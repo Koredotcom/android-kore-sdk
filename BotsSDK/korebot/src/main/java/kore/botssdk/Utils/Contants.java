@@ -1,0 +1,12 @@
+package kore.botssdk.utils;
+
+/**
+ * Created by Pradeep Mahato on 31-May-16.
+ */
+public class Contants {
+
+    public static final String LOGIN_SHARED_PREF = "loginSharedPref";
+
+    public static String USER_ID = "userId";
+    public static String ACCESS_TOKEN = "accessToken";
+}

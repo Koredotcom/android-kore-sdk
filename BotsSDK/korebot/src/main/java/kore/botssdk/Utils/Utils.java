@@ -1,4 +1,4 @@
-package kore.botssdk.Utils;
+package kore.botssdk.utils;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

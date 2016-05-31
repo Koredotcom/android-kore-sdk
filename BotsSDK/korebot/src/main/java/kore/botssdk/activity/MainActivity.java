@@ -1,5 +1,7 @@
 package kore.botssdk.activity;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,9 +13,10 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.Utils.CustomToast;
+import kore.botssdk.utils.CustomToast;
 import kore.botssdk.net.KoreLoginRequest;
 import kore.botssdk.net.KoreRestResponse;
+import kore.botssdk.utils.Contants;
 
 /**
  * Created by Pradeep Mahato on 26-May-16.
@@ -23,6 +26,8 @@ public class MainActivity extends BaseSpiceActivity {
     EditText userNameEdittext;
     EditText userNameEditPassword;
     Button loginBtn;
+
+    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +69,31 @@ public class MainActivity extends BaseSpiceActivity {
      */
 
     /**
+     * Start of : Utility Methods
+     */
+
+    private void saveCredsToPreferences(String userId, String accessToken) {
+        boolean savedSuccessfully = false;
+        sharedPreferences = getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(Contants.USER_ID, userId);
+        editor.putString(Contants.ACCESS_TOKEN, accessToken);
+        savedSuccessfully = editor.commit();
+
+        if (savedSuccessfully) {
+            CustomToast.showToast(getApplicationContext(), "Saved to pref");
+        } else {
+            CustomToast.showToast(getApplicationContext(), "Failed to save to pref");
+        }
+    }
+
+    /**
+     * End of : Utility Methods
+     */
+
+    /**
      * Start of : Service Calls
      */
 
@@ -90,7 +120,7 @@ public class MainActivity extends BaseSpiceActivity {
                 String userId = koreLoginResponse.getUserInfo().getUserId();
                 String authToken = koreLoginResponse.getAuthInfo().getAccessToken();
 
-                CustomToast.showToast(getApplicationContext(), "UserId: " + userId + "\nAuthToken : " + authToken);
+                saveCredsToPreferences(userId, authToken);
             }
         });
 

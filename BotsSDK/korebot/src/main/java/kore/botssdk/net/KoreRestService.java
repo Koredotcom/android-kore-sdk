@@ -5,7 +5,7 @@ import android.os.Build;
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 
 import kore.botssdk.R;
-import kore.botssdk.Utils.Utils;
+import kore.botssdk.utils.Utils;
 import kore.botssdk.services.KoreAuthErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
