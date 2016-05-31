@@ -3,4 +3,31 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="mentionsAndHashTagColor">#6CC24A</color>
+
+    <!-- Bubble (Hackathon changes) -->
+    <color name="readReceiptGreen">#6cc249</color>
+    <color name="readReceiptYellow">#fad05e</color>
+    <color name="readReceiptGrey">#c0cfd4</color>
+    <color name="readReceiptLightGrey">#EBEBEB</color>
+    <color name="readReceiptBorder">#FFFFFF</color>
+    <color name="sendfailed">#EE3340</color>
+    <color name="bubbleFileName">#474747</color>
+    <color name="bubbleFileBackground">#f8f8f8</color>
+    <color name="colorUnselected">#F4F4F4</color>
+    <color name="colorSelected">#E0E0E0</color>
+
+    <!-- profile status color -->
+    <color name="statusOnline">#2ADE75</color>
+    <color name="statusOffline">#BFCED3</color>
+
+    <!-- Timestamp -->
+    <color name="timestamp_row1">#A4B1B5</color>
+    <color name="timestamp_row2">#C3D2D6</color>
+
+    <!-- Offline mode check -->
+    <color name="offline_mode_check_bg_color">#CC96A5A9</color>
+    <color name="offline_mode_check_text_color">#FFFFFF</color>
+
 </resources>
