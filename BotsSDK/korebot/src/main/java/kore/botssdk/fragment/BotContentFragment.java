@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import kore.botssdk.R;
 
@@ -13,12 +14,22 @@ import kore.botssdk.R;
  */
 public class BotContentFragment extends BaseSpiceFragment {
 
+    ListView botsBubblesListView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
+        findViews(view);
         return view;
     }
 
+    private void findViews(View view) {
+        botsBubblesListView = (ListView) view.findViewById(R.id.botsBubblesListView);
+    }
+
+    private void setupAdapter() {
+
+    }
 }

@@ -11,6 +11,24 @@
         android:text="Bot Chat Content Fragment"
         android:textColor="@android:color/darker_gray"
         android:textSize="28sp"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/botsBubblesListView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:alwaysDrawnWithCache="false"
+        android:animationCache="false"
+        android:choiceMode="singleChoice"
+        android:clipToPadding="false"
+        android:divider="@android:color/transparent"
+        android:listSelector="@android:color/white"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:scrollingCache="false"
+        android:smoothScrollbar="true"
+        android:stackFromBottom="true"
         android:visibility="visible" />
 
 </RelativeLayout>
