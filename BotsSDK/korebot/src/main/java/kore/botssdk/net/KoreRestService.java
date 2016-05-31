@@ -34,7 +34,6 @@ public class KoreRestService extends RetrofitGsonSpiceService{
         builder.setRequestInterceptor(new RequestInterceptor() {
             @Override
             public void intercept(RequestFacade request) {
-                // TODO add any other generic headers required
                 request.addHeader("User-Agent", getApplicationContext().getString(R.string.app_name)
                         + "/" + Utils.getBuildVersion(getApplicationContext())
                         + "(Android-"+ Build.VERSION.RELEASE + ")");
