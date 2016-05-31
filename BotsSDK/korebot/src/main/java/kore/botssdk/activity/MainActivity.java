@@ -1,6 +1,7 @@
 package kore.botssdk.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -72,7 +73,7 @@ public class MainActivity extends BaseSpiceActivity {
      * Start of : Utility Methods
      */
 
-    private void saveCredsToPreferences(String userId, String accessToken) {
+    private boolean saveCredsToPreferences(String userId, String accessToken) {
         boolean savedSuccessfully = false;
         sharedPreferences = getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
 
@@ -87,6 +88,13 @@ public class MainActivity extends BaseSpiceActivity {
         } else {
             CustomToast.showToast(getApplicationContext(), "Failed to save to pref");
         }
+
+        return savedSuccessfully;
+    }
+
+    private void launchBotHomeActivity() {
+        Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -120,7 +128,11 @@ public class MainActivity extends BaseSpiceActivity {
                 String userId = koreLoginResponse.getUserInfo().getUserId();
                 String authToken = koreLoginResponse.getAuthInfo().getAccessToken();
 
-                saveCredsToPreferences(userId, authToken);
+                boolean successfullySaved = saveCredsToPreferences(userId, authToken);
+
+                if (successfullySaved) {
+                    launchBotHomeActivity();
+                }
             }
         });
 
