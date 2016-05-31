@@ -2,7 +2,7 @@ package kore.botssdk.application;
 
 import android.content.Context;
 
-import kore.botssdk.view.DimensionUtil;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
