@@ -1,0 +1,31 @@
+package kore.botssdk.view.viewUtils;
+
+import android.content.res.Resources;
+
+import kore.botssdk.application.AppControl;
+
+/**
+ * Created by Pradeep Mahato on 01-Jun-16.
+ */
+public class BubbleViewUtil {
+
+    public static int getBubbleContentWidth() {
+        int viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        return (int) (0.59 * viewWidth);
+    }
+
+    public static int getBotBubbleContentWidth() {
+        int viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        return (int) (0.65 * viewWidth);
+    }
+
+    /**
+     * @return dimens for what each media content should take as a Base-platform
+     */
+    public static int getBubbleContentHeight() {
+        //This is bad... would be rectified based on the % of space available
+        int dp81 = (int) (81 * AppControl.getInstance().getDimensionUtil().dp1);
+        return dp81;
+    }
+
+}
