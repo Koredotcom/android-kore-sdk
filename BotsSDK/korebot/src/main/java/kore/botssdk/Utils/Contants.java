@@ -9,4 +9,5 @@ public class Contants {
 
     public static String USER_ID = "userId";
     public static String ACCESS_TOKEN = "accessToken";
+    public static String KEY_ASSERTION = "assertion";
 }
