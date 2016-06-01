@@ -59,7 +59,8 @@ public class BotsChatAdapter extends BaseAdapter {
 
         //Newer
         if (position >= 0 && position < getCount()) {
-            if (position % 2 == 0) {
+            int rem = position % 10;
+            if (rem == 0 || rem == 1 || rem == 2 || rem == 3 || rem == 4) {
                 return BUBBLE_RIGHT_LAYOUT;
             } else {
                 return BUBBLE_LEFT_LAYOUT;
