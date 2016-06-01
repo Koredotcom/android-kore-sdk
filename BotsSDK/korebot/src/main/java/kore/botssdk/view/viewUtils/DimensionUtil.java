@@ -14,6 +14,7 @@ public class DimensionUtil {
 
     public DimensionUtil(Context context) {
         this.context = context;
+        init();
     }
 
     private void init() {
