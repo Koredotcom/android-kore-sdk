@@ -117,7 +117,7 @@ public class BotsChatAdapter extends BaseAdapter {
             //Bubble Population logic
             holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
 
-            holder.baseBubbleLayout.setContinuousMessage(true);
+            holder.baseBubbleLayout.setContinuousMessage(false);
 
             holder.baseBubbleLayout.fillBubbleLayout(position, true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
 
