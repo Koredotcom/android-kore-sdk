@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kore.botssdk.view.SendBubbleContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/send_bubble_layout_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false">
+
+    <!-- Send Bubble -->
+    <kore.botssdk.view.SendBubbleLayout
+        android:id="@+id/sendBubbleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="#00FF00FF" />
+
+</kore.botssdk.view.SendBubbleContainer>
