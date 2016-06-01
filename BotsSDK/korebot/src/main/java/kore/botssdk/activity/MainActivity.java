@@ -18,6 +18,7 @@ import kore.botssdk.utils.CustomToast;
 import kore.botssdk.net.KoreLoginRequest;
 import kore.botssdk.net.KoreRestResponse;
 import kore.botssdk.utils.Contants;
+import kore.botssdk.utils.KoreBotSharedPreferences;
 
 /**
  * Created by Pradeep Mahato on 26-May-16.
@@ -27,8 +28,6 @@ public class MainActivity extends BaseSpiceActivity {
     EditText userNameEdittext;
     EditText userNameEditPassword;
     Button loginBtn;
-
-    SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,24 +87,6 @@ public class MainActivity extends BaseSpiceActivity {
      * Start of : Utility Methods
      */
 
-    private boolean saveCredsToPreferences(String userId, String accessToken) {
-        boolean savedSuccessfully = false;
-        sharedPreferences = getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString(Contants.USER_ID, userId);
-        editor.putString(Contants.ACCESS_TOKEN, accessToken);
-        savedSuccessfully = editor.commit();
-
-        if (savedSuccessfully) {
-            CustomToast.showToast(getApplicationContext(), "Saved to pref");
-        } else {
-            CustomToast.showToast(getApplicationContext(), "Failed to save to pref");
-        }
-
-        return savedSuccessfully;
-    }
 
     private void launchBotHomeActivity() {
         Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
@@ -143,7 +124,7 @@ public class MainActivity extends BaseSpiceActivity {
                 String userId = koreLoginResponse.getUserInfo().getUserId();
                 String authToken = koreLoginResponse.getAuthInfo().getAccessToken();
 
-                boolean successfullySaved = saveCredsToPreferences(userId, authToken);
+                boolean successfullySaved = KoreBotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
 
                 if (successfullySaved) {
                     launchBotHomeActivity();
