@@ -24,7 +24,7 @@
         <activity android:name=".activity.BotChatActivity"/>
 
         <service
-            android:name=".net.KoreRestService"
+            android:name=".net.KoreBotRestService"
             android:exported="false" />
 
 
