@@ -37,6 +37,10 @@ public class MainActivity extends BaseSpiceActivity {
 
         findViews();
         setListeners();
+        if (isAlreadyLoggedIn()) {
+            launchBotHomeActivity();
+            finish();
+        }
     }
 
     private void findViews() {
@@ -47,6 +51,17 @@ public class MainActivity extends BaseSpiceActivity {
 
     private void setListeners() {
         loginBtn.setOnClickListener(onLoginOnClickListener);
+    }
+
+    private boolean isAlreadyLoggedIn() {
+        boolean isAlreadyLoggedIn = false;
+
+        sharedPreferences = getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        isAlreadyLoggedIn = sharedPreferences.contains(Contants.USER_ID) && sharedPreferences.contains(Contants.ACCESS_TOKEN);
+
+        return isAlreadyLoggedIn;
     }
 
     /**
