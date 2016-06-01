@@ -8,12 +8,13 @@ public class ServerConfig {
     /*
        Server: QA
      */
-    public static final String SERVER_URL = "https://qa.kore.com";
-    public static final String SERVER_IP = "presence.kore.com";
-    public static final String SERVER_ID_PROXY = "idproxy-dev.kore.com";
-    public static final String SERVER_PORT = "443";
-    public static final Boolean IS_PRESENCE_SSL = true;
+//    public static final String SERVER_URL = "https://qa.kore.com";
+//    public static final String SERVER_IP = "presence.kore.com";
+//    public static final String SERVER_ID_PROXY = "idproxy-dev.kore.com";
+//    public static final String SERVER_PORT = "443";
+//    public static final Boolean IS_PRESENCE_SSL = true;
 
+    public static final String KORE_BOT_SERVER_URL = "http://devbots.kore.com";
     /*
        Server: QA1
      */
