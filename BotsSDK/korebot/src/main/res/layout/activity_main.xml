@@ -32,7 +32,7 @@
             android:background="@android:color/transparent"
             android:hint="Enter user name"
             android:singleLine="true"
-            android:text="gecko340@mailinator.com"/>
+            android:text="ramachandra.pradeep.challa@kore.com"/>
 
         <EditText
             android:id="@+id/userNameEditPassword"
@@ -43,7 +43,7 @@
             android:background="@android:color/transparent"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:text="Kore@12345"/>
+            android:text="123456Aa_"/>
 
         <Button
             android:id="@+id/loginBtn"
