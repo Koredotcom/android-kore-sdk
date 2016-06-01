@@ -28,4 +28,6 @@ dependencies {
     compile files('libs/robospice-1.4.12.jar')
     compile files('libs/robospice-cache-1.4.12.jar')
     compile files('libs/robospice-retrofit-1.4.12.jar')
+    compile files('libs/autobahn-0.5.0.jar')
+    compile files('libs/jackson-core-asl-1.9.7.jar')
 }
