@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import kore.botssdk.R;
+import kore.botssdk.adapter.BotsChatAdapter;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -22,6 +23,7 @@ public class BotContentFragment extends BaseSpiceFragment {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
         findViews(view);
+        setupAdapter();
         return view;
     }
 
@@ -30,6 +32,7 @@ public class BotContentFragment extends BaseSpiceFragment {
     }
 
     private void setupAdapter() {
-
+        BotsChatAdapter botsChatAdapter = new BotsChatAdapter(getActivity());
+        botsBubblesListView.setAdapter(botsChatAdapter);
     }
 }

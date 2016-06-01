@@ -80,6 +80,18 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView.setText(textualContent);
     }
 
+    public TextView getBotContentTextView() {
+        return botContentTextView;
+    }
+
+    public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
+        this.restrictedLayoutWidth = restrictedLayoutWidth;
+    }
+
+    public void setRestrictedLayoutHeight(float restrictedLayoutHeight) {
+        this.restrictedLayoutHeight = restrictedLayoutHeight;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
