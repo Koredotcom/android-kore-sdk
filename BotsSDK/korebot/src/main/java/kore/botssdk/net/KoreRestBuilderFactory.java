@@ -8,17 +8,11 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
-import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLContext;
-
-import kore.botssdk.ssl.SSLHelper;
 import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 
@@ -36,17 +30,11 @@ public class KoreRestBuilderFactory extends RetrofitGsonSpiceService {
     public RestAdapter.Builder getRestAdapterBuilder()
     {
         RestAdapter.Builder builder = super.createRestAdapterBuilder();
-        if(getServerUrl().contains("https"))
-        {
-            return setSSLPinning(builder);
-        }
-        else
-        {
+
             return  builder;
-        }
     }
 
-    private RestAdapter.Builder setSSLPinning(RestAdapter.Builder builder){
+    /*private RestAdapter.Builder setSSLPinning(RestAdapter.Builder builder){
         SSLContext context = SSLHelper.getSSLContextWithCertificate(mContext, ServerConfig.SERVER_URL);
         OkHttpClient client = new OkHttpClient();
         client.setReadTimeout(60, TimeUnit.SECONDS);
@@ -54,7 +42,7 @@ public class KoreRestBuilderFactory extends RetrofitGsonSpiceService {
         client.setSslSocketFactory(context.getSocketFactory());
         builder.setClient(new OkClient(client));
         return builder;
-    }
+    }*/
 
     @Override
     protected String getServerUrl() {
