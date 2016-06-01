@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary  'org.apache.http.legacy'
 }
 
 dependencies {
@@ -27,5 +28,4 @@ dependencies {
     compile files('libs/robospice-1.4.12.jar')
     compile files('libs/robospice-cache-1.4.12.jar')
     compile files('libs/robospice-retrofit-1.4.12.jar')
-    compile files('libs/websocket.jar')
 }
