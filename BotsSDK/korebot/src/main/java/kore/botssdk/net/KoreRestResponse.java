@@ -1,6 +1,9 @@
 package kore.botssdk.net;
 
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import kore.botssdk.models.Authorization;
 import kore.botssdk.models.BotUserInfo;
 import kore.botssdk.models.KoreUser;
@@ -84,5 +87,32 @@ public class KoreRestResponse {
         }
     }
 
+    public static class BotMessage {
+        private String body;
+        private ArrayList<Objects> attachments = new ArrayList<>();
+
+        public BotMessage(String body) {
+            this.body = body;
+        }
+
+        public void setBody(String body) {
+            this.body = body;
+        }
+
+        public void setAttachments(ArrayList<Objects> attachments) {
+            this.attachments = attachments;
+        }
+    }
+
+    public static class BotPayLoad {
+        private BotMessage message;
+        private String resourceid = "/bot.message";
+        private ArrayList<Objects> botInfo = new ArrayList<>();
+        private int id = 1;
+
+        public void setMessage(BotMessage message) {
+            this.message = message;
+        }
+    }
 
 }

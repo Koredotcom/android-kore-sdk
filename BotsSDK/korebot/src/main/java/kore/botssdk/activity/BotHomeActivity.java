@@ -16,6 +16,7 @@ import kore.botssdk.R;
 import kore.botssdk.net.KoreRestRequest;
 import kore.botssdk.net.KoreRestResponse;
 import kore.botssdk.utils.Contants;
+import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.KoreBotSharedPreferences;
 import kore.botssdk.websocket.KorePresenceListener;
 import kore.botssdk.websocket.KorePresenceWrapper;
@@ -54,9 +55,9 @@ public class BotHomeActivity extends BaseSpiceActivity {
     View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
-//            startActivity(intent);
-            connectToWebSocket(KoreBotSharedPreferences.getAccessTokenFromPreferences(BotHomeActivity.this));
+            Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+            startActivity(intent);
+//            connectToWebSocket(KoreBotSharedPreferences.getAccessTokenFromPreferences(BotHomeActivity.this));
         }
     };
 
@@ -80,12 +81,17 @@ public class BotHomeActivity extends BaseSpiceActivity {
         getSpiceManager().execute(request, new RequestListener<KoreRestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-
+                CustomToast.showToast(getApplicationContext(), "onRequestFailure !!");
             }
 
             @Override
             public void onRequestSuccess(KoreRestResponse.RTMUrl response) {
+                CustomToast.showToast(getApplicationContext(), "onRequestSuccess !!");
                 KorePresenceWrapper.getInstance().connect(response.getUrl());
+
+                Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+                startActivity(intent);
+
             }
         });
     }
