@@ -72,8 +72,8 @@ public class TextMediaLayout extends MediaLayout {
 
     }
 
-    public void startup(int position, int... dimens) {
-        populateText(position + "");
+    public void startup(int position, String messageBody, int... dimens) {
+        populateText(messageBody);
     }
 
     private void populateText(String textualContent) {

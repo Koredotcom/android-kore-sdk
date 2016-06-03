@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotRequest;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -312,7 +315,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     }
 
 
-    public void fillBubbleLayout(int position,
+    public void fillBubbleLayout(int position, BaseBotMessage baseBotMessage,
                                  boolean constrictLayout, int... dimens) {
 
         this.position = position;
@@ -326,7 +329,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         preCosmeticChanges();
 
         // Bubble Text Media
-        populateBubbleTextMedia(position, constrictLayout, dimens);
+        populateBubbleTextMedia(position, baseBotMessage, constrictLayout, dimens);
 
     }
 
@@ -351,8 +354,16 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
     }
 
-    protected void populateBubbleTextMedia(int position, boolean constrictLayout, int... dimens) {
-        bubbleTextMediaLayout.startup(position, dimens);
+    protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, boolean constrictLayout, int... dimens) {
+
+        String message;
+        if (baseBotMessage.isSend()) {
+            message = ((BotRequest) baseBotMessage).getMessage().getBody();
+        } else {
+            message = ((BotResponse) baseBotMessage).getTempMessage().getcInfo().getBody();
+        }
+
+        bubbleTextMediaLayout.startup(position, message, dimens);
     }
 
     protected void textViewCosmeticChanges() {

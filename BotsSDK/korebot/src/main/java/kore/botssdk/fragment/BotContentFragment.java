@@ -7,8 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
+import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
+import kore.botssdk.models.BotRequest;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.websocket.KorePresenceWrapper;
 import kore.botssdk.websocket.PresenceConnectionListener;
@@ -19,6 +24,7 @@ import kore.botssdk.websocket.PresenceConnectionListener;
 public class BotContentFragment extends BaseSpiceFragment implements PresenceConnectionListener {
 
     ListView botsBubblesListView;
+    BotsChatAdapter botsChatAdapter;
 
     @Nullable
     @Override
@@ -28,6 +34,7 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
         findViews(view);
         setupAdapter();
         KorePresenceWrapper.getInstance().setPresenceConnectionListener(this);
+        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -36,17 +43,35 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
     }
 
     private void setupAdapter() {
-        BotsChatAdapter botsChatAdapter = new BotsChatAdapter(getActivity());
+        botsChatAdapter = new BotsChatAdapter(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
     }
 
     @Override
     public void onConnected(String message) {
-        CustomToast.showToast(getActivity(), "onConnected");
+        CustomToast.showToast(getActivity(), message);
+        convertToPojoAndRefreshTheList(message);
     }
 
     @Override
     public void onDisconnected(String reason) {
-        CustomToast.showToast(getActivity(), "onDisconnected");
+        CustomToast.showToast(getActivity(), "onDisconnected. Reason is " + reason);
     }
+
+    private void convertToPojoAndRefreshTheList(String message) {
+
+        Gson gson = new Gson();
+        BotResponse botResponse = gson.fromJson(message, BotResponse.class);
+        if (botResponse.getMessage() != null) {
+            botsChatAdapter.addBaseBotMessage(botResponse);
+        }
+
+    }
+
+    public void onEvent(BotRequest botRequest) {
+        if (botRequest.getMessage() != null) {
+            botsChatAdapter.addBaseBotMessage(botRequest);
+        }
+    }
+
 }

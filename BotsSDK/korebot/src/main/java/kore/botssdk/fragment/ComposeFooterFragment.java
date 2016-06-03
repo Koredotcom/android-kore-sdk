@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
+import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.KoreRestResponse;
 import kore.botssdk.websocket.KorePresenceWrapper;
 
@@ -67,6 +69,9 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
         Log.d(LOG_TAG, "Payload : " + jsonPayload);
         KorePresenceWrapper.getInstance().sendMessage(jsonPayload);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        EventBus.getDefault().post(botRequest);
     }
 
 }

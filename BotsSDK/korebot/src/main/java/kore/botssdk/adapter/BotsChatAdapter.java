@@ -9,8 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.view.BaseBubbleContainer;
 import kore.botssdk.view.BaseBubbleLayout;
 import kore.botssdk.view.ReceivedBubbleContainer;
@@ -35,6 +39,8 @@ public class BotsChatAdapter extends BaseAdapter {
     int dp1;
     int position;
 
+    private ArrayList<BaseBotMessage> baseBotMessageArrayList;
+
     public static final int BUBBLE_ADAPTER_DIFFERENT_VIEW_COUNTS = 3;
     public static final int BUBBLE_LEFT_LAYOUT = 0;
     public static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;
@@ -47,6 +53,8 @@ public class BotsChatAdapter extends BaseAdapter {
         BUBBLE_CONTENT_LAYOUT_WIDTH = BubbleViewUtil.getBubbleContentWidth();
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
         viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+
+        baseBotMessageArrayList = new ArrayList<>();
     }
 
     @Override
@@ -57,27 +65,24 @@ public class BotsChatAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
 
-        //Newer
-        if (position >= 0 && position < getCount()) {
-            int rem = position % 10;
-            if (rem == 0 || rem == 1 || rem == 2 || rem == 3 || rem == 4) {
-                return BUBBLE_RIGHT_LAYOUT;
-            } else {
-                return BUBBLE_LEFT_LAYOUT;
-            }
+        BaseBotMessage baseBotMessage = getItem(position);
+
+        if (baseBotMessage.isSend()) {
+            return BUBBLE_RIGHT_LAYOUT;
         } else {
             return BUBBLE_LEFT_LAYOUT;
         }
+
     }
 
     @Override
     public int getCount() {
-        return 1000;
+        return baseBotMessageArrayList.size();
     }
 
     @Override
-    public Integer getItem(int position) {
-        return position;
+    public BaseBotMessage getItem(int position) {
+        return baseBotMessageArrayList.get(position);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class BotsChatAdapter extends BaseAdapter {
 
             holder.baseBubbleLayout.setContinuousMessage(false);
 
-            holder.baseBubbleLayout.fillBubbleLayout(position, true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
+            holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
 
         }
 
@@ -153,6 +158,11 @@ public class BotsChatAdapter extends BaseAdapter {
         BaseBubbleContainer baseBubbleContainer;
         BaseBubbleLayout baseBubbleLayout;
         RelativeLayout bubbleLayoutContainer;
+    }
+
+    public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
+        baseBotMessageArrayList.add(baseBotMessage);
+        notifyDataSetChanged();
     }
 
 }
