@@ -1,7 +1,6 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ public final class KorePresenceWrapper {
 
     public static KorePresenceWrapper pKorePresenceInstance;
     private final String LOG_TAG = KorePresenceWrapper.class.getSimpleName();
-    private PresenceConnectionListener mListener = null;
+    private PresenceConnectionListener presenceConnectionListener = null;
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
 
@@ -147,8 +146,8 @@ public final class KorePresenceWrapper {
                 public void onStringRecived(HashMap _data) {
 //                    KoreLogger.debugLog(LOG_TAG, _data.toString());
 //                    KoreLogger.debugLog(LOG_TAG, "Sending web socket callback");
-                    if (mListener != null) {
-                        mListener.onConnected(_data);
+                    if (presenceConnectionListener != null) {
+                        presenceConnectionListener.onConnected(_data);
                     }
                 }
             });
@@ -167,8 +166,8 @@ public final class KorePresenceWrapper {
                     @Override
                     public void onTextMessage(String payload) {
                         Log.d(getClass().getSimpleName(), "Got echo: " + payload);
-                        if (mListener != null) {
-                            mListener.onConnected(payload);
+                        if (presenceConnectionListener != null) {
+                            presenceConnectionListener.onConnected(payload);
                         }
                     }
 
@@ -176,8 +175,8 @@ public final class KorePresenceWrapper {
                     public void onClose(int code, String reason) {
                         HashMap<String, String> disConnect = new HashMap<>();
                         disConnect.put("name", "disconnect");
-                        if (mListener != null){
-                            mListener.onDisconnected(reason);
+                        if (presenceConnectionListener != null){
+                            presenceConnectionListener.onDisconnected(reason);
                         }
                         Log.d(getClass().getSimpleName(), "Connection lost.");
                     }
@@ -188,7 +187,7 @@ public final class KorePresenceWrapper {
         }
     }
 
-    private void sendMessage(String msg){
+    public void sendMessage(String msg){
         if(mConnection != null && mConnection.isConnected()){
             mConnection.sendTextMessage(msg);
         }
@@ -200,8 +199,8 @@ public final class KorePresenceWrapper {
         HashMap<String, String> disConnect = new HashMap<>();
         disConnect.put("name", "disconnect");
         try {
-            if (mListener != null){
-                mListener.onDisconnected(disConnect);
+            if (presenceConnectionListener != null){
+                presenceConnectionListener.onDisconnected(disConnect);
             }
             if (mIsReconnectionAttemptNeeded) {
 //                mIsReconnectionAttemptNeeded = true;
@@ -279,5 +278,13 @@ public final class KorePresenceWrapper {
         if (mReconnectionCount > 10) mReconnectionCount = 1;
         Random rint = new Random();
         return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
+    }
+
+    public PresenceConnectionListener getPresenceConnectionListener() {
+        return presenceConnectionListener;
+    }
+
+    public void setPresenceConnectionListener(PresenceConnectionListener presenceConnectionListener) {
+        this.presenceConnectionListener = presenceConnectionListener;
     }
 }
