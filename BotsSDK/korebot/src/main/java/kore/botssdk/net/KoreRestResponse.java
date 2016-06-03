@@ -102,6 +102,10 @@ public class KoreRestResponse {
         public void setAttachments(ArrayList<Objects> attachments) {
             this.attachments = attachments;
         }
+
+        public String getBody() {
+            return body;
+        }
     }
 
     public static class BotPayLoad {
