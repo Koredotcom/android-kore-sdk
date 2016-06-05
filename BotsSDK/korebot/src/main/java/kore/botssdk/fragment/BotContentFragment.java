@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
@@ -49,7 +50,7 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
 
     @Override
     public void onConnected(String message) {
-        CustomToast.showToast(getActivity(), message);
+//        CustomToast.showToast(getActivity(), message);
         convertToPojoAndRefreshTheList(message);
     }
 
@@ -61,9 +62,14 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
     private void convertToPojoAndRefreshTheList(String message) {
 
         Gson gson = new Gson();
-        BotResponse botResponse = gson.fromJson(message, BotResponse.class);
-        if (botResponse.getMessage() != null) {
-            botsChatAdapter.addBaseBotMessage(botResponse);
+        try {
+            BotResponse botResponse = gson.fromJson(message, BotResponse.class);
+            if (botResponse.getMessage() != null) {
+                botsChatAdapter.addBaseBotMessage(botResponse);
+                scrollToBottom();
+            }
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
         }
 
     }
@@ -71,7 +77,18 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
     public void onEvent(BotRequest botRequest) {
         if (botRequest.getMessage() != null) {
             botsChatAdapter.addBaseBotMessage(botRequest);
+            scrollToBottom();
         }
+    }
+
+    private void scrollToBottom() {
+        final int count = botsChatAdapter.getCount();
+        botsBubblesListView.post(new Runnable() {
+            @Override
+            public void run() {
+                botsBubblesListView.setSelection(count - 1);
+            }
+        });
     }
 
 }
