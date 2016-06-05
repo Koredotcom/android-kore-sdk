@@ -21,7 +21,8 @@
         </activity>
 
         <activity android:name=".activity.BotHomeActivity" />
-        <activity android:name=".activity.BotChatActivity"/>
+        <activity android:name=".activity.BotChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <service
             android:name=".net.KoreBotRestService"
