@@ -18,6 +18,7 @@ import java.util.Objects;
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.models.BotRequest;
+import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.KoreRestResponse;
 import kore.botssdk.websocket.KorePresenceWrapper;
 
@@ -51,9 +52,11 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
     View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String msg = composeFooterEditTxt.getText().toString();
-            composeFooterEditTxt.setText("");
-            prepareTheJsonObject(msg);
+            String msg = composeFooterEditTxt.getText().toString().trim();
+            if (!msg.isEmpty()) {
+                composeFooterEditTxt.setText("");
+                prepareTheJsonObject(msg);
+            }
         }
     };
 
@@ -68,7 +71,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
         String jsonPayload = gson.toJson(botPayLoad);
 
         Log.d(LOG_TAG, "Payload : " + jsonPayload);
-        KorePresenceWrapper.getInstance().sendMessage(jsonPayload);
+        BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+        KorePresenceWrapper.getInstance().sendMessage();
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         EventBus.getDefault().post(botRequest);
