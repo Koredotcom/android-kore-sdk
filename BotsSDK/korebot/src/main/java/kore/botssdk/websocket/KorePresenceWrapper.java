@@ -3,12 +3,15 @@ package kore.botssdk.websocket;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import de.tavendo.autobahn.WebSocketHandler;
+import kore.botssdk.models.BotRequest;
+import kore.botssdk.net.BotRequestPool;
 
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
@@ -169,6 +172,20 @@ public final class KorePresenceWrapper {
                         if (presenceConnectionListener != null) {
                             presenceConnectionListener.onConnected(payload);
                         }
+                        if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
+                            ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
+                            int len = botRequestStringArrayList.size();
+                            for(int i=0; i < len; i++) {
+                                String botRequestPayload = botRequestStringArrayList.get(i);
+                                if (sendMessage(botRequestPayload)) {
+                                    BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
+                                    i--; //reset the parameter
+                                    len--; //reset the length.
+                                } else {
+                                    break; //Break the loop, as re-connection would be attempted from sendMessage(...)
+                                }
+                            }
+                        }
                     }
 
                     @Override
@@ -187,9 +204,45 @@ public final class KorePresenceWrapper {
         }
     }
 
-    public void sendMessage(String msg){
+    /**
+     * Start sending the message's as in queue
+     */
+    public void sendMessage() {
+        if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
+            ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
+            int len = botRequestStringArrayList.size();
+            for(int i=0; i < len; i++) {
+                String botRequestPayload = botRequestStringArrayList.get(i);
+                if (sendMessage(botRequestPayload)) {
+                    BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
+                    i--; //reset the parameter
+                    len--; //reset the length.
+                } else {
+                    break; //Break the loop, as re-connection would be attempted from sendMessage(...)
+                }
+            }
+        }
+    }
+
+    /**
+     * @param msg : The message object
+     * @return Was it able to successfully send the message.
+     */
+    public boolean sendMessage(String msg){
         if(mConnection != null && mConnection.isConnected()){
             mConnection.sendTextMessage(msg);
+            return true;
+        } else {
+            connect(Url);
+            return false;
+        }
+    }
+
+    public boolean isConnected() {
+        if(mConnection != null && mConnection.isConnected()){
+            return true;
+        } else {
+            return false;
         }
     }
 
