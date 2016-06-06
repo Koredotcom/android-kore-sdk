@@ -2,28 +2,30 @@ package kore.botssdk.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.util.HashMap;
-
 import kore.botssdk.R;
-import kore.botssdk.net.RestRequest;
-import kore.botssdk.net.RestResponse;
-import kore.botssdk.utils.Contants;
-import kore.botssdk.utils.CustomToast;
-import kore.botssdk.websocket.SocketWrapper;
+import kore.botssdk.adapter.AvailableBotListAdapter;
+import kore.botssdk.net.GetBotMarketStreams;
+import kore.botssdk.net.MarketStreamList;
+import kore.botssdk.utils.BotSharedPreferences;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
 public class BotHomeActivity extends BaseSpiceActivity {
 
-    Button launchBotBtn;
-    Button logOutBtn;
+    Button launchBotBtn, fetchAgainBtn;
+    ListView botListView;
+    AvailableBotListAdapter availableBotListAdapter;
+
+    String LOG_TAG = BotHomeActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,15 +34,30 @@ public class BotHomeActivity extends BaseSpiceActivity {
 
         findViews();
         setListeners();
+        getAllBotsFromMarketStream();
     }
 
     private void findViews() {
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
-        logOutBtn = (Button) findViewById(R.id.logOutBtn);
+        botListView = (ListView) findViewById(R.id.botListView);
+        fetchAgainBtn = (Button) findViewById(R.id.fetchAgainBtn);
     }
 
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
+        fetchAgainBtn.setOnClickListener(fetchAgainBtnOnClickListener);
+    }
+
+    private void setAdapter(MarketStreamList marketStreamList) {
+
+        if (availableBotListAdapter == null) {
+            availableBotListAdapter = new AvailableBotListAdapter(getApplicationContext(), marketStreamList);
+            botListView.setAdapter(availableBotListAdapter);
+        } else {
+            availableBotListAdapter.setMarketStreamList(marketStreamList);
+            availableBotListAdapter.notifyDataSetChanged();
+        }
+
     }
 
     /**
@@ -52,7 +69,13 @@ public class BotHomeActivity extends BaseSpiceActivity {
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
             startActivity(intent);
-//            connectToWebSocket(BotSharedPreferences.getAccessTokenFromPreferences(BotHomeActivity.this));
+        }
+    };
+
+    View.OnClickListener fetchAgainBtnOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            getAllBotsFromMarketStream();
         }
     };
 
@@ -60,34 +83,26 @@ public class BotHomeActivity extends BaseSpiceActivity {
      * END of : Listeners
      */
 
-    private void connectToWebSocket(final String accessToken){
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class,null, accessToken) {
-            @Override
-            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
-                HashMap<String,Object> hsh = new HashMap<>(1);
-                hsh.put(Contants.KEY_ASSERTION,jwtToken.getJwt());
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()));
-                return rtmUrl;
-            }
-        } ;
+    private void getAllBotsFromMarketStream(){
 
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        String userId = BotSharedPreferences.getUserIdFromPreferences(getApplicationContext());
+        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
+
+        GetBotMarketStreams getBotMarketStreams = new GetBotMarketStreams(userId, accessToken);
+
+        getSpiceManager().execute(getBotMarketStreams, new RequestListener<MarketStreamList>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                CustomToast.showToast(getApplicationContext(), "onRequestFailure !!");
+                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\nonRequestFailure : " + e.getMessage()) ;
             }
 
             @Override
-            public void onRequestSuccess(RestResponse.RTMUrl response) {
-                CustomToast.showToast(getApplicationContext(), "onRequestSuccess !!");
-                SocketWrapper.getInstance().connect(response.getUrl());
-
-                Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
-                startActivity(intent);
-
+            public void onRequestSuccess(MarketStreamList marketStreamList) {
+                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\n" +
+                        "onRequestSuccess : listSize -> " + marketStreamList.size());
+                setAdapter(marketStreamList);
             }
         });
+
     }
 }

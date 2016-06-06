@@ -52,7 +52,8 @@ public class MainActivity extends BaseSpiceActivity {
     }
 
     private boolean isAlreadyLoggedIn() {
-        return BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null;
+        return BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null
+                && BotSharedPreferences.getUserIdFromPreferences(getApplicationContext()) != null;
     }
 
     /**
