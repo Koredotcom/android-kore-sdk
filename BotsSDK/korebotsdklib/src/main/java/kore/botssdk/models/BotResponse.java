@@ -25,4 +25,5 @@ public class BotResponse extends BaseBotMessage{
     public boolean isSend() {
         return false;
     }
+
 }

@@ -1,10 +1,14 @@
 package kore.botssdk.net;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import kore.botssdk.models.MarketStreams;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.POST;
+import retrofit.http.Path;
 
 public interface RestAPI {
 
@@ -25,5 +29,9 @@ public interface RestAPI {
     //Getting rtm URL
     @POST("/api/rtm/start")
     RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token);
+
+    //Get Market Streams
+    @GET("/api/1.1/users/{userId}/builder/streams")
+    MarketStreamList getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
 }
