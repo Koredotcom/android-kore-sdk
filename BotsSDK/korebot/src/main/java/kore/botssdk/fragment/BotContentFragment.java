@@ -50,7 +50,6 @@ public class BotContentFragment extends BaseSpiceFragment implements PresenceCon
 
     @Override
     public void onConnected(String message) {
-//        CustomToast.showToast(getActivity(), message);
         convertToPojoAndRefreshTheList(message);
     }
 
