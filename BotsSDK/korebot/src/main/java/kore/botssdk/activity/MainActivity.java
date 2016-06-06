@@ -36,6 +36,8 @@ public class MainActivity extends BaseSpiceActivity {
         if (isAlreadyLoggedIn()) {
             launchBotHomeActivity();
             finish();
+        } else {
+            saveToPrefAndLaunch();
         }
     }
 
@@ -81,6 +83,17 @@ public class MainActivity extends BaseSpiceActivity {
     private void launchBotHomeActivity() {
         Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
         startActivity(intent);
+    }
+
+    private void saveToPrefAndLaunch() {
+        String userId = "u-73364365-f98d-571d-8e8e-022186cde3bc";//koreLoginResponse.getUserInfo().getUserId();
+        String authToken = "mO6emCF8p-rOpDR-cJbQCKg9yTFLqxF_nHEe_d6ZcyBtDnDf3DYpPs9RG3qnqZlS";//koreLoginResponse.getAuthInfo().getAccessToken();
+
+        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
+
+        if (successfullySaved) {
+            launchBotHomeActivity();
+        }
     }
 
     /**

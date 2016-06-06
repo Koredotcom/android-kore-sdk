@@ -14,6 +14,7 @@ import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.utils.BotRequestController;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.BotSharedPreferences;
@@ -79,7 +80,8 @@ public class BotChatActivity extends BaseSpiceActivity {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 CustomToast.showToast(getApplicationContext(), "onRequestSuccess !!");
-                SocketWrapper.getInstance().connect(response.getUrl());
+                BotRequestController.setUrl(response.getUrl());
+                SocketWrapper.getInstance().connect(BotRequestController.getUrl());
             }
         });
     }

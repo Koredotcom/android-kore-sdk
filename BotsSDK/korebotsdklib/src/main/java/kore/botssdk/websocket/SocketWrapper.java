@@ -22,7 +22,7 @@ public final class SocketWrapper {
     private final WebSocketConnection mConnection = new WebSocketConnection();
 
     private boolean mIsReconnectionAttemptNeeded = true;
-    private String Url;
+    private String url;
 
     private int mReconnectionCount = 0;
 
@@ -41,11 +41,11 @@ public final class SocketWrapper {
         return pKorePresenceInstance;
     }
 
-    public void connect(String Url) {
-        if (Url != null) {
-            this.Url = Url;
+    public void connect(String url) {
+        if (url != null) {
+            this.url = url;
             try {
-                mConnection.connect(Url, new WebSocketHandler() {
+                mConnection.connect(url, new WebSocketHandler() {
                     @Override
                     public void onOpen() {
                     }
@@ -56,26 +56,10 @@ public final class SocketWrapper {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onConnected(payload);
                         }
-                        if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
-                            ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
-                            int len = botRequestStringArrayList.size();
-                            for (int i = 0; i < len; i++) {
-                                String botRequestPayload = botRequestStringArrayList.get(i);
-                                if (sendMessage(botRequestPayload)) {
-                                    BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
-                                    i--; //reset the parameter
-                                    len--; //reset the length.
-                                } else {
-                                    break; //Break the loop, as re-connection would be attempted from sendMessage(...)
-                                }
-                            }
-                        }
                     }
 
                     @Override
                     public void onClose(int code, String reason) {
-                        HashMap<String, String> disConnect = new HashMap<>();
-                        disConnect.put("name", "disconnect");
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onDisconnected(reason);
                         }
@@ -89,44 +73,14 @@ public final class SocketWrapper {
     }
 
     /**
-     * Start sending the message's as in queue
-     */
-    public void sendMessage() {
-        if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
-            ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
-            int len = botRequestStringArrayList.size();
-            for (int i = 0; i < len; i++) {
-                String botRequestPayload = botRequestStringArrayList.get(i);
-                if (sendMessage(botRequestPayload)) {
-                    BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
-                    i--; //reset the parameter
-                    len--; //reset the length.
-                } else {
-                    break; //Break the loop, as re-connection would be attempted from sendMessage(...)
-                }
-            }
-        }
-    }
-
-    /**
      * @param msg : The message object
      * @return Was it able to successfully send the message.
      */
-    public boolean sendMessage(String msg) {
+    public void sendMessage(String msg) {
         if (mConnection != null && mConnection.isConnected()) {
             mConnection.sendTextMessage(msg);
-            return true;
         } else {
-            connect(Url);
-            return false;
-        }
-    }
-
-    public boolean isConnected() {
-        if (mConnection != null && mConnection.isConnected()) {
-            return true;
-        } else {
-            return false;
+            Log.e(LOG_TAG, "Either WebSocketConnection is not initialized or connection is not present.");
         }
     }
 
@@ -151,4 +105,13 @@ public final class SocketWrapper {
     public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {
         this.socketConnectionListener = socketConnectionListener;
     }
+
+    public boolean isConnected() {
+        if (mConnection != null && mConnection.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

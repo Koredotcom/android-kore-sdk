@@ -16,6 +16,7 @@ import kore.botssdk.R;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.utils.BotRequestController;
 import kore.botssdk.websocket.SocketWrapper;
 
 /**
@@ -68,7 +69,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
         Log.d(LOG_TAG, "Payload : " + jsonPayload);
         BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
-        SocketWrapper.getInstance().sendMessage();
+        BotRequestController.getInstance().startSendingMessage();
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         EventBus.getDefault().post(botRequest);

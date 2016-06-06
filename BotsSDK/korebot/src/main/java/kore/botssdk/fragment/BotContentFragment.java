@@ -2,6 +2,7 @@ package kore.botssdk.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.BotRequestPool;
+import kore.botssdk.utils.BotRequestController;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.websocket.SocketWrapper;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -26,6 +29,7 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
 
     ListView botsBubblesListView;
     BotsChatAdapter botsChatAdapter;
+    String LOG_TAG = BotContentFragment.class.getSimpleName();
 
     @Nullable
     @Override
@@ -50,7 +54,12 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
 
     @Override
     public void onConnected(String message) {
+        Log.d(LOG_TAG, message);
         convertToPojoAndRefreshTheList(message);
+        if (!BotRequestPool.isPoolEmpty()) {
+            //If the pool is not empty then start sending messages....
+            BotRequestController.getInstance().startSendingMessage();
+        }
     }
 
     @Override
