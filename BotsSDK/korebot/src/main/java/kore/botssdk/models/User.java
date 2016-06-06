@@ -2,7 +2,7 @@ package kore.botssdk.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class KoreUser {
+public class User {
 
     private UserInfo userInfo;
 

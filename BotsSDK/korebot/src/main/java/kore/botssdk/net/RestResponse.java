@@ -6,12 +6,12 @@ import java.util.Objects;
 
 import kore.botssdk.models.Authorization;
 import kore.botssdk.models.BotUserInfo;
-import kore.botssdk.models.KoreUser;
+import kore.botssdk.models.User;
 
 @SuppressWarnings("serial")
-public class KoreRestResponse {
+public class RestResponse {
 
-    public class KoreLoginResponse extends KoreUser {
+    public class LoginResponse extends User {
         public String status;
     }
     public class JWTTokenResponse{

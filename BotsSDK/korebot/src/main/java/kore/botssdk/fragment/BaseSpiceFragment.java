@@ -4,14 +4,14 @@ import android.support.v4.app.Fragment;
 
 import com.octo.android.robospice.SpiceManager;
 
-import kore.botssdk.net.KoreBotRestService;
+import kore.botssdk.net.BotRestService;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
 public class BaseSpiceFragment extends Fragment{
 
-    SpiceManager spiceManager = new SpiceManager(KoreBotRestService.class);
+    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
     @Override
     public void onStart() {

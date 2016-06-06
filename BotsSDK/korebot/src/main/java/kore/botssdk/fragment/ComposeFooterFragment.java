@@ -11,16 +11,12 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.BotRequestPool;
-import kore.botssdk.net.KoreRestResponse;
-import kore.botssdk.websocket.KorePresenceWrapper;
+import kore.botssdk.net.RestResponse;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -62,9 +58,9 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
     private void prepareTheJsonObject(String message) {
 
-        KoreRestResponse.BotMessage botMessage = new KoreRestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
 
-        KoreRestResponse.BotPayLoad botPayLoad = new KoreRestResponse.BotPayLoad();
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
 
         Gson gson = new Gson();
@@ -72,7 +68,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
         Log.d(LOG_TAG, "Payload : " + jsonPayload);
         BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
-        KorePresenceWrapper.getInstance().sendMessage();
+        SocketWrapper.getInstance().sendMessage();
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         EventBus.getDefault().post(botRequest);

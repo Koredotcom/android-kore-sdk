@@ -23,12 +23,12 @@ import retrofit.converter.GsonConverter;
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  */
-public class KoreBotRestService extends RetrofitGsonSpiceService {
+public class BotRestService extends RetrofitGsonSpiceService {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        addRetrofitInterface(KoreRestAPI.class);
+        addRetrofitInterface(RestAPI.class);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class KoreBotRestService extends RetrofitGsonSpiceService {
                         + "(Android-"+ Build.VERSION.RELEASE + ")");
             }
         });
-        builder.setErrorHandler(new KoreAuthErrorHandler(KoreBotRestService.this));
+        builder.setErrorHandler(new KoreAuthErrorHandler(BotRestService.this));
         builder.setLogLevel(RestAdapter.LogLevel.FULL);
         return builder;
     }

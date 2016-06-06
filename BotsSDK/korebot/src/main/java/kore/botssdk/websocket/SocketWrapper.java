@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
@@ -14,11 +13,11 @@ import kore.botssdk.net.BotRequestPool;
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  */
-public final class KorePresenceWrapper {
+public final class SocketWrapper {
 
-    public static KorePresenceWrapper pKorePresenceInstance;
-    private final String LOG_TAG = KorePresenceWrapper.class.getSimpleName();
-    private PresenceConnectionListener presenceConnectionListener = null;
+    public static SocketWrapper pKorePresenceInstance;
+    private final String LOG_TAG = SocketWrapper.class.getSimpleName();
+    private SocketConnectionListener socketConnectionListener = null;
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
 
@@ -30,15 +29,15 @@ public final class KorePresenceWrapper {
     /**
      * Restricting outside object creation
      */
-    private KorePresenceWrapper() {
+    private SocketWrapper() {
     }
 
     /**
      * Singleton Instance *
      */
-    public static synchronized KorePresenceWrapper getInstance() {
+    public static synchronized SocketWrapper getInstance() {
         if (pKorePresenceInstance == null)
-            pKorePresenceInstance = new KorePresenceWrapper();
+            pKorePresenceInstance = new SocketWrapper();
         return pKorePresenceInstance;
     }
 
@@ -54,8 +53,8 @@ public final class KorePresenceWrapper {
                     @Override
                     public void onTextMessage(String payload) {
                         Log.d(getClass().getSimpleName(), "Got echo: " + payload);
-                        if (presenceConnectionListener != null) {
-                            presenceConnectionListener.onConnected(payload);
+                        if (socketConnectionListener != null) {
+                            socketConnectionListener.onConnected(payload);
                         }
                         if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
                             ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
@@ -77,8 +76,8 @@ public final class KorePresenceWrapper {
                     public void onClose(int code, String reason) {
                         HashMap<String, String> disConnect = new HashMap<>();
                         disConnect.put("name", "disconnect");
-                        if (presenceConnectionListener != null) {
-                            presenceConnectionListener.onDisconnected(reason);
+                        if (socketConnectionListener != null) {
+                            socketConnectionListener.onDisconnected(reason);
                         }
                         Log.d(getClass().getSimpleName(), "Connection lost.");
                     }
@@ -149,7 +148,7 @@ public final class KorePresenceWrapper {
         }
     }
 
-    public void setPresenceConnectionListener(PresenceConnectionListener presenceConnectionListener) {
-        this.presenceConnectionListener = presenceConnectionListener;
+    public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {
+        this.socketConnectionListener = socketConnectionListener;
     }
 }

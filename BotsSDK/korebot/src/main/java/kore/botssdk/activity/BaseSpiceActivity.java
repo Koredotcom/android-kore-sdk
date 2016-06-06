@@ -2,14 +2,14 @@ package kore.botssdk.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import com.octo.android.robospice.SpiceManager;
-import kore.botssdk.net.KoreBotRestService;
+import kore.botssdk.net.BotRestService;
 
 /**
  * Created by Pradeep Mahato on 30-May-16.
  */
 public class BaseSpiceActivity extends AppCompatActivity {
 
-    SpiceManager spiceManager = new SpiceManager(KoreBotRestService.class);
+    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
     @Override
     protected void onStart() {

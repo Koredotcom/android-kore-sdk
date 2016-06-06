@@ -1,8 +1,6 @@
 package kore.botssdk.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +12,10 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.HashMap;
 
 import kore.botssdk.R;
+import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.CustomToast;
-import kore.botssdk.net.KoreLoginRequest;
-import kore.botssdk.net.KoreRestResponse;
-import kore.botssdk.utils.Contants;
-import kore.botssdk.utils.KoreBotSharedPreferences;
+import kore.botssdk.net.LoginRequest;
+import kore.botssdk.net.RestResponse;
 
 /**
  * Created by Pradeep Mahato on 26-May-16.
@@ -53,7 +50,7 @@ public class MainActivity extends BaseSpiceActivity {
     }
 
     private boolean isAlreadyLoggedIn() {
-        return KoreBotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null;
+        return BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null;
     }
 
     /**
@@ -104,20 +101,20 @@ public class MainActivity extends BaseSpiceActivity {
         credMap.put("client_id", "1");
         credMap.put("grant_type", "password");
 
-        KoreLoginRequest koreLoginRequest = new KoreLoginRequest(this, credMap);
+        LoginRequest loginRequest = new LoginRequest(this, credMap);
 
-        getSpiceManager().execute(koreLoginRequest, new RequestListener<KoreRestResponse.KoreLoginResponse>() {
+        getSpiceManager().execute(loginRequest, new RequestListener<RestResponse.LoginResponse>() {
             @Override
             public void onRequestFailure(SpiceException mException) {
                 CustomToast.showToast(getApplicationContext(), "onRequestFailure !!");
             }
 
             @Override
-            public void onRequestSuccess(KoreRestResponse.KoreLoginResponse koreLoginResponse) {
+            public void onRequestSuccess(RestResponse.LoginResponse koreLoginResponse) {
                 String userId = koreLoginResponse.getUserInfo().getUserId();
                 String authToken = koreLoginResponse.getAuthInfo().getAccessToken();
 
-                boolean successfullySaved = KoreBotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
+                boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
 
                 if (successfullySaved) {
                     launchBotHomeActivity();

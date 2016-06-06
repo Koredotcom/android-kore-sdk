@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  */
-public class KoreBotSharedPreferences {
+public class BotSharedPreferences {
 
     public static boolean saveCredsToPreferences(Context mContext, String userId, String accessToken) {
         boolean savedSuccessfully = false;

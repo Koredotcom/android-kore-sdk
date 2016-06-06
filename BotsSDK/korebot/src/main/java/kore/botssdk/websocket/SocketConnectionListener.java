@@ -5,7 +5,7 @@ import java.util.HashMap;
 /**
  *
  */
-public interface PresenceConnectionListener {
+public interface SocketConnectionListener {
 	/**
 	 * Callback for when user Connected 
 	 */

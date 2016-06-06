@@ -1,11 +1,9 @@
 package kore.botssdk.websocket;
 
-import java.util.HashMap;
-
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  */
-public class KorePresenceListener implements PresenceConnectionListener {
+public class SocketListener implements SocketConnectionListener {
     @Override
     public void onConnected(String hsh) {
         //TODO you will get the response here

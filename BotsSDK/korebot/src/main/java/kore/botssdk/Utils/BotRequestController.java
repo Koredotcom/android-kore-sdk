@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.octo.android.robospice.SpiceManager;
 
-import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.BotRequestPool;
-import kore.botssdk.websocket.KorePresenceWrapper;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 03-Jun-16.
@@ -29,10 +28,10 @@ public class BotRequestController {
     }
 
     public boolean startSendingMessage(String messageStr) {
-        boolean isConnected = KorePresenceWrapper.getInstance().isConnected();
+        boolean isConnected = SocketWrapper.getInstance().isConnected();
         if (isConnected) {
             //Send the message
-            KorePresenceWrapper.getInstance().sendMessage(messageStr);
+            SocketWrapper.getInstance().sendMessage(messageStr);
             BotRequestPool.getBotRequestStringArrayList().remove(messageStr);
             return true;
         } else {

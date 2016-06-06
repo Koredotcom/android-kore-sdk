@@ -1,8 +1,6 @@
 package kore.botssdk.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 
@@ -14,12 +12,12 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import kore.botssdk.R;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
-import kore.botssdk.net.KoreRestRequest;
-import kore.botssdk.net.KoreRestResponse;
+import kore.botssdk.net.RestRequest;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
-import kore.botssdk.utils.KoreBotSharedPreferences;
-import kore.botssdk.websocket.KorePresenceWrapper;
+import kore.botssdk.utils.BotSharedPreferences;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -58,30 +56,30 @@ public class BotChatActivity extends BaseSpiceActivity {
 
     private void connectToWebSocket(){
 
-        String accessToken = KoreBotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
+        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
 
-        KoreRestRequest<KoreRestResponse.RTMUrl> request = new KoreRestRequest<KoreRestResponse.RTMUrl>(KoreRestResponse.RTMUrl.class,null, accessToken) {
+        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class,null, accessToken) {
             @Override
-            public KoreRestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                KoreRestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
+            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
+                RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
                 HashMap<String,Object> hsh = new HashMap<>(1);
                 hsh.put(Contants.KEY_ASSERTION,jwtToken.getJwt());
-                KoreRestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-                KoreRestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()));
+                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()));
                 return rtmUrl;
             }
         } ;
 
-        getSpiceManager().execute(request, new RequestListener<KoreRestResponse.RTMUrl>() {
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 CustomToast.showToast(getApplicationContext(), "onRequestFailure !!");
             }
 
             @Override
-            public void onRequestSuccess(KoreRestResponse.RTMUrl response) {
+            public void onRequestSuccess(RestResponse.RTMUrl response) {
                 CustomToast.showToast(getApplicationContext(), "onRequestSuccess !!");
-                KorePresenceWrapper.getInstance().connect(response.getUrl());
+                SocketWrapper.getInstance().connect(response.getUrl());
             }
         });
     }
