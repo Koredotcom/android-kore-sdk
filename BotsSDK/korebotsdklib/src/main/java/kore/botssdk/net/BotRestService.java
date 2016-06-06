@@ -12,9 +12,9 @@ import com.octo.android.robospice.retrofit.RetrofitGsonSpiceService;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
-import kore.botssdk.R;
 import kore.botssdk.services.KoreAuthErrorHandler;
 import kore.botssdk.utils.Utils;
+import kore.korebotsdklib.R;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.Converter;
@@ -35,6 +35,7 @@ public class BotRestService extends RetrofitGsonSpiceService {
     protected String getServerUrl() {
         return ServerConfig.KORE_BOT_SERVER_URL;
     }
+
     @Override
     protected RestAdapter.Builder createRestAdapterBuilder() {
         RestAdapter.Builder builder = super.createRestAdapterBuilder();
@@ -43,20 +44,21 @@ public class BotRestService extends RetrofitGsonSpiceService {
             public void intercept(RequestFacade request) {
                 request.addHeader("User-Agent", getApplicationContext().getString(R.string.app_name)
                         + "/" + Utils.getBuildVersion(getApplicationContext())
-                        + "(Android-"+ Build.VERSION.RELEASE + ")");
+                        + "(Android-" + Build.VERSION.RELEASE + ")");
             }
         });
         builder.setErrorHandler(new KoreAuthErrorHandler(BotRestService.this));
         builder.setLogLevel(RestAdapter.LogLevel.FULL);
         return builder;
     }
+
     @Override
     protected Converter createConverter() {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(boolean.class, new BooleanDeserializer());
         gsonBuilder.excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT);
         final Gson gson = gsonBuilder.create();
-        return  new GsonConverter(gson);
+        return new GsonConverter(gson);
     }
 
     class BooleanDeserializer implements JsonDeserializer {
@@ -64,9 +66,9 @@ public class BotRestService extends RetrofitGsonSpiceService {
         @Override
         public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws com.google.gson.JsonParseException {
             boolean value;
-            try{
-                value = json.getAsInt() > 0 ? true: false;
-            }catch (NumberFormatException ex){
+            try {
+                value = json.getAsInt() > 0 ? true : false;
+            } catch (NumberFormatException ex) {
                 value = json.getAsBoolean();
             }
             return value;

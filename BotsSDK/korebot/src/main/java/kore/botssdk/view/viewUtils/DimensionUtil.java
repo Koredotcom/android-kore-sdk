@@ -2,7 +2,7 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 
-import kore.botssdk.utils.Utils;
+import kore.botssdk.utils.Utility;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -18,7 +18,7 @@ public class DimensionUtil {
     }
 
     private void init() {
-        dp1 = Utils.convertDpToPixel(context, 1);
+        dp1 = Utility.convertDpToPixel(context, 1);
     }
 
 }
