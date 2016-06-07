@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="bgBlueSignup">#3F51B5</color>
+    <color name="bgLightBlue">#9fa8da</color>
 
     <color name="mentionsAndHashTagColor">#6CC24A</color>
 

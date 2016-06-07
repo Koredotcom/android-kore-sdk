@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -25,6 +27,8 @@ public class MainActivity extends BaseSpiceActivity {
     EditText userNameEdittext;
     EditText userNameEditPassword;
     Button loginBtn;
+    Button anonymousLoginBtn;
+    Button normalLoginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,22 +37,23 @@ public class MainActivity extends BaseSpiceActivity {
 
         findViews();
         setListeners();
-        if (isAlreadyLoggedIn()) {
-            launchBotHomeActivity();
-            finish();
-        } else {
-            saveToPrefAndLaunch();
-        }
+        getSupportActionBar().setSubtitle("Login");
     }
 
     private void findViews() {
         userNameEdittext = (EditText) findViewById(R.id.userNameEdittext);
         userNameEditPassword = (EditText) findViewById(R.id.userNameEditPassword);
         loginBtn = (Button) findViewById(R.id.loginBtn);
+
+        anonymousLoginBtn = (Button) findViewById(R.id.anonymousLoginBtn);
+        normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
+
     }
 
     private void setListeners() {
         loginBtn.setOnClickListener(onLoginOnClickListener);
+        anonymousLoginBtn.setOnClickListener(anonymousLoginBtnOnClickListener);
+        normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);
     }
 
     private boolean isAlreadyLoggedIn() {
@@ -68,6 +73,25 @@ public class MainActivity extends BaseSpiceActivity {
                 invokeSignInServiceCall(userNameEdittext.getText().toString(), userNameEditPassword.getText().toString());
             } else {
                 CustomToast.showToast(getApplicationContext(), "Invalid/empty credentials !!");
+            }
+        }
+    };
+
+    View.OnClickListener anonymousLoginBtnOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
+
+    View.OnClickListener normalLoginBtnOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (isAlreadyLoggedIn()) {
+                launchBotHomeActivity();
+                finish();
+            } else {
+                saveToPrefAndLaunch();
             }
         }
     };

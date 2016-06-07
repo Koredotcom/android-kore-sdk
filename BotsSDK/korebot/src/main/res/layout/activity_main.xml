@@ -3,18 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin">
+    android:background="@color/bgLightBlue"
+    >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Login"
-        android:textSize="18dp"
-        android:textStyle="bold" />
+        android:textSize="24dp"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/loginContainer"
@@ -22,28 +21,29 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/userNameEdittext"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center_horizontal|center_vertical"
             android:background="@android:color/transparent"
+            android:gravity="center_horizontal|center_vertical"
             android:hint="Enter user name"
             android:singleLine="true"
-            android:text="alerts@kore.com"/>
+            android:text="alerts@kore.com" />
 
         <EditText
             android:id="@+id/userNameEditPassword"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@android:color/transparent"
             android:gravity="center_horizontal|center_vertical"
             android:hint="Enter password"
-            android:background="@android:color/transparent"
             android:inputType="textPassword"
             android:singleLine="true"
-            android:text="kore@123"/>
+            android:text="kore@123" />
 
         <Button
             android:id="@+id/loginBtn"
@@ -51,6 +51,33 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="Login" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loginContainer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/anonymousLoginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:padding="10dp"
+            android:text="Anonymous Login"
+            android:background="@drawable/button_drawable" />
+
+        <Button
+            android:id="@+id/normalLoginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Normal Login"
+            android:background="@drawable/button_drawable"/>
+
     </LinearLayout>
 
 </RelativeLayout>
