@@ -33,7 +33,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     private boolean leftSide;
     protected boolean isContinuousMessage = false;
     protected boolean isSeparatedClosely = false;
-    protected boolean isGroupMessage = false;
+    protected boolean isGroupMessage = true;
     private Point triangleCoordA, triangleCoordB, triangleCoordC;
     private Point lineStart, lineEnd;
 
@@ -331,11 +331,20 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         // Bubble Text Media
         populateBubbleTextMedia(position, baseBotMessage, constrictLayout, dimens);
 
+        // 70% of UI-alignments happens here...
+        cosmeticChanges(baseBotMessage, position);
+
     }
 
     protected void preCosmeticChanges() {
         determineTextColor();
         textViewCosmeticChanges();
+    }
+
+    /**
+     * UI changes
+     */
+    protected void cosmeticChanges(BaseBotMessage baseBotMessage, int position) {
     }
 
     protected void determineTextColor() {

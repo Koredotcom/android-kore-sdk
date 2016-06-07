@@ -6,6 +6,11 @@ import android.util.AttributeSet;
 import java.util.Arrays;
 import java.util.Collections;
 
+import kore.botssdk.R;
+import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.utils.Contants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -13,6 +18,8 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  * Created by Pradeep Mahato on 01-Jun-16.
  */
 public class ReceivedBubbleLayout extends BaseBubbleLayout {
+
+    CircularProfileView cpvSenderImage;
 
     public ReceivedBubbleLayout(Context context) {
         super(context);
@@ -40,8 +47,15 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
     @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        cpvSenderImage = (CircularProfileView) findViewById(R.id.cpvSenderImage);
+    }
+
+    @Override
     void initializeBubbleBorderPass1() {
-        BUBBLE_LEFT_PROFILE_PIC = 0;
+
+        BUBBLE_LEFT_PROFILE_PIC = cpvSenderImage.getMeasuredWidth();
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? (int) (10 * dp1) : 0;
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? 0 : 0;
         if (isContinuousMessage && isSeparatedClosely) {
@@ -81,10 +95,29 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
+    @Override
+    protected void cosmeticChanges(BaseBotMessage baseBotMessage, int position) {
+        super.cosmeticChanges(baseBotMessage, position);
+        cosmetiseForProfilePic(baseBotMessage);
+    }
+
+    protected void cosmetiseForProfilePic(BaseBotMessage baseBotMessage) {
+        if (isGroupMessage) {
+            String icon = ((BotResponse) baseBotMessage).getIcon();
+            cpvSenderImage.setVisibility(VISIBLE);
+            cpvSenderImage.populateLayout(" ", null, icon, null, -1, 0, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+        } else {
+            cpvSenderImage.setVisibility(GONE);
+        }
+    }
+
+    private void populatePorfilePic() {
+
+    }
+
     /**
      * Layout Manipulation Section
      */
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -104,6 +137,22 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
         contentWidth = bubbleTextMediaLayout.getWidth();
+
+        /*
+         * For Sender icon [CPV]
+         */
+        float cpvSenderImageDimen = dp1 * 35;
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
+        cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
+        MeasureUtils.measure(cpvSenderImage, childWidthSpec, childHeightSpec);
+
+        int cpvMarginLeft, cpvMarginRight;
+        if (cpvSenderImage.getMeasuredWidth() != 0) {
+            cpvMarginLeft = cpvMarginRight = (int) dp4;
+        } else {
+            cpvMarginLeft = cpvMarginRight = 0;
+        }
 
         /*
          * For Simplified Bubble Layout
@@ -135,7 +184,18 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         left = BUBBLE_LEFT_BORDER;
         top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE;
 
-        left = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH;
+
+        /*
+         * For Sender icon [CPV]
+         */
+        if (cpvSenderImage.getVisibility() != GONE) {
+            left = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
+            LayoutUtils.layoutChild(cpvSenderImage, left, top);
+            left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+        } else {
+            left = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH;
+        }
+
         top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE;
 
 
@@ -150,6 +210,15 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         left += bubbleTextMediaLayouMarginLeft;
         top = bubbleTextMediaLayouMarginTop;
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
+
+         /*
+         * For re-adjusting CPV
+         */
+        if (cpvSenderImage.getVisibility() != GONE) {
+            int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
+            int cpvTop = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
+            LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
+        }
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

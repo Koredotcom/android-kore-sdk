@@ -12,6 +12,7 @@ public class BotResponse extends BaseBotMessage{
     private String type;
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
+    private String icon;
 
     public ArrayList<BotResponseMessage> getMessage() {
         return message;
@@ -23,6 +24,10 @@ public class BotResponse extends BaseBotMessage{
 
     public BotInfoModel getBotInfo() {
         return botInfo;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     @Override

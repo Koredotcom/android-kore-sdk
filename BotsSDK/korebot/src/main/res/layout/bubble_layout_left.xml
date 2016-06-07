@@ -10,6 +10,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:background="#0000FF00" />
+        android:background="#0000FF00">
+
+        <!-- Sender Image -->
+        <kore.botssdk.view.CircularProfileView
+            android:id="@+id/cpvSenderImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true" />
+
+    </kore.botssdk.view.ReceivedBubbleLayout>
 
 </kore.botssdk.view.ReceivedBubbleContainer>
