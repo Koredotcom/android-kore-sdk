@@ -5,6 +5,6 @@ package kore.botssdk.utils;
  */
 public class BundleUtils {
 
-    public static String CHATBOT;
-    public static String TASKBOTID;
+    public static String CHATBOT = "chatBot";
+    public static String TASKBOTID = "taskBotId";
 }

@@ -52,6 +52,8 @@ public class BotChatActivity extends BaseSpiceActivity {
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
 
         connectToWebSocket();
+
+        updateTitleBar();
     }
 
     private void getBundleInfo() {
@@ -67,6 +69,10 @@ public class BotChatActivity extends BaseSpiceActivity {
         chatLayoutContentContainer = (FrameLayout) findViewById(R.id.chatLayoutContentContainer);
     }
 
+    private void updateTitleBar() {
+        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : "Kore Bot";
+        getSupportActionBar().setSubtitle(botName);
+    }
 
     private void connectToWebSocket(){
 
