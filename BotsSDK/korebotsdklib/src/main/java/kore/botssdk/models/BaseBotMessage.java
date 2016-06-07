@@ -6,7 +6,12 @@ package kore.botssdk.models;
 
 public abstract class BaseBotMessage {
 
+    protected String from;
+
     protected boolean isSend;
     public abstract boolean isSend();
 
+    public String getFrom() {
+        return from;
+    }
 }

@@ -12,9 +12,11 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import kore.botssdk.R;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.BotRequestController;
+import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.BotSharedPreferences;
@@ -30,11 +32,14 @@ public class BotChatActivity extends BaseSpiceActivity {
 
     FragmentTransaction fragmentTransaction;
 
+    String chatBot, taskBotId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
         findViews();
+        getBundleInfo();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -47,6 +52,14 @@ public class BotChatActivity extends BaseSpiceActivity {
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
 
         connectToWebSocket();
+    }
+
+    private void getBundleInfo() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            chatBot = bundle.getString(BundleUtils.CHATBOT, "");
+            taskBotId = bundle.getString(BundleUtils.TASKBOTID, "");
+        }
     }
 
     private void findViews() {
@@ -66,7 +79,16 @@ public class BotChatActivity extends BaseSpiceActivity {
                 HashMap<String,Object> hsh = new HashMap<>(1);
                 hsh.put(Contants.KEY_ASSERTION,jwtToken.getJwt());
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()));
+
+                HashMap<String, Object> optParameterBotInfo = null;
+                if (chatBot != null && !chatBot.isEmpty() && taskBotId != null && !taskBotId.isEmpty()) {
+                    optParameterBotInfo = new HashMap<>();
+                    BotInfoModel botInfoModel = new BotInfoModel(chatBot, taskBotId);
+                    optParameterBotInfo.put("botInfo", botInfoModel);
+                }
+
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
+                        accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
             }
         } ;

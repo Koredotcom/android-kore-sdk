@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -12,9 +13,11 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AvailableBotListAdapter;
+import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
 import kore.botssdk.utils.BotSharedPreferences;
+import kore.botssdk.utils.BundleUtils;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -46,6 +49,7 @@ public class BotHomeActivity extends BaseSpiceActivity {
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
         fetchAgainBtn.setOnClickListener(fetchAgainBtnOnClickListener);
+        botListView.setOnItemClickListener(botListVieOnItemClickListener);
     }
 
     private void setAdapter(MarketStreamList marketStreamList) {
@@ -76,6 +80,23 @@ public class BotHomeActivity extends BaseSpiceActivity {
         @Override
         public void onClick(View v) {
             getAllBotsFromMarketStream();
+        }
+    };
+
+    AdapterView.OnItemClickListener botListVieOnItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            MarketStreams marketStreams = availableBotListAdapter.getItem(position);
+
+            Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
+
+            Bundle botChatActivityBundle = new Bundle();
+            botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
+            botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
+
+            botChatActivityIntent.putExtras(botChatActivityBundle);
+
+            startActivity(botChatActivityIntent);
         }
     };
 

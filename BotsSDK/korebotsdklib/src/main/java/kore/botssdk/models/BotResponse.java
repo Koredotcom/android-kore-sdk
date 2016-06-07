@@ -10,7 +10,7 @@ import java.util.Objects;
 public class BotResponse extends BaseBotMessage{
 
     private String type;
-    private ArrayList<Objects> botInfo;
+    private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
 
     public ArrayList<BotResponseMessage> getMessage() {
@@ -19,6 +19,10 @@ public class BotResponse extends BaseBotMessage{
 
     public BotResponseMessage getTempMessage() {
         return message.get(0);
+    }
+
+    public BotInfoModel getBotInfo() {
+        return botInfo;
     }
 
     @Override

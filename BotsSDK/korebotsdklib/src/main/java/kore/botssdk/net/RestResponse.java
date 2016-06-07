@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import kore.botssdk.models.Authorization;
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotUserInfo;
 import kore.botssdk.models.User;
 
@@ -111,7 +112,7 @@ public class RestResponse {
     public static class BotPayLoad {
         private BotMessage message;
         private String resourceid = "/bot.message";
-        private ArrayList<Objects> botInfo = new ArrayList<>();
+        private BotInfoModel botInfo;
         private int id = 1;
 
         public void setMessage(BotMessage message) {

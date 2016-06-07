@@ -13,7 +13,7 @@ public class BotRequest extends BaseBotMessage {
 
     private RestResponse.BotMessage message;
     private String resourceid = "/bot.message";
-    private ArrayList<Objects> botInfo = new ArrayList<>();
+    private BotInfoModel botInfo;
     private int id = 1;
 
     public void setMessage(RestResponse.BotMessage message) {
@@ -22,6 +22,10 @@ public class BotRequest extends BaseBotMessage {
 
     public RestResponse.BotMessage getMessage() {
         return message;
+    }
+
+    public BotInfoModel getBotInfo() {
+        return botInfo;
     }
 
     @Override
