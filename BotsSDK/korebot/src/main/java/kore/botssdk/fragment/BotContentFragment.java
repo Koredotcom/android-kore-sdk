@@ -18,6 +18,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.utils.BotRequestController;
+import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.websocket.SocketWrapper;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -31,12 +32,15 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
     BotsChatAdapter botsChatAdapter;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
 
+    boolean shallShowProfilePic;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
         findViews(view);
+        getBundleInfo();
         setupAdapter();
         SocketWrapper.getInstance().setSocketConnectionListener(this);
         EventBus.getDefault().register(this);
@@ -50,6 +54,14 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
     private void setupAdapter() {
         botsChatAdapter = new BotsChatAdapter(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
+        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
+    }
+
+    private void getBundleInfo() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+        }
     }
 
     @Override

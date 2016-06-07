@@ -443,4 +443,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         this.isSeparatedClosely = isSeparatedClosely;
     }
 
+    public void setGroupMessage(boolean groupMessage) {
+        isGroupMessage = groupMessage;
+    }
 }

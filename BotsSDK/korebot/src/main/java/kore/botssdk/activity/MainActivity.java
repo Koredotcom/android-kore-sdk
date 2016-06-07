@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.utils.BotSharedPreferences;
+import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.net.LoginRequest;
 import kore.botssdk.net.RestResponse;
@@ -37,6 +39,7 @@ public class MainActivity extends BaseSpiceActivity {
 
         findViews();
         setListeners();
+        clearPref();
         getSupportActionBar().setSubtitle("Login");
     }
 
@@ -56,9 +59,19 @@ public class MainActivity extends BaseSpiceActivity {
         normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);
     }
 
+    private void clearPref() {
+        BotSharedPreferences.clearPreferences(MainActivity.this);
+    }
+
     private boolean isAlreadyLoggedIn() {
         return BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null
                 && BotSharedPreferences.getUserIdFromPreferences(getApplicationContext()) != null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        clearPref();
     }
 
     /**
@@ -80,7 +93,7 @@ public class MainActivity extends BaseSpiceActivity {
     View.OnClickListener anonymousLoginBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            launchBotHomeActivity(true);
         }
     };
 
@@ -88,10 +101,10 @@ public class MainActivity extends BaseSpiceActivity {
         @Override
         public void onClick(View v) {
             if (isAlreadyLoggedIn()) {
-                launchBotHomeActivity();
+                launchBotHomeActivity(false);
                 finish();
             } else {
-                saveToPrefAndLaunch();
+                saveToPrefAndLaunch(false);
             }
         }
     };
@@ -105,19 +118,24 @@ public class MainActivity extends BaseSpiceActivity {
      */
 
 
-    private void launchBotHomeActivity() {
+    private void launchBotHomeActivity(boolean isAnonymous) {
         Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(BundleUtils.LOGIN_MODE, (isAnonymous) ? Contants.ANONYMOUS_FLOW : Contants.NORMAL_FLOW);
+        intent.putExtras(bundle);
+
         startActivity(intent);
     }
 
-    private void saveToPrefAndLaunch() {
+    private void saveToPrefAndLaunch(boolean isAnonymous) {
         String userId = "u-73364365-f98d-571d-8e8e-022186cde3bc";//koreLoginResponse.getUserInfo().getUserId();
         String authToken = "mO6emCF8p-rOpDR-cJbQCKg9yTFLqxF_nHEe_d6ZcyBtDnDf3DYpPs9RG3qnqZlS";//koreLoginResponse.getAuthInfo().getAccessToken();
 
         boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
 
         if (successfullySaved) {
-            launchBotHomeActivity();
+            launchBotHomeActivity(isAnonymous);
         }
     }
 
@@ -155,7 +173,7 @@ public class MainActivity extends BaseSpiceActivity {
                 boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this,userId, authToken);
 
                 if (successfullySaved) {
-                    launchBotHomeActivity();
+                    launchBotHomeActivity(false);
                 }
             }
         });

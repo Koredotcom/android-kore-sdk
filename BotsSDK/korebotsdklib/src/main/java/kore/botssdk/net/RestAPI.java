@@ -27,6 +27,10 @@ public interface RestAPI {
     @POST("/api/oAuth/token/jwtgrant")
     RestResponse.BotAuthorization jwtGrant(@Body HashMap<String,Object> jwtToken);
 
+    //Getting jwt grant Anonymous
+    @POST("/api/oAuth/token/jwtgrant/anonymous")
+    RestResponse.BotAuthorization jwtGrantAnonymous(@Body HashMap<String,Object> jwtToken);
+
     //Getting rtm URL
     @POST("/api/rtm/start")
     RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);

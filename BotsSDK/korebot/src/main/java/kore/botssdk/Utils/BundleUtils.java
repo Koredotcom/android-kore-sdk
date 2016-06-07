@@ -7,4 +7,6 @@ public class BundleUtils {
 
     public static String CHATBOT = "chatBot";
     public static String TASKBOTID = "taskBotId";
+    public static String LOGIN_MODE = "loginMode";
+    public static String SHOW_PROFILE_PIC = "showProfilePic";
 }

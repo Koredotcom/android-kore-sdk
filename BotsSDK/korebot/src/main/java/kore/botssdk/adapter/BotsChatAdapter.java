@@ -38,6 +38,7 @@ public class BotsChatAdapter extends BaseAdapter {
     int viewWidth;
     int dp1;
     int position;
+    boolean shallShowProfilePic;
 
     private ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
@@ -123,6 +124,7 @@ public class BotsChatAdapter extends BaseAdapter {
             holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
 
             holder.baseBubbleLayout.setContinuousMessage(false);
+            holder.baseBubbleLayout.setGroupMessage(shallShowProfilePic);
 
             holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
 
@@ -165,4 +167,7 @@ public class BotsChatAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setShallShowProfilePic(boolean shallShowProfilePic) {
+        this.shallShowProfilePic = shallShowProfilePic;
+    }
 }

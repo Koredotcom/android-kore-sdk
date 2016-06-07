@@ -18,6 +18,7 @@ import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.Contants;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -28,6 +29,8 @@ public class BotHomeActivity extends BaseSpiceActivity {
     ListView botListView;
     AvailableBotListAdapter availableBotListAdapter;
 
+    String loginMode = Contants.NORMAL_FLOW;
+
     String LOG_TAG = BotHomeActivity.class.getSimpleName();
 
     @Override
@@ -37,7 +40,10 @@ public class BotHomeActivity extends BaseSpiceActivity {
 
         findViews();
         setListeners();
-        getAllBotsFromMarketStream();
+        getBundleInfo();
+        if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
+            getAllBotsFromMarketStream();
+        }
     }
 
     private void findViews() {
@@ -50,6 +56,13 @@ public class BotHomeActivity extends BaseSpiceActivity {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
         fetchAgainBtn.setOnClickListener(fetchAgainBtnOnClickListener);
         botListView.setOnItemClickListener(botListVieOnItemClickListener);
+    }
+
+    private void getBundleInfo() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
+        }
     }
 
     private void setAdapter(MarketStreamList marketStreamList) {
@@ -72,6 +85,12 @@ public class BotHomeActivity extends BaseSpiceActivity {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putString(BundleUtils.LOGIN_MODE, loginMode);
+            bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+            intent.putExtras(bundle);
+
             startActivity(intent);
         }
     };
@@ -93,6 +112,7 @@ public class BotHomeActivity extends BaseSpiceActivity {
             Bundle botChatActivityBundle = new Bundle();
             botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
             botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
+            botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
 
             botChatActivityIntent.putExtras(botChatActivityBundle);
 

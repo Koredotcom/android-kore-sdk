@@ -27,6 +27,25 @@ public class BotSharedPreferences {
         return savedSuccessfully;
     }
 
+    public static boolean clearPreferences(Context mContext) {
+        boolean savedSuccessfully = false;
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.remove(Contants.USER_ID);
+        editor.remove(Contants.ACCESS_TOKEN);
+        savedSuccessfully = editor.commit();
+
+        if (savedSuccessfully) {
+            CustomToast.showToast(mContext, "Successfully cleared");
+        } else {
+            CustomToast.showToast(mContext, "Failed to clear");
+        }
+
+        return savedSuccessfully;
+    }
+
     public static String getAccessTokenFromPreferences(Context context){
         String accessToken = null;
         SharedPreferences sharedPreferences = context.getSharedPreferences(Contants.LOGIN_SHARED_PREF, Context.MODE_PRIVATE);
