@@ -5,4 +5,7 @@
 
     <dimen name="toast_y_offset_default">64dip</dimen>
 
+    <dimen name="profile_presence_status">11dp</dimen>
+    <dimen name="profile_presence_border_width">1dp</dimen>
+
 </resources>

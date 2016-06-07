@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProfileView">
+        <attr name="badge_padding" format="dimension" />
+        <attr name="text_size" format="dimension"/>
+        <attr name="font_style" format="enum">
+            <enum name="roboto_light" value="0" />
+            <enum name="roboto_light_italics" value="1" />
+            <enum name="roboto_regular" value="2" />
+            <enum name="roboto_regular_italics" value="3" />
+            <enum name="roboto_medium" value="4" />
+            <enum name="roboto_medium_italics" value="5" />
+            <enum name="roboto_bold" value="6" />
+            <enum name="roboto_bold_italics" value="7" />
+        </attr>
+        <attr name="profile_drawable_padding" format="dimension"/>
+        <attr name="border_width" format="dimension"/>
+        <attr name="border_color" format="color"/>
+        <attr name="has_border" format="boolean"/>
+        <attr name="publish_events" format="boolean"/>
+    </declare-styleable>
+
+</resources>
