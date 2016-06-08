@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.models.MarketStreams;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
+import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
 
@@ -38,5 +40,17 @@ public interface RestAPI {
     //Get Market Streams
     @GET("/api/1.1/users/{userId}/builder/streams")
     MarketStreamList getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
+
+    //Subscribe to Push notification
+    @POST("/api/users/{userId}/sdknotifications/subscribe")
+    Response subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
+
+    //Unsubscribe to Push notification
+    @Headers({
+            "Content-type: application/json",
+            "X-HTTP-Method-Override:DELETE"
+    })
+    @POST("/api/users/{userId}/sdknotifications/unsubscribe")
+    Response unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
 }

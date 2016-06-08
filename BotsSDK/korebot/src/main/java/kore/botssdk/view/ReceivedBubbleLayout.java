@@ -111,10 +111,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         }
     }
 
-    private void populatePorfilePic() {
-
-    }
-
     /**
      * Layout Manipulation Section
      */
