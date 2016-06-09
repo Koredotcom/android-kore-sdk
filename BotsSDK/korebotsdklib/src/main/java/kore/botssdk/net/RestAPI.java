@@ -12,6 +12,7 @@ import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface RestAPI {
 
@@ -36,6 +37,9 @@ public interface RestAPI {
     //Getting rtm URL
     @POST("/api/rtm/start")
     RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
+
+    @POST("/api/rtm/start")
+    RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
     @GET("/api/1.1/users/{userId}/builder/streams")

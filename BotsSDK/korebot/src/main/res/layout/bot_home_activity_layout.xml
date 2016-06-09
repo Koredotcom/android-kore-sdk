@@ -12,7 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
         android:padding="10dp"
-        android:text="Kore Bot" />
+        android:text="Talk to Kore Bot" />
 
     <!-- Listview -->
     <ListView

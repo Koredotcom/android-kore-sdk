@@ -1,9 +1,5 @@
 package kore.botssdk.utils;
 
-import android.content.Context;
-
-import com.octo.android.robospice.SpiceManager;
-
 import java.util.ArrayList;
 
 import kore.botssdk.net.BotRequestPool;
@@ -13,10 +9,6 @@ import kore.botssdk.websocket.SocketWrapper;
  * Created by Pradeep Mahato on 03-Jun-16.
  */
 public class BotRequestController {
-
-    Context context;
-    SpiceManager spiceManager;
-    static String url;
 
     public static BotRequestController botRequestController;
 
@@ -28,11 +20,6 @@ public class BotRequestController {
             botRequestController = new BotRequestController();
         }
         return botRequestController;
-    }
-
-    public BotRequestController(Context context, SpiceManager spiceManager) {
-        this.context = context;
-        this.spiceManager = spiceManager;
     }
 
     public void startSendingMessage() {
@@ -48,7 +35,7 @@ public class BotRequestController {
                         i--; //reset the parameter
                         len--; //reset the length.
                     } else {
-                        SocketWrapper.getInstance().connect(url);
+                        SocketWrapper.getInstance().reconnect();
                         break; //Break the loop, as re-connection would be attempted from sendMessage(...)
                     }
                 }
@@ -56,11 +43,4 @@ public class BotRequestController {
         }
     }
 
-    public static void setUrl(String url) {
-        BotRequestController.url = url;
-    }
-
-    public static String getUrl() {
-        return url;
-    }
 }
