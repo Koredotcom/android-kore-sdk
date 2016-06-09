@@ -12,6 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="#00FF00FF" />
+        android:background="#00FF00FF">
+
+        <kore.botssdk.view.HeaderLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </kore.botssdk.view.SendBubbleLayout>
 
 </kore.botssdk.view.SendBubbleContainer>

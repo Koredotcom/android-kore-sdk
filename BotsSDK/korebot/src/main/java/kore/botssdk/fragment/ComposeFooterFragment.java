@@ -11,12 +11,15 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
+
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.BotRequestController;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.websocket.SocketWrapper;
 
 /**
@@ -72,6 +75,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
         BotRequestController.getInstance().startSendingMessage();
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
         EventBus.getDefault().post(botRequest);
     }
 

@@ -39,6 +39,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
     protected int[] textMediaDimen;
     protected int[] maxBubbleDimen;
+    protected int[] headerLayoutDimen;
     protected int[] maxContentDimen;
 
     protected int BUBBLE_ARROW_WIDTH = 0;
@@ -76,6 +77,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
+    protected HeaderLayout headerLayout;
     protected int position;
     protected int[] dimens;
     protected int textColor;
@@ -187,7 +189,6 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         addView(bubbleTextMediaLayout);
 
     }
-
 
     protected void setInivisiblePaintColor(Paint paint) {
         paint.setColor(0x00000000);
@@ -314,6 +315,11 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
     }
 
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
+    }
 
     public void fillBubbleLayout(int position, BaseBotMessage baseBotMessage,
                                  boolean constrictLayout, int... dimens) {
@@ -330,6 +336,9 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         // Bubble Text Media
         populateBubbleTextMedia(position, baseBotMessage, constrictLayout, dimens);
+
+        // Header Layout
+        populateHeaderLayout(position, baseBotMessage);
 
         // 70% of UI-alignments happens here...
         cosmeticChanges(baseBotMessage, position);
@@ -375,6 +384,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.startup(position, message, dimens);
     }
 
+    abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);
+
     protected void textViewCosmeticChanges() {
 
         botContentTextView = bubbleTextMediaLayout.getBotContentTextView();
@@ -393,6 +404,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         //STEP 2: Store additional informations required in further stage of UI rendering...
         maxBubbleDimen = new int[2];
         maxContentDimen = new int[2];
+        headerLayoutDimen = new int[2];
     }
 
     /**

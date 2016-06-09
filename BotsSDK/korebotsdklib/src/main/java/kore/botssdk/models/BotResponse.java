@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by Pradeep Mahato on 03-Jun-16.
  */
 
-public class BotResponse extends BaseBotMessage{
+public class BotResponse extends BaseBotMessage {
 
     private String type;
     private BotInfoModel botInfo;

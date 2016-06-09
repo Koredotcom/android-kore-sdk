@@ -32,4 +32,9 @@ public class BotRequest extends BaseBotMessage {
     public boolean isSend() {
         return true;
     }
+
+    public void setCreatedOn(String createdOn) {
+        this.createdOn = createdOn;
+    }
+
 }

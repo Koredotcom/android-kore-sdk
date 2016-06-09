@@ -3,9 +3,12 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -78,6 +81,15 @@ public class SendBubbleLayout extends BaseBubbleLayout {
     }
 
     @Override
+    protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
+        try {
+            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxAllowedWidth = parentWidth;
@@ -96,6 +108,11 @@ public class SendBubbleLayout extends BaseBubbleLayout {
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
         contentWidth = bubbleTextMediaLayout.getMeasuredWidth();
+
+        /*
+         * For Time Stamp
+         */
+        MeasureUtils.measure(headerLayout, wrapSpec, wrapSpec);
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 

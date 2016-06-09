@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -11,6 +12,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.utils.Contants;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -61,7 +63,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) dp1;
         } else {
-            BUBBLE_TOP_BORDER = (int) (dp14 + dp1);
+            BUBBLE_TOP_BORDER = headerLayout.getMeasuredHeight();//int) (dp14 + dp1);
         }
         BUBBLE_LEFT_BORDER = (int) ((!isGroupMessage) ? dp4 : dp1);
         BUBBLE_RIGHT_BORDER = (int) dp1;
@@ -86,13 +88,24 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void initializeBubbleContentDimen() {
         super.initializeBubbleContentDimen();
 
+        headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + textMediaDimen[0] + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
-        maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0]));
+        headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
+        maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
+    }
+
+    @Override
+    protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
+        try {
+            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -150,6 +163,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             cpvMarginLeft = cpvMarginRight = 0;
         }
 
+
+        /*
+         * For Time Stamp
+         */
+        MeasureUtils.measure(headerLayout, wrapSpec, wrapSpec);
+
         /*
          * For Simplified Bubble Layout
          */
@@ -180,6 +199,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         left = BUBBLE_LEFT_BORDER;
         top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE;
 
+        /*
+         * For Sender Name
+         */
+        if (cpvSenderImage.getVisibility() != GONE) {
+            left += BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + cpvSenderImage.getMeasuredWidth() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+            LayoutUtils.layoutChild(headerLayout, left, top);
+            top = headerLayout.getBottom();
+        }
 
         /*
          * For Sender icon [CPV]
@@ -204,7 +231,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For TextMedia Layout
          */
         left += bubbleTextMediaLayouMarginLeft;
-        top = bubbleTextMediaLayouMarginTop;
+        top = headerLayout.getBottom() + bubbleTextMediaLayouMarginTop;
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
 
          /*
