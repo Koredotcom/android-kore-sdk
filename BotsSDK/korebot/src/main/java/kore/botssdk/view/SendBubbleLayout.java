@@ -71,13 +71,15 @@ public class SendBubbleLayout extends BaseBubbleLayout {
     protected void initializeBubbleContentDimen() {
         super.initializeBubbleContentDimen();
 
+        headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth() + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + textMediaDimen[0] + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
-        maxBubbleDimen[0] = BUBBLE_LEFT_PROFILE_PIC + Collections.max(Arrays.asList(maxContentDimen[0]));
+        maxBubbleDimen[0] = BUBBLE_LEFT_PROFILE_PIC + Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
+        headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
     @Override
@@ -138,6 +140,12 @@ public class SendBubbleLayout extends BaseBubbleLayout {
 
         int top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE, left;
         int containerWidth = getMeasuredWidth();
+        /*
+         * For Sender Name
+         */
+        left = containerWidth - (BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER + headerLayout.getMeasuredWidth());
+        LayoutUtils.layoutChild(headerLayout, left, top);
+        top = headerLayout.getBottom();
 
         /*
          * For TextMedia Layout
