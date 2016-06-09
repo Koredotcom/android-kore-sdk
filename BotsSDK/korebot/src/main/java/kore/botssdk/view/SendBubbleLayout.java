@@ -85,7 +85,7 @@ public class SendBubbleLayout extends BaseBubbleLayout {
     @Override
     protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
         try {
-            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn()));
+            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn(), false));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -141,7 +141,7 @@ public class SendBubbleLayout extends BaseBubbleLayout {
         int top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE, left;
         int containerWidth = getMeasuredWidth();
         /*
-         * For Sender Name
+         * For Time Stamp
          */
         left = containerWidth - (BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER + headerLayout.getMeasuredWidth());
         LayoutUtils.layoutChild(headerLayout, left, top);

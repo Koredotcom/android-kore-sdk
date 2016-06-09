@@ -102,7 +102,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     @Override
     protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
         try {
-            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn()));
+            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn(), true));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -200,13 +200,11 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         top = getPaddingTop() + BUBBLE_TOP_BORDER + BUBBLE_SEPARATION_DISTANCE;
 
         /*
-         * For Sender Name
+         * For Time Stamp
          */
-        if (cpvSenderImage.getVisibility() != GONE) {
-            left += BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + cpvSenderImage.getMeasuredWidth() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
-            LayoutUtils.layoutChild(headerLayout, left, top);
-            top = headerLayout.getBottom();
-        }
+        left += BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + cpvSenderImage.getMeasuredWidth() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+        LayoutUtils.layoutChild(headerLayout, left, top);
+        top = headerLayout.getBottom();
 
         /*
          * For Sender icon [CPV]
