@@ -13,23 +13,32 @@ import kore.botssdk.R;
  */
 public class CustomToast {
 
+    private static boolean enableToast;
+
     public static void toastIt(Context context, CharSequence text, int duration) {
-        Toast.makeText(context, text, duration).show();
+        if (enableToast) {
+            Toast.makeText(context, text, duration).show();
+        }
     }
 
     public static final void showToast(Context context, String msg) {
-        showToast(context, msg, Toast.LENGTH_SHORT);
+        if (enableToast) {
+            showToast(context, msg, Toast.LENGTH_SHORT);
+        }
     }
 
     public static final void showToast(Context context, String msg, int length) {
-        if (!(length == Toast.LENGTH_LONG || length == Toast.LENGTH_SHORT)) {
-            length = Toast.LENGTH_SHORT;
+
+        if (enableToast) {
+            if (!(length == Toast.LENGTH_LONG || length == Toast.LENGTH_SHORT)) {
+                length = Toast.LENGTH_SHORT;
+            }
+
+            int yOffset = context.getResources().getDimensionPixelSize(R.dimen.toast_y_offset_default);
+            int gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+
+            showToast(context, msg, length, gravity, 0, yOffset);
         }
-
-        int yOffset = context.getResources().getDimensionPixelSize(R.dimen.toast_y_offset_default);
-        int gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-
-        showToast(context, msg, length, gravity, 0, yOffset);
     }
 
     /**
@@ -43,26 +52,29 @@ public class CustomToast {
      */
     public static void showToast(final Context context, final String msg, final int length,
                                  final int gravity, final int xOffset, final int yOffset) {
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            Toast toast = Toast.makeText(context, msg, length);
-            toast.setGravity(gravity, xOffset, yOffset);
-            toast.show();
 
-        } else {
+        if (enableToast) {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                Toast toast = Toast.makeText(context, msg, length);
+                toast.setGravity(gravity, xOffset, yOffset);
+                toast.show();
 
-            if(context == null) {
-                return;
-            }
+            } else {
 
-            if(context instanceof Activity) {
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast toast = Toast.makeText(context, msg, length);
-                        toast.setGravity(gravity, xOffset, yOffset);
-                        toast.show();
-                    }
-                });
+                if (context == null) {
+                    return;
+                }
+
+                if (context instanceof Activity) {
+                    ((Activity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast toast = Toast.makeText(context, msg, length);
+                            toast.setGravity(gravity, xOffset, yOffset);
+                            toast.show();
+                        }
+                    });
+                }
             }
         }
     }
