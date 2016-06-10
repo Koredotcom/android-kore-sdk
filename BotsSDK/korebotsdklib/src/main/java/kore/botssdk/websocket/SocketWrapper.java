@@ -34,6 +34,8 @@ public final class SocketWrapper {
 
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
+    private String clientId;
+    private String secretKey;
     private SpiceManager spiceManager;
 
     private int mReconnectionCount = 0;
@@ -41,7 +43,7 @@ public final class SocketWrapper {
     /**
      * Restricting outside object creation
      */
-    private SocketWrapper() {
+    public SocketWrapper() {
     }
 
     /**
@@ -54,12 +56,25 @@ public final class SocketWrapper {
     }
 
     /**
+     * For Anonymous connection
+     *
+     * @param spiceManager
+     */
+    public void connect(String clientId, String secretKey, SpiceManager spiceManager) {
+        connectAnonymous(clientId, secretKey, spiceManager);
+    }
+
+    public void connect(String accessToken, SpiceManager spiceManager) {
+        connect(accessToken, null, null, spiceManager);
+    }
+
+    /**
      * Method to invoke connection
      *
-     * @param accessToken :
-     * @param chatBot
-     * @param taskBotId
-     * @param spiceManager
+     * @param accessToken : AccessToken of the loged user.
+     * @param chatBot: Name of the chat-bot
+     * @param taskBotId: Chat-bot's taskId
+     * @param spiceManager:
      */
     public void connect(String accessToken, final String chatBot, final String taskBotId, SpiceManager spiceManager) {
 
@@ -99,16 +114,23 @@ public final class SocketWrapper {
 
     }
 
-    public void connectAnonymous(SpiceManager spiceManager) {
+    /**
+     * Method to invoke anonymous connection
+     *
+     * @param spiceManager
+     */
+    private void connectAnonymous(final String clientId, final String secretKey, SpiceManager spiceManager) {
 
         this.spiceManager = spiceManager;
         this.accessToken = null;
+        this.clientId = clientId;
+        this.secretKey = secretKey;
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 HashMap<String,Object> hsh = new HashMap<>(2);
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel());
+                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
 
                 String userId = jwtGrant.getUserInfo().getId();
@@ -212,7 +234,7 @@ public final class SocketWrapper {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 HashMap<String,Object> hsh = new HashMap<>(2);
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel());
+                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
 
                 String userId = jwtGrant.getUserInfo().getId();

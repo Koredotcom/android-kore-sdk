@@ -78,7 +78,10 @@ public class BotChatActivity extends BaseSpiceActivity {
     }
 
     private void connectToWebSocketAnonymous() {
-        SocketWrapper.getInstance().connectAnonymous(spiceManager);
+        String demoClientId = getResources().getString(R.string.demo_client_id);
+        String demoSecretKey = getResources().getString(R.string.demo_secret_key);
+
+        SocketWrapper.getInstance().connect(demoClientId, demoSecretKey, spiceManager);
     }
 
 }

@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Bots SDK</string>
+
+    <string name="demo_client_id">5a37bf24-fea0-4e6b-a816-f9602db08149</string>
+    <string name="demo_secret_key">437ce09b-9005-4a30-a56d-a456b5e0e304</string>
+
 </resources>
