@@ -41,9 +41,6 @@ public class BotHomeActivity extends BaseSpiceActivity {
         findViews();
         setListeners();
         getBundleInfo();
-        if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
-            getAllBotsFromMarketStream();
-        }
     }
 
     private void findViews() {
@@ -73,6 +70,14 @@ public class BotHomeActivity extends BaseSpiceActivity {
             availableBotListAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
+            getAllBotsFromMarketStream();
+        }
     }
 
     /**

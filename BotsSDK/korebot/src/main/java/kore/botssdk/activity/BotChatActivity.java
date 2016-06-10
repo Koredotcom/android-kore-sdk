@@ -53,6 +53,12 @@ public class BotChatActivity extends BaseSpiceActivity {
         updateTitleBar();
     }
 
+    @Override
+    protected void onDestroy() {
+        SocketWrapper.getInstance().disConnect();
+        super.onDestroy();
+    }
+
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
