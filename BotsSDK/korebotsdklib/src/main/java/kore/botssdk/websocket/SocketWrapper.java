@@ -6,11 +6,13 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 
-import de.tavendo.autobahn.WebSocketConnection;
-import de.tavendo.autobahn.WebSocketException;
-import de.tavendo.autobahn.WebSocketHandler;
+import kore.botssdk.autobahn.WebSocket;
+import kore.botssdk.autobahn.WebSocketConnection;
+import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.models.AnonymousAssertionModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.RestRequest;
@@ -31,6 +33,8 @@ public final class SocketWrapper {
 
     private boolean mIsReconnectionAttemptNeeded = true;
     private String url;
+    private URI uri;
+    private boolean mTLSEnabled = false;
 
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
@@ -71,34 +75,40 @@ public final class SocketWrapper {
     /**
      * Method to invoke connection
      *
-     * @param accessToken : AccessToken of the loged user.
-     * @param chatBot: Name of the chat-bot
-     * @param taskBotId: Chat-bot's taskId
+     * @param accessToken   : AccessToken of the loged user.
+     * @param chatBot:      Name of the chat-bot
+     * @param taskBotId:    Chat-bot's taskId
      * @param spiceManager:
      */
-    public void connect(String accessToken, final String chatBot, final String taskBotId, SpiceManager spiceManager) {
+    public void connect(String accessToken, String chatBot, String taskBotId, SpiceManager spiceManager) {
 
         this.spiceManager = spiceManager;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
-        if (chatBot != null && !chatBot.isEmpty() && taskBotId != null && !taskBotId.isEmpty()) {
-            BotInfoModel botInfoModel = new BotInfoModel(chatBot, taskBotId);
-            optParameterBotInfo.put("botInfo", botInfoModel);
-        }
+
+        final String chatBotArg = (chatBot == null) ? "" : chatBot;
+        final String taskBotIdArg = (taskBotId == null) ? "" : taskBotId;
+
+        BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
+        optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
-                HashMap<String,Object> hsh = new HashMap<>(1);
-                hsh.put(Constants.KEY_ASSERTION,jwtToken.getJwt());
+                HashMap<String, Object> hsh = new HashMap<>();
+                hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
+
+                BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
+                hsh.put(Constants.BOT_INFO, botInfoModel);
+
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
                         accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
             }
-        } ;
+        };
 
         spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
@@ -108,7 +118,11 @@ public final class SocketWrapper {
 
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
-                SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                try {
+                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -125,12 +139,18 @@ public final class SocketWrapper {
         this.accessToken = null;
         this.clientId = clientId;
         this.secretKey = secretKey;
+        final String chatBot = "";
+        final String taskBotId = "";
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                HashMap<String,Object> hsh = new HashMap<>(2);
+                HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
+
+                BotInfoModel botInfoModel = new BotInfoModel(chatBot, taskBotId);
+                hsh.put(Constants.BOT_INFO, botInfoModel);
+
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
 
                 String userId = jwtGrant.getUserInfo().getId();
@@ -140,7 +160,7 @@ public final class SocketWrapper {
                         accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), new HashMap<String, Object>());
                 return rtmUrl;
             }
-        } ;
+        };
 
 
         spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
@@ -151,35 +171,62 @@ public final class SocketWrapper {
 
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
-                SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                try {
+                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
 
-    private void connectToSocket(String url) {
+    private void connectToSocket(String url) throws URISyntaxException {
         if (url != null) {
             this.url = url;
+            this.uri = new URI(url);
+            determineTLSEnability(url);
+
             try {
-                mConnection.connect(url, new WebSocketHandler() {
+                mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
                     @Override
                     public void onOpen() {
+                        Log.d(LOG_TAG, "Connection Open.");
+                        if (socketConnectionListener != null) {
+                            socketConnectionListener.onOpen();
+                        }
+                    }
+
+                    @Override
+                    public void onClose(WebSocketCloseNotification code, String reason) {
+                        Log.d(LOG_TAG, "Connection Lost.");
+                        if (socketConnectionListener != null) {
+                            socketConnectionListener.onClose(code, reason);
+                        }
                     }
 
                     @Override
                     public void onTextMessage(String payload) {
-                        Log.d(getClass().getSimpleName(), "Got echo: " + payload);
+                        Log.d(LOG_TAG, "onTextMessage payload :" + payload);
                         if (socketConnectionListener != null) {
-                            socketConnectionListener.onConnected(payload);
+                            socketConnectionListener.onTextMessage(payload);
                         }
                     }
 
                     @Override
-                    public void onClose(int code, String reason) {
+                    public void onRawTextMessage(byte[] payload) {
+                        Log.d(LOG_TAG, "onRawTextMessage payload:" + payload);
                         if (socketConnectionListener != null) {
-                            socketConnectionListener.onDisconnected(reason);
+                            socketConnectionListener.onRawTextMessage(payload);
                         }
-                        Log.d(getClass().getSimpleName(), "Connection lost.");
+                    }
+
+                    @Override
+                    public void onBinaryMessage(byte[] payload) {
+                        Log.d(LOG_TAG, "onBinaryMessage payload: " + payload);
+                        if (socketConnectionListener != null) {
+                            socketConnectionListener.onBinaryMessage(payload);
+                        }
                     }
                 });
             } catch (WebSocketException e) {
@@ -204,15 +251,15 @@ public final class SocketWrapper {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
-                HashMap<String,Object> hsh = new HashMap<>(1);
-                hsh.put(Constants.KEY_ASSERTION,jwtToken.getJwt());
+                HashMap<String, Object> hsh = new HashMap<>(1);
+                hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
                         accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo, true);
                 return rtmUrl;
             }
-        } ;
+        };
 
         spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
@@ -222,18 +269,22 @@ public final class SocketWrapper {
 
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
-                SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                try {
+                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
     private void reconnectForAnonymousUser() {
-        
+
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                HashMap<String,Object> hsh = new HashMap<>(2);
+                HashMap<String, Object> hsh = new HashMap<>(2);
                 hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
 
@@ -244,7 +295,7 @@ public final class SocketWrapper {
                         accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), new HashMap<String, Object>(), true);
                 return rtmUrl;
             }
-        } ;
+        };
 
 
         spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
@@ -255,7 +306,11 @@ public final class SocketWrapper {
 
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
-                SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                try {
+                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -288,6 +343,10 @@ public final class SocketWrapper {
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
+    }
+
+    private void determineTLSEnability(String url) {
+        mTLSEnabled = url.startsWith(Constants.SECURE_WEBSOCKET_PREFIX);
     }
 
     public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {

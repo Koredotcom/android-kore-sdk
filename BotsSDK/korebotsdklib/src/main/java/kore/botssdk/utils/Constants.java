@@ -12,4 +12,8 @@ public class Constants {
     public static String USER_ID = "userId";
     public static String ACCESS_TOKEN = "accessToken";
     public static String KEY_ASSERTION = "assertion";
+    public static String BOT_INFO = "botInfo";
+
+    public static String UNSECURE_WEBSOCKET_PREFIX = "ws://";
+    public static String SECURE_WEBSOCKET_PREFIX = "wss://";
 }

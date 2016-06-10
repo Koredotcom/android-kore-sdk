@@ -23,30 +23,30 @@ public interface RestAPI {
     RestResponse.LoginResponse loginUser(@Body HashMap<String, Object> userCredentials);
 
     // Get JWT Token
-    @POST("/api/users/sts")
+    @POST("/api" + URL_VERSION + "/users/sts")
     RestResponse.JWTTokenResponse getJWTToken(@Header("Authorization") String token);
 
     //Getting jwt grant
-    @POST("/api/oAuth/token/jwtgrant")
+    @POST("/api" + URL_VERSION + "/oAuth/token/jwtgrant")
     RestResponse.BotAuthorization jwtGrant(@Body HashMap<String,Object> jwtToken);
 
     //Getting jwt grant Anonymous
-    @POST("/api/oAuth/token/jwtgrant/anonymous")
+    @POST("/api" + URL_VERSION + "/oAuth/token/jwtgrant/anonymous")
     RestResponse.BotAuthorization jwtGrantAnonymous(@Body HashMap<String,Object> jwtToken);
 
     //Getting rtm URL
-    @POST("/api/rtm/start")
+    @POST("/api" + URL_VERSION + "/rtm/start")
     RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
 
-    @POST("/api/rtm/start")
+    @POST("/api" + URL_VERSION + "/rtm/start")
     RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
-    @GET("/api/1.1/users/{userId}/builder/streams")
+    @GET("/api" + URL_VERSION + "/users/{userId}/builder/streams")
     MarketStreamList getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Subscribe to Push notification
-    @POST("/api/users/{userId}/sdknotifications/subscribe")
+    @POST("/api" + URL_VERSION + "/users/{userId}/sdknotifications/subscribe")
     Response subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
 
     //Unsubscribe to Push notification
@@ -54,7 +54,7 @@ public interface RestAPI {
             "Content-type: application/json",
             "X-HTTP-Method-Override:DELETE"
     })
-    @POST("/api/users/{userId}/sdknotifications/unsubscribe")
+    @POST("/api" + URL_VERSION + "/users/{userId}/sdknotifications/unsubscribe")
     Response unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
 }

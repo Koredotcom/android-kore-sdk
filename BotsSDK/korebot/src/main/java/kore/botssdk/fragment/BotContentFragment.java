@@ -14,6 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
+import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.BotRequestPool;
@@ -64,21 +65,6 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
         }
     }
 
-    @Override
-    public void onConnected(String message) {
-        Log.d(LOG_TAG, message);
-        convertToPojoAndRefreshTheList(message);
-        if (!BotRequestPool.isPoolEmpty()) {
-            //If the pool is not empty then start sending messages....
-            BotRequestController.getInstance().startSendingMessage();
-        }
-    }
-
-    @Override
-    public void onDisconnected(String reason) {
-        CustomToast.showToast(getActivity(), "onDisconnected. Reason is " + reason);
-    }
-
     private void convertToPojoAndRefreshTheList(String message) {
 
         Gson gson = new Gson();
@@ -111,4 +97,33 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
         });
     }
 
+    @Override
+    public void onOpen() {
+
+    }
+
+    @Override
+    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+        CustomToast.showToast(getActivity(), "onDisconnected. Reason is " + reason);
+    }
+
+    @Override
+    public void onTextMessage(String message) {
+        Log.d(LOG_TAG, message);
+        convertToPojoAndRefreshTheList(message);
+        if (!BotRequestPool.isPoolEmpty()) {
+            //If the pool is not empty then start sending messages....
+            BotRequestController.getInstance().startSendingMessage();
+        }
+    }
+
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+
+    }
 }
