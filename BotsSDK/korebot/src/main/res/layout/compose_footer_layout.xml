@@ -31,6 +31,7 @@
         android:background="@drawable/send_button_selector"
         android:text="Send"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:elevation="5dp"/>
 
 </LinearLayout>

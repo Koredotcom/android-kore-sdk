@@ -3,15 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Bot Chat"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="28sp"
-        android:visibility="gone" />
-
     <!-- For the footer -->
     <FrameLayout
         android:id="@+id/chatLayoutFooterContainer"
@@ -26,5 +17,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/chatLayoutFooterContainer" />
+
+
+    <!-- Progress bar representing loading -->
+    <ProgressBar
+        android:id="@+id/taskProgressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:theme="@style/LinearProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:indeterminate="true"
+        android:layout_marginTop="-7dp"
+        />
 
 </RelativeLayout>

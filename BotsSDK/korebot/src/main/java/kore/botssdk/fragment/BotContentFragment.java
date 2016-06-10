@@ -13,6 +13,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
+import kore.botssdk.SocketConnectionEvents;
 import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.models.BotRequest;
@@ -99,12 +100,24 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
 
     @Override
     public void onOpen() {
-
+        EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTED));
     }
 
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
         CustomToast.showToast(getActivity(), "onDisconnected. Reason is " + reason);
+
+        switch (code) {
+            case CONNECTION_LOST:
+                EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.DISCONNECTED));
+                break;
+            case CANNOT_CONNECT:
+            case PROTOCOL_ERROR:
+            case INTERNAL_ERROR:
+            case SERVER_ERROR:
+            EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.FAILED_TO_CONNECT));
+            break;
+        }
     }
 
     @Override

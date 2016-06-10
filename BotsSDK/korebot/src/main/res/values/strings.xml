@@ -7,4 +7,9 @@
     <string name="demo_user_id">u-73364365-f98d-571d-8e8e-022186cde3bc</string>
     <string name="demo_auth_token">mO6emCF8p-rOpDR-cJbQCKg9yTFLqxF_nHEe_d6ZcyBtDnDf3DYpPs9RG3qnqZlS</string>
 
+    <string name="socket_connecting">Connecting</string>
+    <string name="socket_connected">Connected</string>
+    <string name="socket_disconnected">Disconnected</string>
+    <string name="socket_failed">Failed to connect</string>
+
 </resources>

@@ -15,6 +15,7 @@ import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
+import kore.botssdk.SocketConnectionEvents;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
@@ -31,6 +32,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
     EditText composeFooterEditTxt;
     Button composeFooterSendBtn;
+    boolean isDisabled, isFirstTime;
 
     @Nullable
     @Override
@@ -40,13 +42,31 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
 
         findViews(view);
 
-        composeFooterSendBtn.setOnClickListener(composeFooterSendBtOnClickListener);
+        isDisabled = true;
+        isFirstTime = true;
+        updateUI();
+        setListener();
+
+        EventBus.getDefault().register(this);
+
         return view;
     }
 
     private void findViews(View view) {
         composeFooterEditTxt = (EditText) view.findViewById(R.id.composeFooterEditTxt);
         composeFooterSendBtn = (Button) view.findViewById(R.id.composeFooterSendBtn);
+    }
+
+    private void updateUI() {
+        composeFooterSendBtn.setEnabled(!isDisabled && !isFirstTime);
+    }
+
+    private void setListener() {
+        if (isDisabled && isFirstTime) {
+            composeFooterSendBtn.setOnClickListener(null);
+        } else {
+            composeFooterSendBtn.setOnClickListener(composeFooterSendBtOnClickListener);
+        }
     }
 
     View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
@@ -77,6 +97,17 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
         EventBus.getDefault().post(botRequest);
+    }
+
+    public void onEventMainThread(SocketConnectionEvents socketConnectionEvents) {
+        if (socketConnectionEvents.getSocketConnectionEventStates() == SocketConnectionEvents.SocketConnectionEventStates.CONNECTED) {
+            isDisabled = false;
+            isFirstTime = false;
+            EventBus.getDefault().unregister(this);
+
+            updateUI();
+            setListener();
+        }
     }
 
 }
