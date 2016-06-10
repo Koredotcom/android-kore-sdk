@@ -20,19 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/launchBotBtn"
-        android:layout_above="@+id/fetchAgainBtn"
         android:layout_marginTop="10dp" />
-
-    <!-- Kore Bot -->
-    <Button
-        android:id="@id/fetchAgainBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:text="Fetch Again"
-        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -25,7 +25,7 @@ import kore.botssdk.utils.Contants;
  */
 public class BotHomeActivity extends BaseSpiceActivity {
 
-    Button launchBotBtn, fetchAgainBtn;
+    Button launchBotBtn;
     ListView botListView;
     AvailableBotListAdapter availableBotListAdapter;
 
@@ -49,12 +49,10 @@ public class BotHomeActivity extends BaseSpiceActivity {
     private void findViews() {
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
         botListView = (ListView) findViewById(R.id.botListView);
-        fetchAgainBtn = (Button) findViewById(R.id.fetchAgainBtn);
     }
 
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
-        fetchAgainBtn.setOnClickListener(fetchAgainBtnOnClickListener);
         botListView.setOnItemClickListener(botListVieOnItemClickListener);
     }
 
@@ -95,13 +93,6 @@ public class BotHomeActivity extends BaseSpiceActivity {
         }
     };
 
-    View.OnClickListener fetchAgainBtnOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            getAllBotsFromMarketStream();
-        }
-    };
-
     AdapterView.OnItemClickListener botListVieOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -124,7 +115,7 @@ public class BotHomeActivity extends BaseSpiceActivity {
      * END of : Listeners
      */
 
-    private void getAllBotsFromMarketStream(){
+    private void getAllBotsFromMarketStream() {
 
         String userId = BotSharedPreferences.getUserIdFromPreferences(getApplicationContext());
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
@@ -134,7 +125,7 @@ public class BotHomeActivity extends BaseSpiceActivity {
         getSpiceManager().execute(getBotMarketStreams, new RequestListener<MarketStreamList>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\nonRequestFailure : " + e.getMessage()) ;
+                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\nonRequestFailure : " + e.getMessage());
             }
 
             @Override
