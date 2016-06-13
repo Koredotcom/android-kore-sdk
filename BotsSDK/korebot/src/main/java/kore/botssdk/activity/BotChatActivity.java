@@ -21,6 +21,7 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.BotRequest;
+import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
@@ -229,21 +230,24 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onSendClick(String message) {
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-
-        Gson gson = new Gson();
-        String jsonPayload = gson.toJson(botPayLoad);
-
-        Log.d(LOG_TAG, "Payload : " + jsonPayload);
-        botConnector.sendMessage(jsonPayload);
-
-        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        botConnector.sendMessage(message);
 
         if (botContentFragmentUpdate != null) {
+            //Update the bot content list with the send message
+
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+
+            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+            botPayLoad.setMessage(botMessage);
+
+            Gson gson = new Gson();
+            String jsonPayload = gson.toJson(botPayLoad);
+
+            Log.d(LOG_TAG, "Payload : " + jsonPayload);
+
+            BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+            botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+
             botContentFragmentUpdate.updateContentListOnSend(botRequest);
         }
     }

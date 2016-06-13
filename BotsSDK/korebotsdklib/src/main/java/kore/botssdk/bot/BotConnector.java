@@ -2,9 +2,12 @@ package kore.botssdk.bot;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import kore.botssdk.net.BotRequestPool;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
 
@@ -79,7 +82,16 @@ public class BotConnector {
     public void sendMessage(String msg) {
 
         if (msg != null && !msg.isEmpty()) {
-            BotRequestPool.getBotRequestStringArrayList().add(msg);
+
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+
+            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+            botPayLoad.setMessage(botMessage);
+
+            Gson gson = new Gson();
+            String jsonPayload = gson.toJson(botPayLoad);
+
+            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
         }
 
         if (!BotRequestPool.isPoolEmpty()) {
