@@ -188,6 +188,7 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
             composeFooterUpdate.enableSendButton();
             composeFooterUpdate = null;
         }
+        //By sending null initiating sending which are un-delivered in pool
         botConnector.sendMessage(null);
         updateTitleBar(SocketConnectionEventStates.CONNECTED);
     }
