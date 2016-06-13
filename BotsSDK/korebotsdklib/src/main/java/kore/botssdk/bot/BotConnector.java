@@ -27,16 +27,20 @@ public class BotConnector {
     }
 
     /**
+     * Connection for authenticated user
+     *
      * @param accessToken
      * @param chatBot
      * @param taskBotId
      * @param socketConnectionListener
      */
-    public void connectAsNormalUser(String accessToken, String chatBot, String taskBotId, SocketConnectionListener socketConnectionListener) {
+    public void connectAsAuthenticatedUser(String accessToken, String chatBot, String taskBotId, SocketConnectionListener socketConnectionListener) {
         SocketWrapper.getInstance(mContext).connect(accessToken, chatBot, taskBotId, socketConnectionListener);
     }
 
     /**
+     * Connection for anonymous user
+     *
      * @param clientId
      * @param secretKey
      * @param socketConnectionListener
@@ -46,17 +50,17 @@ public class BotConnector {
     }
 
     /**
-     *
+     *  [MANDATORY] Invoke this method to disconnect the previously connected socket connection.
      */
     public void disconnect() {
         SocketWrapper.getInstance(mContext).disConnect();
     }
 
     /**
-     *
+     * @return whether socket connection is present
      */
-    public void isConnected() {
-        SocketWrapper.getInstance(mContext).isConnected();
+    public boolean isConnected() {
+        return SocketWrapper.getInstance(mContext).isConnected();
     }
 
     /**

@@ -21,9 +21,9 @@ import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
-import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -73,14 +73,13 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
         updateTitleBar();
         EventBus.getDefault().register(this);
 
-        botConnector =  new BotConnector(getApplicationContext());
+        botConnector = new BotConnector(getApplicationContext());
 
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
             connectToWebSocket();
         } else {
             connectToWebSocketAnonymous();
         }
-
     }
 
     @Override
@@ -144,9 +143,9 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
         }
     }
 
-    private void connectToWebSocket(){
+    private void connectToWebSocket() {
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-        botConnector.connectAsNormalUser(accessToken, chatBot, taskBotId, this);
+        botConnector.connectAsAuthenticatedUser(accessToken, chatBot, taskBotId, this);
 
         EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTING));
     }
@@ -161,7 +160,7 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
     }
 
     public void onEventMainThread(SocketConnectionEvents socketConnectionEvents) {
-        updateTitleBar (socketConnectionEvents);
+        updateTitleBar(socketConnectionEvents);
     }
 
     private void updateActionBar() {

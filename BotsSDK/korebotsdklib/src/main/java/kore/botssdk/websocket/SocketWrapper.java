@@ -255,7 +255,6 @@ public final class SocketWrapper {
     /**
      *
      */
-
     private void reconnect() {
         if (accessToken != null) {
             //Reconnection for valid credential
@@ -351,6 +350,7 @@ public final class SocketWrapper {
             mConnection.sendTextMessage(msg);
             return true;
         } else {
+            reconnect();
             Log.e(LOG_TAG, "Either WebSocketConnection is not initialized or connection is not present.");
             return false;
         }
