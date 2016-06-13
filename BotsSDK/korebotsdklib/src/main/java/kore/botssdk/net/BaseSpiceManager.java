@@ -27,11 +27,8 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public void start(Context context) {
-        try {
+        if (!isConnected())
             spiceManager.start(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -39,11 +36,8 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public void stop() {
-        try {
+        if (isConnected())
             spiceManager.shouldStop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
