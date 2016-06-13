@@ -24,7 +24,7 @@ public class BotConnector {
      * @param mContext
      */
     public BotConnector(Context mContext) {
-        this.mContext = mContext;
+        this.mContext = mContext.getApplicationContext();
     }
 
     /**

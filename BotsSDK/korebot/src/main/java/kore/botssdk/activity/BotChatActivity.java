@@ -79,7 +79,8 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
 
         updateTitleBar();
 
-        botConnector = new BotConnector(getApplicationContext());
+
+        botConnector = new BotConnector(this);
 
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
             connectToWebSocket();
