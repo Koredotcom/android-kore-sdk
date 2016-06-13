@@ -16,6 +16,7 @@ import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.models.AnonymousAssertionModel;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
@@ -25,7 +26,7 @@ import kore.botssdk.utils.Constants;
  * Created by Ramachandra Pradeep on 6/1/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public final class SocketWrapper {
+public final class SocketWrapper extends BaseSpiceManager {
 
     private final String LOG_TAG = SocketWrapper.class.getSimpleName();
 
@@ -43,20 +44,18 @@ public final class SocketWrapper {
     private String clientId;
     private String secretKey;
 
-    private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
     private Context mContext;
 
     /**
      * Restricting outside object creation
      */
     private SocketWrapper(Context mContext) {
-        spiceManager.start(mContext);
+        start(mContext);
         this.mContext = mContext;
     }
 
     /**
-     *
-     * @return
+     * The global default SocketWrapper instance
      */
     public static SocketWrapper getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
@@ -70,6 +69,7 @@ public final class SocketWrapper {
     }
 
     /**
+     * To prevent cloning
      *
      * @return
      * @throws CloneNotSupportedException
@@ -80,7 +80,7 @@ public final class SocketWrapper {
     }
 
     /**
-     * Method to invoke connection
+     * Method to invoke connection for authenticated user
      *
      * @param accessToken   : AccessToken of the loged user.
      * @param chatBot:      Name of the chat-bot
@@ -99,8 +99,8 @@ public final class SocketWrapper {
         optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
 
         //If spiceManager is not started then start it
-        if (!spiceManager.isStarted()) {
-            spiceManager.start(mContext);
+        if (!isConnected()) {
+            start(mContext);
         }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
@@ -121,7 +121,7 @@ public final class SocketWrapper {
             }
         };
 
-        spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -140,9 +140,11 @@ public final class SocketWrapper {
     }
 
     /**
+     * Method to invoke connection for anonymous
      *
-     * @param clientId
-     * @param secretKey
+     * These keys are generated from bot admin console
+     * @param clientId : generated clientId
+     * @param secretKey : secretKey associated with the specific client
      */
     public void connectAnonymous(final String clientId, final String secretKey,SocketConnectionListener socketConnectionListener) {
 
@@ -154,8 +156,8 @@ public final class SocketWrapper {
         final String taskBotId = "";
 
         //If spiceManager is not started then start it
-        if (!spiceManager.isStarted()) {
-            spiceManager.start(mContext);
+        if (!isConnected()) {
+            start(mContext);
         }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
@@ -179,7 +181,7 @@ public final class SocketWrapper {
         };
 
 
-        spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -196,7 +198,12 @@ public final class SocketWrapper {
         });
     }
 
-
+    /**
+     * To connect through socket
+     *
+     * @param url : to connect the socket to
+     * @throws URISyntaxException
+     */
     private void connectToSocket(String url) throws URISyntaxException {
         if (url != null) {
             this.url = url;
@@ -219,8 +226,9 @@ public final class SocketWrapper {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
                         }
-                        if(spiceManager != null && spiceManager.isStarted())
-                            spiceManager.shouldStop();
+                        if (isConnected()) {
+                            stop();
+                        }
                     }
 
                     @Override
@@ -254,12 +262,12 @@ public final class SocketWrapper {
     }
 
     /**
-     *
+     *  Reconnect to socket
      */
     private void reconnect() {
         if (accessToken != null) {
             //Reconnection for valid credential
-            reconnectForCertifiedUser();
+            reconnectForAuthenticUser();
         } else {
             //Reconnection for anonymous
             reconnectForAnonymousUser();
@@ -267,14 +275,14 @@ public final class SocketWrapper {
     }
 
     /**
-     *
+     * Reconnection for authentic user
      */
-    private void reconnectForCertifiedUser() {
+    private void reconnectForAuthenticUser() {
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
 
         //If spiceManager is not started then start it
-        if (!spiceManager.isStarted()) {
-            spiceManager.start(mContext);
+        if (!isConnected()) {
+            start(mContext);
         }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
@@ -291,7 +299,7 @@ public final class SocketWrapper {
             }
         };
 
-        spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -309,15 +317,15 @@ public final class SocketWrapper {
     }
 
     /**
-     *
+     * Reconnection for anonymous user
      */
     private void reconnectForAnonymousUser() {
 
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
 
         //If spiceManager is not started then start it
-        if (!spiceManager.isStarted()) {
-            spiceManager.start(mContext);
+        if (!isConnected()) {
+            start(mContext);
         }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
@@ -337,7 +345,7 @@ public final class SocketWrapper {
         };
 
 
-        spiceManager.execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -384,19 +392,23 @@ public final class SocketWrapper {
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
-        if(spiceManager != null && spiceManager.isStarted()){
-            spiceManager.shouldStop();
+        if (isConnected()) {
+            stop();
         }
     }
 
     /**
-     *
-     * @param url
+     * Determine the TLS enability of the url.
+     * @param url url to connect to (is generally either ws:// or wss://)
      */
     private void determineTLSEnability(String url) {
         mTLSEnabled = url.startsWith(Constants.SECURE_WEBSOCKET_PREFIX);
     }
 
+    /**
+     * To determine wither socket is connected or not
+     * @return boolean indicating the connection presence.
+     */
     public boolean isConnected() {
         if (mConnection != null && mConnection.isConnected()) {
             return true;

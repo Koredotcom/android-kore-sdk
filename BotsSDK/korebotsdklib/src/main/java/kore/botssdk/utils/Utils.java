@@ -8,6 +8,13 @@ import android.content.pm.PackageManager;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class Utils {
+
+    /**
+     * Retrieve The version name of this package, as specified by the manifest
+     *
+     * @param context
+     * @return 
+     */
     public static String getVersion(Context context) {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
@@ -17,6 +24,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Get the package version
+     * @param context
+     * @return
+     */
     public static String getBuildVersion(Context context) {
         return "v" + getVersion(context);
     }

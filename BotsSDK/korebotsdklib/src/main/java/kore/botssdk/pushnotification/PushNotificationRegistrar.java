@@ -8,6 +8,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.HashMap;
 
+import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RegisterPushNotificationRequest;
 import kore.botssdk.net.UnSubscribePushNotificationRequest;
 import kore.botssdk.utils.Constants;
@@ -17,16 +18,24 @@ import retrofit.client.Response;
  * Created by Pradeep Mahato on 08-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class PushNotificationRegistrar {
+public class PushNotificationRegistrar extends BaseSpiceManager {
 
-    SpiceManager spiceManager;
     RequestListener<Response> requestListener;
 
-    public PushNotificationRegistrar(SpiceManager spiceManager, RequestListener<Response> requestListener) {
-        this.spiceManager = spiceManager;
+    /**
+     * @param requestListener : Callback for requests
+     */
+    public PushNotificationRegistrar(RequestListener<Response> requestListener) {
         this.requestListener = requestListener;
     }
 
+    /**
+     * Register for Push notification
+     *
+     * @param context
+     * @param userId : UserId for whom push notification is required
+     * @param accessToken : User's access token
+     */
     public void registerPushNotification(Context context, String userId, String accessToken) {
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -37,10 +46,17 @@ public class PushNotificationRegistrar {
 
         RegisterPushNotificationRequest registerPushNotificationRequest = new RegisterPushNotificationRequest(userId, accessToken, pushNotificationRequestMap);
 
-        spiceManager.execute(registerPushNotificationRequest, requestListener);
+        if (!isConnected()) start(context);
+        getSpiceManager().execute(registerPushNotificationRequest, requestListener);
 
     }
 
+    /**
+     * Unregister Push notification
+     *
+     * @param context
+     * @param accessToken : User's access token for whom the notification has to be unregistered
+     */
     public void unsubscribePushNotification(Context context, String accessToken) {
 
         String deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
@@ -50,7 +66,9 @@ public class PushNotificationRegistrar {
 
         UnSubscribePushNotificationRequest unSubscribePushNotificationRequest = new UnSubscribePushNotificationRequest(accessToken, pushNotificationRequestMap);
 
-        spiceManager.execute(unSubscribePushNotificationRequest, requestListener);
+        if (!isConnected()) start(context);
+
+        getSpiceManager().execute(unSubscribePushNotificationRequest, requestListener);
 
     }
 

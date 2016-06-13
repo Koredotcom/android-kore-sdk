@@ -12,10 +12,12 @@ import kore.botssdk.websocket.SocketWrapper;
  * Created by Ramachandra Pradeep on 6/13/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+
+/**
+ * Gateway to connect to Bots.
+ */
 public class BotConnector {
-
     private Context mContext;
-
 
     private BotConnector() {
     }
@@ -51,7 +53,7 @@ public class BotConnector {
     }
 
     /**
-     *  [MANDATORY] Invoke this method to disconnect the previously connected socket connection.
+     * [MANDATORY] Invoke this method to disconnect the previously connected socket connection.
      */
     public void disconnect() {
         SocketWrapper.getInstance(mContext).disConnect();
@@ -65,6 +67,13 @@ public class BotConnector {
     }
 
     /**
+     * Method to send messages over socket.
+     * It uses FIFO pattern to first send if any pending requests are present
+     * following current request later onward.
+     * <p/>
+     * pass 'msg' as NULL on reconnection of the socket to empty the pool
+     * by sending messages from the pool.
+     *
      * @param msg
      */
     public void sendMessage(String msg) {

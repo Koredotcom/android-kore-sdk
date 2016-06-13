@@ -3,6 +3,7 @@ package kore.botssdk.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,7 +34,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends BaseSpiceActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface {
+public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 

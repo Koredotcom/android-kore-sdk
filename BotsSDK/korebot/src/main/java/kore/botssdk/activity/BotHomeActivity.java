@@ -2,18 +2,21 @@ package kore.botssdk.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AvailableBotListAdapter;
 import kore.botssdk.models.MarketStreams;
+import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
 import kore.botssdk.utils.BotSharedPreferences;
@@ -24,11 +27,13 @@ import kore.botssdk.utils.Contants;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotHomeActivity extends BaseSpiceActivity {
+public class BotHomeActivity extends AppCompatActivity {
 
     Button launchBotBtn;
     ListView botListView;
     AvailableBotListAdapter availableBotListAdapter;
+
+    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
     String loginMode = Contants.NORMAL_FLOW;
 
@@ -74,11 +79,23 @@ public class BotHomeActivity extends BaseSpiceActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        spiceManager.start(getApplicationContext());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
             getAllBotsFromMarketStream();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        spiceManager.shouldStop();
+        super.onStop();
     }
 
     /**
@@ -128,7 +145,7 @@ public class BotHomeActivity extends BaseSpiceActivity {
 
         GetBotMarketStreams getBotMarketStreams = new GetBotMarketStreams(userId, accessToken);
 
-        getSpiceManager().execute(getBotMarketStreams, new RequestListener<MarketStreamList>() {
+        spiceManager.execute(getBotMarketStreams, new RequestListener<MarketStreamList>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, "getAllBotsFromMarketStream()\nonRequestFailure : " + e.getMessage());

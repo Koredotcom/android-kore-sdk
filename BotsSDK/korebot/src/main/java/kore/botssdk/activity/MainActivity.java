@@ -2,6 +2,7 @@ package kore.botssdk.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,7 +26,7 @@ import kore.botssdk.net.RestResponse;
  * Created by Pradeep Mahato on 26-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class MainActivity extends BaseSpiceActivity {
+public class MainActivity extends AppCompatActivity {
 
     Button anonymousLoginBtn;
     Button normalLoginBtn;
