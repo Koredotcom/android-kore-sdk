@@ -78,15 +78,13 @@ public class BotConnector {
                 int len = botRequestStringArrayList.size();
                 for (int i = 0; i < len; i++) {
                     String botRequestPayload = botRequestStringArrayList.get(i);
-                    if (SocketWrapper.getInstance(mContext).isConnected()) {
-                        boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
-                        if (wasSuccessfullySend) {
-                            BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
-                            i--; //reset the parameter
-                            len--; //reset the length.
-                        } else {
-                            break;//Break the loop, as re-connection would be attempted from sendMessage(...)
-                        }
+                    boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
+                    if (wasSuccessfullySend) {
+                        BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
+                        i--; //reset the parameter
+                        len--; //reset the length.
+                    } else {
+                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
                     }
                 }
             }

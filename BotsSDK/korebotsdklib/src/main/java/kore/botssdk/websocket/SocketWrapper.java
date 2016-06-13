@@ -270,6 +270,12 @@ public final class SocketWrapper {
      */
     private void reconnectForCertifiedUser() {
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
+
+        //If spiceManager is not started then start it
+        if (!spiceManager.isStarted()) {
+            spiceManager.start(mContext);
+        }
+
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
@@ -307,6 +313,12 @@ public final class SocketWrapper {
     private void reconnectForAnonymousUser() {
 
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
+
+        //If spiceManager is not started then start it
+        if (!spiceManager.isStarted()) {
+            spiceManager.start(mContext);
+        }
+
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
@@ -351,7 +363,7 @@ public final class SocketWrapper {
             return true;
         } else {
             reconnect();
-            Log.e(LOG_TAG, "Either WebSocketConnection is not initialized or connection is not present.");
+            Log.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
         }
     }

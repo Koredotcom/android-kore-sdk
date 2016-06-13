@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.view.BaseBubbleContainer;
 import kore.botssdk.view.BaseBubbleLayout;
 import kore.botssdk.view.ReceivedBubbleContainer;

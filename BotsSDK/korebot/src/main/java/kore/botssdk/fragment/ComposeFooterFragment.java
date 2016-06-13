@@ -9,14 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
-import kore.botssdk.SocketConnectionEvents;
+import kore.botssdk.listener.ComposeFooterUpdate;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
-public class ComposeFooterFragment extends BaseSpiceFragment {
+public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate {
 
     String LOG_TAG = ComposeFooterFragment.class.getName();
 
@@ -37,8 +36,6 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
         isFirstTime = true;
         updateUI();
         setListener();
-
-        EventBus.getDefault().register(this);
 
         return view;
     }
@@ -79,19 +76,17 @@ public class ComposeFooterFragment extends BaseSpiceFragment {
         }
     }
 
-    public void onEventMainThread(SocketConnectionEvents socketConnectionEvents) {
-        if (socketConnectionEvents.getSocketConnectionEventStates() == SocketConnectionEvents.SocketConnectionEventStates.CONNECTED) {
-            isDisabled = false;
-            isFirstTime = false;
-            EventBus.getDefault().unregister(this);
-
-            updateUI();
-            setListener();
-        }
-    }
-
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    @Override
+    public void enableSendButton() {
+        isDisabled = false;
+        isFirstTime = false;
+
+        updateUI();
+        setListener();
     }
 
     public interface ComposeFooterInterface {

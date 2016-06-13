@@ -10,9 +10,9 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
+import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleUtils;
@@ -20,7 +20,7 @@ import kore.botssdk.utils.BundleUtils;
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
-public class BotContentFragment extends BaseSpiceFragment {
+public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
 
     ListView botsBubblesListView;
     BotsChatAdapter botsChatAdapter;
@@ -36,7 +36,6 @@ public class BotContentFragment extends BaseSpiceFragment {
         findViews(view);
         getBundleInfo();
         setupAdapter();
-        EventBus.getDefault().register(this);
         return view;
     }
 
@@ -72,13 +71,6 @@ public class BotContentFragment extends BaseSpiceFragment {
 
     }
 
-    public void onEvent(BotRequest botRequest) {
-        if (botRequest.getMessage() != null) {
-            botsChatAdapter.addBaseBotMessage(botRequest);
-            scrollToBottom();
-        }
-    }
-
     private void scrollToBottom() {
         final int count = botsChatAdapter.getCount();
         botsBubblesListView.post(new Runnable() {
@@ -87,5 +79,13 @@ public class BotContentFragment extends BaseSpiceFragment {
                 botsBubblesListView.setSelection(count - 1);
             }
         });
+    }
+
+    @Override
+    public void updateContentListOnSend(BotRequest botRequest) {
+        if (botRequest.getMessage() != null) {
+            botsChatAdapter.addBaseBotMessage(botRequest);
+            scrollToBottom();
+        }
     }
 }
