@@ -23,6 +23,7 @@ import kore.botssdk.net.RestResponse;
 
 /**
  * Created by Pradeep Mahato on 26-May-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class MainActivity extends BaseSpiceActivity {
 

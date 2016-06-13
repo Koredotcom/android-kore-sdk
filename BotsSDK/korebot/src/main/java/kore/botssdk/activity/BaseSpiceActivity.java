@@ -6,6 +6,7 @@ import kore.botssdk.net.BotRestService;
 
 /**
  * Created by Pradeep Mahato on 30-May-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BaseSpiceActivity extends AppCompatActivity {
 

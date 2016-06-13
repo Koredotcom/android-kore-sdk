@@ -14,6 +14,9 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 
+/**
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
+ */
 public interface RestAPI {
 
     String URL_VERSION = "/1.1";

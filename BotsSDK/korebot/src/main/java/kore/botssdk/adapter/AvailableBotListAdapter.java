@@ -18,6 +18,7 @@ import kore.botssdk.net.MarketStreamList;
 
 /**
  * Created by Pradeep Mahato on 06-Jun-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class AvailableBotListAdapter extends BaseAdapter {
 

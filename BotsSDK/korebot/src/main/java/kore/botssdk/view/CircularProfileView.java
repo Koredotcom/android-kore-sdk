@@ -30,6 +30,7 @@ import kore.botssdk.utils.Contants;
 
 /**
  * Created by tapasya on 01/10/15.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class CircularProfileView extends RoundedImageView {
 

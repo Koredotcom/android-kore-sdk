@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 
 /**
  * Created by Pradeep Mahato on 06-Jun-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class Utils {
     public static String getVersion(Context context) {

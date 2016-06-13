@@ -5,7 +5,7 @@ import java.util.HashMap;
 import kore.botssdk.autobahn.WebSocket;
 
 /**
- *
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public interface SocketConnectionListener {
 

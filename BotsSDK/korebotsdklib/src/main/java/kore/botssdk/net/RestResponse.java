@@ -9,6 +9,9 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotUserInfo;
 import kore.botssdk.models.User;
 
+/**
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
+ */
 @SuppressWarnings("serial")
 public class RestResponse {
 

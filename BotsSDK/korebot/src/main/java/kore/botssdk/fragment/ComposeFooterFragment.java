@@ -14,6 +14,7 @@ import kore.botssdk.listener.ComposeFooterUpdate;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate {
 

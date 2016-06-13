@@ -19,6 +19,7 @@ import kore.botssdk.utils.BundleUtils;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
 

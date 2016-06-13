@@ -1,6 +1,9 @@
 package kore.botssdk.models;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
+ */
 public class UserInfo {
 
     public static final String SSO_FACEBOOK = "facebook";

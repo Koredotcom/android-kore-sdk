@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 
 /**
  * Created by nicholaspontiff on 7/16/15.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BaseDrawable extends Drawable {
 

@@ -2,6 +2,10 @@ package kore.botssdk.net;
 
 import com.octo.android.robospice.request.retrofit.RetrofitSpiceRequest;
 
+/**
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
+ */
+
 public abstract class RestRequest<T> extends RetrofitSpiceRequest<T, RestAPI> {
 
     protected final String LOG_TAG = getClass().getSimpleName();

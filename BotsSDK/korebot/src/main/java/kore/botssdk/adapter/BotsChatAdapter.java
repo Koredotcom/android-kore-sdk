@@ -24,6 +24,7 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotsChatAdapter extends BaseAdapter {
 
