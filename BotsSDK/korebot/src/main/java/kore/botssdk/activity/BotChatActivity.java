@@ -3,26 +3,37 @@ package kore.botssdk.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+
+import com.google.gson.Gson;
+
+import java.util.Date;
 
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.SocketConnectionEvents;
 import kore.botssdk.autobahn.WebSocket;
+import kore.botssdk.bot.BotConnector;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.models.BotRequest;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.BotSharedPreferences;
+import kore.botssdk.utils.CustomToast;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.websocket.SocketConnectionListener;
-import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
-public class BotChatActivity extends BaseSpiceActivity implements SocketConnectionListener {
+public class BotChatActivity extends BaseSpiceActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface {
+
+    String LOG_TAG = BotChatActivity.class.getSimpleName();
 
     FrameLayout chatLayoutFooterContainer;
     FrameLayout chatLayoutContentContainer;
@@ -35,6 +46,10 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
 
     Handler actionBarTitleUpdateHandler;
 
+    BotConnector botConnector;
+    BotContentFragment botContentFragment;
+    ComposeFooterFragment composeFooterFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,18 +59,21 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
-        BotContentFragment botContentFragment = new BotContentFragment();
+        botContentFragment = new BotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        ComposeFooterFragment composeFooterFragment = new ComposeFooterFragment();
+        composeFooterFragment = new ComposeFooterFragment();
         composeFooterFragment.setArguments(getIntent().getExtras());
+        composeFooterFragment.setComposeFooterInterface(this);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
 
         updateTitleBar();
         EventBus.getDefault().register(this);
+
+        botConnector =  new BotConnector(getApplicationContext());
 
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
             connectToWebSocket();
@@ -68,7 +86,7 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        SocketWrapper.getInstance().disConnect();
+        botConnector.disconnect();
         super.onDestroy();
     }
 
@@ -128,7 +146,7 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
 
     private void connectToWebSocket(){
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-        SocketWrapper.getInstance().connect(accessToken, chatBot, taskBotId,this);
+        botConnector.connectAsNormalUser(accessToken, chatBot, taskBotId, this);
 
         EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTING));
     }
@@ -137,7 +155,7 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
         String demoClientId = getResources().getString(R.string.demo_client_id);
         String demoSecretKey = getResources().getString(R.string.demo_secret_key);
 
-        SocketWrapper.getInstance().connectAnonymous(demoClientId, demoSecretKey,this);
+        botConnector.connectAsAnonymousUser(demoClientId, demoSecretKey, this);
 
         EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTING));
     }
@@ -165,17 +183,30 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
 
     @Override
     public void onOpen() {
-
+        EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTED));
+        botConnector.sendMessage(null);
     }
 
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+        CustomToast.showToast(getApplicationContext(), "onDisconnected. Reason is " + reason);
 
+        switch (code) {
+            case CONNECTION_LOST:
+                EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.DISCONNECTED));
+                break;
+            case CANNOT_CONNECT:
+            case PROTOCOL_ERROR:
+            case INTERNAL_ERROR:
+            case SERVER_ERROR:
+                EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.FAILED_TO_CONNECT));
+                break;
+        }
     }
 
     @Override
     public void onTextMessage(String payload) {
-
+        botContentFragment.convertToPojoAndRefreshTheList(payload);
     }
 
     @Override
@@ -186,5 +217,23 @@ public class BotChatActivity extends BaseSpiceActivity implements SocketConnecti
     @Override
     public void onBinaryMessage(byte[] payload) {
 
+    }
+
+    @Override
+    public void onSendClick(String message) {
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        botPayLoad.setMessage(botMessage);
+
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botPayLoad);
+
+        Log.d(LOG_TAG, "Payload : " + jsonPayload);
+        botConnector.sendMessage(jsonPayload);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        EventBus.getDefault().post(botRequest);
     }
 }

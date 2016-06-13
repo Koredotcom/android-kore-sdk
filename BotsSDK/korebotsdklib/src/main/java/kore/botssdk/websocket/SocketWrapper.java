@@ -50,6 +50,7 @@ public final class SocketWrapper {
      */
     private SocketWrapper(Context mContext) {
         spiceManager.start(mContext);
+        this.mContext = mContext;
     }
 
     /**
@@ -77,15 +78,6 @@ public final class SocketWrapper {
         return new CloneNotSupportedException("Clone not supported");
     }
 
-
-    /*public void connect(String clientId, String secretKey) {
-        connectAnonymous(clientId, secretKey);
-    }
-
-    public void connect(String accessToken) {
-        connect(accessToken, null, null);
-    }*/
-
     /**
      * Method to invoke connection
      *
@@ -104,6 +96,11 @@ public final class SocketWrapper {
 
         BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
         optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
+
+        //If spiceManager is not started then start it
+        if (!spiceManager.isStarted()) {
+            spiceManager.start(mContext);
+        }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
             @Override
@@ -154,6 +151,11 @@ public final class SocketWrapper {
         this.secretKey = secretKey;
         final String chatBot = "";
         final String taskBotId = "";
+
+        //If spiceManager is not started then start it
+        if (!spiceManager.isStarted()) {
+            spiceManager.start(mContext);
+        }
 
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
@@ -344,11 +346,13 @@ public final class SocketWrapper {
      * @param msg : The message object
      * @return Was it able to successfully send the message.
      */
-    public void sendMessage(String msg) {
+    public boolean sendMessage(String msg) {
         if (mConnection != null && mConnection.isConnected()) {
             mConnection.sendTextMessage(msg);
+            return true;
         } else {
             Log.e(LOG_TAG, "Either WebSocketConnection is not initialized or connection is not present.");
+            return false;
         }
     }
 
@@ -379,10 +383,6 @@ public final class SocketWrapper {
     private void determineTLSEnability(String url) {
         mTLSEnabled = url.startsWith(Constants.SECURE_WEBSOCKET_PREFIX);
     }
-
-    /*public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {
-        this.socketConnectionListener = socketConnectionListener;
-    }*/
 
     public boolean isConnected() {
         if (mConnection != null && mConnection.isConnected()) {

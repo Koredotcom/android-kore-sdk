@@ -2,7 +2,6 @@ package kore.botssdk.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +12,15 @@ import com.google.gson.JsonSyntaxException;
 
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
-import kore.botssdk.SocketConnectionEvents;
 import kore.botssdk.adapter.BotsChatAdapter;
-import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.net.BotRequestPool;
-import kore.botssdk.utils.BotRequestController;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.CustomToast;
-import kore.botssdk.websocket.SocketWrapper;
-import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
-public class BotContentFragment extends BaseSpiceFragment implements SocketConnectionListener {
+public class BotContentFragment extends BaseSpiceFragment {
 
     ListView botsBubblesListView;
     BotsChatAdapter botsChatAdapter;
@@ -44,7 +36,6 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
         findViews(view);
         getBundleInfo();
         setupAdapter();
-//        SocketWrapper.getInstance().setSocketConnectionListener(this);
         EventBus.getDefault().register(this);
         return view;
     }
@@ -66,7 +57,7 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
         }
     }
 
-    private void convertToPojoAndRefreshTheList(String message) {
+    public void convertToPojoAndRefreshTheList(String message) {
 
         Gson gson = new Gson();
         try {
@@ -96,47 +87,5 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
                 botsBubblesListView.setSelection(count - 1);
             }
         });
-    }
-
-    @Override
-    public void onOpen() {
-        EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTED));
-    }
-
-    @Override
-    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-        CustomToast.showToast(getActivity(), "onDisconnected. Reason is " + reason);
-
-        switch (code) {
-            case CONNECTION_LOST:
-                EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.DISCONNECTED));
-                break;
-            case CANNOT_CONNECT:
-            case PROTOCOL_ERROR:
-            case INTERNAL_ERROR:
-            case SERVER_ERROR:
-            EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.FAILED_TO_CONNECT));
-            break;
-        }
-    }
-
-    @Override
-    public void onTextMessage(String message) {
-        Log.d(LOG_TAG, message);
-        convertToPojoAndRefreshTheList(message);
-        if (!BotRequestPool.isPoolEmpty()) {
-            //If the pool is not empty then start sending messages....
-            BotRequestController.getInstance().startSendingMessage();
-        }
-    }
-
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-
     }
 }
