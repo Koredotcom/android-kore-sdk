@@ -35,7 +35,7 @@
         }
     };
     
-#### 3. Iniitializing the RTM client
+#### 3. Initializing the RTM client
     String accessToken = "Y6w*******************";
     String chatBot = "My Bot";
     String taskBotId = "st-**************";
