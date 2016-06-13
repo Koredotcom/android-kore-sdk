@@ -15,6 +15,12 @@ public interface SpiceManagerLifeCycle {
     boolean isConnected();
 
     /**
+     *
+     * @return whether spiceManager is presently started
+     */
+    boolean isStarted();
+
+    /**
      * To start Spice Manager
      *
      * @param context

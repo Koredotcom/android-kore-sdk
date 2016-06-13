@@ -21,13 +21,21 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
     }
 
     /**
+     * @return Spice Manager's started state
+     */
+    @Override
+    public boolean isStarted() {
+        return spiceManager.isStarted();
+    }
+
+    /**
      * Start spice manager service
      *
      * @param context
      */
     @Override
     public void start(Context context) {
-        if (!isConnected())
+        if (!isConnected() && !isStarted())
             spiceManager.start(context);
     }
 
@@ -36,7 +44,7 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public void stop() {
-        if (isConnected())
+        if (isConnected() || isStarted())
             spiceManager.shouldStop();
     }
 
