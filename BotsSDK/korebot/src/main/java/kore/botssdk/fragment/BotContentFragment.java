@@ -44,7 +44,7 @@ public class BotContentFragment extends BaseSpiceFragment implements SocketConne
         findViews(view);
         getBundleInfo();
         setupAdapter();
-        SocketWrapper.getInstance().setSocketConnectionListener(this);
+//        SocketWrapper.getInstance().setSocketConnectionListener(this);
         EventBus.getDefault().register(this);
         return view;
     }

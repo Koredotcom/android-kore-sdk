@@ -10,17 +10,19 @@ import android.widget.ProgressBar;
 import de.greenrobot.event.EventBus;
 import kore.botssdk.R;
 import kore.botssdk.SocketConnectionEvents;
+import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.BotSharedPreferences;
+import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  */
-public class BotChatActivity extends BaseSpiceActivity {
+public class BotChatActivity extends BaseSpiceActivity implements SocketConnectionListener {
 
     FrameLayout chatLayoutFooterContainer;
     FrameLayout chatLayoutContentContainer;
@@ -126,7 +128,7 @@ public class BotChatActivity extends BaseSpiceActivity {
 
     private void connectToWebSocket(){
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-        SocketWrapper.getInstance().connect(accessToken, chatBot, taskBotId, spiceManager);
+        SocketWrapper.getInstance().connect(accessToken, chatBot, taskBotId,this);
 
         EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTING));
     }
@@ -135,7 +137,7 @@ public class BotChatActivity extends BaseSpiceActivity {
         String demoClientId = getResources().getString(R.string.demo_client_id);
         String demoSecretKey = getResources().getString(R.string.demo_secret_key);
 
-        SocketWrapper.getInstance().connect(demoClientId, demoSecretKey, spiceManager);
+        SocketWrapper.getInstance().connectAnonymous(demoClientId, demoSecretKey,this);
 
         EventBus.getDefault().post(new SocketConnectionEvents(SocketConnectionEvents.SocketConnectionEventStates.CONNECTING));
     }
@@ -161,4 +163,28 @@ public class BotChatActivity extends BaseSpiceActivity {
         }
     };
 
+    @Override
+    public void onOpen() {
+
+    }
+
+    @Override
+    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+
+    }
+
+    @Override
+    public void onTextMessage(String payload) {
+
+    }
+
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+
+    }
+
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+
+    }
 }

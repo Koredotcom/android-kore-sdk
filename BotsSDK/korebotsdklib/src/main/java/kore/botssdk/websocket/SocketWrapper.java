@@ -1,5 +1,6 @@
 package kore.botssdk.websocket;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.octo.android.robospice.SpiceManager;
@@ -15,6 +16,7 @@ import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.models.AnonymousAssertionModel;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
@@ -31,7 +33,6 @@ public final class SocketWrapper {
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
 
-    private boolean mIsReconnectionAttemptNeeded = true;
     private String url;
     private URI uri;
     private boolean mTLSEnabled = false;
@@ -40,37 +41,50 @@ public final class SocketWrapper {
     private String accessToken;
     private String clientId;
     private String secretKey;
-    private SpiceManager spiceManager;
 
-    private int mReconnectionCount = 0;
+    private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    private Context mContext;
 
     /**
      * Restricting outside object creation
      */
-    public SocketWrapper() {
+    private SocketWrapper(Context mContext) {
+        spiceManager.start(mContext);
     }
 
     /**
-     * Singleton Instance *
+     *
+     * @return
      */
-    public static synchronized SocketWrapper getInstance() {
-        if (pKorePresenceInstance == null)
-            pKorePresenceInstance = new SocketWrapper();
+    public static SocketWrapper getInstance(Context mContext) {
+        if (pKorePresenceInstance == null) {
+            synchronized (SocketWrapper.class) {
+                if(pKorePresenceInstance == null) {
+                    pKorePresenceInstance = new SocketWrapper(mContext);
+                }
+            }
+        }
         return pKorePresenceInstance;
     }
 
     /**
-     * For Anonymous connection
      *
-     * @param spiceManager
+     * @return
+     * @throws CloneNotSupportedException
      */
-    public void connect(String clientId, String secretKey, SpiceManager spiceManager) {
-        connectAnonymous(clientId, secretKey, spiceManager);
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return new CloneNotSupportedException("Clone not supported");
     }
 
-    public void connect(String accessToken, SpiceManager spiceManager) {
-        connect(accessToken, null, null, spiceManager);
+
+    /*public void connect(String clientId, String secretKey) {
+        connectAnonymous(clientId, secretKey);
     }
+
+    public void connect(String accessToken) {
+        connect(accessToken, null, null);
+    }*/
 
     /**
      * Method to invoke connection
@@ -78,11 +92,10 @@ public final class SocketWrapper {
      * @param accessToken   : AccessToken of the loged user.
      * @param chatBot:      Name of the chat-bot
      * @param taskBotId:    Chat-bot's taskId
-     * @param spiceManager:
      */
-    public void connect(String accessToken, String chatBot, String taskBotId, SpiceManager spiceManager) {
+    public void connect(String accessToken, String chatBot, String taskBotId,SocketConnectionListener socketConnectionListener) {
 
-        this.spiceManager = spiceManager;
+        this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
 
@@ -119,7 +132,7 @@ public final class SocketWrapper {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -129,13 +142,13 @@ public final class SocketWrapper {
     }
 
     /**
-     * Method to invoke anonymous connection
      *
-     * @param spiceManager
+     * @param clientId
+     * @param secretKey
      */
-    private void connectAnonymous(final String clientId, final String secretKey, SpiceManager spiceManager) {
+    public void connectAnonymous(final String clientId, final String secretKey,SocketConnectionListener socketConnectionListener) {
 
-        this.spiceManager = spiceManager;
+        this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
         this.secretKey = secretKey;
@@ -172,7 +185,7 @@ public final class SocketWrapper {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -203,6 +216,8 @@ public final class SocketWrapper {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
                         }
+                        if(spiceManager != null && spiceManager.isStarted())
+                            spiceManager.shouldStop();
                     }
 
                     @Override
@@ -235,7 +250,11 @@ public final class SocketWrapper {
         }
     }
 
-    public void reconnect() {
+    /**
+     *
+     */
+
+    private void reconnect() {
         if (accessToken != null) {
             //Reconnection for valid credential
             reconnectForCertifiedUser();
@@ -245,6 +264,9 @@ public final class SocketWrapper {
         }
     }
 
+    /**
+     *
+     */
     private void reconnectForCertifiedUser() {
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
@@ -270,7 +292,7 @@ public final class SocketWrapper {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -278,6 +300,9 @@ public final class SocketWrapper {
         });
     }
 
+    /**
+     *
+     */
     private void reconnectForAnonymousUser() {
 
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
@@ -307,7 +332,7 @@ public final class SocketWrapper {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    SocketWrapper.getInstance().connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl());
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -332,7 +357,6 @@ public final class SocketWrapper {
      * Call this method when the user logged out
      */
     public void disConnect() {
-        this.mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {
                 mConnection.disconnect();
@@ -343,15 +367,22 @@ public final class SocketWrapper {
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
+        if(spiceManager != null && spiceManager.isStarted()){
+            spiceManager.shouldStop();
+        }
     }
 
+    /**
+     *
+     * @param url
+     */
     private void determineTLSEnability(String url) {
         mTLSEnabled = url.startsWith(Constants.SECURE_WEBSOCKET_PREFIX);
     }
 
-    public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {
+    /*public void setSocketConnectionListener(SocketConnectionListener socketConnectionListener) {
         this.socketConnectionListener = socketConnectionListener;
-    }
+    }*/
 
     public boolean isConnected() {
         if (mConnection != null && mConnection.isConnected()) {
