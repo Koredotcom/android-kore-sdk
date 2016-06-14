@@ -11,10 +11,10 @@ public class AnonymousAssertionModel {
     /**
      *
      * @param clientId : clientId generated from bot-admin console
-     * @param secretKey :  client secret key generated from bot-admin console
+     * @param uuid :  UUID
      */
-    public AnonymousAssertionModel(String clientId, String secretKey) {
+    public AnonymousAssertionModel(String clientId, String uuid) {
         this.issuer = clientId;
-        this.subject = secretKey;
+        this.subject = uuid;
     }
 }

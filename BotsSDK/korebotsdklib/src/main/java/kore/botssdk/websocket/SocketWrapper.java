@@ -144,14 +144,14 @@ public final class SocketWrapper extends BaseSpiceManager {
      *
      * These keys are generated from bot admin console
      * @param clientId : generated clientId
-     * @param secretKey : secretKey associated with the specific client
+     * @param uuid : uuid associated with the specific client
      */
-    public void connectAnonymous(final String clientId, final String secretKey,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String clientId, final String uuid,SocketConnectionListener socketConnectionListener) {
 
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
-        this.secretKey = secretKey;
+        this.secretKey = uuid;
         final String chatBot = "";
         final String taskBotId = "";
 
@@ -164,7 +164,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
+                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuid));
 
                 BotInfoModel botInfoModel = new BotInfoModel(chatBot, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);

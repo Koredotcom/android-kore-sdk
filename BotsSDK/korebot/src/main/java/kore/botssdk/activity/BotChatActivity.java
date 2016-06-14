@@ -15,13 +15,12 @@ import java.util.Date;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
-import kore.botssdk.bot.BotConnector;
+import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.BotRequest;
-import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
@@ -50,7 +49,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     Handler actionBarTitleUpdateHandler;
 
-    BotConnector botConnector;
+    BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
 
@@ -81,8 +80,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
         updateTitleBar();
 
-
-        botConnector = new BotConnector(this);
+        botClient = new BotClient(this);
 
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
             connectToWebSocket();
@@ -93,7 +91,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     protected void onDestroy() {
-        botConnector.disconnect();
+        botClient.disconnect();
         super.onDestroy();
     }
 
@@ -153,16 +151,15 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     private void connectToWebSocket() {
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-        botConnector.connectAsAuthenticatedUser(accessToken, chatBot, taskBotId, this);
+        botClient.connectAsAuthenticatedUser(accessToken, chatBot, taskBotId, this);
 
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
 
     private void connectToWebSocketAnonymous() {
         String demoClientId = getResources().getString(R.string.demo_client_id);
-        String demoSecretKey = getResources().getString(R.string.demo_secret_key);
 
-        botConnector.connectAsAnonymousUser(demoClientId, demoSecretKey, this);
+        botClient.connectAsAnonymousUser(demoClientId, this);
 
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
@@ -191,7 +188,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             composeFooterUpdate = null;
         }
         //By sending null initiating sending which are un-delivered in pool
-        botConnector.sendMessage(null);
+        botClient.sendMessage(null);
         updateTitleBar(SocketConnectionEventStates.CONNECTED);
     }
 
@@ -230,7 +227,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onSendClick(String message) {
-        botConnector.sendMessage(message);
+        botClient.sendMessage(message);
 
         if (botContentFragmentUpdate != null) {
             //Update the bot content list with the send message

@@ -1,10 +1,12 @@
 package kore.botssdk.bot;
 
 import android.content.Context;
+import android.provider.Settings;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
@@ -17,18 +19,18 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 
 /**
- * Gateway to connect to Bots.
+ * Gateway for clients to interact with Bots.
  */
-public class BotConnector {
+public class BotClient {
     private Context mContext;
 
-    private BotConnector() {
+    private BotClient() {
     }
 
     /**
      * @param mContext
      */
-    public BotConnector(Context mContext) {
+    public BotClient(Context mContext) {
         this.mContext = mContext.getApplicationContext();
     }
 
@@ -48,11 +50,11 @@ public class BotConnector {
      * Connection for anonymous user
      *
      * @param clientId
-     * @param secretKey
      * @param socketConnectionListener
      */
-    public void connectAsAnonymousUser(String clientId, String secretKey, SocketConnectionListener socketConnectionListener) {
-        SocketWrapper.getInstance(mContext).connectAnonymous(clientId, secretKey, socketConnectionListener);
+    public void connectAsAnonymousUser(String clientId, SocketConnectionListener socketConnectionListener) {
+        String uuid = UUID.randomUUID().toString();
+        SocketWrapper.getInstance(mContext).connectAnonymous(clientId, uuid, socketConnectionListener);
     }
 
     /**
