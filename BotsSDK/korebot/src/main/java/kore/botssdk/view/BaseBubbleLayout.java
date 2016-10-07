@@ -19,6 +19,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -375,14 +376,17 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
     protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, boolean constrictLayout, int... dimens) {
 
-        String message;
+        String message = null;
         if (baseBotMessage.isSend()) {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
         } else {
-            message = ((BotResponse) baseBotMessage).getTempMessage().getcInfo().getBody();
+            BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
+            if(msg != null)
+                message = msg.getcInfo().getBody();
         }
 
-        bubbleTextMediaLayout.startup(position, message, dimens);
+        if(message != null)
+            bubbleTextMediaLayout.startup(position, message, dimens);
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);

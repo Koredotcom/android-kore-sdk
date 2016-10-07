@@ -19,8 +19,12 @@ public class BotResponse extends BaseBotMessage {
         return message;
     }
 
+    /**
+     * returns null if there are no messages
+     * @return
+     */
     public BotResponseMessage getTempMessage() {
-        return message.get(0);
+        return message!=null && message.size() > 0?message.get(0):null;
     }
 
     public BotInfoModel getBotInfo() {
