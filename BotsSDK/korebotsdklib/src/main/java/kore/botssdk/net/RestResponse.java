@@ -116,10 +116,15 @@ public class RestResponse {
         private BotMessage message;
         private String resourceid = "/bot.message";
         private BotInfoModel botInfo;
-        private int id = 1;
+        private int clientMessageId = (int)System.currentTimeMillis();
+        private int id = clientMessageId;
+        private String client = "sdk";
 
         public void setMessage(BotMessage message) {
             this.message = message;
+        }
+        public void setBotInfo(BotInfoModel botInfo){
+            this.botInfo = botInfo;
         }
     }
 
