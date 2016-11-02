@@ -112,11 +112,23 @@ public class RestResponse {
         }
     }
 
+    public static class Meta{
+        public String timezone;
+        public String locale;
+        public Meta(String timezone, String locale){
+            this.timezone = timezone;
+            this.locale = locale;
+        }
+    }
+
     public static class BotPayLoad {
+
+
         private BotMessage message;
         private String resourceid = "/bot.message";
         private BotInfoModel botInfo;
         private int clientMessageId = (int)System.currentTimeMillis();
+        private Meta meta;
         private int id = clientMessageId;
         private String client = "sdk";
 
@@ -125,6 +137,49 @@ public class RestResponse {
         }
         public void setBotInfo(BotInfoModel botInfo){
             this.botInfo = botInfo;
+        }
+
+        public int getClientMessageId() {
+            return clientMessageId;
+        }
+
+        public void setClientMessageId(int clientMessageId) {
+            this.clientMessageId = clientMessageId;
+        }
+
+        public Meta getMeta() {
+            return meta;
+        }
+
+        public void setMeta(Meta meta) {
+            this.meta = meta;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getClient() {
+            return client;
+        }
+
+        public void setClient(String client) {
+            this.client = client;
+        }
+        public BotMessage getMessage() {
+            return message;
+        }
+
+        public String getResourceid() {
+            return resourceid;
+        }
+
+        public BotInfoModel getBotInfo() {
+            return botInfo;
         }
     }
 

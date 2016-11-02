@@ -37,12 +37,14 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private String url;
     private URI uri;
-    private boolean mTLSEnabled = false;
+//    private boolean mTLSEnabled = false;
 
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
     private String clientId;
-    private String secretKey;
+    private String uuId;
+    private String chatBotName;
+    private String taskBotId;
 
     private Context mContext;
 
@@ -83,16 +85,16 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Method to invoke connection for authenticated user
      *
      * @param accessToken   : AccessToken of the loged user.
-     * @param chatBot:      Name of the chat-bot
+     * @param chatBotName:      Name of the chat-bot
      * @param taskBotId:    Chat-bot's taskId
      */
-    public void connect(String accessToken, String chatBot, String taskBotId,SocketConnectionListener socketConnectionListener) {
+    public void connect(String accessToken, String chatBotName, String taskBotId,SocketConnectionListener socketConnectionListener) {
 
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
 
-        final String chatBotArg = (chatBot == null) ? "" : chatBot;
+        final String chatBotArg = (chatBotName == null) ? "" : chatBotName;
         final String taskBotIdArg = (taskBotId == null) ? "" : taskBotId;
 
         BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
@@ -146,14 +148,14 @@ public final class SocketWrapper extends BaseSpiceManager {
      * @param clientId : generated clientId
      * @param uuid : uuid associated with the specific client
      */
-    public void connectAnonymous(final String clientId, final String uuid,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
 
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
-        this.secretKey = uuid;
-        final String chatBot = "";
-        final String taskBotId = "";
+        this.uuId = uuId;
+        this.chatBotName = chatBotName;
+        this.taskBotId = taskBotId;
 
         //If spiceManager is not started then start it
         if (!isConnected()) {
@@ -163,19 +165,23 @@ public final class SocketWrapper extends BaseSpiceManager {
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuid));
 
-                BotInfoModel botInfoModel = new BotInfoModel(chatBot, taskBotId);
+                HashMap<String, Object> hsh = new HashMap<>();
+                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuId));
+
+                BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
+
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
+
+                HashMap<String, Object> hsh1 = new HashMap<>();
+                hsh1.put(Constants.BOT_INFO, botInfoModel);
 
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
-                        accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), new HashMap<String, Object>());
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
                 return rtmUrl;
             }
         };
@@ -208,7 +214,6 @@ public final class SocketWrapper extends BaseSpiceManager {
         if (url != null) {
             this.url = url;
             this.uri = new URI(url);
-            determineTLSEnability(url);
 
             try {
                 mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
@@ -293,8 +298,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
-                        accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo, true);
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo, true);
                 return rtmUrl;
             }
         };
@@ -331,15 +335,22 @@ public final class SocketWrapper extends BaseSpiceManager {
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                HashMap<String, Object> hsh = new HashMap<>(2);
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, secretKey));
+                HashMap<String, Object> hsh = new HashMap<>();
+                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuId));
+
+                BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
+                hsh.put(Constants.BOT_INFO, botInfoModel);
+
+
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
+
+                HashMap<String, Object> hsh1 = new HashMap<>();
+                hsh1.put(Constants.BOT_INFO, botInfoModel);
 
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
-                        accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), new HashMap<String, Object>(), true);
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1, true);
                 return rtmUrl;
             }
         };
@@ -401,9 +412,9 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Determine the TLS enability of the url.
      * @param url url to connect to (is generally either ws:// or wss://)
      */
-    private void determineTLSEnability(String url) {
+   /* private void determineTLSEnability(String url) {
         mTLSEnabled = url.startsWith(Constants.SECURE_WEBSOCKET_PREFIX);
-    }
+    }*/
 
     /**
      * To determine wither socket is connected or not
