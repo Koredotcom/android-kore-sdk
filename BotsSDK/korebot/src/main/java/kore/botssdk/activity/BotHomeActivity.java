@@ -19,6 +19,7 @@ import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
@@ -51,6 +52,7 @@ public class BotHomeActivity extends AppCompatActivity {
 
     private void findViews() {
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
+        launchBotBtn.setText("Talk to "+ SDKConfiguration.Client.chatBotName);
         botListView = (ListView) findViewById(R.id.botListView);
     }
 

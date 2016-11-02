@@ -20,8 +20,10 @@ import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
@@ -102,6 +104,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             taskBotId = bundle.getString(BundleUtils.TASKBOTID, "");
             loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
         }
+        if(loginMode.equalsIgnoreCase(Contants.ANONYMOUS_FLOW)){
+            chatBot = SDKConfiguration.Client.chatBotName;
+            taskBotId = SDKConfiguration.Client.taskBotId;
+        }
     }
 
     private void findViews() {
@@ -111,7 +117,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void updateTitleBar() {
-        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) ? "Kore Bot" : "Kore Bot - anonymous");
+        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) ? chatBot : chatBot+" - anonymous");
         getSupportActionBar().setSubtitle(botName);
     }
 
@@ -151,15 +157,14 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     private void connectToWebSocket() {
         String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-        botClient.connectAsAuthenticatedUser(accessToken, chatBot, taskBotId, this);
+        botClient.connectAsAuthenticatedUser(accessToken, chatBot,taskBotId, this);
 
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
 
     private void connectToWebSocketAnonymous() {
-        String demoClientId = getResources().getString(R.string.demo_client_id);
 
-        botClient.connectAsAnonymousUser(demoClientId, this);
+        botClient.connectAsAnonymousUser(SDKConfiguration.Client.demo_client_id,chatBot,taskBotId, this);
 
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
@@ -188,7 +193,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             composeFooterUpdate = null;
         }
         //By sending null initiating sending which are un-delivered in pool
-        botClient.sendMessage(null);
+        botClient.sendMessage(null,null,null);
         updateTitleBar(SocketConnectionEventStates.CONNECTED);
     }
 
@@ -227,7 +232,9 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onSendClick(String message) {
-        botClient.sendMessage(message);
+
+
+        botClient.sendMessage(message,chatBot,taskBotId);
 
         if (botContentFragmentUpdate != null) {
             //Update the bot content list with the send message
@@ -236,11 +243,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             botPayLoad.setMessage(botMessage);
-
+            BotInfoModel botInfo = new BotInfoModel(chatBot,taskBotId);
+            botPayLoad.setBotInfo(botInfo);
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
-
-            Log.d(LOG_TAG, "Payload : " + jsonPayload);
 
             BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
             botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));

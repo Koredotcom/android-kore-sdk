@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import kore.botssdk.R;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
@@ -28,28 +29,29 @@ import kore.botssdk.net.RestResponse;
  */
 public class MainActivity extends AppCompatActivity {
 
-    Button anonymousLoginBtn;
-    Button normalLoginBtn;
+    private Button anonymousLoginBtn;
+    private Button normalLoginBtn;
+    private boolean isAnonymous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        findViews();
-        setListeners();
+        isAnonymous = SDKConfiguration.Server.IS_ANONYMOUS_USER;
+        findViewsAndSetListeners();
         clearPref();
         getSupportActionBar().setSubtitle("Login");
     }
 
-    private void findViews() {
+    private void findViewsAndSetListeners() {
         anonymousLoginBtn = (Button) findViewById(R.id.anonymousLoginBtn);
-        normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
-    }
-
-    private void setListeners() {
         anonymousLoginBtn.setOnClickListener(anonymousLoginBtnOnClickListener);
+
+        normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
         normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);
+
+        if(isAnonymous)normalLoginBtn.setVisibility(View.GONE);
+        else anonymousLoginBtn.setVisibility(View.GONE);
     }
 
     private void clearPref() {
@@ -110,10 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveToPrefAndLaunch(boolean isAnonymous) {
-        String userId = getResources().getString(R.string.demo_user_id);
-        String authToken = getResources().getString(R.string.demo_auth_token);
-
-        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, userId, authToken);
+        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, SDKConfiguration.Client.demo_user_id, SDKConfiguration.Client.demo_auth_token);
 
         if (successfullySaved) {
             launchBotHomeActivity(isAnonymous);
