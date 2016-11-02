@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -78,7 +79,7 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     private void populateText(String textualContent) {
-        botContentTextView.setText(textualContent);
+        botContentTextView.setText(Html.fromHtml(textualContent.replace("\n","<br />")));
     }
 
     public TextView getBotContentTextView() {
