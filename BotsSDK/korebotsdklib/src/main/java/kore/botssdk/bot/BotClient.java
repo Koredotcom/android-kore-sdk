@@ -1,13 +1,16 @@
 package kore.botssdk.bot;
 
 import android.content.Context;
-import android.provider.Settings;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -52,9 +55,9 @@ public class BotClient {
      * @param clientId
      * @param socketConnectionListener
      */
-    public void connectAsAnonymousUser(String clientId, SocketConnectionListener socketConnectionListener) {
-        String uuid = UUID.randomUUID().toString();
-        SocketWrapper.getInstance(mContext).connectAnonymous(clientId, uuid, socketConnectionListener);
+    public void connectAsAnonymousUser(String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
+        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+        SocketWrapper.getInstance(mContext).connectAnonymous(clientId, chatBotName, taskBotId, uuid, socketConnectionListener);
     }
 
     /**
@@ -81,18 +84,27 @@ public class BotClient {
      *
      * @param msg
      */
-    public void sendMessage(String msg) {
+    public void sendMessage(String msg, String chatBotName, String taskBotId) {
 
         if (msg != null && !msg.isEmpty()) {
 
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+
 
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
             botPayLoad.setMessage(botMessage);
+
+            BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
+            botPayLoad.setBotInfo(botInfo);
+
+            RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+            botPayLoad.setMeta(meta);
 
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
 
+            Log.d("BotClient", "Payload : " + jsonPayload);
             BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
         }
 
