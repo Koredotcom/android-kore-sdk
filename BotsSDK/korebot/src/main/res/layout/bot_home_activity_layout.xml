@@ -11,8 +11,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerInParent="true"
+        android:background="@drawable/button_drawable"
         android:padding="10dp"
-        android:text="Talk to Kore Bot" />
+        android:textColor="@android:color/white"
+        android:text="Talk to NBO" />
 
     <!-- Listview -->
     <ListView
