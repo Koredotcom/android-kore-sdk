@@ -104,7 +104,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
         try {
             headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn(), true));
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
