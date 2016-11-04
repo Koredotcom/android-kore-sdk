@@ -117,8 +117,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(
-                        accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
             }
         };

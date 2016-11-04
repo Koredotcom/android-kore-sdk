@@ -104,10 +104,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             taskBotId = bundle.getString(BundleUtils.TASKBOTID, "");
             loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
         }
-        if(loginMode.equalsIgnoreCase(Contants.ANONYMOUS_FLOW)){
+//        if(loginMode.equalsIgnoreCase(Contants.ANONYMOUS_FLOW)){
             chatBot = SDKConfiguration.Client.chatBotName;
             taskBotId = SDKConfiguration.Client.taskBotId;
-        }
+//        }
     }
 
     private void findViews() {

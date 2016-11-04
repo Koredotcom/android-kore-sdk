@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener normalLoginBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            BotSharedPreferences.clearPreferences(MainActivity.this);
             if (isAlreadyLoggedIn()) {
                 launchBotHomeActivity(false);
                 finish();
