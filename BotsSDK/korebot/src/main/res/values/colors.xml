@@ -10,7 +10,9 @@
 
     <!-- Bubble Update(Sprint7) -->
     <color name="left_bubble_selected">#D3D3D3</color>
-    <color name="left_bubble_unselected">#F4F4F4</color>
+    <!--<color name="left_bubble_unselected">#F4F4F4</color>-->
+    <color name="left_bubble_unselected">#EBEBEB</color>
+
     <color name="right_bubble_selected">#0268de</color>
     <color name="right_bubble_unselected">#0076FF</color>
     <color name="bot_left_bubble_selected">#CCCCCC</color>
@@ -68,5 +70,7 @@
     <!-- Offline mode check -->
     <color name="offline_mode_check_bg_color">#CC96A5A9</color>
     <color name="offline_mode_check_text_color">#FFFFFF</color>
+
+    <color name="bot_option_text_color">#01CDEF</color>
 
 </resources>

@@ -171,6 +171,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         MeasureUtils.measure(headerLayout, wrapSpec, wrapSpec);
 
         /*
+         * For OptionsList
+         */
+        MeasureUtils.measure(bcl, parentWidth+BUBBLE_CONTENT_LEFT_MARGIN+BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
+
+
+        /*
          * For Simplified Bubble Layout
          */
         int width = BUBBLE_CONTENT_LEFT_MARGIN + bubbleTextMediaLayout.getMeasuredWidth() + BUBBLE_CONTENT_RIGHT_MARGIN;
@@ -238,9 +244,16 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
         if (cpvSenderImage.getVisibility() != GONE) {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            int cpvTop = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
+            int cpvTop = bubbleTextMediaLayout.getBottom()+ bcl.getHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
+
+        /*
+        * For OptionsList
+        * */
+        left -=  bubbleTextMediaLayouMarginLeft;
+        top =  bubbleTextMediaLayout.getBottom();
+        LayoutUtils.layoutChild(bcl, left, top);
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

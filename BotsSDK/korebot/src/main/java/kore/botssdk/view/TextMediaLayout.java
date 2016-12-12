@@ -5,10 +5,16 @@ import android.text.Html;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import kore.botssdk.R;
+import kore.botssdk.adapter.BotListCustomAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -22,6 +28,7 @@ public class TextMediaLayout extends MediaLayout {
     TextView botContentTextView;
 
     public static final int TEXTVIEW_ID = 1980081;
+    public static final int LIST_ID = 1980045;
     public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
 
     private float restrictedLayoutWidth, restrictedLayoutHeight;
