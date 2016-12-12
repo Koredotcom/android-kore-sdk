@@ -244,7 +244,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
         if (cpvSenderImage.getVisibility() != GONE) {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            int cpvTop = bubbleTextMediaLayout.getBottom()+ bcl.getHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
+            int cpvTop = bubbleTextMediaLayout.getBottom()+ bcl.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 
