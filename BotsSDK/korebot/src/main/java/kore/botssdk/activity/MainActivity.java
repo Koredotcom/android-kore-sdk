@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
@@ -29,8 +30,8 @@ import kore.botssdk.net.RestResponse;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private Button anonymousLoginBtn;
-    private Button normalLoginBtn;
+    private Button startUsingBot;
+    private TextView txtBotName;
     private boolean isAnonymous;
 
     @Override
@@ -40,18 +41,20 @@ public class MainActivity extends AppCompatActivity {
         isAnonymous = SDKConfiguration.Server.IS_ANONYMOUS_USER;
         findViewsAndSetListeners();
         clearPref();
-        getSupportActionBar().setSubtitle("Login");
+        getSupportActionBar().setSubtitle("Bot");
     }
 
     private void findViewsAndSetListeners() {
-        anonymousLoginBtn = (Button) findViewById(R.id.anonymousLoginBtn);
-        anonymousLoginBtn.setOnClickListener(anonymousLoginBtnOnClickListener);
+        startUsingBot = (Button) findViewById(R.id.startUsingBot);
+        startUsingBot.setOnClickListener(startUsingBotBtnOnClickListener);
 
-        normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
-        normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);
+       /* normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
+        normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);*/
 
-        if(isAnonymous)normalLoginBtn.setVisibility(View.GONE);
-        else anonymousLoginBtn.setVisibility(View.GONE);
+        txtBotName = (TextView) findViewById(R.id.txtBotName);
+        txtBotName.setText(SDKConfiguration.Client.chatBotName);
+
+
     }
 
     private void clearPref() {
@@ -73,25 +76,24 @@ public class MainActivity extends AppCompatActivity {
      * Start of : Listeners
      */
 
-    View.OnClickListener anonymousLoginBtnOnClickListener = new View.OnClickListener() {
+    View.OnClickListener startUsingBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            launchBotHomeActivity(true);
-        }
-    };
-
-    View.OnClickListener normalLoginBtnOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            BotSharedPreferences.clearPreferences(MainActivity.this);
-            if (isAlreadyLoggedIn()) {
-                launchBotHomeActivity(false);
-                finish();
-            } else {
-                saveToPrefAndLaunch(false);
+            if(isAnonymous) {
+                launchBotChatActivity(isAnonymous);
+            }else{
+                BotSharedPreferences.clearPreferences(MainActivity.this);
+                if (isAlreadyLoggedIn()) {
+                    launchBotChatActivity(false);
+                    finish();
+                } else {
+                    saveToPrefAndLaunch(false);
+                }
             }
         }
     };
+
+
 
     /**
      * End of : Listeners
@@ -102,21 +104,24 @@ public class MainActivity extends AppCompatActivity {
      */
 
 
-    private void launchBotHomeActivity(boolean isAnonymous) {
-        Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
+    private void launchBotChatActivity(boolean isAnonymous) {
+
+        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
 
         Bundle bundle = new Bundle();
         bundle.putString(BundleUtils.LOGIN_MODE, (isAnonymous) ? Contants.ANONYMOUS_FLOW : Contants.NORMAL_FLOW);
+        bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
         intent.putExtras(bundle);
 
         startActivity(intent);
+
     }
 
     private void saveToPrefAndLaunch(boolean isAnonymous) {
         boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, SDKConfiguration.Client.demo_user_id, SDKConfiguration.Client.demo_auth_token);
 
         if (successfullySaved) {
-            launchBotHomeActivity(isAnonymous);
+            launchBotChatActivity(isAnonymous);
         }
     }
 

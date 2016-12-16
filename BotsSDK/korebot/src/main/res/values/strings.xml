@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">Bots SDK</string>
+    <string name="app_name">"Teamlease Virtual Assistant"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>
     <string name="socket_failed">Failed to connect</string>
+    <string name="send">"Send"</string>
+
 
 </resources>

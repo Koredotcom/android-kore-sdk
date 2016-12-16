@@ -72,5 +72,9 @@
     <color name="offline_mode_check_text_color">#FFFFFF</color>
 
     <color name="bot_option_text_color">#01CDEF</color>
+    <color name="connectBotBackground">#F7F7F7</color>
+    <color name="footerdivider_color">#CACACA</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="rippelColor">#FF0000</color>
 
 </resources>

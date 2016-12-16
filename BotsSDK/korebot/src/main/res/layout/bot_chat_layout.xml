@@ -18,6 +18,13 @@
         android:layout_height="match_parent"
         android:layout_above="@id/chatLayoutFooterContainer" />
 
+    <!-- For the Suggestion -->
+    <FrameLayout
+        android:id="@+id/quickReplyLayoutFooterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chatLayoutFooterContainer"
+        />
 
     <!-- Progress bar representing loading -->
     <ProgressBar

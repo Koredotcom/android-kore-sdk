@@ -13,22 +13,24 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import kore.botssdk.R;
+import kore.botssdk.models.ButtonTemplate;
 
 /**
  * Created by Anil Kumar on 12/1/2016.
  */
 public class BotListCustomAdapter extends BaseAdapter /*implements View.OnClickListener*/ {
     private Context mContext;
-    private ArrayList<String> optionsList;
+
+    private ArrayList<ButtonTemplate> optionsList;
     private LayoutInflater inflater = null;
-    String tempValues;
+    ButtonTemplate tempValues;
     private static final int OPTIONS_LIST_LIMIT = 3;
     public static boolean isInExpandedMode;
     private MoreSelectionListener moreSelectionListener;
 
-    public BotListCustomAdapter(Context a, ArrayList<String> d) {
+    public BotListCustomAdapter(Context a/*, ArrayList<ButtonTemplate> d*/) {
         mContext = a;
-        optionsList = d;
+//        optionsList = d;
         inflater = LayoutInflater.from(mContext);
     }
 
@@ -45,7 +47,7 @@ public class BotListCustomAdapter extends BaseAdapter /*implements View.OnClickL
     }
 
     @Override
-    public String getItem(int position) {
+    public ButtonTemplate getItem(int position) {
         return optionsList.get(position);
     }
 
@@ -60,8 +62,8 @@ public class BotListCustomAdapter extends BaseAdapter /*implements View.OnClickL
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        String option= getItem(position);
-        if(!TextUtils.isEmpty(option)) {
+        ButtonTemplate option= getItem(position);
+        if(!TextUtils.isEmpty(option.getTitle())) {
             if (!isInExpandedMode && showMore()) {
                 if (position == OPTIONS_LIST_LIMIT) {
                     convertView = getShowMoreView(convertView, parent);
@@ -91,8 +93,8 @@ public class BotListCustomAdapter extends BaseAdapter /*implements View.OnClickL
             holder.text.setText("No Data");
         } else {
             tempValues = null;
-            tempValues = (String) optionsList.get(position);
-            holder.text.setText(tempValues);
+            tempValues = (ButtonTemplate) optionsList.get(position);
+            holder.text.setText(tempValues.getTitle());
             //vi.setOnClickListener(this);
         }
         return vi;
@@ -138,5 +140,13 @@ public class BotListCustomAdapter extends BaseAdapter /*implements View.OnClickL
 
     public void setMoreSelectionListener(MoreSelectionListener moreSelectionListener) {
         this.moreSelectionListener = moreSelectionListener;
+    }
+
+    public ArrayList<ButtonTemplate> getOptionsList() {
+        return optionsList;
+    }
+
+    public void setOptionsList(ArrayList<ButtonTemplate> optionsList) {
+        this.optionsList = optionsList;
     }
 }

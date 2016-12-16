@@ -8,8 +8,28 @@ import java.util.ArrayList;
  */
 
 public class BotResponseMessage {
+
     private String type;
+    private ComponentModel component;
     private BotResponseMessageComponentInfo cInfo;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ComponentModel getComponent() {
+        return component;
+    }
+
+    public void setComponent(ComponentModel component) {
+        this.component = component;
+    }
+
+    public void setcInfo(BotResponseMessageComponentInfo cInfo) {
+        this.cInfo = cInfo;
+    }
+
+
 
     public String getType() {
         return type;

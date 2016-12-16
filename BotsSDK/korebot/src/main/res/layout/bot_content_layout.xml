@@ -24,7 +24,7 @@
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
         android:listSelector="@android:color/white"
-        android:paddingBottom="10dp"
+        android:paddingBottom="45dp"
         android:paddingTop="10dp"
         android:overScrollMode="never"
         android:scrollbars="none"

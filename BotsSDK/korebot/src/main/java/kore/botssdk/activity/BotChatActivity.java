@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
 
@@ -18,10 +18,15 @@ import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BotSharedPreferences;
@@ -36,7 +41,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface {
+public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -54,6 +59,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
+    QuickReplyFragment quickReplyFragment;
 
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
@@ -72,6 +78,13 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
+        //Add Suggestion Fragment
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        quickReplyFragment = new QuickReplyFragment();
+        quickReplyFragment.setArguments(getIntent().getExtras());
+        quickReplyFragment.setListener(BotChatActivity.this);
+        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
+
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         composeFooterFragment = new ComposeFooterFragment();
@@ -79,6 +92,9 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         composeFooterFragment.setComposeFooterInterface(this);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
+
+
+
 
         updateTitleBar();
 
@@ -217,7 +233,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onTextMessage(String payload) {
-        botContentFragment.convertToPojoAndRefreshTheList(payload);
+        processPayload(payload);
     }
 
     @Override
@@ -262,4 +278,41 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     public void setComposeFooterUpdate(ComposeFooterUpdate composeFooterUpdate) {
         this.composeFooterUpdate = composeFooterUpdate;
     }
+
+    @Override
+    public void onQuickReplyItemClicked(String text) {
+//        Toast.makeText(BotChatActivity.this,text,Toast.LENGTH_SHORT).show();
+        onSendClick(text);
+    }
+
+    private void processPayload(String payload) {
+
+        Gson gson = new Gson();
+        try {
+            BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
+            checkForQuickReplies(botResponse);
+            botContentFragment.addMessageToBotChatAdapter(botResponse);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void checkForQuickReplies(BotResponse botResponse) {
+        if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
+        ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+        if (compModel != null) {
+            String compType = compModel.getType();
+            if (compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)) {
+
+                PayloadOuter payOuter = compModel.getPayload();
+                PayloadInner payInner = payOuter.getPayload();
+                if (payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)) {
+                    quickReplyFragment.populateQuickReplyViews(payInner.getQuick_replies());
+                }
+
+            }
+        }
+    }
+
 }

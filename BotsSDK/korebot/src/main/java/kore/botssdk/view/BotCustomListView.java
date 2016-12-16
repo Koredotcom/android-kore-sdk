@@ -14,8 +14,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.adapter.BotListCustomAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.models.ButtonTemplate;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -48,15 +50,19 @@ public class BotCustomListView extends ViewGroup {
     private void init() {
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list, this, true);
         botList = (ListView) inflatedView.findViewById(R.id.botCustomListView);
-
         botList.setOnItemClickListener(botOptionsClickListener);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        populateBotListView();
+
+        bla = new BotListCustomAdapter(getContext());
+        bla.setMoreSelectionListener(botMoreOptionsClickListener);
+        bla.setOptionsList(new ArrayList<ButtonTemplate>());
+        botList.setAdapter(bla);
+
     }
 
-    private void populateBotListView() {
+    public void populateBotListView(ArrayList<ButtonTemplate> buttons) {
 
-        ArrayList<String> data = new ArrayList<>();
+        /*ArrayList<String> data = new ArrayList<>();
         data.add("Option 1");
         data.add("Option 2");
         data.add("Option 3");
@@ -65,10 +71,10 @@ public class BotCustomListView extends ViewGroup {
         data.add("Option 6");
         data.add("Option 7");
         data.add("Option 8");
-        data.add("Option 9");
-        bla = new BotListCustomAdapter(getContext(), data);
-        bla.setMoreSelectionListener(botMoreOptionsClickListener);
-        botList.setAdapter(bla);
+        data.add("Option 9");*/
+//        bla = new BotListCustomAdapter(getContext());
+
+        bla.setOptionsList(buttons);
         bla.notifyDataSetChanged();
         requestLayout();
     }
@@ -116,8 +122,11 @@ public class BotCustomListView extends ViewGroup {
     private AdapterView.OnItemClickListener botOptionsClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.v("BotListCustom", "=====Row List button clicked=====");
-            Toast.makeText(getContext(),bla.getItem(position) + " clicked",Toast.LENGTH_SHORT).show();
+//            Log.v("BotListCustom", "=====Row List button clicked=====");
+//            Toast.makeText(getContext(),bla.getItem(position) + " clicked",Toast.LENGTH_SHORT).show();
+            if(getContext() instanceof BotChatActivity){
+                ((BotChatActivity)getContext()).onQuickReplyItemClicked(bla.getItem(position).getPayload());
+            }
         }
     };
 

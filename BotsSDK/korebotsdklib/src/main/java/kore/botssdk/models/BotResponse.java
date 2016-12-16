@@ -10,6 +10,12 @@ import java.util.Objects;
 
 public class BotResponse extends BaseBotMessage {
 
+    public static final String TEMPLATE_TYPE_BUTTON = "button";
+    public static final String TEMPLATE_TYPE_LIST = "list";
+    public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";
+    public static final String COMPONENT_TYPE_TEMPLATE = "template";
+    public static final String COMPONENT_TYPE_TEXT = "text";
+
     private String type;
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;

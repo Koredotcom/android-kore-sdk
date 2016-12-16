@@ -28,7 +28,7 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
  */
 public class BotsChatAdapter extends BaseAdapter {
 
-    public static String LOG_TAG = BotsChatAdapter.class.getSimpleName();
+//    public static String LOG_TAG = BotsChatAdapter.class.getSimpleName();
 
     Context context;
     private LayoutInflater ownLayoutInflater;

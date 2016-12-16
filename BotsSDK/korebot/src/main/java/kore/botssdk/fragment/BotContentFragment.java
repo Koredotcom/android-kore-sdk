@@ -57,19 +57,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         }
     }
 
-    public void convertToPojoAndRefreshTheList(String message) {
-
-        Gson gson = new Gson();
-        try {
-            BotResponse botResponse = gson.fromJson(message, BotResponse.class);
-            if (botResponse.getMessage() != null) {
-                botsChatAdapter.addBaseBotMessage(botResponse);
-                scrollToBottom();
-            }
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+    public void addMessageToBotChatAdapter(BotResponse botResponse){
+        if (botResponse.getMessage() != null) {
+            botsChatAdapter.addBaseBotMessage(botResponse);
+            scrollToBottom();
         }
-
     }
 
     private void scrollToBottom() {

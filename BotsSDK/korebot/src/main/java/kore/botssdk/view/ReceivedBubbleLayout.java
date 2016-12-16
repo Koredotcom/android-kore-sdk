@@ -2,16 +2,17 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.BotResponseMessage;
-import kore.botssdk.utils.Contants;
+import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -113,7 +114,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void cosmeticChanges(BaseBotMessage baseBotMessage, int position) {
         super.cosmeticChanges(baseBotMessage, position);
         cosmetiseForProfilePic(baseBotMessage);
+        cosmetiseForOptionsList(baseBotMessage);
     }
+
 
     protected void cosmetiseForProfilePic(BaseBotMessage baseBotMessage) {
         if (isGroupMessage) {
@@ -124,6 +127,36 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }
     }
+
+
+    private void cosmetiseForOptionsList(BaseBotMessage baseBotMessage){
+
+        if(((BotResponse) baseBotMessage).getMessage().isEmpty()) return;
+        ComponentModel compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        if(compModel !=null){
+            String compType = compModel.getType();
+            if(compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)){
+
+                PayloadOuter payOuter = compModel.getPayload();
+                PayloadInner payInner = payOuter.getPayload();
+                if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_BUTTON)){
+                    botCustomListView.setVisibility(View.VISIBLE);
+                    botCustomListView.populateBotListView(payInner.getButtons());
+
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)){
+                    botCustomListView.setVisibility(View.GONE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    return;
+                }
+
+            }else if(compType.equals(BotResponse.COMPONENT_TYPE_TEXT)){
+                botCustomListView.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
 
     /**
      * Layout Manipulation Section
@@ -173,7 +206,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /*
          * For OptionsList
          */
-        MeasureUtils.measure(bcl, parentWidth+BUBBLE_CONTENT_LEFT_MARGIN+BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
+        if(botCustomListView.getVisibility() != View.GONE)
+        MeasureUtils.measure(botCustomListView, parentWidth+BUBBLE_CONTENT_LEFT_MARGIN+BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
 
 
         /*
@@ -244,7 +278,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
         if (cpvSenderImage.getVisibility() != GONE) {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            int cpvTop = bubbleTextMediaLayout.getBottom()+ bcl.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
+            int cpvTop = bubbleTextMediaLayout.getBottom()+ botCustomListView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 
@@ -253,7 +287,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         * */
         left -=  bubbleTextMediaLayouMarginLeft;
         top =  bubbleTextMediaLayout.getBottom();
-        LayoutUtils.layoutChild(bcl, left, top);
+        if(botCustomListView.getVisibility() != View.GONE)
+        LayoutUtils.layoutChild(botCustomListView, left, top);
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

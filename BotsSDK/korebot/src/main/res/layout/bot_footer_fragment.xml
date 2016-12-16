@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ECEFF1"
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
+
+        <!-- Bot Message Fragment resides -->
+        <FrameLayout
+            android:id="@+id/post_frame_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/footer_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@color/footerdivider_color" />
+
+        <!--<com.kore.koreapp.views.AudioVisualiserView
+            android:id="@+id/bot_bottom_strip"
+            android:layout_width="220dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@color/teamPostViewForAlertsStripColor"
+            android:orientation="horizontal"
+            android:visibility="gone"/>-->
+
+        <RelativeLayout
+            android:id="@+id/fl_footer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:background="@color/connectBotBackground"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/composeFooterRl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/connectBotBackground">
+
+                <RelativeLayout
+                    android:id="@+id/tasksRl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/newTasksLogo"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:paddingBottom="10dp"
+                        android:paddingEnd="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="5dp"
+                        android:paddingStart="10dp"
+                        android:paddingTop="10dp"
+                        android:src="@drawable/new_task"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/loadingTasks"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@color/connectBotBackground"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:paddingBottom="10dp"
+                            android:paddingEnd="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp"
+                            android:visibility="gone"
+                            android:indeterminate="false" />
+
+                        <ImageView
+                            android:id="@+id/errorLoading"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:paddingBottom="10dp"
+                            android:paddingEnd="5dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="5dp"
+                            android:paddingStart="10dp"
+                            android:paddingTop="10dp"
+                            android:src="@drawable/conection_error"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/composeFrameLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="49dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_toEndOf="@id/tasksRl"
+                    android:layout_toLeftOf="@+id/btnsend1"
+                    android:layout_toRightOf="@id/tasksRl"
+                    android:layout_toStartOf="@+id/btnsend1"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtTxtMessage"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="center_vertical|start"
+                        android:hint="message..."
+                        android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                        android:maxHeight="68dp"
+                        android:minHeight="26dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:scrollbars="vertical"
+                        android:tag="regular"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="right|center"
+                    android:id="@+id/btnsend1"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:id="@+id/progressL">
+
+                        <!--<ImageView
+                            android:id="@+id/rec_audio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:paddingRight="10dp"
+                            android:paddingLeft="10dp"
+                            android:background="?android:attr/selectableItemBackground"
+                            android:src="@drawable/mic_btn"
+                            android:visibility="visible" />-->
+                        <kore.botssdk.view.RippleView
+                            android:id="@+id/rec_audio"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:layout_centerHorizontal="true"
+                            ripple:rv_centered="true">
+                            <ImageView
+                                android:id="@+id/rec_audio_img"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/mic_btn"
+                                android:padding="5dp"
+                                android:layout_gravity="center"/>
+                        </kore.botssdk.view.RippleView>
+
+                        <ProgressBar
+                            android:id="@+id/progressBarAudio"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_gravity="center"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/sendTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_toRightOf="@id/progressL"
+                        android:gravity="center"
+                        android:tag="bold"
+                        android:text="@string/send"
+                        android:textColor="@color/bgBlueSignup"
+                        android:textSize="14dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/footerConnectBotWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/connectBotBackground"
+                android:descendantFocusability="afterDescendants"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_footerConnectBot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:tag="bold"
+                    android:text="Connect"
+                    android:textAlignment="center"
+                    android:textColor="@color/bgBlueSignup"
+                    android:textSize="14dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+    </LinearLayout>

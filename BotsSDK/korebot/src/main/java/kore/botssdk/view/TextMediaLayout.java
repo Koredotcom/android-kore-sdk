@@ -85,7 +85,7 @@ public class TextMediaLayout extends MediaLayout {
         populateText(messageBody);
     }
 
-    private void populateText(String textualContent) {
+    public void populateText(String textualContent) {
         botContentTextView.setText(Html.fromHtml(textualContent.replace("\n","<br />")));
     }
 
