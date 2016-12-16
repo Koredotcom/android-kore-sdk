@@ -56,6 +56,7 @@ public class QuickReplyFragment extends BaseSpiceFragment {
     public void populateQuickReplyViews(ArrayList<QuickReplyTemplate> quickReplies){
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins((int)dp1*5, (int)dp1*5, (int)dp1*5, (int)dp1*5);
+        quick_reply_container.removeAllViews();
         for(QuickReplyTemplate qReply : quickReplies) {
             final TextView txtQuickReply = new TextView(getActivity());
             txtQuickReply.setText(qReply.getTitle());
