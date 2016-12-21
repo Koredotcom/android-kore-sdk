@@ -8,8 +8,8 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/imageUrl"
         android:src="@drawable/ic_launcher"
         android:background="@drawable/rectangle_background"
@@ -21,8 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imageUrl"
         android:gravity="left"
-        android:textSize="16dp"
+        android:textSize="13dp"
         android:paddingLeft="10dp"
+        android:textColor="#222222"
         android:textStyle="bold"
         android:text="Stripped Shirt"
         />
@@ -33,9 +34,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="left"
-        android:textSize="16dp"
+        android:textSize="12dp"
+        android:textColor="#9d9d9d"
         android:paddingLeft="10dp"
-        android:paddingTop="5dp"
+        android:paddingTop="2dp"
         android:layout_below="@id/title"
         android:text="$40.99"
         />
@@ -45,14 +47,12 @@
         android:id="@+id/productDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:textColor="@android:color/holo_blue_dark"
-        android:padding="8dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
+        android:textSize="12dp"
+        android:textColor="#0076ff"
         android:layout_below="@id/imageUrl"
-        android:background="@drawable/rounded_image_bg_blue"
         android:text="Buy"
+        android:paddingBottom="4dp"
+        android:textStyle="bold"
         android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

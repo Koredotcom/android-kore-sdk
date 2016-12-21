@@ -134,7 +134,7 @@ public class BotCustomListView extends ViewGroup {
     }
 
     private int measureRequiredHeightNew(BotListCustomAdapterNew rootView) {
-        int cumulativeHeight = rootView.getCount() ==4 ? (((rootView.getCount() -1 ) * (150 * dp1)) ) :  ((rootView.getCount()) * (134 * dp1) );//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
+        int cumulativeHeight = rootView.getCount() ==4 ? (((rootView.getCount() -1 ) * (100 * dp1)) ) :  ((rootView.getCount()) * (87 * dp1) );//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
         Log.d("AAAAA!@#",cumulativeHeight+"");
         return cumulativeHeight;
     }

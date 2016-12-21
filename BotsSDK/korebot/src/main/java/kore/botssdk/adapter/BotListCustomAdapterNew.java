@@ -127,7 +127,7 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
         convertView = inflater.inflate(R.layout.bot_options_more_list_item, parent, false);
         LinearLayout container = (LinearLayout) convertView.findViewById(R.id.bot_options_more);
         TextView moreTextView = (TextView) convertView.findViewById(R.id.more_txt_view);
-        moreTextView.setText("More");
+        moreTextView.setText("Show more");
 
         // LinearLayout membersMoreOption = (LinearLayout) convertView.findViewById(R.id.space_members_more);
         container.setOnClickListener(new View.OnClickListener() {
