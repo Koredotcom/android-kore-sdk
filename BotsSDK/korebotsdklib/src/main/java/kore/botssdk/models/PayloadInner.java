@@ -11,6 +11,7 @@ public class PayloadInner {
     private String text;
     private ArrayList<ButtonTemplate> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
+    private ArrayList<ListTemplate> elements;
 
     public PayloadInner(){}
 
@@ -44,5 +45,13 @@ public class PayloadInner {
 
     public ArrayList<QuickReplyTemplate> getQuick_replies() {
         return quick_replies;
+    }
+
+    public void setElements(ArrayList<ListTemplate> elements) {
+        this.elements = elements;
+    }
+
+    public ArrayList<ListTemplate> getElements() {
+        return elements;
     }
 }

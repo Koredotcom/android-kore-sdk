@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListCustomAdapter;
+import kore.botssdk.adapter.BotListCustomAdapterNew;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
@@ -32,7 +33,7 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public abstract class BaseBubbleLayout extends ViewGroup {
 
     Context context;
-    protected float dp1, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
+    protected float dp1, dp2, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
     protected int senderImageRadius, bubbleCornerRadius;
     private boolean leftSide;
@@ -132,6 +133,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
                 && AppControl.getInstance().getDimensionUtil() != null) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
             dp4 = 4 * dp1;
+            dp2 = 2 * dp1;
             dp6 = 6 * dp1;
             dp10 = 10 * dp1;
             dp13 = 13 * dp1;
@@ -198,6 +200,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         botCustomListView = new BotCustomListView(getContext());
         BotListCustomAdapter.isInExpandedMode = false;
+        BotListCustomAdapterNew.isInExpandedMode = false;
         RelativeLayout.LayoutParams txtVwParams1 = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         botCustomListView.setLayoutParams(txtVwParams1);
@@ -281,7 +284,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         Bitmap curveBitmap = formCurveBitmap(senderImageRadius, bubbleCornerRadius);
 
         int x = 0;
-        int y = bubbleTextMediaLayout.getBottom() + botCustomListView.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 2 - senderImageRadius;
+        int y = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getBottom() )+ BUBBLE_CONTENT_BOTTOM_MARGIN + 2 - senderImageRadius;
 
         if(isLeftSide()) {
             x = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN - 6 * dp1 - senderImageRadius + dp1/3);
@@ -324,12 +327,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         int dimen[] = textMediaDimen;
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
-        int rectBottom = bubbleTextMediaLayout.getBottom() + botCustomListView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        int rectBottom = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 :botCustomListView.getMeasuredHeight() - BUBBLE_CONTENT_BOTTOM_MARGIN) + BUBBLE_CONTENT_BOTTOM_MARGIN;
         int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + (isLeftSide()?
                 0:BUBBLE_CONTENT_RIGHT_MARGIN);
 
         rect.set(rectLeft, rectTop, rectRight, rectBottom);
-        canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
+        if(botCustomListView.getVisibility() == View.GONE)
+            canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
+        else
+            canvas.drawRoundRect(rect, (float) (3* dp1), (float) (3 * dp1), paint);
     }
 
     @Override
@@ -419,7 +425,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
      */
     protected void initializeBubbleContentDimen() {
         //STEP 1: Retrieve TextMedia Layout dimensional value... and also FooterLayoutDimentionalValue
-        textMediaDimen =  new int[]{Math.max(bubbleTextMediaLayout.getMeasuredWidth(), botCustomListView.getMeasuredWidth()), bubbleTextMediaLayout.getMeasuredHeight()+ botCustomListView.getMeasuredHeight()/*+list.getMeasuredHeight()*/} ;//bubbleTextMediaLayout.getTextMediaLayoutDimens(bubbleMeta.getComponentMeta(), dimens);
+        textMediaDimen =  new int[]{Math.max(bubbleTextMediaLayout.getMeasuredWidth(), botCustomListView.getMeasuredWidth()), bubbleTextMediaLayout.getMeasuredHeight()+ (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight())/*+list.getMeasuredHeight()*/} ;//bubbleTextMediaLayout.getTextMediaLayoutDimens(bubbleMeta.getComponentMeta(), dimens);
 
         //STEP 2: Store additional informations required in further stage of UI rendering...
         maxBubbleDimen = new int[2];

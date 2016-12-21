@@ -4,13 +4,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotCustomListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.ListTemplate;
+import kore.botssdk.models.ListTemplateButton;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.DateUtils;
@@ -142,8 +146,25 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                 if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_BUTTON)){
                     botCustomListView.setVisibility(View.VISIBLE);
                     botCustomListView.populateBotListView(payInner.getButtons());
-
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_LIST)){
+
+                    botCustomListView.setVisibility(View.VISIBLE);
+                    ArrayList<ListTemplate> elements = payInner.getElements();
+
+                    ArrayList<BotCustomListModel> allBotList = new ArrayList<>();
+
+                    for(ListTemplate lt : elements){
+                        BotCustomListModel blm = new BotCustomListModel();
+                        blm.setTitle(lt.getTitle());
+                        blm.setSubtitle(lt.getSubtitle());
+                        blm.setImageUrl(lt.getImage_url());
+                        allBotList.add(blm);
+                    }
+                    botCustomListView.populateBotListViewNew(allBotList);
+
+
+
                 }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)){
                     botCustomListView.setVisibility(View.GONE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
