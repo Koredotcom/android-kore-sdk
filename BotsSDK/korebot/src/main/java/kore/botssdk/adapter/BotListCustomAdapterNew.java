@@ -1,9 +1,8 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotCustomListModel;
-import kore.botssdk.models.ButtonTemplate;
 
 /**
  * Created by Anil Kumar on 12/20/2016.
@@ -31,7 +28,7 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
     private ArrayList<BotCustomListModel> optionsList;
 
     private LayoutInflater inflater = null;
-    BotCustomListModel tempValues;
+//    BotCustomListModel tempValues;
     private static final int OPTIONS_LIST_LIMIT = 3;
     public static boolean isInExpandedMode;
     private MoreSelectionListener moreSelectionListener;
@@ -106,16 +103,21 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
         if (optionsList.size() <= 0) {
             holder.title.setText("No Data");
         } else {
-            tempValues = null;
-            tempValues = (BotCustomListModel) optionsList.get(position);
+//            tempValues = null;
+            final BotCustomListModel tempValues = (BotCustomListModel) optionsList.get(position);
             holder.title.setText(tempValues.getTitle());
             holder.subtitle.setText(tempValues.getSubtitle());
             downlodImage(tempValues.getImageUrl(),holder.imageUrl);
+
+            holder.buy.setText(tempValues.getBtn_title());
             holder.buy.setClickable(true);
             holder.buy.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext,"Clicked on buy",Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(tempValues.getBtn_url()));
+                    mContext.startActivity(i);
+                    /*Toast.makeText(mContext,"Clicked on buy",Toast.LENGTH_SHORT).show();*/
                 }
             });
         }

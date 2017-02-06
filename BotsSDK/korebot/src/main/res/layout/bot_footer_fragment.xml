@@ -74,7 +74,7 @@
                         android:paddingStart="10dp"
                         android:paddingTop="10dp"
                         android:src="@drawable/new_task"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/loadingTasks"
@@ -177,13 +177,13 @@
                             android:background="?android:attr/selectableItemBackground"
                             android:src="@drawable/mic_btn"
                             android:visibility="visible" />-->
-                        <kore.botssdk.view.RippleView
+                        <!--<kore.botssdk.view.RippleView
                             android:id="@+id/rec_audio"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
                             android:layout_centerHorizontal="true"
-                            ripple:rv_centered="true">
+                            ripple:rv_centered="true">-->
                             <ImageView
                                 android:id="@+id/rec_audio_img"
                                 android:layout_width="40dp"
@@ -191,17 +191,18 @@
                                 android:layout_centerInParent="true"
                                 android:src="@drawable/mic_btn"
                                 android:padding="5dp"
-                                android:layout_gravity="center"/>
-                        </kore.botssdk.view.RippleView>
+                                android:layout_gravity="center"
+                                android:visibility="visible"/>
+                        <!--</kore.botssdk.view.RippleView>-->
 
-                        <ProgressBar
+                        <!--<ProgressBar
                             android:id="@+id/progressBarAudio"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
                             android:layout_gravity="center"
-                            android:visibility="gone" />
+                            android:visibility="gone" />-->
                     </FrameLayout>
 
                     <TextView

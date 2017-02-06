@@ -6,7 +6,7 @@
 
     <!-- Kore Bot -->
     <Button
-        android:id="@+id/launchBotBtn"
+        android:id="@+id/btnQuit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -14,14 +14,15 @@
         android:background="@drawable/button_drawable"
         android:padding="10dp"
         android:textColor="@android:color/white"
-        android:text="Talk to NBO" />
+        android:text="Talk to NBO"
+        android:visibility="gone"/>
 
     <!-- Listview -->
     <ListView
         android:id="@+id/botListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/launchBotBtn"
+        android:layout_below="@id/btnQuit"
         android:layout_marginTop="10dp" />
 
 </RelativeLayout>

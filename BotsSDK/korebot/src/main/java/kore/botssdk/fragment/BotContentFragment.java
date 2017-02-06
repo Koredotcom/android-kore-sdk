@@ -2,9 +2,11 @@ package kore.botssdk.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
@@ -16,6 +18,8 @@ import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.view.CircularProfileView;
+import kore.botssdk.views.DotsTextView;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -26,8 +30,12 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     ListView botsBubblesListView;
     BotsChatAdapter botsChatAdapter;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
+    private LinearLayout botTypingStatusRl;
+    private CircularProfileView botTypingStatusIcon;
+    private DotsTextView typingStatusItemDots;
 
     boolean shallShowProfilePic;
+    private String mChannelIconURL;
 
     @Nullable
     @Override
@@ -36,6 +44,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         View view = inflater.inflate(R.layout.bot_content_layout, null);
         findViews(view);
         getBundleInfo();
+        initializeBotTypingStatus(view,mChannelIconURL);
         setupAdapter();
         return view;
     }
@@ -54,14 +63,38 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         Bundle bundle = getArguments();
         if (bundle != null) {
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+            mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
         }
     }
 
-    public void addMessageToBotChatAdapter(BotResponse botResponse){
-        if (botResponse.getMessage() != null) {
+    public void addMessageToBotChatAdapter(final BotResponse botResponse){
+        if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            botTypingStatusRl.setVisibility(View.VISIBLE);
+            botTypingStatusRl.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    botsChatAdapter.addBaseBotMessage(botResponse);
+//                        scrollToBottom();
+                    botTypingStatusRl.setVisibility(View.GONE);
+                    botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
+
+                }
+            }, 2000);
+        }
+        if (typingStatusItemDots != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            typingStatusItemDots.start();
+            Log.d("Hey", "Started animation");
+        }
+        /*if (botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             botsChatAdapter.addBaseBotMessage(botResponse);
             scrollToBottom();
-        }
+        }*/
+    }
+    protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
+        botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
+        botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
+        botTypingStatusIcon.populateLayout("B", mChannelIconURL, null, -1, 0, true);
+        typingStatusItemDots  = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
     }
 
     private void scrollToBottom() {

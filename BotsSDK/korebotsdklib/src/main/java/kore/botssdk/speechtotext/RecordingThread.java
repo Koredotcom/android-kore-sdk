@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.speechtotext;
 
 import android.media.AudioFormat;
@@ -90,4 +91,4 @@ public class RecordingThread {
         Log.v(LOG_TAG, String.format("Recording stopped. Samples read: %d", shortsRead));
     }
 
-} 
+} */

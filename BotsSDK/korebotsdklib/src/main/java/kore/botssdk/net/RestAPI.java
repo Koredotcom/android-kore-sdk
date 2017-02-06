@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+import kore.botssdk.models.KoreLoginResponse;
 import kore.botssdk.models.MarketStreams;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -24,6 +25,9 @@ public interface RestAPI {
     /** Login Service **/
     @POST("/api/oAuth/token")
     RestResponse.LoginResponse loginUser(@Body HashMap<String, Object> userCredentials);
+
+    @POST("/api/oAuth/token")
+    KoreLoginResponse loginNormalUser(@Body HashMap<String, Object> userCredentials);
 
     // Get JWT Token
     @POST("/api/users/sts")

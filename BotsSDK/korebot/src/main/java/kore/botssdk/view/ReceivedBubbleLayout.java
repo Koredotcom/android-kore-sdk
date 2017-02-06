@@ -159,6 +159,11 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         blm.setTitle(lt.getTitle());
                         blm.setSubtitle(lt.getSubtitle());
                         blm.setImageUrl(lt.getImage_url());
+                        if(lt.getButtons() != null && !lt.getButtons().isEmpty()){
+                            blm.setBtn_type(lt.getButtons().get(0).getType());
+                            blm.setBtn_title(lt.getButtons().get(0).getTitle());
+                            blm.setBtn_url(lt.getButtons().get(0).getUrl());
+                        }
                         allBotList.add(blm);
                     }
                     botCustomListView.populateBotListViewNew(allBotList);

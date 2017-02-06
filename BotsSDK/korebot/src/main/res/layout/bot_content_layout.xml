@@ -33,4 +33,41 @@
         android:stackFromBottom="true"
         android:visibility="visible" />
 
+    <LinearLayout
+        xmlns:cpv="http://schemas.android.com/apk/res-auto"
+        xmlns:dots="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/botTypingStatus"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/typing_layout_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/typing_layout_margin_left"
+        android:layout_marginRight="@dimen/typing_layout_margin_right"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <!-- Typer Image -->
+        <kore.botssdk.view.CircularProfileView
+            android:id="@+id/typing_status_item_cpv"
+            android:layout_width="@dimen/typing_layout_cpv_width"
+            android:layout_height="@dimen/typing_layout_cpv_height"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="true"
+            cpv:font_style="roboto_regular"
+            cpv:text_size="12dp" />
+
+        <!-- Presence Dots -->
+        <kore.botssdk.views.DotsTextView
+            android:id="@+id/typing_status_item_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/left_bubble_text_color"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/dot_view_margin_bottom"
+            android:layout_marginLeft="5dp"
+            dots:autoplay="true"
+            dots:period="1000" />
+    </LinearLayout>
+
 </RelativeLayout>

@@ -1,7 +1,13 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -14,8 +20,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.BotListCustomAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -86,7 +94,32 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     public void populateText(String textualContent) {
-        botContentTextView.setText(Html.fromHtml(textualContent.replace("\n","<br />")));
+        textualContent = StringUtils.unescapeHtml3(textualContent);
+        CharSequence sequence = Html.fromHtml(textualContent.replace("\n","<br />"));
+        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+        for(URLSpan span : urls) {
+            makeLinkClickable(strBuilder, span);
+        }
+        botContentTextView.setText(strBuilder);
+        botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span)
+    {
+        int start = strBuilder.getSpanStart(span);
+        int end = strBuilder.getSpanEnd(span);
+        int flags = strBuilder.getSpanFlags(span);
+        ClickableSpan clickable = new ClickableSpan() {
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                intent.putExtra("url", span.getURL());
+                intent.putExtra("header", getResources().getString(R.string.app_name));
+                getContext().startActivity(intent);
+            }
+        };
+        strBuilder.setSpan(clickable, start, end, flags);
+        strBuilder.removeSpan(span);
     }
 
     public TextView getBotContentTextView() {

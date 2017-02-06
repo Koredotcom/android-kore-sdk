@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">"Teamlease Virtual Assistant"</string>
+    <string name="app_name">"KoreBots"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>
     <string name="socket_failed">Failed to connect</string>
     <string name="send">"Send"</string>
-
-
+    <string name="please_wait">"Please wait..."</string>
+    <string name="speak_now">"Speak now"</string>
+    <string name="no_network">"No network!"</string>
 </resources>

@@ -227,11 +227,6 @@ public class RippleView extends RelativeLayout {
 //     * @param event MotionEvent registered by the Ripple gesture listener
      */
     public void animateRipple() {
-        try{
-            throw new Exception("Hi");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         createAnimation();
     }
 

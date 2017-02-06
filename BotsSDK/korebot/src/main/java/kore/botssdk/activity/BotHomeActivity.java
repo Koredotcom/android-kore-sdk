@@ -19,8 +19,6 @@ import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
-import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
 
@@ -37,6 +35,7 @@ public class BotHomeActivity extends AppCompatActivity {
     SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
     String loginMode = Contants.NORMAL_FLOW;
+    String userId, accessToken;
 
     String LOG_TAG = BotHomeActivity.class.getSimpleName();
 
@@ -51,8 +50,8 @@ public class BotHomeActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
-        launchBotBtn.setText("Talk to "+ SDKConfiguration.Client.chatBotName);
+        launchBotBtn = (Button) findViewById(R.id.btnQuit);
+        launchBotBtn.setText("Exit");
         botListView = (ListView) findViewById(R.id.botListView);
     }
 
@@ -65,6 +64,8 @@ public class BotHomeActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
+            userId = bundle.getString(BundleUtils.USER_ID,"");
+            accessToken = bundle.getString(BundleUtils.ACCESS_TOKEN,"");
         }
     }
 
@@ -107,14 +108,7 @@ public class BotHomeActivity extends AppCompatActivity {
     View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
-
-            Bundle bundle = new Bundle();
-            bundle.putString(BundleUtils.LOGIN_MODE, loginMode);
-            bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-            intent.putExtras(bundle);
-
-            startActivity(intent);
+            System.exit(0);
         }
     };
 
@@ -129,7 +123,9 @@ public class BotHomeActivity extends AppCompatActivity {
             botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
             botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
             botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
-
+            botChatActivityBundle.putString(BundleUtils.USER_ID,userId);
+            botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
+            botChatActivityBundle.putString(BundleUtils.ACCESS_TOKEN,accessToken);
             botChatActivityIntent.putExtras(botChatActivityBundle);
 
             startActivity(botChatActivityIntent);
@@ -142,8 +138,8 @@ public class BotHomeActivity extends AppCompatActivity {
 
     private void getAllBotsFromMarketStream() {
 
-        String userId = BotSharedPreferences.getUserIdFromPreferences(getApplicationContext());
-        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
+//        String userId = BotSharedPreferences.getUserIdFromPreferences(getApplicationContext());
+//        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
 
         GetBotMarketStreams getBotMarketStreams = new GetBotMarketStreams(userId, accessToken);
 

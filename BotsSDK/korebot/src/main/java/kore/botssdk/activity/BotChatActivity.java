@@ -29,7 +29,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.BotSharedPreferences;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
@@ -51,7 +50,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     FragmentTransaction fragmentTransaction;
 
-    String chatBot, taskBotId;
+    String chatBot, taskBotId, accessToken;
     String loginMode = Contants.NORMAL_FLOW;
 
     Handler actionBarTitleUpdateHandler;
@@ -101,7 +100,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         botClient = new BotClient(this);
 
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
-            connectToWebSocket();
+            connectToWebSocket(accessToken);
         } else {
             connectToWebSocketAnonymous();
         }
@@ -119,10 +118,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             chatBot = bundle.getString(BundleUtils.CHATBOT, "");
             taskBotId = bundle.getString(BundleUtils.TASKBOTID, "");
             loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
+            accessToken = bundle.getString(BundleUtils.ACCESS_TOKEN,"");
         }
 //        if(loginMode.equalsIgnoreCase(Contants.ANONYMOUS_FLOW)){
-            chatBot = SDKConfiguration.Client.chatBotName;
-            taskBotId = SDKConfiguration.Client.taskBotId;
+            chatBot = bundle.getString(BundleUtils.CHATBOT,"");
+            taskBotId = bundle.getString(BundleUtils.TASKBOTID);
 //        }
     }
 
@@ -171,8 +171,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
 
-    private void connectToWebSocket() {
-        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
+    private void connectToWebSocket(String accessToken) {
+//        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
         botClient.connectAsAuthenticatedUser(accessToken, chatBot,taskBotId, this);
 
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
@@ -215,7 +215,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-        CustomToast.showToast(getApplicationContext(), "onDisconnected. Reason is " + reason);
+//        CustomToast.showToast(getApplicationContext(), "onDisconnected. Reason is " + reason);
 
         switch (code) {
             case CONNECTION_LOST:
@@ -314,5 +314,4 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             }
         }
     }
-
 }

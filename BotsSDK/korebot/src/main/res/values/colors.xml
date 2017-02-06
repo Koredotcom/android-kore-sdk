@@ -75,6 +75,6 @@
     <color name="connectBotBackground">#F7F7F7</color>
     <color name="footerdivider_color">#CACACA</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="rippelColor">#FF0000</color>
+    <color name="rippelColor">#0000EE</color>
 
 </resources>

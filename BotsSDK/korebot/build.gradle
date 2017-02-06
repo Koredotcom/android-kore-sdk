@@ -18,7 +18,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        asana {
+            applicationId 'kore.botssdk.asana'
+        }
+        shopbot2{
+            applicationId 'kore.botssdk.shopbot2'
+        }
+        sales_ot{
+            applicationId 'kore.botssdk.salesot'
+        }
+    }
 }
+
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
