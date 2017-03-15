@@ -42,6 +42,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
     private String clientId;
+    private String JWTToken;
     private String uuId;
     private String chatBotName;
     private String taskBotId;
@@ -146,12 +147,14 @@ public final class SocketWrapper extends BaseSpiceManager {
      * These keys are generated from bot admin console
      * @param clientId : generated clientId
      * @param uuid : uuid associated with the specific client
+     * @param jwtGrant : jwt access token
      */
-    public void connectAnonymous(final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
 
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
+        this.JWTToken = sJwtGrant;
         this.uuId = uuId;
         this.chatBotName = chatBotName;
         this.taskBotId = taskBotId;
@@ -166,13 +169,13 @@ public final class SocketWrapper extends BaseSpiceManager {
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
 
                 HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuId));
+                hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
 
                 BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
 
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
+                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
@@ -335,13 +338,13 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, new AnonymousAssertionModel(clientId, uuId));
+                hsh.put(Constants.KEY_ASSERTION, JWTToken);
 
                 BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
 
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrantAnonymous(hsh);
+                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
@@ -349,7 +352,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1, true);
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
                 return rtmUrl;
             }
         };

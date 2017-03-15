@@ -55,9 +55,9 @@ public class BotClient {
      * @param clientId
      * @param socketConnectionListener
      */
-    public void connectAsAnonymousUser(String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
+    public void connectAsAnonymousUser(String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        SocketWrapper.getInstance(mContext).connectAnonymous(clientId, chatBotName, taskBotId, uuid, socketConnectionListener);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, clientId, chatBotName, taskBotId, uuid, socketConnectionListener);
     }
 
     /**

@@ -16,6 +16,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AvailableBotListAdapter;
 import kore.botssdk.models.MarketStreams;
+import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.GetBotMarketStreams;
 import kore.botssdk.net.MarketStreamList;
@@ -91,7 +92,7 @@ public class BotHomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
-            getAllBotsFromMarketStream();
+//            getAllBotsFromMarketStream();
         }
     }
 

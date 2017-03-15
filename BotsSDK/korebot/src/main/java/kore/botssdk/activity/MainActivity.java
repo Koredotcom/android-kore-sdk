@@ -113,21 +113,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener startUsingBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(isAnonymous) {
-                launchBotChatActivity(isAnonymous);
-            }else{
-//                BotSharedPreferences.clearPreferences(MainActivity.this);
-//                if (isAlreadyLoggedIn()) {
-//                    launchBotChatActivity(false);
-//                loginAndLaunchBotActivity();
-//                userId = SDKConfiguration.Client.demo_user_id;
-//                accessToken = SDKConfiguration.Client.demo_auth_token;
-                loginAndLaunchBotActivity();
-//                    finish();
-//                } else {
-//                    saveToPrefAndLaunch(false);
-//                }
-            }
+            launchBotChatActivity(isAnonymous);
         }
     };
 
@@ -135,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private void loginAndLaunchBotActivity() {
         showProgress("Please wait while logging in");
         HashMap<String, Object> credMap = new HashMap<String, Object>();
-        credMap.put("username", SDKConfiguration.Client.email_id);
-        credMap.put("password", SDKConfiguration.Client.password);
+      //  credMap.put("username", SDKConfiguration.Client.email_id);
+      //  credMap.put("password", SDKConfiguration.Client.password);
         credMap.put("scope", "friends");
         credMap.put("client_secret", "1");
         credMap.put("client_id", "1");
@@ -167,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void launchBotChatActivity(boolean isAnonymous) {
 
-        Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
+        /*Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
 
         Bundle bundle = new Bundle();
         bundle.putString(BundleUtils.LOGIN_MODE, (isAnonymous) ? Contants.ANONYMOUS_FLOW : Contants.NORMAL_FLOW);
@@ -178,7 +164,20 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.putExtras(bundle);
 
-        startActivity(intent);
+        startActivity(intent);*/
+
+        Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
+
+        Bundle botChatActivityBundle = new Bundle();
+        botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
+        botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
+//        botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
+//        botChatActivityBundle.putString(BundleUtils.USER_ID,userId);
+//        botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
+//        botChatActivityBundle.putString(BundleUtils.ACCESS_TOKEN,accessToken);
+        botChatActivityIntent.putExtras(botChatActivityBundle);
+
+        startActivity(botChatActivityIntent);
 
     }
 
