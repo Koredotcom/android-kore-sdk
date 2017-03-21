@@ -24,6 +24,7 @@ import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.event.TapToSpeakEventPublisher;
 import kore.botssdk.speechtotext.AudioCue;
 import kore.botssdk.speechtotext.AudioDataReceivedListener;
+import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.speechtotext.AudioTaskListener;
 import kore.botssdk.speechtotext.RawAudioRecorder;
 import kore.botssdk.speechtotext.SocketWrapperForTextToSpeech;
@@ -200,7 +201,16 @@ public class TapToSpeakFragment extends Fragment {
         mListener.onCloseButtonClicked(0);
         TapToSpeakEventPublisher.stop();
     }
+    public void clearBuffAndCloseFragment(){
+        sbf.delete(0, sbf.length());
+        closeFragment();
+    }
 
+    public AudioRecorder.State getState(){
+        if(mRecordingThread !=null)
+           return mRecordingThread.getState();
+        else return AudioRecorder.State.ERROR;
+    }
     private void sendEOF() {
         try {
             byte[] eos = "EOS".getBytes("US-ASCII");

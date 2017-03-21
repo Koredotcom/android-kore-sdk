@@ -22,6 +22,7 @@ import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterUpdate;
+import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.speechtotext.AudioTaskListener;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.CustomToast;
@@ -45,6 +46,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     boolean isDisabled, isFirstTime;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
+    private TapToSpeakFragment tapToSpeakFragment;
 
     @Nullable
     @Override
@@ -137,10 +139,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            }/* else if (sendButton.getVisibility() != View.VISIBLE && mRecordingThread.getState()!= AudioRecorder.State.RECORDING) {
+            } else if (sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment.getState()!= AudioRecorder.State.RECORDING) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
-            }*/
+            }
         }
 
         @Override
@@ -167,14 +169,14 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     private void startAudioRecordingSafe() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-                editTextMessage.setHint("Start talking...");
+//                editTextMessage.setHint("Start talking...");
                 showTapToSpeakFragment();
 
             } else {
                 requestMicrophonePermission();
             }
         } else {
-            editTextMessage.setHint("Start talking...");
+//            editTextMessage.setHint("Start talking...");
             showTapToSpeakFragment();
         }
     }
@@ -197,7 +199,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //            rec_audio_img.setImageResource(R.drawable.mic_btn_active);
 //            mRecordingThread.startRecording();
-            editTextMessage.setHint("Start talking...");
+//            editTextMessage.setHint("Start talking...");
             showTapToSpeakFragment();
         }
     }
@@ -207,7 +209,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         editTextMessage.setEnabled(false);
         rec_audio_img.setVisibility(View.GONE);
 
-        TapToSpeakFragment tapToSpeakFragment = new TapToSpeakFragment();
+        tapToSpeakFragment = new TapToSpeakFragment();
         tapToSpeakFragment.setmListener(mListener);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
