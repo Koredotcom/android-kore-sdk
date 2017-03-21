@@ -85,7 +85,7 @@ public final class SocketWrapperForTextToSpeech {
              * Preparing presence Url
              */
 
-        String url = "wss://"+ SDKConfiguration.Server.SERVER_IP + "/speechcntxt/ws/speech?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
+        String url = "wss://"+ SDKConfiguration.Server.SERVER_IP + "?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
         Log.d(LOG_TAG,"The url is "+ url);
         try {
             this.uri = new URI(url);

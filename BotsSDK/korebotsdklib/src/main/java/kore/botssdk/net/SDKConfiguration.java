@@ -13,7 +13,7 @@ public class SDKConfiguration {
         public static final String KORE_BOT_SERVER_URL = "https://qa1-bots.kore.com";//https://qabots.kore.com";//";//https://pilot-bots.kore.com/";//";//"https://bots.kore.com";
         public static final boolean IS_ANONYMOUS_USER = false;
         //For speech to text
-        public static final String SERVER_IP = "demo.kore.com";
+        public static final String SERVER_IP = "speech.kore.ai/stream/kore/decode";//"demo.kore.com";
     }
 
 
@@ -25,6 +25,10 @@ public class SDKConfiguration {
         public static final String demo_auth_token = "dQOq8_DOo_y5dwY7uau0woSaYTyFzAa8v3z0TAY6KLocC9HI4PcCCxlmKfjmKxPb";
 //        public static final String demo_user_id = "u-29fffa9b-32c4-59c2-9ebd-58a543b6a58d";
 //        public static final String demo_auth_token = "ikIidZi8ivr9LeFbI-GQrDvYXtFJ7U1Fg-lRCigX9y7pcw_KjsGSSMtXkayihUbM";
+
+        //Logging with this account
+        public static final String email_id = "riz@testadmin3.xyz";
+        public static final String password = "Kore@123";
 
     }
 

@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
     private void loginAndLaunchBotActivity() {
         showProgress("Please wait while logging in");
         HashMap<String, Object> credMap = new HashMap<String, Object>();
-        credMap.put("username", "riz@testadmin3.xyz");
-        credMap.put("password", "Kore@123");
+        credMap.put("username", SDKConfiguration.Client.email_id);
+        credMap.put("password", SDKConfiguration.Client.password);
         credMap.put("scope", "friends");
         credMap.put("client_secret", "1");
         credMap.put("client_id", "1");
