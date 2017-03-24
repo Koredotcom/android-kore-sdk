@@ -78,9 +78,9 @@ public static final String JWT_SERVER_URL = "<jwt-token-server-url>";
 *	Run the app.
 
 ## Integrating into your app
-1. Create BotConnector object providing context
+1. Create BotClient object providing context
 ```
-BotConnector botConnector = new BotConnector(context);
+BotClient botClient = new BotClient(this);
 ```
 #### 2. Implement SocketConnectionListener to receive callback
 ```
@@ -142,7 +142,7 @@ NOTE: Please refer about JWT signing and verification at - https://developer.kor
 
 #### 6. Send message
 ```
-botconnector.sendMessage("Tweet hello")
+botClient.sendMessage("Tweet hello")
 ```
 #### 7. Listen to events in socketConnectionListener
 ```
