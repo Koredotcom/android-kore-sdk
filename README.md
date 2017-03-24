@@ -1,3 +1,9 @@
+Kore Bot SDK
+
+Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
+
+With just few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language
+
 # Overview
     This SDK allows you to talk to Bots over a web socket.
 
