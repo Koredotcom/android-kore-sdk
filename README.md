@@ -10,16 +10,18 @@ Kore SDK for Android enables you to talk to Kore bots over a web socket. This re
 # Setting up
 
 ### Prerequisites
+* Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
 * SDK app credentials 
-	* Navigate to the bot and enable *Web / Mobile Client* channel against the bot
-	
+* Login to the Bots platform
+	* Navigate to the Bot builder
+	* Search and click on the bot 
+	* Enable *Web / Mobile Client* channel against the bot as shown in the screen below.
+		
 	![Add bot to Web/Mobile Client channel](https://github.com/Koredotcom/iOS-kore-sdk/blob/feature/1.0/channels.png)
 	
 	* create new or use existing SDK app to obtain client id and client secret
 	
 	![Obtain Client id and Client secret](https://github.com/Koredotcom/iOS-kore-sdk/blob/feature/1.0/web-mobile-client-channel.png)
-
-* Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
 
 ## Instructions
 
