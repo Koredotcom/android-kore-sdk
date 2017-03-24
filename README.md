@@ -173,13 +173,7 @@ pushNotificationRegistrar.registerPushNotification(Context context, String userI
 PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
 pushNotificationRegistrar.unsubscribePushNotification(Context context, String accessToken);
 ```
-#### 10. Anonymous user login
-```
-String clientId = "YOUR_SDK_CLIENTID";
-String secretKey = "CLIENT_SECRET_KEY";
-botconnector.connectAsAnonymousUser(String clientId, String secretKey, SocketConnectionListener socketConnectionListener)
-```
-#### 11. Disconnect
+#### 10. Disconnect
 ----
 //Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
 botconnector.disconnect();
