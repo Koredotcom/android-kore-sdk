@@ -82,7 +82,7 @@ public static final String JWT_SERVER_URL = "<jwt-token-server-url>";
 ```
 BotConnector botConnector = new BotConnector(context);
 ```
-2. Implement SocketConnectionListener to receive callback
+#### 2. Implement SocketConnectionListener to receive callback
 ```
 SocketConnectionListener socketConnectionListener = new SocketConnectionListener() {
     @Override
@@ -102,7 +102,7 @@ SocketConnectionListener socketConnectionListener = new SocketConnectionListener
     }
 };
 ```
-3. Initialize RTM client
+#### 3. Initialize RTM client
 ```
 String accessToken = "Y6w*******************";
 String chatBot = "My Bot";
@@ -140,11 +140,11 @@ NOTE: Please refer about JWT signing and verification at - https://developer.kor
         });
     }
 
-6. Send message
+#### 6. Send message
 ```
 botconnector.sendMessage("Tweet hello")
 ```
-7. Listen to events in socketConnectionListener
+#### 7. Listen to events in socketConnectionListener
 ```
 @Override
 public void onOpen() {
@@ -163,23 +163,23 @@ public void onBinaryMessage(byte[] payload) {
 }
 ```
 
-8. Subscribe to push notifications
+#### 8. Subscribe to push notifications
 ```
 PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
 pushNotificationRegistrar.registerPushNotification(Context context, String userId, String accessToken);
 ```
-9. Unsubscribe to push notifications
+#### 9. Unsubscribe to push notifications
 ```
 PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
 pushNotificationRegistrar.unsubscribePushNotification(Context context, String accessToken);
 ```
-10. Anonymous user login
+#### 10. Anonymous user login
 ```
 String clientId = "YOUR_SDK_CLIENTID";
 String secretKey = "CLIENT_SECRET_KEY";
 botconnector.connectAsAnonymousUser(String clientId, String secretKey, SocketConnectionListener socketConnectionListener)
 ```
-11. Disconnect
+#### 11. Disconnect
 ----
 //Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
 botconnector.disconnect();
