@@ -5,76 +5,45 @@ package kore.botssdk.net;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
+import java.util.UUID;
+
 /**
  * This class is for defining properties
  */
 public class SDKConfiguration {
+    public static class Config {
 
-    //    struct botConfig {
-//        static let baseUrl = "https://qa1-bots.kore.com/"
-//        static let clientId = "cs-2f6084da-33d0-5b0f-9c66-5b0bbef514f2"
-//        static let clientSecret = "T2+PyTibG6f29DcYrhhkoVpD3VSgH/zizJlK8+yMglg="
-//        static let identity = "riz1@testadmin3.xyz"
-//
-//        static let chatBotName = "Asana_Emp1"
-//        static let taskBotId = "st-fb2f3ef8-bca1-5fc3-95b9-ec0f3b40f090"
-//    }
+        /*
+        public static final String demo_client_id = "<client-id>";// Copy this value from Bot Builder SDK Settings ex. cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+        public static final String clientSecret = "<client-secret>";// Copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+        public static final String identity = "user@example.com";// This should represent the subject for JWT token. This can be an email or phone number, in case of known user, and in case of anonymous user, this can be a randomly generated unique id.
 
-    /*struct botConfig {
-        static let baseUrl = "https://pilot-bots.kore.com/"
-        static let clientId = "cs-a3d69bdb-996e-5551-b78e-996deb62039f"
-        static let clientSecret = "1Jm6IHQt8PfunGjgtV444wfEff3YnwtYd1tjmZElXIY="
-        static let identity = "riz@testadmin3.xyz"
+        public static final String chatBotName = "<bot-name>";// Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. "Demo Bot"
+        public static final String botId = "<bot-id>"; // Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. st-acecd91f-b009-5f3f-9c15-7249186d827d
 
-        static let chatBotName = "BBCConsu"
-        static let taskBotId = "st-a03b7d94-8823-568f-b3aa-a0bf80a91e16"
-    }*/
+        public static final String KORE_BOT_SERVER_URL = "https://bots.kore.com/";// Replace it with your on-premise server URL, if required
+        public static final boolean IS_ANONYMOUS_USER = true; // If not anonymous, you should send same identity (such as email or phone number) while making a connection, so as to remember the user state across sessions.
+        //For speech to text server URL
+        public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/speechcntxt/ws/speech";
 
-    //This is related to JWT Token
-    public static class Demo{
-        public static final String JWT_SERVER_URL = "http://50.19.64.173:4000";
-    }
+        // Specify the Server URL for JWT token generation. This token is used to authorize the SDK client.
+        // Refer to documentation on how to setup the JWT server for token generation
+        public static final String JWT_SERVER_URL = "<jwt-token-server-url>";//ex. https://jwt-token-server.example.com/
+         */
+        public static final String demo_client_id = "cs-a3d69bdb-996e-5551-b78e-996deb62039f";// Copy this value from Bot Builder SDK Settings ex. cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+        public static final String clientSecret = "1Jm6IHQt8PfunGjgtV444wfEff3YnwtYd1tjmZElXIY=";// Copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+        public static String identity = "demo@example.com";// This should represent the subject for JWT token. This can be an email or phone number, in case of known user, and in case of anonymous user, this can be a randomly generated unique id.
 
-    public static class Server{
-/*<<<<<<< HEAD*/
-        public static final String KORE_BOT_SERVER_URL = "https://qa1-bots.kore.com";//https://qabots.kore.com";//";//https://pilot-bots.kore.com/";//";//"https://bots.kore.com";
-        public static final boolean IS_ANONYMOUS_USER = true;
+        public static final String chatBotName = "BBCConsu";// Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. "Demo Bot"
+        public static final String botId = "st-a03b7d94-8823-568f-b3aa-a0bf80a91e16"; // Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. st-acecd91f-b009-5f3f-9c15-7249186d827d
+
+        public static final String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";// Replace it with your on-premise server URL, if required
+        public static boolean IS_ANONYMOUS_USER = false; // If not anonymous, you should send same identity (such as email or phone number) while making a connection, so as to remember the user state across sessions.
         //For speech to text
-        public static final String SERVER_IP = "speech.kore.ai/stream/kore/decode";//"demo.kore.com";
-/*=======
-        public static final String KORE_BOT_SERVER_URL = "https://qa1-bots.kore.com";//"https://qabots.kore.com";
-        public static final boolean IS_ANONYMOUS_USER = false;
->>>>>>> 17e5ca1... JWT Grant related changes*/
-    }
+        public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
 
+        public static final String JWT_SERVER_URL = "http://50.19.64.173:4000";
 
-
-    public static class Client {
-/*<<<<<<< HEAD
-
-        public static final String demo_client_id = "cs-649b8bb3-b1c4-5807-b998-d26c8f80b9be";//"cs-21340ce3-b7c6-5544-bc04-84f26188febf";////"cs-784b3387-3ca3-55d9-a577-f3e5e6fd5284";
-        public static final String demo_user_id = "u-379b7210-9dc0-5f02-8ab8-92a2986c51de";//koreLoginResponse.getUserInfo().getUserId();
-        public static final String demo_auth_token = "dQOq8_DOo_y5dwY7uau0woSaYTyFzAa8v3z0TAY6KLocC9HI4PcCCxlmKfjmKxPb";
-//        public static final String demo_user_id = "u-29fffa9b-32c4-59c2-9ebd-58a543b6a58d";
-//        public static final String demo_auth_token = "ikIidZi8ivr9LeFbI-GQrDvYXtFJ7U1Fg-lRCigX9y7pcw_KjsGSSMtXkayihUbM";
-
-        //Logging with this account
-        public static final String email_id = "riz@testadmin3.xyz";
-        public static final String password = "Kore@123";
-
-=======*/
-        public static final String demo_client_id = "cs-31d07db4-c7b0-5460-8193-bf68aeea81a3";//"cs-2f6084da-33d0-5b0f-9c66-5b0bbef514f2";
-        public static final String demo_user_id = "u-73364365-f98d-571d-8e8e-022186cde3bc";
-        public static final String clientSecret = "jPT8HDU4YfSa+oBoAoTtflvXm+TZP9FjWbcNYMb0d88=";//"T2+PyTibG6f29DcYrhhkoVpD3VSgH/zizJlK8+yMglg=";
-        public static final String identity = "riz@testadmin3.xyz";
-
-
-        public static final String chatBotName = "Shopbot_2";
-        public static final String taskBotId = "st-75bdb67c-894d-520e-a98b-2927a485f604";
-
-        //Not needed for anonymous user
-        public static final String demo_auth_token = "mO6emCF8p-rOpDR-cJbQCKg9yTFLqxF_nHEe_d6ZcyBtDnDf3DYpPs9RG3qnqZlS";
-/*>>>>>>> 17e5ca1... JWT Grant related changes*/
     }
 
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"KoreBots"</string>
+    <string name="app_name">"Kore.ai"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>

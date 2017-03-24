@@ -34,7 +34,7 @@ public class BotRestService extends RetrofitGsonSpiceService {
 
     @Override
     protected String getServerUrl() {
-        return SDKConfiguration.Server.KORE_BOT_SERVER_URL;
+        return SDKConfiguration.Config.KORE_BOT_SERVER_URL;
     }
 
     @Override

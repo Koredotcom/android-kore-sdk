@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.event.TapToSpeakEventPublisher;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.speechtotext.AudioCue;
 import kore.botssdk.speechtotext.AudioDataReceivedListener;
 import kore.botssdk.speechtotext.AudioRecorder;
@@ -87,7 +88,7 @@ public class TapToSpeakFragment extends Fragment {
         if (SocketWrapperForTextToSpeech.getInstance(getActivity()).isConnected()) {
             audioCue.playStartSoundAndSleep();
         } else {
-            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, "ramachandra.pradeep.challa@kore.com");
+            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, SDKConfiguration.Config.identity);
         }
     }
 
@@ -198,6 +199,7 @@ public class TapToSpeakFragment extends Fragment {
         sendEOF();
         mRecordingThread.stop();
 //        handler.removeCallbacks(updateVisualizer);
+        if(mListener != null)
         mListener.onCloseButtonClicked(0);
         TapToSpeakEventPublisher.stop();
     }

@@ -139,7 +139,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            } else if (sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment.getState()!= AudioRecorder.State.RECORDING) {
+            } else if (sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment != null && tapToSpeakFragment.getState()!= AudioRecorder.State.RECORDING) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
             }

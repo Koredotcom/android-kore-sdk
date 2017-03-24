@@ -148,6 +148,7 @@
                         android:paddingStart="8dp"
                         android:scrollbars="vertical"
                         android:tag="regular"
+                        android:textColor="@color/bubble_dark_text_color"
                         android:textSize="16sp" />
 
                 </LinearLayout>

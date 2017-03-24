@@ -20,7 +20,6 @@ import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.KoreLoginRequest;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.Contants;
 
 /**
  * Created by Pradeep Mahato on 26-May-16.
@@ -39,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isAnonymous = SDKConfiguration.Server.IS_ANONYMOUS_USER;
+        isAnonymous = SDKConfiguration.Config.IS_ANONYMOUS_USER;
         findViewsAndSetListeners();
 //        clearPref();
         getSupportActionBar().setSubtitle("Bot");
@@ -47,13 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void findViewsAndSetListeners() {
         startUsingBot = (Button) findViewById(R.id.startUsingBot);
+        startUsingBot.setText("Chat with "+SDKConfiguration.Config.chatBotName);
         startUsingBot.setOnClickListener(startUsingBotBtnOnClickListener);
 
        /* normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
         normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);*/
 
 //        txtBotName = (TextView) findViewById(R.id.txtBotName);
-//        txtBotName.setText(SDKConfiguration.Client.chatBotName);
+//        txtBotName.setText(SDKConfiguration.Config.chatBotName);
 
 
     }
@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
     private void loginAndLaunchBotActivity() {
         showProgress("Please wait while logging in");
         HashMap<String, Object> credMap = new HashMap<String, Object>();
-      //  credMap.put("username", SDKConfiguration.Client.email_id);
-      //  credMap.put("password", SDKConfiguration.Client.password);
+      //  credMap.put("username", SDKConfiguration.Config.email_id);
+      //  credMap.put("password", SDKConfiguration.Config.password);
         credMap.put("scope", "friends");
         credMap.put("client_secret", "1");
         credMap.put("client_id", "1");
@@ -153,28 +153,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void launchBotChatActivity(boolean isAnonymous) {
 
-        /*Intent intent = new Intent(getApplicationContext(), BotHomeActivity.class);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleUtils.LOGIN_MODE, (isAnonymous) ? Contants.ANONYMOUS_FLOW : Contants.NORMAL_FLOW);
-        bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        if(!isAnonymous){
-            bundle.putString(BundleUtils.USER_ID,userId);
-            bundle.putString(BundleUtils.ACCESS_TOKEN,accessToken);
-        }
-        intent.putExtras(bundle);
-
-        startActivity(intent);*/
-
         Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
 
         Bundle botChatActivityBundle = new Bundle();
-        botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
-        botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
-//        botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
-//        botChatActivityBundle.putString(BundleUtils.USER_ID,userId);
+        botChatActivityBundle.putString(BundleUtils.CHATBOT, SDKConfiguration.Config.chatBotName);
+        botChatActivityBundle.putString(BundleUtils.TASKBOTID, SDKConfiguration.Config.botId);
+        botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
 //        botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
-//        botChatActivityBundle.putString(BundleUtils.ACCESS_TOKEN,accessToken);
         botChatActivityIntent.putExtras(botChatActivityBundle);
 
         startActivity(botChatActivityIntent);
@@ -182,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /*private void saveToPrefAndLaunch(boolean isAnonymous) {
-//        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, SDKConfiguration.Client.demo_user_id, SDKConfiguration.Client.demo_auth_token);
+//        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, SDKConfiguration.Config.demo_user_id, SDKConfiguration.Config.demo_auth_token);
 
             launchBotChatActivity(isAnonymous);
     }*/

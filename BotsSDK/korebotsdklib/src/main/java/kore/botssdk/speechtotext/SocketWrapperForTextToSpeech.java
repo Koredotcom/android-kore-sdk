@@ -67,7 +67,7 @@ public final class SocketWrapperForTextToSpeech {
      *
      * @param accessToken   : AccessToken of the loged user.
      * @param chatBotName:      Name of the chat-bot
-     * @param taskBotId:    Chat-bot's taskId
+     * @param botId:    Chat-bot's taskId
      */
     /**
      * To connect the user presence
@@ -85,7 +85,7 @@ public final class SocketWrapperForTextToSpeech {
              * Preparing presence Url
              */
 
-        String url = "wss://"+ SDKConfiguration.Server.SERVER_IP + "?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
+        String url = SDKConfiguration.Config.SPEECH_SERVER_BASE_URL + "?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
         Log.d(LOG_TAG,"The url is "+ url);
         try {
             this.uri = new URI(url);

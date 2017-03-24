@@ -38,18 +38,6 @@ public class BotClient {
     }
 
     /**
-     * Connection for authenticated user
-     *
-     * @param accessToken
-     * @param chatBot
-     * @param taskBotId
-     * @param socketConnectionListener
-     */
-    public void connectAsAuthenticatedUser(String accessToken, String chatBot, String taskBotId, SocketConnectionListener socketConnectionListener) {
-        SocketWrapper.getInstance(mContext).connect(accessToken, chatBot, taskBotId, socketConnectionListener);
-    }
-
-    /**
      * Connection for anonymous user
      *
      * @param clientId
