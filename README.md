@@ -107,7 +107,9 @@ SocketConnectionListener socketConnectionListener = new SocketConnectionListener
 String accessToken = "Y6w*******************";
 String chatBot = "My Bot";
 String taskBotId = "st-**************";
-botconnector.connectAsAuthenticatedUser(accessToken, chatBot, taskBotId, socketConnectionListener);
+botClient.connectAsAnonymousUser(jwt.getJwt(),
+            SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
+
 ```
 #### 4. JWT genration
     a. You need to have secure token service hosted in your environment which returns the JWT token.
