@@ -16,7 +16,7 @@ public interface BotDemoRestAPI {
             "alg:RS256",
             "typ:JWT"
     })
-    @POST("/api/users/sts")
+    @POST("/websdk/users/sts")
     RestResponse.JWTTokenResponse getJWTToken(@Body HashMap<String, Object> jsonObject);
 
 }

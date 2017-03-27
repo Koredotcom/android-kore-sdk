@@ -338,8 +338,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             @Override
             public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
                 botClient.connectAsAnonymousUser(jwt.getJwt(),
-                        SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
-            }
+            SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
+        }
         });
     }
 }
