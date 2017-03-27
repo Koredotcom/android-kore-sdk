@@ -34,7 +34,7 @@ public class SDKConfiguration {
         public static final String clientSecret = "723ItR1V1iXcWuSsS5aRBaN16sKzR4QkwbH2MSmTQcI=";//"1Jm6IHQt8PfunGjgtV444wfEff3YnwtYd1tjmZElXIY=";// Copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
         public static String identity = "abc@gmail.com";//"demo@example.com";// This should represent the subject for JWT token. This can be an email or phone number, in case of known user, and in case of anonymous user, this can be a randomly generated unique id.
 
-        public static final String chatBotName = "TestBot";//"BBCConsu";// Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. "Demo Bot"
+        public static final String chatBotName = "ConsumerBot";//"BBCConsu";// Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. "Demo Bot"
         public static final String botId = "st-c4e66389-5b6c-5270-8186-e904a8a22357";//"st-a03b7d94-8823-568f-b3aa-a0bf80a91e16"; // Copy this value from Bot Builder -> Channels -> Web/Mobile Config  ex. st-acecd91f-b009-5f3f-9c15-7249186d827d
 
         public static final String KORE_BOT_SERVER_URL = "http://docker.korebot.com/";//"https://pilot-bots.kore.com/";// Replace it with your on-premise server URL, if required

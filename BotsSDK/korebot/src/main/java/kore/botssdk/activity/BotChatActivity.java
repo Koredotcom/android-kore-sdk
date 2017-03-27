@@ -37,8 +37,10 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.Contants;
+import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SocketConnectionEventStates;
+import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 
@@ -147,8 +149,14 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void updateTitleBar() {
-        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) ? chatBot : chatBot+" - anonymous");
-        getSupportActionBar().setSubtitle(botName);
+
+        if(Utils.isNetworkAvailable(this)) {
+            String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) ? chatBot : chatBot + " - anonymous");
+            getSupportActionBar().setSubtitle(botName);
+        }else{
+            CustomToast.showToast(getApplicationContext(), "No network avilable.");
+            getSupportActionBar().setSubtitle("Disconnected");
+        }
     }
 
     private void updateTitleBar(SocketConnectionEventStates socketConnectionEvents) {
@@ -180,8 +188,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                 break;
         }
 
-        if (!titleMsg.isEmpty()) {
+        if (Utils.isNetworkAvailable(this) && !titleMsg.isEmpty()) {
             getSupportActionBar().setSubtitle(titleMsg);
+        }else{
+            CustomToast.showToast(getApplicationContext(), "No network avilable.");
+                getSupportActionBar().setSubtitle("Disconnected");
         }
     }
     private void connectToWebSocketAnonymous() {
@@ -224,7 +235,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         switch (code) {
             case CONNECTION_LOST:
                 updateTitleBar(SocketConnectionEventStates.DISCONNECTED);
-                break;
+                return;
             case CANNOT_CONNECT:
             case PROTOCOL_ERROR:
             case INTERNAL_ERROR:
