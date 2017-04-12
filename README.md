@@ -26,7 +26,7 @@ Kore SDK for Android enables you to talk to Kore bots over a web socket. This re
 ## Instructions
 
 ### Configuration changes
-* Setting up clientId, clientSecret, botId, chatBotName and identity in  BotsSDK/korebotsdklib/src/main/java/kore/botssdk/net/SDKConfiguration.java
+* Setting up clientId, clientSecret, botId, botName and identity in SDKConfiguration.java
 
 Client id - Copy this id from Bot Builder SDK Settings ex. cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
  ```
@@ -106,10 +106,7 @@ SocketConnectionListener socketConnectionListener = new SocketConnectionListener
 ```
 #### 3. Initialize RTM client
 ```
-String accessToken = "Y6w*******************";
-String chatBot = "My Bot";
-String taskBotId = "st-**************";
-botClient.connectAsAnonymousUser(jwt.getJwt(),
+botClient.connectAsAnonymousUser(jwt,
             SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
 
 ```
