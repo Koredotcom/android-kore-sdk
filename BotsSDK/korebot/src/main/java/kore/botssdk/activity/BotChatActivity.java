@@ -10,12 +10,8 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Date;
-import java.util.UUID;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
@@ -31,12 +27,9 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.net.BotDemoRestService;
-import kore.botssdk.net.JWTGrantRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.Contants;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SocketConnectionEventStates;
@@ -58,8 +51,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     FragmentTransaction fragmentTransaction;
 
-    String chatBot, taskBotId, accessToken;
-    String loginMode = Contants.NORMAL_FLOW;
+
+    String chatBot, taskBotId, jwt;
 
     Handler actionBarTitleUpdateHandler;
 
@@ -70,7 +63,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
-    private SpiceManager spiceManagerForJWT = new SpiceManager(BotDemoRestService.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,30 +108,15 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         botClient.disconnect();
         super.onDestroy();
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        spiceManagerForJWT.start(getApplicationContext());
-    }
-
-    @Override
-    protected void onStop() {
-        spiceManagerForJWT.shouldStop();
-        super.onStop();
-    }
 
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            chatBot = bundle.getString(BundleUtils.BOT_NAME, "");
-            taskBotId = bundle.getString(BundleUtils.BOT_ID, "");
-            loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
-            accessToken = bundle.getString(BundleUtils.ACCESS_TOKEN,"");
+
+            jwt = bundle.getString(BundleUtils.JWT_TOKEN,"");
         }
-//        if(loginMode.equalsIgnoreCase(Contants.ANONYMOUS_FLOW)){
-            chatBot = bundle.getString(BundleUtils.BOT_NAME,"");
-            taskBotId = bundle.getString(BundleUtils.BOT_ID);
-//        }
+        chatBot = SDKConfiguration.Client.bot_name;
+        taskBotId = SDKConfiguration.Client.bot_id;
     }
 
     private void findViews() {
@@ -150,13 +127,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     private void updateTitleBar() {
 
-        if(Utils.isNetworkAvailable(this)) {
-            String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) ? chatBot : chatBot + " - anonymous");
-            getSupportActionBar().setSubtitle(botName);
-        }else{
-            CustomToast.showToast(getApplicationContext(), "No network avilable.");
-            getSupportActionBar().setSubtitle("Disconnected");
-        }
+        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot+" - anonymous" : chatBot);
+        getSupportActionBar().setSubtitle(botName);
     }
 
     private void updateTitleBar(SocketConnectionEventStates socketConnectionEvents) {
@@ -196,7 +168,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
     private void connectToWebSocketAnonymous() {
-        getJWTToken();
+        botClient.connectAsAnonymousUser(jwt,SDKConfiguration.Client.client_id,chatBot,taskBotId, BotChatActivity.this);
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
 
@@ -330,27 +302,5 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             }
         }
     }
-    private void getJWTToken(){
-        String id;
-        if(SDKConfiguration.Server.IS_ANONYMOUS_USER){
-            id = UUID.randomUUID().toString();
-        }else{
-            id = SDKConfiguration.Client.identity;
-        }
 
-        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
-                SDKConfiguration.Client.client_secret, id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
-        spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
-                botClient.connectAsAnonymousUser(jwt.getJwt(),
-            SDKConfiguration.Client.client_id,chatBot,taskBotId, BotChatActivity.this);
-        }
-        });
-    }
 }

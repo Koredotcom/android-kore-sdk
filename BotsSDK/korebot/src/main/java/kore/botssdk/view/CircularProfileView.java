@@ -1,7 +1,6 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,10 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -26,7 +23,7 @@ import java.io.File;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.drawables.ProfileDrawable;
-import kore.botssdk.utils.Contants;
+import kore.botssdk.utils.StringConstants;
 
 /**
  * Created by tapasya on 01/10/15.
@@ -35,7 +32,7 @@ import kore.botssdk.utils.Contants;
 public class CircularProfileView extends RoundedImageView {
 
     private static final int DEFAULT_BADGE_TEXT_SIZE = 12;
-    public static String DEFAULT_PROFILE_COLOR = Contants.DEFAULT_PROFILE_COLOR;
+    public static String DEFAULT_PROFILE_COLOR = StringConstants.DEFAULT_PROFILE_COLOR;
     public static final int PRESENCE_STATUS_INVALID = -100;
     private float TAG_RADIUS;
     private Paint mPaint;
@@ -168,7 +165,7 @@ public class CircularProfileView extends RoundedImageView {
         }
 
         if (applyRoundTransform) {
-            if (url.startsWith(Contants.HTTP_SCHEME)) {
+            if (url.startsWith(StringConstants.HTTP_SCHEME)) {
                 Picasso.with(getContext())
                         .load(url)
                         .transform(getRoundTransformation())
@@ -181,7 +178,7 @@ public class CircularProfileView extends RoundedImageView {
             }
 
         } else {
-            if (url.startsWith(Contants.HTTP_SCHEME)) {
+            if (url.startsWith(StringConstants.HTTP_SCHEME)) {
                 Picasso.with(getContext())
                         .load(url)
                         .into(viewTarget);

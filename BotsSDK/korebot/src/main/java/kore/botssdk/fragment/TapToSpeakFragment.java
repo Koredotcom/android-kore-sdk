@@ -205,7 +205,8 @@ public class TapToSpeakFragment extends Fragment {
     }
     public void clearBuffAndCloseFragment(){
         sbf.delete(0, sbf.length());
-        closeFragment();
+        if(!TapToSpeakFragment.this.isDetached() && TapToSpeakFragment.this.getActivity() != null)
+            closeFragment();
     }
 
     public AudioRecorder.State getState(){

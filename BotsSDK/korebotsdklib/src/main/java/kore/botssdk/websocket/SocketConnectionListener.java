@@ -3,6 +3,7 @@ package kore.botssdk.websocket;
 import kore.botssdk.autobahn.WebSocket;
 
 /**
+ * Created by Ramachandra
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public interface SocketConnectionListener {

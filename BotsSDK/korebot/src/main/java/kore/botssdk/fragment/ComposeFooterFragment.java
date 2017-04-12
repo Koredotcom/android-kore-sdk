@@ -107,6 +107,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message);
+            if(tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()){
+                tapToSpeakFragment.clearBuffAndCloseFragment();
+                editTextMessage.setText("");
+            }
         } else {
             Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
@@ -230,19 +234,25 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         @Override
         public void onCloseButtonClicked(int resultCode) {
             editTextMessage.setEnabled(true);
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
+            try {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
 //        ft.setCustomAnimations(R.anim.abc_slide_out_bottom,R.anim.anim_no_transition);
-            ft.remove(fm.findFragmentByTag(TapToSpeakFragmentTag));
-            ft.commit();
+                ft.remove(fm.findFragmentByTag(TapToSpeakFragmentTag));
+                ft.commit();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
             stopRecording();
         }
 
         @Override
         public void audioDataToTextView(String text) {
-            editTextMessage.setText(text);
-            editTextMessage.setSelection(editTextMessage.getText().length());
+            if(tapToSpeakFragment != null && !tapToSpeakFragment.isDetached() && tapToSpeakFragment.getState() == AudioRecorder.State.RECORDING) {
+                editTextMessage.setText(text);
+                editTextMessage.setSelection(editTextMessage.getText().length());
+            }
         }
     };
 

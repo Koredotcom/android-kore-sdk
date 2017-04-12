@@ -3,25 +3,21 @@ package kore.botssdk.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.AvailableBotListAdapter;
-import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.BotRestService;
-import kore.botssdk.net.GetBotMarketStreams;
-import kore.botssdk.net.MarketStreamList;
+import kore.botssdk.net.JWTGrantRequest;
+import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.Contants;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -29,16 +25,10 @@ import kore.botssdk.utils.Contants;
  */
 public class BotHomeActivity extends AppCompatActivity {
 
-    Button launchBotBtn;
-    ListView botListView;
-    AvailableBotListAdapter availableBotListAdapter;
+    private Button launchBotBtn;
+    private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    private SpiceManager spiceManagerForJWT = new SpiceManager(BotDemoRestService.class);
 
-    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
-
-    String loginMode = Contants.NORMAL_FLOW;
-    String userId, accessToken;
-
-    String LOG_TAG = BotHomeActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,38 +37,16 @@ public class BotHomeActivity extends AppCompatActivity {
 
         findViews();
         setListeners();
-        getBundleInfo();
     }
 
     private void findViews() {
-        launchBotBtn = (Button) findViewById(R.id.btnQuit);
-        launchBotBtn.setText("Exit");
-        botListView = (ListView) findViewById(R.id.botListView);
+
+        launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
+        launchBotBtn.setText("Talk to "+ SDKConfiguration.Client.bot_name);
     }
 
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
-        botListView.setOnItemClickListener(botListVieOnItemClickListener);
-    }
-
-    private void getBundleInfo() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            loginMode = bundle.getString(BundleUtils.LOGIN_MODE, Contants.NORMAL_FLOW);
-            userId = bundle.getString(BundleUtils.USER_ID,"");
-            accessToken = bundle.getString(BundleUtils.ACCESS_TOKEN,"");
-        }
-    }
-
-    private void setAdapter(MarketStreamList marketStreamList) {
-
-        if (availableBotListAdapter == null) {
-            availableBotListAdapter = new AvailableBotListAdapter(getApplicationContext(), marketStreamList);
-            botListView.setAdapter(availableBotListAdapter);
-        } else {
-            availableBotListAdapter.setMarketStreamList(marketStreamList);
-            availableBotListAdapter.notifyDataSetChanged();
-        }
 
     }
 
@@ -86,19 +54,15 @@ public class BotHomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         spiceManager.start(getApplicationContext());
+        spiceManagerForJWT.start(getApplicationContext());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (loginMode.equalsIgnoreCase(Contants.NORMAL_FLOW)) {
-//            getAllBotsFromMarketStream();
-        }
-    }
+
 
     @Override
     protected void onStop() {
         spiceManager.shouldStop();
+        spiceManagerForJWT.shouldStop();
         super.onStop();
     }
 
@@ -109,54 +73,42 @@ public class BotHomeActivity extends AppCompatActivity {
     View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            System.exit(0);
-        }
-    };
-
-    AdapterView.OnItemClickListener botListVieOnItemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            MarketStreams marketStreams = availableBotListAdapter.getItem(position);
-
-            Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
-
-            Bundle botChatActivityBundle = new Bundle();
-            botChatActivityBundle.putString(BundleUtils.BOT_NAME, marketStreams.getName());
-            botChatActivityBundle.putString(BundleUtils.BOT_ID, marketStreams.get_id());
-            botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
-            botChatActivityBundle.putString(BundleUtils.USER_ID,userId);
-            botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
-            botChatActivityBundle.putString(BundleUtils.ACCESS_TOKEN,accessToken);
-            botChatActivityIntent.putExtras(botChatActivityBundle);
-
-            startActivity(botChatActivityIntent);
+            getJWTToken();
         }
     };
 
     /**
-     * END of : Listeners
+     * This Service call to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
      */
 
-    private void getAllBotsFromMarketStream() {
-
-//        String userId = BotSharedPreferences.getUserIdFromPreferences(getApplicationContext());
-//        String accessToken = BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext());
-
-        GetBotMarketStreams getBotMarketStreams = new GetBotMarketStreams(userId, accessToken);
-
-        spiceManager.execute(getBotMarketStreams, new RequestListener<MarketStreamList>() {
+    private void getJWTToken(){
+        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
+                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+        spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\nonRequestFailure : " + e.getMessage());
+                Toast.makeText(BotHomeActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onRequestSuccess(MarketStreamList marketStreamList) {
-                Log.e(LOG_TAG, "getAllBotsFromMarketStream()\n" +
-                        "onRequestSuccess : listSize -> " + marketStreamList.size());
-                setAdapter(marketStreamList);
+            public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
+                launchBotChatActivity(jwt.getJwt());
             }
         });
+    }
 
+    /**
+     * Launching BotchatActivity where user can interact with bot
+     * @param jwt
+     */
+    private void launchBotChatActivity(String jwt){
+        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Bundle bundle = new Bundle();
+        //This should not be null
+        bundle.putString(BundleUtils.JWT_TOKEN, jwt);
+        bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
     }
 }

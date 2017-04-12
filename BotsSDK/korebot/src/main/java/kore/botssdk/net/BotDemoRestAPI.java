@@ -2,7 +2,6 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.Headers;
 import retrofit.http.POST;
@@ -16,7 +15,8 @@ public interface BotDemoRestAPI {
             "alg:RS256",
             "typ:JWT"
     })
-    @POST("/websdk/users/sts")
+    //@POST("/api/users/sts")
+    @POST("/users/sts")
     RestResponse.JWTTokenResponse getJWTToken(@Body HashMap<String, Object> jsonObject);
 
 }

@@ -3,7 +3,6 @@ package kore.botssdk.websocket;
 import android.content.Context;
 import android.util.Log;
 
-import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
@@ -14,10 +13,8 @@ import java.util.HashMap;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
-import kore.botssdk.models.AnonymousAssertionModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.BaseSpiceManager;
-import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;

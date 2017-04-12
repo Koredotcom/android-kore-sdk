@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.zip.Inflater;
-
 import kore.botssdk.R;
 import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.MarketStreamList;
@@ -20,6 +18,7 @@ import kore.botssdk.net.MarketStreamList;
  * Created by Pradeep Mahato on 06-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@Deprecated
 public class AvailableBotListAdapter extends BaseAdapter {
 
     MarketStreamList marketStreamList;
