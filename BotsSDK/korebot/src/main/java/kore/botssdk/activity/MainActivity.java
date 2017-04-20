@@ -25,6 +25,7 @@ import kore.botssdk.utils.BundleUtils;
  * Created by Pradeep Mahato on 26-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@Deprecated
 public class MainActivity extends AppCompatActivity {
 
     private Button startUsingBot;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        isAnonymous = SDKConfiguration.Config.IS_ANONYMOUS_USER;
+        isAnonymous = SDKConfiguration.Server.IS_ANONYMOUS_USER;
         findViewsAndSetListeners();
 //        clearPref();
         getSupportActionBar().setSubtitle("Bot");
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void findViewsAndSetListeners() {
         startUsingBot = (Button) findViewById(R.id.startUsingBot);
-        startUsingBot.setText("Chat with "+SDKConfiguration.Config.chatBotName);
+        startUsingBot.setText("Chat with "+SDKConfiguration.Client.bot_name);
         startUsingBot.setOnClickListener(startUsingBotBtnOnClickListener);
 
        /* normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
@@ -156,8 +157,8 @@ public class MainActivity extends AppCompatActivity {
         Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
 
         Bundle botChatActivityBundle = new Bundle();
-        botChatActivityBundle.putString(BundleUtils.CHATBOT, SDKConfiguration.Config.chatBotName);
-        botChatActivityBundle.putString(BundleUtils.TASKBOTID, SDKConfiguration.Config.botId);
+        botChatActivityBundle.putString(BundleUtils.BOT_NAME, SDKConfiguration.Client.bot_name);
+        botChatActivityBundle.putString(BundleUtils.BOT_ID, SDKConfiguration.Client.bot_id);
         botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
 //        botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
         botChatActivityIntent.putExtras(botChatActivityBundle);

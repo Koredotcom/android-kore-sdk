@@ -88,7 +88,7 @@ public class TapToSpeakFragment extends Fragment {
         if (SocketWrapperForTextToSpeech.getInstance(getActivity()).isConnected()) {
             audioCue.playStartSoundAndSleep();
         } else {
-            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, SDKConfiguration.Config.identity);
+            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, SDKConfiguration.Client.identity);
         }
     }
 

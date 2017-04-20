@@ -121,8 +121,8 @@ public class BotHomeActivity extends AppCompatActivity {
             Intent botChatActivityIntent = new Intent(getApplicationContext(), BotChatActivity.class);
 
             Bundle botChatActivityBundle = new Bundle();
-            botChatActivityBundle.putString(BundleUtils.CHATBOT, marketStreams.getName());
-            botChatActivityBundle.putString(BundleUtils.TASKBOTID, marketStreams.get_id());
+            botChatActivityBundle.putString(BundleUtils.BOT_NAME, marketStreams.getName());
+            botChatActivityBundle.putString(BundleUtils.BOT_ID, marketStreams.get_id());
             botChatActivityBundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, true);
             botChatActivityBundle.putString(BundleUtils.USER_ID,userId);
             botChatActivityBundle.putString(BundleUtils.CHANNEL_ICON_URL,marketStreams.getIcon());
