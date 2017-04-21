@@ -147,6 +147,10 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     botCustomListView.setVisibility(View.VISIBLE);
                     botCustomListView.populateBotListView(payInner.getButtons());
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)){
+                    botCustomListView.setVisibility(View.VISIBLE);
+                    botCustomListView.populateBotListView(payInner.convertQuickReplyToButton(payInner.getQuick_replies()));
+                    bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_LIST)){
 
                     botCustomListView.setVisibility(View.VISIBLE);

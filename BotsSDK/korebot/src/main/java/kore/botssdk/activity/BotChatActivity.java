@@ -18,6 +18,7 @@ import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
+//import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -59,7 +60,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
-    QuickReplyFragment quickReplyFragment;
+//    QuickReplyFragment quickReplyFragment;
 
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
@@ -78,12 +79,12 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
-        //Add Suggestion Fragment
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        quickReplyFragment = new QuickReplyFragment();
-        quickReplyFragment.setArguments(getIntent().getExtras());
-        quickReplyFragment.setListener(BotChatActivity.this);
-        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
+//        //Add Suggestion Fragment
+//        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        quickReplyFragment = new QuickReplyFragment();
+//        quickReplyFragment.setArguments(getIntent().getExtras());
+//        quickReplyFragment.setListener(BotChatActivity.this);
+//        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -278,7 +279,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         Gson gson = new Gson();
         try {
             BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
-            checkForQuickReplies(botResponse);
+            if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
+//            checkForQuickReplies(botResponse);
             botContentFragment.addMessageToBotChatAdapter(botResponse);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
@@ -286,7 +288,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     }
 
-    private void checkForQuickReplies(BotResponse botResponse) {
+    /*private void checkForQuickReplies(BotResponse botResponse) {
         if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
         ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
         if (compModel != null) {
@@ -301,6 +303,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
             }
         }
-    }
+    }*/
 
 }

@@ -54,4 +54,21 @@ public class PayloadInner {
     public ArrayList<ListTemplate> getElements() {
         return elements;
     }
+
+    public ArrayList<ButtonTemplate> convertQuickReplyToButton(ArrayList<QuickReplyTemplate> quick_replies){
+        ArrayList<ButtonTemplate> buttonTemplates = null;
+        if(quick_replies != null && quick_replies.size()>0){
+            buttonTemplates = new ArrayList<>(quick_replies.size());
+            for(QuickReplyTemplate template:quick_replies){
+                ButtonTemplate buttonTemplate = new ButtonTemplate();
+                buttonTemplate.setTitle(template.getTitle());
+                buttonTemplate.setPayload(template.getPayload());
+                buttonTemplate.setType(template.getContent_type());
+                buttonTemplates.add(buttonTemplate);
+            }
+
+        }
+        return buttonTemplates;
+    }
+
 }
