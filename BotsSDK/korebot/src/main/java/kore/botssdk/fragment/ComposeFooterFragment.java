@@ -96,8 +96,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String msg = editTextMessage.getText().toString().trim();
-            if (!msg.isEmpty()) {
+            String msg = editTextMessage.getText().toString();
+            if (!msg.trim().isEmpty()) {
                 editTextMessage.setText("");
                 sendMessageText(msg);
             }

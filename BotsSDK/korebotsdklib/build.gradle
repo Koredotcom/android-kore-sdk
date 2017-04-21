@@ -29,4 +29,5 @@ dependencies {
     compile files('libs/robospice-cache-1.4.12.jar')
     compile files('libs/robospice-retrofit-1.4.12.jar')
     compile files('libs/jackson-core-asl-1.9.7.jar')
+    compile files('libs/commons-lang3-3.2.1.jar')
 }

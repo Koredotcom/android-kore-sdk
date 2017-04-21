@@ -24,6 +24,9 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.BotListCustomAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
+import kore.botssdk.utils.markdown.MarkdownTagHandler;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -50,9 +53,11 @@ public class TextMediaLayout extends MediaLayout {
     int widthStyle = 0;
 
     float dp1;
+    private Context mContext;
 
     public TextMediaLayout(Context context) {
         super(context);
+        this.mContext = context;
         init();
     }
 
@@ -95,10 +100,12 @@ public class TextMediaLayout extends MediaLayout {
 
     public void populateText(String textualContent) {
         textualContent = StringUtils.unescapeHtml3(textualContent);
-        CharSequence sequence = Html.fromHtml(textualContent.replace("\n","<br />"));
+        textualContent = MarkdownUtil.processMarkDown(textualContent);
+        CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
+                new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for(URLSpan span : urls) {
+        for (URLSpan span : urls) {
             makeLinkClickable(strBuilder, span);
         }
         botContentTextView.setText(strBuilder);
