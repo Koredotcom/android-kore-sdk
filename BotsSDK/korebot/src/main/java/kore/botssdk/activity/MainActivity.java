@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.activity;
 
 import android.app.ProgressDialog;
@@ -21,10 +22,12 @@ import kore.botssdk.net.KoreLoginRequest;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
+*/
 /**
  * Created by Pradeep Mahato on 26-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 @Deprecated
 public class MainActivity extends AppCompatActivity {
 
@@ -50,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
         startUsingBot.setText("Chat with "+SDKConfiguration.Client.bot_name);
         startUsingBot.setOnClickListener(startUsingBotBtnOnClickListener);
 
-       /* normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
-        normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);*/
+       */
+/* normalLoginBtn = (Button) findViewById(R.id.normalLoginBtn);
+        normalLoginBtn.setOnClickListener(normalLoginBtnOnClickListener);*//*
+
 
 //        txtBotName = (TextView) findViewById(R.id.txtBotName);
 //        txtBotName.setText(SDKConfiguration.Config.chatBotName);
@@ -59,14 +64,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-   /* private void clearPref() {
+   */
+/* private void clearPref() {
         BotSharedPreferences.clearPreferences(MainActivity.this);
     }
 
     private boolean isAlreadyLoggedIn() {
         return BotSharedPreferences.getAccessTokenFromPreferences(getApplicationContext()) != null
                 && BotSharedPreferences.getUserIdFromPreferences(getApplicationContext()) != null;
-    }*/
+    }*//*
+
 
     protected void showProgress(String msg) {
         if (!isFinishing()) {
@@ -80,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
+    */
+/**
      * Method to dismiss the progress dialog
-     */
+     *//*
+
     protected void dismissProgress() {
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
@@ -107,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    /**
+    */
+/**
      * Start of : Listeners
-     */
+     *//*
+
 
     View.OnClickListener startUsingBotBtnOnClickListener = new View.OnClickListener() {
         @Override
@@ -167,14 +178,19 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*private void saveToPrefAndLaunch(boolean isAnonymous) {
+    */
+/*private void saveToPrefAndLaunch(boolean isAnonymous) {
 //        boolean successfullySaved = BotSharedPreferences.saveCredsToPreferences(MainActivity.this, SDKConfiguration.Config.demo_user_id, SDKConfiguration.Config.demo_auth_token);
 
             launchBotChatActivity(isAnonymous);
-    }*/
+    }*//*
 
-    /**
+
+    */
+/**
      * End of : Utility Methods
-     */
+     *//*
+
 
 }
+*/
