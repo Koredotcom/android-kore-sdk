@@ -37,7 +37,6 @@ import kore.botssdk.utils.SocketConnectionEventStates;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 
-
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -94,9 +93,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
 
-
-
-
         updateTitleBar();
 
         botClient = new BotClient(this);
@@ -114,7 +110,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 
-            jwt = bundle.getString(BundleUtils.JWT_TOKEN,"");
+            jwt = bundle.getString(BundleUtils.JWT_TOKEN, "");
         }
         chatBot = SDKConfiguration.Client.bot_name;
         taskBotId = SDKConfiguration.Client.bot_id;
@@ -127,8 +123,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void updateTitleBar() {
-
-        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot+" - anonymous" : chatBot);
+        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot + " - anonymous" : chatBot);
         getSupportActionBar().setSubtitle(botName);
     }
 
@@ -163,13 +158,14 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
         if (Utils.isNetworkAvailable(this) && !titleMsg.isEmpty()) {
             getSupportActionBar().setSubtitle(titleMsg);
-        }else{
+        } else {
             CustomToast.showToast(getApplicationContext(), "No network avilable.");
-                getSupportActionBar().setSubtitle("Disconnected");
+            getSupportActionBar().setSubtitle("Disconnected");
         }
     }
+
     private void connectToWebSocketAnonymous() {
-        botClient.connectAsAnonymousUser(jwt,SDKConfiguration.Client.client_id,chatBot,taskBotId, BotChatActivity.this);
+        botClient.connectAsAnonymousUser(jwt, SDKConfiguration.Client.client_id, chatBot, taskBotId, BotChatActivity.this);
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
 
@@ -197,14 +193,13 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             composeFooterUpdate = null;
         }
         //By sending null initiating sending which are un-delivered in pool
-        botClient.sendMessage(null,null,null);
+        botClient.sendMessage(null, null, null);
         updateTitleBar(SocketConnectionEventStates.CONNECTED);
     }
 
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
 //        CustomToast.showToast(getApplicationContext(), "onDisconnected. Reason is " + reason);
-
         switch (code) {
             case CONNECTION_LOST:
                 updateTitleBar(SocketConnectionEventStates.DISCONNECTED);
@@ -238,16 +233,14 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     public void onSendClick(String message) {
 
 
-        botClient.sendMessage(message,chatBot,taskBotId);
+        botClient.sendMessage(message, chatBot, taskBotId);
 
         if (botContentFragmentUpdate != null) {
             //Update the bot content list with the send message
-
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             botPayLoad.setMessage(botMessage);
-            BotInfoModel botInfo = new BotInfoModel(chatBot,taskBotId);
+            BotInfoModel botInfo = new BotInfoModel(chatBot, taskBotId);
             botPayLoad.setBotInfo(botInfo);
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
@@ -270,7 +263,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onQuickReplyItemClicked(String text) {
-//        Toast.makeText(BotChatActivity.this,text,Toast.LENGTH_SHORT).show();
         onSendClick(text);
     }
 
@@ -304,5 +296,4 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             }
         }
     }*/
-
 }

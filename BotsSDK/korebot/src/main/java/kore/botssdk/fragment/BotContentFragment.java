@@ -48,7 +48,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         View view = inflater.inflate(R.layout.bot_content_layout, null);
         findViews(view);
         getBundleInfo();
-        initializeBotTypingStatus(view,mChannelIconURL);
+        initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
         setupTextToSpeech();
         return view;
@@ -88,12 +88,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     public void onPause() {
         if (textToSpeech != null) {
             textToSpeech.stop();
-            textToSpeech.shutdown();
         }
         super.onPause();
     }
 
-    public void addMessageToBotChatAdapter(final BotResponse botResponse){
+    public void addMessageToBotChatAdapter(final BotResponse botResponse) {
         if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             botTypingStatusRl.setVisibility(View.VISIBLE);
             botTypingStatusRl.postDelayed(new Runnable() {
@@ -111,16 +110,13 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             typingStatusItemDots.start();
             Log.d("Hey", "Started animation");
         }
-        /*if (botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            botsChatAdapter.addBaseBotMessage(botResponse);
-            scrollToBottom();
-        }*/
     }
+
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
         botTypingStatusIcon.populateLayout("B", mChannelIconURL, null, -1, 0, true);
-        typingStatusItemDots  = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
+        typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
     }
 
     private void scrollToBottom() {
