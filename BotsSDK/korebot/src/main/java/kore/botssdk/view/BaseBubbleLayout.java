@@ -112,6 +112,12 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         init();
     }
 
+    public BaseBubbleLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        this.context = getContext();
+        init();
+    }
+
     private void init() {
         initiliazeCoordinates();
         setWillNotDraw(false);
@@ -120,12 +126,6 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         setPaintColor(paint);
         paint.setAntiAlias(true);
         viewAddition();
-    }
-
-    public BaseBubbleLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        this.context = getContext();
-        init();
     }
 
     private void initiliazeCoordinates() {
@@ -245,6 +245,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     }
 
     abstract void initializeBubbleBorderPass1();
+
     abstract void initializeBubbleBorderPass2();
 
     @Override
@@ -284,10 +285,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         Bitmap curveBitmap = formCurveBitmap(senderImageRadius, bubbleCornerRadius);
 
         int x = 0;
-        int y = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getBottom() )+ BUBBLE_CONTENT_BOTTOM_MARGIN + 2 - senderImageRadius;
+        int y = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getBottom()) + BUBBLE_CONTENT_BOTTOM_MARGIN + 2 - senderImageRadius;
 
-        if(isLeftSide()) {
-            x = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN - 6 * dp1 - senderImageRadius + dp1/3);
+        if (isLeftSide()) {
+            x = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN - 6 * dp1 - senderImageRadius + dp1 / 3);
         } else {
             x = bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN - senderImageRadius;
         }
@@ -311,10 +312,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         curvePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         curvePaint.setColor(Color.WHITE);
-        if(isLeftSide()) {
-            curveCanvas.drawCircle(BUBBLE_LEFT_BORDER + 4 * dp1 - dp1/3, 0, channelImageRadius, curvePaint);
+        if (isLeftSide()) {
+            curveCanvas.drawCircle(BUBBLE_LEFT_BORDER + 4 * dp1 - dp1 / 3, 0, channelImageRadius, curvePaint);
         } else {
-            int circularCurveX = (int) ((isGroupMessage) ? channelImageRadius + bubbleRadius + 3 * dp1 : channelImageRadius + bubbleRadius + 3*dp1);
+            int circularCurveX = (int) ((isGroupMessage) ? channelImageRadius + bubbleRadius + 3 * dp1 : channelImageRadius + bubbleRadius + 3 * dp1);
             curveCanvas.drawCircle(circularCurveX, 0, channelImageRadius, curvePaint);
         }
 
@@ -327,15 +328,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         int dimen[] = textMediaDimen;
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
-        int rectBottom = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 :botCustomListView.getMeasuredHeight() - BUBBLE_CONTENT_BOTTOM_MARGIN) + BUBBLE_CONTENT_BOTTOM_MARGIN;
-        int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + (isLeftSide()?
-                0:BUBBLE_CONTENT_RIGHT_MARGIN);
+        int rectBottom = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight() - BUBBLE_CONTENT_BOTTOM_MARGIN) + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + (isLeftSide() ?
+                0 : BUBBLE_CONTENT_RIGHT_MARGIN);
 
         rect.set(rectLeft, rectTop, rectRight, rectBottom);
-        if(botCustomListView.getVisibility() == View.GONE)
+        if (botCustomListView.getVisibility() == View.GONE)
             canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
         else
-            canvas.drawRoundRect(rect, (float) (3* dp1), (float) (3 * dp1), paint);
+            canvas.drawRoundRect(rect, (float) (3 * dp1), (float) (3 * dp1), paint);
     }
 
     @Override
@@ -402,11 +403,11 @@ public abstract class BaseBubbleLayout extends ViewGroup {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
-            if(msg != null)
+            if (msg != null)
                 message = msg.getcInfo().getBody();
         }
 
-        if(message != null)
+        if (message != null)
             bubbleTextMediaLayout.startup(position, message, dimens);
     }
 
@@ -425,7 +426,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
      */
     protected void initializeBubbleContentDimen() {
         //STEP 1: Retrieve TextMedia Layout dimensional value... and also FooterLayoutDimentionalValue
-        textMediaDimen =  new int[]{Math.max(bubbleTextMediaLayout.getMeasuredWidth(), botCustomListView.getMeasuredWidth()), bubbleTextMediaLayout.getMeasuredHeight()+ (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight())/*+list.getMeasuredHeight()*/} ;//bubbleTextMediaLayout.getTextMediaLayoutDimens(bubbleMeta.getComponentMeta(), dimens);
+        textMediaDimen = new int[]{Math.max(bubbleTextMediaLayout.getMeasuredWidth(), botCustomListView.getMeasuredWidth()), bubbleTextMediaLayout.getMeasuredHeight() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight())/*+list.getMeasuredHeight()*/};//bubbleTextMediaLayout.getTextMediaLayoutDimens(bubbleMeta.getComponentMeta(), dimens);
 
         //STEP 2: Store additional informations required in further stage of UI rendering...
         maxBubbleDimen = new int[2];

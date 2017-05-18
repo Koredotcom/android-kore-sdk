@@ -1,5 +1,6 @@
 package kore.botssdk.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
@@ -132,6 +133,9 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     @Override
     public void updateContentListOnSend(BotRequest botRequest) {
         if (botRequest.getMessage() != null) {
+            if (textToSpeech != null) {
+                textToSpeech.stop();
+            }
             botsChatAdapter.addBaseBotMessage(botRequest);
             scrollToBottom();
         }
@@ -143,7 +147,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             if (textToSpeech != null) {
                 textToSpeech.stop();
             }
-            textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null, null);
+            } else {
+                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
+            }
         }
     }
 }
