@@ -1,6 +1,7 @@
 package kore.botssdk.fragment;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+
+import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
@@ -33,6 +36,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
+    private TextToSpeech textToSpeech;
 
     boolean shallShowProfilePic;
     private String mChannelIconURL;
@@ -46,6 +50,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         getBundleInfo();
         initializeBotTypingStatus(view,mChannelIconURL);
         setupAdapter();
+        setupTextToSpeech();
         return view;
     }
 
@@ -59,12 +64,33 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
     }
 
+    private void setupTextToSpeech() {
+        textToSpeech = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.US);
+                }
+            }
+        });
+    }
+
     private void getBundleInfo() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
         }
+    }
+
+    @Override
+    public void onPause() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onPause();
     }
 
     public void addMessageToBotChatAdapter(final BotResponse botResponse){
@@ -77,7 +103,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 //                        scrollToBottom();
                     botTypingStatusRl.setVisibility(View.GONE);
                     botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
-
+                    textToSpeech(botResponse);
                 }
             }, 2000);
         }
@@ -112,6 +138,16 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         if (botRequest.getMessage() != null) {
             botsChatAdapter.addBaseBotMessage(botRequest);
             scrollToBottom();
+        }
+    }
+
+    private void textToSpeech(BotResponse botResponse) {
+        if (botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
+            if (textToSpeech != null) {
+                textToSpeech.stop();
+            }
+            textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
 }
