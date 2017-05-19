@@ -1,7 +1,9 @@
 package kore.botssdk.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
+import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
@@ -22,6 +25,7 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
+import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -41,7 +45,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface {
+public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -50,12 +54,15 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     ProgressBar taskProgressBar;
 
     FragmentTransaction fragmentTransaction;
+    final Handler handler = new Handler();
 
 
     String chatBot, taskBotId, jwt;
 
     Handler actionBarTitleUpdateHandler;
 
+    TextToSpeech textToSpeech;
+    boolean isTTSEnabled = true;
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
@@ -94,6 +101,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         setComposeFooterUpdate(composeFooterFragment);
 
         updateTitleBar();
+        setupTextToSpeech();
 
         botClient = new BotClient(this);
 
@@ -164,6 +172,26 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
 
+    private void setupTextToSpeech() {
+        textToSpeech = new TextToSpeech(BotChatActivity.this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.US);
+                }
+            }
+        });
+        botContentFragment.setTextToSpeech(textToSpeech);
+        composeFooterFragment.setTtsUpdate(BotChatActivity.this);
+    }
+
+    private void stopTextToSpeech() {
+        if (!isTTSEnabled && textToSpeech != null) {
+            textToSpeech.stop();
+        }
+    }
+
     private void connectToWebSocketAnonymous() {
         botClient.connectAsAnonymousUser(jwt, SDKConfiguration.Client.client_id, chatBot, taskBotId, BotChatActivity.this);
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
@@ -187,6 +215,12 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     };
 
     @Override
+    protected void onPause() {
+        stopTextToSpeech();
+        super.onPause();
+    }
+
+    @Override
     public void onOpen() {
         if (composeFooterUpdate != null) {
             composeFooterUpdate.enableSendButton();
@@ -199,7 +233,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-//        CustomToast.showToast(getApplicationContext(), "onDisconnected. Reason is " + reason);
         switch (code) {
             case CONNECTION_LOST:
                 updateTitleBar(SocketConnectionEventStates.DISCONNECTED);
@@ -270,14 +303,43 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
         Gson gson = new Gson();
         try {
-            BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
+            final BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
             if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
 //            checkForQuickReplies(botResponse);
+            stopTextToSpeech();
             botContentFragment.addMessageToBotChatAdapter(botResponse);
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    textToSpeech(botResponse);
+                }
+            }, 2000);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void ttsUpdateListener(boolean isTTSEnabled) {
+        this.isTTSEnabled = isTTSEnabled;
+        stopTextToSpeech();
+    }
+
+    public boolean isTTSEnabled() {
+        return isTTSEnabled;
+    }
+
+    private void textToSpeech(BotResponse botResponse) {
+        if (isTTSEnabled && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
+            stopTextToSpeech();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null, null);
+            } else {
+                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
     }
 
     /*private void checkForQuickReplies(BotResponse botResponse) {

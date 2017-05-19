@@ -51,7 +51,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         getBundleInfo();
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
-        setupTextToSpeech();
         return view;
     }
 
@@ -65,16 +64,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
     }
 
-    private void setupTextToSpeech() {
-        textToSpeech = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                }
-            }
-        });
+    public void setTextToSpeech(TextToSpeech textToSpeech) {
+        this.textToSpeech = textToSpeech;
     }
 
     private void getBundleInfo() {
@@ -83,14 +74,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
         }
-    }
-
-    @Override
-    public void onPause() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-        }
-        super.onPause();
     }
 
     public void addMessageToBotChatAdapter(final BotResponse botResponse) {
@@ -103,7 +86,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 //                        scrollToBottom();
                     botTypingStatusRl.setVisibility(View.GONE);
                     botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
-                    textToSpeech(botResponse);
                 }
             }, 2000);
         }
@@ -141,17 +123,4 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         }
     }
 
-    private void textToSpeech(BotResponse botResponse) {
-        if (botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
-            if (textToSpeech != null) {
-                textToSpeech.stop();
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null, null);
-            } else {
-                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
-            }
-        }
-    }
 }

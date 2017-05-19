@@ -54,7 +54,7 @@ public class TapToSpeakFragment extends Fragment {
         txtSpeakNow.setText(R.string.please_wait);
 
         mRecordingThread = new RawAudioRecorder(audioDataReceivedListener);
-        audioCue = new AudioCue(getActivity(),soundListener);
+        audioCue = new AudioCue(getActivity(), soundListener);
         view.findViewById(R.id.stop_speak).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +66,7 @@ public class TapToSpeakFragment extends Fragment {
             public void run() {
                 initializeWebSocket();
             }
-        },400);
+        }, 400);
         return view;
     }
 
@@ -95,7 +95,7 @@ public class TapToSpeakFragment extends Fragment {
     SoundPlayCompletionListener soundListener = new SoundPlayCompletionListener() {
         @Override
         public void onAudioCompleted(Type soundType) {
-            if(soundType == Type.START){
+            if (soundType == Type.START) {
                 recordAudio();
             }
         }
@@ -137,6 +137,7 @@ public class TapToSpeakFragment extends Fragment {
             Log.d(LOG_TAG, "Connection opened");
             audioCue.playStartSoundAndSleep();
         }
+
         @Override
         public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
             Log.d(LOG_TAG, "Connection closed reason " + reason);
@@ -161,18 +162,19 @@ public class TapToSpeakFragment extends Fragment {
         }
     };
 
-    private void recordAudio(){
+    private void recordAudio() {
         txtSpeakNow.setText(R.string.speak_now);
         mRecordingThread.startRecording();
     }
 
     StringBuffer sbf = new StringBuffer();
-    private void processAndAppendText(String jsonString){
+
+    private void processAndAppendText(String jsonString) {
         try {
             JSONObject root = new JSONObject(jsonString);
-            if(root != null){
+            if (root != null) {
                 JSONObject result = root.getJSONObject("result");
-                if(result != null){
+                if (result != null) {
                     boolean isFinal = result.getBoolean("final");
                     JSONObject hypotheses = (JSONObject) result.getJSONArray("hypotheses").get(0);
 //                    Log.d(LOG_TAG,"The Dash isss "+hypotheses.getString("original-transcript"));
@@ -183,7 +185,7 @@ public class TapToSpeakFragment extends Fragment {
 //                        editTextMessage.setText(sbf.toString());
 //                        editTextMessage.setSelection(editTextMessage.getText().length());
                     } else {
-                        mListener.audioDataToTextView(sbf.toString()+ hypotheses.getString("transcript"));
+                        mListener.audioDataToTextView(sbf.toString() + hypotheses.getString("transcript"));
 //                        editTextMessage.setText(sbf.toString() + hypotheses.getString("transcript"));
 //                        editTextMessage.setSelection(editTextMessage.getText().length());
                     }
@@ -195,25 +197,28 @@ public class TapToSpeakFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    private void closeFragment(){
+
+    private void closeFragment() {
         sendEOF();
         mRecordingThread.stop();
 //        handler.removeCallbacks(updateVisualizer);
-        if(mListener != null)
-        mListener.onCloseButtonClicked(0);
+        if (mListener != null)
+            mListener.onCloseButtonClicked(0);
         TapToSpeakEventPublisher.stop();
     }
-    public void clearBuffAndCloseFragment(){
+
+    public void clearBuffAndCloseFragment() {
         sbf.delete(0, sbf.length());
-        if(!TapToSpeakFragment.this.isDetached() && TapToSpeakFragment.this.getActivity() != null)
+        if (!TapToSpeakFragment.this.isDetached() && TapToSpeakFragment.this.getActivity() != null)
             closeFragment();
     }
 
-    public AudioRecorder.State getState(){
-        if(mRecordingThread !=null)
-           return mRecordingThread.getState();
+    public AudioRecorder.State getState() {
+        if (mRecordingThread != null)
+            return mRecordingThread.getState();
         else return AudioRecorder.State.ERROR;
     }
+
     private void sendEOF() {
         try {
             byte[] eos = "EOS".getBytes("US-ASCII");

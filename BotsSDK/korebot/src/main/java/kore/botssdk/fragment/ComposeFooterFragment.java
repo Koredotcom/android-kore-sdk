@@ -22,6 +22,7 @@ import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterUpdate;
+import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.speechtotext.AudioTaskListener;
 import kore.botssdk.utils.AppPermissionsHelper;
@@ -39,14 +40,16 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     protected TextView sendButton;
     //    protected RippleView rec_audio;
     protected ImageView rec_audio_img;
+    protected ImageView audio_speak_tts;
     //    private RawAudioRecorder mRecordingThread;
 //    private ProgressBar loadingTasksProgressBar,progressBarAudio;
     private static final int REQUEST_RECORD_AUDIO = 13;
 
-    boolean isDisabled, isFirstTime;
+    boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
     private TapToSpeakFragment tapToSpeakFragment;
+    private TTSUpdate ttsUpdate;
 
     @Nullable
     @Override
@@ -58,6 +61,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         isFirstTime = true;
         updateUI();
         setListener();
+        setListenerExplicitly();
         KoreEventCenter.register(this);
         return view;
     }
@@ -73,8 +77,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         editTextMessage.addTextChangedListener(composeTextWatcher);
         sendButton = (TextView) view.findViewById(R.id.sendTv);
         rec_audio_img = (ImageView) view.findViewById(R.id.rec_audio_img);
-//        progressBarAudio = (ProgressBar) view.findViewById(R.id.progressBarAudio);
-        rec_audio_img.setOnClickListener(onAudioMicClicked);
+        audio_speak_tts = (ImageView) view.findViewById(R.id.audio_speak_tts);
+
 //        footerDivider = view.findViewById(R.id.footer_divider);
 //        tasksRl = (RelativeLayout) view.findViewById(R.id.tasksRl);
 //        footer = (RelativeLayout) view.findViewById(R.id.fl_footer);
@@ -93,21 +97,23 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         }
     }
 
-    View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String msg = editTextMessage.getText().toString();
-            if (!msg.trim().isEmpty()) {
-                editTextMessage.setText("");
-                sendMessageText(msg);
-            }
+    private void setListenerExplicitly() {
+        rec_audio_img.setOnClickListener(onAudioMicClicked);
+        audio_speak_tts.setOnClickListener(onTTSEnableSwitchClickListener);
+    }
+
+    private void toggleTTSButton() {
+        if (isTTSEnabled) {
+            audio_speak_tts.setImageResource(R.drawable.ic_volume_up_black_24dp);
+        } else {
+            audio_speak_tts.setImageResource(R.drawable.ic_volume_off_black_24dp);
         }
-    };
+    }
 
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message);
-            if(tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()){
+            if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");
             }
@@ -118,6 +124,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setTtsUpdate(TTSUpdate ttsUpdate) {
+        this.ttsUpdate = ttsUpdate;
     }
 
     @Override
@@ -143,23 +153,44 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            } else if ( (sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment != null && tapToSpeakFragment.getState()!= AudioRecorder.State.RECORDING)
-                    || (s.length() >0 && sendButton.getVisibility() != View.VISIBLE) )
-               {
+            } else if ((sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment != null && tapToSpeakFragment.getState() != AudioRecorder.State.RECORDING)
+                    || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
-               }
-
+            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
     };
+
     View.OnClickListener onAudioMicClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             startAudioRecordingSafe();
+        }
+    };
+
+    View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String msg = editTextMessage.getText().toString();
+            if (!msg.trim().isEmpty()) {
+                editTextMessage.setText("");
+                sendMessageText(msg);
+            }
+        }
+    };
+
+    View.OnClickListener onTTSEnableSwitchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            isTTSEnabled = !isTTSEnabled;
+            toggleTTSButton();
+            if (ttsUpdate != null) {
+                ttsUpdate.ttsUpdateListener(isTTSEnabled);
+            }
         }
     };
 
@@ -189,14 +220,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     }
 
     private void requestMicrophonePermission() {
-//        if (AppPermissionsHelper.shouldShowRationale(getActivity(), android.Manifest.permission.RECORD_AUDIO)) {
-            // Show dialog explaining why we need record audio
-            AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
-                    android.Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
-
-        /*} else {
-            CustomToast.showToast(getActivity(), "Microphone access is required in order to record audio");
-        }*/
+        AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
+                android.Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
     }
 
     @Override
@@ -237,10 +262,9 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             try {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
-//        ft.setCustomAnimations(R.anim.abc_slide_out_bottom,R.anim.anim_no_transition);
                 ft.remove(fm.findFragmentByTag(TapToSpeakFragmentTag));
                 ft.commit();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -249,7 +273,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         @Override
         public void audioDataToTextView(String text) {
-            if(tapToSpeakFragment != null && !tapToSpeakFragment.isDetached() && tapToSpeakFragment.getState() == AudioRecorder.State.RECORDING) {
+            if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached() && tapToSpeakFragment.getState() == AudioRecorder.State.RECORDING) {
                 editTextMessage.setText(text);
                 editTextMessage.setSelection(editTextMessage.getText().length());
             }

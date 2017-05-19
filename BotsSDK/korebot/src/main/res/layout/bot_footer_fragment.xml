@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ECEFF1"
     android:orientation="horizontal"
-    android:paddingBottom="2dp"
-    xmlns:ripple="http://schemas.android.com/apk/res-auto">
+    android:paddingBottom="2dp">
 
     <LinearLayout
         android:id="@+id/mainContent"
@@ -87,14 +87,14 @@
                             android:id="@+id/progressBar"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
+                            android:indeterminate="false"
                             android:paddingBottom="10dp"
                             android:paddingEnd="5dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="5dp"
                             android:paddingStart="10dp"
                             android:paddingTop="10dp"
-                            android:visibility="gone"
-                            android:indeterminate="false" />
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/errorLoading"
@@ -125,8 +125,8 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_toEndOf="@id/tasksRl"
-                    android:layout_toLeftOf="@+id/btnsend1"
                     android:layout_toRightOf="@id/tasksRl"
+                    android:layout_toLeftOf="@+id/btnsend1"
                     android:layout_toStartOf="@+id/btnsend1"
                     android:background="@color/white"
                     android:gravity="center"
@@ -153,75 +153,48 @@
 
                 </LinearLayout>
 
-                <RelativeLayout
+                <LinearLayout
+                    android:id="@+id/btnsend1"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="right|center"
-                    android:id="@+id/btnsend1"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:id="@+id/progressL">
-
-                        <!--<ImageView
-                            android:id="@+id/rec_audio"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:paddingRight="10dp"
-                            android:paddingLeft="10dp"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:src="@drawable/mic_btn"
-                            android:visibility="visible" />-->
-                        <!--<kore.botssdk.view.RippleView
-                            android:id="@+id/rec_audio"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:layout_centerHorizontal="true"
-                            ripple:rv_centered="true">-->
-                            <ImageView
-                                android:id="@+id/rec_audio_img"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_centerInParent="true"
-                                android:src="@drawable/mic_btn"
-                                android:padding="5dp"
-                                android:layout_gravity="center"
-                                android:visibility="visible"/>
-                        <!--</kore.botssdk.view.RippleView>-->
-
-                        <!--<ProgressBar
-                            android:id="@+id/progressBarAudio"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="10dp"
-                            android:layout_gravity="center"
-                            android:visibility="gone" />-->
-                    </FrameLayout>
 
                     <TextView
                         android:id="@+id/sendTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_toRightOf="@id/progressL"
-                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:tag="bold"
                         android:text="@string/send"
+                        android:gravity="center_vertical"
                         android:textColor="@color/bgBlueSignup"
                         android:textSize="14dp"
                         android:visibility="gone" />
-                </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/rec_audio_img"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_mic_black_24dp"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/audio_speak_tts"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_volume_up_black_24dp"
+                        android:visibility="visible" />
+
+                </LinearLayout>
 
             </RelativeLayout>
 
@@ -250,4 +223,4 @@
 
         </RelativeLayout>
     </LinearLayout>
-    </LinearLayout>
+</LinearLayout>
