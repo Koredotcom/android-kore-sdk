@@ -49,7 +49,7 @@ public class TTSSynthesizer {
     }
 
     private void speakViaSDK(String textualMessage) {
-        String modifiedTextualMessage = textualMessage.replace(" ", "+");
+        String modifiedTextualMessage = textualMessage.replace("\r\n","").replace(" ", "+").replace("++","+");//.replace("\n", "");
         String url = "http://192.168.10.34:11000/cgi-bin/speech?voice=salli&lang=en_us&text=" + modifiedTextualMessage;
 
         if (mediaPlayer == null) {
