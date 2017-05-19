@@ -6,4 +6,5 @@ package kore.botssdk.listener;
  */
 public interface TTSUpdate {
     void ttsUpdateListener(boolean isTTSEnabled);
+    void ttsOnStop();
 }

@@ -1,8 +1,6 @@
 package kore.botssdk.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-
-import java.util.Locale;
-
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleUtils;
@@ -37,10 +31,10 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
-    private TextToSpeech textToSpeech;
 
     boolean shallShowProfilePic;
     private String mChannelIconURL;
+    private TTSUpdate ttsUpdate;
 
     @Nullable
     @Override
@@ -64,8 +58,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
     }
 
-    public void setTextToSpeech(TextToSpeech textToSpeech) {
-        this.textToSpeech = textToSpeech;
+    public void setTtsUpdate(TTSUpdate ttsUpdate) {
+        this.ttsUpdate = ttsUpdate;
     }
 
     private void getBundleInfo() {
@@ -83,7 +77,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 @Override
                 public void run() {
                     botsChatAdapter.addBaseBotMessage(botResponse);
-//                        scrollToBottom();
                     botTypingStatusRl.setVisibility(View.GONE);
                     botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
                 }
@@ -115,8 +108,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     @Override
     public void updateContentListOnSend(BotRequest botRequest) {
         if (botRequest.getMessage() != null) {
-            if (textToSpeech != null) {
-                textToSpeech.stop();
+            if (ttsUpdate != null) {
+                ttsUpdate.ttsOnStop();
             }
             botsChatAdapter.addBaseBotMessage(botRequest);
             scrollToBottom();

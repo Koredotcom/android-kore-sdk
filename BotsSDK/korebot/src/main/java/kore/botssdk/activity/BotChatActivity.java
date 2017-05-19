@@ -1,9 +1,7 @@
 package kore.botssdk.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,14 +12,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
-import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
-//import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -29,15 +25,13 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.ComponentModel;
-import kore.botssdk.models.PayloadInner;
-import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SocketConnectionEventStates;
+import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 
@@ -61,11 +55,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     Handler actionBarTitleUpdateHandler;
 
-    TextToSpeech textToSpeech;
     boolean isTTSEnabled = true;
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
+    TTSSynthesizer ttsSynthesizer;
 //    QuickReplyFragment quickReplyFragment;
 
     BotContentFragmentUpdate botContentFragmentUpdate;
@@ -101,9 +95,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         setComposeFooterUpdate(composeFooterFragment);
 
         updateTitleBar();
-        setupTextToSpeech();
 
         botClient = new BotClient(this);
+        ttsSynthesizer = new TTSSynthesizer(this);
+        setupTextToSpeech();
 
         connectToWebSocketAnonymous();
     }
@@ -173,23 +168,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void setupTextToSpeech() {
-        textToSpeech = new TextToSpeech(BotChatActivity.this, new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                }
-            }
-        });
-        botContentFragment.setTextToSpeech(textToSpeech);
         composeFooterFragment.setTtsUpdate(BotChatActivity.this);
-    }
-
-    private void stopTextToSpeech() {
-        if (!isTTSEnabled && textToSpeech != null) {
-            textToSpeech.stop();
-        }
+        botContentFragment.setTtsUpdate(BotChatActivity.this);
     }
 
     private void connectToWebSocketAnonymous() {
@@ -216,7 +196,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     protected void onPause() {
-        stopTextToSpeech();
         super.onPause();
     }
 
@@ -326,19 +305,25 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         stopTextToSpeech();
     }
 
+    @Override
+    public void ttsOnStop() {
+        stopTextToSpeech();
+    }
+
     public boolean isTTSEnabled() {
         return isTTSEnabled;
+    }
+
+    private void stopTextToSpeech() {
+        if (isTTSEnabled) {
+            ttsSynthesizer.stopTextToSpeech();
+        }
     }
 
     private void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
-            stopTextToSpeech();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null, null);
-            } else {
-                textToSpeech.speak(botResponseTextualFormat, TextToSpeech.QUEUE_FLUSH, null);
-            }
+            ttsSynthesizer.speak(botResponseTextualFormat);
         }
     }
 

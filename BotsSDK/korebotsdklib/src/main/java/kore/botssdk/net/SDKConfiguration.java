@@ -5,8 +5,6 @@ package kore.botssdk.net;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
-import java.util.UUID;
-
 /**
  * This class is for defining properties
  */
@@ -62,7 +60,6 @@ public class SDKConfiguration {
         public static final String client_id = "cs-06226979-8812-5c4e-8a74-bf4d5e2ca996";//"cs-31d07db4-c7b0-5460-8193-bf68aeea81a3";//"cs-2f6084da-33d0-5b0f-9c66-5b0bbef514f2";
         public static final String client_secret = "KnNEbqxgJoXTtVFyVi67yrWg5k4R+qvney8th5ZM5I4=";//"jPT8HDU4YfSa+oBoAoTtflvXm+TZP9FjWbcNYMb0d88=";//"T2+PyTibG6f29DcYrhhkoVpD3VSgH/zizJlK8+yMglg=";
         public static final String identity = "riz@testadmin3.xyz";
-
 
         public static final String bot_name = "Karl";//"Shopbot_2";
         public static final String bot_id = "st-411ba486-3098-57e8-8e90-46b2ac3ce9b7";//"st-75bdb67c-894d-520e-a98b-2927a485f604";
