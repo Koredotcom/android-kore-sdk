@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -55,7 +56,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     Handler actionBarTitleUpdateHandler;
 
-    boolean isTTSEnabled = true;
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
@@ -301,7 +301,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void ttsUpdateListener(boolean isTTSEnabled) {
-        this.isTTSEnabled = isTTSEnabled;
         stopTextToSpeech();
     }
 
@@ -311,17 +310,22 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     public boolean isTTSEnabled() {
-        return isTTSEnabled;
+        if (composeFooterFragment != null) {
+            return composeFooterFragment.isTTSEnabled();
+        } else {
+            Log.e(BotChatActivity.class.getSimpleName(), "ComposeFooterFragment not found");
+            return false;
+        }
     }
 
     private void stopTextToSpeech() {
-        if (isTTSEnabled) {
+        if (!isTTSEnabled()) {
             ttsSynthesizer.stopTextToSpeech();
         }
     }
 
     private void textToSpeech(BotResponse botResponse) {
-        if (isTTSEnabled && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+        if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
             ttsSynthesizer.speak(botResponseTextualFormat);
         }

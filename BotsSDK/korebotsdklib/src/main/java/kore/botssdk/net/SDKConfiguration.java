@@ -52,7 +52,7 @@ public class SDKConfiguration {
     //Server related configurations
     public static class Server{
         public static final String KORE_BOT_SERVER_URL = "https://bots.kore.ai";// "https://qa1-bots.kore.com";//"https://qabots.kore.com";
-        public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";//"wss://speech.kore.ai/speechcntxt/verizon";
+        public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";//"wss://speech.kore.ai/speechcntxt/verizon"; //"ws://192.168.10.101:8000/main/live/recognize";
         public static final boolean IS_ANONYMOUS_USER = true;
     }
 

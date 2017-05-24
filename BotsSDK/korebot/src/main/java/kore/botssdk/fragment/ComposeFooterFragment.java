@@ -26,7 +26,6 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.speechtotext.AudioTaskListener;
 import kore.botssdk.utils.AppPermissionsHelper;
-import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.Utility;
 
 /**
@@ -45,7 +44,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 //    private ProgressBar loadingTasksProgressBar,progressBarAudio;
     private static final int REQUEST_RECORD_AUDIO = 13;
 
-    boolean isDisabled, isFirstTime, isTTSEnabled = true;
+    boolean isDisabled, isFirstTime, isTTSEnabled = false;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
     private TapToSpeakFragment tapToSpeakFragment;
@@ -62,6 +61,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         updateUI();
         setListener();
         setListenerExplicitly();
+        toggleTTSButton();
         KoreEventCenter.register(this);
         return view;
     }
@@ -193,6 +193,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             }
         }
     };
+
+    public boolean isTTSEnabled() {
+        return isTTSEnabled;
+    }
 
     private void stopRecording() {
         if (editTextMessage.getText().toString().trim().length() == 0) {
