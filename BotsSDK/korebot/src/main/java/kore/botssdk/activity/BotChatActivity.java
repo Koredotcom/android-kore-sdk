@@ -196,6 +196,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     protected void onPause() {
+        ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
 

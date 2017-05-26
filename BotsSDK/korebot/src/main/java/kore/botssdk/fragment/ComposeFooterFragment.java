@@ -194,6 +194,12 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         }
     };
 
+    private void stopTTS() {
+        if (ttsUpdate != null) {
+            ttsUpdate.ttsOnStop();
+        }
+    }
+
     public boolean isTTSEnabled() {
         return isTTSEnabled;
     }
@@ -241,6 +247,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     }
 
     private void showTapToSpeakFragment() {
+        stopTTS();
         Utility.hideVirtualKeyboard(getActivity());
         editTextMessage.setEnabled(false);
         rec_audio_img.setVisibility(View.GONE);

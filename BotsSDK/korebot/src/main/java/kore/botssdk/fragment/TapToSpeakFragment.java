@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.event.TapToSpeakEventPublisher;
 import kore.botssdk.net.SDKConfiguration;
@@ -195,6 +196,14 @@ public class TapToSpeakFragment extends Fragment {
 
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() instanceof BotChatActivity) {
+            ((BotChatActivity) getActivity()).ttsOnStop();
         }
     }
 
