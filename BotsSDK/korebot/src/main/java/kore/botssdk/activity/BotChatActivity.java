@@ -245,7 +245,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     @Override
     public void onSendClick(String message) {
 
-
+        stopTextToSpeech();
         botClient.sendMessage(message, chatBot, taskBotId);
 
         if (botContentFragmentUpdate != null) {
@@ -320,9 +320,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void stopTextToSpeech() {
-        if (!isTTSEnabled()) {
-            ttsSynthesizer.stopTextToSpeech();
-        }
+        ttsSynthesizer.stopTextToSpeech();
     }
 
     private void textToSpeech(BotResponse botResponse) {

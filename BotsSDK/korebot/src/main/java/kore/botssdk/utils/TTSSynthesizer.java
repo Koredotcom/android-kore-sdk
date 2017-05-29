@@ -54,11 +54,11 @@ public class TTSSynthesizer {
 
         if (mediaPlayer == null) {
             mediaPlayer = new MediaPlayer();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnPreparedListener(mediaPlayerOnPreparedListener);
         }
 
         try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             stopTextToSpeechSDK();
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url);
@@ -97,7 +97,7 @@ public class TTSSynthesizer {
     }
 
     private void stopTextToSpeechSDK() {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+        if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
