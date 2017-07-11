@@ -14,7 +14,6 @@ import kore.botssdk.models.BotCustomListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ListTemplate;
-import kore.botssdk.models.ListTemplateButton;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.DateUtils;
@@ -139,10 +138,10 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         ComponentModel compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
         if(compModel !=null){
             String compType = compModel.getType();
-            if(compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)){
+            PayloadOuter payOuter = compModel.getPayload();
+            PayloadInner payInner = payOuter.getPayload();
+            if(payInner != null && payInner.getTemplate_type() != null && compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)){
 
-                PayloadOuter payOuter = compModel.getPayload();
-                PayloadInner payInner = payOuter.getPayload();
                 if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_BUTTON)){
                     botCustomListView.setVisibility(View.VISIBLE);
                     botCustomListView.populateBotListView(payInner.getButtons());

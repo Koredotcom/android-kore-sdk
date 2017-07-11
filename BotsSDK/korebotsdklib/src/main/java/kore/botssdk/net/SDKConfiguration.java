@@ -51,18 +51,18 @@ public class SDKConfiguration {
 
     //Server related configurations
     public static class Server{
-        public static final String KORE_BOT_SERVER_URL = "https://bots.kore.ai";// "https://qa1-bots.kore.com";//"https://qabots.kore.com";
+        public static final String KORE_BOT_SERVER_URL = "https://qa-bots.kore.ai";//"https://bots.kore.ai";// "https://qa1-bots.kore.com";//"https://qabots.kore.com";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";//"wss://speech.kore.ai/speechcntxt/verizon"; //"ws://192.168.10.101:8000/main/live/recognize";
-        public static final boolean IS_ANONYMOUS_USER = true;
+        public static final boolean IS_ANONYMOUS_USER = false;
     }
 
     public static class Client {
-        public static final String client_id = "cs-06226979-8812-5c4e-8a74-bf4d5e2ca996";//"cs-31d07db4-c7b0-5460-8193-bf68aeea81a3";//"cs-2f6084da-33d0-5b0f-9c66-5b0bbef514f2";
-        public static final String client_secret = "KnNEbqxgJoXTtVFyVi67yrWg5k4R+qvney8th5ZM5I4=";//"jPT8HDU4YfSa+oBoAoTtflvXm+TZP9FjWbcNYMb0d88=";//"T2+PyTibG6f29DcYrhhkoVpD3VSgH/zizJlK8+yMglg=";
-        public static final String identity = "riz@testadmin3.xyz";
+        public static final String client_id = "cs-5649368e-68bb-555a-8803-935f223db585";//"cs-31d07db4-c7b0-5460-8193-bf68aeea81a3";//"cs-2f6084da-33d0-5b0f-9c66-5b0bbef514f2";
+        public static final String client_secret = "AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";//"jPT8HDU4YfSa+oBoAoTtflvXm+TZP9FjWbcNYMb0d88=";//"T2+PyTibG6f29DcYrhhkoVpD3VSgH/zizJlK8+yMglg=";
+        public static final String identity = "reshma@testadmin3.xyz";
 
-        public static final String bot_name = "Karl";//"Shopbot_2";
-        public static final String bot_id = "st-411ba486-3098-57e8-8e90-46b2ac3ce9b7";//"st-75bdb67c-894d-520e-a98b-2927a485f604";
+        public static final String bot_name = "Twitter_Auth";//"Shopbot_2";
+        public static final String bot_id = "st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";//"st-75bdb67c-894d-520e-a98b-2927a485f604";
     }
 
 }
