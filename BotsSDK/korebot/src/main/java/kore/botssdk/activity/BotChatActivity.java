@@ -285,6 +285,9 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         try {
             final BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
             if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
+
+            Log.d(LOG_TAG, payload);
+
 //            checkForQuickReplies(botResponse);
             stopTextToSpeech();
             botContentFragment.addMessageToBotChatAdapter(botResponse);

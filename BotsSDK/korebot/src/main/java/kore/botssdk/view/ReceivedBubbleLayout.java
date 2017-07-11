@@ -132,37 +132,34 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
 
-    private void cosmetiseForOptionsList(BaseBotMessage baseBotMessage){
+    private void cosmetiseForOptionsList(BaseBotMessage baseBotMessage) {
 
-        if(((BotResponse) baseBotMessage).getMessage().isEmpty()) return;
+        if (((BotResponse) baseBotMessage).getMessage().isEmpty()) return;
         ComponentModel compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
-        if(compModel !=null){
+        if (compModel != null) {
             String compType = compModel.getType();
             PayloadOuter payOuter = compModel.getPayload();
             PayloadInner payInner = payOuter.getPayload();
-            if(payInner != null && payInner.getTemplate_type() != null && compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)){
+            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
 
-                if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_BUTTON)){
+                if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
                     botCustomListView.populateBotListView(payInner.getButtons());
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)){
+                } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
                     botCustomListView.populateBotListView(payInner.convertQuickReplyToButton(payInner.getQuick_replies()));
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_LIST)){
-
+                } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
                     ArrayList<ListTemplate> elements = payInner.getElements();
-
                     ArrayList<BotCustomListModel> allBotList = new ArrayList<>();
-
-                    for(ListTemplate lt : elements){
+                    for (ListTemplate lt : elements) {
                         BotCustomListModel blm = new BotCustomListModel();
                         blm.setTitle(lt.getTitle());
                         blm.setSubtitle(lt.getSubtitle());
                         blm.setImageUrl(lt.getImage_url());
-                        if(lt.getButtons() != null && !lt.getButtons().isEmpty()){
+                        if (lt.getButtons() != null && !lt.getButtons().isEmpty()) {
                             blm.setBtn_type(lt.getButtons().get(0).getType());
                             blm.setBtn_title(lt.getButtons().get(0).getTitle());
                             blm.setBtn_url(lt.getButtons().get(0).getUrl());
@@ -170,16 +167,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         allBotList.add(blm);
                     }
                     botCustomListView.populateBotListViewNew(allBotList);
-
-
-
-                }else if(payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)){
-                    botCustomListView.setVisibility(View.GONE);
-                    bubbleTextMediaLayout.populateText(payInner.getText());
-                    return;
                 }
-
-            }else if(compType.equals(BotResponse.COMPONENT_TYPE_TEXT)){
+            } else if (compType.equals(BotResponse.COMPONENT_TYPE_TEXT)) {
                 botCustomListView.setVisibility(View.GONE);
             }
         }
@@ -235,8 +224,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /*
          * For OptionsList
          */
-        if(botCustomListView.getVisibility() != View.GONE)
-        MeasureUtils.measure(botCustomListView, parentWidth+BUBBLE_CONTENT_LEFT_MARGIN+BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
+        if (botCustomListView.getVisibility() != View.GONE)
+            MeasureUtils.measure(botCustomListView, parentWidth + BUBBLE_CONTENT_LEFT_MARGIN + BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
 
 
         /*
@@ -307,17 +296,17 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
         if (cpvSenderImage.getVisibility() != GONE) {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            int cpvTop = bubbleTextMediaLayout.getBottom()+ botCustomListView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
+            int cpvTop = bubbleTextMediaLayout.getBottom() + botCustomListView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 
         /*
         * For OptionsList
         * */
-        left -=  bubbleTextMediaLayouMarginLeft;
-        top =  bubbleTextMediaLayout.getBottom();
-        if(botCustomListView.getVisibility() != View.GONE)
-        LayoutUtils.layoutChild(botCustomListView, left, top);
+        left -= bubbleTextMediaLayouMarginLeft;
+        top = bubbleTextMediaLayout.getBottom();
+        if (botCustomListView.getVisibility() != View.GONE)
+            LayoutUtils.layoutChild(botCustomListView, left, top);
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

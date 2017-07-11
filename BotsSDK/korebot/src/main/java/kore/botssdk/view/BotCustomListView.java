@@ -27,21 +27,14 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  */
 public class BotCustomListView extends ViewGroup {
 
+    String LOG_TAG = BotCustomListView.class.getSimpleName();
+
     private ListView botList;
     private Button btn;
     private BotListCustomAdapter bla;
     private BotListCustomAdapterNew blaNew;
 
-    public boolean isNewList() {
-        return isNewList;
-    }
-
-    public void setNewList(boolean newList) {
-        isNewList = newList;
-    }
-
     private boolean isNewList;
-
     int dp1;
 
     public BotCustomListView(Context context) {
@@ -64,18 +57,6 @@ public class BotCustomListView extends ViewGroup {
         botList = (ListView) inflatedView.findViewById(R.id.botCustomListView);
         botList.setOnItemClickListener(botOptionsClickListener);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-
-       /* bla = new BotListCustomAdapter(getContext());
-        bla.setMoreSelectionListener(botMoreOptionsClickListener);
-        bla.setOptionsList(new ArrayList<ButtonTemplate>());
-        botList.setAdapter(bla);*/
-
-
-       /* blaNew = new BotListCustomAdapterNew(getContext());
-        bla.setMoreSelectionListener(botMoreOptionsClickListener);
-        bla.setOptionsList(new ArrayList<ButtonTemplate>());
-        botList.setAdapter(bla);*/
-
     }
 
     public void populateBotListView(ArrayList<ButtonTemplate> buttons) {
@@ -92,8 +73,6 @@ public class BotCustomListView extends ViewGroup {
 
 
     public void populateBotListViewNew(ArrayList<BotCustomListModel> botCustList) {
-
-
         setNewList(true);
         blaNew = new BotListCustomAdapterNew(getContext());
         blaNew.setMoreSelectionListener(botMoreOptionsClickListenerNew);
@@ -106,39 +85,71 @@ public class BotCustomListView extends ViewGroup {
         requestLayout();
     }
 
+    public boolean isNewList() {
+        return isNewList;
+    }
+
+    public void setNewList(boolean newList) {
+        isNewList = newList;
+    }
+
+    private AdapterView.OnItemClickListener botOptionsClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (getContext() instanceof BotChatActivity && !isNewList()) {
+                ((BotChatActivity) getContext()).onQuickReplyItemClicked(bla.getItem(position).getPayload());
+            }
+        }
+    };
+
+    BotListCustomAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotListCustomAdapter.MoreSelectionListener() {
+        @Override
+        public void onMoreSelected() {
+            bla.notifyDataSetChanged();
+            requestLayout();
+
+        }
+    };
+
+    BotListCustomAdapterNew.MoreSelectionListener botMoreOptionsClickListenerNew = new BotListCustomAdapterNew.MoreSelectionListener() {
+        @Override
+        public void onMoreSelected() {
+            blaNew.notifyDataSetChanged();
+            requestLayout();
+
+        }
+    };
+
+    private int measureRequiredHeight(BotListCustomAdapter rootView) {
+        int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
+        Log.d(LOG_TAG, cumulativeHeight + "");
+        return cumulativeHeight;
+    }
+
+    private int measureRequiredHeightNew(BotListCustomAdapterNew rootView) {
+        int cumulativeHeight = rootView.getCount() == 4 ? (((rootView.getCount() - 1) * (100 * dp1))) : ((rootView.getCount()) * (87 * dp1));//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
+        Log.d(LOG_TAG, cumulativeHeight + "");
+        return cumulativeHeight;
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         int _height = 0;
-        if(isNewList()){
+        if (isNewList()) {
             _height = measureRequiredHeightNew(blaNew);
-        }else{
+        } else {
             _height = measureRequiredHeight(bla);
         }
 
-//        int _height =  ( isNewList() ? measureRequiredHeightNew(blaNew) :  measureRequiredHeight(bla) );
         int heightSpec = View.MeasureSpec.makeMeasureSpec(_height, View.MeasureSpec.EXACTLY);
 
-        widthMeasureSpec =  View.MeasureSpec.makeMeasureSpec(widthMeasureSpec, View.MeasureSpec.EXACTLY);//MeasureSpec.makeMeasureSpec( widthMeasureSpec, MeasureSpec.UNSPECIFIED);//MeasureSpec.getSize(widthMeasureSpec);
+        widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(widthMeasureSpec, View.MeasureSpec.EXACTLY);
         View lv = getChildAt(0);
         MeasureUtils.measure(lv, widthMeasureSpec, heightSpec);
 
         setMeasuredDimension(widthMeasureSpec, heightSpec);
     }
-
-    private int measureRequiredHeight(BotListCustomAdapter rootView) {
-        int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
-        Log.d("AAAAA!@#",cumulativeHeight+"");
-        return cumulativeHeight;
-    }
-
-    private int measureRequiredHeightNew(BotListCustomAdapterNew rootView) {
-        int cumulativeHeight = rootView.getCount() ==4 ? (((rootView.getCount() -1 ) * (100 * dp1)) ) :  ((rootView.getCount()) * (87 * dp1) );//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
-        Log.d("AAAAA!@#",cumulativeHeight+"");
-        return cumulativeHeight;
-    }
-
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -150,7 +161,7 @@ public class BotCustomListView extends ViewGroup {
         int childLeft = this.getPaddingLeft();
         int childTop = this.getPaddingTop();
 
-        int itemWidth = (r-l)/getChildCount();
+        int itemWidth = (r - l) / getChildCount();
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
@@ -161,35 +172,4 @@ public class BotCustomListView extends ViewGroup {
         }
 
     }
-
-    private AdapterView.OnItemClickListener botOptionsClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//            Log.v("BotListCustom", "=====Row List button clicked=====");
-//            Toast.makeText(getContext(),bla.getItem(position) + " clicked",Toast.LENGTH_SHORT).show();
-            if(getContext() instanceof BotChatActivity && !isNewList()){
-                ((BotChatActivity)getContext()).onQuickReplyItemClicked(bla.getItem(position).getPayload());
-            }else{
-
-            }
-        }
-    };
-
-    BotListCustomAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotListCustomAdapter.MoreSelectionListener(){
-        @Override
-        public void onMoreSelected() {
-            bla.notifyDataSetChanged();
-            requestLayout();
-
-        }
-    };
-
-    BotListCustomAdapterNew.MoreSelectionListener botMoreOptionsClickListenerNew = new BotListCustomAdapterNew.MoreSelectionListener(){
-        @Override
-        public void onMoreSelected() {
-            blaNew.notifyDataSetChanged();
-            requestLayout();
-
-        }
-    };
 }
