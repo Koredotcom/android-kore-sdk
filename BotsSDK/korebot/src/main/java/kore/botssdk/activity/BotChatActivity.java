@@ -26,6 +26,9 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
@@ -60,7 +63,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
     TTSSynthesizer ttsSynthesizer;
-//    QuickReplyFragment quickReplyFragment;
+    QuickReplyFragment quickReplyFragment;
 
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
@@ -79,12 +82,12 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
-//        //Add Suggestion Fragment
-//        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        quickReplyFragment = new QuickReplyFragment();
-//        quickReplyFragment.setArguments(getIntent().getExtras());
-//        quickReplyFragment.setListener(BotChatActivity.this);
-//        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
+        //Add Suggestion Fragment
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        quickReplyFragment = new QuickReplyFragment();
+        quickReplyFragment.setArguments(getIntent().getExtras());
+        quickReplyFragment.setListener(BotChatActivity.this);
+        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -288,7 +291,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
             Log.d(LOG_TAG, payload);
 
-//            checkForQuickReplies(botResponse);
+            checkForQuickReplies(botResponse);
             stopTextToSpeech();
             botContentFragment.addMessageToBotChatAdapter(botResponse);
             handler.postDelayed(new Runnable() {
@@ -333,20 +336,20 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
 
-    /*private void checkForQuickReplies(BotResponse botResponse) {
+    private void checkForQuickReplies(BotResponse botResponse) {
         if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
         ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
         if (compModel != null) {
             String compType = compModel.getType();
-            if (compType.equals(BotResponse.COMPONENT_TYPE_TEMPLATE)) {
+            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
 
                 PayloadOuter payOuter = compModel.getPayload();
                 PayloadInner payInner = payOuter.getPayload();
-                if (payInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_QUICK_REPLIES)) {
+                if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                     quickReplyFragment.populateQuickReplyViews(payInner.getQuick_replies());
                 }
 
             }
         }
-    }*/
+    }
 }

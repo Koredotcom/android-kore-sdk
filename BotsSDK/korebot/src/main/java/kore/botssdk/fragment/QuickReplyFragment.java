@@ -25,14 +25,14 @@ public class QuickReplyFragment extends BaseSpiceFragment {
     private final String LOG_TAG = QuickReplyFragment.class.getSimpleName();
     private LinearLayout quick_reply_container;
     private float dp1;
-//    private String[] arr = {" Hi ","Hello","How are you"," list ","what","when","where","good","discard"};
+    //    private String[] arr = {" Hi ","Hello","How are you"," list ","what","when","where","good","discard"};
     private QuickReplyInterface mListener;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.quickreply_layout,null);
+        View view = inflater.inflate(R.layout.quickreply_layout, null);
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         findViews(view);
         return view;
@@ -43,6 +43,7 @@ public class QuickReplyFragment extends BaseSpiceFragment {
         quick_reply_container.setVisibility(View.GONE);
 
     }
+
     public QuickReplyInterface getListener() {
         return mListener;
     }
@@ -50,14 +51,16 @@ public class QuickReplyFragment extends BaseSpiceFragment {
     public void setListener(QuickReplyInterface mListener) {
         this.mListener = mListener;
     }
+
     public interface QuickReplyInterface {
         void onQuickReplyItemClicked(String text);
     }
-    public void populateQuickReplyViews(ArrayList<QuickReplyTemplate> quickReplies){
+
+    public void populateQuickReplyViews(ArrayList<QuickReplyTemplate> quickReplies) {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins((int)dp1*5, (int)dp1*5, (int)dp1*5, (int)dp1*5);
+        layoutParams.setMargins((int) dp1 * 5, (int) dp1 * 5, (int) dp1 * 5, (int) dp1 * 5);
         quick_reply_container.removeAllViews();
-        for(QuickReplyTemplate qReply : quickReplies) {
+        for (QuickReplyTemplate qReply : quickReplies) {
             final TextView txtQuickReply = new TextView(getActivity());
             txtQuickReply.setText(qReply.getTitle());
             txtQuickReply.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
@@ -68,7 +71,7 @@ public class QuickReplyFragment extends BaseSpiceFragment {
             txtQuickReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mListener != null){
+                    if (mListener != null) {
                         mListener.onQuickReplyItemClicked(txtQuickReply.getText().toString());
                         quick_reply_container.setVisibility(View.GONE);
                     }

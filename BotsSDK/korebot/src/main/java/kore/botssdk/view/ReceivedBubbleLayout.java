@@ -147,8 +147,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     botCustomListView.populateBotListView(payInner.getButtons());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    botCustomListView.setVisibility(View.VISIBLE);
-                    botCustomListView.populateBotListView(payInner.convertQuickReplyToButton(payInner.getQuick_replies()));
+//                    botCustomListView.setVisibility(View.VISIBLE);
+//                    botCustomListView.populateBotListView(payInner.convertQuickReplyToButton(payInner.getQuick_replies()));
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
