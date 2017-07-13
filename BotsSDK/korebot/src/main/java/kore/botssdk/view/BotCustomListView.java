@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.adapter.BotListCustomAdapter;
-import kore.botssdk.adapter.BotListCustomAdapterNew;
+import kore.botssdk.adapter.BotButtonTypeAdapter;
+import kore.botssdk.adapter.BotListTypeAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotCustomListModel;
 import kore.botssdk.models.ButtonTemplate;
@@ -31,8 +31,8 @@ public class BotCustomListView extends ViewGroup {
 
     private ListView botList;
     private Button btn;
-    private BotListCustomAdapter bla;
-    private BotListCustomAdapterNew blaNew;
+    private BotButtonTypeAdapter botButtonTypeAdapter;
+    private BotListTypeAdapter botListTypeAdapter;
 
     private boolean isNewList;
     int dp1;
@@ -59,29 +59,29 @@ public class BotCustomListView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
 
-    public void populateBotListView(ArrayList<ButtonTemplate> buttons) {
+    public void populateBotButtonTypeView(ArrayList<ButtonTemplate> buttons) {
         setNewList(false);
-        bla = new BotListCustomAdapter(getContext());
-        bla.setMoreSelectionListener(botMoreOptionsClickListener);
-        bla.setOptionsList(new ArrayList<ButtonTemplate>());
-        botList.setAdapter(bla);
+        botButtonTypeAdapter = new BotButtonTypeAdapter(getContext());
+        botButtonTypeAdapter.setMoreSelectionListener(botMoreOptionsClickListener);
+        botButtonTypeAdapter.setOptionsList(new ArrayList<ButtonTemplate>());
+        botList.setAdapter(botButtonTypeAdapter);
 
-        bla.setOptionsList(buttons);
-        bla.notifyDataSetChanged();
+        botButtonTypeAdapter.setOptionsList(buttons);
+        botButtonTypeAdapter.notifyDataSetChanged();
         requestLayout();
     }
 
 
-    public void populateBotListViewNew(ArrayList<BotCustomListModel> botCustList) {
+    public void populateBotListTypeView(ArrayList<BotCustomListModel> botCustList) {
         setNewList(true);
-        blaNew = new BotListCustomAdapterNew(getContext());
-        blaNew.setMoreSelectionListener(botMoreOptionsClickListenerNew);
-        blaNew.setOptionsList(new ArrayList<BotCustomListModel>());
-        botList.setAdapter(blaNew);
+        botListTypeAdapter = new BotListTypeAdapter(getContext());
+        botListTypeAdapter.setMoreSelectionListener(botMoreOptionsClickListenerNew);
+        botListTypeAdapter.setOptionsList(new ArrayList<BotCustomListModel>());
+        botList.setAdapter(botListTypeAdapter);
 
 
-        blaNew.setOptionsList(botCustList);
-        blaNew.notifyDataSetChanged();
+        botListTypeAdapter.setOptionsList(botCustList);
+        botListTypeAdapter.notifyDataSetChanged();
         requestLayout();
     }
 
@@ -97,36 +97,36 @@ public class BotCustomListView extends ViewGroup {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (getContext() instanceof BotChatActivity && !isNewList()) {
-                ((BotChatActivity) getContext()).onQuickReplyItemClicked(bla.getItem(position).getPayload());
+                ((BotChatActivity) getContext()).onQuickReplyItemClicked(botButtonTypeAdapter.getItem(position).getPayload());
             }
         }
     };
 
-    BotListCustomAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotListCustomAdapter.MoreSelectionListener() {
+    BotButtonTypeAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotButtonTypeAdapter.MoreSelectionListener() {
         @Override
         public void onMoreSelected() {
-            bla.notifyDataSetChanged();
+            botButtonTypeAdapter.notifyDataSetChanged();
             requestLayout();
 
         }
     };
 
-    BotListCustomAdapterNew.MoreSelectionListener botMoreOptionsClickListenerNew = new BotListCustomAdapterNew.MoreSelectionListener() {
+    BotListTypeAdapter.MoreSelectionListener botMoreOptionsClickListenerNew = new BotListTypeAdapter.MoreSelectionListener() {
         @Override
         public void onMoreSelected() {
-            blaNew.notifyDataSetChanged();
+            botListTypeAdapter.notifyDataSetChanged();
             requestLayout();
 
         }
     };
 
-    private int measureRequiredHeight(BotListCustomAdapter rootView) {
+    private int measureRequiredHeight(BotButtonTypeAdapter rootView) {
         int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
         Log.d(LOG_TAG, cumulativeHeight + "");
         return cumulativeHeight;
     }
 
-    private int measureRequiredHeightNew(BotListCustomAdapterNew rootView) {
+    private int measureRequiredHeightNew(BotListTypeAdapter rootView) {
         int cumulativeHeight = rootView.getCount() == 4 ? (((rootView.getCount() - 1) * (100 * dp1))) : ((rootView.getCount()) * (87 * dp1));//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
         Log.d(LOG_TAG, cumulativeHeight + "");
         return cumulativeHeight;
@@ -137,9 +137,9 @@ public class BotCustomListView extends ViewGroup {
 
         int _height = 0;
         if (isNewList()) {
-            _height = measureRequiredHeightNew(blaNew);
+            _height = measureRequiredHeightNew(botListTypeAdapter);
         } else {
-            _height = measureRequiredHeight(bla);
+            _height = measureRequiredHeight(botButtonTypeAdapter);
         }
 
         int heightSpec = View.MeasureSpec.makeMeasureSpec(_height, View.MeasureSpec.EXACTLY);

@@ -144,11 +144,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
-                    botCustomListView.populateBotListView(payInner.getButtons());
+                    botCustomListView.populateBotButtonTypeView(payInner.getButtons());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
-//                    botCustomListView.setVisibility(View.VISIBLE);
-//                    botCustomListView.populateBotListView(payInner.convertQuickReplyToButton(payInner.getQuick_replies()));
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
@@ -166,7 +164,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         }
                         allBotList.add(blm);
                     }
-                    botCustomListView.populateBotListViewNew(allBotList);
+                    botCustomListView.populateBotListTypeView(allBotList);
                 }
             } else if (compType.equals(BotResponse.COMPONENT_TYPE_TEXT)) {
                 botCustomListView.setVisibility(View.GONE);

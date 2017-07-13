@@ -17,8 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListCustomAdapter;
-import kore.botssdk.adapter.BotListCustomAdapterNew;
+import kore.botssdk.adapter.BotButtonTypeAdapter;
+import kore.botssdk.adapter.BotListTypeAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
@@ -199,8 +199,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         addView(bubbleTextMediaLayout);
 
         botCustomListView = new BotCustomListView(getContext());
-        BotListCustomAdapter.isInExpandedMode = false;
-        BotListCustomAdapterNew.isInExpandedMode = false;
+        BotButtonTypeAdapter.isInExpandedMode = false;
+        BotListTypeAdapter.isInExpandedMode = false;
         RelativeLayout.LayoutParams txtVwParams1 = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         botCustomListView.setLayoutParams(txtVwParams1);

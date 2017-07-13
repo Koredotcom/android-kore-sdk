@@ -1,39 +1,33 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.models.BotCustomListModel;
+import kore.botssdk.models.ButtonTemplate;
 
 /**
- * Created by Anil Kumar on 12/20/2016.
+ * Created by Anil Kumar on 12/1/2016.
  */
-public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnClickListener*/ {
+public class BotButtonTypeAdapter extends BaseAdapter /*implements View.OnClickListener*/ {
     private Context mContext;
 
-    private ArrayList<BotCustomListModel> optionsList;
-
+    private ArrayList<ButtonTemplate> optionsList;
     private LayoutInflater inflater = null;
-//    BotCustomListModel tempValues;
+    ButtonTemplate tempValues;
     private static final int OPTIONS_LIST_LIMIT = 3;
     public static boolean isInExpandedMode;
     private MoreSelectionListener moreSelectionListener;
 
-    public BotListCustomAdapterNew(Context a) {
+    public BotButtonTypeAdapter(Context a) {
         mContext = a;
         inflater = LayoutInflater.from(mContext);
     }
@@ -46,12 +40,12 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
             return (OPTIONS_LIST_LIMIT + 1);
     }
 
-    public int getOptionsSize(){
+    public int getOptionsSize() {
         return optionsList.size();
     }
 
     @Override
-    public BotCustomListModel getItem(int position) {
+    public ButtonTemplate getItem(int position) {
         return optionsList.get(position);
     }
 
@@ -59,19 +53,16 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
     public long getItemId(int position) {
         return position;
     }
-    public static class ViewHolder {
-        public TextView title;
-        public TextView subtitle;
-        public ImageView imageUrl;
-        public TextView buy;
 
+    public static class ViewHolder {
+        public TextView text;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        BotCustomListModel option= getItem(position);
-        if(option != null) {
+        ButtonTemplate option = getItem(position);
+        if (!TextUtils.isEmpty(option.getTitle())) {
             if (!isInExpandedMode && showMore()) {
                 if (position == OPTIONS_LIST_LIMIT) {
                     convertView = getShowMoreView(convertView, parent);
@@ -86,40 +77,23 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
         return convertView;
     }
 
-    private View getOptionsView(View convertView,int position){
+    private View getOptionsView(View convertView, int position) {
         View vi = convertView;
         ViewHolder holder;
-        if (convertView == null || convertView.getTag() ==null) {
-            vi = inflater.inflate(R.layout.bot_custom_list_row_new, null);
+        if (convertView == null || convertView.getTag() == null) {
+            vi = inflater.inflate(R.layout.bot_custom_list_row, null);
             holder = new ViewHolder();
-            holder.title= (TextView) vi.findViewById(R.id.title);
-            holder.subtitle= (TextView) vi.findViewById(R.id.subtitle);
-            holder.imageUrl= (ImageView) vi.findViewById(R.id.imageUrl);
-            holder.buy = (TextView) vi.findViewById(R.id.productDetails);
+            holder.text = (TextView) vi.findViewById(R.id.botTextView1);
             vi.setTag(holder);
         } else
             holder = (ViewHolder) vi.getTag();
 
         if (optionsList.size() <= 0) {
-            holder.title.setText("No Data");
+            holder.text.setText("No Data");
         } else {
-//            tempValues = null;
-            final BotCustomListModel tempValues = (BotCustomListModel) optionsList.get(position);
-            holder.title.setText(tempValues.getTitle());
-            holder.subtitle.setText(tempValues.getSubtitle());
-            downlodImage(tempValues.getImageUrl(),holder.imageUrl);
-
-            holder.buy.setText(tempValues.getBtn_title());
-            holder.buy.setClickable(true);
-            holder.buy.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(tempValues.getBtn_url()));
-                    mContext.startActivity(i);
-                    /*Toast.makeText(mContext,"Clicked on buy",Toast.LENGTH_SHORT).show();*/
-                }
-            });
+            tempValues = null;
+            tempValues = (ButtonTemplate) optionsList.get(position);
+            holder.text.setText(tempValues.getTitle());
         }
         return vi;
     }
@@ -129,7 +103,7 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
         convertView = inflater.inflate(R.layout.bot_options_more_list_item, parent, false);
         LinearLayout container = (LinearLayout) convertView.findViewById(R.id.bot_options_more);
         TextView moreTextView = (TextView) convertView.findViewById(R.id.more_txt_view);
-        moreTextView.setText("Show more");
+        moreTextView.setText("More");
 
         // LinearLayout membersMoreOption = (LinearLayout) convertView.findViewById(R.id.space_members_more);
         container.setOnClickListener(new View.OnClickListener() {
@@ -138,18 +112,13 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
                 isInExpandedMode = true;
                 //notifyDataSetChanged();
 
-                if(moreSelectionListener !=null)
+                if (moreSelectionListener != null)
                     moreSelectionListener.onMoreSelected();
             }
         });
         convertView.setTag(null);
         return convertView;
     }
-
-    /*@Override
-    public void onClick(View v) {
-        Log.v("BotListCustomAdapter", "=====Row button clicked=====");
-    }*/
 
     private boolean showMore() {
         if (optionsList != null && !optionsList.isEmpty()) {
@@ -166,19 +135,11 @@ public class BotListCustomAdapterNew extends BaseAdapter /*implements View.OnCli
         this.moreSelectionListener = moreSelectionListener;
     }
 
-    public ArrayList<BotCustomListModel> getOptionsList() {
+    public ArrayList<ButtonTemplate> getOptionsList() {
         return optionsList;
     }
 
-    public void setOptionsList(ArrayList<BotCustomListModel> optionsList) {
+    public void setOptionsList(ArrayList<ButtonTemplate> optionsList) {
         this.optionsList = optionsList;
     }
-
-    private void downlodImage(String imageUrl, ImageView iv){
-        Picasso.with(mContext)
-                .load(imageUrl)
-                .into(iv);
-    }
-
-
 }
