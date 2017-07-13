@@ -70,22 +70,20 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         }
     }
 
-    public void addMessageToBotChatAdapter(final BotResponse botResponse) {
+    public void showTypingStatus(BotResponse botResponse) {
         if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            botTypingStatusRl.setVisibility(View.VISIBLE);
-            botTypingStatusRl.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    botsChatAdapter.addBaseBotMessage(botResponse);
-                    botTypingStatusRl.setVisibility(View.GONE);
-                    botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
-                }
-            }, 2000);
+            if (typingStatusItemDots != null) {
+                botTypingStatusRl.setVisibility(View.VISIBLE);
+                typingStatusItemDots.start();
+                Log.d("Hey", "Started animation");
+            }
         }
-        if (typingStatusItemDots != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            typingStatusItemDots.start();
-            Log.d("Hey", "Started animation");
-        }
+    }
+
+    public void addMessageToBotChatAdapter(BotResponse botResponse) {
+        botsChatAdapter.addBaseBotMessage(botResponse);
+        botTypingStatusRl.setVisibility(View.GONE);
+        botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {

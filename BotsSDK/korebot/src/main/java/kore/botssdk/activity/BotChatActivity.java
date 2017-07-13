@@ -35,6 +35,7 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SocketConnectionEventStates;
+import kore.botssdk.utils.StringConstants;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -87,7 +88,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         quickReplyFragment = new QuickReplyFragment();
         quickReplyFragment.setArguments(getIntent().getExtras());
         quickReplyFragment.setListener(BotChatActivity.this);
-        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer,quickReplyFragment).commit();
+        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer, quickReplyFragment).commit();
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -266,6 +267,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
             botContentFragmentUpdate.updateContentListOnSend(botRequest);
         }
+
+        toggleQuickRepliesVisiblity(false);
     }
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
@@ -287,19 +290,22 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         Gson gson = new Gson();
         try {
             final BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
-            if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
+            if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                return;
+            }
 
             Log.d(LOG_TAG, payload);
+            botContentFragment.showTypingStatus(botResponse);
 
-            checkForQuickReplies(botResponse);
-            stopTextToSpeech();
-            botContentFragment.addMessageToBotChatAdapter(botResponse);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    stopTextToSpeech();
+                    checkForQuickReplies(botResponse);
+                    botContentFragment.addMessageToBotChatAdapter(botResponse);
                     textToSpeech(botResponse);
                 }
-            }, 2000);
+            }, StringConstants.TYPING_STATUS_TIME);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }
@@ -336,8 +342,19 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
 
+    private void toggleQuickRepliesVisiblity(boolean visible){
+        if (visible) {
+            quickReplyFragment.toggleQuickReplyContainer(View.VISIBLE);
+        } else {
+            quickReplyFragment.toggleQuickReplyContainer(View.GONE);
+        }
+    }
+
     private void checkForQuickReplies(BotResponse botResponse) {
-        if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) return;
+        if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+            return;
+        }
+
         ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
         if (compModel != null) {
             String compType = compModel.getType();

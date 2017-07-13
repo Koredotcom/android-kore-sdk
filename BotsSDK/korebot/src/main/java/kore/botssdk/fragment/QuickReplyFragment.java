@@ -25,7 +25,6 @@ public class QuickReplyFragment extends BaseSpiceFragment {
     private final String LOG_TAG = QuickReplyFragment.class.getSimpleName();
     private LinearLayout quick_reply_container;
     private float dp1;
-    //    private String[] arr = {" Hi ","Hello","How are you"," list ","what","when","where","good","discard"};
     private QuickReplyInterface mListener;
 
 
@@ -41,19 +40,6 @@ public class QuickReplyFragment extends BaseSpiceFragment {
     private void findViews(View view) {
         quick_reply_container = (LinearLayout) view.findViewById(R.id.quick_reply_container);
         quick_reply_container.setVisibility(View.GONE);
-
-    }
-
-    public QuickReplyInterface getListener() {
-        return mListener;
-    }
-
-    public void setListener(QuickReplyInterface mListener) {
-        this.mListener = mListener;
-    }
-
-    public interface QuickReplyInterface {
-        void onQuickReplyItemClicked(String text);
     }
 
     public void populateQuickReplyViews(ArrayList<QuickReplyTemplate> quickReplies) {
@@ -81,5 +67,18 @@ public class QuickReplyFragment extends BaseSpiceFragment {
         }
         quick_reply_container.setVisibility(View.VISIBLE);
     }
+
+    public void toggleQuickReplyContainer(int visibility) {
+        quick_reply_container.setVisibility(visibility);
+    }
+
+    public void setListener(QuickReplyInterface mListener) {
+        this.mListener = mListener;
+    }
+
+    public interface QuickReplyInterface {
+        void onQuickReplyItemClicked(String text);
+    }
+
 }
 

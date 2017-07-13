@@ -1,6 +1,5 @@
 package kore.botssdk.utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,22 +7,10 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
-
 /**
  * Created by Ramachandra on 03/12/16.
  */
 public class AppPermissionsHelper {
-   /* public static boolean hasPermission(String... permission) {
-        boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ContextCompat.checkSelfPermission(KoreAppControl.getInstance().getContext(), permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
-        }
-        return shouldShowRequestPermissionRationale;
-    }*/
 
     public static void requestForPermission(Activity activity, String permission, int requestCode) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
@@ -107,10 +94,6 @@ public class AppPermissionsHelper {
         }
         return shouldShowRequestPermissionRationale;
     }
-
-   /* public static boolean hasPermissionForLocation() {
-        return AppPermissionsHelper.hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
-    }*/
 
     public static void startInstalledAppDetailsActivity(final Activity activity) {
         if (activity == null) {

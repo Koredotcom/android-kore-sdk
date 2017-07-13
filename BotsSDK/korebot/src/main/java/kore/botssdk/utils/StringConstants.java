@@ -18,6 +18,8 @@ public class StringConstants {
     public static final String DEFAULT_PROFILE_COLOR = "#7ACA5D";
     public final static String HTTP_SCHEME = "http";
 
+    public static final int TYPING_STATUS_TIME = 1500; //in millisecond
+
 //    public static String ANONYMOUS_FLOW = "anonymous_flow";
 //    public static String NORMAL_FLOW = "normal_flow";
 
