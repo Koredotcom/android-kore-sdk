@@ -329,14 +329,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
         int rectBottom = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight() - BUBBLE_CONTENT_BOTTOM_MARGIN) + BUBBLE_CONTENT_BOTTOM_MARGIN;
-        int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + (isLeftSide() ?
-                0 : BUBBLE_CONTENT_RIGHT_MARGIN);
+        int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + BUBBLE_CONTENT_RIGHT_MARGIN;
 
         rect.set(rectLeft, rectTop, rectRight, rectBottom);
-        if (botCustomListView.getVisibility() == View.GONE)
-            canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
-        else
-            canvas.drawRoundRect(rect, (float) (3 * dp1), (float) (3 * dp1), paint);
+        canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
     }
 
     @Override

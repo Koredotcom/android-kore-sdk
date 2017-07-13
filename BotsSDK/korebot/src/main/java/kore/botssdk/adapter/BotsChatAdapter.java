@@ -122,17 +122,9 @@ public class BotsChatAdapter extends BaseAdapter {
 
             //Bubble Population logic
             holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
-
             holder.baseBubbleLayout.setContinuousMessage(false);
-
-            holder.baseBubbleLayout.setGroupMessage(shallShowProfilePic);
-
+            holder.baseBubbleLayout.setGroupMessage(true);
             holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
-
-            if(holder.baseBubbleLayout instanceof ReceivedBubbleLayout){
-                setShallShowProfilePic(true);
-            }
-
         }
 
         return convertView;
