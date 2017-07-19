@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/carouselViewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible"
-    android:padding="10dp"/>
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    android:paddingBottom="@dimen/carousel_view_padding_bottom"
+    android:paddingLeft="@dimen/carousel_view_padding_left"
+    android:paddingRight="@dimen/carousel_view_padding_right"
+    android:paddingTop="@dimen/carousel_view_padding_top"
+    android:visibility="visible" />

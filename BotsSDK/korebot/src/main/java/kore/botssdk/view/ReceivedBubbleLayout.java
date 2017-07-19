@@ -29,6 +29,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
     CircularProfileView cpvSenderImage;
+    int carouselViewHeight;
 
     public ReceivedBubbleLayout(Context context) {
         super(context);
@@ -52,6 +53,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
     private void init() {
         textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+        carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
         super.setLeftSide(true);
     }
 
@@ -240,8 +242,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For CarouselView
          */
         if (botCarouselView.getVisibility() != View.GONE) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) (400 * dp1), MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (250*dp1), MeasureSpec.EXACTLY);
+            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
+            childHeightSpec = MeasureSpec.makeMeasureSpec(carouselViewHeight, MeasureSpec.EXACTLY);
             MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
         }
 

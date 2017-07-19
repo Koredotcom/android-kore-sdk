@@ -19,4 +19,13 @@
     <dimen name="typing_layout_margin_left">2dp</dimen>
     <dimen name="typing_layout_margin_right">2dp</dimen>
 
+    <!-- Carousel View -->
+    <dimen name="carousel_layout_height">295dp</dimen>
+    <item name="carousel_item_width_factor" format="float" type="dimen">1.0</item>
+    <dimen name="carousel_item_page_margin">10dp</dimen>
+    <dimen name="carousel_view_padding_left">50dp</dimen>
+    <dimen name="carousel_view_padding_top">0dp</dimen>
+    <dimen name="carousel_view_padding_right">100dp</dimen>
+    <dimen name="carousel_view_padding_bottom">0dp</dimen>
+
 </resources>

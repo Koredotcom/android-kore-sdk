@@ -39,6 +39,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     FragmentManager fragmentManager;
     protected float dp1, dp2, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
+    protected float screenWidth;
     protected int senderImageRadius, bubbleCornerRadius;
     private boolean leftSide;
     protected boolean isContinuousMessage = false;
@@ -169,6 +170,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
             BUBBLE_ARROW_TOP_Y = 0;
             BUBBLE_ARROW_MIDDLE_Y = (int) (arrow_factor * BUBBLE_ARROW_WIDTH);
             BUBBLE_ARROW_END_Y = (int) (2 * arrow_factor * BUBBLE_ARROW_WIDTH);
+            screenWidth = AppControl.getInstance().getDimensionUtil().screenWidth;
         }
     }
 
@@ -216,9 +218,6 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         botCarouselView = new BotCarouselView(getContext());
         botCarouselView.setFragmentManager(fragmentManager);
-        RelativeLayout.LayoutParams botCarouselViewParams = new RelativeLayout.LayoutParams(
-                (int) (250 * dp1), (int) (250 * dp1));
-        botCarouselView.setLayoutParams(botCarouselViewParams);
         botCarouselView.setVisibility(View.GONE);
         botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
         addView(botCarouselView);

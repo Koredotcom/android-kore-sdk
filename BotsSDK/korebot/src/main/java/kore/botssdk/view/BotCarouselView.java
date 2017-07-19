@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,12 @@ public class BotCarouselView extends ViewGroup {
 
     ViewPager carouselViewpager;
     int dp1;
+
     private int layoutWidth, layoutHeight;
+    private int carouselViewWidth, carouselViewHeight;
     FragmentManager fragmentManager;
     Activity activityContext;
-
-    public void setActivityContext(Activity activityContext) {
-        this.activityContext = activityContext;
-    }
+    BotCarouselAdapter botCarouselAdapter;
 
     public BotCarouselView(Context context) {
         super(context);
@@ -54,12 +54,29 @@ public class BotCarouselView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
         carouselViewpager = (ViewPager) inflatedView.findViewById(R.id.carouselViewpager);
-        carouselViewpager.setPageMargin(10 * dp1);
-        carouselViewpager.setClipChildren(false);
-        carouselViewpager.setClipToPadding(false);
-        carouselViewpager.setPadding(50 * dp1, 0, 100 * dp1, 0);
-        carouselViewpager.setOffscreenPageLimit(6);
+
+        TypedValue typedValue = new TypedValue();
+        int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+        carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
+
+        carouselViewpager.setPageMargin(pageMargin);
+        carouselViewpager.setOffscreenPageLimit(3);
 //        setBackgroundColor(0xff00ff00);
+    }
+
+    public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
+        if (fragmentManager != null && activityContext != null) {
+            if (carouselViewpager.getAdapter() == null) {
+                botCarouselAdapter = new BotCarouselAdapter(fragmentManager, activityContext);
+                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+                botCarouselAdapter.notifyDataSetChanged();
+                carouselViewpager.setAdapter(botCarouselAdapter);
+            } else {
+                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
+                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+                botCarouselAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     public void setLayoutWidth(int layoutWidth) {
@@ -74,20 +91,8 @@ public class BotCarouselView extends ViewGroup {
         this.fragmentManager = fragmentManager;
     }
 
-    BotCarouselAdapter botCarouselAdapter;
-    public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
-        if (fragmentManager != null && activityContext != null) {
-            if (carouselViewpager.getAdapter() == null) {
-                botCarouselAdapter = new BotCarouselAdapter(fragmentManager, activityContext);
-                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-                botCarouselAdapter.notifyDataSetChanged();
-                carouselViewpager.setAdapter(botCarouselAdapter);
-            } else {
-                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
-                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-                botCarouselAdapter.notifyDataSetChanged();
-            }
-        }
+    public void setActivityContext(Activity activityContext) {
+        this.activityContext = activityContext;
     }
 
     @Override
@@ -108,7 +113,7 @@ public class BotCarouselView extends ViewGroup {
          * For Carousel ViewPager Layout
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        childHeightSpec = MeasureSpec.makeMeasureSpec(200 * dp1, MeasureSpec.AT_MOST);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(carouselViewHeight, MeasureSpec.AT_MOST);
         MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeightSpec);
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
