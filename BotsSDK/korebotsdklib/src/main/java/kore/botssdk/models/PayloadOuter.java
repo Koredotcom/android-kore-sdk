@@ -7,6 +7,7 @@ public class PayloadOuter {
 
     private String type;
     private PayloadInner payload;
+    private String text;
 
     public String getType() {
         return type;
@@ -14,5 +15,9 @@ public class PayloadOuter {
 
     public PayloadInner getPayload() {
         return payload;
+    }
+
+    public String getText() {
+        return text;
     }
 }

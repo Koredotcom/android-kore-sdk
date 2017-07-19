@@ -1,7 +1,6 @@
 package kore.botssdk.models;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by Pradeep Mahato on 03-Jun-16.
@@ -12,6 +11,7 @@ public class BotResponse extends BaseBotMessage {
 
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
+    public static final String TEMPLATE_TYPE_CAROUSEL = "carousel";
     public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";
     public static final String COMPONENT_TYPE_TEMPLATE = "template";
     public static final String COMPONENT_TYPE_TEXT = "text";

@@ -1,7 +1,9 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +30,11 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
  */
 public class BotsChatAdapter extends BaseAdapter {
 
-//    public static String LOG_TAG = BotsChatAdapter.class.getSimpleName();
+    public static String LOG_TAG = BotsChatAdapter.class.getSimpleName();
 
     Context context;
+    Activity activityContext;
+    FragmentManager fragmentManager;
     private LayoutInflater ownLayoutInflater;
     private int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
@@ -124,6 +128,8 @@ public class BotsChatAdapter extends BaseAdapter {
             holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
             holder.baseBubbleLayout.setContinuousMessage(false);
             holder.baseBubbleLayout.setGroupMessage(true);
+            holder.baseBubbleLayout.setFragmentManager(fragmentManager);
+            holder.baseBubbleLayout.setActivityContext(activityContext);
             holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         }
 
@@ -166,5 +172,13 @@ public class BotsChatAdapter extends BaseAdapter {
 
     public void setShallShowProfilePic(boolean shallShowProfilePic) {
         this.shallShowProfilePic = shallShowProfilePic;
+    }
+
+    public void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
+
+    public void setActivityContext(Activity activityContext) {
+        this.activityContext = activityContext;
     }
 }

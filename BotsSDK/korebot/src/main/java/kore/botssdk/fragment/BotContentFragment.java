@@ -16,6 +16,7 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.views.DotsTextView;
 
@@ -47,13 +48,19 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         setupAdapter();
         return view;
     }
-
+    BotCarouselView botCarouselView;
     private void findViews(View view) {
         botsBubblesListView = (ListView) view.findViewById(R.id.botsBubblesListView);
+        botCarouselView = (BotCarouselView) view.findViewById(R.id.botCV);
+//        botCarouselView.setFragmentManager(getFragmentManager());
+//        botCarouselView.setActivityContext(getActivity());
+        botCarouselView.setVisibility(View.GONE);
     }
 
     private void setupAdapter() {
         botsChatAdapter = new BotsChatAdapter(getActivity());
+        botsChatAdapter.setFragmentManager(getChildFragmentManager());
+        botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
     }
@@ -84,6 +91,21 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.addBaseBotMessage(botResponse);
         botTypingStatusRl.setVisibility(View.GONE);
         botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
+        /*if (botResponse instanceof BotResponse) {
+            ComponentModel compModel = ((BotResponse) botResponse).getMessage().get(0).getComponent();
+            PayloadOuter payOuter = compModel.getPayload();
+            PayloadInner payInner;
+            if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                Gson gson = new Gson();
+                payOuter = gson.fromJson(payOuter.getText().replace("&quot;","\""), PayloadOuter.class);
+                payInner = payOuter.getPayload();
+                botCarouselView.populateCarouselView(payInner.getElements());
+            } else {
+                payInner = payOuter.getPayload();
+                botCarouselView.populateCarouselView(payInner.getElements());
+            }
+        }*/
+
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
@@ -109,8 +131,10 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             if (ttsUpdate != null) {
                 ttsUpdate.ttsOnStop();
             }
-            botsChatAdapter.addBaseBotMessage(botRequest);
-            scrollToBottom();
+            if (botsChatAdapter != null) {
+                botsChatAdapter.addBaseBotMessage(botRequest);
+                scrollToBottom();
+            }
         }
     }
 

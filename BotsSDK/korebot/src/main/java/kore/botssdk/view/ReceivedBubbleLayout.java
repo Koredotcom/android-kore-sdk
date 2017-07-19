@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -94,14 +96,15 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         super.initializeBubbleContentDimen();
 
         headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
-        maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + textMediaDimen[0] + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+        maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + textMediaDimen[0] + botCarouselView.getMeasuredWidth() + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
         headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
     @Override
@@ -117,7 +120,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void cosmeticChanges(BaseBotMessage baseBotMessage, int position) {
         super.cosmeticChanges(baseBotMessage, position);
         cosmetiseForProfilePic(baseBotMessage);
-        cosmetiseForOptionsList(baseBotMessage);
     }
 
 
@@ -132,14 +134,19 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
 
-    private void cosmetiseForOptionsList(BaseBotMessage baseBotMessage) {
+    protected void populateForTemplates(int position, BaseBotMessage baseBotMessage) {
 
         if (((BotResponse) baseBotMessage).getMessage().isEmpty()) return;
         ComponentModel compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
         if (compModel != null) {
             String compType = compModel.getType();
             PayloadOuter payOuter = compModel.getPayload();
-            PayloadInner payInner = payOuter.getPayload();
+            PayloadInner payInner;
+            if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                Gson gson = new Gson();
+                payOuter = gson.fromJson(payOuter.getText().replace("&quot;","\""), PayloadOuter.class);
+            }
+            payInner = payOuter.getPayload();
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
 
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -148,9 +155,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    botCarouselView.populateCarouselView(payInner.getElements());
+                    botCarouselView.setVisibility(View.VISIBLE);
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCustomListView.setVisibility(View.VISIBLE);
-                    ArrayList<ListTemplate> elements = payInner.getElements();
+                    ArrayList<ListTemplate> elements = new ArrayList<>();//ArrayList<ListTemplate> payInner.getElements();
                     ArrayList<BotCustomListModel> allBotList = new ArrayList<>();
                     for (ListTemplate lt : elements) {
                         BotCustomListModel blm = new BotCustomListModel();
@@ -222,17 +232,18 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /*
          * For OptionsList
          */
-        if (botCustomListView.getVisibility() != View.GONE)
+        if (botCustomListView.getVisibility() != View.GONE) {
             MeasureUtils.measure(botCustomListView, parentWidth + BUBBLE_CONTENT_LEFT_MARGIN + BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
-
+        }
 
         /*
-         * For Simplified Bubble Layout
+         * For CarouselView
          */
-        int width = BUBBLE_CONTENT_LEFT_MARGIN + bubbleTextMediaLayout.getMeasuredWidth() + BUBBLE_CONTENT_RIGHT_MARGIN;
-        int height = BUBBLE_CONTENT_TOP_MARGIN + bubbleTextMediaLayout.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
-        childWidthSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+        if (botCarouselView.getVisibility() != View.GONE) {
+            childWidthSpec = MeasureSpec.makeMeasureSpec((int) (400 * dp1), MeasureSpec.EXACTLY);
+            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (250*dp1), MeasureSpec.EXACTLY);
+            MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
+        }
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
@@ -305,6 +316,15 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         top = bubbleTextMediaLayout.getBottom();
         if (botCustomListView.getVisibility() != View.GONE)
             LayoutUtils.layoutChild(botCustomListView, left, top);
+
+        /*
+         * For Carousel View
+         */
+        left = 0;
+        top = bubbleTextMediaLayout.getBottom();
+        if (botCarouselView.getVisibility() != View.GONE) {
+            LayoutUtils.layoutChild(botCarouselView, left, top);
+        }
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

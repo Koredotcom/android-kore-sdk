@@ -24,17 +24,21 @@
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
         android:listSelector="@android:color/white"
+        android:overScrollMode="never"
         android:paddingBottom="45dp"
         android:paddingTop="10dp"
-        android:overScrollMode="never"
         android:scrollbars="none"
         android:scrollingCache="false"
         android:smoothScrollbar="true"
         android:stackFromBottom="true"
         android:visibility="visible" />
 
-    <LinearLayout
-        xmlns:cpv="http://schemas.android.com/apk/res-auto"
+    <kore.botssdk.view.BotCarouselView
+        android:id="@+id/botCV"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"/>
+
+    <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
         xmlns:dots="http://schemas.android.com/apk/res-auto"
         android:id="@+id/botTypingStatus"
         android:layout_width="match_parent"
@@ -61,11 +65,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/dot_view_margin_bottom"
+            android:layout_marginLeft="5dp"
             android:textColor="@color/left_bubble_text_color"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginBottom="@dimen/dot_view_margin_bottom"
-            android:layout_marginLeft="5dp"
             dots:autoplay="true"
             dots:period="1000" />
     </LinearLayout>

@@ -34,6 +34,7 @@ public class TextMediaLayout extends MediaLayout {
     public static final int TEXTVIEW_ID = 1980081;
     public static final int LIST_ID = 1980045;
     public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
+    public static final int CAROUSEL_VIEW_ID = 1980053;
 
     private float restrictedLayoutWidth, restrictedLayoutHeight;
 

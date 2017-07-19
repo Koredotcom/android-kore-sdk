@@ -18,6 +18,7 @@ import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
+import kore.botssdk.fragment.CarouselFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
@@ -38,6 +39,7 @@ import kore.botssdk.utils.SocketConnectionEventStates;
 import kore.botssdk.utils.StringConstants;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
@@ -62,6 +64,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     BotClient botClient;
     BotContentFragment botContentFragment;
+    CarouselFragment carouselFragment;
     ComposeFooterFragment composeFooterFragment;
     TTSSynthesizer ttsSynthesizer;
     QuickReplyFragment quickReplyFragment;
@@ -80,8 +83,14 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
+        carouselFragment = new CarouselFragment();
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
+
+        BotCarouselView bcv = (BotCarouselView) findViewById(R.id.botCV1);
+        /*bcv.setFragmentManager(getSupportFragmentManager());
+        bcv.populateCarouselView(new ArrayList<BotCarouselModel>());*/
+        bcv.setVisibility(View.GONE);
 
         //Add Suggestion Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -337,7 +346,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     private void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            String botResponseTextualFormat = botResponse.getTempMessage().getcInfo().getBody();
+            String botResponseTextualFormat = "";//botResponse.getTempMessage().getcInfo().getBody();
             ttsSynthesizer.speak(botResponseTextualFormat);
         }
     }

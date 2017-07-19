@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,8 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public abstract class BaseBubbleLayout extends ViewGroup {
 
     Context context;
+    Activity activityContext;
+    FragmentManager fragmentManager;
     protected float dp1, dp2, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
     protected int senderImageRadius, bubbleCornerRadius;
@@ -85,6 +89,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected TextView botContentTextView;
     protected HeaderLayout headerLayout;
     protected BotCustomListView botCustomListView;
+    protected BotCarouselView botCarouselView;
 
 
     protected int position;
@@ -208,6 +213,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         botCustomListView.setId(TextMediaLayout.LIST_ID);
         botCustomListView.setVisibility(View.GONE);
         addView(botCustomListView);
+
+        botCarouselView = new BotCarouselView(getContext());
+        botCarouselView.setFragmentManager(fragmentManager);
+        RelativeLayout.LayoutParams botCarouselViewParams = new RelativeLayout.LayoutParams(
+                (int) (250 * dp1), (int) (250 * dp1));
+        botCarouselView.setLayoutParams(botCarouselViewParams);
+        botCarouselView.setVisibility(View.GONE);
+        botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
+        addView(botCarouselView);
     }
 
     protected void setInivisiblePaintColor(Paint paint) {
@@ -356,6 +370,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         // Bubble Text Media
         populateBubbleTextMedia(position, baseBotMessage, constrictLayout, dimens);
+        // Bubble Templates
+        populateForTemplates(position, baseBotMessage);
 
         // Header Layout
         populateHeaderLayout(position, baseBotMessage);
@@ -392,6 +408,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
     }
 
+    protected  void populateForTemplates(int position, BaseBotMessage baseBotMessage) {}
+
     protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, boolean constrictLayout, int... dimens) {
 
         String message = null;
@@ -399,12 +417,14 @@ public abstract class BaseBubbleLayout extends ViewGroup {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
-            if (msg != null)
-                message = msg.getcInfo().getBody();
+            if (msg != null && msg.getComponent() != null && msg.getComponent().getType().equalsIgnoreCase("text")) {
+                message = msg.getComponent().getPayload().getText();
+            }
         }
 
-        if (message != null)
+        if (message != null && !message.isEmpty()) {
             bubbleTextMediaLayout.startup(position, message, dimens);
+        }
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);
@@ -480,5 +500,23 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
     public void setGroupMessage(boolean groupMessage) {
         isGroupMessage = groupMessage;
+    }
+
+    public FragmentManager getFragmentManager() {
+        return fragmentManager;
+    }
+
+    public void setFragmentManager(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+        if (botCarouselView != null) {
+            botCarouselView.setFragmentManager(fragmentManager);
+        }
+    }
+
+    public void setActivityContext(Activity activityContext) {
+        this.activityContext = activityContext;
+        if (botCarouselView != null) {
+            botCarouselView.setActivityContext(activityContext);
+        }
     }
 }
