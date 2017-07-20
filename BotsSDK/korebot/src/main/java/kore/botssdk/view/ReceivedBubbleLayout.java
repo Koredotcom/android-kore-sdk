@@ -168,9 +168,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                         bubbleTextMediaLayout.populateText(payInner.getText());
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botCarouselView.setVisibility(View.VISIBLE);
                         botCarouselView.populateCarouselView(payInner.getElements());
                         setDoDrawBubbleBackground(false);
-                        botCarouselView.setVisibility(View.VISIBLE);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botCustomListView.setVisibility(View.VISIBLE);
                         ArrayList<ListTemplate> elements = new ArrayList<>();//ArrayList<ListTemplate> payInner.getElements();
@@ -319,10 +319,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For Carousel View
          */
         left = 0;
-        if (botCarouselView.getVisibility() != View.GONE) {
-            top -= BUBBLE_CONTENT_TOP_MARGIN;
-            LayoutUtils.layoutChild(botCarouselView, left, top);
-        }
+        top -= BUBBLE_CONTENT_TOP_MARGIN;
+        LayoutUtils.layoutChild(botCarouselView, left, top);
 
          /*
          * For re-adjusting CPV

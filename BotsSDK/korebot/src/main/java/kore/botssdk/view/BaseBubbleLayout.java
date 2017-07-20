@@ -10,7 +10,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +21,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotButtonTypeAdapter;
 import kore.botssdk.adapter.BotListTypeAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -36,7 +36,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
     Context context;
     Activity activityContext;
-    FragmentManager fragmentManager;
+    ComposeFooterInterface composeFooterInterface;
     protected float dp1, dp2, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
     protected float screenWidth;
@@ -222,7 +222,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         addView(botCustomListView);
 
         botCarouselView = new BotCarouselView(getContext());
-        botCarouselView.setFragmentManager(fragmentManager);
+        botCarouselView.setComposeFooterInterface(composeFooterInterface);
         botCarouselView.setVisibility(View.GONE);
         botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
         addView(botCarouselView);
@@ -505,14 +505,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         isGroupMessage = groupMessage;
     }
 
-    public FragmentManager getFragmentManager() {
-        return fragmentManager;
-    }
-
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
         if (botCarouselView != null) {
-            botCarouselView.setFragmentManager(fragmentManager);
+            botCarouselView.setComposeFooterInterface(composeFooterInterface);
         }
     }
 

@@ -3,6 +3,7 @@ package kore.botssdk.view.viewUtils;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import com.squareup.picasso.Picasso;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
 
 /**
@@ -39,7 +42,7 @@ public class CarouselItemViewHelper {
         view.setTag(carouselViewHolder);
     }
 
-    public static void populateStuffs(CarouselViewHolder carouselViewHolder, BotCarouselModel botCarouselModel, Context activityContext) {
+    public static void populateStuffs(CarouselViewHolder carouselViewHolder, final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface, BotCarouselModel botCarouselModel, Context activityContext) {
 
         if (botCarouselModel != null) {
 
@@ -53,6 +56,16 @@ public class CarouselItemViewHelper {
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            carouselViewHolder.carouselButtonListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (composeFooterInterface != null) {
+                        BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
+                        String buttonPayload = botCaourselButtonModel.getPayload();
+                        composeFooterInterface.onSendClick(buttonPayload);
+                    }
+                }
+            });
         }
     }
 

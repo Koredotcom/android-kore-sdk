@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -31,8 +31,8 @@ public class BotCarouselView extends ViewGroup {
 
     private int layoutWidth, layoutHeight;
     private int carouselViewWidth, carouselViewHeight;
-    FragmentManager fragmentManager;
     Activity activityContext;
+    ComposeFooterInterface composeFooterInterface;
     BotCarouselAdapter botCarouselAdapter;
 
     public BotCarouselView(Context context) {
@@ -64,9 +64,9 @@ public class BotCarouselView extends ViewGroup {
     }
 
     public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
-        if (fragmentManager != null && activityContext != null) {
+        if (composeFooterInterface != null && activityContext != null) {
             if (carouselViewpager.getAdapter() == null) {
-                botCarouselAdapter = new BotCarouselAdapter(fragmentManager, activityContext);
+                botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setAdapter(botCarouselAdapter);
@@ -86,8 +86,8 @@ public class BotCarouselView extends ViewGroup {
         this.layoutHeight = layoutHeight;
     }
 
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
     }
 
     public void setActivityContext(Activity activityContext) {

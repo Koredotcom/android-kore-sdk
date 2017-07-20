@@ -32,6 +32,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
+    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
 
     boolean shallShowProfilePic;
     private String mChannelIconURL;
@@ -59,7 +60,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 
     private void setupAdapter() {
         botsChatAdapter = new BotsChatAdapter(getActivity());
-        botsChatAdapter.setFragmentManager(getChildFragmentManager());
+        botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
@@ -67,6 +68,10 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
         this.ttsUpdate = ttsUpdate;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
     }
 
     private void getBundleInfo() {

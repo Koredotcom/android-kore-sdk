@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.view.BaseBubbleContainer;
 import kore.botssdk.view.BaseBubbleLayout;
@@ -34,7 +34,7 @@ public class BotsChatAdapter extends BaseAdapter {
 
     Context context;
     Activity activityContext;
-    FragmentManager fragmentManager;
+    ComposeFooterInterface composeFooterInterface;
     private LayoutInflater ownLayoutInflater;
     private int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
@@ -128,7 +128,7 @@ public class BotsChatAdapter extends BaseAdapter {
             holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
             holder.baseBubbleLayout.setContinuousMessage(false);
             holder.baseBubbleLayout.setGroupMessage(true);
-            holder.baseBubbleLayout.setFragmentManager(fragmentManager);
+            holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
             holder.baseBubbleLayout.setActivityContext(activityContext);
             holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         }
@@ -174,8 +174,8 @@ public class BotsChatAdapter extends BaseAdapter {
         this.shallShowProfilePic = shallShowProfilePic;
     }
 
-    public void setFragmentManager(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
     }
 
     public void setActivityContext(Activity activityContext) {

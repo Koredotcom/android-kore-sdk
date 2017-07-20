@@ -83,7 +83,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
-        carouselFragment = new CarouselFragment();
+        botContentFragment.setComposeFooterInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 

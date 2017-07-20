@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
 import android.util.TypedValue;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
 
@@ -23,12 +23,14 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     ArrayList<BotCarouselModel> botCarouselModels = new ArrayList<>();
     Activity activityContext;
+    ComposeFooterInterface composeFooterInterface;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
 
-    public BotCarouselAdapter(FragmentManager fm, Activity activityContext) {
+    public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface, Activity activityContext) {
         super();
         this.activityContext = activityContext;
+        this.composeFooterInterface = composeFooterInterface;
         ownLayoutInflater = activityContext.getLayoutInflater();
 
         TypedValue typedValue = new TypedValue();
@@ -51,7 +53,7 @@ public class BotCarouselAdapter extends PagerAdapter {
         View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
 
         CarouselItemViewHelper.initializeViewHolder(carouselItemLayout);
-        CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), botCarouselModels.get(position), activityContext);
+        CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, botCarouselModels.get(position), activityContext);
 
         container.addView(carouselItemLayout);
 
