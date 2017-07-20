@@ -121,15 +121,23 @@ public class BotCustomListView extends ViewGroup {
     };
 
     private int measureRequiredHeight(BotButtonTypeAdapter rootView) {
-        int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
-        Log.d(LOG_TAG, cumulativeHeight + "");
-        return cumulativeHeight;
+        if (rootView != null) {
+            int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
+            Log.d(LOG_TAG, cumulativeHeight + "");
+            return cumulativeHeight;
+        } else {
+            return 0;
+        }
     }
 
     private int measureRequiredHeightNew(BotListTypeAdapter rootView) {
-        int cumulativeHeight = rootView.getCount() == 4 ? (((rootView.getCount() - 1) * (100 * dp1))) : ((rootView.getCount()) * (87 * dp1));//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
-        Log.d(LOG_TAG, cumulativeHeight + "");
-        return cumulativeHeight;
+        if (rootView != null) {
+            int cumulativeHeight = rootView.getCount() == 4 ? (((rootView.getCount() - 1) * (100 * dp1))) : ((rootView.getCount()) * (87 * dp1));//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
+            Log.d(LOG_TAG, cumulativeHeight + "");
+            return cumulativeHeight;
+        } else {
+            return 0;
+        }
     }
 
     @Override

@@ -120,6 +120,13 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
     @Override
+    protected void preCosmeticChanges() {
+        super.preCosmeticChanges();
+        botCarouselView.setVisibility(View.GONE);
+        botCustomListView.setVisibility(View.GONE);
+    }
+
+    @Override
     protected void cosmeticChanges(BaseBotMessage baseBotMessage, int position) {
         super.cosmeticChanges(baseBotMessage, position);
         cosmetiseForProfilePic(baseBotMessage);
@@ -151,6 +158,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                 }
                 payInner = payOuter.getPayload();
+
                 if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
 
                     if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -238,18 +246,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /*
          * For OptionsList
          */
-        if (botCustomListView.getVisibility() != View.GONE) {
-            MeasureUtils.measure(botCustomListView, parentWidth + BUBBLE_CONTENT_LEFT_MARGIN + BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
-        }
+        MeasureUtils.measure(botCustomListView, parentWidth + BUBBLE_CONTENT_LEFT_MARGIN + BUBBLE_CONTENT_RIGHT_MARGIN, wrapSpec);
 
         /*
          * For CarouselView
          */
-        if (botCarouselView.getVisibility() != View.GONE) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
