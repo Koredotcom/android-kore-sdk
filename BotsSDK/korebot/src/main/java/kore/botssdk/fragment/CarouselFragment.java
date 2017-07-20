@@ -26,7 +26,7 @@ import kore.botssdk.utils.BundleConstants;
 public class CarouselFragment extends Fragment {
 
     ImageView carouselItemImage;
-    TextView carouselItemTitle, carouselItemSubTitle, carousel_textViw;
+    TextView carouselItemTitle, carouselItemSubTitle;
     ListView carouselButtonListview;
     RelativeLayout carouselItemRoot;
 
@@ -40,9 +40,9 @@ public class CarouselFragment extends Fragment {
         View view = inflater.inflate(R.layout.carousel_item_layout, container, false);
 
         gson = new Gson();
-//        extractFromBundle();
+        extractFromBundle();
         findViews(view);
-//        populateView();
+        populateView();
 
         return view;
     }
@@ -53,7 +53,6 @@ public class CarouselFragment extends Fragment {
         carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
         carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
         carouselButtonListview = (ListView) view.findViewById(R.id.carousel_button_listview);
-        carousel_textViw = (TextView) view.findViewById(R.id.carousel_textViw);
     }
 
     int carouselPosition;
@@ -78,21 +77,6 @@ public class CarouselFragment extends Fragment {
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getActivity());
             carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
-
-            carousel_textViw.setText(carouselPosition + "");
-            switch (carouselPosition) {
-                case 0:
-                    carouselItemRoot.setBackgroundColor(0xffff0000);
-                    break;
-                case 1:
-                    carouselItemRoot.setBackgroundColor(0xff00ff00);
-                    break;
-                case 2:
-                    carouselItemRoot.setBackgroundColor(0xff0000ff);
-                    break;
-                default:
-                    carouselItemRoot.setBackgroundColor(0xff0f0f0f);
-            }
         }
     }
 

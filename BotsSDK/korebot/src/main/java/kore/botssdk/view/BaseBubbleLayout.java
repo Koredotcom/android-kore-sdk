@@ -44,6 +44,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     private boolean leftSide;
     protected boolean isContinuousMessage = false;
     protected boolean isSeparatedClosely = false;
+    protected boolean doDrawBubbleBackground = true;
     protected boolean isGroupMessage = true;
     private Point triangleCoordA, triangleCoordB, triangleCoordC;
     private Point lineStart, lineEnd;
@@ -63,6 +64,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_CONTENT_TOP_MARGIN = 0;
     protected int BUBBLE_CONTENT_RIGHT_MARGIN = 0;
     protected int BUBBLE_CONTENT_BOTTOM_MARGIN = 0;
+    protected int BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN = 0;
     protected int BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT = 0;
     protected int BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = 0;
     protected int BUBBLE_TOP_BORDER = 0;
@@ -82,6 +84,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected int RIGHT_COLOR_UNSELECTED = getResources().getColor(R.color.right_bubble_unselected);
     protected int LEFT_COLOR_SELECTED = getResources().getColor(R.color.left_bubble_selected);
     protected int LEFT_COLOR_UNSELECTED = getResources().getColor(R.color.left_bubble_unselected);
+    protected int BUBBLE_WHITE_COLOR = getResources().getColor(R.color.bubble_white_color);
     protected int POLICY_BUBBLE_COLOR = getResources().getColor(R.color.policy_bubble_color);
     protected int WHITE_COLOR = 0xffffffff;
     public static String NON_KORE_COLOR = "#AEBFC4";
@@ -177,7 +180,9 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected void setPaintColor(Paint paint) {
 
         if (isLeftSide()) {
-            if (isSelected()) {
+            if (!isDoDrawBubbleBackground()) {
+                paint.setColor(BUBBLE_WHITE_COLOR);
+            } else if (isSelected()) {
                 paint.setColor(LEFT_COLOR_SELECTED);
             } else {
                 paint.setColor(LEFT_COLOR_UNSELECTED);
@@ -381,6 +386,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     }
 
     protected void preCosmeticChanges() {
+        setDoDrawBubbleBackground(true);
         determineTextColor();
         textViewCosmeticChanges();
     }
@@ -421,9 +427,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
             }
         }
 
-        if (message != null && !message.isEmpty()) {
-            bubbleTextMediaLayout.startup(position, message, dimens);
-        }
+        bubbleTextMediaLayout.startup(position, message, dimens);
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);
@@ -517,5 +521,13 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         if (botCarouselView != null) {
             botCarouselView.setActivityContext(activityContext);
         }
+    }
+
+    public boolean isDoDrawBubbleBackground() {
+        return doDrawBubbleBackground;
+    }
+
+    public void setDoDrawBubbleBackground(boolean doDrawBubbleBackground) {
+        this.doDrawBubbleBackground = doDrawBubbleBackground;
     }
 }

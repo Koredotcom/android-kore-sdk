@@ -61,7 +61,6 @@ public class BotCarouselView extends ViewGroup {
 
         carouselViewpager.setPageMargin(pageMargin);
         carouselViewpager.setOffscreenPageLimit(3);
-//        setBackgroundColor(0xff00ff00);
     }
 
     public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {

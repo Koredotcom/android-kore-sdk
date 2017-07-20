@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
+import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotCarouselModel;
 
 /**
@@ -19,11 +20,9 @@ import kore.botssdk.models.BotCarouselModel;
  */
 public class CarouselItemViewHelper {
 
-    int carouselPosition;
-
     public static class CarouselViewHolder {
         ImageView carouselItemImage;
-        TextView carouselItemTitle, carouselItemSubTitle, carousel_textViw;
+        TextView carouselItemTitle, carouselItemSubTitle;
         ListView carouselButtonListview;
         CardView carouselItemRoot;
     }
@@ -36,7 +35,6 @@ public class CarouselItemViewHelper {
         carouselViewHolder.carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
         carouselViewHolder.carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
         carouselViewHolder.carouselButtonListview = (ListView) view.findViewById(R.id.carousel_button_listview);
-        carouselViewHolder.carousel_textViw = (TextView) view.findViewById(R.id.carousel_textViw);
 
         view.setTag(carouselViewHolder);
     }
@@ -44,6 +42,9 @@ public class CarouselItemViewHelper {
     public static void populateStuffs(CarouselViewHolder carouselViewHolder, BotCarouselModel botCarouselModel, Context activityContext) {
 
         if (botCarouselModel != null) {
+
+            float dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
             carouselViewHolder.carouselItemSubTitle.setText(botCarouselModel.getSubtitle());
 
@@ -55,4 +56,7 @@ public class CarouselItemViewHelper {
         }
     }
 
+    private static int getButtonHeight(Context context, int itemCount, float dp1) {
+        return (int) (context.getResources().getDimension(R.dimen.carousel_view_button_height_individual) * dp1 + 4 * dp1);
+    }
 }
