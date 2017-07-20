@@ -243,7 +243,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
         if (botCarouselView.getVisibility() != View.GONE) {
             childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec(carouselViewHeight, MeasureSpec.EXACTLY);
+            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight), MeasureSpec.EXACTLY);
             MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
         }
 

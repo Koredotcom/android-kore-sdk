@@ -5,10 +5,10 @@
 
     <Button
         android:id="@+id/bot_carousel_item_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:background="@android:color/background_light"
+        android:background="@android:color/white"
         android:textColor="@android:color/holo_blue_dark"
         android:text="Button"/>
 

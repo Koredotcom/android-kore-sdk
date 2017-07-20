@@ -1,10 +1,10 @@
 package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -25,15 +25,13 @@ public class CarouselItemViewHelper {
         ImageView carouselItemImage;
         TextView carouselItemTitle, carouselItemSubTitle, carousel_textViw;
         ListView carouselButtonListview;
-        RelativeLayout carouselItemRoot;
-        RelativeLayout carouselItemWidthContainer;
+        CardView carouselItemRoot;
     }
 
     public static void initializeViewHolder(View view) {
         CarouselViewHolder carouselViewHolder = new CarouselViewHolder();
 
-        carouselViewHolder.carouselItemWidthContainer = (RelativeLayout) view.findViewById(R.id.carousel_item_width);
-        carouselViewHolder.carouselItemRoot = (RelativeLayout) view.findViewById(R.id.carousel_item_root);
+        carouselViewHolder.carouselItemRoot = (CardView) view.findViewById(R.id.carousel_item_root);
         carouselViewHolder.carouselItemImage = (ImageView) view.findViewById(R.id.carousel_item_image);
         carouselViewHolder.carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
         carouselViewHolder.carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
@@ -54,21 +52,6 @@ public class CarouselItemViewHelper {
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
-
-            /*carousel_textViw.setText(carouselPosition + "");
-            switch (carouselPosition) {
-                case 0:
-                    carouselItemWidthContainer.setBackgroundColor(0xffff0000);
-                    break;
-                case 1:
-                    carouselItemWidthContainer.setBackgroundColor(0xff00ff00);
-                    break;
-                case 2:
-                    carouselItemWidthContainer.setBackgroundColor(0xff0000ff);
-                    break;
-                default:
-                    carouselItemWidthContainer.setBackgroundColor(0xff0f0f0f);
-            }*/
         }
     }
 
