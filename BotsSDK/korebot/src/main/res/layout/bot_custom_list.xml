@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<kore.botssdk.view.AutoExpandListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/botCustomListView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botCustomListRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/botCustomListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"/>
+    
+    <Button
+        android:id="@+id/botCustomListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:textColor="@color/bgBlueSignup"
+        android:visibility="gone"/>
+</LinearLayout>

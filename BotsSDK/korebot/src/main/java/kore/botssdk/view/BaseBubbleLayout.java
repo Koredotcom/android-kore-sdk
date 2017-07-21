@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListTypeAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BaseBotMessage;
@@ -90,7 +92,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
     protected HeaderLayout headerLayout;
-    protected BotCustomListView botCustomListView;
+    protected BotListTemplateView botListTemplateView;
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
 
@@ -209,14 +211,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         addView(bubbleTextMediaLayout);
 
-        botCustomListView = new BotCustomListView(getContext());
-        BotListTypeAdapter.isInExpandedMode = false;
-        botCustomListView.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-        botCustomListView.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
-        botCustomListView.setBackgroundColor(Color.WHITE);
-        botCustomListView.setId(TextMediaLayout.LIST_ID);
-        botCustomListView.setVisibility(View.GONE);
-        addView(botCustomListView);
+        botListTemplateView = new BotListTemplateView(getContext());
+        botListTemplateView.setId(TextMediaLayout.LIST_ID);
+        botListTemplateView.setVisibility(View.GONE);
+        addView(botListTemplateView);
 
         botButtonView = new BotButtonView(getContext());
         botButtonView.setId(TextMediaLayout.BUTTON_VIEW_ID);
@@ -306,7 +304,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         Bitmap curveBitmap = formCurveBitmap(senderImageRadius, bubbleCornerRadius);
 
         int x = 0;
-        int y = (botButtonView.getMeasuredHeight() > 0 ? botButtonView.getBottom() : bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN) + 2 - senderImageRadius;
+        int y = 0;
+        if (botButtonView.getMeasuredHeight() > 0) {
+            y = botButtonView.getBottom();
+        } else if (botListTemplateView.getMeasuredHeight() > 0) {
+            y = (int) (botListTemplateView.getBottom() + dp1);
+        } else {
+            y = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        }
+        y += 2 - senderImageRadius;
 
         if (isLeftSide()) {
             x = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN - 6 * dp1 - senderImageRadius + dp1 / 3);
@@ -349,8 +355,17 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         int dimen[] = textMediaDimen;
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
-        int rectBottom = (botButtonView.getMeasuredHeight() > 0 ? botButtonView.getBottom() : bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN);
-        int rectRight = (int) Math.max(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN, botButtonView.getRight() + dp1);
+        int rectBottom = 0;
+        if (botButtonView.getMeasuredHeight() > 0) {
+            rectBottom = botButtonView.getBottom();
+        } else if (botListTemplateView.getMeasuredHeight() > 0) {
+            rectBottom = (int) (botListTemplateView.getBottom() + dp1);
+        } else {
+            rectBottom = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        }
+        int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
+                botButtonView.getRight() + (int) dp1,
+                botListTemplateView.getRight() + (int) dp1));
 
         rect.set(rectLeft, rectTop, rectRight, rectBottom);
         canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
@@ -416,7 +431,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
     }
 
-    protected  void populateForTemplates(int position, BaseBotMessage baseBotMessage) {}
+    protected void populateForTemplates(int position, BaseBotMessage baseBotMessage) {
+    }
 
     protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, boolean constrictLayout, int... dimens) {
 
@@ -448,7 +464,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
      */
     protected void initializeBubbleContentDimen() {
         //STEP 1: Retrieve TextMedia Layout dimensional value... and also FooterLayoutDimentionalValue
-        textMediaDimen = new int[]{Math.max(bubbleTextMediaLayout.getMeasuredWidth(), botCustomListView.getMeasuredWidth()), bubbleTextMediaLayout.getMeasuredHeight() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight())/*+list.getMeasuredHeight()*/};//bubbleTextMediaLayout.getTextMediaLayoutDimens(bubbleMeta.getComponentMeta(), dimens);
+        textMediaDimen = new int[]{bubbleTextMediaLayout.getMeasuredWidth(), bubbleTextMediaLayout.getMeasuredHeight()};
 
         //STEP 2: Store additional informations required in further stage of UI rendering...
         maxBubbleDimen = new int[2];
@@ -515,6 +531,9 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
         if (botButtonView != null) {
             botButtonView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if (botListTemplateView != null) {
+            botListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
     }
 

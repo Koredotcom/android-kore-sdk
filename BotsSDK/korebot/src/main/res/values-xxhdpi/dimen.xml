@@ -2,4 +2,5 @@
     <dimen name="carousel_view_cardCornerRadius">5dp</dimen>
     <dimen name="carousel_view_button_list_max_height">146dp</dimen>
     <dimen name="carousel_view_button_height">48dp</dimen>
+    <dimen name="list_item_view_height">120dp</dimen>
 </resources>

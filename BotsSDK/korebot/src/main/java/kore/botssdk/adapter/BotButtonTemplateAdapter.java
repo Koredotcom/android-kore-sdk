@@ -15,11 +15,11 @@ import kore.botssdk.models.BotButtonModel;
 /**
  * Created by Anil Kumar on 12/1/2016.
  */
-public class BotButtonTypeAdapter extends BaseAdapter {
+public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
     private LayoutInflater ownLayoutInflater = null;
 
-    public BotButtonTypeAdapter(Context context) {
+    public BotButtonTemplateAdapter(Context context) {
         ownLayoutInflater = LayoutInflater.from(context);
     }
 

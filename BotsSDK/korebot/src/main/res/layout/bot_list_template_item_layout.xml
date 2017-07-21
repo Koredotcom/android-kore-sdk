@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_view_height"
+    android:background="@android:color/white"
+    android:minHeight="@dimen/list_item_view_height"
+    android:orientation="vertical"
+    android:paddingBottom="7dp"
+    android:paddingLeft="7dp"
+    android:paddingRight="7dp"
+    android:paddingTop="7dp">
+
+    <!-- Item image -->
+    <ImageView
+        android:id="@+id/bot_list_item_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:clickable="false"
+        android:minHeight="60dp"
+        android:minWidth="60dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/bot_list_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textSize="14dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/bot_list_item_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bot_list_item_title"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:text="Subtitle"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="12dp" />
+
+    <Button
+        android:id="@+id/bot_list_item_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/bgBlueSignup"
+        android:background="@drawable/rounded_image_bg_blue"
+        android:textSize="12dp" />
+
+</RelativeLayout>

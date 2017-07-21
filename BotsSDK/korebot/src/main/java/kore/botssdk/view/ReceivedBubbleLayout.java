@@ -6,16 +6,13 @@ import android.view.View;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.models.BotCustomListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
-import kore.botssdk.models.ListTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.DateUtils;
@@ -100,14 +97,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth(),  botListTemplateView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
         headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
     @Override
@@ -124,7 +121,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         super.preCosmeticChanges();
         botButtonView.setVisibility(View.GONE);
         botCarouselView.setVisibility(View.GONE);
-        botCustomListView.setVisibility(View.GONE);
+        botListTemplateView.setVisibility(View.GONE);
     }
 
     @Override
@@ -149,6 +146,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         // Default out everything
         botButtonView.populateButtonList(null);
+        botListTemplateView.populateListTemplateView(null, null);
 
         if (!((BotResponse) baseBotMessage).getMessage().isEmpty()) {
 
@@ -174,28 +172,16 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         bubbleTextMediaLayout.populateText(payInner.getText());
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botCarouselView.setVisibility(View.VISIBLE);
-                        botCarouselView.populateCarouselView(payInner.getElements());
+//                        botCarouselView.populateCarouselView(payInner.getElements());
+                        botCarouselView.populateCarouselView(null);
                         setDoDrawBubbleBackground(false);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botCustomListView.setVisibility(View.VISIBLE);
-                        ArrayList<ListTemplate> elements = new ArrayList<>();//ArrayList<ListTemplate> payInner.getElements();
-                        ArrayList<BotCustomListModel> allBotList = new ArrayList<>();
-                        for (ListTemplate lt : elements) {
-                            BotCustomListModel blm = new BotCustomListModel();
-                            blm.setTitle(lt.getTitle());
-                            blm.setSubtitle(lt.getSubtitle());
-                            blm.setImageUrl(lt.getImage_url());
-                            if (lt.getButtons() != null && !lt.getButtons().isEmpty()) {
-                                blm.setBtn_type(lt.getButtons().get(0).getType());
-                                blm.setBtn_title(lt.getButtons().get(0).getTitle());
-                                blm.setBtn_url(lt.getButtons().get(0).getUrl());
-                            }
-                            allBotList.add(blm);
-                        }
-                        botCustomListView.populateBotListTypeView(allBotList);
+                        botListTemplateView.setVisibility(View.VISIBLE);
+                        botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
+                        botListTemplateView.populateListTemplateView(payInner.getElements(), payInner.getButtons());
                     }
                 } else if (compType.equals(BotResponse.COMPONENT_TYPE_TEXT)) {
-                    botCustomListView.setVisibility(View.GONE);
+                    botListTemplateView.setVisibility(View.GONE);
                 }
             }
         }
@@ -252,6 +238,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For Button Templates
          */
         MeasureUtils.measure(botButtonView, wrapSpec, wrapSpec);
+
+        /*
+         * For List Templates
+         */
+        MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
+
         /*
         *//*
          * For OptionsList
@@ -330,8 +322,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /*
         * For OptionsList
         * */
-        if (botCustomListView.getVisibility() != View.GONE)
-            LayoutUtils.layoutChild(botCustomListView, left, top);
+        left = botButtonView.getLeft();
+        top = bubbleTextMediaLayout.getBottom() - BUBBLE_CONTENT_TOP_MARGIN;
+        LayoutUtils.layoutChild(botListTemplateView, left, top);
 
         /*
          * For Carousel View
@@ -347,11 +340,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
             int cpvTop = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN,
                     botButtonView.getBottom() + (int)dp1,
-                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN)) - cpvSenderImage.getMeasuredHeight();
+                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,
+                    botListTemplateView.getBottom() + (int)dp1)) - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 
-        botCarouselView.bringToFront();
+//        botCarouselView.bringToFront();
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 
