@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotButtonTypeAdapter;
+import kore.botssdk.adapter.BotButtonTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.models.BotButtonModel;
@@ -62,9 +62,9 @@ public class BotButtonView extends ViewGroup {
     }
 
     public void populateButtonList(ArrayList<BotButtonModel> botButtonModels) {
-        BotButtonTypeAdapter buttonTypeAdapter;
+        BotButtonTemplateAdapter buttonTypeAdapter;
         if (autoExpandListView.getAdapter() == null) {
-            buttonTypeAdapter = new BotButtonTypeAdapter(getContext());
+            buttonTypeAdapter = new BotButtonTemplateAdapter(getContext());
             autoExpandListView.setAdapter(buttonTypeAdapter);
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -76,7 +76,7 @@ public class BotButtonView extends ViewGroup {
                 }
             });
         } else {
-            buttonTypeAdapter = (BotButtonTypeAdapter) autoExpandListView.getAdapter();
+            buttonTypeAdapter = (BotButtonTemplateAdapter) autoExpandListView.getAdapter();
         }
         buttonTypeAdapter.setBotButtonModels(botButtonModels);
         buttonTypeAdapter.notifyDataSetChanged();
