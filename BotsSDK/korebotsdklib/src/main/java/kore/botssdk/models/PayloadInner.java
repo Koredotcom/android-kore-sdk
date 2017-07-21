@@ -9,7 +9,7 @@ public class PayloadInner {
 
     private String template_type;
     private String text;
-    private ArrayList<ButtonTemplate> buttons;
+    private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<BotCarouselModel> elements;
 
@@ -21,7 +21,7 @@ public class PayloadInner {
         return text;
     }
 
-    public ArrayList<ButtonTemplate> getButtons() {
+    public ArrayList<BotButtonModel> getButtons() {
         return buttons;
     }
 

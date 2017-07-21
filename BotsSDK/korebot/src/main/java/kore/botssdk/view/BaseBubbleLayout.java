@@ -14,11 +14,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotButtonTypeAdapter;
 import kore.botssdk.adapter.BotListTypeAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
@@ -93,6 +91,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected TextView botContentTextView;
     protected HeaderLayout headerLayout;
     protected BotCustomListView botCustomListView;
+    protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
 
 
@@ -211,15 +210,19 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         addView(bubbleTextMediaLayout);
 
         botCustomListView = new BotCustomListView(getContext());
-        BotButtonTypeAdapter.isInExpandedMode = false;
         BotListTypeAdapter.isInExpandedMode = false;
-        RelativeLayout.LayoutParams txtVwParams1 = new RelativeLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        botCustomListView.setLayoutParams(txtVwParams1);
+        botCustomListView.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
+        botCustomListView.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         botCustomListView.setBackgroundColor(Color.WHITE);
         botCustomListView.setId(TextMediaLayout.LIST_ID);
         botCustomListView.setVisibility(View.GONE);
         addView(botCustomListView);
+
+        botButtonView = new BotButtonView(getContext());
+        botButtonView.setId(TextMediaLayout.BUTTON_VIEW_ID);
+        botButtonView.setVisibility(View.GONE);
+        addView(botButtonView);
+
 
         botCarouselView = new BotCarouselView(getContext());
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
@@ -303,7 +306,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         Bitmap curveBitmap = formCurveBitmap(senderImageRadius, bubbleCornerRadius);
 
         int x = 0;
-        int y = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getBottom()) + BUBBLE_CONTENT_BOTTOM_MARGIN + 2 - senderImageRadius;
+        int y = (botButtonView.getMeasuredHeight() > 0 ? botButtonView.getBottom() : bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN) + 2 - senderImageRadius;
 
         if (isLeftSide()) {
             x = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN - 6 * dp1 - senderImageRadius + dp1 / 3);
@@ -346,8 +349,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         int dimen[] = textMediaDimen;
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
-        int rectBottom = bubbleTextMediaLayout.getBottom() + (botCustomListView.getVisibility() == View.GONE ? 0 : botCustomListView.getMeasuredHeight() - BUBBLE_CONTENT_BOTTOM_MARGIN) + BUBBLE_CONTENT_BOTTOM_MARGIN;
-        int rectRight = Math.max(bubbleTextMediaLayout.getRight(), botCustomListView.getRight()) + BUBBLE_CONTENT_RIGHT_MARGIN;
+        int rectBottom = (botButtonView.getMeasuredHeight() > 0 ? botButtonView.getBottom() : bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN);
+        int rectRight = (int) Math.max(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN, botButtonView.getRight() + dp1);
 
         rect.set(rectLeft, rectTop, rectRight, rectBottom);
         canvas.drawRoundRect(rect, (float) (1.5 * dp10), (float) (1.5 * dp10), paint);
@@ -509,6 +512,9 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         this.composeFooterInterface = composeFooterInterface;
         if (botCarouselView != null) {
             botCarouselView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if (botButtonView != null) {
+            botButtonView.setComposeFooterInterface(composeFooterInterface);
         }
     }
 

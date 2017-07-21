@@ -34,6 +34,8 @@ public class BotCustomListView extends ViewGroup {
     private BotButtonTypeAdapter botButtonTypeAdapter;
     private BotListTypeAdapter botListTypeAdapter;
 
+    private float restrictedLayoutWidth, restrictedLayoutHeight;
+
     private boolean isNewList;
     int dp1;
 
@@ -62,13 +64,12 @@ public class BotCustomListView extends ViewGroup {
     public void populateBotButtonTypeView(ArrayList<ButtonTemplate> buttons) {
         setNewList(false);
         botButtonTypeAdapter = new BotButtonTypeAdapter(getContext());
-        botButtonTypeAdapter.setMoreSelectionListener(botMoreOptionsClickListener);
-        botButtonTypeAdapter.setOptionsList(new ArrayList<ButtonTemplate>());
+//        botButtonTypeAdapter.setMoreSelectionListener(botMoreOptionsClickListener);
+//        botButtonTypeAdapter.setBotButtonModels(new ArrayList<ButtonTemplate>());
         botList.setAdapter(botButtonTypeAdapter);
 
-        botButtonTypeAdapter.setOptionsList(buttons);
+//        botButtonTypeAdapter.setBotButtonModels(buttons);
         botButtonTypeAdapter.notifyDataSetChanged();
-        requestLayout();
     }
 
 
@@ -101,15 +102,15 @@ public class BotCustomListView extends ViewGroup {
             }
         }
     };
-
-    BotButtonTypeAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotButtonTypeAdapter.MoreSelectionListener() {
-        @Override
-        public void onMoreSelected() {
-            botButtonTypeAdapter.notifyDataSetChanged();
-            requestLayout();
-
-        }
-    };
+//
+//    BotButtonTypeAdapter.MoreSelectionListener botMoreOptionsClickListener = new BotButtonTypeAdapter.MoreSelectionListener() {
+//        @Override
+//        public void onMoreSelected() {
+//            botButtonTypeAdapter.notifyDataSetChanged();
+//            requestLayout();
+//
+//        }
+//    };
 
     BotListTypeAdapter.MoreSelectionListener botMoreOptionsClickListenerNew = new BotListTypeAdapter.MoreSelectionListener() {
         @Override
@@ -120,9 +121,25 @@ public class BotCustomListView extends ViewGroup {
         }
     };
 
-    private int measureRequiredHeight(BotButtonTypeAdapter rootView) {
-        if (rootView != null) {
-            int cumulativeHeight = rootView.getCount() * (46 * dp1) + 5 * dp1;
+    public float getRestrictedLayoutWidth() {
+        return restrictedLayoutWidth;
+    }
+
+    public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
+        this.restrictedLayoutWidth = restrictedLayoutWidth;
+    }
+
+    public float getRestrictedLayoutHeight() {
+        return restrictedLayoutHeight;
+    }
+
+    public void setRestrictedLayoutHeight(float restrictedLayoutHeight) {
+        this.restrictedLayoutHeight = restrictedLayoutHeight;
+    }
+
+    private int measureRequiredHeight(BotButtonTypeAdapter botButtonTypeAdapter) {
+        if (botButtonTypeAdapter != null) {
+            int cumulativeHeight = botButtonTypeAdapter.getCount() * (46 * dp1) + 5 * dp1;
             Log.d(LOG_TAG, cumulativeHeight + "");
             return cumulativeHeight;
         } else {
@@ -130,9 +147,9 @@ public class BotCustomListView extends ViewGroup {
         }
     }
 
-    private int measureRequiredHeightNew(BotListTypeAdapter rootView) {
-        if (rootView != null) {
-            int cumulativeHeight = rootView.getCount() == 4 ? (((rootView.getCount() - 1) * (100 * dp1))) : ((rootView.getCount()) * (87 * dp1));//(rootView.getCount() * (85  * dp1)) + 5 * dp1;
+    private int measureRequiredHeightNew(BotListTypeAdapter botListTypeAdapter) {
+        if (botListTypeAdapter != null) {
+            int cumulativeHeight = botListTypeAdapter.getCount() == 4 ? (((botListTypeAdapter.getCount() - 1) * (100 * dp1))) : ((botListTypeAdapter.getCount()) * (87 * dp1));
             Log.d(LOG_TAG, cumulativeHeight + "");
             return cumulativeHeight;
         } else {
@@ -144,6 +161,7 @@ public class BotCustomListView extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         int _height = 0;
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         if (isNewList()) {
             _height = measureRequiredHeightNew(botListTypeAdapter);
         } else {
@@ -152,9 +170,8 @@ public class BotCustomListView extends ViewGroup {
 
         int heightSpec = View.MeasureSpec.makeMeasureSpec(_height, View.MeasureSpec.EXACTLY);
 
-        widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(widthMeasureSpec, View.MeasureSpec.EXACTLY);
-        View lv = getChildAt(0);
-        MeasureUtils.measure(lv, widthMeasureSpec, heightSpec);
+        int childWidthMeasureSpec = View.MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, View.MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botList, widthMeasureSpec, heightSpec);
 
         setMeasuredDimension(widthMeasureSpec, heightSpec);
     }
