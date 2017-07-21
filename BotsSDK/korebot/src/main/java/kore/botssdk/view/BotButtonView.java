@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class BotButtonView extends ViewGroup {
 
     float dp1, layoutItemHeight = 0;
-    AutoExpandListView autoExpandListView;
+    ListView autoExpandListView;
     float restrictedMaxWidth, restrictedMaxHeight;
     ComposeFooterInterface composeFooterInterface;
 
@@ -45,9 +46,8 @@ public class BotButtonView extends ViewGroup {
 
     private void init() {
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
-        View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list, this, true);
-        autoExpandListView = (AutoExpandListView) inflatedView.findViewById(R.id.botCustomListView);
-        autoExpandListView.setExpanded(true);
+        View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_button_view, this, true);
+        autoExpandListView = (ListView) inflatedView.findViewById(R.id.botCustomButtonList);
 
         layoutItemHeight = getResources().getDimension(R.dimen.carousel_view_button_height_individual);
         setBackgroundColor(0xffffffff);

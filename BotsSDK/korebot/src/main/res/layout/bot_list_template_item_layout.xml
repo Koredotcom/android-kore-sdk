@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:textColor="@color/bgBlueSignup"
+        android:textColor="@android:color/holo_blue_dark"
         android:background="@drawable/rounded_image_bg_blue"
         android:textSize="12dp" />
 

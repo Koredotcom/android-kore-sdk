@@ -8,16 +8,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
-public class AutoExpandListView extends ListView {
+public class ListView extends ListView {
 
     boolean expanded = true;
 
-    public AutoExpandListView(Context context, AttributeSet attrs,
-                              int defaultStyle) {
+    public ListView(Context context, AttributeSet attrs,
+                    int defaultStyle) {
         super(context, attrs, defaultStyle);
     }
 
-    public AutoExpandListView(Context context, AttributeSet attrs) {
+    public ListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

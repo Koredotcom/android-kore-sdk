@@ -44,7 +44,11 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = ownLayoutInflater.inflate(R.layout.bot_carousel_item_button_layout, null);
+
+        if (convertView == null) {
+            convertView = ownLayoutInflater.inflate(R.layout.bot_carousel_item_button_layout, null);
+        }
+
         if (convertView.getTag() == null) {
             initializeViewHolder(convertView);
         }
