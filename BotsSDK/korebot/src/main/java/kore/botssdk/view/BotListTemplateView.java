@@ -14,8 +14,10 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotListTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -32,6 +34,7 @@ public class BotListTemplateView extends ViewGroup {
     LinearLayout botCustomListRoot;
     float restrictedMaxWidth, restrictedMaxHeight;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public BotListTemplateView(Context context) {
         super(context);
@@ -64,6 +67,7 @@ public class BotListTemplateView extends ViewGroup {
             botListTemplateAdapter = new BotListTemplateAdapter(getContext(), autoExpandListView);
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         } else {
             botListTemplateAdapter = (BotListTemplateAdapter) autoExpandListView.getAdapter();
         }
@@ -75,9 +79,14 @@ public class BotListTemplateView extends ViewGroup {
             botCustomListViewButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (composeFooterInterface != null) {
-                        String message = botButtonModelArrayList.get(0).getPayload();
-                        composeFooterInterface.onSendClick(message);
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                        BotButtonModel botButtonModel = botButtonModelArrayList.get(0);
+                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
+                        } else {
+                            String message = botButtonModel.getPayload();
+                            composeFooterInterface.onSendClick(message);
+                        }
                     }
                 }
             });
@@ -97,6 +106,10 @@ public class BotListTemplateView extends ViewGroup {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public int getViewHeight() {

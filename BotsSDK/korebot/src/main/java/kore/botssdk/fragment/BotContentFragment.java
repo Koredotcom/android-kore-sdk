@@ -12,6 +12,7 @@ import android.widget.ListView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -33,6 +34,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
     ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     boolean shallShowProfilePic;
     private String mChannelIconURL;
@@ -61,6 +63,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private void setupAdapter() {
         botsChatAdapter = new BotsChatAdapter(getActivity());
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
+        botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
@@ -72,6 +75,10 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 
     public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     private void getBundleInfo() {

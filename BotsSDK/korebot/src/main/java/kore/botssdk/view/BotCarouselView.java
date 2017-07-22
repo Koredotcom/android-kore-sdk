@@ -15,6 +15,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -33,6 +34,7 @@ public class BotCarouselView extends ViewGroup {
     private int carouselViewWidth, carouselViewHeight;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     BotCarouselAdapter botCarouselAdapter;
 
     public BotCarouselView(Context context) {
@@ -66,7 +68,7 @@ public class BotCarouselView extends ViewGroup {
     public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
         if (composeFooterInterface != null && activityContext != null) {
             if (carouselViewpager.getAdapter() == null) {
-                botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, activityContext);
+                botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setAdapter(botCarouselAdapter);
@@ -88,6 +90,10 @@ public class BotCarouselView extends ViewGroup {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public void setActivityContext(Activity activityContext) {

@@ -37,34 +37,23 @@ public class GenericWebViewActivity extends AppCompatActivity {
 
     protected void loadUrl() {
 
-
-        // Below required for geolocation
-//        webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
-//        webView.getSettings().setGeolocationEnabled(true);
-//        webView.getSettings().setAllowFileAccess(true);
-//        webView.setWebChromeClient(webViewChromeClient);
-
-
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
-//        webview.getSettings().setPluginState(WebSettings.PluginState.ON);
 
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                /*view.loadUrl(url);
-                return true;*/
-                Log.d(this.getClass().getSimpleName(),"The URL is "+url);
+                Log.d(this.getClass().getSimpleName(), "The URL is " + url);
                 boolean value = super.shouldOverrideUrlLoading(view, url);
                 return value;
             }
 
 
         });
-        webview.setWebChromeClient(new WebChromeClient(){
+        webview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onCloseWindow(WebView window) {
                 super.onCloseWindow(window);
@@ -85,7 +74,7 @@ public class GenericWebViewActivity extends AppCompatActivity {
         @JavascriptInterface
         public void NativeBridgeUp(String responseData) {
 
-            Log.d(this.getClass().getSimpleName(),"The response data is "+responseData);
+            Log.d(this.getClass().getSimpleName(), "The response data is " + responseData);
         }
 
         @JavascriptInterface
@@ -103,7 +92,6 @@ public class GenericWebViewActivity extends AppCompatActivity {
     private void setUpActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setIcon(R.drawable.actionbar_home);
         actionBar.setTitle(actionbarTitle);
 
     }

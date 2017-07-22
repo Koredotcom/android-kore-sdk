@@ -42,11 +42,4 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" />
 
-
-    <kore.botssdk.view.BotCarouselView
-        android:id="@+id/botCV1"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_alignParentTop="true"/>
-
 </RelativeLayout>

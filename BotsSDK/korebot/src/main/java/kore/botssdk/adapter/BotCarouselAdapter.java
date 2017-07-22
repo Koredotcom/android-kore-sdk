@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
 
@@ -24,13 +25,17 @@ public class BotCarouselAdapter extends PagerAdapter {
     ArrayList<BotCarouselModel> botCarouselModels = new ArrayList<>();
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
 
-    public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface, Activity activityContext) {
+    public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface,
+                              InvokeGenericWebViewInterface invokeGenericWebViewInterface,
+                              Activity activityContext) {
         super();
         this.activityContext = activityContext;
         this.composeFooterInterface = composeFooterInterface;
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
         ownLayoutInflater = activityContext.getLayoutInflater();
 
         TypedValue typedValue = new TypedValue();
@@ -57,7 +62,7 @@ public class BotCarouselAdapter extends PagerAdapter {
         View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
 
         CarouselItemViewHelper.initializeViewHolder(carouselItemLayout);
-        CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, botCarouselModels.get(position), activityContext);
+        CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, invokeGenericWebViewInterface, botCarouselModels.get(position), activityContext);
 
         container.addView(carouselItemLayout);
 

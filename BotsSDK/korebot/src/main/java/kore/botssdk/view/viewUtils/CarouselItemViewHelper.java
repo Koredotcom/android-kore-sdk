@@ -14,8 +14,10 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.utils.BundleConstants;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -42,7 +44,11 @@ public class CarouselItemViewHelper {
         view.setTag(carouselViewHolder);
     }
 
-    public static void populateStuffs(CarouselViewHolder carouselViewHolder, final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface, BotCarouselModel botCarouselModel, Context activityContext) {
+    public static void populateStuffs(CarouselViewHolder carouselViewHolder,
+                                      final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
+                                      final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
+                                      final BotCarouselModel botCarouselModel,
+                                      Context activityContext) {
 
         if (botCarouselModel != null) {
 
@@ -59,10 +65,25 @@ public class CarouselItemViewHelper {
             carouselViewHolder.carouselButtonListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null) {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                         BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
-                        String buttonPayload = botCaourselButtonModel.getPayload();
-                        composeFooterInterface.onSendClick(buttonPayload);
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
+                        } else {
+                            String buttonPayload = botCaourselButtonModel.getPayload();
+                            composeFooterInterface.onSendClick(buttonPayload);
+                        }
+                    }
+                }
+            });
+
+            carouselViewHolder.carouselItemRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (invokeGenericWebViewInterface != null) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
+                        }
                     }
                 }
             });

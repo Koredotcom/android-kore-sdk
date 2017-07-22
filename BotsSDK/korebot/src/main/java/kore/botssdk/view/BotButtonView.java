@@ -14,7 +14,9 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotButtonTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -28,6 +30,7 @@ public class BotButtonView extends ViewGroup {
     ListView autoExpandListView;
     float restrictedMaxWidth, restrictedMaxHeight;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public BotButtonView(Context context) {
         super(context);
@@ -61,6 +64,10 @@ public class BotButtonView extends ViewGroup {
         this.composeFooterInterface = composeFooterInterface;
     }
 
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
     public void populateButtonList(ArrayList<BotButtonModel> botButtonModels) {
         BotButtonTemplateAdapter buttonTypeAdapter;
         if (autoExpandListView.getAdapter() == null) {
@@ -69,9 +76,14 @@ public class BotButtonView extends ViewGroup {
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null) {
-                        String message = ((BotButtonModel) parent.getItemAtPosition(position)).getPayload();
-                        composeFooterInterface.onSendClick(message);
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                        BotButtonModel botButtonModel = ((BotButtonModel) parent.getItemAtPosition(position));
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
+                        } else {
+                            String message = botButtonModel.getPayload();
+                            composeFooterInterface.onSendClick(message);
+                        }
                     }
                 }
             });

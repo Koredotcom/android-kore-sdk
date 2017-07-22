@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,10 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 /**
@@ -33,6 +34,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
 
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
     ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflator;
     Context context;
     RoundedCornersTransform roundedCornersTransform;
@@ -100,18 +102,30 @@ public class BotListTemplateAdapter extends BaseAdapter {
         holder.botListItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
-                Log.d(LOG_TAG, botListElementButton.getUrl());
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
+                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
+                    } else {
+                        composeFooterInterface.onSendClick(botListElementButton.getTitle());
+                    }
+                }
             }
         });
 
         holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = parentListView.getPositionForView(v);
-                BotListModel _botListModel = getItem(position);
-                if (_botListModel != null) {
-                    Log.d(LOG_TAG, _botListModel.getDefault_action().getUrl());
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    int position = parentListView.getPositionForView(v);
+                    BotListModel _botListModel = getItem(position);
+                    if (_botListModel != null) {
+                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
+                        } else {
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getFallback_url());
+                        }
+                    }
                 }
             }
         });
@@ -124,6 +138,10 @@ public class BotListTemplateAdapter extends BaseAdapter {
 
     public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     private void initializeViewHolder(View view) {

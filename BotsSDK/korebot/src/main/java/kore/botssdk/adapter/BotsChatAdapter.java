@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.view.BaseBubbleContainer;
 import kore.botssdk.view.BaseBubbleLayout;
@@ -35,6 +36,7 @@ public class BotsChatAdapter extends BaseAdapter {
     Context context;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private LayoutInflater ownLayoutInflater;
     private int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
@@ -129,6 +131,7 @@ public class BotsChatAdapter extends BaseAdapter {
             holder.baseBubbleLayout.setContinuousMessage(false);
             holder.baseBubbleLayout.setGroupMessage(true);
             holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
+            holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             holder.baseBubbleLayout.setActivityContext(activityContext);
             holder.baseBubbleLayout.fillBubbleLayout(position, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         }
@@ -176,6 +179,10 @@ public class BotsChatAdapter extends BaseAdapter {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public void setActivityContext(Activity activityContext) {

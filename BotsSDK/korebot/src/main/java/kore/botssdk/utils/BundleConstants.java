@@ -15,4 +15,7 @@ public class BundleConstants {
 
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
+
+    public static String BUTTON_TYPE_POSTBACK = "postback";
+    public static String BUTTON_TYPE_WEB_URL = "web_url";
 }

@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -23,6 +24,7 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterUpdate;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
@@ -39,14 +41,13 @@ import kore.botssdk.utils.SocketConnectionEventStates;
 import kore.botssdk.utils.StringConstants;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
-import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate {
+public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -84,13 +85,9 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         botContentFragment = new BotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
+        botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
-
-        BotCarouselView bcv = (BotCarouselView) findViewById(R.id.botCV1);
-        /*bcv.setFragmentManager(getSupportFragmentManager());
-        bcv.populateCarouselView(new ArrayList<BotCarouselModel>());*/
-        bcv.setVisibility(View.GONE);
 
         //Add Suggestion Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -332,6 +329,16 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void invokeGenericWebView(String url) {
+        if (url != null && !url.isEmpty()) {
+            Intent intent = new Intent(getApplicationContext(), GenericWebViewActivity.class);
+            intent.putExtra("url", url);
+            intent.putExtra("header", getResources().getString(R.string.app_name));
+            startActivity(intent);
+        }
     }
 
     @Override

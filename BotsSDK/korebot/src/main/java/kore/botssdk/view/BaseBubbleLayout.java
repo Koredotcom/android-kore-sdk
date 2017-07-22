@@ -22,6 +22,7 @@ import java.util.Collections;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -37,6 +38,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     Context context;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected float dp1, dp2, dp4, dp10, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
     protected float screenWidth;
@@ -534,6 +536,19 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
         if (botListTemplateView != null) {
             botListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+        if (botCarouselView != null) {
+            botCarouselView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botButtonView != null) {
+            botButtonView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botListTemplateView != null) {
+            botListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
