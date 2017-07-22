@@ -96,21 +96,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.addBaseBotMessage(botResponse);
         botTypingStatusRl.setVisibility(View.GONE);
         botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
-        /*if (botResponse instanceof BotResponse) {
-            ComponentModel compModel = ((BotResponse) botResponse).getMessage().get(0).getComponent();
-            PayloadOuter payOuter = compModel.getPayload();
-            PayloadInner payInner;
-            if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                Gson gson = new Gson();
-                payOuter = gson.fromJson(payOuter.getText().replace("&quot;","\""), PayloadOuter.class);
-                payInner = payOuter.getPayload();
-                botCarouselView.populateCarouselView(payInner.getElements());
-            } else {
-                payInner = payOuter.getPayload();
-                botCarouselView.populateCarouselView(payInner.getElements());
-            }
-        }*/
-
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {

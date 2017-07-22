@@ -40,7 +40,11 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return botCarouselModels.size();
+        if (botCarouselModels == null) {
+            return 0;
+        } else {
+            return botCarouselModels.size();
+        }
     }
 
     @Override

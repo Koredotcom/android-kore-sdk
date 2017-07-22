@@ -172,13 +172,12 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         bubbleTextMediaLayout.populateText(payInner.getText());
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botCarouselView.setVisibility(View.VISIBLE);
-//                        botCarouselView.populateCarouselView(payInner.getElements());
-                        botCarouselView.populateCarouselView(null);
+                        botCarouselView.populateCarouselView(payInner.getCarouselElements());
                         setDoDrawBubbleBackground(false);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botListTemplateView.setVisibility(View.VISIBLE);
                         botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                        botListTemplateView.populateListTemplateView(payInner.getElements(), payInner.getButtons());
+                        botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
                     }
                 } else if (compType.equals(BotResponse.COMPONENT_TYPE_TEXT)) {
                     botListTemplateView.setVisibility(View.GONE);
@@ -243,13 +242,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For List Templates
          */
         MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
-
-        /*
-        *//*
-         * For OptionsList
-         *//*
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int)(BUBBLE_CONTENT_LEFT_BORDER + BubbleViewUtil.getBubbleContentWidth() + BUBBLE_CONTENT_RIGHT_BORDER), MeasureSpec.EXACTLY);
-        MeasureUtils.measure(botCustomListView, childWidthSpec, wrapSpec);*/
 
         /*
          * For CarouselView
@@ -345,7 +337,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 
-//        botCarouselView.bringToFront();
+        botCarouselView.bringToFront();
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 

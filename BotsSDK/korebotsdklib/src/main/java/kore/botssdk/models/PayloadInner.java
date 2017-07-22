@@ -1,5 +1,9 @@
 package kore.botssdk.models;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +15,10 @@ public class PayloadInner {
     private String text;
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
-    private ArrayList<BotListModel> elements;
+    private ArrayList<BotCarouselModel> carouselElements;
+    private ArrayList<BotListModel> listElements;
+    private Object elements;
+    private String elementsAsString;
 
     public String getTemplate_type() {
         return template_type;
@@ -29,8 +36,24 @@ public class PayloadInner {
         return quick_replies;
     }
 
-    public ArrayList<BotListModel> getElements() {
-        return elements;
+    public ArrayList<BotCarouselModel> getCarouselElements() {
+        return carouselElements;
+    }
+
+    public ArrayList<BotListModel> getListElements() {
+        return listElements;
+    }
+
+    public void convertElementToAppropriate() {
+        Gson gson = new Gson();
+        elementsAsString = gson.toJson(elements);
+        if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
+            Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {}.getType();
+            carouselElements = gson.fromJson(elementsAsString, carouselType);
+        } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+            Type listType = new TypeToken<ArrayList<BotListModel>>() {}.getType();
+            listElements = gson.fromJson(elementsAsString, listType);
+        }
     }
 
     public ArrayList<ButtonTemplate> convertQuickReplyToButton(ArrayList<QuickReplyTemplate> quick_replies) {

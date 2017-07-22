@@ -304,6 +304,19 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             }
 
             Log.d(LOG_TAG, payload);
+            if (!botResponse.getMessage().isEmpty()) {
+                ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+                if (compModel != null) {
+                    PayloadOuter payOuter = compModel.getPayload();
+                    PayloadInner payInner;
+                    if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                        payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                    }
+                    if (payOuter.getPayload() != null) {
+                        payOuter.getPayload().convertElementToAppropriate();
+                    }
+                }
+            }
             botContentFragment.showTypingStatus(botResponse);
 
             handler.postDelayed(new Runnable() {
