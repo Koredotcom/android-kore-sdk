@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
@@ -49,6 +50,7 @@ public class TextMediaLayout extends MediaLayout {
 
     float dp1;
     private Context mContext;
+    final String TEXT_COLOR = "#000000";
 
     public TextMediaLayout(Context context) {
         super(context);

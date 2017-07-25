@@ -27,6 +27,8 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -392,10 +394,11 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         preCosmeticChanges();
 
+        ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
-        populateBubbleTextMedia(position, baseBotMessage, constrictLayout, dimens);
+        populateBubbleTextMedia(position, baseBotMessage, componentModel, constrictLayout, dimens);
         // Bubble Templates
-        populateForTemplates(position, baseBotMessage);
+        populateForTemplates(position, componentModel);
 
         // Header Layout
         populateHeaderLayout(position, baseBotMessage);
@@ -403,6 +406,14 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         // 70% of UI-alignments happens here...
         cosmeticChanges(baseBotMessage, position);
 
+    }
+
+    private ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
+        ComponentModel compModel = null;
+        if (baseBotMessage instanceof BotResponse && !((BotResponse) baseBotMessage).getMessage().isEmpty()) {
+            compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        }
+        return compModel;
     }
 
     protected void preCosmeticChanges() {
@@ -433,18 +444,33 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         }
     }
 
-    protected void populateForTemplates(int position, BaseBotMessage baseBotMessage) {
+    protected void populateForTemplates(int position, ComponentModel componentModel) {
     }
 
-    protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, boolean constrictLayout, int... dimens) {
+    protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, int... dimens) {
 
         String message = null;
+        String textColor = "#000000";
         if (baseBotMessage.isSend()) {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
-            if (msg != null && msg.getComponent() != null && msg.getComponent().getType().equalsIgnoreCase("text")) {
-                message = msg.getComponent().getPayload().getText();
+            if (componentModel != null) {
+                String compType = componentModel.getType();
+                PayloadOuter payOuter = componentModel.getPayload();
+                if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+                    message = payOuter.getText();
+                } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+                    message = payOuter.getPayload().getText();
+                    textColor = payOuter.getPayload().getColor();
+                    if (botContentTextView != null) {
+                        try {
+                            botContentTextView.setTextColor(Color.parseColor(textColor));
+                        } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         }
 

@@ -19,6 +19,7 @@ public class PayloadInner {
     private ArrayList<BotListModel> listElements;
     private Object elements;
     private String elementsAsString;
+    private String color = "#000000";
 
     public String getTemplate_type() {
         return template_type;
@@ -42,6 +43,10 @@ public class PayloadInner {
 
     public ArrayList<BotListModel> getListElements() {
         return listElements;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public void convertElementToAppropriate() {

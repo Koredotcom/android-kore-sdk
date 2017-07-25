@@ -142,15 +142,17 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
 
-    protected void populateForTemplates(int position, BaseBotMessage baseBotMessage) {
+    protected void populateForTemplates(int position, ComponentModel compModel) {
 
         // Default out everything
         botButtonView.populateButtonList(null);
         botListTemplateView.populateListTemplateView(null, null);
 
-        if (!((BotResponse) baseBotMessage).getMessage().isEmpty()) {
+        botListTemplateView.setVisibility(View.GONE);
+        botCarouselView.setVisibility(View.GONE);
+        botButtonView.setVisibility(View.GONE);
 
-            ComponentModel compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        if (compModel != null) {
             if (compModel != null) {
                 String compType = compModel.getType();
                 PayloadOuter payOuter = compModel.getPayload();
@@ -179,8 +181,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
                         botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
                     }
-                } else if (compType.equals(BotResponse.COMPONENT_TYPE_TEXT)) {
-                    botListTemplateView.setVisibility(View.GONE);
                 }
             }
         }
