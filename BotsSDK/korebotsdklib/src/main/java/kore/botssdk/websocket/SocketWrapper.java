@@ -13,10 +13,14 @@ import java.util.HashMap;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
+import kore.botssdk.autobahn.WebSpeechSocketListener;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.BotSpeechSocketStream;
 import kore.botssdk.net.BaseSpiceManager;
+import kore.botssdk.net.GetBotSpeechSocketStream;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
 
 /**
@@ -38,6 +42,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
+    private String speechAccessToken;
     private String clientId;
     private String JWTToken;
     private String uuId;
@@ -60,7 +65,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     public static SocketWrapper getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
             synchronized (SocketWrapper.class) {
-                if(pKorePresenceInstance == null) {
+                if (pKorePresenceInstance == null) {
                     pKorePresenceInstance = new SocketWrapper(mContext);
                 }
             }
@@ -82,11 +87,11 @@ public final class SocketWrapper extends BaseSpiceManager {
     /**
      * Method to invoke connection for authenticated user
      *
-     * @param accessToken   : AccessToken of the loged user.
-     * @param chatBotName:      Name of the chat-bot
-     * @param taskBotId:    Chat-bot's taskId
+     * @param accessToken  : AccessToken of the loged user.
+     * @param chatBotName: Name of the chat-bot
+     * @param taskBotId:   Chat-bot's taskId
      */
-    public void connect(String accessToken, String chatBotName, String taskBotId,SocketConnectionListener socketConnectionListener) {
+    public void connect(String accessToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
 
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
@@ -140,15 +145,17 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     /**
      * Method to invoke connection for anonymous
-     *
+     * <p>
      * These keys are generated from bot admin console
-     * @param clientId : generated clientId
-     * @param uuid : uuid associated with the specific client
-     * @param jwtGrant : jwt access token
+     *
+     * @param sJwtGrant   : JWTToken
+     * @param clientId    : generated clientId
+     * @param chatBotName : Bot Name
+     * @param taskBotId   : the Bot-Id
+     * @param uuId        : uuid associated with the specific client
      */
-    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId) {
 
-        this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
         this.JWTToken = sJwtGrant;
@@ -179,6 +186,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                speechAccessToken = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
                 return rtmUrl;
@@ -266,7 +274,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     }
 
     /**
-     *  Reconnect to socket
+     * Reconnect to socket
      */
     private void reconnect() {
         if (accessToken != null) {
@@ -297,6 +305,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
 
+                speechAccessToken = jwtGrant.getAuthorization().getAccessToken();
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo, true);
                 return rtmUrl;
             }
@@ -346,8 +355,8 @@ public final class SocketWrapper extends BaseSpiceManager {
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
-                String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                speechAccessToken = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
                 return rtmUrl;
@@ -367,6 +376,25 @@ public final class SocketWrapper extends BaseSpiceManager {
                     connectToSocket(response.getUrl().concat("&isReconnect=true"));
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void connectToSpeechSocket(final WebSpeechSocketListener webSpeechSocketListener) {
+
+        GetBotSpeechSocketStream request = new GetBotSpeechSocketStream(SDKConfiguration.Client.client_id, SDKConfiguration.Client.identity, speechAccessToken);
+
+        getSpiceManagerForSpeechSocket().execute(request, new RequestListener<BotSpeechSocketStream>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.e(LOG_TAG, e.getMessage());
+            }
+
+            @Override
+            public void onRequestSuccess(BotSpeechSocketStream botSpeechSocketStream) {
+                if (webSpeechSocketListener != null) {
+                    webSpeechSocketListener.onSpeechSocketConnection(botSpeechSocketStream);
                 }
             }
         });
@@ -417,6 +445,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     /**
      * To determine wither socket is connected or not
+     *
      * @return boolean indicating the connection presence.
      */
     public boolean isConnected() {

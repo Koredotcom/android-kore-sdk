@@ -23,7 +23,7 @@ import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.event.TapToSpeakEventPublisher;
-import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.listener.BotWebsocketConnectionInterface;
 import kore.botssdk.speechtotext.AudioCue;
 import kore.botssdk.speechtotext.AudioDataReceivedListener;
 import kore.botssdk.speechtotext.AudioRecorder;
@@ -43,6 +43,8 @@ public class TapToSpeakFragment extends Fragment {
     private RawAudioRecorder mRecordingThread;
     private AudioCue audioCue;
     private AudioTaskListener mListener;
+
+    BotWebsocketConnectionInterface botWebsocketConnectionInterface;
 
 
     @Nullable
@@ -71,15 +73,6 @@ public class TapToSpeakFragment extends Fragment {
         return view;
     }
 
-    /*private Runnable updateVisualizer = new Runnable() {
-
-        @Override
-        public void run() {
-            rec_audio.animateRipple();
-            handler.postDelayed(this, 600);
-        }
-    };*/
-
     private void initializeWebSocket() {
         if (!NetworkUtility.isNetworkConnectionAvailable(getActivity())) {
             txtSpeakNow.setText(R.string.no_network);
@@ -89,8 +82,18 @@ public class TapToSpeakFragment extends Fragment {
         if (SocketWrapperForTextToSpeech.getInstance(getActivity()).isConnected()) {
             audioCue.playStartSoundAndSleep();
         } else {
-            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, SDKConfiguration.Client.identity);
+            botWebsocketConnectionInterface.initiateSocketConnectionListener();
+//            SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, SDKConfiguration.Client.identity);
         }
+    }
+
+    public void initiateSpeechServerConnection(String speechSocketUrl) {
+        if (!NetworkUtility.isNetworkConnectionAvailable(getActivity())) {
+            txtSpeakNow.setText(R.string.no_network);
+            return;
+        }
+
+        SocketWrapperForTextToSpeech.getInstance(getActivity()).connect(sListener, speechSocketUrl);
     }
 
     SoundPlayCompletionListener soundListener = new SoundPlayCompletionListener() {
@@ -243,5 +246,9 @@ public class TapToSpeakFragment extends Fragment {
 
     public void setmListener(AudioTaskListener mListener) {
         this.mListener = mListener;
+    }
+
+    public void setBotWebsocketConnectionInterface(BotWebsocketConnectionInterface botWebsocketConnectionInterface) {
+        this.botWebsocketConnectionInterface = botWebsocketConnectionInterface;
     }
 }

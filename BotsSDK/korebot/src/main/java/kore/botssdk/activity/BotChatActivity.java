@@ -17,18 +17,21 @@ import java.util.Date;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
+import kore.botssdk.autobahn.WebSpeechSocketListener;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.CarouselFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.BotWebsocketConnectionInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BotSpeechSocketStream;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
@@ -42,12 +45,13 @@ import kore.botssdk.utils.StringConstants;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
+public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface, BotWebsocketConnectionInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -101,6 +105,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         composeFooterFragment = new ComposeFooterFragment();
         composeFooterFragment.setArguments(getIntent().getExtras());
         composeFooterFragment.setComposeFooterInterface(this);
+        composeFooterFragment.setBotWebsocketConnectionInterface(this);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
 
@@ -397,5 +402,17 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
             }
         }
+    }
+
+    @Override
+    public void initiateSocketConnectionListener() {
+        SocketWrapper.getInstance(this).connectToSpeechSocket(new WebSpeechSocketListener() {
+            @Override
+            public void onSpeechSocketConnection(BotSpeechSocketStream botSpeechSocketStream) {
+                if (composeFooterFragment != null) {
+                    composeFooterFragment.initiateSpeechServerConnection(botSpeechSocketStream.getLink());
+                }
+            }
+        });
     }
 }

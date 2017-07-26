@@ -7,7 +7,6 @@ import java.net.URI;
 
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.autobahn.WebSocketConnection;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 
@@ -21,7 +20,7 @@ public final class SocketWrapperForTextToSpeech {
     private final String LOG_TAG = SocketWrapperForTextToSpeech.class.getSimpleName();
 
     public static SocketWrapperForTextToSpeech pKorePresenceInstance;
-//    private Map<String, Object> mWebSocketConnectionArgs = Collections.emptyMap();
+    //    private Map<String, Object> mWebSocketConnectionArgs = Collections.emptyMap();
     private SocketConnectionListener socketConnectionListener = null;
     private final WebSocketConnection mConnection = new WebSocketConnection();
 
@@ -45,7 +44,7 @@ public final class SocketWrapperForTextToSpeech {
     public static SocketWrapperForTextToSpeech getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
             synchronized (SocketWrapperForTextToSpeech.class) {
-                    pKorePresenceInstance = new SocketWrapperForTextToSpeech(mContext);
+                pKorePresenceInstance = new SocketWrapperForTextToSpeech(mContext);
             }
         }
         return pKorePresenceInstance;
@@ -74,21 +73,17 @@ public final class SocketWrapperForTextToSpeech {
      *
      * @param _mListener
      */
-    public void connect(SocketConnectionListener _mListener, String email) {
+    public void connect(SocketConnectionListener _mListener, String speechServerUrl) {
         this.socketConnectionListener = _mListener;
-//        String host = null;
-//        String port = null;
-//        Boolean ssl = false;
-//        String accessToken = null;
 
-            /**
-             * Preparing presence Url
-             */
+        /**
+         * Preparing presence Url
+         */
 
-        String url = SDKConfiguration.Server.SPEECH_SERVER_BASE_URL + "?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
-        Log.d(LOG_TAG,"The url is "+ url);
+        speechServerUrl = speechServerUrl + "&" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1";
+        Log.d(LOG_TAG, "The url is " + speechServerUrl);
         try {
-            this.uri = new URI(url);
+            this.uri = new URI(speechServerUrl);
             mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
                 @Override
                 public void onOpen() {
@@ -133,7 +128,6 @@ public final class SocketWrapperForTextToSpeech {
         }
 
 
-
     }
 
     /**
@@ -174,42 +168,4 @@ public final class SocketWrapperForTextToSpeech {
             return false;
         }
     }
-
-    /*@Override
-    public void onDisconnect(Exception e) {
-        KoreLogger.debugLog(LOG_TAG, "Disconnect callback ");
-        HashMap<String, String> disConnect = new HashMap<>();
-        disConnect.put("name", "disconnect");
-        try {
-            KoreLogger.debugLog(LOG_TAG, "Sending web socket disconnect callback");
-            if (mListener != null)
-                mListener.onDisconnected(disConnect);
-        } catch (Exception e1) {
-            KoreLogger.errorLog(LOG_TAG, "onDisconnect", e1);
-        }
-    }*/
-   /* public void sendData(byte[] msg) {
-
-        if (msg != null && msg.length > 0) {
-            AudioDataPool.getAudioDataPoolList().add(AudioDataPool.getAudioDataPoolList().size(),new ByteData(msg));
-        }
-
-        if (!AudioDataPool.isPoolEmpty()) {
-            if (!AudioDataPool.getAudioDataPoolList().isEmpty()) {
-                ArrayList<ByteData> audioDataList = AudioDataPool.getAudioDataPoolList();
-                int len = audioDataList.size();
-                for (int i = 0; i < len; i++) {
-                    ByteData requestPayload = audioDataList.get(i);
-                    boolean wasSuccessfullySend = sendRawData(requestPayload.data);
-                    if (wasSuccessfullySend) {
-                        AudioDataPool.getAudioDataPoolList().remove(i);
-                        i--; //reset the parameter
-                        len--; //reset the length.
-                    } else {
-                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
-                    }
-                }
-            }
-        }
-    }*/
 }

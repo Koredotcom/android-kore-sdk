@@ -11,6 +11,7 @@ import com.octo.android.robospice.SpiceManager;
 public class BaseSpiceManager implements SpiceManagerLifeCycle {
 
     private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    private SpiceManager spiceManagerForSpeechSocket = new SpiceManager(BotSpeechSocketRestService.class);
 
     /**
      * @return Spice Manager's connection state
@@ -25,7 +26,7 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public boolean isStarted() {
-        return spiceManager.isStarted();
+        return spiceManager.isStarted() && spiceManagerForSpeechSocket.isStarted();
     }
 
     /**
@@ -35,8 +36,10 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public void start(Context context) {
-        if (!isConnected() && !isStarted())
+        if (!isConnected() && !isStarted()) {
             spiceManager.start(context);
+            spiceManagerForSpeechSocket.start(context);
+        }
     }
 
     /**
@@ -44,8 +47,10 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     @Override
     public void stop() {
-        if (isConnected() || isStarted())
+        if (isConnected() || isStarted()) {
             spiceManager.shouldStop();
+            spiceManagerForSpeechSocket.shouldStop();
+        }
     }
 
     /**
@@ -54,5 +59,9 @@ public class BaseSpiceManager implements SpiceManagerLifeCycle {
      */
     public SpiceManager getSpiceManager() {
         return spiceManager;
+    }
+
+    public SpiceManager getSpiceManagerForSpeechSocket() {
+        return spiceManagerForSpeechSocket;
     }
 }

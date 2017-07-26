@@ -21,6 +21,7 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
+import kore.botssdk.listener.BotWebsocketConnectionInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
@@ -49,6 +50,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
     private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
+
+    BotWebsocketConnectionInterface botWebsocketConnectionInterface;
 
     @Nullable
     @Override
@@ -124,6 +127,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setBotWebsocketConnectionInterface(BotWebsocketConnectionInterface botWebsocketConnectionInterface) {
+        this.botWebsocketConnectionInterface = botWebsocketConnectionInterface;
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
@@ -254,6 +261,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         tapToSpeakFragment = new TapToSpeakFragment();
         tapToSpeakFragment.setmListener(mListener);
+        tapToSpeakFragment.setBotWebsocketConnectionInterface(botWebsocketConnectionInterface);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.abc_slide_in_bottom, R.anim.abc_slide_out_bottom);
@@ -290,5 +298,11 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             }
         }
     };
+
+    public void initiateSpeechServerConnection(String speechServerUrl) {
+        if (tapToSpeakFragment != null) {
+            tapToSpeakFragment.initiateSpeechServerConnection(speechServerUrl);
+        }
+    }
 
 }
