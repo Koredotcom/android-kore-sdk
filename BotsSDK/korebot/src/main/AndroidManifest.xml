@@ -36,10 +36,6 @@
         <service
             android:name=".net.BotDemoRestService"
             android:exported="false" />
-        <service
-            android:name=".net.BotSpeechSocketRestService"
-            android:exported="true"/>
-
     </application>
 
 </manifest>
