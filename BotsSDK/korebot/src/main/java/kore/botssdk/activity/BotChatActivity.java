@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -326,6 +327,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                 }
             }, StringConstants.TYPING_STATUS_TIME);
         } catch (JsonSyntaxException e) {
+            Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 

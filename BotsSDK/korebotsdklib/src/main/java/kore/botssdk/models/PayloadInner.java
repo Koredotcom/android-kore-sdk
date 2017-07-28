@@ -1,6 +1,7 @@
 package kore.botssdk.models;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -17,9 +18,11 @@ public class PayloadInner {
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
-    private Object elements;
+    private Object elements = null;
     private String elementsAsString;
     private String color = "#000000";
+
+    private final String INVALID_JSON = "Invalid JSON";
 
     public String getTemplate_type() {
         return template_type;
@@ -51,13 +54,38 @@ public class PayloadInner {
 
     public void convertElementToAppropriate() {
         Gson gson = new Gson();
-        elementsAsString = gson.toJson(elements);
-        if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
-            Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {}.getType();
-            carouselElements = gson.fromJson(elementsAsString, carouselType);
-        } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
-            Type listType = new TypeToken<ArrayList<BotListModel>>() {}.getType();
-            listElements = gson.fromJson(elementsAsString, listType);
+        if (elements != null) {
+            elementsAsString = gson.toJson(elements);
+            if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
+                Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
+                }.getType();
+                carouselElements = gson.fromJson(elementsAsString, carouselType);
+            } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+                Type listType = new TypeToken<ArrayList<BotListModel>>() {
+                }.getType();
+                listElements = gson.fromJson(elementsAsString, listType);
+            }
+        }
+        templateValidator();
+    }
+
+    private void templateValidator() throws JsonSyntaxException {
+        if (elements != null) {
+            if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
+                for(BotCarouselModel carouselElement : carouselElements) {
+                    if (carouselElement.getTitle() == null || carouselElement.getImage_url() == null) {
+                        throw new JsonSyntaxException(INVALID_JSON);
+                    }
+                }
+            } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+                for (BotListModel botListElement : listElements) {
+                    if (botListElement.getTitle() == null) {
+                        throw new JsonSyntaxException(INVALID_JSON);
+                    }
+                }
+            }
+        } else {
+            throw new JsonSyntaxException(INVALID_JSON);
         }
     }
 
