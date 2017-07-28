@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
@@ -16,9 +18,14 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.CircularProfileView;
+import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
 
 /**
@@ -29,6 +36,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 
     ListView botsBubblesListView;
     BotsChatAdapter botsChatAdapter;
+    QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
@@ -67,6 +75,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
+
+        quickReplyView = new QuickReplyView(getContext());
+        quickReplyView.setComposeFooterInterface(composeFooterInterface);
+        quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        botsBubblesListView.addFooterView(quickReplyView);
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
@@ -97,6 +110,32 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 Log.d("Hey", "Started animation");
             }
         }
+    }
+
+    public void setQuickRepliesIntoFooter(BotResponse botResponse) {
+        ArrayList<QuickReplyTemplate> quickReplyTemplates = getQuickReplies(botResponse);
+        quickReplyView.populateQuickReplyView(quickReplyTemplates);
+    }
+
+    private ArrayList<QuickReplyTemplate> getQuickReplies(BotResponse botResponse) {
+
+        ArrayList<QuickReplyTemplate> quickReplyTemplates = null;
+
+        if (botResponse != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+            if (compModel != null) {
+                String compType = compModel.getType();
+                if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
+                    PayloadOuter payOuter = compModel.getPayload();
+                    PayloadInner payInner = payOuter.getPayload();
+                    if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        quickReplyTemplates = payInner.getQuick_replies();
+                    }
+                }
+            }
+        }
+
+        return quickReplyTemplates;
     }
 
     public void addMessageToBotChatAdapter(BotResponse botResponse) {
@@ -130,6 +169,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             }
             if (botsChatAdapter != null) {
                 botsChatAdapter.addBaseBotMessage(botRequest);
+                quickReplyView.populateQuickReplyView(null);
                 scrollToBottom();
             }
         }

@@ -8,30 +8,21 @@ public class QuickReplyTemplate {
     private String content_type;
     private String title;
     private String payload;
-
-    public QuickReplyTemplate(){}
-
-    public void setContent_type(String content_type){
-        this.content_type = content_type;
-    }
+    private String image_url;
 
     public String getContent_type() {
         return content_type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setPayload(String payload) {
-        this.payload = payload;
-    }
-
     public String getPayload() {
         return payload;
+    }
+
+    public String getImage_url() {
+        return image_url;
     }
 }

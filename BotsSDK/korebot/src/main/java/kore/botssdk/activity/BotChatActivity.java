@@ -321,7 +321,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                 @Override
                 public void run() {
                     stopTextToSpeech();
-                    checkForQuickReplies(botResponse);
+                    botContentFragment.setQuickRepliesIntoFooter(botResponse);
                     botContentFragment.addMessageToBotChatAdapter(botResponse);
                     textToSpeech(botResponse);
                 }
@@ -381,23 +381,4 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
     }
 
-    private void checkForQuickReplies(BotResponse botResponse) {
-        if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
-            return;
-        }
-
-        ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
-        if (compModel != null) {
-            String compType = compModel.getType();
-            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
-
-                PayloadOuter payOuter = compModel.getPayload();
-                PayloadInner payInner = payOuter.getPayload();
-                if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    quickReplyFragment.populateQuickReplyViews(payInner.getQuick_replies());
-                }
-
-            }
-        }
-    }
 }

@@ -12,7 +12,7 @@ public class BubbleViewUtil {
 
     public static int getBubbleContentWidth() {
         int viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        return (int) (0.59 * viewWidth);
+        return (int) (0.68 * viewWidth);
     }
 
     public static int getBotBubbleContentWidth() {
