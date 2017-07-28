@@ -72,16 +72,26 @@ public class PayloadInner {
     private void templateValidator() throws JsonSyntaxException {
         if (elements != null) {
             if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
-                for(BotCarouselModel carouselElement : carouselElements) {
+                for (int i = 0; i < carouselElements.size(); i++) {
+                    BotCarouselModel carouselElement = carouselElements.get(i);
                     if (carouselElement.getTitle() == null || carouselElement.getImage_url() == null) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        carouselElements.remove(carouselElement);
+                        i--;
                     }
                 }
+                if (carouselElements.isEmpty()) {
+                    throw new JsonSyntaxException(INVALID_JSON);
+                }
             } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
-                for (BotListModel botListElement : listElements) {
+                for (int i = 0; i < listElements.size(); i++) {
+                    BotListModel botListElement = listElements.get(i);
                     if (botListElement.getTitle() == null) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        listElements.remove(botListElement);
+                        i--;
                     }
+                }
+                if (listElements.isEmpty()) {
+                    throw new JsonSyntaxException(INVALID_JSON);
                 }
             }
         } else {
