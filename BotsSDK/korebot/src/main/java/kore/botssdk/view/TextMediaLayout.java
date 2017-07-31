@@ -2,12 +2,12 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -76,6 +76,7 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
+        botContentTextView.setAutoLinkMask(Linkify.ALL);
         botContentTextView.setId(TEXTVIEW_ID);
         float dp5 = dp1 * 5;
         botContentTextView.setPadding(0, 0, 0, (int) dp5);
