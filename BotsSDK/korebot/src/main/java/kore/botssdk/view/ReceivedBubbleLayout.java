@@ -141,7 +141,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         }
     }
 
-
     protected void populateForTemplates(int position, ComponentModel compModel) {
 
         // Default out everything
@@ -170,8 +169,10 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
                         botButtonView.populateButtonList(payInner.getButtons());
                         bubbleTextMediaLayout.populateText(payInner.getText());
+                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                     } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                         bubbleTextMediaLayout.populateText(payInner.getText());
+                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botCarouselView.setVisibility(View.VISIBLE);
                         botCarouselView.populateCarouselView(payInner.getCarouselElements());
