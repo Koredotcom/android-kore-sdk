@@ -85,6 +85,9 @@ public class CarouselItemViewHelper {
                         if (botCarouselModel.getDefault_action() != null &&
                                 BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
+                        } else {
+                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                            composeFooterInterface.onSendClick(buttonPayload);
                         }
                     }
                 }

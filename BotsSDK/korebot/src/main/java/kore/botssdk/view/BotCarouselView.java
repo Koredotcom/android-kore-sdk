@@ -67,16 +67,16 @@ public class BotCarouselView extends ViewGroup {
 
     public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
         if (composeFooterInterface != null && activityContext != null) {
-            if (carouselViewpager.getAdapter() == null) {
+//            if (carouselViewpager.getAdapter() == null) {
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setAdapter(botCarouselAdapter);
-            } else {
-                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
-                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-                botCarouselAdapter.notifyDataSetChanged();
-            }
+//            } else {
+//                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
+//                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+//                botCarouselAdapter.notifyDataSetChanged();
+//            }
         }
     }
 
