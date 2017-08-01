@@ -26,11 +26,11 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-        public static final String client_id = "cs-aa8ed318-e95c-5955-9680-04cd322e48c6";
-        public static final String client_secret = "2o4+bp9/QwjGVMuCwTBpp/tTCvi5ZdRKcecTPOo4T+Y=";
-        public static final String identity = "admin@testadmin3.xyz";
+        public static final String client_id = "cs-5649368e-68bb-555a-8803-935f223db585";
+        public static final String client_secret = "AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static final String identity = "reshma@testadmin3.xyz";
 
-        public static final String bot_name = "MyBotM2Enterprise_Mahato";
-        public static final String bot_id = "st-c0fb100e-2983-5d0d-ba0e-5c030f678e32";
+        public static final String bot_name = "Twitter_Auth";
+        public static final String bot_id = "st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
     }
 }
