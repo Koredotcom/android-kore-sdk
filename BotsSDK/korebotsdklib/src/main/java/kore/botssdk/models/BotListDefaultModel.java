@@ -9,6 +9,7 @@ public class BotListDefaultModel {
     String url;
     String webview_height_ratio;
     String fallback_url;
+    String payload;
 
     public String getType() {
         return type;
@@ -25,5 +26,9 @@ public class BotListDefaultModel {
 
     public String getFallback_url() {
         return fallback_url;
+    }
+
+    public String getPayload() {
+        return payload;
     }
 }
