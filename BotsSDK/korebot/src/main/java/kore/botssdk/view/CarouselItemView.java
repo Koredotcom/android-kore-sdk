@@ -96,11 +96,26 @@ public class CarouselItemView extends ViewGroup {
             extractFromBundle(bundle);
         }
 
-        if (botCarouselModel != null) {
-            carouselItemTitle.setText(botCarouselModel.getTitle());
-            carouselItemSubTitle.setText(botCarouselModel.getSubtitle());
+        String title =  "";
+        String subtitle = "";
+        String imageUrl = "";
 
-            Picasso.with(getContext()).load(botCarouselModel.getImage_url()).into(carouselItemImage);
+        if (botCarouselModel != null) {
+            if (botCarouselModel.getTitle() != null) {
+                title = botCarouselModel.getTitle();
+            }
+            if (botCarouselModel.getSubtitle() != null) {
+                subtitle = botCarouselModel.getSubtitle();
+            }
+            if (botCarouselModel.getImage_url() != null) {
+                imageUrl = botCarouselModel.getImage_url();
+            }
+
+
+            carouselItemTitle.setText(title);
+            carouselItemSubTitle.setText(subtitle);
+
+            Picasso.with(getContext()).load(imageUrl).into(carouselItemImage);
 
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getContext());
             carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);

@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 public class BotCarouselModel {
 
-    String title;
-    String image_url;
+    String title = "";
+    String image_url = "";
     String subtitle;
     BotListDefaultModel default_action;
     ArrayList<BotCaourselButtonModel> buttons;
