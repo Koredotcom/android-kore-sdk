@@ -154,7 +154,7 @@ public final class SocketWrapper extends BaseSpiceManager {
      * @param taskBotId   : the Bot-Id
      * @param uuId        : uuid associated with the specific client
      */
-    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId) {
+    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId, SocketConnectionListener socketConnectionListener) {
 
         this.accessToken = null;
         this.clientId = clientId;
@@ -162,6 +162,7 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.uuId = uuId;
         this.chatBotName = chatBotName;
         this.taskBotId = taskBotId;
+        this.socketConnectionListener = socketConnectionListener;
 
         //If spiceManager is not started then start it
         if (!isConnected()) {

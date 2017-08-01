@@ -51,7 +51,7 @@ public interface RestAPI {
     MarketStreamList getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Get Speech Socket URL
-    @GET("/asrsocket/dev/start")
+    @POST("/asrsocket/dev/start")
     BotSpeechSocketStream getSpeechSocketStream(@Header("Authorization") String token, @Query("email") String email);
 
     //Subscribe to Push notification
