@@ -96,23 +96,27 @@ public class BotListTemplateAdapter extends BaseAdapter {
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemSubtitle.setText(botListModel.getSubtitle());
-        holder.botListItemButton.setText(botListModel.getButtons().get(0).getTitle());
-        holder.botListItemButton.setTag(botListModel.getButtons().get(0));
+        if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
+            holder.botListItemButton.setVisibility(View.GONE);
+        } else {
+            holder.botListItemButton.setVisibility(View.VISIBLE);
+            holder.botListItemButton.setText(botListModel.getButtons().get(0).getTitle());
+            holder.botListItemButton.setTag(botListModel.getButtons().get(0));
 
-        holder.botListItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
-                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
-                    } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
-                        composeFooterInterface.onSendClick(botListElementButton.getPayload());
+            holder.botListItemButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                        BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
+                            composeFooterInterface.onSendClick(botListElementButton.getPayload());
+                        }
                     }
                 }
-            }
-        });
-
+            });
+        }
         holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
