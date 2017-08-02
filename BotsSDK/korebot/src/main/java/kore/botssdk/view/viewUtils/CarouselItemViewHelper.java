@@ -67,12 +67,10 @@ public class CarouselItemViewHelper {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                         BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
-                        if (botCarouselModel.getDefault_action() != null &&
-                                BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
-                        } else if (botCarouselModel.getDefault_action() != null &&
-                                BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
-                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCaourselButtonModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botCaourselButtonModel.getUrl());
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
+                            String buttonPayload = botCaourselButtonModel.getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
                         }
                     }

@@ -8,6 +8,7 @@ public class BotCaourselButtonModel {
     String type;
     String title;
     String payload;
+    String url;
 
     public String getType() {
         return type;
@@ -19,5 +20,9 @@ public class BotCaourselButtonModel {
 
     public String getPayload() {
         return payload;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }
