@@ -10,6 +10,7 @@ public class BotListElementButton {
     String url;
     String webview_height_ratio;
     String fallback_url;
+    String payload;
 
     public String getTitle() {
         return title;
@@ -29,5 +30,9 @@ public class BotListElementButton {
 
     public String getFallback_url() {
         return fallback_url;
+    }
+
+    public String getPayload() {
+        return payload;
     }
 }

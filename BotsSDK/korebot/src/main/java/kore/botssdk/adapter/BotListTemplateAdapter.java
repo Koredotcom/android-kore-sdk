@@ -104,10 +104,10 @@ public class BotListTemplateAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
-                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
                         invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
-                    } else {
-                        composeFooterInterface.onSendClick(botListElementButton.getTitle());
+                    } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
+                        composeFooterInterface.onSendClick(botListElementButton.getPayload());
                     }
                 }
             }
@@ -120,10 +120,10 @@ public class BotListTemplateAdapter extends BaseAdapter {
                     int position = parentListView.getPositionForView(v);
                     BotListModel _botListModel = getItem(position);
                     if (_botListModel != null) {
-                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                        } else {
-                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getFallback_url());
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload());
                         }
                     }
                 }

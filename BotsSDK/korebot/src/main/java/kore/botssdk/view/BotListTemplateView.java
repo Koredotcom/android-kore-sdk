@@ -22,7 +22,8 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 /**
- * Created by Anil Kumar on 12/8/2016.
+ * Created by Pradeep Mahato on 22/7/17.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotListTemplateView extends ViewGroup {
 
@@ -81,9 +82,9 @@ public class BotListTemplateView extends ViewGroup {
                 public void onClick(View v) {
                     if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                         BotButtonModel botButtonModel = botButtonModelArrayList.get(0);
-                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
-                        } else {
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
                             String message = botButtonModel.getPayload();
                             composeFooterInterface.onSendClick(message);
                         }
