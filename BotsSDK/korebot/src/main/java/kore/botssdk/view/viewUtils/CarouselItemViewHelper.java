@@ -70,8 +70,9 @@ public class CarouselItemViewHelper {
                         if (botCarouselModel.getDefault_action() != null &&
                                 BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
-                        } else {
-                            String buttonPayload = botCaourselButtonModel.getPayload();
+                        } else if (botCarouselModel.getDefault_action() != null &&
+                                BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
                         }
                     }
@@ -85,7 +86,8 @@ public class CarouselItemViewHelper {
                         if (botCarouselModel.getDefault_action() != null &&
                                 BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
-                        } else {
+                        } else if (botCarouselModel.getDefault_action() != null &&
+                                BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
                         }
