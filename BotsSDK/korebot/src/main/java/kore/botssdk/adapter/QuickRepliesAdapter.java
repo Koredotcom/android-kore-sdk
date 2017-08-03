@@ -47,7 +47,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
     public void onBindViewHolder(QuickReplyViewHolder holder, int position) {
         QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
-        if (quickReplyTemplate.getImage_url() != null) {
+        if (quickReplyTemplate.getImage_url() != null && !quickReplyTemplate.getImage_url().isEmpty()) {
             Picasso.with(context).load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
             holder.getQuickReplyImage().setVisibility(View.VISIBLE);
         } else {
