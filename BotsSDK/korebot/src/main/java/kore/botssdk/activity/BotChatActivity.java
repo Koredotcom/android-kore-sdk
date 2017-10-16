@@ -30,6 +30,7 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
@@ -368,8 +369,34 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     private void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            String botResponseTextualFormat = "";//botResponse.getTempMessage().getcInfo().getBody();
-            ttsSynthesizer.speak(botResponseTextualFormat);
+            String botResponseTextualFormat = "";
+            BotResponseMessage msg = ((BotResponse) botResponse).getTempMessage();
+            ComponentModel componentModel = botResponse.getMessage().get(0).getComponent();
+            if (componentModel != null) {
+                String compType = componentModel.getType();
+                PayloadOuter payOuter = componentModel.getPayload();
+                if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+                    botResponseTextualFormat = payOuter.getText();
+                } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+                    botResponseTextualFormat = payOuter.getPayload().getText();
+                } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
+                    PayloadInner payInner;
+                    if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                        Gson gson = new Gson();
+                        payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                    }
+                    payInner = payOuter.getPayload();
+
+                    if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    }
+                }
+                ttsSynthesizer.speak(botResponseTextualFormat);
+            }
         }
     }
 
