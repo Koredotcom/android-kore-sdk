@@ -42,6 +42,7 @@ public class GenericWebViewActivity extends AppCompatActivity {
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
 
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webview.setWebViewClient(new WebViewClient() {
             @Override
