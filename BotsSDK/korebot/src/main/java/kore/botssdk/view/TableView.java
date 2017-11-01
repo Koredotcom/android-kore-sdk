@@ -2,9 +2,11 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -38,26 +40,33 @@ public class TableView extends ViewGroup {
 
     public void populateTableView(BotTableDataModel data){
         if(data != null){
+/*            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(10,10,10,10);*/
             mTable.removeAllViews();
             int size = data.getHeaders().size();
             int rowSize = data.getRows().size();
 
-                TableRow tr = new TableRow(mContext);
+            TableRow tr = new TableRow(mContext);
+            tr.setBackgroundResource(R.drawable.tableview_cell_shape);
 //                if(i%2==0)tr.setBackgroundColor(Color.GRAY);
 //                tr.setId(100+i);
 //                tr.setBackgroundColor(Color.GRAY);
-                tr.setLayoutParams(new LayoutParams(
-                        LayoutParams.MATCH_PARENT,
-                        LayoutParams.WRAP_CONTENT));
+            tr.setLayoutParams(new LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT));
+            //  tr.setPadding(10,10,10,10);
 
-                //Create two columns to add as table data
-                // Create a TextView to add date
+            //Create two columns to add as table data
+            // Create a TextView to add date
             for(int i = 0; i < size; i++) {
                 TextView txtHeader = new TextView(mContext);
                 txtHeader.setId(200 + i);
-                txtHeader.setBackgroundResource(R.drawable.tableview_cell_shape);
+                //   txtHeader.setLayoutParams(layoutParams);
                 txtHeader.setText(data.getHeaders().get(i).getTitle());
-                txtHeader.setPadding(2, 0, 5, 0);
+                txtHeader.setGravity(Gravity.CENTER);
+                txtHeader.setPadding(10, 20, 10, 20);
                 txtHeader.setTextColor(Color.BLACK);
                 txtHeader.setTextSize(14);
                 tr.addView(txtHeader);
@@ -68,22 +77,25 @@ public class TableView extends ViewGroup {
 
             for(int j=0; j< rowSize; j++){
                 TableRow trdata = new TableRow(mContext);
+                //  trdata.setPadding(10,10,10,10);
 //                if(i%2==0)tr.setBackgroundColor(Color.GRAY);
 //                tr.setId(100+i);
 //                trdata.setBackgroundColor(Color.GRAY);
                 trdata.setLayoutParams(new LayoutParams(
                         LayoutParams.MATCH_PARENT,
                         LayoutParams.WRAP_CONTENT));
+                trdata.setBackgroundResource(R.drawable.tableview_cell_shape);
                 for(int k=0; k<size;k++){
                     if(data.getRows().get(j).size() != size) {
                         continue;
                     }
                     TextView txtData = new TextView(mContext);
                     txtData.setId(200 + k);
-                    txtData.setBackgroundResource(R.drawable.tableview_cell_shape);
+                    // txtData.setLayoutParams(layoutParams);
                     txtData.setText(data.getRows().get(j).get(k) != null?data.getRows().get(j).get(k):"");
-                    txtData.setPadding(2, 0, 5, 0);
+                    txtData.setPadding(10, 20, 10, 20);
                     txtData.setTextColor(Color.BLACK);
+                    txtData.setGravity(Gravity.CENTER);
                     txtData.setTextSize(14);
                     trdata.addView(txtData);
                 }
@@ -100,8 +112,8 @@ public class TableView extends ViewGroup {
 
 
 
-                
-            }
+
+        }
 
     }
 

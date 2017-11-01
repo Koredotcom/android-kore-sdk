@@ -389,7 +389,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /**
          * For Table view
          */
-        left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+        left = cpvSenderImage.getRight() /2;
         top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
         LayoutUtils.layoutChild(tableView, left, top);
 
