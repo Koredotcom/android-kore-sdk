@@ -51,7 +51,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
             Picasso.with(context).load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
             holder.getQuickReplyImage().setVisibility(View.VISIBLE);
         } else {
-            holder.getQuickReplyImage().setVisibility(View.INVISIBLE);
+            holder.getQuickReplyImage().setVisibility(View.GONE);
         }
 
         holder.getQuickReplyTitle().setText(quickReplyTemplate.getTitle());

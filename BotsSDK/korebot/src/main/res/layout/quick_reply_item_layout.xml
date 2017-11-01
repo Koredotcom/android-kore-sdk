@@ -32,10 +32,11 @@
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#01CDEF"
             android:ellipsize="end"
+            android:padding="5dp"
             android:maxLines="1"
-            android:layout_gravity="center_vertical"
-            android:maxWidth="@dimen/quick_reply_item_max_width" />
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
 </LinearLayout>

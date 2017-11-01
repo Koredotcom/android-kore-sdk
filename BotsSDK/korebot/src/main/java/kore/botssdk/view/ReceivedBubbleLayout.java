@@ -366,20 +366,6 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         top = bubbleTextMediaLayout.getBottom();
         LayoutUtils.layoutChild(botCarouselView, left, top);
 
-        /**
-         * For PieChat view
-         */
-        top = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
-        LayoutUtils.layoutChild(botPieChartView, left, top);
-
-        /**
-         * For Table view
-         */
-        left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
-        top = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
-        LayoutUtils.layoutChild(tableView, left, top);
-
-
 
          /*
          * For re-adjusting CPV
@@ -388,10 +374,25 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
             int cpvTop = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN,
                     botButtonView.getBottom() + (int)dp1,
-                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN, botPieChartView.getBottom(),tableView.getBottom(),
+                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,
                     botListTemplateView.getBottom() + (int) dp1)) - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
+
+
+        /**
+         * For PieChat view
+         */
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        LayoutUtils.layoutChild(botPieChartView, left, top);
+
+        /**
+         * For Table view
+         */
+        left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
+        LayoutUtils.layoutChild(tableView, left, top);
+
 
         botCarouselView.bringToFront();
 
