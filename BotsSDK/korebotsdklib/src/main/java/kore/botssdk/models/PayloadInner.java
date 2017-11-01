@@ -18,11 +18,33 @@ public class PayloadInner {
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
+
+    public ArrayList<BotPieChartElementModel> getPieChartElements() {
+        return pieChartElements;
+    }
+
+    public void setPieChartElements(ArrayList<BotPieChartElementModel> pieChartElements) {
+        this.pieChartElements = pieChartElements;
+    }
+
+    public BotTableDataModel getData() {
+        return data;
+    }
+
+    public void setData(BotTableDataModel data) {
+        this.data = data;
+    }
+
+    private ArrayList<BotPieChartElementModel> pieChartElements;
+
+
+    private BotTableDataModel data;
     private Object elements = null;
     private String elementsAsString;
     private String color = "#000000";
 
     private final String INVALID_JSON = "Invalid JSON";
+    private String speech_hint;
 
     public String getTemplate_type() {
         return template_type;
@@ -52,6 +74,11 @@ public class PayloadInner {
         return color;
     }
 
+    public String getSpeech_hint() {
+        return speech_hint;
+    }
+
+
     public void convertElementToAppropriate() {
         Gson gson = new Gson();
         if (elements != null) {
@@ -64,7 +91,16 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<BotListModel>>() {
                 }.getType();
                 listElements = gson.fromJson(elementsAsString, listType);
-            }
+            } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(template_type)) {
+                Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
+                }.getType();
+                pieChartElements = gson.fromJson(elementsAsString, listType);
+            } /*else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)){
+                Type modelType = new TypeToken<BotTableDataModel>(){
+                }.getType();
+                data = gson.fromJson(elementsAsString,modelType);
+
+            }*/
         }
         templateValidator();
     }

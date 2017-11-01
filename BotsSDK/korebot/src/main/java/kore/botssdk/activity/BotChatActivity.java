@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import net.gotev.speech.Speech;
+
 import java.util.Date;
 
 import kore.botssdk.R;
@@ -79,6 +81,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
+        Speech.init(this, getPackageName());
         findViews();
         getBundleInfo();
 
@@ -118,6 +121,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     @Override
     protected void onDestroy() {
         botClient.disconnect();
+        Speech.getInstance().shutdown();
         super.onDestroy();
     }
 
@@ -138,8 +142,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void updateTitleBar() {
-        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot + " - anonymous" : chatBot);
-        getSupportActionBar().setSubtitle(botName);
+//        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot + " - anonymous" : chatBot);
+//        getSupportActionBar().setSubtitle(botName);
     }
 
     private void updateTitleBar(SocketConnectionEventStates socketConnectionEvents) {
@@ -172,10 +176,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
 
         if (Utils.isNetworkAvailable(this) && !titleMsg.isEmpty()) {
-            getSupportActionBar().setSubtitle(titleMsg);
+//            getSupportActionBar().setSubtitle(titleMsg);
         } else {
             CustomToast.showToast(getApplicationContext(), "No network avilable.");
-            getSupportActionBar().setSubtitle("Disconnected");
+//            getSupportActionBar().setSubtitle("Disconnected");
         }
     }
 
@@ -387,7 +391,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                     }
                     payInner = payOuter.getPayload();
 
-                    if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    if (payInner.getSpeech_hint() != null) {
+                        botResponseTextualFormat = payInner.getSpeech_hint();
+//                        ttsSynthesizer.speak(botResponseTextualFormat);
+                    } else if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botResponseTextualFormat = payInner.getText();
                     } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botResponseTextualFormat = payInner.getText();
@@ -395,7 +402,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     }
                 }
-                ttsSynthesizer.speak(botResponseTextualFormat);
+                ttsSynthesizer.speak(botResponseTextualFormat.replaceAll("\\<.*?>",""));
             }
         }
     }

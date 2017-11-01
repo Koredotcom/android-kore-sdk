@@ -4,13 +4,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.github.mikephil.charting.data.Entry;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotPieChartElementModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
@@ -27,7 +30,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
     CircularProfileView cpvSenderImage;
-    int carouselViewHeight;
+    int carouselViewHeight, pieViewHeight,tableHeight;
 
     public ReceivedBubbleLayout(Context context) {
         super(context);
@@ -52,6 +55,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     private void init() {
         textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
+        pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
+        tableHeight = (int) getResources().getDimension(R.dimen.table_layout_height);
         super.setLeftSide(true);
     }
 
@@ -97,14 +102,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth(),  botListTemplateView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(), botListTemplateView.getMeasuredWidth(),botPieChartView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
         headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight()+ botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
     @Override
@@ -122,6 +127,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         botButtonView.setVisibility(View.GONE);
         botCarouselView.setVisibility(View.GONE);
         botListTemplateView.setVisibility(View.GONE);
+        botPieChartView.setVisibility(View.GONE);
+        tableView.setVisibility(View.GONE);
     }
 
     @Override
@@ -181,6 +188,25 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         botListTemplateView.setVisibility(View.VISIBLE);
                         botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
                         botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
+                    }else if(BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                        botPieChartView.setVisibility(View.VISIBLE);
+                        bubbleTextMediaLayout.populateText(payInner.getText());
+                        ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
+                        if(elementModels != null && !elementModels.isEmpty()) {
+                            ArrayList<String > xVal = new ArrayList<>(elementModels.size());
+                            ArrayList<Entry> yVal = new ArrayList<>(elementModels.size());
+                            for(int i=0; i < elementModels.size(); i++){
+                                xVal.add(elementModels.get(i).getTitle());
+                                yVal.add(new Entry((float)elementModels.get(i).getValue(),i));
+                            }
+                            botPieChartView.populatePieChart("", xVal,yVal);
+
+                        }
+                    }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
+                        tableView.setVisibility(View.VISIBLE);
+                        bubbleTextMediaLayout.populateText(payInner.getText());
+                        tableView.populateTableView(payInner.getData());
+
                     }
                 }
             }
@@ -243,6 +269,20 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For List Templates
          */
         MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
+
+        /**
+         * For PieChart
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((((int) screenWidth) - 50), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botPieChartView, childWidthSpec,childHeightSpec);
+
+        /**
+         * For TableView
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(tableView, childWidthSpec,childHeightSpec);
 
         /*
          * For CarouselView
@@ -326,6 +366,21 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         top = bubbleTextMediaLayout.getBottom();
         LayoutUtils.layoutChild(botCarouselView, left, top);
 
+        /**
+         * For PieChat view
+         */
+        top = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        LayoutUtils.layoutChild(botPieChartView, left, top);
+
+        /**
+         * For Table view
+         */
+        left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
+        top = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
+        LayoutUtils.layoutChild(tableView, left, top);
+
+
+
          /*
          * For re-adjusting CPV
          */
@@ -333,8 +388,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
             int cpvTop = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN,
                     botButtonView.getBottom() + (int)dp1,
-                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,
-                    botListTemplateView.getBottom() + (int)dp1)) - cpvSenderImage.getMeasuredHeight();
+                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN, botPieChartView.getBottom(),tableView.getBottom(),
+                    botListTemplateView.getBottom() + (int) dp1)) - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
 

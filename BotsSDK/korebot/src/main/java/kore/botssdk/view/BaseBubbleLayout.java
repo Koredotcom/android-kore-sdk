@@ -99,6 +99,8 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected BotListTemplateView botListTemplateView;
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
+    protected PieChartView botPieChartView;
+    protected TableView tableView;
 
 
     protected int position;
@@ -231,6 +233,17 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         botCarouselView.setVisibility(View.GONE);
         botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
         addView(botCarouselView);
+
+        botPieChartView = new PieChartView(getContext());
+        botPieChartView.setVisibility(View.GONE);
+        botPieChartView.setId(TextMediaLayout.PIECHART_VIEW_ID);
+        addView(botPieChartView);
+
+        tableView = new TableView(getContext());
+        tableView.setVisibility(View.GONE);
+        tableView.setId(TextMediaLayout.TABLE_VIEW_ID);
+        addView(tableView);
+
     }
 
     protected void setInivisiblePaintColor(Paint paint) {

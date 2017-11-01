@@ -26,7 +26,8 @@
         <activity
             android:name=".activity.BotChatActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity
             android:name=".activity.GenericWebViewActivity"
             android:label="@string/app_name"

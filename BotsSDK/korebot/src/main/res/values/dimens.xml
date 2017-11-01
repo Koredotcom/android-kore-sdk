@@ -29,4 +29,8 @@
     <dimen name="carousel_view_padding_bottom">0dp</dimen>
     <dimen name="carousel_view_button_height_individual">48dp</dimen>
 
+    <!-- Pie View -->
+    <dimen name="pie_layout_height">375dp</dimen>
+    <dimen name="table_layout_height">100dp</dimen>
+
 </resources>
