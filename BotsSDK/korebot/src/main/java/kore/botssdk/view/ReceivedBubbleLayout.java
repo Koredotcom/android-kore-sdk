@@ -273,14 +273,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /**
          * For PieChart
          */
-        childWidthSpec = MeasureSpec.makeMeasureSpec((((int) screenWidth) - 50), MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
         MeasureUtils.measure(botPieChartView, childWidthSpec,childHeightSpec);
 
         /**
          * For TableView
          */
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
         MeasureUtils.measure(tableView, childWidthSpec,childHeightSpec);
 
@@ -383,6 +383,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /**
          * For PieChat view
          */
+        left = cpvSenderImage.getRight() /2;
         top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         LayoutUtils.layoutChild(botPieChartView, left, top);
 
