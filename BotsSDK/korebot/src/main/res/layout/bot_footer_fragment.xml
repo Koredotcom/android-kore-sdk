@@ -226,37 +226,73 @@
 
         </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:id="@+id/default_footer"
-        android:background="#341423"
-        android:alpha="1.0"
-        android:layout_height="wrap_content">
 
-        <ImageView
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/default_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="1.0"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_speech"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/keyboard_image"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_margin="10dp"
-            android:contentDescription="@string/click_hear_to_enter_text"
+            android:ellipsize="marquee"
+            android:gravity="right|end"
             android:padding="5dp"
-            android:src="@drawable/keyboard_white" />
+            android:singleLine="true"
+            android:visibility="gone"
+            android:textColor="@android:color/white"
+            android:textSize="12dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#341423"
+            android:gravity="center_vertical">
+
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone"
+                android:id="@+id/linearLayoutProgress">
+
+                <net.gotev.speech.ui.SpeechProgressView
+                    android:id="@+id/progress"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp"/>
+
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/keyboard_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/click_hear_to_enter_text"
+                android:padding="5dp"
+                android:src="@drawable/keyboard_white" />
 
             <TextView
                 android:id="@+id/speaker_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tag="regular"
-                android:padding="5dp"
-                android:layout_margin="5dp"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:text="@string/tap_to_speak"
-                android:drawableTop="@drawable/mic_white"
-                android:textColor="#ffffff"
+                android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/mic_white"
+                android:padding="5dp"
+                android:tag="regular"
+                android:text="@string/tap_to_speak"
+                android:textColor="#ffffff"
                 android:textSize="12dp" />
-    </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

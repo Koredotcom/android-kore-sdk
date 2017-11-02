@@ -81,7 +81,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
-        Speech.init(this, getPackageName());
         findViews();
         getBundleInfo();
 
@@ -121,7 +120,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     @Override
     protected void onDestroy() {
         botClient.disconnect();
-        Speech.getInstance().shutdown();
         super.onDestroy();
     }
 

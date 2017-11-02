@@ -11,4 +11,10 @@
     <string name="click_hear_to_enter_text">click hear to enter text</string>
     <string name="click_hear_to_speak_something">click hear to speak something</string>
     <string name="tap_to_speak">Tap to speak</string>
+    <string name="repeat">Repeat please</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
+    <string name="permission_required">You need to grant the permission to use the microphone</string>
+    <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>
 </resources>

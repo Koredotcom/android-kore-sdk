@@ -3,16 +3,17 @@ package kore.botssdk.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,11 +23,18 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.gotev.speech.GoogleVoiceTypingDisabledException;
+import net.gotev.speech.Speech;
+import net.gotev.speech.SpeechDelegate;
+import net.gotev.speech.SpeechRecognitionNotAvailable;
+import net.gotev.speech.SpeechUtil;
+import net.gotev.speech.ui.SpeechProgressView;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import kore.botssdk.R;
@@ -35,7 +43,6 @@ import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
-import kore.botssdk.speechtotext.AudioTaskListener;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
 
@@ -46,7 +53,7 @@ import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLE
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate {
+public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate, SpeechDelegate {
 
     private static final int REQ_CODE_SPEECH_INPUT = 1;
     String LOG_TAG = ComposeFooterFragment.class.getName();
@@ -55,11 +62,13 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     protected TextView sendButton;
     protected TextView speakerText;
     protected LinearLayout mainContentLayout;
-    protected RelativeLayout defaultFooterLayout;
+    protected LinearLayout defaultFooterLayout;
     //    protected RippleView rec_audio;
     protected ImageView rec_audio_img;
     protected ImageView audio_speak_tts;
     protected  ImageView keyboard_img;
+    private SpeechProgressView progress;
+    private TextView text_view_speech;
     //    private RawAudioRecorder mRecordingThread;
 //    private ProgressBar loadingTasksProgressBar,progressBarAudio;
     private static final int REQUEST_RECORD_AUDIO = 13;
@@ -69,6 +78,13 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
     private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
+    private LinearLayout linearLayoutProgress;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Speech.init(getContext(), getContext().getPackageName());
+    }
 
     @Nullable
     @Override
@@ -89,12 +105,13 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     @Override
     public void onDestroy() {
         KoreEventCenter.unregister(this);
+        Speech.getInstance().shutdown();
         super.onDestroy();
     }
 
     private void findViews(View view) {
         mainContentLayout = (LinearLayout)view.findViewById(R.id.mainContent);
-        defaultFooterLayout = (RelativeLayout) view.findViewById(R.id.default_footer);
+        defaultFooterLayout = (LinearLayout) view.findViewById(R.id.default_footer);
         editTextMessage = (EditText) view.findViewById(R.id.edtTxtMessage);
         editTextMessage.addTextChangedListener(composeTextWatcher);
         sendButton = (TextView) view.findViewById(R.id.sendTv);
@@ -102,6 +119,19 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         rec_audio_img = (ImageView) view.findViewById(R.id.rec_audio_img);
         keyboard_img = (ImageView)view.findViewById(R.id.keyboard_image);
         audio_speak_tts = (ImageView) view.findViewById(R.id.audio_speak_tts);
+        linearLayoutProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
+
+        progress = (SpeechProgressView) view.findViewById(R.id.progress);
+        int[] colors = {
+                ContextCompat.getColor(getContext(), android.R.color.black),
+                ContextCompat.getColor(getContext(), android.R.color.darker_gray),
+                ContextCompat.getColor(getContext(), android.R.color.black),
+                ContextCompat.getColor(getContext(), android.R.color.holo_orange_dark),
+                ContextCompat.getColor(getContext(), android.R.color.holo_red_dark)
+        };
+        progress.setColors(colors);
+
+        text_view_speech = (TextView) view.findViewById(R.id.text_view_speech);
 
 //        footerDivider = view.findViewById(R.id.footer_divider);
 //        tasksRl = (RelativeLayout) view.findViewById(R.id.tasksRl);
@@ -119,11 +149,17 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         } else {
             sendButton.setOnClickListener(composeFooterSendBtOnClickListener);
         }
+
     }
 
     private void setListenerExplicitly() {
         keyboard_img.setOnClickListener(keyboardIconClickListener);
-        speakerText.setOnClickListener(onAudioMicClicked);
+        speakerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonClick();
+            }
+        });
         audio_speak_tts.setOnClickListener(onTTSEnableSwitchClickListener);
         rec_audio_img.setOnClickListener(onVoiceModeActivated);
     }
@@ -191,12 +227,12 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         }
     };
 
-    View.OnClickListener onAudioMicClicked = new View.OnClickListener() {
+    /*View.OnClickListener onAudioMicClicked = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             startAudioRecordingSafe();
         }
-    };
+    };*/
 
     View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
         @Override
@@ -222,6 +258,12 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             mainContentLayout.setVisibility(View.GONE);
             animateLayoutGone(mainContentLayout);
             animateLayoutVisible(defaultFooterLayout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onButtonClick();
+                }
+            },500);
         }
     };
 
@@ -256,7 +298,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         }
     }
 
-    private void startAudioRecordingSafe() {
+    /*private void startAudioRecordingSafe() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 //                editTextMessage.setHint("Start talking...");
@@ -269,7 +311,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 //            editTextMessage.setHint("Start talking...");
             showTapToSpeakFragment();
         }
-    }
+    }*/
 
     private void requestMicrophonePermission() {
         AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
@@ -367,8 +409,134 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
 
     }
+    private void onButtonClick() {
+        if (Speech.getInstance().isListening()) {
+            Speech.getInstance().stopListening();
+        } else {
+            if (Build.VERSION.SDK_INT >= 23) {
+                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+//                editTextMessage.setHint("Start talking...");
+                    onRecordAudioPermissionGranted();
 
-    AudioTaskListener mListener = new AudioTaskListener() {
+                } else {
+                    requestMicrophonePermission();
+                }
+            } else {
+//            editTextMessage.setHint("Start talking...");
+//                showTapToSpeakFragment();
+                onRecordAudioPermissionGranted();
+            }
+            /*RxPermissions.getInstance(this)
+                    .request(Manifest.permission.RECORD_AUDIO)
+                    .subscribe(granted -> {
+                        if (granted) { // Always true pre-M
+                            onRecordAudioPermissionGranted();
+                        } else {
+                            Toast.makeText(MainActivity.this, R.string.permission_required, Toast.LENGTH_LONG);
+                        }
+                    });*/
+        }
+    }
+    private void onRecordAudioPermissionGranted() {
+        stopTTS();
+        Utility.hideVirtualKeyboard(getActivity());
+        /*editTextMessage.setEnabled(false);
+        animateLayoutVisible(mainContentLayout);
+        animateLayoutGone(defaultFooterLayout);*/
+        speakerText.setVisibility(View.GONE);
+        linearLayoutProgress.setVisibility(View.VISIBLE);
+        text_view_speech.setVisibility(View.VISIBLE);
+        text_view_speech.setText("");
+
+        try {
+            Speech.getInstance().stopTextToSpeech();
+            Speech.getInstance().startListening(progress, ComposeFooterFragment.this);
+
+        } catch (SpeechRecognitionNotAvailable exc) {
+            showSpeechNotSupportedDialog();
+
+        } catch (GoogleVoiceTypingDisabledException exc) {
+            showEnableGoogleVoiceTyping();
+        }
+    }
+    @Override
+    public void onStartOfSpeech() {
+    }
+
+    @Override
+    public void onSpeechRmsChanged(float value) {
+    }
+
+    @Override
+    public void onSpeechPartialResults(List<String> results) {
+
+        text_view_speech.setText(results.toString());
+        for (String partial : results) {
+            text_view_speech.append(partial + " ");
+        }
+    }
+
+    @Override
+    public void onSpeechResult(String result) {
+        speakerText.setVisibility(View.VISIBLE);
+        linearLayoutProgress.setVisibility(View.GONE);
+        text_view_speech.setText(result);
+
+        if (result.isEmpty()) {
+            Speech.getInstance().say(getString(R.string.repeat));
+
+        }else{
+            if (composeFooterInterface != null) {
+                composeFooterInterface.onSendClick(result);
+                editTextMessage.setText("");
+            } else {
+                Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+            }
+            /*else {
+            Speech.getInstance().say(result);
+        }*/
+        }
+        text_view_speech.setVisibility(View.GONE);
+
+    }
+    private void showSpeechNotSupportedDialog() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        SpeechUtil.redirectUserToGoogleAppOnPlayStore(getActivity());
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.speech_not_available)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener)
+                .show();
+    }
+
+    private void showEnableGoogleVoiceTyping() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(R.string.enable_google_voice_typing)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // do nothing
+                    }
+                })
+                .show();
+    }
+
+
+    /*AudioTaskListener mListener = new AudioTaskListener() {
         @Override
         public void onCloseButtonClicked(int resultCode) {
             editTextMessage.setEnabled(true);
@@ -391,6 +559,6 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
                 editTextMessage.setSelection(editTextMessage.getText().length());
             }
         }
-    };
+    };*/
 
 }

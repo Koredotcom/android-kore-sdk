@@ -237,7 +237,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                     @Override
                     public void onTextMessage(String payload) {
-                        Log.d(LOG_TAG, "onTextMessage payload :" + payload);
+//                        Log.d(LOG_TAG, "onTextMessage payload :" + payload);
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onTextMessage(payload);
                         }
@@ -245,7 +245,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                     @Override
                     public void onRawTextMessage(byte[] payload) {
-                        Log.d(LOG_TAG, "onRawTextMessage payload:" + payload);
+//                        Log.d(LOG_TAG, "onRawTextMessage payload:" + payload);
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onRawTextMessage(payload);
                         }
@@ -253,7 +253,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                     @Override
                     public void onBinaryMessage(byte[] payload) {
-                        Log.d(LOG_TAG, "onBinaryMessage payload: " + payload);
+//                        Log.d(LOG_TAG, "onBinaryMessage payload: " + payload);
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onBinaryMessage(payload);
                         }
