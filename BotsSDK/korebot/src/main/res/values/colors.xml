@@ -78,4 +78,20 @@
     <color name="white">#FFFFFFFF</color>
     <color name="rippelColor">#0000EE</color>
 
+    <string-array name="color_set">
+        <item>#4E74F0</item>
+        <item>#E44929</item>
+        <item>#FF7A00</item>
+        <item>#BDA100</item>
+        <item>#E36CA2</item>
+        <item>#591880</item>
+        <item>#3AB961</item>
+        <item>#654BAF</item>
+        <item>#E36CA2</item>
+        <item>#1B3880</item>
+        <item>#9D1850</item>
+        <item>#DB9400</item>
+        <item>#008930</item>
+    </string-array>
+
 </resources>

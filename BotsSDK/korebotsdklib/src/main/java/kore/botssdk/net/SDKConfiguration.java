@@ -22,12 +22,12 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-        public static final String client_id = "cs-63e75351-f6a0-5aa9-8f3e-a4703e5f4666";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static final String client_secret = "Wwf8tZsPO/zbyojG5mXYYeuRsNXZwdnJwXI9HcPordw=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static final String identity = "reshma@testadmin3.xyz";
+        public static final String client_id = "cs-49b31906-d106-55ab-a278-b658a37ed08f";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static final String client_secret = "2kJJH2DgKDv3ZP6XCDmVkNC6xKepPoeJ26ix1Ly7lqk=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static final String identity = "udayabhaskar.cc@kore.com";
 
-        public static final String bot_name = "Kore Healthcare";//"Twitter_Auth";
-        public static final String bot_id = "st-34713e2e-c3fd-5ae9-822a-4e440a4085ac";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+        public static final String bot_name = " Future Group Uday";//"Twitter_Auth";
+        public static final String bot_id = "st-dc1ae300-4e90-5e98-b073-ccfccf65b41b";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
     }
 
 }

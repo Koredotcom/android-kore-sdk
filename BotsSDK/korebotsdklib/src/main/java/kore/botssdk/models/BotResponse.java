@@ -12,6 +12,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
     public static final String TEMPLATE_TYPE_PIECHART = "piechart";
+    public static final String TEMPLATE_TYPE_LINECHART = "linechart";
     public static final String TEMPLATE_TYPE_TABLE = "table";
     public static final String TEMPLATE_TYPE_CAROUSEL = "carousel";
     public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";

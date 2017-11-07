@@ -39,6 +39,7 @@ public class TextMediaLayout extends MediaLayout {
     public static final int BUTTON_VIEW_ID = 1980098;
     public static final int PIECHART_VIEW_ID = 19800123;
     public static final int TABLE_VIEW_ID = 19800345;
+    public static final int LINECHART_VIEW_ID = 19800335;
 
     private float restrictedLayoutWidth, restrictedLayoutHeight;
 

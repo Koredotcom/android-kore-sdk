@@ -18,6 +18,8 @@ public class PayloadInner {
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
+    private ArrayList<BotLineChartDataModel> lineChartDataModels;
+    private ArrayList<String> headers;
 
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
         return pieChartElements;
@@ -95,12 +97,12 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
                 }.getType();
                 pieChartElements = gson.fromJson(elementsAsString, listType);
-            } /*else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)){
-                Type modelType = new TypeToken<BotTableDataModel>(){
+            } else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<BotLineChartDataModel>>() {
                 }.getType();
-                data = gson.fromJson(elementsAsString,modelType);
+                lineChartDataModels = gson.fromJson(elementsAsString, listType);
 
-            }*/
+            }
         }
         templateValidator();
     }
@@ -153,4 +155,19 @@ public class PayloadInner {
         return buttonTemplates;
     }
 
+    public ArrayList<String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(ArrayList<String> headers) {
+        this.headers = headers;
+    }
+
+    public ArrayList<BotLineChartDataModel> getLineChartDataModels() {
+        return lineChartDataModels;
+    }
+
+    public void setLineChartDataModels(ArrayList<BotLineChartDataModel> lineChartDataModels) {
+        this.lineChartDataModels = lineChartDataModels;
+    }
 }

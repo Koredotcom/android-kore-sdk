@@ -101,6 +101,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
     protected TableView tableView;
+    protected LineChartView lineChartView;
 
 
     protected int position;
@@ -243,6 +244,11 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         tableView.setVisibility(View.GONE);
         tableView.setId(TextMediaLayout.TABLE_VIEW_ID);
         addView(tableView);
+
+        lineChartView = new LineChartView(getContext());
+        lineChartView.setVisibility(GONE);
+        lineChartView.setId(TextMediaLayout.LINECHART_VIEW_ID);
+        addView(lineChartView);
 
     }
 

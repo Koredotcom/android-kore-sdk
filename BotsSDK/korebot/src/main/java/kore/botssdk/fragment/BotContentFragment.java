@@ -128,7 +128,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
                     PayloadOuter payOuter = compModel.getPayload();
                     PayloadInner payInner = payOuter.getPayload();
-                    if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    if (payInner != null && BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
                         quickReplyTemplates = payInner.getQuick_replies();
                     }
                 }
