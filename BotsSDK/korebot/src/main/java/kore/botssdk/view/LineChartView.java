@@ -63,7 +63,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
 
 
 
-        mChart.setDescription(" ");
+        mChart.setDescription(headers.get(0));
         ArrayList<ILineDataSet> dataSets = getYAxisValues(data,headers);
         LineData lineData = new LineData(getXAxisValues(data), dataSets);
 
