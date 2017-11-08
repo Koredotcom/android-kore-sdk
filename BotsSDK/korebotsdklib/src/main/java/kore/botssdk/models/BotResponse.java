@@ -19,6 +19,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String COMPONENT_TYPE_TEMPLATE = "template";
     public static final String COMPONENT_TYPE_TEXT = "text";
     public static final String COMPONENT_TYPE_ERROR = "error";
+    public static final String COMPONENT_TYPE_MESSAGE = "message";
 
     private String type;
     private BotInfoModel botInfo;

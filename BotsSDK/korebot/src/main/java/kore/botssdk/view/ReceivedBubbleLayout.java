@@ -214,6 +214,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         bubbleTextMediaLayout.populateText(payInner.getText());
                         lineChartView.setData(payInner.getLineChartDataModels(),payInner.getHeaders());
                     }
+                }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){
+                    bubbleTextMediaLayout.populateText(payInner.getText());
                 }else{
                     bubbleTextMediaLayout.populateText(payOuter.getText());
 

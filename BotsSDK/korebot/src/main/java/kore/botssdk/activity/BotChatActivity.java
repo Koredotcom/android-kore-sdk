@@ -381,7 +381,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                     botResponseTextualFormat = payOuter.getText();
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
                     botResponseTextualFormat = payOuter.getPayload().getText();
-                } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
+                } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) || BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
                     PayloadInner payInner;
                     if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
                         Gson gson = new Gson();
