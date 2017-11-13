@@ -51,6 +51,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
+    public int getLinkTextColor() {
+        return getResources().getColor(R.color.mentionsAndHashTagColor);
+    }
 
     private void init() {
         textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
@@ -76,7 +79,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) dp1;
         } else {
-            BUBBLE_TOP_BORDER = headerLayout.getMeasuredHeight();//int) (dp14 + dp1);
+            BUBBLE_TOP_BORDER = (int) dp1 + headerLayout.getMeasuredHeight();//int) (dp14 + dp1);
         }
         BUBBLE_LEFT_BORDER = (int) ((!isGroupMessage) ? dp4 : dp1);
         BUBBLE_RIGHT_BORDER = (int) dp1;
@@ -185,7 +188,11 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botCarouselView.setVisibility(View.VISIBLE);
                         botCarouselView.populateCarouselView(payInner.getCarouselElements());
-                        setDoDrawBubbleBackground(false);
+                        bubbleTextMediaLayout.populateText(payInner.getText());
+                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
+                        if(!isDoDrawBubbleBackground()){
+                            cpvSenderImage.setVisibility(GONE);
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botListTemplateView.setVisibility(View.VISIBLE);
                         botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
@@ -307,7 +314,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For CarouselView
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
         MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
@@ -378,12 +385,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         top = bubbleTextMediaLayout.getBottom() - BUBBLE_CONTENT_TOP_MARGIN;
         LayoutUtils.layoutChild(botListTemplateView, left, top);
 
-        /*
-         * For Carousel View
-         */
-        left = 0;
-        top = bubbleTextMediaLayout.getBottom();
-        LayoutUtils.layoutChild(botCarouselView, left, top);
+
 
 
          /*
@@ -393,11 +395,16 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
             int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
             int cpvTop = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN,
                     botButtonView.getBottom() + (int)dp1,
-                    botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,
+                  /*  botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,*/
                     botListTemplateView.getBottom() + (int) dp1)) - cpvSenderImage.getMeasuredHeight();
             LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
         }
-
+        /*
+         * For Carousel View
+         */
+        left = 0;
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        LayoutUtils.layoutChild(botCarouselView, left, top);
 
         /**
          * For PieChat view

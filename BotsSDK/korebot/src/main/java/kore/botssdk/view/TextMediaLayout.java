@@ -54,6 +54,9 @@ public class TextMediaLayout extends MediaLayout {
     float dp1;
     private Context mContext;
     final String TEXT_COLOR = "#000000";
+    private int linkTextColor ;
+
+
 
     public TextMediaLayout(Context context) {
         super(context);
@@ -61,6 +64,12 @@ public class TextMediaLayout extends MediaLayout {
         init();
     }
 
+    public TextMediaLayout(Context context,int linkTextColor) {
+        super(context);
+        this.mContext = context;
+        this.linkTextColor = linkTextColor;
+        init();
+    }
     private void init() {
 
         if (!isInEditMode()) {
@@ -69,7 +78,7 @@ public class TextMediaLayout extends MediaLayout {
 
         //Add a textView
         botContentTextView = new TextView(getContext());
-        botContentTextView.setLinkTextColor(getResources().getColor(R.color.mentionsAndHashTagColor));
+
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -83,10 +92,13 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView.setId(TEXTVIEW_ID);
         float dp5 = dp1 * 5;
         botContentTextView.setPadding(0, 0, 0, (int) dp5);
+        botContentTextView.setLinkTextColor(linkTextColor);
         if (gravity == GRAVITY_LEFT) {
             botContentTextView.setGravity(Gravity.LEFT);
+
         } else if (gravity == GRAVITY_RIGHT) {
             botContentTextView.setGravity(Gravity.RIGHT);
+
         }
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
@@ -212,5 +224,13 @@ public class TextMediaLayout extends MediaLayout {
                 childTop += child.getMeasuredHeight();
             }
         }
+    }
+
+    public int getLinkTextColor() {
+        return linkTextColor;
+    }
+
+    public void setLinkTextColor(int linkTextColor) {
+        this.linkTextColor = linkTextColor;
     }
 }

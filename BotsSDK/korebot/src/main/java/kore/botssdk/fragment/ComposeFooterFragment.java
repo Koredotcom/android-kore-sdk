@@ -45,6 +45,7 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.Utils;
 
 import static android.app.Activity.RESULT_OK;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
@@ -162,6 +163,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         });
         audio_speak_tts.setOnClickListener(onTTSEnableSwitchClickListener);
         rec_audio_img.setOnClickListener(onVoiceModeActivated);
+
     }
 
     private void toggleTTSButton() {
@@ -190,6 +192,9 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
         this.ttsUpdate = ttsUpdate;
+        if (ttsUpdate != null) {
+            ttsUpdate.ttsUpdateListener(isTTSEnabled);
+        }
     }
 
     @Override
@@ -247,8 +252,12 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
                 animateLayoutVisible(mainContentLayout);
+
                 animateLayoutGone(defaultFooterLayout);
+                editTextMessage.requestFocus();
+                Utility.showVirtualKeyboard(getActivity(),editTextMessage);
         }
     };
 
@@ -326,17 +335,18 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 //            rec_audio_img.setImageResource(R.drawable.mic_btn_active);
 //            mRecordingThread.startRecording();
 //            editTextMessage.setHint("Start talking...");
-            showTapToSpeakFragment();
+            onRecordAudioPermissionGranted();
         }
     }
 
     private void showTapToSpeakFragment() {
         stopTTS();
-        Utility.hideVirtualKeyboard(getActivity());
         editTextMessage.setEnabled(false);
         animateLayoutVisible(mainContentLayout);
         animateLayoutGone(defaultFooterLayout);
+
         promptSpeechInput();
+        Utility.showVirtualKeyboard(getActivity(),mainContentLayout);
    /*     rec_audio_img.setVisibility(View.GONE);
 
         tapToSpeakFragment = new TapToSpeakFragment();

@@ -45,7 +45,7 @@ public class BotHomeActivity extends AppCompatActivity {
     private void findViews() {
 
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
-        launchBotBtn.setText("Talk to "+ SDKConfiguration.Client.bot_name);
+        launchBotBtn.setText(SDKConfiguration.Client.bot_name);
     }
 
     private void setListeners() {
@@ -114,6 +114,7 @@ public class BotHomeActivity extends AppCompatActivity {
         //This should not be null
         bundle.putString(BundleUtils.JWT_TOKEN, jwt);
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS,SDKConfiguration.Client.bot_name.charAt(0)+"");
         intent.putExtras(bundle);
 
         startActivity(intent);

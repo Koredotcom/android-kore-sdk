@@ -76,6 +76,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
+    boolean isItFirstConnect = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,6 +223,10 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
         //By sending null initiating sending which are un-delivered in pool
         botClient.sendMessage(null, null, null);
+        if(isItFirstConnect && SDKConfiguration.TRIGGER_INIT_MESSAGE) {
+            botClient.sendMessage(SDKConfiguration.INIT_MESSAGE, chatBot, taskBotId);
+            isItFirstConnect = false;
+        }
         updateTitleBar(SocketConnectionEventStates.CONNECTED);
     }
 
@@ -377,7 +382,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             if (componentModel != null) {
                 String compType = componentModel.getType();
                 PayloadOuter payOuter = componentModel.getPayload();
-                if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+                if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType) || payOuter.getType() == null) {
                     botResponseTextualFormat = payOuter.getText();
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
                     botResponseTextualFormat = payOuter.getPayload().getText();

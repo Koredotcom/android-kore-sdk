@@ -85,7 +85,11 @@ public class PieChartView extends ViewGroup {
         dataSet.setSelectionShift(5);
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for(int c : ColorTemplate.VORDIPLOM_COLORS)
+        String[] colorsArray = this.getResources().getStringArray(R.array.color_set);
+        for(String color : colorsArray){
+            colors.add(Color.parseColor(color));
+        }
+/*        for(int c : ColorTemplate.VORDIPLOM_COLORS)
             colors.add(c);
         for(int c : ColorTemplate.JOYFUL_COLORS)
             colors.add(c);
@@ -94,9 +98,9 @@ public class PieChartView extends ViewGroup {
         for(int c : ColorTemplate.LIBERTY_COLORS)
             colors.add(c);
         for(int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
+            colors.add(c);*/
 
-        colors.add(ColorTemplate.getHoloBlue());
+
 
         dataSet.setColors(colors);
 
@@ -104,7 +108,7 @@ public class PieChartView extends ViewGroup {
         data.setDataSet(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.GRAY);
+        data.setValueTextColor(Color.WHITE);
 
         mChart.setData(data);
         mChart.highlightValues(null);

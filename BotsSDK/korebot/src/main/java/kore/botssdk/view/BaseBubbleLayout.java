@@ -52,6 +52,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected boolean isGroupMessage = true;
     private Point triangleCoordA, triangleCoordB, triangleCoordC;
     private Point lineStart, lineEnd;
+    private int linkTextColor;
 
     protected int[] textMediaDimen;
     protected int[] maxBubbleDimen;
@@ -205,17 +206,18 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     }
 
 
+    abstract int getLinkTextColor();
     private void viewAddition() {
         ownLayoutInflater = LayoutInflater.from(context);
 
         // Bubble Text Media
-        bubbleTextMediaLayout = new TextMediaLayout(context);
-
+        bubbleTextMediaLayout = new TextMediaLayout(context,getLinkTextColor());
         bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
         bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
+      /*  bubbleTextMediaLayout.setLinkTextColor(getLinkTextColor());*/
         addView(bubbleTextMediaLayout);
 
         botListTemplateView = new BotListTemplateView(getContext());
@@ -611,4 +613,6 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     public void setDoDrawBubbleBackground(boolean doDrawBubbleBackground) {
         this.doDrawBubbleBackground = doDrawBubbleBackground;
     }
+
+
 }

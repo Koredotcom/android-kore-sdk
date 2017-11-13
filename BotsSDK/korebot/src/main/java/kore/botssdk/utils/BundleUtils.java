@@ -7,6 +7,7 @@ package kore.botssdk.utils;
 public class BundleUtils {
 
     public static String BOT_NAME = "chatBot";
+    public static String BOT_NAME_INITIALS ="bot_initials";
     public static String CHANNEL_ICON_URL = "CHANNEL_ICON_URL";
     public static String BOT_ID = "taskBotId";
     public static String SHOW_PROFILE_PIC = "showProfilePic";

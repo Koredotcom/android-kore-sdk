@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 
+import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -37,6 +38,9 @@ public class SendBubbleLayout extends BaseBubbleLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
+    public int getLinkTextColor() {
+        return getResources().getColor(R.color.right_bubble_text_color);
+    }
 
     private void init() {
         textMediaLayoutGravity = TextMediaLayout.GRAVITY_RIGHT;
@@ -50,7 +54,7 @@ public class SendBubbleLayout extends BaseBubbleLayout {
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) (1 * dp1);
         } else {
-            BUBBLE_TOP_BORDER = (int) (14 * dp1 + 1 * dp1);
+            BUBBLE_TOP_BORDER = (int) (1 * dp1 + 14 * dp1);
         }
         BUBBLE_LEFT_BORDER = 0;
         BUBBLE_RIGHT_BORDER = (int) (2 * dp6 + dp6 + 2 * dp1);

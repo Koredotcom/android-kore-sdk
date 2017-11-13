@@ -56,6 +56,7 @@ public class HeaderLayout extends ViewGroup {
         //Add a textView
         headerTextView = new TextView(getContext());
         headerTextView.setLinkTextColor(getResources().getColor(R.color.mentionsAndHashTagColor));
+        headerTextView.setTextColor(getContext().getColor(R.color.footer_color_dark_grey));
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

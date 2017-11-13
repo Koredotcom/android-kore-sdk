@@ -22,6 +22,7 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.CircularProfileView;
@@ -46,6 +47,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
 
     boolean shallShowProfilePic;
     private String mChannelIconURL;
+    private String mBotNameInitials;
     private TTSUpdate ttsUpdate;
 
     @Nullable
@@ -99,6 +101,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         if (bundle != null) {
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
+            mBotNameInitials = bundle.getString(BundleUtils.BOT_NAME_INITIALS,"B");
         }
     }
 
@@ -147,7 +150,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
-        botTypingStatusIcon.populateLayout("B", mChannelIconURL, null, -1, 0, true);
+        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, 0, true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
     }
 
