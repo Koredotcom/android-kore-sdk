@@ -10,8 +10,9 @@
         android:layout_above="@+id/launchBotBtn"
         android:layout_height="150dp"
         android:scaleType="fitCenter"
+        android:visibility="gone"
         android:adjustViewBounds="true"
-        android:src="@drawable/mebot_logo"/>
+        android:src="@drawable/ic_launcher"/>
 
     <!-- Kore Bot -->
     <Button
