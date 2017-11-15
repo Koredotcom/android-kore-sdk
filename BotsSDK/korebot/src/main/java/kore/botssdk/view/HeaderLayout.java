@@ -16,7 +16,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 /**
  * Created by Pradeep Mahato on 08-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
+ * Copyright (c) 2014 Kore Inc. All rights reserved.headerla
  */
 public class HeaderLayout extends ViewGroup {
 
@@ -56,7 +56,7 @@ public class HeaderLayout extends ViewGroup {
         //Add a textView
         headerTextView = new TextView(getContext());
         headerTextView.setLinkTextColor(getResources().getColor(R.color.mentionsAndHashTagColor));
-        headerTextView.setTextColor(getContext().getColor(R.color.footer_color_dark_grey));
+        headerTextView.setTextColor(getContext().getResources().getColor(R.color.footer_color_dark_grey));
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
