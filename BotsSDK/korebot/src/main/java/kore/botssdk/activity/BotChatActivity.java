@@ -371,7 +371,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     private void stopTextToSpeech() {
-        ttsSynthesizer.stopTextToSpeech();
+        try {
+            ttsSynthesizer.stopTextToSpeech();
+        }catch (IllegalArgumentException exception){
+            exception.printStackTrace();
+        }
     }
 
     private void textToSpeech(BotResponse botResponse) {
