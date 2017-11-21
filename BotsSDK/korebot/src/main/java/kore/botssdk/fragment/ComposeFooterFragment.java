@@ -45,7 +45,6 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
-import kore.botssdk.utils.Utils;
 
 import static android.app.Activity.RESULT_OK;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
@@ -207,7 +206,16 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     }
 
     public interface ComposeFooterInterface {
+        /**
+         * @param message : Title and payload, Both are same
+         */
         void onSendClick(String message);
+
+        /**
+         * @param message : Title of the button
+         * @param payload : Payload to be send
+         */
+        void onSendClick(String message, String payload);
     }
 
     TextWatcher composeTextWatcher = new TextWatcher() {

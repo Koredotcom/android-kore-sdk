@@ -71,7 +71,8 @@ public class CarouselItemViewHelper {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCaourselButtonModel.getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             String buttonPayload = botCaourselButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(buttonPayload);
+                            String buttonTitle = botCaourselButtonModel.getTitle();
+                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
                         }
                     }
                 }

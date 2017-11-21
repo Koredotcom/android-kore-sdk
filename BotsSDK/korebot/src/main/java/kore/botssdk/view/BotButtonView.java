@@ -81,8 +81,9 @@ public class BotButtonView extends ViewGroup {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
                         } else {
-                            String message = botButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(message);
+                            String title = botButtonModel.getTitle();
+                            String payload = botButtonModel.getPayload();
+                            composeFooterInterface.onSendClick(title, payload);
                         }
                     }
                 }

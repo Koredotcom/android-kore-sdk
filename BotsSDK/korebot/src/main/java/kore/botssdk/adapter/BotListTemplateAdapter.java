@@ -111,7 +111,9 @@ public class BotListTemplateAdapter extends BaseAdapter {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
-                            composeFooterInterface.onSendClick(botListElementButton.getPayload());
+                            String listElementButtonPayload = botListElementButton.getPayload();
+                            String listElementButtonTitle = botListElementButton.getTitle();
+                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload);
                         }
                     }
                 }

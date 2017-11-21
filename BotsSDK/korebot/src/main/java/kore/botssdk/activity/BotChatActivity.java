@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import net.gotev.speech.Speech;
-
 import java.util.Date;
 
 import kore.botssdk.R;
@@ -263,9 +261,13 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
 
     @Override
     public void onSendClick(String message) {
+        onSendClick(message, message);
+    }
 
+    @Override
+    public void onSendClick(String message, String payload) {
         stopTextToSpeech();
-        botClient.sendMessage(message, chatBot, taskBotId);
+        botClient.sendMessage(payload, chatBot, taskBotId);
 
         if (botContentFragmentUpdate != null) {
             //Update the bot content list with the send message
