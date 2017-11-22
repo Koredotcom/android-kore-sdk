@@ -80,11 +80,11 @@ public class TTSSynthesizer {
     };
 
     private void speakViaNative(String textualMessage) {
-        stopTextToSpeechNative();
+       // stopTextToSpeechNative();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_FLUSH, null, null);
+            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
         } else {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_FLUSH, null);
+            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null);
         }
     }
 

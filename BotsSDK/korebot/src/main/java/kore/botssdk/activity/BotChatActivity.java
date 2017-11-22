@@ -330,7 +330,6 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    stopTextToSpeech();
                     botContentFragment.setQuickRepliesIntoFooter(botResponse);
                     botContentFragment.addMessageToBotChatAdapter(botResponse);
                     textToSpeech(botResponse);
