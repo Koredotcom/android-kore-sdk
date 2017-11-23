@@ -4,10 +4,21 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.util.Base64;
+import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+
+import kore.botssdk.adapter.BotsChatAdapter;
+import kore.botssdk.autobahn.WebSocket;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.speechtotext.TtsWebSocketWrapper;
+import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
  * Created by Pradeep Mahato on 19-May-17.
@@ -19,11 +30,34 @@ public class TTSSynthesizer {
     private TextToSpeech textToSpeech;
 
     private Context context;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    public static String LOG_TAG = TTSSynthesizer.class.getSimpleName();
+    public ArrayList<String> que = new ArrayList<>();
+
+
 
     public TTSSynthesizer(Context context) {
         this.context = context;
-        initNative(context);
+        if(!Constants.ENABLE_SDK) {
+            initNative(context);
+        }else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initializeWebSocket();
+                }
+            }, 400);
+            mediaPlayer.setOnPreparedListener(mediaPlayerOnPreparedListener);
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    que.remove(0);
+                    if(que.size() >0) {
+                        PlayAudio(que.get(0));
+                    }
+                }
+            });
+        }
     }
 
     public TextToSpeech initNative(Context context) {
@@ -40,40 +74,26 @@ public class TTSSynthesizer {
         return textToSpeech;
     }
 
-    public void speak(String textualMessage) {
+    public void speak(String textualMessage,String accessToken) {
         if (Constants.ENABLE_SDK) {
-            speakViaSDK(textualMessage);
+            speakViaSDK(textualMessage,accessToken);
         } else {
             speakViaNative(textualMessage);
         }
     }
 
-    private void speakViaSDK(String textualMessage) {
-        String modifiedTextualMessage = textualMessage.replace("\r\n","").replace(" ", "+").replace("++","+");
-        String url = "https://speech.kore.ai/tts/cgi-bin/speech?voice=salli&lang=en_us&text=" + modifiedTextualMessage;
+    private void initializeWebSocket(){
+        TtsWebSocketWrapper.getInstance(context).connect(sListener);
+    }
 
-        if (mediaPlayer == null) {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setOnPreparedListener(mediaPlayerOnPreparedListener);
-        }
-
-        try {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            stopTextToSpeechSDK();
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepareAsync();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void speakViaSDK(String textualMessage,String accessToken) {
+        TtsWebSocketWrapper.getInstance(context).sendMessage(textualMessage,accessToken);
     }
 
     MediaPlayer.OnPreparedListener mediaPlayerOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
             if (mp != null) {
-                stopTextToSpeechSDK();
                 mp.start();
             }
         }
@@ -97,6 +117,7 @@ public class TTSSynthesizer {
     }
 
     private void stopTextToSpeechSDK() {
+        que.clear();
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.reset();
@@ -108,5 +129,50 @@ public class TTSSynthesizer {
             textToSpeech.stop();
         }
     }
+    SocketConnectionListener sListener = new SocketConnectionListener() {
+        @Override
+        public void onOpen() {
+            Log.d(LOG_TAG, "Connection opened");
 
+        }
+
+        @Override
+        public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+            Log.d(LOG_TAG, "Connection closed reason " + reason);
+        }
+
+        @Override
+        public void onTextMessage(String payload) {
+            Log.d(LOG_TAG, "Message received is 1 " + payload);
+        }
+
+        @Override
+        public void onRawTextMessage(byte[] payload) {
+            Log.d(LOG_TAG, "Message received is 2 " + payload);
+        }
+
+        @Override
+        public void onBinaryMessage(byte[] payload) {
+            Log.d(LOG_TAG, "Message received is 3 " + payload);
+            String audio = Base64.encodeToString(payload,
+                    Base64.NO_WRAP);
+            que.add(audio);
+            if(!mediaPlayer.isPlaying()  && que.size() <=1) {
+                PlayAudio(audio);
+            }
+        }
+    };
+    public void PlayAudio(String audio){
+        try
+        {
+            String url = "data:audio/mp3;base64,"+audio;
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.setDataSource(url);
+            mediaPlayer.prepare();
+        }
+        catch(Exception ex){
+            System.out.print(ex.getMessage());
+        }
+    }
 }

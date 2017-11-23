@@ -19,6 +19,8 @@ import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
 
+import static kore.botssdk.net.RestRequest.accessTokenHeader;
+
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -43,6 +45,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private String uuId;
     private String chatBotName;
     private String taskBotId;
+    private String auth;
 
     private Context mContext;
 
@@ -52,6 +55,10 @@ public final class SocketWrapper extends BaseSpiceManager {
     private SocketWrapper(Context mContext) {
         start(mContext);
         this.mContext = mContext;
+    }
+
+    public String getAccessToken(){
+        return accessTokenHeader(auth);
     }
 
     /**
@@ -114,6 +121,8 @@ public final class SocketWrapper extends BaseSpiceManager {
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
+                auth = jwtGrant.getAuthorization().getAccessToken();
+                this.accessToken = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
@@ -179,6 +188,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                auth = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
                 return rtmUrl;
@@ -348,6 +358,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                auth = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
                 return rtmUrl;

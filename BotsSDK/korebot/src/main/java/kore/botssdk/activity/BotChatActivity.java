@@ -114,6 +114,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         setupTextToSpeech();
 
         connectToWebSocketAnonymous();
+
     }
 
     @Override
@@ -189,6 +190,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         botClient.connectAsAnonymousUser(jwt, SDKConfiguration.Client.client_id, chatBot, taskBotId, BotChatActivity.this);
         updateTitleBar(SocketConnectionEventStates.CONNECTING);
     }
+
+
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
@@ -410,7 +413,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     }
                 }
-                ttsSynthesizer.speak(botResponseTextualFormat.replaceAll("\\<.*?>",""));
+                ttsSynthesizer.speak(botResponseTextualFormat.replaceAll("\\<.*?>",""),botClient.getAccessToken());
             }
         }
     }
