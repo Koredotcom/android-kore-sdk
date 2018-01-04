@@ -24,6 +24,12 @@ public class AppControl {
     public static AppControl getInstance() {
         return singleton;
     }
+    public static AppControl getInstance(Context mContext) {
+        if(singleton == null){
+            singleton = new AppControl(mContext);
+        }
+        return singleton;
+    }
 
     public DimensionUtil getDimensionUtil() {
         return dimensionUtil;

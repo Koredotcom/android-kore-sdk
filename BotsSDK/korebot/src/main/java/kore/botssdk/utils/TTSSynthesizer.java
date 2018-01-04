@@ -33,6 +33,7 @@ public class TTSSynthesizer {
     private MediaPlayer mediaPlayer = new MediaPlayer();
     public static String LOG_TAG = TTSSynthesizer.class.getSimpleName();
     public ArrayList<String> que = new ArrayList<>();
+    public boolean ttsEnabled;
 
 
 
@@ -174,5 +175,13 @@ public class TTSSynthesizer {
         catch(Exception ex){
             System.out.print(ex.getMessage());
         }
+    }
+
+    public boolean isTtsEnabled() {
+        return ttsEnabled;
+    }
+
+    public void setTtsEnabled(boolean ttsEnabled) {
+        this.ttsEnabled = ttsEnabled;
     }
 }
