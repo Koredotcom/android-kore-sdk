@@ -70,8 +70,9 @@ public class BotCarouselView extends ViewGroup {
 //            if (carouselViewpager.getAdapter() == null) {
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-                botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setAdapter(botCarouselAdapter);
+                botCarouselAdapter.notifyDataSetChanged();
+
 //            } else {
 //                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
 //                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
@@ -117,11 +118,15 @@ public class BotCarouselView extends ViewGroup {
         /*
          * For Carousel ViewPager Layout
          */
+        int childHeight = botCarouselAdapter != null ? botCarouselAdapter.getMaxChildHeight() : 0 ;
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        childHeightSpec = MeasureSpec.makeMeasureSpec(carouselViewHeight, MeasureSpec.AT_MOST);
+        childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeightSpec);
 
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        totalHeight += childHeight+ 10 * dp1;
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
+
+        super.onMeasure(widthMeasureSpec, parentHeightSpec);
     }
 
     @Override

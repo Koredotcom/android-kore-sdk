@@ -45,11 +45,11 @@ public class TextMediaLayout extends MediaLayout {
 
     public static int GRAVITY_LEFT = 0;
     public static int GRAVITY_RIGHT = 1;
-    int gravity = 0;
+   public int gravity = 0;
 
     public static int MATCH_PARENT = 0;
     public static int WRAP_CONTENT = 1;
-    int widthStyle = 0;
+    public int widthStyle = 0;
 
     float dp1;
     private Context mContext;

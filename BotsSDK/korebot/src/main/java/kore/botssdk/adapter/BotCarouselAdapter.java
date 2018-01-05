@@ -7,14 +7,19 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
+
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Pradeep Mahato on 14-July-17.
@@ -28,6 +33,7 @@ public class BotCarouselAdapter extends PagerAdapter {
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
+    ArrayList<Integer> heights = new ArrayList<>();
 
     public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface,
                               InvokeGenericWebViewInterface invokeGenericWebViewInterface,
@@ -54,20 +60,41 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((CardView) object);
+        return view == ((LinearLayout) object);
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
+    public Object instantiateItem(ViewGroup container, final int position) {
+        final View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
 
         CarouselItemViewHelper.initializeViewHolder(carouselItemLayout);
         CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, invokeGenericWebViewInterface, botCarouselModels.get(position), activityContext);
-
         container.addView(carouselItemLayout);
+        ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+        {
+            public boolean onPreDraw()
+            {
+                CarouselItemViewHelper.CarouselViewHolder holder = (CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag();
+                int height = (int)(holder.carouselItemImage.getMeasuredHeight() + holder.carouselItemSubTitle.getMeasuredHeight() + holder.carouselItemTitle.getMeasuredHeight() + (botCarouselModels.get(position).getButtons() != null ? botCarouselModels.get(position).getButtons().size() * 48 * dp1 :0) + 45 * dp1);
+                heights.add(height);
+                ViewGroup.LayoutParams layoutParams = holder.carouselItemRoot.getLayoutParams();
+                layoutParams.height = height;
+                holder.carouselItemRoot.setLayoutParams(layoutParams);
+                return true;
+            }
+        });
 
         return carouselItemLayout;
 
+    }
+
+    public int getMaxChildHeight(){
+        if(heights.size()>0) {
+            return Collections.max(heights);
+        }else{
+            return 0;
+        }
     }
 
     public void setBotCarouselModels(ArrayList<BotCarouselModel> botCarouselModels) {
@@ -85,7 +112,7 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((CardView) object);
+        container.removeView((LinearLayout) object);
     }
 
 }

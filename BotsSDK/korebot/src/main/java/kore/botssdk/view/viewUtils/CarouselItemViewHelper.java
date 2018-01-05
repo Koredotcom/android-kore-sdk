@@ -26,10 +26,11 @@ import kore.botssdk.utils.BundleConstants;
 public class CarouselItemViewHelper {
 
     public static class CarouselViewHolder {
-        ImageView carouselItemImage;
-        TextView carouselItemTitle, carouselItemSubTitle;
+        public ImageView carouselItemImage;
+        public TextView carouselItemTitle;
+        public TextView carouselItemSubTitle;
         ListView carouselButtonListview;
-        CardView carouselItemRoot;
+        public CardView carouselItemRoot;
     }
 
     public static void initializeViewHolder(View view) {
@@ -57,8 +58,12 @@ public class CarouselItemViewHelper {
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
             carouselViewHolder.carouselItemSubTitle.setText(botCarouselModel.getSubtitle());
 
-            Picasso.with(activityContext).load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
-
+            try {
+                if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty())
+                    Picasso.with(activityContext).load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
