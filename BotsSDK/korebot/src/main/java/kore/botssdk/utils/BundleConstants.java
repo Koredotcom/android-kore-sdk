@@ -18,4 +18,5 @@ public class BundleConstants {
 
     public static String BUTTON_TYPE_POSTBACK = "postback";
     public static String BUTTON_TYPE_WEB_URL = "web_url";
+    public static String BUTTON_TYPE_USER_INTENT = "UserIntent";
 }
