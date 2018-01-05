@@ -53,6 +53,9 @@ public class BotClient {
         return SocketWrapper.getInstance(mContext).getAccessToken();
     }
 
+    public  String getUserId(){
+        return SocketWrapper.getInstance(mContext).getBotUserId();
+    }
     /**
      * [MANDATORY] Invoke this method to disconnect the previously connected socket connection.
      */

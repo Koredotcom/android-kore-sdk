@@ -10,7 +10,7 @@ import java.util.Map;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotUserInfo {
-    private String id;
+    private String userId;
     private String enrollType;
     private List<Object> roles = new ArrayList<Object>();
     private PwdChangeRequire pwdChangeRequire;
@@ -23,21 +23,6 @@ public class BotUserInfo {
     private String profImage;
     private String profColour;
     private Boolean isFirstTimeLogin;
-    /**
-     * @return
-     * The id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     * The id
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * @return
@@ -230,5 +215,13 @@ public class BotUserInfo {
      */
     public void setIsFirstTimeLogin(Boolean isFirstTimeLogin) {
         this.isFirstTimeLogin = isFirstTimeLogin;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

@@ -46,6 +46,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private String chatBotName;
     private String taskBotId;
     private String auth;
+    private String botUserId;
 
     private Context mContext;
 
@@ -58,7 +59,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     }
 
     public String getAccessToken(){
-        return accessTokenHeader(auth);
+        return auth;
     }
 
     /**
@@ -123,6 +124,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
                 auth = jwtGrant.getAuthorization().getAccessToken();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                botUserId = jwtGrant.getUserInfo().getUserId();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
@@ -186,7 +188,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
-                String userId = jwtGrant.getUserInfo().getId();
+                botUserId = jwtGrant.getUserInfo().getUserId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
                 auth = jwtGrant.getAuthorization().getAccessToken();
 
@@ -356,10 +358,9 @@ public final class SocketWrapper extends BaseSpiceManager {
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
-                String userId = jwtGrant.getUserInfo().getId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
                 auth = jwtGrant.getAuthorization().getAccessToken();
-
+                botUserId = jwtGrant.getUserInfo().getUserId();
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
                 return rtmUrl;
             }
@@ -438,4 +439,11 @@ public final class SocketWrapper extends BaseSpiceManager {
         }
     }
 
+    public String getBotUserId() {
+        return botUserId;
+    }
+
+    public void setBotUserId(String botUserId) {
+        this.botUserId = botUserId;
+    }
 }
