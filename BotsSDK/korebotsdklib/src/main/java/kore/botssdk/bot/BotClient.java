@@ -86,6 +86,7 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+            botMessage.setAuthorization("bearer " + getAccessToken());
             botPayLoad.setMessage(botMessage);
 
             BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);

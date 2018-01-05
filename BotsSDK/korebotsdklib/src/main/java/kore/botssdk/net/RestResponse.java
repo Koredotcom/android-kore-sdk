@@ -93,6 +93,7 @@ public class RestResponse {
 
     public static class BotMessage {
         private String body;
+        private String authInfo;
         private ArrayList<Objects> attachments = new ArrayList<>();
 
         public BotMessage(String body) {
@@ -109,6 +110,14 @@ public class RestResponse {
 
         public String getBody() {
             return body;
+        }
+
+        public String getAuthorization() {
+            return authInfo;
+        }
+
+        public void setAuthorization(String authorization) {
+            this.authInfo = authorization;
         }
     }
 
