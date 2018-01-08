@@ -33,7 +33,7 @@ public class TTSSynthesizer {
     private MediaPlayer mediaPlayer = new MediaPlayer();
     public static String LOG_TAG = TTSSynthesizer.class.getSimpleName();
     public ArrayList<String> que = new ArrayList<>();
-    public boolean ttsEnabled;
+    public boolean ttsEnabled = true;
 
 
 
@@ -183,5 +183,8 @@ public class TTSSynthesizer {
 
     public void setTtsEnabled(boolean ttsEnabled) {
         this.ttsEnabled = ttsEnabled;
+        if(!ttsEnabled){
+            stopTextToSpeech();
+        }
     }
 }
