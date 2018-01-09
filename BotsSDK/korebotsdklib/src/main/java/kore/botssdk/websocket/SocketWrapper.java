@@ -1,6 +1,7 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -9,6 +10,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.autobahn.WebSocketConnection;
@@ -33,6 +36,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private SocketConnectionListener socketConnectionListener = null;
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
+    private static Timer timer = new Timer();
 
     private String url;
     private URI uri;
@@ -154,8 +158,6 @@ public final class SocketWrapper extends BaseSpiceManager {
      *
      * These keys are generated from bot admin console
      * @param clientId : generated clientId
-     * @param uuid : uuid associated with the specific client
-     * @param jwtGrant : jwt access token
      */
     public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
 
@@ -234,6 +236,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onOpen();
                         }
+                        startSendingPong();
                     }
 
                     @Override
@@ -242,9 +245,11 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
                         }
+                        if(timer != null)timer.cancel();
                         if (isConnected()) {
                             stop();
                         }
+
                     }
 
                     @Override
@@ -275,6 +280,22 @@ public final class SocketWrapper extends BaseSpiceManager {
                 e.printStackTrace();
             }
         }
+    }
+    private void startSendingPong(){
+        TimerTask tTask = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    if (mConnection != null && mConnection.isConnected()) {
+                        mConnection.sendTextMessage("pong from the client");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        timer.scheduleAtFixedRate(tTask, 1000L,1000L);
     }
 
     /**
