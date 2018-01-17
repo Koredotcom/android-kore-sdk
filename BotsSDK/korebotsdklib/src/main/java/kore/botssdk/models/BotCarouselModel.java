@@ -32,8 +32,37 @@ public class BotCarouselModel {
 
     String image_url = "";
     String subtitle;
+
+    String price;
+    String cost_price;
+    String saved_price;
     BotListDefaultModel default_action;
+
     ArrayList<BotCaourselButtonModel> buttons;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getCost_price() {
+        return cost_price;
+    }
+
+    public String getSaved_price() {
+        return saved_price;
+    }
+
+    public void setSaved_price(String saved_price) {
+        this.saved_price = saved_price;
+    }
+    public void setCost_price(String cost_price) {
+        this.cost_price = cost_price;
+    }
+
 
     public String getTitle() {
         return title;

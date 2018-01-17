@@ -108,7 +108,12 @@ public class PayloadInner {
                 Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
                 }.getType();
                 carouselElements = gson.fromJson(elementsAsString, carouselType);
-            } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+            }else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
+                Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
+                }.getType();
+                carouselElements = gson.fromJson(elementsAsString, carouselType);
+            }
+            else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
                 Type listType = new TypeToken<ArrayList<BotListModel>>() {
                 }.getType();
                 listElements = gson.fromJson(elementsAsString, listType);
@@ -131,9 +136,9 @@ public class PayloadInner {
     }
 
     private void templateValidator() throws JsonSyntaxException {
-        if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+        if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
             if (elements != null) {
-                if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
+                if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
                     for (int i = 0; i < carouselElements.size(); i++) {
                         BotCarouselModel carouselElement = carouselElements.get(i);
                         if (carouselElement.getTitle() == null || carouselElement.getImage_url() == null) {

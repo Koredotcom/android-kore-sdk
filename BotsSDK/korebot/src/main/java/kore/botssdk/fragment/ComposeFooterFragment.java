@@ -175,7 +175,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message);
+            composeFooterInterface.onSendClick(message.trim());
             if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");

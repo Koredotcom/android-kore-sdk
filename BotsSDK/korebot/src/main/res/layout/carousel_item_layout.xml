@@ -43,6 +43,57 @@
                 android:src="@mipmap/imageplaceholder_left"
                 android:scaleType="fitXY" />
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/carousel_item_image"
+                android:id="@+id/offer_price_fl"
+                android:background="@drawable/offer_layout"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/carousel_item_offer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingTop="2dp"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    android:textColor="@color/bubbleFileName"
+                    android:textStyle="normal" />
+
+            </FrameLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/carousel_item_image"
+                android:id="@+id/saved_price_fl"
+                android:background="@drawable/save_layout"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/carousel_item_saved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingTop="2dp"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    android:textColor="@color/white"
+                    android:textStyle="normal" />
+
+            </FrameLayout>
+
             <TextView
                 android:id="@+id/carousel_item_title"
                 android:layout_width="match_parent"
@@ -70,7 +121,6 @@
                 android:ellipsize="end"
                 android:maxLines="3"
                 android:gravity="center_horizontal"
-                android:paddingBottom="5dp"
                 android:paddingLeft="7dp"
                 android:paddingRight="7dp"
                 android:textColor="#8b93a0"

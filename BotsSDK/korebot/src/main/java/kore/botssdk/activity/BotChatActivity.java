@@ -411,18 +411,24 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                     if (payInner.getSpeech_hint() != null) {
                         botResponseTextualFormat = payInner.getSpeech_hint();
 //                        ttsSynthesizer.speak(botResponseTextualFormat);
-                    } else if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botResponseTextualFormat = payInner.getText();
-                    } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botResponseTextualFormat = payInner.getText();
-                    } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        } else if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                            botResponseTextualFormat = payInner.getText();
+                        } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                            botResponseTextualFormat = payInner.getText();
+                        } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                            botResponseTextualFormat = payInner.getText();
+                        } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(payInner.getTemplate_type())) {
+                            botResponseTextualFormat = payInner.getText();
+                        }
+                        else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                            botResponseTextualFormat = payInner.getText();
+                        }
                     }
                 }
                 ttsSynthesizer.speak(botResponseTextualFormat.replaceAll("\\<.*?>",""),botClient.getAccessToken());
             }
         }
-    }
+
 
     private void toggleQuickRepliesVisiblity(boolean visible){
         if (visible) {

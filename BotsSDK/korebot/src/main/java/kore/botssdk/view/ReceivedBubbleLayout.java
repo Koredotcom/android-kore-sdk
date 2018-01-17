@@ -164,53 +164,54 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         botButtonView.setVisibility(View.GONE);
 
         if (compModel != null) {
-            if (compModel != null) {
-                String compType = compModel.getType();
-                PayloadOuter payOuter = compModel.getPayload();
-                PayloadInner payInner;
-                if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                    Gson gson = new Gson();
-                    payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
-                }
-                payInner = payOuter.getPayload();
+            String compType = compModel.getType();
+            PayloadOuter payOuter = compModel.getPayload();
+            PayloadInner payInner;
+            if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                Gson gson = new Gson();
+                payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+            }
+            payInner = payOuter.getPayload();
 
-                if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
+            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
 
-                    if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botButtonView.setVisibility(View.VISIBLE);
-                        botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                        botButtonView.populateButtonList(payInner.getButtons());
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
-                    } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
-                    } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botCarouselView.setVisibility(View.VISIBLE);
-                        botCarouselView.populateCarouselView(payInner.getCarouselElements());
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
-                        if(!isDoDrawBubbleBackground()){
-                            cpvSenderImage.setVisibility(GONE);
+                if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    botButtonView.setVisibility(View.VISIBLE);
+                    botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
+                    botButtonView.populateButtonList(payInner.getButtons());
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
+                } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
+                } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    botCarouselView.setVisibility(View.VISIBLE);
+                    botCarouselView.populateCarouselView(payInner.getCarouselElements());
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
+                    if(!isDoDrawBubbleBackground()){
+                        cpvSenderImage.setVisibility(GONE);
+                    }
+                } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    botListTemplateView.setVisibility(View.VISIBLE);
+                    botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
+                    botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
+                }else if(BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                    botPieChartView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
+                    if(elementModels != null && !elementModels.isEmpty()) {
+                        ArrayList<String > xVal = new ArrayList<>(elementModels.size());
+                        ArrayList<Entry> yVal = new ArrayList<>(elementModels.size());
+                        for(int i=0; i < elementModels.size(); i++){
+                            xVal.add(elementModels.get(i).getTitle());
+                            yVal.add(new Entry((float)elementModels.get(i).getValue(),i));
                         }
+                        botPieChartView.populatePieChart("", xVal,yVal);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                         botListTemplateView.setVisibility(View.VISIBLE);
                         botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
                         botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
-                    }else if(BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())){
-                        botPieChartView.setVisibility(View.VISIBLE);
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
-                        if(elementModels != null && !elementModels.isEmpty()) {
-                            ArrayList<String > xVal = new ArrayList<>(elementModels.size());
-                            ArrayList<Entry> yVal = new ArrayList<>(elementModels.size());
-                            for(int i=0; i < elementModels.size(); i++){
-                                xVal.add(elementModels.get(i).getTitle());
-                                yVal.add(new Entry((float)elementModels.get(i).getValue(),i));
-                            }
-                            botPieChartView.populatePieChart("", xVal,yVal);
-
-                        }
                     }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
                         tableView.setVisibility(View.VISIBLE);
                         bubbleTextMediaLayout.populateText(payInner.getText());
