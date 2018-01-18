@@ -120,7 +120,10 @@ public class CarouselItemViewHelper {
 
             if(!Utils.isNullOrEmpty(botCarouselModel.getPrice()) || !Utils.isNullOrEmpty(botCarouselModel.getCost_price())) {
                 carouselViewHolder.carouselOfferPrice_FL.setVisibility(View.VISIBLE);
-                carouselViewHolder.carousel_item_offer.setText(ssBuilder);
+                if(!Utils.isNullOrEmpty(botCarouselModel.getCost_price()))
+                    carouselViewHolder.carousel_item_offer.setText(ssBuilder);
+                else
+                    carouselViewHolder.carousel_item_offer.setText(text);
             }else{
                 carouselViewHolder.carouselOfferPrice_FL.setVisibility(View.GONE);
             }
