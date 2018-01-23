@@ -64,9 +64,11 @@ public class CarouselItemViewHelper {
             }catch (Exception e){
                 e.printStackTrace();
             }
-            BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
-            carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
-            botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            if(botCarouselModel.getButtons() != null) {
+                BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
+                carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
+                botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            }
             carouselViewHolder.carouselButtonListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

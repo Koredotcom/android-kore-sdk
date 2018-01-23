@@ -74,9 +74,11 @@ public class CarouselFragment extends Fragment {
 
             Picasso.with(getActivity()).load(botCarouselModel.getImage_url()).into(carouselItemImage);
 
-            BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getActivity());
-            carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
-            botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            if(botCarouselModel.getButtons() != null) {
+                BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getActivity());
+                carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
+                botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            }
         }
     }
 
