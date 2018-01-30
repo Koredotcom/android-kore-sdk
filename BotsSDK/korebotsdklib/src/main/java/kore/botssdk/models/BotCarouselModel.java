@@ -9,6 +9,27 @@ import java.util.ArrayList;
 public class BotCarouselModel {
 
     String title = "";
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public void setDefault_action(BotListDefaultModel default_action) {
+        this.default_action = default_action;
+    }
+
+    public void setButtons(ArrayList<BotCaourselButtonModel> buttons) {
+        this.buttons = buttons;
+    }
+
     String image_url = "";
     String subtitle;
     BotListDefaultModel default_action;

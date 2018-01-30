@@ -5,6 +5,14 @@ package kore.botssdk.models;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotListDefaultModel {
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     String type;
     String url;
     String webview_height_ratio;

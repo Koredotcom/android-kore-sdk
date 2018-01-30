@@ -12,10 +12,19 @@ import java.util.ArrayList;
  */
 public class PayloadInner {
 
+    public void setTemplate_type(String template_type) {
+        this.template_type = template_type;
+    }
+
     private String template_type;
     private String text;
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
+
+    public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
+        this.carouselElements = carouselElements;
+    }
+
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
@@ -41,6 +50,15 @@ public class PayloadInner {
 
 
     private BotTableDataModel data;
+
+    public Object getElements() {
+        return elements;
+    }
+
+    public void setElements(Object elements) {
+        this.elements = elements;
+    }
+
     private Object elements = null;
     private String elementsAsString;
     private String color = "#000000";
