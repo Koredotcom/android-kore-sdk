@@ -2,13 +2,17 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
@@ -17,7 +21,11 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
+
+import static android.view.View.GONE;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -29,6 +37,10 @@ public class CarouselItemViewHelper {
         public ImageView carouselItemImage;
         public TextView carouselItemTitle;
         public TextView carouselItemSubTitle;
+        public TextView hashTagsView;
+        public TextView knowledgeType;
+        public TextView knowledgeMode;
+        public RelativeLayout koraItems;
         ListView carouselButtonListview;
         public CardView carouselItemRoot;
     }
@@ -41,6 +53,11 @@ public class CarouselItemViewHelper {
         carouselViewHolder.carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
         carouselViewHolder.carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
         carouselViewHolder.carouselButtonListview = (ListView) view.findViewById(R.id.carousel_button_listview);
+
+        carouselViewHolder.hashTagsView = (TextView) view.findViewById(R.id.hash_tags_view);
+        carouselViewHolder.knowledgeType = (TextView) view.findViewById(R.id.knowledge_type);
+        carouselViewHolder.knowledgeMode = (TextView) view.findViewById(R.id.knowledge_mode);
+        carouselViewHolder.koraItems = (RelativeLayout) view.findViewById(R.id.kora_items);
 
         view.setTag(carouselViewHolder);
     }
@@ -80,6 +97,8 @@ public class CarouselItemViewHelper {
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
                             composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                        }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
+                            invokeGenericWebViewInterface.handleUserActions(((KnowledgeDetailModel)botCarouselModel).getId(),botCaourselButtonModel.getType());
                         }
                     }
                 }
@@ -100,6 +119,48 @@ public class CarouselItemViewHelper {
                     }
                 }
             });
+            if(botCarouselModel instanceof KnowledgeDetailModel){
+
+                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getImage_url())) {
+                    carouselViewHolder.carouselItemImage.setVisibility(GONE);
+                } else {
+                    carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
+                }
+
+
+                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getTitle())) {
+                    carouselViewHolder.carouselItemTitle.setVisibility(GONE);
+                } else {
+                    carouselViewHolder.carouselItemTitle.setVisibility(View.VISIBLE);
+                }
+
+                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getSubtitle())) {
+                    carouselViewHolder.carouselItemSubTitle.setVisibility(GONE);
+                } else {
+                    carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
+                }
+
+                carouselViewHolder.carouselItemTitle.setGravity(Gravity.LEFT);
+                carouselViewHolder.carouselItemSubTitle.setGravity(Gravity.LEFT);
+                carouselViewHolder.koraItems.setVisibility(View.VISIBLE);
+                ArrayList<String> hashTags = ((KnowledgeDetailModel)botCarouselModel).getHashTag();
+                StringBuilder hashText = new StringBuilder();
+                if(hashTags != null && hashTags.size()> 0) {
+                    for (String tag : hashTags) {
+                        if(!tag.trim().isEmpty())
+                            hashText.append("  #").append(tag);
+                    }
+                    carouselViewHolder.hashTagsView.setText(hashText);
+                    carouselViewHolder.hashTagsView.setVisibility(View.VISIBLE);
+                }else{
+                    carouselViewHolder.hashTagsView.setVisibility(GONE);
+                }
+                carouselViewHolder.knowledgeType.setText(((KnowledgeDetailModel) botCarouselModel).getType());
+                carouselViewHolder.knowledgeMode.setText("private");
+            }else{
+                carouselViewHolder.koraItems.setVisibility(View.GONE);
+            }
+
         }
     }
 

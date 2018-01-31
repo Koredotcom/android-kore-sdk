@@ -356,6 +356,12 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     @Override
+    public void handleUserActions(String type, String payload) {
+
+
+    }
+
+    @Override
     public void ttsUpdateListener(boolean isTTSEnabled) {
         stopTextToSpeech();
     }

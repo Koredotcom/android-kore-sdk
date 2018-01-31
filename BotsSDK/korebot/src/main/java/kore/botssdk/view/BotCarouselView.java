@@ -65,13 +65,20 @@ public class BotCarouselView extends ViewGroup {
         carouselViewpager.setOffscreenPageLimit(3);
     }
 
-    public void populateCarouselView(ArrayList<BotCarouselModel> botCarouselModelArrayList) {
+    public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList) {
         if (composeFooterInterface != null && activityContext != null) {
 //            if (carouselViewpager.getAdapter() == null) {
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 carouselViewpager.setAdapter(botCarouselAdapter);
                 botCarouselAdapter.notifyDataSetChanged();
+        /*        for(int i=0;i<carouselViewpager.getChildCount();i++){
+                    View view = carouselViewpager.getChildAt(i).findViewById(R.id.carousel_item_root);
+                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                    layoutParams.height = botCarouselAdapter.getMaxChildHeight();
+                    view.setLayoutParams(layoutParams);
+                    invalidate();
+                }*/
 
 //            } else {
 //                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
@@ -121,9 +128,9 @@ public class BotCarouselView extends ViewGroup {
         int childHeight = botCarouselAdapter != null ? botCarouselAdapter.getMaxChildHeight() : 0 ;
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeightSpec);
+        MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeight != 0 ? childHeightSpec : wrapSpec);
 
-        totalHeight += childHeight+ 10 * dp1;
+        totalHeight += childHeight+getPaddingBottom()+getPaddingTop();
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, parentHeightSpec);

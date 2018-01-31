@@ -20,6 +20,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String COMPONENT_TYPE_TEXT = "text";
     public static final String COMPONENT_TYPE_ERROR = "error";
     public static final String COMPONENT_TYPE_MESSAGE = "message";
+    public static final String  TEMPLATE_TYPE_KORA_CAROUSAL = "kora_carousel";
 
     private String type;
     private BotInfoModel botInfo;

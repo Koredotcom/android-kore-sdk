@@ -6,4 +6,5 @@ package kore.botssdk.listener;
  */
 public interface InvokeGenericWebViewInterface {
     void invokeGenericWebView(String url);
+    void handleUserActions(String payload,String type);
 }

@@ -28,6 +28,7 @@ public class PayloadInner {
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
+    private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<String> headers;
 
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
@@ -120,6 +121,10 @@ public class PayloadInner {
                 }.getType();
                 lineChartDataModels = gson.fromJson(elementsAsString, listType);
 
+            }else if(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {
+                }.getType();
+                knowledgeDetailModels = gson.fromJson(elementsAsString, listType);
             }
         }
         templateValidator();
@@ -187,5 +192,13 @@ public class PayloadInner {
 
     public void setLineChartDataModels(ArrayList<BotLineChartDataModel> lineChartDataModels) {
         this.lineChartDataModels = lineChartDataModels;
+    }
+
+    public ArrayList<KnowledgeDetailModel> getKnowledgeDetailModels() {
+        return knowledgeDetailModels;
+    }
+
+    public void setKnowledgeDetailModels(ArrayList<KnowledgeDetailModel> knowledgeDetailModels) {
+        this.knowledgeDetailModels = knowledgeDetailModels;
     }
 }

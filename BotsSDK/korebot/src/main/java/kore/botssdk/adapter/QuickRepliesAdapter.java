@@ -64,7 +64,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
                     QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
                     if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getContent_type())) {
                         invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
-                    } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equals(quickReplyTemplate.getContent_type())){
+                    } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
                         invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                     }else {
                         String quickReplyTitle = quickReplyTemplate.getTitle();

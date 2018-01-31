@@ -295,7 +295,11 @@ public final class SocketWrapper extends BaseSpiceManager {
             }
         };
 
-        timer.scheduleAtFixedRate(tTask, 1000L,1000L);
+       try {
+           timer.scheduleAtFixedRate(tTask, 1000L, 1000L);
+       }catch(Exception e){
+           e.printStackTrace();
+       }
     }
 
     /**
