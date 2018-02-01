@@ -6,6 +6,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Ramachandra Pradeep on 12/15/2016.
@@ -18,6 +21,11 @@ public class PayloadInner {
 
     private String template_type;
     private String text;
+    private String table_design;
+
+    private List<List<String>> columns = null;
+    private ArrayList<BotTableDataModel> table_elements_data = null;
+
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
 
@@ -34,6 +42,8 @@ public class PayloadInner {
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
         return pieChartElements;
     }
+
+
 
     public void setPieChartElements(ArrayList<BotPieChartElementModel> pieChartElements) {
         this.pieChartElements = pieChartElements;
@@ -61,6 +71,7 @@ public class PayloadInner {
     }
 
     private Object elements = null;
+//    private Object columns = null;
     private String elementsAsString;
     private String color = "#000000";
 
@@ -130,6 +141,10 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {
                 }.getType();
                 knowledgeDetailModels = gson.fromJson(elementsAsString, listType);
+            }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)){
+                Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
+                }.getType();
+                table_elements_data = gson.fromJson(elementsAsString, tableType);
             }
         }
         templateValidator();
@@ -205,5 +220,20 @@ public class PayloadInner {
 
     public void setKnowledgeDetailModels(ArrayList<KnowledgeDetailModel> knowledgeDetailModels) {
         this.knowledgeDetailModels = knowledgeDetailModels;
+    }
+    public ArrayList<BotTableDataModel> getTable_elements_data() {
+        return table_elements_data;
+    }
+
+    public void setTable_elements_data(ArrayList<BotTableDataModel> table_elements_data) {
+        this.table_elements_data = table_elements_data;
+    }
+
+    public List<List<String>> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<List<String>> columns) {
+        this.columns = columns;
     }
 }

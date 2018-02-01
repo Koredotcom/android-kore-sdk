@@ -226,7 +226,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else{
                     bubbleTextMediaLayout.populateText(payOuter.getText());
-
+                    tableView.populateTableView(payInner);
                 }
             }
         }
