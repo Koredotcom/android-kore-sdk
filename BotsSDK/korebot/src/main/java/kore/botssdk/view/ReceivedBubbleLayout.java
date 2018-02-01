@@ -160,6 +160,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         botListTemplateView.populateListTemplateView(null, null);
 
         botListTemplateView.setVisibility(View.GONE);
+        botCarouselView.populateCarouselView(null);
         botCarouselView.setVisibility(View.GONE);
         botButtonView.setVisibility(View.GONE);
 
@@ -192,11 +193,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     if(!isDoDrawBubbleBackground()){
                         cpvSenderImage.setVisibility(GONE);
                     }
-                } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    botListTemplateView.setVisibility(View.VISIBLE);
-                    botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                    botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
-                }else if(BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                } else if(BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())){
                     botPieChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
@@ -208,26 +205,27 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                             yVal.add(new Entry((float)elementModels.get(i).getValue(),i));
                         }
                         botPieChartView.populatePieChart("", xVal,yVal);
-                    } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        botListTemplateView.setVisibility(View.VISIBLE);
-                        botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                        botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
-                    }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
-                        tableView.setVisibility(View.VISIBLE);
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        tableView.populateTableView(payInner);
-
-                    }else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())){
-                        lineChartView.setVisibility(View.VISIBLE);
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                        lineChartView.setData(payInner.getLineChartDataModels(),payInner.getHeaders());
                     }
+                }else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    botListTemplateView.setVisibility(View.VISIBLE);
+                    botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
+                    botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
+                }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
+                    tableView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    tableView.populateTableView(payInner);
+
+                }else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                    lineChartView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    lineChartView.setData(payInner.getLineChartDataModels(),payInner.getHeaders());
                 }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else{
                     bubbleTextMediaLayout.populateText(payOuter.getText());
-                    tableView.populateTableView(payInner);
                 }
+            }else{
+                bubbleTextMediaLayout.populateText(payOuter.getText());
             }
         }
 
@@ -300,8 +298,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For TableView
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
-        MeasureUtils.measure(tableView, childWidthSpec,childHeightSpec);
+//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(tableView, childWidthSpec,wrapSpec);
 
         /**
          * for line chart
@@ -315,8 +313,8 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For CarouselView
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
-        MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
+//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
