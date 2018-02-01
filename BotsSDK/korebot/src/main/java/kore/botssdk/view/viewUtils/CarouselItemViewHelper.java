@@ -46,7 +46,7 @@ public class CarouselItemViewHelper {
         public TextView knowledgeMode;
         public RelativeLayout koraItems;
         ListView carouselButtonListview;
-        CardView carouselItemRoot;
+        public CardView carouselItemRoot;
 
         FrameLayout carouselOfferPrice_FL,carouselSavedPrice_FL;
         TextView carousel_item_offer,carousel_item_save_price;

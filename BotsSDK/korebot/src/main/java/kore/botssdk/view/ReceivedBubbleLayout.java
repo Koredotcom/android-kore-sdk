@@ -215,7 +215,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
                         tableView.setVisibility(View.VISIBLE);
                         bubbleTextMediaLayout.populateText(payInner.getText());
-                        tableView.populateTableView(payInner.getData());
+                        tableView.populateTableView(payInner);
 
                     }else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())){
                         lineChartView.setVisibility(View.VISIBLE);
