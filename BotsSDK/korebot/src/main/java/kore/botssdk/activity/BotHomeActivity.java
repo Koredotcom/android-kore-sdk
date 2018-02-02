@@ -14,6 +14,8 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.util.UUID;
+
 import kore.botssdk.R;
 import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.BotRestService;
@@ -90,7 +92,7 @@ public class BotHomeActivity extends AppCompatActivity {
 
     private void getJWTToken(){
         JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
-                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+                SDKConfiguration.Client.client_secret,SDKConfiguration.Server.IS_ANONYMOUS_USER? UUID.randomUUID().toString():SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
         spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
