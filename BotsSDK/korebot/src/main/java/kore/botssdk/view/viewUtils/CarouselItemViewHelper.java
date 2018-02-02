@@ -98,7 +98,6 @@ public class CarouselItemViewHelper {
                 carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
                 botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
             }
-            Picasso.with(activityContext).load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
 
             String price = Utils.isNullOrEmpty(botCarouselModel.getPrice())?"":botCarouselModel.getPrice();
             String cost_price = Utils.isNullOrEmpty(botCarouselModel.getCost_price())?"":botCarouselModel.getCost_price();
