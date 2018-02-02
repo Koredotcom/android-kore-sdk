@@ -79,7 +79,7 @@ public class BotCarouselAdapter extends PagerAdapter {
             public boolean onPreDraw()
             {
                 CarouselItemViewHelper.CarouselViewHolder holder = (CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag();
-                int height = (int)(holder.carouselItemImage.getMeasuredHeight() + holder.carouselItemSubTitle.getMeasuredHeight() + holder.carouselItemTitle.getMeasuredHeight() + (botCarouselModels.get(position).getButtons() != null ? botCarouselModels.get(position).getButtons().size() * 48 * dp1 :0)+ 25 * dp1);
+                int height = (int)(holder.carouselItemImage.getMeasuredHeight() + holder.carouselItemSubTitle.getMeasuredHeight() + holder.carouselItemTitle.getMeasuredHeight() + (botCarouselModels.get(position).getButtons() != null ? botCarouselModels.get(position).getButtons().size() * 48 * dp1 :0)+ 45 * dp1);
                 if(botCarouselModels.get(position) instanceof KnowledgeDetailModel){
                     height = height+holder.hashTagsView.getMeasuredHeight()+(holder.knowledgeMode.getMeasuredHeight() > holder.knowledgeType.getMeasuredHeight() ? holder.knowledgeMode.getMeasuredHeight() : holder.knowledgeType.getMeasuredHeight());
                 }

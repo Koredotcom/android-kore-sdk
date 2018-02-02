@@ -20,8 +20,8 @@
                 android:id="@+id/carousel_button_listview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/kora_items"
                 android:divider="#efefef"
+                android:layout_alignParentBottom="true"
                 android:dividerHeight="1dp"
                 android:footerDividersEnabled="false"
                 android:headerDividersEnabled="true"
@@ -132,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/kora_items"
                 android:visibility="gone"
-                android:layout_below="@+id/carousel_image_detail_container"
+                android:layout_above="@+id/carousel_button_listview"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/hash_tags_view"
