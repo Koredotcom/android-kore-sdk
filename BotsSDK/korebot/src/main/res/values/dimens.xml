@@ -35,5 +35,7 @@
 
     <!--Line chart View-->
     <dimen name="line_layout_height">300dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
+    <dimen name="dimen_12dp">12dp</dimen>
 
 </resources>

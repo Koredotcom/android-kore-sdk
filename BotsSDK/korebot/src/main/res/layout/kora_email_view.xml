@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="307dp"
+        android:layout_height="280dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp">
+
+            <TextView
+                android:id="@+id/from_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="regular"
+                android:text="@string/label_from"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/from_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/from_label"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/from_label"
+                android:tag="regular"
+                android:textColor="@color/color_656ce7"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/to_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/from_label"
+                android:layout_below="@+id/from_label"
+                android:tag="regular"
+                android:text="@string/label_to"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/to_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/to_label"
+                android:layout_below="@+id/from_label"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/to_label"
+                android:tag="regular"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/cc_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/to_label"
+                android:layout_below="@+id/to_label"
+                android:tag="regular"
+                android:text="@string/label_cc"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_14dp" />
+
+            <TextView
+                android:id="@+id/cc_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/cc_label"
+                android:layout_below="@+id/to_label"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/cc_label"
+                android:tag="regular"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="@dimen/dimen_14dp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:tag="bold"
+            android:textColor="@color/color_1a1a1a"
+            android:textSize="@dimen/dimen_14dp" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:tag="regular"
+            android:textColor="@color/color_8b93a0"
+            android:textSize="@dimen/dimen_14dp" />
+
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/attachment_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="end"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@mipmap/icon_attachment_doc"
+            android:drawablePadding="5dp"
+            android:paddingRight="10dp"
+            android:tag="regular"
+            android:text="1 Attachment"
+            android:textColor="@color/color_8b93a0"
+            android:textSize="@dimen/dimen_12dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+
+            <TextView
+                android:id="@+id/email_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="5dp"
+                android:tag="regular"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_12dp" />
+
+            <TextView
+                android:id="@+id/mail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/email_type"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:tag="regular"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_12dp" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#efefef" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#efefef"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

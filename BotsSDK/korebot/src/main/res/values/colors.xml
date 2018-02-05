@@ -77,6 +77,10 @@
     <color name="footerdivider_color">#CACACA</color>
     <color name="white">#FFFFFFFF</color>
     <color name="rippelColor">#0000EE</color>
+    <color name="color_656ce7">#656ce7</color>
+    <color name="color_8b93a0">#8b93a0</color>
+    <color name="color_1a1a1a">#1a1a1a</color>
+    <color name="color_4f637d">#4f637d</color>
 
     <string-array name="color_set">
         <item>#4E74F0</item>
