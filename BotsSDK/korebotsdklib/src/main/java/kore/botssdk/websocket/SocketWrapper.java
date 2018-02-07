@@ -1,7 +1,6 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.Log;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -16,13 +15,12 @@ import java.util.TimerTask;
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
+import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
-
-import static kore.botssdk.net.RestRequest.accessTokenHeader;
 
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
@@ -37,6 +35,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
     private static Timer timer = new Timer();
+//    private boolean mIsReconnectionAttemptNeeded = true;
 
     private String url;
     private URI uri;
@@ -44,6 +43,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
+    private String userAccessToken = null;
     private String clientId;
     private String JWTToken;
     private String uuId;
@@ -53,6 +53,15 @@ public final class SocketWrapper extends BaseSpiceManager {
     private String botUserId;
 
     private Context mContext;
+    /**
+     * initial reconnection delay 1 Sec
+     */
+//    private int mReconnectDelay = 1000;
+
+    /**
+     * initial reconnection count
+     */
+//    private int mReconnectionCount = 0;
 
     /**
      * Restricting outside object creation
@@ -60,6 +69,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private SocketWrapper(Context mContext) {
         start(mContext);
         this.mContext = mContext;
+        KoreEventCenter.register(this);
     }
 
     public String getAccessToken(){
@@ -103,6 +113,7 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
+//        mIsReconnectionAttemptNeeded = true;
 
         final String chatBotArg = (chatBotName == null) ? "" : chatBotName;
         final String taskBotIdArg = (taskBotId == null) ? "" : taskBotId;
@@ -151,6 +162,11 @@ public final class SocketWrapper extends BaseSpiceManager {
             }
         });
 
+    }
+
+    public void ConnectAnonymousForKora(final String userAccessToken, final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener){
+        this.userAccessToken = userAccessToken;
+        connectAnonymous(sJwtGrant,clientId,chatBotName,taskBotId,uuId,socketConnectionListener);
     }
 
     /**
@@ -237,6 +253,8 @@ public final class SocketWrapper extends BaseSpiceManager {
                             socketConnectionListener.onOpen();
                         }
                         startSendingPong();
+//                        mReconnectionCount = 1;
+//                        mReconnectDelay = 1000;
                     }
 
                     @Override
@@ -245,11 +263,14 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
                         }
-                        if(timer != null)timer.cancel();
+                        if(timer != null){
+                            timer.cancel();
+                            timer = null;
+                        }
                         if (isConnected()) {
                             stop();
                         }
-
+//                        reconnectAttempt();
                     }
 
                     @Override
@@ -296,6 +317,7 @@ public final class SocketWrapper extends BaseSpiceManager {
         };
 
        try {
+           if(timer == null)timer = new Timer();
            timer.scheduleAtFixedRate(tTask, 1000L, 1000L);
        }catch(Exception e){
            e.printStackTrace();
@@ -371,6 +393,7 @@ public final class SocketWrapper extends BaseSpiceManager {
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
+
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, JWTToken);
 
@@ -409,6 +432,11 @@ public final class SocketWrapper extends BaseSpiceManager {
         });
     }
 
+    public void onEvent(String token){
+        JWTToken = token;
+        reconnect();
+    }
+
     /**
      * @param msg : The message object
      * @return Was it able to successfully send the message.
@@ -418,17 +446,65 @@ public final class SocketWrapper extends BaseSpiceManager {
             mConnection.sendTextMessage(msg);
             return true;
         } else {
-            reconnect();
+            if(userAccessToken != null && socketConnectionListener != null){
+                socketConnectionListener.refreshJwtToken();
+            }else {
+                reconnect();
+            }
             Log.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
         }
     }
 
+   /* *//**
+     * Method to Reconnection attempt based on incremental delay
+     *
+     * @reurn
+     *//*
+    private void reconnectAttempt() {
+//        mIsImmediateFetchActionNeeded = true;
+        mReconnectDelay = getReconnectDelay();
+        try {
+            final Handler _handler = new Handler();
+            Runnable r = new Runnable() {
+
+                @Override
+                public void run() {
+                    Log.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
+                    if (mIsReconnectionAttemptNeeded && !isConnected()) {
+                        reconnect();
+                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
+//                        mReconnectDelay = getReconnectDelay();
+//                        _handler.postDelayed(this, mReconnectDelay);
+                        Log.d(LOG_TAG, "#### trying to reconnect");
+                    }
+
+                }
+            };
+            _handler.postDelayed(r, mReconnectDelay);
+        } catch (Exception e) {
+            Log.d(LOG_TAG, ":: The Exception is " + e.toString());
+        }
+    }
+
+    *//**
+     * The reconnection attempt delay(incremental delay)
+     *
+     * @return
+     *//*
+    private int getReconnectDelay() {
+        mReconnectionCount++;
+        Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
+        if (mReconnectionCount > 6) mReconnectionCount = 1;
+        Random rint = new Random();
+        return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
+    }*/
     /**
      * For disconnecting user's presence
      * Call this method when the user logged out
      */
     public void disConnect() {
+//        mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {
                 mConnection.disconnect();

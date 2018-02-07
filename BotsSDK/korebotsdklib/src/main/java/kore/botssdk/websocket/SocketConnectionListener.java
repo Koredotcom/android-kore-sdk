@@ -47,6 +47,7 @@ public interface SocketConnectionListener {
     public void onBinaryMessage(byte[] payload);
 
 
+    public void refreshJwtToken();
     /**
      * Callback for when user Connected
      *//*

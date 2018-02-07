@@ -232,6 +232,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     @Override
+    public void refreshJwtToken() {
+
+    }
+
+    @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
         switch (code) {
             case CONNECTION_LOST:

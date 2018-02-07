@@ -147,6 +147,11 @@ public class TapToSpeakFragment extends Fragment {
         }
 
         @Override
+        public void refreshJwtToken() {
+
+        }
+
+        @Override
         public void onTextMessage(String payload) {
             Log.d(LOG_TAG, "Message received is 1 " + payload);
             processAndAppendText(payload);
