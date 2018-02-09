@@ -77,10 +77,10 @@ public class KoraCarousalViewHelper {
             final EmailModel emailModel = (EmailModel) dataSetModel.getPayload();
             from.setText(StringEscapeUtils.unescapeHtml4(emailModel.getFrom()));
             if (emailModel.getTo() != null) {
-                to.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getTo(), ",")));
+                to.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getTo(), ", ")));
             }
             if (emailModel.getCc() != null) {
-                cc.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getCc(), ",")));
+                cc.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getCc(), ", ")));
                 ccLabel.setVisibility(View.GONE);
                 cc.setVisibility(View.GONE);
             }else{
@@ -92,7 +92,7 @@ public class KoraCarousalViewHelper {
             attachment.setText(String.format(activityContext.getResources().getString(R.string.atatchment_format),1));
             attachment.setVisibility(View.GONE);
             emailType.setText(emailModel.getSource());
-            createdInfo.setText(emailModel.getDate());
+            createdInfo.setText(emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")));
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             listView.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(emailModel.getButtons() != null ? emailModel.getButtons() : new ArrayList<BotCaourselButtonModel>());
