@@ -38,6 +38,7 @@ public class PayloadInner {
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<String> headers;
+    private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
 
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
         return pieChartElements;
@@ -145,6 +146,10 @@ public class PayloadInner {
                 Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
                 }.getType();
                 table_elements_data = gson.fromJson(elementsAsString, tableType);
+            }else if(BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(template_type)){
+                Type tableType = new TypeToken<ArrayList<KoraSearchResultsModel>>() {
+                }.getType();
+                koraSearchResultsModel = gson.fromJson(elementsAsString, tableType);
             }
         }
         templateValidator();
@@ -235,5 +240,13 @@ public class PayloadInner {
 
     public void setColumns(List<List<String>> columns) {
         this.columns = columns;
+    }
+
+    public ArrayList<KoraSearchResultsModel> getKoraSearchResultsModel() {
+        return koraSearchResultsModel;
+    }
+
+    public void setKoraSearchResultsModel(ArrayList<KoraSearchResultsModel> koraSearchResultsModel) {
+        this.koraSearchResultsModel = koraSearchResultsModel;
     }
 }

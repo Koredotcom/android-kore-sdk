@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -8,11 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.jar.Attributes;
-import java.util.zip.Inflater;
+import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.adapter.KoraCarousalAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.EmailModel;
+import kore.botssdk.models.KnowledgeDetailModel;
+import kore.botssdk.models.KoraSearchDataSetModel;
+import kore.botssdk.models.KoraSearchResultsModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -27,6 +34,37 @@ public class KoraCarouselView extends ViewGroup {
     float dp1;
     TextView headerView;
     ViewPager carousalView;
+    KoraCarousalAdapter koraCarousalAdapter;
+
+    public Activity getActivityContext() {
+        return activityContext;
+    }
+
+    public void setActivityContext(Activity activityContext) {
+        this.activityContext = activityContext;
+    }
+
+    Activity activityContext;
+
+    public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
+        return invokeGenericWebViewInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+        return composeFooterInterface;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+
 
     public KoraCarouselView(Context mContext){
 
@@ -47,8 +85,11 @@ public class KoraCarouselView extends ViewGroup {
     private void init() {
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
-        headerView = (TextView) view.findViewById(R.id.header_view);
         carousalView = (ViewPager) view.findViewById(R.id.carouselViewpager);
+        int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+
+        carousalView.setPageMargin(pageMargin);
+        carousalView.setOffscreenPageLimit(3);
     }
 
     @Override
@@ -63,19 +104,16 @@ public class KoraCarouselView extends ViewGroup {
         int childWidthSpec;
         int childHeightSpec;
         int contentWidth = 0;
-        int childHeight =0;
+        int childHeight;
 
-/*
-        */
-/*
+        /*
          * For Carousel ViewPager Layout
-         *//*
+         */
 
-         childHeight = botCarouselAdapter != null ? botCarouselAdapter.getMaxChildHeight() : 0 ;
+         childHeight = koraCarousalAdapter != null ? koraCarousalAdapter.getMaxChildHeight() : 0 ;
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeight != 0 ? childHeightSpec : wrapSpec);
-*/
+        childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
+        MeasureUtils.measure(carousalView, childWidthSpec, childHeight != 0 ? childHeightSpec : wrapSpec);
 
         totalHeight += childHeight+getPaddingBottom()+getPaddingTop();
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
@@ -101,4 +139,45 @@ public class KoraCarouselView extends ViewGroup {
             }
         }
     }
+
+    public void prepareDatasetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
+
+        if (invokeGenericWebViewInterface != null && composeFooterInterface != null) {
+            ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels = new ArrayList<>();
+            if(koraSearchResultsModel != null) {
+                ArrayList<EmailModel> emails = koraSearchResultsModel.getEmails();
+                ArrayList<KnowledgeDetailModel> knowledgeDetailModels = koraSearchResultsModel.getKnowledges();
+                if (emails != null && emails.size() > 0) {
+                    for (EmailModel emailModel : emails) {
+                        KoraSearchDataSetModel koraSearchDatasetModel = new KoraSearchDataSetModel();
+                        koraSearchDatasetModel.setType("email");
+                        koraSearchDatasetModel.setPayload(emailModel);
+                        koraSearchDatasetModel.setViewType(KoraSearchDataSetModel.ViewType.EMAIL_VIEW);
+                        koraSearchDataSetModels.add(koraSearchDatasetModel);
+                    }
+
+                }
+                if (knowledgeDetailModels != null && knowledgeDetailModels.size() > 0) {
+                    for (KnowledgeDetailModel knowledgeDetailModel : knowledgeDetailModels) {
+                        KoraSearchDataSetModel koraSearchDatasetModel = new KoraSearchDataSetModel();
+                        koraSearchDatasetModel.setType("knowledge");
+                        koraSearchDatasetModel.setPayload(knowledgeDetailModel);
+                        koraSearchDatasetModel.setViewType(KoraSearchDataSetModel.ViewType.KNOWLEDGE_VIEW);
+                        koraSearchDataSetModels.add(koraSearchDatasetModel);
+                    }
+
+                }
+            }
+
+            //            if (carouselViewpager.getAdapter() == null) {
+            koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
+            carousalView.setAdapter(koraCarousalAdapter);
+            koraCarousalAdapter.notifyDataSetChanged();
+
+        }
+    }
+
+
+
+
 }
