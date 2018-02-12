@@ -17,6 +17,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -56,7 +57,6 @@ public class BotCarouselView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
         carouselViewpager = (ViewPager) inflatedView.findViewById(R.id.carouselViewpager);
-
         TypedValue typedValue = new TypedValue();
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
@@ -126,11 +126,12 @@ public class BotCarouselView extends ViewGroup {
          * For Carousel ViewPager Layout
          */
         int childHeight = botCarouselAdapter != null ? botCarouselAdapter.getMaxChildHeight() : 0 ;
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(carouselViewpager, childWidthSpec, childHeight != 0 ? childHeightSpec : wrapSpec);
 
-        totalHeight += childHeight+getPaddingBottom()+getPaddingTop();
+        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
+        // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
+        MeasureUtils.measure(carouselViewpager, childWidthSpec, wrapSpec);
+
+        totalHeight += carouselViewpager.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, parentHeightSpec);

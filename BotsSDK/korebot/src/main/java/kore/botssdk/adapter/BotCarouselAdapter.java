@@ -19,6 +19,7 @@ import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.KnowledgeDetailModel;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -63,17 +64,17 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == (object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         final View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
-
+        KaFontUtils.applyCustomFont(activityContext,carouselItemLayout);
         CarouselItemViewHelper.initializeViewHolder(carouselItemLayout);
         CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, invokeGenericWebViewInterface, botCarouselModels.get(position), activityContext);
         container.addView(carouselItemLayout);
-        ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
+/*        ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
             public boolean onPreDraw()
@@ -92,7 +93,7 @@ public class BotCarouselAdapter extends PagerAdapter {
               //  views.add(holder.carouselItemRoot);
                 return true;
             }
-        });
+        });*/
         return carouselItemLayout;
 
     }
@@ -136,7 +137,7 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        container.removeView(( CardView) object);
     }
 
 }

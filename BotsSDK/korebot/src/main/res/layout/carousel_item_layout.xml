@@ -1,37 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/carousel_item_root"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@android:color/white"
+    card_view:cardCornerRadius="@dimen/carousel_view_cardCornerRadius"
+    card_view:cardUseCompatPadding="true">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/carousel_item_root"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        card_view:cardCornerRadius="@dimen/carousel_view_cardCornerRadius"
-        card_view:cardUseCompatPadding="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ListView
-                android:id="@+id/carousel_button_listview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="#efefef"
-                android:layout_alignParentBottom="true"
-                android:dividerHeight="1dp"
-                android:footerDividersEnabled="false"
-                android:headerDividersEnabled="true"
-                android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/carousel_image_detail_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:padding="2dp"
             android:visibility="visible">
 
@@ -40,14 +25,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/imageplaceholder_left"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:src="@mipmap/imageplaceholder_left" />
 
             <FrameLayout
+                android:id="@+id/offer_price_fl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/carousel_item_image"
-                android:id="@+id/offer_price_fl"
                 android:background="@drawable/offer_layout"
                 android:visibility="gone">
 
@@ -62,17 +47,18 @@
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"
                     android:paddingTop="2dp"
-                    android:textSize="10sp"
-                    android:visibility="visible"
                     android:textColor="@color/bubbleFileName"
-                    android:textStyle="normal" />
+                    android:textSize="10sp"
+                    android:textStyle="normal"
+                    android:visibility="visible" />
 
             </FrameLayout>
+
             <FrameLayout
+                android:id="@+id/saved_price_fl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/carousel_item_image"
-                android:id="@+id/saved_price_fl"
                 android:background="@drawable/save_layout"
                 android:visibility="gone">
 
@@ -87,10 +73,10 @@
                     android:paddingLeft="2dp"
                     android:paddingRight="2dp"
                     android:paddingTop="2dp"
-                    android:textSize="10sp"
-                    android:visibility="visible"
                     android:textColor="@color/white"
-                    android:textStyle="normal" />
+                    android:textSize="10sp"
+                    android:textStyle="normal"
+                    android:visibility="visible" />
 
             </FrameLayout>
 
@@ -101,16 +87,16 @@
                 android:layout_below="@id/carousel_item_image"
                 android:layout_gravity="top"
                 android:ellipsize="end"
-                android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:maxLines="2"
                 android:paddingBottom="5dp"
                 android:paddingLeft="7dp"
                 android:paddingRight="7dp"
-                android:textColor="#1a1a1a"
+                android:paddingTop="10dp"
+                android:tag="regular"
+                android:textColor="@color/color_1a1a1a"
                 android:textSize="15sp"
-                android:textStyle="normal"
-                android:tag="regular" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/carousel_item_subtitle"
@@ -119,71 +105,92 @@
                 android:layout_below="@id/carousel_item_title"
                 android:layout_gravity="top"
                 android:ellipsize="end"
-                android:maxLines="3"
                 android:gravity="center_horizontal"
+                android:maxLines="3"
                 android:paddingLeft="7dp"
                 android:paddingRight="7dp"
-                android:textColor="#8b93a0"
+                android:tag="regular"
+                android:textColor="@color/color_8b93a0"
                 android:textSize="14sp"
                 android:textStyle="normal" />
 
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:id="@+id/kora_items"
-                android:visibility="gone"
-                android:layout_above="@+id/carousel_button_listview"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/hash_tags_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:layout_alignParentTop="true"
-                    android:maxLines="1"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:textColor="#6168e7"
-                    android:textSize="14sp"
-                    android:tag="regular" />
-
-                <TextView
-                    android:id="@+id/knowledge_type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/hash_tags_view"
-                    android:ellipsize="end"
-                    android:layout_alignParentLeft="true"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:textColor="#a7b0be"
-                    android:textSize="12sp"
-                    android:textStyle="normal" />
-                <TextView
-                    android:id="@+id/knowledge_mode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/hash_tags_view"
-                    android:ellipsize="end"
-                    android:layout_alignParentRight="true"
-                    android:layout_toLeftOf="@+id/knowledge_type"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:textColor="#a7b0be"
-                    android:textSize="12sp"
-                    android:textStyle="normal" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@+id/knowledge_type"
-                    android:background="#efefef" />
-            </RelativeLayout>
-
         </RelativeLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:id="@+id/kora_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/hash_tags_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:tag="regular"
+                android:textColor="@color/color_6168e7"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/knowledge_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/hash_tags_view"
+                android:ellipsize="end"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:tag="regular"
+                android:textColor="@color/color_a7b0be"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/knowledge_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/hash_tags_view"
+                android:layout_toLeftOf="@+id/knowledge_type"
+                android:ellipsize="end"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:tag="regular"
+                android:textColor="@color/color_a7b0be"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/knowledge_type"
+                android:background="@color/color_efefef" />
+        </RelativeLayout>
+
+
+
+        <ListView
+            android:id="@+id/carousel_button_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/color_efefef"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true"
+            android:visibility="visible" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
