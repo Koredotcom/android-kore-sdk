@@ -3,6 +3,7 @@ package kore.botssdk.view.viewUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -88,7 +89,7 @@ public class KoraCarousalViewHelper {
                 cc.setVisibility(View.VISIBLE);
             }
             title.setText(emailModel.getSubject());
-            desc.setText(emailModel.getDesc());
+            desc.setText(StringEscapeUtils.unescapeHtml4(emailModel.getDesc()));
             attachment.setText(String.format(activityContext.getResources().getString(R.string.atatchment_format),1));
             attachment.setVisibility(View.GONE);
             emailType.setText(emailModel.getSource());

@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import kore.botssdk.models.EmailModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.models.KoraSearchResultsModel;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
 import kore.botssdk.view.viewUtils.KoraCarousalViewHelper;
 
@@ -61,18 +63,17 @@ public class KoraCarousalAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((LinearLayout) object);
+        return view == (object);
     }
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         final View carouselItemLayout;
         carouselItemLayout = ownLayoutInflater.inflate(R.layout.kora_carousal_view_item, container, false);
-
-
+        KaFontUtils.applyCustomFont(mContext,carouselItemLayout);
         KoraCarousalViewHelper.initializeViewHolder(carouselItemLayout);
         KoraCarousalViewHelper.populateStuffs((KoraCarousalViewHelper.KoraCarousalViewHolder) carouselItemLayout.getTag(), composeFooterInterface, genericWebViewInterface, data.get(position), mContext);
         container.addView(carouselItemLayout);
-        ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
+      /*  ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
         {
             public boolean onPreDraw()
@@ -81,14 +82,14 @@ public class KoraCarousalAdapter extends PagerAdapter {
                 int height = 0;
                 if(data.get(position).getViewType() == KoraSearchDataSetModel.ViewType.KNOWLEDGE_VIEW){
                     height = holder.knowledgeView.getMeasuredHeight();
-        /*            ViewGroup.LayoutParams layoutParams = holder.knowledgeView.getLayoutParams();
+        *//*            ViewGroup.LayoutParams layoutParams = holder.knowledgeView.getLayoutParams();
                     layoutParams.height = height;
-                    holder.knowledgeView.setLayoutParams(layoutParams);*/
+                    holder.knowledgeView.setLayoutParams(layoutParams);*//*
                 }else if(data.get(position).getViewType() == KoraSearchDataSetModel.ViewType.EMAIL_VIEW){
                     height = holder.emailView.getMeasuredHeight();
-         /*           ViewGroup.LayoutParams layoutParams = holder.emailView.getLayoutParams();
+         *//*           ViewGroup.LayoutParams layoutParams = holder.emailView.getLayoutParams();
                     layoutParams.height = height;
-                    holder.emailView.setLayoutParams(layoutParams);*/
+                    holder.emailView.setLayoutParams(layoutParams);*//*
                 }else{
                     height = holder.showMoreView.getMeasuredHeight();
                 }
@@ -101,7 +102,7 @@ public class KoraCarousalAdapter extends PagerAdapter {
                   views.add(holder.viewRoot);
                 return true;
             }
-        });
+        });*/
         return carouselItemLayout;
 
     }
@@ -109,7 +110,7 @@ public class KoraCarousalAdapter extends PagerAdapter {
     @Override
     public void finishUpdate(ViewGroup container) {
         super.finishUpdate(container);
-         applyParams();
+        // applyParams();
     }
 
     private void applyParams() {
@@ -145,6 +146,6 @@ public class KoraCarousalAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        container.removeView((CardView) object);
     }
 }

@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 /**
  * Created by Shiva Krishna on 2/9/2018.
  */
@@ -36,9 +38,15 @@ public class HeightAdjustableViewPager extends ViewPager {
                     height = childMeasuredHeight;
                 }
             }
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+            height = height+(int)(10 * dp1);
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
+            for(int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                child.getLayoutParams().height = height+child.getPaddingBottom()+child.getPaddingTop();
+            }
         }
-        // super has to be called again so the new specs are treated as exact measurements
+
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
