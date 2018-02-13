@@ -122,10 +122,8 @@ public class BotCarouselView extends ViewGroup {
         int childHeightSpec;
         int contentWidth = 0;
 
-        /*
-         * For Carousel ViewPager Layout
-         */
-        int childHeight = botCarouselAdapter != null ? botCarouselAdapter.getMaxChildHeight() : 0 ;
+
+
 
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);

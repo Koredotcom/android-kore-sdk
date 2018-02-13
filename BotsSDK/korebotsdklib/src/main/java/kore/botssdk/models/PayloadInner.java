@@ -45,7 +45,6 @@ public class PayloadInner {
     }
 
 
-
     public void setPieChartElements(ArrayList<BotPieChartElementModel> pieChartElements) {
         this.pieChartElements = pieChartElements;
     }

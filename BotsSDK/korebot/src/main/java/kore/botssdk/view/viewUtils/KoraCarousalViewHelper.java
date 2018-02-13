@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -116,7 +117,7 @@ public class KoraCarousalViewHelper {
                                 String desktopUrl = redirectUrls.get("dweb");
                                 String mobUrl = redirectUrls.get("mob");
                                 if (mobUrl != null) {
-                                    invokeGenericWebViewInterface.invokeGenericWebView(mobUrl);
+                                    invokeGenericWebViewInterface.invokeGenericWebView(URLDecoder.decode(mobUrl));
                                   /*  try {
                                         Intent intent = activityContext.getPackageManager().getLaunchIntentForPackage("com.google.android.gm");
                                         activityContext.startActivity(intent);

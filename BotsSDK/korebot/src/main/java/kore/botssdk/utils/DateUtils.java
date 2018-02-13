@@ -22,6 +22,7 @@ public class DateUtils {
         return getTimeStamp(timeStampMillis);
     }
 
+
     public static String getTimeStamp(long timeStampMillis) {
         return dateFormat4.format(new Date(timeStampMillis));
     }

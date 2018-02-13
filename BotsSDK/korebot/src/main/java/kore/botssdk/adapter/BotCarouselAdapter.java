@@ -35,9 +35,7 @@ public class BotCarouselAdapter extends PagerAdapter {
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflater;
-    float pageWidth = 1.0f;
-    ArrayList<Integer> heights = new ArrayList<>();
-    ArrayList<View> views = new ArrayList<>();
+    float pageWidth = 0.8f;
 
     public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface,
                               InvokeGenericWebViewInterface invokeGenericWebViewInterface,
@@ -64,7 +62,7 @@ public class BotCarouselAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == (object);
+        return view == ( object);
     }
 
     @Override
@@ -104,23 +102,6 @@ public class BotCarouselAdapter extends PagerAdapter {
        // applyParams();
     }
 
-    private void applyParams() {
-        int maxHeight = getMaxChildHeight();
-        for(View view : views) {
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            layoutParams.height = maxHeight;
-            view.setLayoutParams(layoutParams);
-        }
-        Log.d("called","view pager 1");
-    }
-
-    public int getMaxChildHeight(){
-        if(heights.size()>0) {
-            return Collections.max(heights);
-        }else{
-            return 0;
-        }
-    }
 
     public void setBotCarouselModels(ArrayList<? extends BotCarouselModel> botCarouselModels) {
         this.botCarouselModels = botCarouselModels;
