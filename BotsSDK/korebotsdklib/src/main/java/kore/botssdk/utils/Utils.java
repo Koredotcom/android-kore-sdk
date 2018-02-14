@@ -45,4 +45,8 @@ public class Utils {
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
+    public static boolean isWebURL(String url) {
+        return android.util.Patterns.WEB_URL.matcher(url).matches();
+    }
+
 }
