@@ -17,6 +17,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_CAROUSEL = "carousel";
     public static final String TEMPLATE_TYPE_CAROUSEL_ADV = "carouselAdv";
     public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";
+    public static final String TEMPLATE_TYPE_FORM_ACTIONS = "form_actions";
     public static final String COMPONENT_TYPE_TEMPLATE = "template";
     public static final String COMPONENT_TYPE_TEXT = "text";
     public static final String COMPONENT_TYPE_ERROR = "error";

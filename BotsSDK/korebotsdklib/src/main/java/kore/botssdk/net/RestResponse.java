@@ -94,6 +94,16 @@ public class RestResponse {
     public static class BotMessage {
         private String body;
         private String authInfo;
+
+        public String getParams() {
+            return params;
+        }
+
+        public void setParams(String params) {
+            this.params = params;
+        }
+
+        private String params;
         private ArrayList<Objects> attachments = new ArrayList<>();
 
         public BotMessage(String body) {

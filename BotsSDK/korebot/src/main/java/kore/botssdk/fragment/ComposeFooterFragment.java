@@ -42,6 +42,7 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
@@ -216,6 +217,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
          * @param payload : Payload to be send
          */
         void onSendClick(String message, String payload);
+
+        void onFormActionButtonClicked(FormActionTemplate fTemplate);
     }
 
     TextWatcher composeTextWatcher = new TextWatcher() {

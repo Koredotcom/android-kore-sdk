@@ -23,11 +23,40 @@ public class PayloadInner {
     private String text;
     private String table_design;
 
+    public String getPlaceholder_text() {
+        return placeholder_text;
+    }
+
+    public void setPlaceholder_text(String placeholder_text) {
+        this.placeholder_text = placeholder_text;
+    }
+
+    public ArrayList<FormActionTemplate> getForm_actions() {
+        return form_actions;
+    }
+
+    public void setForm_actions(ArrayList<FormActionTemplate> form_actions) {
+        this.form_actions = form_actions;
+    }
+
+    private String placeholder_text;
+
+    public String getHashtag_search_url() {
+        return hashtag_search_url;
+    }
+
+    public void setHashtag_search_url(String hashtag_search_url) {
+        this.hashtag_search_url = hashtag_search_url;
+    }
+
+    private String hashtag_search_url;
+
     private List<List<String>> columns = null;
     private ArrayList<BotTableDataModel> table_elements_data = null;
 
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
+    private ArrayList<FormActionTemplate> form_actions;
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
         this.carouselElements = carouselElements;

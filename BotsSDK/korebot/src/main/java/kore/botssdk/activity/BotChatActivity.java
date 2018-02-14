@@ -32,6 +32,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
@@ -294,6 +295,11 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
         }
 
         toggleQuickRepliesVisiblity(false);
+    }
+
+    @Override
+    public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
+
     }
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {

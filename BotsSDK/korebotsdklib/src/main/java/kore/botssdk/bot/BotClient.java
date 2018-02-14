@@ -130,4 +130,49 @@ public class BotClient {
         }
     }
 
+    public void sendFormData(String payLoad, String chatBotName, String taskBotId) {
+
+        if (payLoad != null && !payLoad.isEmpty()) {
+
+
+
+            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage("Added Information Successfully");
+            botMessage.setAuthorization("bearer " + getAccessToken());
+            botMessage.setParams(payLoad);
+            botPayLoad.setMessage(botMessage);
+
+            BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
+            botPayLoad.setBotInfo(botInfo);
+
+            RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+            botPayLoad.setMeta(meta);
+
+            Gson gson = new Gson();
+            String jsonPayload = gson.toJson(botPayLoad);
+
+            Log.d("BotClient", "Payload : " + jsonPayload);
+            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+        }
+
+        if (!BotRequestPool.isPoolEmpty()) {
+            if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
+                ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
+                int len = botRequestStringArrayList.size();
+                for (int i = 0; i < len; i++) {
+                    String botRequestPayload = botRequestStringArrayList.get(i);
+                    boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
+                    if (wasSuccessfullySend) {
+                        BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
+                        i--; //reset the parameter
+                        len--; //reset the length.
+                    } else {
+                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
+                    }
+                }
+            }
+        }
+    }
+
 }
