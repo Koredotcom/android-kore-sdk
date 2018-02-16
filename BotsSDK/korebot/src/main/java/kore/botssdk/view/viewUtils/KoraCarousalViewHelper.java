@@ -94,7 +94,8 @@ public class KoraCarousalViewHelper {
             attachment.setText(String.format(activityContext.getResources().getString(R.string.atatchment_format),1));
             attachment.setVisibility(View.GONE);
             emailType.setText(emailModel.getSource());
-            createdInfo.setText(emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")));
+
+            createdInfo.setText(emailModel.getDate().indexOf("+") != -1 ?emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")):emailModel.getDate());
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             listView.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(emailModel.getButtons() != null ? emailModel.getButtons() : new ArrayList<BotCaourselButtonModel>());
