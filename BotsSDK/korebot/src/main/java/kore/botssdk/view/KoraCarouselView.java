@@ -110,12 +110,15 @@ public class KoraCarouselView extends ViewGroup {
          * For Carousel ViewPager Layout
          */
 
-         childHeight = koraCarousalAdapter != null ? koraCarousalAdapter.getMaxChildHeight() : 0 ;
+
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
        // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
         MeasureUtils.measure(carousalView, childWidthSpec, wrapSpec);
 
         totalHeight += carousalView.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
+        if(carousalView.getMeasuredHeight() !=0 ){
+            totalHeight+=10*dp1;
+        }
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, parentHeightSpec);

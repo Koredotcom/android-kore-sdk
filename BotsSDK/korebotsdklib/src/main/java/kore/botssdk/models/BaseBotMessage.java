@@ -34,7 +34,7 @@ public abstract class BaseBotMessage {
     public long getCreatedInMillis() {
         if(createdInMillis == 0){
             try {
-                createdInMillis = getTimeInMillis(createdOn,true);
+                createdInMillis = getTimeInMillis(createdOn,!isSend());
             } catch (ParseException e) {
                 e.printStackTrace();
             }

@@ -30,6 +30,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Utils;
 
 import static android.view.View.GONE;
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -136,6 +137,7 @@ public class CarouselItemViewHelper {
 
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
+           // carouselViewHolder.carouselButtonListview.getLayoutParams().height = (int)(botCarouselModel.getButtons() != null ? botCarouselModel.getButtons().size() * (48 * dp1) : 0);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
             carouselViewHolder.carouselButtonListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

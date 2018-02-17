@@ -30,6 +30,8 @@ import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.utils.BundleConstants;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 /**
  * Created by Shiva Krishna on 2/8/2018.
  */
@@ -41,16 +43,17 @@ public class KoraCarousalViewHelper {
         public View emailView;
         public View knowledgeView;
         public View showMoreView;
-        public View viewRoot;
 
     }
 
-    public static void initializeViewHolder(View view) {
+    public static void initializeViewHolder(View view, KoraSearchDataSetModel.ViewType viewType) {
         KoraCarousalViewHolder carouselViewHolder = new KoraCarousalViewHolder();
-        carouselViewHolder.emailView = view.findViewById(R.id.email_view_root);
-        carouselViewHolder.knowledgeView = view.findViewById(R.id.knowledge_view_root);
+        if(viewType == KoraSearchDataSetModel.ViewType.EMAIL_VIEW) {
+            carouselViewHolder.emailView = view.findViewById(R.id.email_view_root);
+        }else {
+            carouselViewHolder.knowledgeView = view.findViewById(R.id.knowledge_view_root);
+        }
         carouselViewHolder.showMoreView = view.findViewById(R.id.show_more_view);
-        carouselViewHolder.viewRoot = view.findViewById(R.id.item_view_root);
         view.setTag(carouselViewHolder);
     }
 
@@ -59,9 +62,6 @@ public class KoraCarousalViewHelper {
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final KoraSearchDataSetModel dataSetModel,
                                       final Context activityContext) {
-        carouselViewHolder.knowledgeView.setVisibility(View.GONE);
-        carouselViewHolder.emailView.setVisibility(View.GONE);
-        carouselViewHolder.showMoreView.setVisibility(View.GONE);
         if (dataSetModel.getViewType() == KoraSearchDataSetModel.ViewType.EMAIL_VIEW) {
             carouselViewHolder.emailView.setVisibility(View.VISIBLE);
             TextView from = (TextView) carouselViewHolder.emailView.findViewById(R.id.from_info);
@@ -97,6 +97,7 @@ public class KoraCarousalViewHelper {
             createdInfo.setText(emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")));
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             listView.setAdapter(botCarouselItemButtonAdapter);
+           // listView.getLayoutParams().height = (int)(emailModel.getButtons() != null ? emailModel.getButtons().size() * (48 * dp1) : 0);
             botCarouselItemButtonAdapter.setBotCaourselButtonModels(emailModel.getButtons() != null ? emailModel.getButtons() : new ArrayList<BotCaourselButtonModel>());
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
