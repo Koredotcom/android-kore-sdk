@@ -202,5 +202,19 @@ public class StringUtils {
         for (final CharSequence[] seq : ESCAPES)
             lookupMap.put(seq[1].toString(), seq[0]);
     }
+    public static boolean isNullOrEmpty(CharSequence string) {
+        return string == null || string.length() == 0;
+    }
 
+    public static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
+
+    public static boolean isNullOrEmptyWithTrim(String string) {
+        return string == null || string.trim().isEmpty();
+    }
+
+    public static boolean isNullOrEmptyWithTrim(CharSequence charSequence) {
+        return charSequence == null || charSequence.toString().trim().isEmpty();
+    }
 }

@@ -89,4 +89,14 @@ public class EmailModel{
     String desc;
     String date;
     String source;
+
+    public String[] getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(String[] attachments) {
+        this.attachments = attachments;
+    }
+
+    String[] attachments;
 }

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 
 import kore.botssdk.R;
@@ -90,9 +91,22 @@ public class KoraCarousalViewHelper {
                 cc.setVisibility(View.VISIBLE);
             }
             title.setText(emailModel.getSubject());
-            desc.setText(StringEscapeUtils.unescapeHtml4(emailModel.getDesc()));
-            attachment.setText(String.format(activityContext.getResources().getString(R.string.atatchment_format),1));
-            attachment.setVisibility(View.GONE);
+            if(!kore.botssdk.utils.StringUtils.isNullOrEmpty(emailModel.getDesc())) {
+                desc.setText(StringEscapeUtils.unescapeHtml4(emailModel.getDesc()));
+                desc.setVisibility(View.VISIBLE);
+            }else{
+                desc.setVisibility(View.GONE);
+            }
+            int attachment_count = emailModel.getAttachments() != null ? emailModel.getAttachments().length :0;
+            if(attachment_count > 0) {
+                attachment.setText(activityContext.getResources().getQuantityString(R.plurals.attachment_count,
+                        attachment_count,attachment_count));
+
+                //attachment.setText(String.format(activityContext.getResources().getString(R.string.atatchment_format), emailModel.getAttachments().length));
+                attachment.setVisibility(View.VISIBLE);
+            }else {
+                attachment.setVisibility(View.GONE);
+            }
             emailType.setText(emailModel.getSource());
 
             createdInfo.setText(emailModel.getDate().indexOf("+") != -1 ?emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")):emailModel.getDate());

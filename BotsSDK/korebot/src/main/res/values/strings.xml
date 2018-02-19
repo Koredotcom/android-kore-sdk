@@ -20,5 +20,9 @@
     <string name="label_to">To</string>
     <string name="label_from">From</string>
     <string name="label_cc">Cc</string>
-    <string name="atatchment_format">%d Attachment</string>
+    <string name="atatchment_format">%d Attachments</string>
+    <plurals name="attachment_count">
+        <item quantity="one">1 Attachment </item>
+        <item quantity="other">%d  Attachments</item>
+    </plurals>
 </resources>
