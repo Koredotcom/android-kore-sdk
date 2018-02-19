@@ -89,7 +89,7 @@ public class KoraCarouselView extends ViewGroup {
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
 
         carousalView.setPageMargin(pageMargin);
-        carousalView.setOffscreenPageLimit(3);
+
     }
 
     @Override
@@ -172,6 +172,7 @@ public class KoraCarouselView extends ViewGroup {
                 }
             }
 
+            carousalView.setOffscreenPageLimit(koraSearchDataSetModels.size() != 0 ? koraSearchDataSetModels.size()-1 : 3);
             //            if (carouselViewpager.getAdapter() == null) {
             koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
             carousalView.setAdapter(koraCarousalAdapter);

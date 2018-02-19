@@ -62,12 +62,13 @@ public class BotCarouselView extends ViewGroup {
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
 
         carouselViewpager.setPageMargin(pageMargin);
-        carouselViewpager.setOffscreenPageLimit(3);
+
     }
 
     public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList) {
         if (composeFooterInterface != null && activityContext != null) {
 //            if (carouselViewpager.getAdapter() == null) {
+                carouselViewpager.setOffscreenPageLimit(botCarouselModelArrayList != null && botCarouselModelArrayList.size() !=0 ? botCarouselModelArrayList.size()-1 : 3);
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 carouselViewpager.setAdapter(botCarouselAdapter);
