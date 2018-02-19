@@ -130,7 +130,7 @@ public class BotClient {
         }
     }
 
-    public void sendFormData(String payLoad, String chatBotName, String taskBotId) {
+    public void sendFormData(String payLoad, String chatBotName, String taskBotId,String message) {
 
         if (payLoad != null && !payLoad.isEmpty()) {
 
@@ -138,7 +138,7 @@ public class BotClient {
 
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage("Added Information Successfully");
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
             botMessage.setAuthorization("bearer " + getAccessToken());
             botMessage.setParams(payLoad);
             botPayLoad.setMessage(botMessage);
