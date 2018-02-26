@@ -41,15 +41,17 @@ public class PayloadInner {
 
     private String placeholder_text;
 
-    public String getHashtag_search_url() {
-        return hashtag_search_url;
+    public AutoSuggestions getAutoSuggestions() {
+        return auto_suggestions;
     }
 
-    public void setHashtag_search_url(String hashtag_search_url) {
-        this.hashtag_search_url = hashtag_search_url;
+    public void setAutoSuggestions(AutoSuggestions auto_suggestions) {
+        this.auto_suggestions = auto_suggestions;
     }
 
-    private String hashtag_search_url;
+//    private String hashtag_search_url;
+
+    private AutoSuggestions auto_suggestions;
 
     private List<List<String>> columns = null;
     private ArrayList<BotTableDataModel> table_elements_data = null;
