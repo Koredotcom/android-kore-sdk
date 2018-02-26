@@ -84,11 +84,11 @@ public class KoraCarousalViewHelper {
             }
             if (emailModel.getCc() != null) {
                 cc.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getCc(), ", ")));
-                ccLabel.setVisibility(View.GONE);
-                cc.setVisibility(View.GONE);
-            }else{
                 ccLabel.setVisibility(View.VISIBLE);
                 cc.setVisibility(View.VISIBLE);
+            }else{
+                ccLabel.setVisibility(View.GONE);
+                cc.setVisibility(View.GONE);
             }
             title.setText(emailModel.getSubject());
             if(!kore.botssdk.utils.StringUtils.isNullOrEmpty(emailModel.getDesc())) {
