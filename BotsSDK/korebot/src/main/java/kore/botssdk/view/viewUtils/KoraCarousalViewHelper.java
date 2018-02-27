@@ -82,7 +82,7 @@ public class KoraCarousalViewHelper {
             if (emailModel.getTo() != null) {
                 to.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getTo(), ", ")));
             }
-            if (emailModel.getCc() != null) {
+            if (emailModel.getCc() != null && emailModel.getCc().length > 0) {
                 cc.setText(StringEscapeUtils.unescapeHtml4(StringUtils.join(emailModel.getCc(), ", ")));
                 ccLabel.setVisibility(View.VISIBLE);
                 cc.setVisibility(View.VISIBLE);
