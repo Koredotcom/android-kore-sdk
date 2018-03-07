@@ -14,6 +14,18 @@ import java.util.TimeZone;
 
 public abstract class BaseBotMessage {
 
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setSend(boolean send) {
+        isSend = send;
+    }
+
+    public void setCreatedOn(String createdOn) {
+        this.createdOn = createdOn;
+    }
+
     protected String from;
 
     protected boolean isSend;

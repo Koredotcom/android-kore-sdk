@@ -25,11 +25,32 @@ public class BotResponse extends BaseBotMessage {
     public static final String  TEMPLATE_TYPE_KORA_CAROUSAL = "kora_carousel";
     public static final String  TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL = "kora_search_carousel";
 
+
+
     private String type;
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
     private String icon;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setBotInfo(BotInfoModel botInfo) {
+        this.botInfo = botInfo;
+    }
+
+    public void setMessage(ArrayList<BotResponseMessage> message) {
+        this.message = message;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
     public ArrayList<BotResponseMessage> getMessage() {
         return message;
     }
