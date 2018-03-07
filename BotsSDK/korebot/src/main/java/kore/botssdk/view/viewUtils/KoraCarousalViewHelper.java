@@ -109,7 +109,7 @@ public class KoraCarousalViewHelper {
             }
             emailType.setText(emailModel.getSource());
 
-            createdInfo.setText(emailModel.getDate().indexOf("+") != -1 ?emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")):emailModel.getDate());
+            createdInfo.setText(emailModel.getDate() != null && emailModel.getDate().indexOf("+") != -1 ?emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")):emailModel.getDate());
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             listView.setAdapter(botCarouselItemButtonAdapter);
            // listView.getLayoutParams().height = (int)(emailModel.getButtons() != null ? emailModel.getButtons().size() * (48 * dp1) : 0);

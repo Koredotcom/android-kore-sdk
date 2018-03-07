@@ -113,7 +113,7 @@ public class TextMediaLayout extends MediaLayout {
 
     public void populateText(String textualContent) {
         if (textualContent != null) {
-            textualContent = StringUtils.unescapeHtml3(textualContent);
+            textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
                     new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
