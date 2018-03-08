@@ -10,6 +10,23 @@ public class BotCaourselButtonModel {
     String type;
     String title;
     String payload;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     String url;
 
     public HashMap<String, String> getRedirectUrl() {

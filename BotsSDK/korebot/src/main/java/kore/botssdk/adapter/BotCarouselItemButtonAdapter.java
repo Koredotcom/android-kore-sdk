@@ -29,7 +29,7 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return botCaourselButtonModels.size();
+        return botCaourselButtonModels != null ? botCaourselButtonModels.size() : 0;
     }
 
     @Override
