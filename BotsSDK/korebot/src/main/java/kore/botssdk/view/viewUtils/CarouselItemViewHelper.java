@@ -209,7 +209,7 @@ public class CarouselItemViewHelper {
                     carouselViewHolder.hashTagsView.setVisibility(GONE);
                 }
                 carouselViewHolder.knowledgeType.setText(((KnowledgeDetailModel) botCarouselModel).getType());
-                carouselViewHolder.knowledgeMode.setText("private");
+                carouselViewHolder.knowledgeMode.setText(((KnowledgeDetailModel) botCarouselModel).getCount()== 0 ? "Private" : "Shared");
             }else{
                 carouselViewHolder.koraItems.setVisibility(View.GONE);
             }
