@@ -407,37 +407,43 @@ public class MarkdownUtil {
             }
 
             StringBuilder builder = new StringBuilder(text);
-            builder.delete(index, index + 3);
+            char c = text.charAt(index+2);
+            if (Character.isDigit(c) && Integer.parseInt(c + "") <= 6) {
 
-            switch (text.charAt(index + 2)) {
-                case '1':
-                    builder.insert(index, "<h1>");
-                    break;
 
-                case '2':
-                    builder.insert(index, "<h2>");
-                    break;
+                builder.delete(index, index + 3);
 
-                case '3':
-                    builder.insert(index, "<h3>");
-                    break;
+                switch (text.charAt(index + 2)) {
+                    case '1':
+                        builder.insert(index, "<h1>");
+                        break;
 
-                case '4':
-                    builder.insert(index, "<h4>");
-                    break;
+                    case '2':
+                        builder.insert(index, "<h2>");
+                        break;
 
-                case '5':
-                    builder.insert(index, "<h5>");
-                    break;
+                    case '3':
+                        builder.insert(index, "<h3>");
+                        break;
 
-                case '6':
-                    builder.insert(index, "<h6>");
-                    break;
+                    case '4':
+                        builder.insert(index, "<h4>");
+                        break;
 
+                    case '5':
+                        builder.insert(index, "<h5>");
+                        break;
+
+                    case '6':
+                        builder.insert(index, "<h6>");
+                        break;
+
+                }
+
+                text = builder.toString();
+            }else{
+                break;
             }
-
-            text = builder.toString();
-
         } while (true);
 
         return text;

@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 android:adjustViewBounds="true"
-                android:scaleType="fitXY"
+                android:scaleType="centerInside"
                 android:src="@mipmap/imageplaceholder_left" />
 
             <FrameLayout
