@@ -96,6 +96,7 @@ public class BotClient {
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
             botMessage.setAuthorization("bearer " + getAccessToken());
+            botMessage.setMappedkuid(getUserId());
             botPayLoad.setMessage(botMessage);
 
             BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
@@ -140,6 +141,7 @@ public class BotClient {
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
             botMessage.setAuthorization("bearer " + getAccessToken());
+            botMessage.setMappedkuid(getUserId());
             botMessage.setParams(payLoad);
             botPayLoad.setMessage(botMessage);
 

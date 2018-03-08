@@ -94,6 +94,7 @@ public class RestResponse {
     public static class BotMessage {
         private String body;
         private String authInfo;
+        private String mappedkuid;
 
         public String getParams() {
             return params;
@@ -128,6 +129,14 @@ public class RestResponse {
 
         public void setAuthorization(String authorization) {
             this.authInfo = authorization;
+        }
+
+        public String getMappedkuid() {
+            return mappedkuid;
+        }
+
+        public void setMappedkuid(String mappedkuid) {
+            this.mappedkuid = mappedkuid;
         }
     }
 
