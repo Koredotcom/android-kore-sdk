@@ -150,6 +150,10 @@ public class CarouselItemViewHelper {
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
                             composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                        }else if(BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCaourselButtonModel.getType())){
+                            String buttonPayload = botCaourselButtonModel.getPayload();
+//                            String buttonTitle = botCaourselButtonModel.getTitle();
+                            composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             invokeGenericWebViewInterface.handleUserActions(((KnowledgeDetailModel)botCarouselModel).getId(),botCaourselButtonModel.getType());
                         }
@@ -166,6 +170,10 @@ public class CarouselItemViewHelper {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
                         } else if (botCarouselModel.getDefault_action() != null &&
                                 BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                            composeFooterInterface.onSendClick(buttonPayload);
+                        }else if (botCarouselModel.getDefault_action() != null &&
+                                BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
                         }
