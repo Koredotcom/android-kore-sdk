@@ -15,6 +15,7 @@ import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewHolder.FormActionViewHolder;
 
 /**
@@ -38,6 +39,7 @@ public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolde
     @Override
     public FormActionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View convertView = layoutInflater.inflate(R.layout.form_action_item_layout, null);
+        KaFontUtils.applyCustomFont(context,convertView);
         return new FormActionViewHolder(convertView);
     }
 

@@ -37,6 +37,7 @@
             android:padding="5dp"
             android:maxLines="1"
             android:textSize="14dp"
+            android:tag="medium"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 
