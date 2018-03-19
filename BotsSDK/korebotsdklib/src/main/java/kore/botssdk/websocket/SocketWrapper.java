@@ -17,6 +17,7 @@ import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.CustomData;
 import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;

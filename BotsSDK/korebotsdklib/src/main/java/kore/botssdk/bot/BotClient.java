@@ -26,7 +26,7 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 public class BotClient {
     private Context mContext;
-
+    private RestResponse.BotCustomData customData;
     private BotClient() {
     }
 
@@ -34,7 +34,13 @@ public class BotClient {
      * @param mContext
      */
     public BotClient(Context mContext) {
+        this.customData = new RestResponse.BotCustomData();
         this.mContext = mContext.getApplicationContext();
+    }
+    public BotClient(Context mContext, RestResponse.BotCustomData customData){
+        this.mContext = mContext;
+        this.customData = customData;
+
     }
 
 
@@ -95,8 +101,8 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
-            botMessage.setAuthorization("bearer " + getAccessToken());
-            botMessage.setMappedkuid(getUserId());
+            customData.put("botToken",getAccessToken());
+            botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
 
             BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
@@ -140,8 +146,8 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-            botMessage.setAuthorization("bearer " + getAccessToken());
-            botMessage.setMappedkuid(getUserId());
+            customData.put("botToken",getAccessToken());
+            botMessage.setCustomData(customData);
             botMessage.setParams(payLoad);
             botPayLoad.setMessage(botMessage);
 

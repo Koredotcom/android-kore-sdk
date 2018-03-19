@@ -2,6 +2,7 @@ package kore.botssdk.net;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.models.Authorization;
@@ -93,9 +94,7 @@ public class RestResponse {
 
     public static class BotMessage {
         private String body;
-        private String authInfo;
-        private String mappedkuid;
-
+        private BotCustomData customData;
         public String getParams() {
             return params;
         }
@@ -123,21 +122,17 @@ public class RestResponse {
             return body;
         }
 
-        public String getAuthorization() {
-            return authInfo;
+        public BotCustomData getCustomData() {
+            return customData;
         }
 
-        public void setAuthorization(String authorization) {
-            this.authInfo = authorization;
+        public void setCustomData(BotCustomData customData) {
+            this.customData = customData;
         }
+    }
 
-        public String getMappedkuid() {
-            return mappedkuid;
-        }
+    public static class BotCustomData extends HashMap<String,Object>{
 
-        public void setMappedkuid(String mappedkuid) {
-            this.mappedkuid = mappedkuid;
-        }
     }
 
     public static class Meta{
