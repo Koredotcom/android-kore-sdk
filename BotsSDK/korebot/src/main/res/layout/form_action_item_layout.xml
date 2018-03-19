@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/quick_reply_textbackground"
+        android:background="@drawable/form_background"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
@@ -32,7 +32,7 @@
             android:id="@+id/form_action_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#ffffff"
+            android:textColor="@color/splash_color"
             android:ellipsize="end"
             android:padding="5dp"
             android:maxLines="1"

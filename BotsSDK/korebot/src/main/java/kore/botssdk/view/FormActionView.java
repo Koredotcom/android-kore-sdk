@@ -100,10 +100,10 @@ public class FormActionView extends ViewGroup {
          * For Carousel ViewPager Layout
          */
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(listViewHeight, MeasureSpec.EXACTLY);
-        childWidthSpec = widthMeasureSpec;
-        childHeightSpec = heightMeasureSpec;
-        MeasureUtils.measure(recyclerView, childWidthSpec, childHeightSpec);
-
+/*        childWidthSpec = widthMeasureSpec;
+        childHeightSpec = heightMeasureSpec;*/
+        MeasureUtils.measure(recyclerView, wrapSpec, heightMeasureSpec);
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec(recyclerView.getMeasuredWidth(), MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
