@@ -59,6 +59,7 @@ public class PayloadInner {
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<FormActionTemplate> form_actions;
+    private AutoOpenFormTemplate form_info;
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
         this.carouselElements = carouselElements;
@@ -278,5 +279,13 @@ public class PayloadInner {
 
     public void setKoraSearchResultsModel(ArrayList<KoraSearchResultsModel> koraSearchResultsModel) {
         this.koraSearchResultsModel = koraSearchResultsModel;
+    }
+
+    public AutoOpenFormTemplate getForm_info() {
+        return form_info;
+    }
+
+    public void setForm_info(AutoOpenFormTemplate form_info) {
+        this.form_info = form_info;
     }
 }
