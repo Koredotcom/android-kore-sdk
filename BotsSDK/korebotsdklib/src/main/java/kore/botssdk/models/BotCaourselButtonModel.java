@@ -49,7 +49,7 @@ public class BotCaourselButtonModel {
 
     String url;
 
-    public HashMap<String, String> getRedirectUrl() {
+/*    public HashMap<String, String> getRedirectUrl() {
         return redirectUrl;
     }
 
@@ -57,7 +57,7 @@ public class BotCaourselButtonModel {
         this.redirectUrl = redirectUrl;
     }
 
-    HashMap<String,String> redirectUrl;
+    HashMap<String,String> redirectUrl;*/
 
     public String getType() {
         return type;
