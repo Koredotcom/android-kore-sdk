@@ -10,6 +10,26 @@ public class BotCaourselButtonModel {
     String type;
     String title;
     String payload;
+    String action;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public HashMap<String, Object> getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(HashMap<String, Object> customData) {
+        this.customData = customData;
+    }
+
+    HashMap<String,Object> customData;
+
 
     public void setType(String type) {
         this.type = type;

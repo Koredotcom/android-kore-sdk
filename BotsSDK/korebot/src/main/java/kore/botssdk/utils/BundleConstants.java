@@ -20,7 +20,8 @@ public class BundleConstants {
     public static String BUTTON_TYPE_POSTBACK_DISP_PAYLOAD = "postback_disp_payload";
     public static String BUTTON_TYPE_WEB_URL = "web_url";
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
+    public static String FORM_TYPE_OPEN_FORM="open_form";
+    public static String FORM_TYPE_SHOW_FORM="show_form";
 
-    public static final String FORM_NAME_ADD_INFO = "Add_Info";
-    public static final String FORM_NAME_OPEN_EDITOR = "Open_Editor";
+
 }

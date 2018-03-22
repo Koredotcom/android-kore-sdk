@@ -22,6 +22,13 @@ public class PayloadInner {
     private String template_type;
     private String text;
     private String table_design;
+    public String getActionType() {
+        return action_type;
+    }
+    private String action_type;
+    public void setActionType(String action_type) {
+        this.action_type = action_type;
+    }
 
     public String getPlaceholder_text() {
         return placeholder_text;
@@ -59,7 +66,7 @@ public class PayloadInner {
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<FormActionTemplate> form_actions;
-    private AutoOpenFormTemplate form_info;
+
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
         this.carouselElements = carouselElements;
@@ -281,11 +288,4 @@ public class PayloadInner {
         this.koraSearchResultsModel = koraSearchResultsModel;
     }
 
-    public AutoOpenFormTemplate getForm_info() {
-        return form_info;
-    }
-
-    public void setForm_info(AutoOpenFormTemplate form_info) {
-        this.form_info = form_info;
-    }
 }

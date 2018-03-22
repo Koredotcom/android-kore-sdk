@@ -1,18 +1,14 @@
 package kore.botssdk.models;
 
+import java.util.HashMap;
+
 /**
  * Created by Ramachandra Pradeep on 09-Feb-18.
  */
 
 public class FormActionTemplate {
 
-    public String getActionType() {
-        return action_type;
-    }
 
-    public void setActionType(String action_type) {
-        this.action_type = action_type;
-    }
 
     public String getTitle() {
         return title;
@@ -30,18 +26,18 @@ public class FormActionTemplate {
         this.form_name = form_name;
     }
 
-    public CustomData getCustomData() {
+    public HashMap<String,Object> getCustomData() {
         return customData;
     }
 
-    public void setCustomData(CustomData customData) {
+    public void setCustomData(HashMap<String,Object> customData) {
         this.customData = customData;
     }
 
-    private String action_type;
+
     private String title;
     private String form_name;
-    private CustomData customData;
+    private HashMap<String,Object> customData;
 
 
 }

@@ -25,6 +25,7 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.models.BotListDefaultModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Utils;
@@ -155,7 +156,7 @@ public class CarouselItemViewHelper {
 //                            String buttonTitle = botCaourselButtonModel.getTitle();
                             composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
-                            invokeGenericWebViewInterface.handleUserActions(((KnowledgeDetailModel)botCarouselModel).getId(),botCaourselButtonModel.getType());
+                            invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
                         }
                     }
                 }
@@ -164,16 +165,18 @@ public class CarouselItemViewHelper {
             carouselViewHolder.carouselItemRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (invokeGenericWebViewInterface != null) {
-                        if (botCarouselModel.getDefault_action() != null &&
-                                BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botCarouselModel.getDefault_action().getUrl());
-                        } else if (botCarouselModel.getDefault_action() != null &&
-                                BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                    BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
+                    if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
+                        } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
+                            invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
+                        }
+                    } else if (composeFooterInterface != null && botListDefaultModel != null) {
+                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
-                        }else if (botCarouselModel.getDefault_action() != null &&
-                                BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                             composeFooterInterface.onSendClick(buttonPayload);
                         }

@@ -128,7 +128,7 @@ public class KoraCarousalViewHelper {
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             HashMap<String,String> redirectUrls = botCaourselButtonModel.getRedirectUrl();
                             if(redirectUrls == null || redirectUrls.size()==0 ) {
-                                invokeGenericWebViewInterface.handleUserActions(emailModel.getDesc(), botCaourselButtonModel.getType());
+                                invokeGenericWebViewInterface.handleUserActions(emailModel.getDesc(), botCaourselButtonModel.getCustomData());
                             }else{
                                 String desktopUrl = redirectUrls.get("dweb");
                                 String mobUrl = redirectUrls.get("mob");
@@ -188,7 +188,7 @@ public class KoraCarousalViewHelper {
                             String buttonTitle = botCaourselButtonModel.getTitle();
                             composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
-                            invokeGenericWebViewInterface.handleUserActions(((KnowledgeDetailModel)knowledgeDetailModel).getId(),botCaourselButtonModel.getType());
+                            invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
                         }
                     }
                 }

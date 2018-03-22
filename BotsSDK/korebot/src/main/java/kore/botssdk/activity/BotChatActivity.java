@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.autobahn.WebSocket;
@@ -367,7 +368,7 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
     }
 
     @Override
-    public void handleUserActions(String type, String payload) {
+    public void handleUserActions(String action, HashMap<String,Object > payload) {
 
 
     }
