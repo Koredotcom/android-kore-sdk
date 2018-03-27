@@ -189,6 +189,7 @@ public class CarouselItemViewHelper {
                     carouselViewHolder.carouselItemImage.setVisibility(GONE);
                 } else {
                     carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
+                    carouselViewHolder.carouselItemImage.setScaleType(ImageView.ScaleType.FIT_XY);
                 }
 
 
@@ -213,9 +214,13 @@ public class CarouselItemViewHelper {
                     for (String tag : hashTags) {
                         if(!tag.trim().isEmpty())
                             hashText.append("  #").append(tag);
+                        if(hashText.length()>3) {
+                            carouselViewHolder.hashTagsView.setText(hashText.substring(2));
+                            carouselViewHolder.hashTagsView.setVisibility(View.VISIBLE);
+                        }else{
+                            carouselViewHolder.hashTagsView.setVisibility(View.GONE);
+                        }
                     }
-                    carouselViewHolder.hashTagsView.setText(hashText);
-                    carouselViewHolder.hashTagsView.setVisibility(View.VISIBLE);
                 }else{
                     carouselViewHolder.hashTagsView.setVisibility(GONE);
                 }
@@ -231,4 +236,6 @@ public class CarouselItemViewHelper {
     private static int getButtonHeight(Context context, int itemCount, float dp1) {
         return (int) (context.getResources().getDimension(R.dimen.carousel_view_button_height_individual) * dp1 + 4 * dp1);
     }
+
+
 }

@@ -3,6 +3,6 @@
     android:id="@+id/botCustomButtonList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:footerDividersEnabled="true"
-    android:headerDividersEnabled="true"
+    android:divider="#f7f7f7"
+    android:dividerHeight="1dp"
     android:scrollbars="none"/>

@@ -17,13 +17,7 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:text="Button"/>
-    <View
-        android:id="@+id/devider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/bot_carousel_item_button"
-        android:background="@color/readReceiptLightGrey"
-        />
+
 
 
 </RelativeLayout>
