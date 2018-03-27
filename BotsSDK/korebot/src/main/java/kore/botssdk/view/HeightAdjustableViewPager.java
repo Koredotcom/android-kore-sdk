@@ -38,8 +38,8 @@ public class HeightAdjustableViewPager extends ViewPager {
                     height = childMeasuredHeight;
                 }
             }
-            if(getChildCount() > 2 && height !=0) {
-                height = height + (int) (45 * dp1);
+            if (height != 0) {
+                height = height + (int) (15 * dp1);
             }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
     /*        for(int i = 0; i < getChildCount(); i++) {

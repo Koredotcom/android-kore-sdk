@@ -172,7 +172,7 @@ public class KoraCarouselView extends ViewGroup {
                 }
             }
 
-            carousalView.setOffscreenPageLimit(3);
+            carousalView.setOffscreenPageLimit(4);
             //            if (carouselViewpager.getAdapter() == null) {
             koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
             carousalView.setAdapter(koraCarousalAdapter);
