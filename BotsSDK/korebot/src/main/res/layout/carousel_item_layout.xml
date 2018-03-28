@@ -17,7 +17,6 @@
             android:id="@+id/carousel_image_detail_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp"
             android:visibility="visible">
 
             <ImageView
