@@ -1,6 +1,7 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -9,6 +10,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,6 +24,7 @@ import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
+import kore.botssdk.utils.Utils;
 
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
@@ -36,7 +39,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private final WebSocketConnection mConnection = new WebSocketConnection();
     private static Timer timer = new Timer();
-//    private boolean mIsReconnectionAttemptNeeded = true;
+    private boolean mIsReconnectionAttemptNeeded = true;
 
     private String url;
     private URI uri;
@@ -57,12 +60,12 @@ public final class SocketWrapper extends BaseSpiceManager {
     /**
      * initial reconnection delay 1 Sec
      */
-//    private int mReconnectDelay = 1000;
+    private int mReconnectDelay = 1000;
 
     /**
      * initial reconnection count
      */
-//    private int mReconnectionCount = 0;
+    private int mReconnectionCount = 0;
 
     /**
      * Restricting outside object creation
@@ -254,8 +257,8 @@ public final class SocketWrapper extends BaseSpiceManager {
                             socketConnectionListener.onOpen();
                         }
                         startSendingPong();
-//                        mReconnectionCount = 1;
-//                        mReconnectDelay = 1000;
+                        mReconnectionCount = 1;
+                        mReconnectDelay = 1000;
                     }
 
                     @Override
@@ -271,7 +274,8 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (isConnected()) {
                             stop();
                         }
-//                        reconnectAttempt();
+                        if(Utils.isNetworkAvailable(mContext))
+                            reconnectAttempt();
                     }
 
                     @Override
@@ -319,7 +323,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
        try {
            if(timer == null)timer = new Timer();
-           timer.scheduleAtFixedRate(tTask, 1000L, 1000L);
+           timer.scheduleAtFixedRate(tTask, 1000L, 30000L);
        }catch(Exception e){
            e.printStackTrace();
        }
@@ -457,11 +461,11 @@ public final class SocketWrapper extends BaseSpiceManager {
         }
     }
 
-   /* *//**
+   /*
      * Method to Reconnection attempt based on incremental delay
      *
      * @reurn
-     *//*
+     */
     private void reconnectAttempt() {
 //        mIsImmediateFetchActionNeeded = true;
         mReconnectDelay = getReconnectDelay();
@@ -474,9 +478,9 @@ public final class SocketWrapper extends BaseSpiceManager {
                     Log.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
                     if (mIsReconnectionAttemptNeeded && !isConnected()) {
                         reconnect();
-                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
-//                        mReconnectDelay = getReconnectDelay();
-//                        _handler.postDelayed(this, mReconnectDelay);
+//                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
+                        mReconnectDelay = getReconnectDelay();
+                        _handler.postDelayed(this, mReconnectDelay);
                         Log.d(LOG_TAG, "#### trying to reconnect");
                     }
 
@@ -488,24 +492,24 @@ public final class SocketWrapper extends BaseSpiceManager {
         }
     }
 
-    *//**
+    /**
      * The reconnection attempt delay(incremental delay)
      *
      * @return
-     *//*
+     */
     private int getReconnectDelay() {
         mReconnectionCount++;
         Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
-        if (mReconnectionCount > 6) mReconnectionCount = 1;
+        if (mReconnectionCount > 5) mReconnectionCount = 1;
         Random rint = new Random();
         return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
-    }*/
+    }
     /**
      * For disconnecting user's presence
      * Call this method when the user logged out
      */
     public void disConnect() {
-//        mIsReconnectionAttemptNeeded = false;
+        mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {
                 mConnection.disconnect();
