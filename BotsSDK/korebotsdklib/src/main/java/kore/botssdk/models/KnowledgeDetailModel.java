@@ -149,5 +149,55 @@ public class KnowledgeDetailModel extends BotCarouselModel {
 
     ArrayList<KoreComponentModel> components;
     ArrayList<LinkPreviewModel> linkPreviews;
+    ArrayList<voteModel> votes;
 
+    public ArrayList<voteModel> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<voteModel> votes) {
+        this.votes = votes;
+    }
+
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public int getSharesCount() {
+        return sharesCount;
+    }
+
+    public void setSharesCount(int sharesCount) {
+        this.sharesCount = sharesCount;
+    }
+
+    public int getUpVoteCount() {
+        return upVoteCount;
+    }
+
+    public void setUpVoteCount(int upVoteCount) {
+        this.upVoteCount = upVoteCount;
+    }
+
+    public int getDownVoteCount() {
+        return downVoteCount;
+    }
+
+    public void setDownVoteCount(int downVoteCount) {
+        this.downVoteCount = downVoteCount;
+    }
+
+    int upVoteCount;
+    int downVoteCount;
+    int likesCount;
+    int sharesCount;
+
+   public class voteModel{
+         int vote;
+         String by;
+   }
 }
