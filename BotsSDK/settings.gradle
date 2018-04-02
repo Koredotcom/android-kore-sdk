@@ -1,1 +1,1 @@
-include ':korebot', ':korebotsdklib'
+include ':korebot', ':korebotsdklib', ':korefileuploadsdk'
