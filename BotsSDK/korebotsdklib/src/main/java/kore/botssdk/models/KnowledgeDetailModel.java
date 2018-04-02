@@ -149,13 +149,13 @@ public class KnowledgeDetailModel extends BotCarouselModel {
 
     ArrayList<KoreComponentModel> components;
     ArrayList<LinkPreviewModel> linkPreviews;
-    ArrayList<voteModel> votes;
+    ArrayList<VoteModel> votes;
 
-    public ArrayList<voteModel> getVotes() {
+    public ArrayList<VoteModel> getVotes() {
         return votes;
     }
 
-    public void setVotes(ArrayList<voteModel> votes) {
+    public void setVotes(ArrayList<VoteModel> votes) {
         this.votes = votes;
     }
 
@@ -196,8 +196,25 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     int likesCount;
     int sharesCount;
 
-   public class voteModel{
+   public class VoteModel {
          int vote;
-         String by;
+
+       public int getVote() {
+           return vote;
+       }
+
+       public void setVote(int vote) {
+           this.vote = vote;
+       }
+
+       public String getBy() {
+           return by;
+       }
+
+       public void setBy(String by) {
+           this.by = by;
+       }
+
+       String by;
    }
 }
