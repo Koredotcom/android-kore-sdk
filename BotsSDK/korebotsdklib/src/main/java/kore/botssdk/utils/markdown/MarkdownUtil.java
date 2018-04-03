@@ -47,10 +47,10 @@ public class MarkdownUtil {
             }
 
             //get next char
-            char c = text.charAt(index + 1);
-            if (c == ' ') {
+         /*     char c = text.charAt(index + 1);
+          if (c == ' ') {
                 continue;
-            }
+            }*/
 
             nIndex = text.indexOf(delimiter, index + 1);
             if (nIndex == -1) {
@@ -58,8 +58,8 @@ public class MarkdownUtil {
             }
 
             //get previous char and ignore SPACE and consecutive STAR
-            c = text.charAt(nIndex - 1);
-            if (c == ' ' || c == delimiter) {
+            char c = text.charAt(nIndex - 1);
+            if (c == delimiter) {
                 continue;
             }
 
