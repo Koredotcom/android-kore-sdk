@@ -159,14 +159,6 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.votes = votes;
     }
 
-    public int getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
-    }
-
     public int getSharesCount() {
         return sharesCount;
     }
@@ -193,8 +185,17 @@ public class KnowledgeDetailModel extends BotCarouselModel {
 
     int upVoteCount;
     int downVoteCount;
-    int likesCount;
     int sharesCount;
+
+    public int getMyVote() {
+        return myVote;
+    }
+
+    public void setMyVote(int myVote) {
+        this.myVote = myVote;
+    }
+
+    int myVote;
 
    public class VoteModel {
          int vote;
