@@ -180,7 +180,6 @@ public final class SocketWrapper extends BaseSpiceManager {
      * @param clientId : generated clientId
      */
     public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
-
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.clientId = clientId;
@@ -193,11 +192,10 @@ public final class SocketWrapper extends BaseSpiceManager {
         if (!isConnected()) {
             start(mContext);
         }
-
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-
+                setPriority(PRIORITY_HIGH);
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
 
@@ -218,7 +216,6 @@ public final class SocketWrapper extends BaseSpiceManager {
                 return rtmUrl;
             }
         };
-
 
         getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
@@ -247,7 +244,6 @@ public final class SocketWrapper extends BaseSpiceManager {
         if (url != null) {
             this.url = url;
             this.uri = new URI(url);
-
             try {
                 mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
                     @Override
