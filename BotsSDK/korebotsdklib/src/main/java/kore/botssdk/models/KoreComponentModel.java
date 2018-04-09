@@ -70,6 +70,7 @@ public class KoreComponentModel implements Parcelable {
     private HashMap<String, Object> templateData;
 
     private boolean showLoader;
+    private String fileSize;
 
     /**
      * @return the mediaType
@@ -400,5 +401,13 @@ public class KoreComponentModel implements Parcelable {
 
     public void setShowLoader(boolean showLoader) {
         this.showLoader = showLoader;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 }

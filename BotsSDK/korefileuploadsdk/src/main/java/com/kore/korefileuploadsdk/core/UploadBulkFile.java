@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -49,7 +50,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
-	
+    private static DecimalFormat df2 = new DecimalFormat("###.##");
 	private String LOG_TAG = getClass().getSimpleName();
 	private String fileName;
 	private String outFilePath=null;
@@ -443,6 +444,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
     					 data.putString("fileId", fileID);
     					 data.putString("fileName", fileName);
 						 data.putString("componentType", componentType);
+						 data.putString("fileSize", getFileSizeMegaBytes(new File(outFilePath)));
 						if(isTeam)
 							data.putString(Constants.TEAM_ID,userOrTeamId);
     					 msg.setData(data); //put the data here
@@ -505,6 +507,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				}
 
 			}
+	}
+	private  String getFileSizeMegaBytes(File file) {
+		return df2.format((double) file.length() / (1024 * 1024)) + " mb";
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
