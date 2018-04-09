@@ -19,7 +19,7 @@ public class NetworkUtility {
      */
 
     public static boolean isNetworkConnectionAvailable(Context context) {
-        return isNetworkConnectionAvailable(context, true);
+        return isNetworkConnectionAvailable(context, false);
     }
 
     public static boolean isNetworkConnectionAvailable(Context context, boolean showMessage) {
