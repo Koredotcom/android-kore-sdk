@@ -187,15 +187,17 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     int downVoteCount;
     int sharesCount;
 
-    public int getMyVote() {
-        return myVote;
+    public MyActions getMyActions() {
+        return myActions;
     }
 
-    public void setMyVote(int myVote) {
-        this.myVote = myVote;
+    public void setMyActions(MyActions myActions) {
+        this.myActions = myActions;
     }
 
-    int myVote;
+    MyActions myActions;
+
+
 
    public class VoteModel {
          int vote;
@@ -217,5 +219,35 @@ public class KnowledgeDetailModel extends BotCarouselModel {
        }
 
        String by;
+   }
+
+   public class MyActions{
+       int vote;
+       boolean like;
+       boolean follow;
+
+       public int getVote() {
+           return vote;
+       }
+
+       public void setVote(int vote) {
+           this.vote = vote;
+       }
+
+       public boolean isLike() {
+           return like;
+       }
+
+       public void setLike(boolean like) {
+           this.like = like;
+       }
+
+       public boolean isFollow() {
+           return follow;
+       }
+
+       public void setFollow(boolean follow) {
+           this.follow = follow;
+       }
    }
 }
