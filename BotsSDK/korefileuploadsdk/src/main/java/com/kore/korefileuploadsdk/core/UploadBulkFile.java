@@ -438,6 +438,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
     					
         				 Message msg = Message.obtain();
     					 Bundle data = new Bundle();
+    					 data.putBoolean("success",true);
     					 data.putString(Constants.MESSAGE_ID, messageId);
     					 data.putString("fileExtn", fileExtn);
 						 data.putString("filePath", outFilePath);
@@ -562,6 +563,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		data.putString("fileName", fileName);
 		data.putString("filePath", outFilePath);
 		data.putString("componentType", componentType);
+        data.putBoolean("success",false);
 		if(isTeam)
 			data.putString(Constants.TEAM_ID,userOrTeamId);
 		msg.setData(data); //put the data here
