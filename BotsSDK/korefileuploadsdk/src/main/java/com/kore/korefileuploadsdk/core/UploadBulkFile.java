@@ -1,5 +1,6 @@
 package com.kore.korefileuploadsdk.core;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,7 +81,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 
 
 	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
-	
+    private ProgressDialog pDialog;
 	
 	
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
@@ -121,7 +122,39 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		
 	}
 
-	@Override
+    private void upLoadProgressState(final int progress ,final boolean show){
+        Handler mainHandler = new Handler(context.getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(show) {
+                    if (pDialog == null) {
+                        pDialog = new ProgressDialog(context);
+                        pDialog.setCancelable(false);
+                        pDialog.setIndeterminate(false);
+                        pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        pDialog.setMax(100);
+                    }
+                    pDialog.setMessage("Uploading...");
+                    pDialog.setProgress(progress);
+                    if(!pDialog.isShowing()) {
+                        pDialog.show();
+                    }
+                }else{
+                    if(pDialog != null && pDialog.isShowing()){
+                        pDialog.dismiss();
+                    }
+                }
+            }
+        };
+        Log.d("progress",progress+" done");
+        mainHandler.post(myRunnable);
+
+    }
+
+
+    @Override
 	public synchronized void fileTokenRecievedSuccessfully(Hashtable<String, String> hsh) {
 		fileToken = hsh.get("fileToken");
 		startUpload();
@@ -187,7 +220,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					}*/
 					Thread.sleep(10);
 					System.gc();
-
+                    upLoadProgressState(0,true);
 					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, isTeam,host));
 					chunkNo++;
 					chunkbaos.reset(); /*chunk size doubles in next iteration*/
@@ -261,6 +294,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		try {
 //			uploadDao.refresh(uploadInfo);
 			uploadInfo.setUploadCount(uploadInfo.getUploadCount()+1);
+            upLoadProgressState(uploadInfo.getUploadCount() * 100/uploadInfo.getTotalChunks(),true);
 		//	ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(chunkNo);
 		//	chInfo.setUploaded(true);
 		//	helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
@@ -273,6 +307,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		
 //		if(isRecorded ){
 			if(uploadInfo.getTotalChunks() == uploadInfo.getUploadCount()){
+
 				Log.d(LOG_TAG, "Sending merge request"+fileName +"as no failed chunks in recorded");
 				try {
 					sendMergeSignal(uploadInfo.getTotalChunks(), fileContext);
@@ -417,6 +452,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				}
 				input.close();
 				httpsURLConnection.disconnect();
+                upLoadProgressState(100,false);
 				Log.d(LOG_TAG, "Got serverResponse for merge " + serverResponse);
 				int statusCode = httpsURLConnection.getResponseCode();
 				
@@ -461,15 +497,13 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					
 					//Updating file sent status into DB
 					
-					// TODO Here insert the file sent status with fileId 
-
+					// TODO Here insert the file sent status with fileId
 					
 				} else {
 
 //					String serverResponse = EntityUtils.toString(response.getEntity());
 					Log.d(LOG_TAG,"The Resp is "+ serverResponse);
 					sendUploadFailedNotice(true);
-
 
 //					throw new Exception("Response code not 200");
 				}
