@@ -610,7 +610,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		if(listener !=null)
 			listener.fileUploaded(/*comp, messageId, fileExtn,messenger*/);
 
-
+        upLoadProgressState(100,false);
 		uploadInfo.setMergeTriggered(isFromMergeSignal);
 	}
 }
