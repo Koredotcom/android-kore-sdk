@@ -9,8 +9,8 @@ public class Constants {
     public static final int UPLOAD_ERROR_CODE_504 = 504;
 
     public static final int MERGE_RE_ATTEMPT_COUNT = 3;
-    public static final int CONNECTION_TIMEOUT = 60000;
-    public static final int CONNECTION_READ_TIMEOUT = 60000;
+    public static final int CONNECTION_TIMEOUT = 2 * 60000;
+    public static final int CONNECTION_READ_TIMEOUT = 2 * 60000;
 
 
     public static final String SERVER_ERROR = "ERROR WHILE CONATCTING WITH SERVER";

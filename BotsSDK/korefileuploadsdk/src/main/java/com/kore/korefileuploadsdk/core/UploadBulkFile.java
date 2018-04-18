@@ -16,6 +16,7 @@ import com.kore.korefileuploadsdk.configurations.FileUploadEndPoints;
 import com.kore.korefileuploadsdk.listeners.ChunkUploadListener;
 import com.kore.korefileuploadsdk.listeners.FileTokenListener;
 import com.kore.korefileuploadsdk.listeners.FileUploadedListener;
+import com.kore.korefileuploadsdk.managers.BotDBManager;
 import com.kore.korefileuploadsdk.managers.FileTokenManager;
 import com.kore.korefileuploadsdk.models.ChunkInfo;
 import com.kore.korefileuploadsdk.models.FileUploadInfo;
@@ -43,6 +44,7 @@ import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.concurrent.ExecutorService;
 
@@ -74,7 +76,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	private int noOfMergeAttempts;
 	private String host;
 
-	//BotDBManager helper;
+	BotDBManager helper;
 //	KoreBaseDao<FileUploadInfo, String> fileDao;
 	FileUploadInfo uploadInfo = new FileUploadInfo();;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
@@ -108,7 +110,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		else
 			userOrTeamId = userId;
 		
-	//	helper = BotDBManager.getInstance();
+		helper = BotDBManager.getInstance();
 		
 		/*if(fileDao == null){
 			try {
@@ -211,13 +213,13 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					chunkInfo.setSize(dataSizeRead);
 
 
-					/*if(helper.getChunkInfoMap().get(fileToken) != null) {
+					if(helper.getChunkInfoMap().get(fileToken) != null) {
 						helper.getChunkInfoMap().get(fileToken).put(chunkNo, chunkInfo);
 					}else{
 						HashMap<Integer, ChunkInfo> hMap = new HashMap<>(1);
 						hMap.put(chunkNo, chunkInfo);
 						helper.getChunkInfoMap().put(fileToken,hMap);
-					}*/
+					}
 					Thread.sleep(10);
 					System.gc();
                     upLoadProgressState(0,true);
@@ -295,10 +297,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //			uploadDao.refresh(uploadInfo);
 			uploadInfo.setUploadCount(uploadInfo.getUploadCount()+1);
             upLoadProgressState(uploadInfo.getUploadCount() * 100/uploadInfo.getTotalChunks(),true);
-		//	ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(chunkNo);
-		//	chInfo.setUploaded(true);
-		//	helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
-		//	helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+			ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(Integer.parseInt(chunkNo));
+			chInfo.setUploaded(true);
+			helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
+			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 //			uploadDao.update(uploadInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -337,7 +339,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			uploadInfo.setTotalChunks(n);
 			try {
 //				fileDao.update(uploadInfo);
-			//	helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+				helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -536,7 +538,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				try {
 //					uploadDao = helper.getDao(FileUploadInfo.class);
 //					uploadDao.update(uploadInfo);
-		//			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+					helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -576,12 +578,12 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //			uploadDao.refresh(uploadInfo);
 			uploadInfo.setUploadCount(uploadInfo.getUploadCount() - chunkNumbers.size());
 			for(String chunkNo:chunkNumbers){
-			//	ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(chunkNo);
-				//chInfo.setUploaded(false);
-				//helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
+				ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(chunkNo);
+				chInfo.setUploaded(false);
+				helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
 			}
 			uploadInfo.setUploaded(false);
-			//helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
