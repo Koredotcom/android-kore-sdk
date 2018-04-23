@@ -151,6 +151,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     ArrayList<LinkPreviewModel> linkPreviews;
     ArrayList<VoteModel> votes;
 
+    public ArrayList<String> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(ArrayList<String> followers) {
+        this.followers = followers;
+    }
+
+    ArrayList<String> followers;
+
     public ArrayList<VoteModel> getVotes() {
         return votes;
     }
@@ -186,6 +196,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     int upVoteCount;
     int downVoteCount;
     int sharesCount;
+
+    public int getFollowCount() {
+        return followCount;
+    }
+
+    public void setFollowCount(int followCount) {
+        this.followCount = followCount;
+    }
+
+    int followCount;
 
     public MyActions getMyActions() {
         return myActions;
