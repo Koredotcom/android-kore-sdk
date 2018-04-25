@@ -197,6 +197,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     int downVoteCount;
     int sharesCount;
 
+    public ArrayList<CommentModel> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<CommentModel> comments) {
+        this.comments = comments;
+    }
+
+    ArrayList<CommentModel> comments;
+
     public int getFollowCount() {
         return followCount;
     }
@@ -270,4 +280,63 @@ public class KnowledgeDetailModel extends BotCarouselModel {
            this.follow = follow;
        }
    }
+
+    public class CommentModel {
+        private long cOn;
+        private long id;
+        private long lMod;
+        private String by;
+
+        public long getcOn() {
+            return cOn;
+        }
+
+        public void setcOn(long cOn) {
+            this.cOn = cOn;
+        }
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public long getlMod() {
+            return lMod;
+        }
+
+        public void setlMod(long lMod) {
+            this.lMod = lMod;
+        }
+
+        public String getBy() {
+            return by;
+        }
+
+        public void setBy(String by) {
+            this.by = by;
+        }
+
+        public String getComment() {
+            return comment;
+        }
+
+        public void setComment(String comment) {
+            this.comment = comment;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        private String comment;
+        private String label;
+
+    }
 }
