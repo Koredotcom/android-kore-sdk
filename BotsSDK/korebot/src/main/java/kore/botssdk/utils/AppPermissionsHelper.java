@@ -1,11 +1,15 @@
 package kore.botssdk.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Created by Ramachandra on 03/12/16.
@@ -21,7 +25,17 @@ public class AppPermissionsHelper {
                     requestCode);
         }
     }
-
+    public static boolean hasPermission(Context context, String... permission) {
+        boolean shouldShowRequestPermissionRationale = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionLength = permission.length;
+            for (int i=0;i<permissionLength;i++) {
+                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                        ContextCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return shouldShowRequestPermissionRationale;
+    }
     /**
      *
      * @param activity : For which activity

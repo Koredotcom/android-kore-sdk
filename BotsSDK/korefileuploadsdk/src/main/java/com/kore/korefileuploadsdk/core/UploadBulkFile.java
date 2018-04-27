@@ -88,7 +88,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						String fileExtn,int BUFFER_SIZE, Messenger messenger,
-							String thumbnailFilePath, String messageId,Context context,boolean isTeam, String teamId, String componentType,
+							String thumbnailFilePath, String messageId,Context context,String componentType,
 						  String host){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
@@ -105,10 +105,8 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this.componentType = componentType;
 		this.host = host;
 		
-		if(isTeam)
-			userOrTeamId = teamId;
-		else
-			userOrTeamId = userId;
+
+		userOrTeamId = userId;
 		
 		helper = BotDBManager.getInstance();
 		
@@ -372,7 +370,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				MultipartEntity reqEntity = new MultipartEntity();
 				
 //				thumbnailFilePath = thumbnailFilePath;
-				if(thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") && fileContext.equalsIgnoreCase("message")){
+				if(thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") && fileContext.equalsIgnoreCase("knowledge")){
 
 					InputStream fis = null;
 					try {
@@ -464,10 +462,13 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //					RecordingStatus.setThumbnailFilePath(null);
 //					String serverResponse = EntityUtils.toString(response.getEntity());
 					JSONObject jsonObject = new JSONObject(serverResponse);
-          			
+          			String thumbnailURL = null;
         			if (jsonObject.get("fileId")!=null) {
         				fileID = (String) jsonObject.get("fileId");
-        				
+
+        				if(jsonObject.get("thumbnailURL") != null){
+        					thumbnailURL = (String)jsonObject.get("thumbnailURL");
+						}
         				if(fileID != null){
     						uploadInfo.setFileId(fileID);
     					}
@@ -484,6 +485,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
     					 data.putString("fileName", fileName);
 						 data.putString("componentType", componentType);
 						 data.putString("fileSize", getFileSizeMegaBytes(new File(outFilePath)));
+						 data.putString("thumbnailURL",thumbnailURL);
 						if(isTeam)
 							data.putString(Constants.TEAM_ID,userOrTeamId);
     					 msg.setData(data); //put the data here
