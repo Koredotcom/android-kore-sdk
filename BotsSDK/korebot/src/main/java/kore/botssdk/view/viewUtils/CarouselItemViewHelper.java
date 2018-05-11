@@ -2,6 +2,7 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
@@ -15,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 
@@ -31,7 +34,6 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Utils;
 
 import static android.view.View.GONE;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -87,7 +89,7 @@ public class CarouselItemViewHelper {
             float dp1 = AppControl.getInstance().getDimensionUtil().dp1;
 
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
-            carouselViewHolder.carouselItemSubTitle.setText(botCarouselModel.getSubtitle());
+            carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle().replaceAll("<br>"," "))));
 
             try {
                 if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty())
