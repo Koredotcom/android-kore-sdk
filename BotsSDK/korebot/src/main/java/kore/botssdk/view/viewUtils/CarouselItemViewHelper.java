@@ -227,7 +227,7 @@ public class CarouselItemViewHelper {
                     carouselViewHolder.hashTagsView.setVisibility(GONE);
                 }
                 carouselViewHolder.knowledgeType.setText("Link: News Article");
-                carouselViewHolder.knowledgeMode.setText(((KnowledgeDetailModel) botCarouselModel).getCount()== 0 ? "Private" : "Shared");
+                carouselViewHolder.knowledgeMode.setText(((KnowledgeDetailModel) botCarouselModel).getSharesCount()== 0 ? "Private" : "Shared");
             }else{
                 carouselViewHolder.koraItems.setVisibility(View.GONE);
             }
