@@ -234,6 +234,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				fis.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			showToastMsg("Unable to attach file");
 		}
 	}
 
@@ -466,7 +467,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
         			if (jsonObject.get("fileId")!=null) {
         				fileID = (String) jsonObject.get("fileId");
 
-        				if(jsonObject.get("thumbnailURL") != null){
+        				if(jsonObject.has("thumbnailURL")){
         					thumbnailURL = (String)jsonObject.get("thumbnailURL");
 						}
         				if(fileID != null){
