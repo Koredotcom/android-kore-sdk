@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -51,7 +50,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends AppCompatActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
+public class BotChatActivity extends BotAppCompactActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -155,6 +154,8 @@ public class BotChatActivity extends AppCompatActivity implements SocketConnecti
                 taskProgressBar.setVisibility(View.VISIBLE);
                 break;
             case CONNECTED:
+                if(isItFirstConnect)
+                    botClient.sendMessage("welcomedialog",chatBot,taskBotId);
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 updateActionBar();

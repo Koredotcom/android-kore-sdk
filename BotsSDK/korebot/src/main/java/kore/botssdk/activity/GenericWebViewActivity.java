@@ -3,11 +3,11 @@ package kore.botssdk.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
@@ -16,7 +16,7 @@ import android.webkit.WebViewClient;
 import kore.botssdk.R;
 
 
-public class GenericWebViewActivity extends AppCompatActivity {
+public class GenericWebViewActivity extends BotAppCompactActivity {
 
     String actionbarTitle;
     String url;
@@ -59,6 +59,14 @@ public class GenericWebViewActivity extends AppCompatActivity {
             public void onCloseWindow(WebView window) {
                 super.onCloseWindow(window);
                 GenericWebViewActivity.this.finish();
+            }
+
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
+                Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
+                        + consoleMessage.lineNumber() + " of "
+                        + consoleMessage.sourceId());
+                return super.onConsoleMessage(consoleMessage);
             }
         });
 

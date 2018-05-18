@@ -28,7 +28,7 @@ import kore.botssdk.utils.BundleUtils;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotHomeActivity extends AppCompatActivity {
+public class BotHomeActivity extends BotAppCompactActivity {
 
     private Button launchBotBtn;
     private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
@@ -42,6 +42,7 @@ public class BotHomeActivity extends AppCompatActivity {
 
         findViews();
         setListeners();
+//        getJWTToken();
     }
 
     private void findViews() {
@@ -79,6 +80,7 @@ public class BotHomeActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (isOnline()) {
+                showProgress("",true);
                 getJWTToken();
             } else {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();
@@ -96,11 +98,13 @@ public class BotHomeActivity extends AppCompatActivity {
         spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
+                dismissProgress();
                 Toast.makeText(BotHomeActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
+                dismissProgress();
                 launchBotChatActivity(jwt.getJwt());
             }
         });
