@@ -12,7 +12,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -99,26 +98,6 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
             dataSet[baseIndex].setFormSize(15.f);
             sets.add(dataSet[baseIndex]);
         }
-
-
-
-
-
-
-        /*ArrayList<Entry> e2 = new ArrayList<Entry>();
-
-        for (int i = 0; i < 12; i++) {
-            e2.add(new Entry(i, e1.get(i).getY() - 30));
-        }
-
-        LineDataSet d2 = new LineDataSet(e2, "New DataSet " + cnt + ", (2)");
-        d2.setLineWidth(2.5f);
-        d2.setCircleRadius(4.5f);
-        d2.setHighLightColor(Color.rgb(244, 117, 117));
-        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
-        d2.setDrawValues(false);*/
-
 
 
 
