@@ -29,11 +29,12 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  * Created by Ramachandra Pradeep on 30-Oct-17.
  */
 
-public class TableView extends ViewGroup {
+@Deprecated
+public class CustomTableView extends ViewGroup {
     private Context mContext;
     TableLayout mTable;
     int dp1;
-    public TableView(Context context) {
+    public CustomTableView(Context context) {
         super(context);
         mContext = context;
         init();

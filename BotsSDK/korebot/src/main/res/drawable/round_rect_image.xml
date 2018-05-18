@@ -1,0 +1,11 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <corners
+        android:bottomLeftRadius="26dp"
+        android:bottomRightRadius="26dp"
+        android:radius="26dp"
+        android:topLeftRadius="26dp"
+        android:topRightRadius="26dp" />
+
+</shape>
