@@ -30,8 +30,9 @@
     <dimen name="carousel_view_button_height_individual">48dp</dimen>
 
     <!-- Pie View -->
-    <dimen name="pie_layout_height">375dp</dimen>
+    <dimen name="pie_layout_height">400dp</dimen>
     <dimen name="table_layout_height">100dp</dimen>
+    <dimen name="mini_table_layout_height">150dp</dimen>
 
     <!--Line chart View-->
     <dimen name="line_layout_height">300dp</dimen>
