@@ -2,14 +2,17 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -30,6 +33,11 @@ public class PieChartView extends ViewGroup {
     private PieChart mChart;
     private Context mContext;
     int dp1;
+    private float holeRadius;
+    private float transparentCircleRadius;
+
+    private final String PIE_TYPE_REGULAR = "regular";
+    private final String PIE_TYPE_DONUT = "donut";
 
     public PieChartView(Context context) {
         super(context);
@@ -41,15 +49,24 @@ public class PieChartView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         mChart = new PieChart(mContext);
         addView(mChart);
-//        setBackgroundColor(mContext.getColor(R.color.bgLightBlue));
+        setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));
     }
 
-    public void populatePieChart(String desc, ArrayList<String> xVals, ArrayList<Entry> yVals){
+    public void populatePieChart(String desc, String pieType, ArrayList<String> xVals, ArrayList<PieEntry> yVals){
+        if(pieType != null && pieType.equals(PIE_TYPE_DONUT)){
+            holeRadius = 58f;
+            transparentCircleRadius = 61f;
+        }else{
+            holeRadius = 0f;
+            transparentCircleRadius = 0f;
+        }
         mChart.setUsePercentValues(true);
         mChart.setDrawHoleEnabled(true);
-        mChart.setDescription(desc);
-        mChart.setHoleRadius(7);
-        mChart.setTransparentCircleRadius(10);
+        Description sdesc = new Description();
+        sdesc.setText(desc);
+        mChart.setDescription(sdesc);
+        mChart.setHoleRadius(holeRadius);
+        mChart.setTransparentCircleRadius(transparentCircleRadius);
 
 
         mChart.setRotationAngle(0);
@@ -57,16 +74,18 @@ public class PieChartView extends ViewGroup {
 
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
-            public void onValueSelected(Entry entry, int i, Highlight highlight) {
-                if(entry == null)
+            public void onValueSelected(Entry e, Highlight h) {
+
+                if (e == null)
                     return;
-                //show toast
-//                Toast.makeText(mContext,)
+                Log.i("VAL SELECTED",
+                        "Value: " + e.getY() + ", index: " + h.getX()
+                                + ", DataSet index: " + h.getDataSetIndex());
             }
 
             @Override
             public void onNothingSelected() {
-
+                Log.i("PieChart", "nothing selected");
             }
         });
         addData(xVals,yVals);
@@ -79,7 +98,7 @@ public class PieChartView extends ViewGroup {
 
     }
 
-    private void addData(ArrayList<String> xVals, ArrayList<Entry> yVals){
+    private void addData(ArrayList<String> xVals, ArrayList<PieEntry> yVals){
         PieDataSet dataSet = new PieDataSet(yVals,"");
         dataSet.setSliceSpace(3);
         dataSet.setSelectionShift(5);
@@ -89,23 +108,11 @@ public class PieChartView extends ViewGroup {
         for(String color : colorsArray){
             colors.add(Color.parseColor(color));
         }
-/*        for(int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-        for(int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-        for(int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-        for(int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-        for(int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);*/
-
-
 
         dataSet.setColors(colors);
 
-        PieData data = new PieData(xVals);
-        data.setDataSet(dataSet);
+        PieData data = new PieData(dataSet);
+//        data.setDataSet(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
