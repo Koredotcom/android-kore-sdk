@@ -9,23 +9,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotLineChartDataModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -49,6 +52,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     private void init() {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         mChart = new LineChart(mContext);
+        mChart.getDescription().setEnabled(false);
         mChart.setTouchEnabled(true);
         CustomMarkerView mv = new CustomMarkerView(mContext, R.layout.marker_content);
 
@@ -56,23 +60,76 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         mChart.setMarkerView(mv);
         mChart.setOnChartGestureListener(this);
         addView(mChart);
-//        setBackgroundColor(mContext.getColor(R.color.bgLightBlue));
+//        setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));
     }
 
-    public void setData(ArrayList<BotLineChartDataModel> data,ArrayList<String> headers) {
+    public void setData(PayloadInner _payInner) {
+
+
+        LineDataSet dataSet[];
+        Description desc = new Description();
+//        desc.setText("Hi This is challa");
+        mChart.setDescription(desc);
+
+
+        ArrayList<BotLineChartDataModel> lineList = _payInner.getLineChartDataModels();
+
+        ArrayList<ILineDataSet> sets = new ArrayList<ILineDataSet>(lineList.size());
+        dataSet = new LineDataSet[lineList.size()];
+
+        for(int baseIndex=0; baseIndex < lineList.size(); baseIndex++){
+            BotLineChartDataModel model = lineList.get(baseIndex);
+
+            ArrayList<Entry> entry = new ArrayList<Entry>();
+            for (int index = 0; index < model.getValues().size(); index++) {
+                entry.add(new Entry(index,Math.round(model.getValues().get(index))));
+            }
+            dataSet[baseIndex] = new LineDataSet(entry, model.getTitle());
+            dataSet[baseIndex].setLineWidth(2.5f);
+            dataSet[baseIndex].setCircleRadius(4.5f);
+            dataSet[baseIndex].setDrawValues(false);
+            dataSet[baseIndex].setColor(ColorTemplate.MATERIAL_COLORS[baseIndex % 4]);
+            dataSet[baseIndex].setCircleColor(ColorTemplate.getHoloBlue());
+            dataSet[baseIndex].setLineWidth(1f);
+            dataSet[baseIndex].setCircleRadius(3f);
+            dataSet[baseIndex].setDrawCircleHole(false);
+            dataSet[baseIndex].setValueTextSize(9f);
+            dataSet[baseIndex].setDrawFilled(true);
+            dataSet[baseIndex].setFormLineWidth(1f);
+            dataSet[baseIndex].setFormSize(15.f);
+            sets.add(dataSet[baseIndex]);
+        }
 
 
 
-        mChart.setDescription(headers.get(0));
-        ArrayList<ILineDataSet> dataSets = getYAxisValues(data,headers);
-        LineData lineData = new LineData(getXAxisValues(data), dataSets);
+
+
+
+        /*ArrayList<Entry> e2 = new ArrayList<Entry>();
+
+        for (int i = 0; i < 12; i++) {
+            e2.add(new Entry(i, e1.get(i).getY() - 30));
+        }
+
+        LineDataSet d2 = new LineDataSet(e2, "New DataSet " + cnt + ", (2)");
+        d2.setLineWidth(2.5f);
+        d2.setCircleRadius(4.5f);
+        d2.setHighLightColor(Color.rgb(244, 117, 117));
+        d2.setColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        d2.setCircleColor(ColorTemplate.VORDIPLOM_COLORS[0]);
+        d2.setDrawValues(false);*/
+
+
+
+
+        LineData lineData = new LineData(sets);
 
 
         // set data
         mChart.setData(lineData);
         mChart.getXAxis().setTextSize(8);
         mChart.getXAxis().setDrawAxisLine(true);
-        mChart.getXAxis().setLabelsToSkip(0);
+//        mChart.getXAxis().setLabelsToSkip(0);
         mChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         mChart.setDrawGridBackground(false);
         mChart.getXAxis().setDrawGridLines(false); // disable grid lines for the XAxis
@@ -80,25 +137,33 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         mChart.getAxisRight().setDrawGridLines(false);
         mChart.getAxisRight().setEnabled(false);// disable grid lines for the right YAxis
         // get the legend (only possible after setting data)
+        // get the legend (only possible after setting data)
         Legend l = mChart.getLegend();
-        mChart.setExtraBottomOffset(20);
-        mChart.setPinchZoom(true);
+
         // modify the legend ...
-         l.setPosition(Legend.LegendPosition.ABOVE_CHART_CENTER);
         l.setForm(Legend.LegendForm.LINE);
+//        l.setTypeface(mTfLight);
+        l.setTextSize(11f);
+        l.setTextColor(Color.WHITE);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+
+
 
     }
 
 
-    private ArrayList<String> getXAxisValues(ArrayList<BotLineChartDataModel> dataModels){
-        ArrayList<String> xVals = new ArrayList<String>();
-        for(BotLineChartDataModel botLineChartDataModel : dataModels){
-            xVals.add(botLineChartDataModel.getTitle());
+    private String[] getXAxisValues(ArrayList<BotLineChartDataModel> dataModels){
+        String arr[] = new String[dataModels.size()];
+        for(int in=0; in<dataModels.size();in++){
+            arr[in] = dataModels.get(in).getTitle();
         }
 
-        return xVals;
+        return arr;
     }
-    private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, ArrayList<String> headers){
+    private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, List<String> headers){
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         Random randomGenerator = new Random();
         String[] colors = this.getResources().getStringArray(R.array.color_set);
@@ -107,7 +172,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         for (int i = 0; i <= size - 1; i++) {
             ArrayList<Entry> yVals = new ArrayList<Entry>();
             for (int j = 0; j <= dataModels.size() - 1; j++) {
-                ArrayList<Float> values = dataModels.get(j).getValues();
+                List<Float> values = dataModels.get(j).getValues();
                 yVals.add(new Entry(values.get(i), j));
             }
 
@@ -118,7 +183,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
             set1.setFillAlpha(110);
             set1.setColor(color);
             set1.setDrawValues(false);
-            set1.setDrawCubic(true);
+//            set1.setDrawCubic(true);
             set1.setCircleColor(Color.BLACK);
             set1.setLineWidth(1f);
             set1.setCircleRadius(3f);

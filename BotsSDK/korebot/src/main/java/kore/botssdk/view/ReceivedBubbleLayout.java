@@ -1,10 +1,11 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
     CircularProfileView cpvSenderImage;
-    int carouselViewHeight, pieViewHeight,tableHeight,lineHeight;
+    int carouselViewHeight, pieViewHeight,tableHeight,lineHeight,miniTableHeight;
 
     public ReceivedBubbleLayout(Context context) {
         super(context);
@@ -61,6 +62,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
         tableHeight = (int) getResources().getDimension(R.dimen.table_layout_height);
         lineHeight = (int) getResources().getDimension(R.dimen.line_layout_height);
+        miniTableHeight = (int) getResources().getDimension(R.dimen.mini_table_layout_height);
         super.setLeftSide(true);
     }
 
@@ -106,14 +108,18 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(), lineChartView.getMeasuredWidth(),botListTemplateView.getMeasuredWidth(),botPieChartView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), botButtonView.getMeasuredWidth(),  lineChartView.getMeasuredWidth(),
+                barChartView.getMeasuredWidth(),miniTableView.getMeasuredWidth(),stackedBarChatView.getMeasuredWidth(),
+                botListTemplateView.getMeasuredWidth(),botPieChartView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
         headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[0] = Collections.max(Arrays.asList(maxContentDimen[0], headerLayoutDimen[0]));
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight()+ lineChartView.getMeasuredHeight()+ botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight()+ lineChartView.getMeasuredHeight()+BUBBLE_CONTENT_BOTTOM_MARGIN;
+                headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +  lineChartView.getMeasuredHeight()+ barChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()
+                +botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight()+miniTableView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + headerLayoutDimen[1] + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
+                lineChartView.getMeasuredHeight()+barChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+miniTableView.getMeasuredHeight()+BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
 
     @Override
@@ -132,8 +138,10 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         botCarouselView.setVisibility(View.GONE);
         botListTemplateView.setVisibility(View.GONE);
         botPieChartView.setVisibility(View.GONE);
-        tableView.setVisibility(View.GONE);
         lineChartView.setVisibility(GONE);
+        barChartView.setVisibility(GONE);
+        stackedBarChatView.setVisibility(GONE);
+        miniTableView.setVisibility(GONE);
     }
 
     @Override
@@ -163,6 +171,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         botCarouselView.populateCarouselView(null);
         botCarouselView.setVisibility(View.GONE);
         botButtonView.setVisibility(View.GONE);
+        miniTableView.setVisibility(GONE);
 
         if (compModel != null) {
             String compType = compModel.getType();
@@ -199,30 +208,59 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
                     if(elementModels != null && !elementModels.isEmpty()) {
                         ArrayList<String > xVal = new ArrayList<>(elementModels.size());
-                        ArrayList<Entry> yVal = new ArrayList<>(elementModels.size());
+                        ArrayList<PieEntry> yVal = new ArrayList<>(elementModels.size());
                         for(int i=0; i < elementModels.size(); i++){
                             xVal.add(elementModels.get(i).getTitle());
-                            yVal.add(new Entry((float)elementModels.get(i).getValue(),i));
+                            yVal.add(new PieEntry((float)elementModels.get(i).getValue(),i));
                         }
-                        botPieChartView.populatePieChart("", xVal,yVal);
+                        botPieChartView.populatePieChart("",payInner.getPie_type(), xVal,yVal);
                     }
                 }else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botListTemplateView.setVisibility(View.VISIBLE);
                     botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
                     botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
-                }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
+                }/*else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
                     tableView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     tableView.populateTableView(payInner);
-
-                }else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                }*/else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())){
                     lineChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    lineChartView.setData(payInner.getLineChartDataModels(),payInner.getHeaders());
+                    lineChartView.setData(payInner);
+                }else if(BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(payInner.getTemplate_type())){
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    if(!payInner.isStacked()) {
+                        barChartView.setVisibility(View.VISIBLE);
+                        barChartView.setData(payInner);
+                    }else{
+                        stackedBarChatView.setVisibility(View.VISIBLE);
+                        stackedBarChatView.setData(payInner);
+                    }
+                }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
+                    miniTableView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    miniTableView.setData(payInner.getTemplate_type(), payInner);
+                }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())){
+                    miniTableView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+//                    for(BotMiniTableModel model:payInner.getMiniTableDataModels()) {
+                        miniTableView.setData(payInner.getTemplate_type(), payInner);
+//                    }
                 }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else{
                     bubbleTextMediaLayout.populateText(payOuter.getText());
+                }
+            }else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())){
+                String message = payOuter.getPayload().getText();
+                String txtColor = payOuter.getPayload().getColor();
+                if (botContentTextView != null) {
+                    try {
+                        botContentTextView.setTextColor(Color.parseColor(txtColor));
+                        botContentTextView.setText(message);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    }
                 }
             }else{
                 bubbleTextMediaLayout.populateText(payOuter.getText());
@@ -297,9 +335,9 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /**
          * For TableView
          */
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
+        /*childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
-        MeasureUtils.measure(tableView, childWidthSpec,wrapSpec);
+        MeasureUtils.measure(miniTableView, childWidthSpec,wrapSpec);*/
 
         /**
          * for line chart
@@ -309,12 +347,33 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(lineChartView, childWidthSpec,childHeightSpec);
 
+        /**
+         * For BarChart
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(barChartView, childWidthSpec,childHeightSpec);
+
+        /**
+         * For stacked BarChart
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(stackedBarChatView, childWidthSpec,childHeightSpec);
+
         /*
          * For CarouselView
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
         MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
+
+        //for mini table
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
+//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (miniTableHeight), MeasureSpec.EXACTLY);
+//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
+        MeasureUtils.measure(miniTableView, childWidthSpec, wrapSpec);
+
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
@@ -415,13 +474,27 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
         /**
          * For Table view
          */
-        left = cpvSenderImage.getRight() /2;
+        /*left = cpvSenderImage.getRight() /2;
         top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
-        LayoutUtils.layoutChild(tableView, left, top);
+        LayoutUtils.layoutChild(tableView, left, top);*/
 
         left = cpvSenderImage.getRight()/2;
         top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
         LayoutUtils.layoutChild(lineChartView, left, top);
+
+        left = cpvSenderImage.getRight()/2;
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
+        LayoutUtils.layoutChild(barChartView, left, top);
+
+        left = cpvSenderImage.getRight()/2;
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
+        LayoutUtils.layoutChild(stackedBarChatView, left, top);
+
+        left = cpvSenderImage.getRight()/2;
+        top = cpvSenderImage.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN + 10;
+        LayoutUtils.layoutChild(miniTableView, left, top);
+
+
 
         botCarouselView.bringToFront();
 

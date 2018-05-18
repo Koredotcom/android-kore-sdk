@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,8 +103,11 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
-    protected TableView tableView;
+//    protected CustomTableView tableView;
     protected LineChartView lineChartView;
+    protected BarChartView barChartView;
+    protected StackedBarChatView stackedBarChatView;
+    protected BotMainTableView miniTableView;
 
 
     protected int position;
@@ -130,6 +135,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         init();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BaseBubbleLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.context = getContext();
@@ -242,15 +248,30 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         botPieChartView.setId(TextMediaLayout.PIECHART_VIEW_ID);
         addView(botPieChartView);
 
-        tableView = new TableView(getContext());
+        /*tableView = new CustomTableView(getContext());
         tableView.setVisibility(View.GONE);
         tableView.setId(TextMediaLayout.TABLE_VIEW_ID);
-        addView(tableView);
+        addView(tableView);*/
 
         lineChartView = new LineChartView(getContext());
         lineChartView.setVisibility(GONE);
         lineChartView.setId(TextMediaLayout.LINECHART_VIEW_ID);
         addView(lineChartView);
+
+        barChartView = new BarChartView(getContext());
+        barChartView.setVisibility(GONE);
+        barChartView.setId(TextMediaLayout.BARCHART_VIEW_ID);
+        addView(barChartView);
+
+        stackedBarChatView = new StackedBarChatView(getContext());
+        stackedBarChatView.setVisibility(GONE);
+        stackedBarChatView.setId(TextMediaLayout.STACK_BARCHAT_VIEW_ID);
+        addView(stackedBarChatView);
+
+        miniTableView = new BotMainTableView(getContext());
+        miniTableView.setVisibility(GONE);
+        miniTableView.setId(TextMediaLayout.MINI_TABLE_VIEW_ID);
+        addView(miniTableView);
 
     }
 
@@ -487,6 +508,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
                     if (botContentTextView != null) {
                         try {
                             botContentTextView.setTextColor(Color.parseColor(textColor));
+                            botContentTextView.setText(message);
                         } catch (IllegalArgumentException e) {
                             e.printStackTrace();
                         }

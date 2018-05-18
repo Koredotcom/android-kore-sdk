@@ -1,6 +1,7 @@
 package kore.botssdk.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Shiva Krishna on 11/6/2017.
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 
 public class BotLineChartDataModel {
     private String title;
-    private ArrayList<Float> values;
+    private List<Float> values;
 
     public String getTitle() {
         return title;
@@ -18,7 +19,7 @@ public class BotLineChartDataModel {
         this.title = title;
     }
 
-    public ArrayList<Float> getValues() {
+    public List<Float> getValues() {
         return values;
     }
 

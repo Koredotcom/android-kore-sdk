@@ -22,6 +22,74 @@ public class PayloadInner {
     private String template_type;
     private String text;
     private String table_design;
+    private String pie_type;
+    private String Auto_adjust_X_axis;
+    private List<String> X_axis;
+    private String direction;
+    private boolean stacked;
+    private String layout;
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
+    }
+
+
+
+    public boolean isStacked() {
+        return stacked;
+    }
+
+    public void setStacked(boolean stacked) {
+        this.stacked = stacked;
+    }
+
+
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+
+
+    public List<String> getxAxis() {
+        return X_axis;
+    }
+
+    public void setxAxis(List<String> xAxis) {
+        this.X_axis = xAxis;
+    }
+
+
+
+
+
+    public String getAuto_adjust_X_axis() {
+        return Auto_adjust_X_axis;
+    }
+
+    public void setAuto_adjust_X_axis(String auto_adjust_X_axis) {
+        Auto_adjust_X_axis = auto_adjust_X_axis;
+    }
+
+
+
+    public String getPie_type() {
+        return pie_type;
+    }
+
+    public void setPie_type(String pie_type) {
+        this.pie_type = pie_type;
+    }
+
+
     public String getActionType() {
         return action_type;
     }
@@ -61,7 +129,7 @@ public class PayloadInner {
     private AutoSuggestions auto_suggestions;
 
     private List<List<String>> columns = null;
-    private ArrayList<BotTableDataModel> table_elements_data = null;
+    private ArrayList<BotTableDataModel> tableDataModel = null;
 
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
@@ -78,6 +146,28 @@ public class PayloadInner {
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<String> headers;
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
+    private ArrayList<BotBarChartDataModel> barChartDataModels;
+
+    public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
+        return miniTableDataModels;
+    }
+
+    public void setMiniTableDataModels(ArrayList<BotMiniTableModel> miniTableDataModels) {
+        this.miniTableDataModels = miniTableDataModels;
+    }
+
+    private ArrayList<BotMiniTableModel> miniTableDataModels;
+
+
+    public ArrayList<BotBarChartDataModel> getBarChartDataModels() {
+        return barChartDataModels;
+    }
+
+    public void setBarChartDataModels(ArrayList<BotBarChartDataModel> barChartDataModels) {
+        this.barChartDataModels = barChartDataModels;
+    }
+
+
 
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
         return pieChartElements;
@@ -176,6 +266,10 @@ public class PayloadInner {
                 }.getType();
                 lineChartDataModels = gson.fromJson(elementsAsString, listType);
 
+            }else if(BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<BotBarChartDataModel>>() {
+                }.getType();
+                barChartDataModels = gson.fromJson(elementsAsString, listType);
             }else if(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equalsIgnoreCase(template_type)){
                 Type listType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {
                 }.getType();
@@ -183,7 +277,11 @@ public class PayloadInner {
             }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)){
                 Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
                 }.getType();
-                table_elements_data = gson.fromJson(elementsAsString, tableType);
+                tableDataModel = gson.fromJson(elementsAsString, tableType);
+            }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(template_type)){
+                Type tableType = new TypeToken<ArrayList<BotMiniTableModel>>() {
+                }.getType();
+                miniTableDataModels = gson.fromJson(elementsAsString, tableType);
             }else if(BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(template_type)){
                 Type tableType = new TypeToken<ArrayList<KoraSearchResultsModel>>() {
                 }.getType();
@@ -265,11 +363,11 @@ public class PayloadInner {
         this.knowledgeDetailModels = knowledgeDetailModels;
     }
     public ArrayList<BotTableDataModel> getTable_elements_data() {
-        return table_elements_data;
+        return tableDataModel;
     }
 
     public void setTable_elements_data(ArrayList<BotTableDataModel> table_elements_data) {
-        this.table_elements_data = table_elements_data;
+        this.tableDataModel = table_elements_data;
     }
 
     public List<List<String>> getColumns() {
