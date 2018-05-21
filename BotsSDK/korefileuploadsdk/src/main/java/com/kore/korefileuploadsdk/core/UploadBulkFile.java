@@ -549,7 +549,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			}
 	}
 	private  String getFileSizeMegaBytes(File file) {
-		return df2.format((double) file.length() / (1024 * 1024)) + " mb";
+		return df2.format((double) file.length() / (1024 * 1024)) + "mb";
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
