@@ -56,9 +56,17 @@ public class Utils {
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
-    public static boolean isWebURL(String url) {
-        return android.util.Patterns.WEB_URL.matcher(url).matches();
+    public static boolean isNullOrEmpty(CharSequence charSequence) {
+        return charSequence == null || charSequence.toString().isEmpty();
     }
+
+    public static boolean isWebURL(String url) {
+        return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
+    }
+    public static boolean isWebURL(CharSequence url) {
+        return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
+    }
+
 
     public static BotResponse buildBotMessage(String msg, String icon){
         BotResponse botResponse = new BotResponse();
