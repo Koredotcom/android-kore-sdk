@@ -102,5 +102,42 @@ public class Utils {
 
         return botResponse;
     }
+    /**
+     * Pass media length in seconds, and get in below format
+     * 00:00:00 (hrs:mins:sec)
+     */
+    public static String getMediaLength(long _seconds) {
+        StringBuilder buffer = new StringBuilder();
+        long _minutes = _seconds / 60;
+        long _hours = _minutes / 60;
+
+        long hours = _hours % 24;
+        long minutes = _minutes % 60;
+        long seconds = _seconds % 60;
+
+        if (hours > 0) {
+            buffer.append(String.format("%02d", hours));
+            buffer.append(":");
+
+        } else {
+            buffer.append("00:");
+        }
+
+        if (minutes > 0) {
+            buffer.append(String.format("%02d", minutes));
+            buffer.append(":");
+
+        } else {
+            buffer.append("00:");
+        }
+
+        if (seconds > 0) {
+            buffer.append(String.format("%02d", seconds));
+        } else {
+            buffer.append("00");
+        }
+
+        return buffer.toString();
+    }
 
 }
