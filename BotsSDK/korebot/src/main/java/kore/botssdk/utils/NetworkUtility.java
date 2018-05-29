@@ -32,7 +32,7 @@ public class NetworkUtility {
         }
 
         if (!isNetworkConnectionAvailable && showMessage) {
-            CustomToast.showToast(context, "No network available");
+//            CustomToast.showToast(context, "No network available");
 
         }
         return isNetworkConnectionAvailable;

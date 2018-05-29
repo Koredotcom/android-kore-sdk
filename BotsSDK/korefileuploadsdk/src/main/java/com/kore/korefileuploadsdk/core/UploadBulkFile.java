@@ -58,18 +58,19 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	private String fileName;
 	private String outFilePath=null;
 	private String accessToken =null;
-	private String userId = null;
+//	private String userId = null;
 	private String userOrTeamId = null;
 	private String fileContext=null;
 	private String fileToken = null;
 	private String fileExtn = null;
+	private String orientation = null;
 	private int BUFFER_SIZE;
 	private Messenger messenger;
 
 //	private int chunkCount = 0;
 	private String thumbnailFilePath;
 	private String messageId;
-	private boolean isTeam;
+//	private boolean isTeam;
 	private Context context;
 	private FileUploadedListener listener;
 	private String componentType;
@@ -89,11 +90,11 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						String fileExtn,int BUFFER_SIZE, Messenger messenger,
 							String thumbnailFilePath, String messageId,Context context,String componentType,
-						  String host){
+						  String host, String orientation){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
 		this.accessToken = accessToken;
-		this.userId = userId;
+//		this.userId = userId;
 		this.fileContext = fileContext;
 		this.fileExtn = fileExtn;
 		this.BUFFER_SIZE = BUFFER_SIZE;
@@ -101,9 +102,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this.thumbnailFilePath = thumbnailFilePath;
 		this.messageId = messageId;
 		this.context = context;
-		this.isTeam = isTeam;
+//		this.isTeam = isTeam;
 		this.componentType = componentType;
 		this.host = host;
+		this.orientation = orientation;
 		
 
 		userOrTeamId = userId;
@@ -221,7 +223,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					Thread.sleep(10);
 					System.gc();
                     upLoadProgressState(0,true);
-					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, isTeam,host));
+					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
 					chunkNo++;
 					chunkbaos.reset(); /*chunk size doubles in next iteration*/
 				}
@@ -272,7 +274,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
                         System.gc();
 
                         if(failedChunkList.contains(chunkNo+"")) {
-                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, isTeam,host));
+                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
                         }
                         chunkNo++;
                         chunkbaos.reset(); /*chunk size doubles in next iteration*/
@@ -330,7 +332,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	@Override
 	public void initiateFileUpload(FileUploadedListener listener) {
 		this.listener = listener;
-		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId,isTeam);
+		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId);
 	}
 
 	void setChunkCount(int n){
@@ -355,9 +357,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			HttpsURLConnection httpsURLConnection = null;
 			try {
 				KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder;
-				if(isTeam)
-					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.TEAM_MERGE_END_POINT, userOrTeamId,fileToken));
-				else
+//				if(isTeam)
+//					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.TEAM_MERGE_END_POINT, userOrTeamId,fileToken));
+//				else
 					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context,host + String.format(FileUploadEndPoints.MERGE_END_POINT, userOrTeamId,fileToken));
 
 				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
@@ -487,8 +489,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 						 data.putString("componentType", componentType);
 						 data.putString("fileSize", getFileSizeMegaBytes(new File(outFilePath)));
 						 data.putString("thumbnailURL",thumbnailURL);
-						if(isTeam)
-							data.putString(Constants.TEAM_ID,userOrTeamId);
+						 data.putString("orientation",orientation);
+//						if(isTeam)
+//							data.putString(Constants.TEAM_ID,userOrTeamId);
     					 msg.setData(data); //put the data here
     					 try {
     						 messenger.send(msg);
@@ -549,7 +552,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			}
 	}
 	private  String getFileSizeMegaBytes(File file) {
-		return df2.format((double) file.length() / (1024 * 1024)) + "mb";
+		if(file.length() < (1024*1024)){
+			return df2.format((double) file.length() / (1024)) + "kb";
+		}else	return df2.format((double) file.length() / (1024 * 1024)) + "mb";
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
@@ -603,8 +608,8 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		data.putString("filePath", outFilePath);
 		data.putString("componentType", componentType);
         data.putBoolean("success",false);
-		if(isTeam)
-			data.putString(Constants.TEAM_ID,userOrTeamId);
+//		if(isTeam)
+//			data.putString(Constants.TEAM_ID,userOrTeamId);
 		msg.setData(data); //put the data here
 
 		try {

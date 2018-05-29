@@ -32,13 +32,12 @@ public class UploadExecutor implements Runnable{
     private String userOrTeamId;
     private byte[] dataToSet = null;
     private int chunkNo = 0;
-    private boolean isTeam;
     private Context context;
     private ChunkUploadListener mListener = null;
     private String host;
 
     public UploadExecutor(Context context, String fileName, String fileToken, String accessToken,String userOrTeamId,byte[] dataToPost,
-                          int chunkNo, ChunkUploadListener listener, boolean isTeam, String host) {
+                          int chunkNo, ChunkUploadListener listener, String host) {
 
         this.fileName=fileName;
         this.fileToken = fileToken;
@@ -47,7 +46,6 @@ public class UploadExecutor implements Runnable{
         this.dataToSet = dataToPost;
         this.chunkNo = chunkNo;
         this.mListener = listener;
-        this.isTeam = isTeam;
         this.context = context;
         this.host = host;
     }
@@ -60,9 +58,9 @@ public class UploadExecutor implements Runnable{
 
             Log.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
             String FULL_URL = null;
-            if(isTeam)
-                FULL_URL = host + String.format(FileUploadEndPoints.TEAM_CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
-            else
+//            if(isTeam)
+//                FULL_URL = host + String.format(FileUploadEndPoints.TEAM_CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
+//            else
                 FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
             koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();

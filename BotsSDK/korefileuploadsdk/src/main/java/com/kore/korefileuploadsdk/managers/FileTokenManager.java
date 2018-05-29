@@ -29,14 +29,14 @@ public class FileTokenManager{
 	private String TEAMS_END_POINT = "/api/1.1/teams/%s/file/token";
 
     public FileTokenManager(String host, FileTokenListener listener,
-                     String accessToken, Context context, String userOrTeamId, boolean isTeam) {
+                     String accessToken, Context context, String userOrTeamId) {
 
         _accessToken = accessToken;
         _mContext = context;
         _listener = listener;
-        if (isTeam)
-            _Url = host + String.format(TEAMS_END_POINT, userOrTeamId);
-        else
+//        if (isTeam)
+//            _Url = host + String.format(TEAMS_END_POINT, userOrTeamId);
+//        else
             _Url = host + String.format(END_POINT, userOrTeamId);
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
