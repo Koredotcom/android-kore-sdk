@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -82,7 +83,7 @@ public class CarouselItemViewHelper {
                                       final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final BotCarouselModel botCarouselModel,
-                                      Context activityContext) {
+                                      final Context activityContext) {
 
         if (botCarouselModel != null) {
 
@@ -156,7 +157,11 @@ public class CarouselItemViewHelper {
                         }else if(BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             String buttonPayload = botCaourselButtonModel.getPayload();
 //                            String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
+                            if(buttonPayload != null && buttonPayload.equalsIgnoreCase("Schedule a meeting")){
+                                Toast.makeText(activityContext,"This feature is not available right now",Toast.LENGTH_LONG).show();
+                            }else {
+                                composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
+                            }
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
                         }
