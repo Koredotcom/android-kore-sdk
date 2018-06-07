@@ -266,6 +266,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
        boolean like;
        boolean follow;
 
+       public int getPrivilege() {
+           return privilege;
+       }
+
+       public void setPrivilege(int privilege) {
+           this.privilege = privilege;
+       }
+
+       int privilege;
+
        public int getVote() {
            return vote;
        }
