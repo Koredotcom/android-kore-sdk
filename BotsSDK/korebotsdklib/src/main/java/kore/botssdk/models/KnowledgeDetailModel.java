@@ -14,6 +14,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
 
     String lMUId;
 
+    public long getViews() {
+        return views;
+    }
+
+    public void setViews(long views) {
+        this.views = views;
+    }
+
+    long views;
+
     public int getCount() {
         return count;
     }
