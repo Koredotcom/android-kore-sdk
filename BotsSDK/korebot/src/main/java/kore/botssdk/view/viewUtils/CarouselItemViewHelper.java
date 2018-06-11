@@ -90,7 +90,7 @@ public class CarouselItemViewHelper {
             float dp1 = AppControl.getInstance().getDimensionUtil().dp1;
 
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
-            carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle().replaceAll("<br>"," "))));
+            carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>","")));
 
             try {
                 if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty())
