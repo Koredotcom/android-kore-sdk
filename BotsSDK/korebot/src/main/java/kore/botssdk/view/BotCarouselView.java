@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -28,7 +26,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class BotCarouselView extends ViewGroup {
 
-    ViewPager carouselViewpager;
+    HeightAdjustableViewPager carouselViewpager;
     int dp1;
 
     private int layoutWidth, layoutHeight;
@@ -56,7 +54,7 @@ public class BotCarouselView extends ViewGroup {
     private void init() {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
-        carouselViewpager = (ViewPager) inflatedView.findViewById(R.id.carouselViewpager);
+        carouselViewpager = (HeightAdjustableViewPager) inflatedView.findViewById(R.id.carouselViewpager);
         TypedValue typedValue = new TypedValue();
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
@@ -73,6 +71,7 @@ public class BotCarouselView extends ViewGroup {
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
                 carouselViewpager.setAdapter(botCarouselAdapter);
                 botCarouselAdapter.notifyDataSetChanged();
+                carouselViewpager.setSwipeLocked(botCarouselModelArrayList != null && botCarouselModelArrayList.size() ==1);
         /*        for(int i=0;i<carouselViewpager.getChildCount();i++){
                     View view = carouselViewpager.getChildAt(i).findViewById(R.id.carousel_item_root);
                     ViewGroup.LayoutParams layoutParams = view.getLayoutParams();

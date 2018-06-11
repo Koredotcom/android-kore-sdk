@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ public class KoraCarouselView extends ViewGroup {
     Context mContext;
     float dp1;
     TextView headerView;
-    ViewPager carousalView;
+    HeightAdjustableViewPager carousalView;
     KoraCarousalAdapter koraCarousalAdapter;
 
     public Activity getActivityContext() {
@@ -85,7 +84,7 @@ public class KoraCarouselView extends ViewGroup {
     private void init() {
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
-        carousalView = (ViewPager) view.findViewById(R.id.carouselViewpager);
+        carousalView = (HeightAdjustableViewPager) view.findViewById(R.id.carouselViewpager);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
 
         carousalView.setPageMargin(pageMargin);
@@ -177,6 +176,7 @@ public class KoraCarouselView extends ViewGroup {
             koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
             carousalView.setAdapter(koraCarousalAdapter);
             koraCarousalAdapter.notifyDataSetChanged();
+            carousalView.setSwipeLocked(koraSearchDataSetModels.size() == 1);
 
         }
     }

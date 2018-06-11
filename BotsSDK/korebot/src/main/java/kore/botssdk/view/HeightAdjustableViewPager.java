@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -12,6 +13,8 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
  */
 
 public class HeightAdjustableViewPager extends ViewPager {
+
+    private boolean swipeLocked;
 
     public HeightAdjustableViewPager(Context context) {
         super(context);
@@ -51,5 +54,23 @@ public class HeightAdjustableViewPager extends ViewPager {
 
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return !swipeLocked && super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        return !swipeLocked && super.onInterceptTouchEvent(event);
+    }
+
+    @Override
+    public boolean canScrollHorizontally(int direction) {
+        return !swipeLocked && super.canScrollHorizontally(direction);
+    }
+
+    public void setSwipeLocked(boolean swipeLocked) {
+        this.swipeLocked = swipeLocked;
     }
 }
