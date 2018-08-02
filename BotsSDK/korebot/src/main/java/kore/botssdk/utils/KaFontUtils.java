@@ -27,6 +27,7 @@ public class KaFontUtils {
     private static Typeface robotoSemiBoldItalic;
     private static Typeface robotoBold;
     private static Typeface robotoBoldItalic;
+    private static Typeface robotoExtraBold;
 
     public static final String ROBOTO_LIGHT = "light";
     public static final String ROBOTO_LIGHT_ITALICS = "light-italic";
@@ -38,6 +39,7 @@ public class KaFontUtils {
     public static final String ROBOTO_SEMI_BOLD_ITALICS = "semi-bold-italic";
     public static final String ROBOTO_BOLD = "bold";
     public static final String ROBOTO_BOLD_ITALICS = "bold-italic";
+    public static final String ROBOTO_EXTRA_BOLD = "extra-bold";
 
     public static void applyCustomFont(Context context, View root) {
         if (root instanceof ViewGroup) {
@@ -105,6 +107,11 @@ public class KaFontUtils {
                     robotoBoldItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-BoldItalic.ttf");
                 }
                 myview.setTypeface(robotoBoldItalic);
+            }else if(((String) tag).equalsIgnoreCase(ROBOTO_EXTRA_BOLD)){
+                if (robotoExtraBold == null) {
+                    robotoExtraBold = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-ExtraBold.ttf");
+                }
+                myview.setTypeface(robotoExtraBold);
             }
         }
     }
@@ -162,6 +169,11 @@ public class KaFontUtils {
                     robotoBoldItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-BoldItalic.ttf");
                 }
                 return robotoBoldItalic;
+            case ROBOTO_EXTRA_BOLD:
+                if (robotoExtraBold == null) {
+                    robotoExtraBold = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-ExtraBold.ttf");
+                }
+                return robotoExtraBold;
             default:
                 if (robotoRegular == null) {
                     robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Regular.ttf");
@@ -196,6 +208,9 @@ public class KaFontUtils {
                 break;
             case 7:
                 typefaceTag = KaFontUtils.ROBOTO_BOLD_ITALICS;
+                break;
+            case 8:
+                typefaceTag = KaFontUtils.ROBOTO_EXTRA_BOLD;
                 break;
             default:
                 typefaceTag = KaFontUtils.ROBOTO_REGULAR;

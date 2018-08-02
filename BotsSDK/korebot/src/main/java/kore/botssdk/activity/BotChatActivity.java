@@ -304,6 +304,11 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
 
     }
 
+    @Override
+    public void launchActivityWithBundle(int type, Bundle payload) {
+
+    }
+
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
     }

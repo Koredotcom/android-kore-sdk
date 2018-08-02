@@ -17,6 +17,10 @@ public class AutoExpandListView extends ListView {
         super(context, attrs, defaultStyle);
     }
 
+    public AutoExpandListView(Context context){
+        super(context,null);
+    }
+
     public AutoExpandListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

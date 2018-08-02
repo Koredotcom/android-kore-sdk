@@ -6,9 +6,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Ramachandra Pradeep on 12/15/2016.
@@ -147,6 +145,7 @@ public class PayloadInner {
     private ArrayList<String> headers;
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
+    private ArrayList<MeetingTemplateModel> meetingTemplateModels;
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
         return miniTableDataModels;
@@ -286,6 +285,10 @@ public class PayloadInner {
                 Type tableType = new TypeToken<ArrayList<KoraSearchResultsModel>>() {
                 }.getType();
                 koraSearchResultsModel = gson.fromJson(elementsAsString, tableType);
+            }  else if (BotResponse.TEMPLATE_TYPE_SLOT_PICKER.equalsIgnoreCase(template_type)) {
+                Type listType = new TypeToken<ArrayList<MeetingTemplateModel>>() {
+                }.getType();
+                meetingTemplateModels = gson.fromJson(elementsAsString, listType);
             }
         }
         templateValidator();
@@ -386,4 +389,11 @@ public class PayloadInner {
         this.koraSearchResultsModel = koraSearchResultsModel;
     }
 
+    public ArrayList<MeetingTemplateModel> getMeetingTemplateModels() {
+        return meetingTemplateModels;
+    }
+
+    public void setMeetingTemplateModels(ArrayList<MeetingTemplateModel> meetingTemplateModels) {
+        this.meetingTemplateModels = meetingTemplateModels;
+    }
 }

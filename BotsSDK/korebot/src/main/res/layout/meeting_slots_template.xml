@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/meeting_layout">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/slots_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@null" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="extra-bold"
+        android:id="@+id/show_more_view"
+        android:text="@string/show_more"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textAllCaps="true"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/slots_list"
+        android:textColor="@color/splash_color"
+        android:textSize="15dp" />
+</LinearLayout>

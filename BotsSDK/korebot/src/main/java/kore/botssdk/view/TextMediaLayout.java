@@ -110,7 +110,7 @@ public class TextMediaLayout extends MediaLayout {
 
     }
 
-    public void startup(int position, String messageBody, int... dimens) {
+    public void startup(String messageBody, int... dimens) {
         populateText(messageBody);
     }
 

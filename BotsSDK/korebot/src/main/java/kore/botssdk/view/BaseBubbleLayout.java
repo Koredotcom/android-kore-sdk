@@ -517,7 +517,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
             }
         }
 
-        bubbleTextMediaLayout.startup(position, message, dimens);
+        bubbleTextMediaLayout.startup(message, dimens);
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);
