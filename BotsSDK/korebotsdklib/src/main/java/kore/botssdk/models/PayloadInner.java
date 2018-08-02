@@ -146,6 +146,7 @@ public class PayloadInner {
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
+    private ArrayList<CalEventsTemplateModel> calEventsTemplateModels;
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
         return miniTableDataModels;
@@ -289,6 +290,9 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<MeetingTemplateModel>>() {
                 }.getType();
                 meetingTemplateModels = gson.fromJson(elementsAsString, listType);
+            }else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(template_type)){
+                Type tableType = new TypeToken<ArrayList<CalEventsTemplateModel>>(){}.getType();
+                calEventsTemplateModels = gson.fromJson(elementsAsString,tableType);
             }
         }
         templateValidator();
