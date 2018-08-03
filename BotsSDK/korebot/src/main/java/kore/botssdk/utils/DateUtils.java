@@ -23,7 +23,7 @@ public class DateUtils {
     public static final Format monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     public static final Format dateWeekDayV2_1 = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 
-    public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd ", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
 
 
