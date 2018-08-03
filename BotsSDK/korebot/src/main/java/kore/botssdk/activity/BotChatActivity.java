@@ -309,6 +309,11 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
 
     }
 
+    @Override
+    public void sendWithSomeDelay(String message, String payload,long time) {
+
+    }
+
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
     }

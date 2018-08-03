@@ -223,6 +223,8 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         void onFormActionButtonClicked(FormActionTemplate fTemplate);
 
         void launchActivityWithBundle(int type,Bundle payload);
+
+        void sendWithSomeDelay(String message,String payload,long time);
     }
 
     TextWatcher composeTextWatcher = new TextWatcher() {

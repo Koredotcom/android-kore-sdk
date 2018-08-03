@@ -20,7 +20,8 @@ public class DateUtils {
     public static final Format dateDay = new SimpleDateFormat("dd", Locale.ENGLISH);
     public static final Format yearFormat = new SimpleDateFormat("yyyy", Locale.ENGLISH);
     public static final Format dateMonth = new SimpleDateFormat("MM", Locale.ENGLISH);    //03
-
+    public static final Format monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
+    public static final Format dateWeekDayV2_1 = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd ", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
@@ -49,7 +50,7 @@ public class DateUtils {
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
 
         // OVERRIDE SOME symbols WHILE RETAINING OTHERS
-        symbols.setAmPmStrings(new String[]{"am", "pm"});
+         symbols.setAmPmStrings(new String[]{"am", "pm"});
         int messageDay = Integer.parseInt(dateDay.format(new Date(lastModified)));
         int currentDay = Integer.parseInt(dateDay.format(new Date()));
 
@@ -86,4 +87,9 @@ public class DateUtils {
 
         return time;
     }
+
+    public static String getDate(long lastModified){
+       return dateWeekMsg.format(new Date(lastModified));
+    }
+
 }

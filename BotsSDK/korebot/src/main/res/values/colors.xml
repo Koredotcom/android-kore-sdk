@@ -112,5 +112,9 @@
     <color name="primary">#FF3F51B5</color>
 
     <color name = "meetingsDisabled">#d4d7db</color>
+    <color name="color_4a4a4a">#4a4a4a</color>
+    <color name="color_a0a0a0">#a0a0a0</color>
+    <color name="color_908f91">#908f91</color>
+    <color name="color_485260">#485260</color>
 
 </resources>

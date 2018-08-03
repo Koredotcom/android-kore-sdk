@@ -101,7 +101,7 @@ public class MeetingSlotsView extends ViewGroup{
         }
         totalHeight += meetingLayout.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
         if(meetingLayout.getMeasuredHeight() !=0 ){
-            totalHeight+=47*dp1;
+            totalHeight+=18*dp1;
         }
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(meetingLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
@@ -119,7 +119,7 @@ public class MeetingSlotsView extends ViewGroup{
         slotsButtonAdapter.notifyDataSetChanged();
         showMore.setVisibility(slots.size() > 0 && meetingTemplateModel != null && meetingTemplateModel.isShowMore() ? VISIBLE : GONE);
         meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
-        showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.meetingsDisabled));
+        showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
         showMore.setOnClickListener(isEnabled ? new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +140,7 @@ public class MeetingSlotsView extends ViewGroup{
 
         //get the available size of child view
         int childLeft = 0;
-        int childTop =(int)(22 * dp1);
+        int childTop =(int)(6 * dp1);
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);

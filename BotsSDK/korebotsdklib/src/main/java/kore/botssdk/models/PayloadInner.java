@@ -147,6 +147,7 @@ public class PayloadInner {
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
     private ArrayList<CalEventsTemplateModel> calEventsTemplateModels;
+    private ArrayList<MeetingConfirmationModel> meetingConfirmationModels;
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
         return miniTableDataModels;
@@ -293,6 +294,10 @@ public class PayloadInner {
             }else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(template_type)){
                 Type tableType = new TypeToken<ArrayList<CalEventsTemplateModel>>(){}.getType();
                 calEventsTemplateModels = gson.fromJson(elementsAsString,tableType);
+            }else if (BotResponse.TEMPLATE_TYPE_MEETING_CONFIRM.equalsIgnoreCase(template_type)) {
+                Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
+                }.getType();
+                meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
             }
         }
         templateValidator();
@@ -399,5 +404,13 @@ public class PayloadInner {
 
     public void setMeetingTemplateModels(ArrayList<MeetingTemplateModel> meetingTemplateModels) {
         this.meetingTemplateModels = meetingTemplateModels;
+    }
+
+    public ArrayList<MeetingConfirmationModel> getMeetingConfirmationModels() {
+        return meetingConfirmationModels;
+    }
+
+    public void setMeetingConfirmationModels(ArrayList<MeetingConfirmationModel> meetingConfirmationModels) {
+        this.meetingConfirmationModels = meetingConfirmationModels;
     }
 }

@@ -93,8 +93,8 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     private void populateVIew(ViewHolder holder, int position) {
         MeetingSlotModel.Slot slot = getItem(position);
         holder.textView.setTag(slot);
-        String startTime = getTimeInAmPm(slot.getStart());
-        String endTime = getTimeInAmPm(slot.getEnd());
+        String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
+        String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
         final String day = getSlotsDate(slot.getStart());
         holder.textView.setText(MessageFormat.format("{0}, {1} to {2}", day, startTime, endTime));
         holder.textView.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +107,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
                         selectedSlot.put("day", meetingSlotModel.getStart());
                         selectedSlot.put("startTime", meetingSlotModel.getStart());
                         selectedSlot.put("endTime", meetingSlotModel.getEnd());
-                        composeFooterInterface.onSendClick(((TextView)v).getText().toString(), gson.toJson(selectedSlot));
+                        composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0);
                     }
                 }
             }
@@ -127,7 +127,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
         holder.textView = (TextView) view.findViewById(R.id.text_view);
-        ((GradientDrawable) holder.textView.getBackground()).setColor(context.getResources().getColor(isEnabled ?R.color.splash_color : R.color.meetingsDisabled));
+        ((GradientDrawable) holder.textView.getBackground()).setColor(context.getResources().getColor(isEnabled ?R.color.splash_color : R.color.color_a7b0be));
          view.setTag(holder);
     }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingEnd="5dp"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <kore.botssdk.view.ProfileTextView
+        android:layout_width="28dp"
+        android:textSize="11dp"
+        android:tag="bold"
+        android:gravity="center"
+        android:id="@+id/profile_view"
+        android:textColor="@color/white"
+        android:layout_height="28dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:textSize="11dp"
+        android:tag="extra-bold"
+        android:background="@drawable/show_more_background"
+        android:gravity="center"
+        android:text="+99"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:id="@+id/more_view"
+        android:visibility="gone"
+        android:textColor="@color/splash_color"
+        android:layout_height="28dp" />
+    
+</LinearLayout>
