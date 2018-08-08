@@ -2,20 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/event_options_more"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="46dp"
+    android:gravity="center"
+    android:layout_gravity="center_horizontal"
     android:orientation="horizontal">
 
     <TextView
         android:id="@+id/events_more_txt_view"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center"
         android:ellipsize="end"
         android:gravity="center"
+        android:tag="extra-bold"
         android:singleLine="true"
         android:text="SHOW MORE"
-        android:textColor="@color/bot_right_bubble_unselected"
-        android:textSize="18dp" />
+        android:textColor="@color/splash_color"
+        android:textSize="15dp" />
 
 </LinearLayout>
 

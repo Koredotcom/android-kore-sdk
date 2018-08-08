@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +32,7 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.KaFontUtils;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
@@ -135,7 +135,7 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
     }
 
     public static class ViewHolder {
-        public Button rowIndex;
+        public TextView rowIndex;
         public TextView txtDateTime;
         public LinearLayout layoutDetails;
         public View sideBar;
@@ -151,13 +151,13 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
         if (convertView == null || convertView.getTag() == null) {
             vi = inflater.inflate(R.layout.calendar_event_list_item, null);
             holder = new ViewHolder();
-            holder.rowIndex = (Button) vi.findViewById(R.id.btnRowIndex);
+            holder.rowIndex = (TextView) vi.findViewById(R.id.btnRowIndex);
             holder.txtDateTime = (TextView) vi.findViewById(R.id.txtDateAndTime);
             holder.layoutDetails = (LinearLayout) vi.findViewById(R.id.layout_deails);
             holder.sideBar = vi.findViewById(R.id.sideBar);
             holder.txtTitle = (TextView) vi.findViewById(R.id.txtTitle);
             holder.txtPlace = (TextView) vi.findViewById(R.id.txtPlace);
-
+            KaFontUtils.applyCustomFont(mContext,vi);
             vi.setTag(holder);
         } else
             holder = (ViewHolder) vi.getTag();
@@ -411,6 +411,7 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
         LinearLayout container = (LinearLayout) convertView.findViewById(R.id.event_options_more);
         final TextView moreTextView = (TextView) convertView.findViewById(R.id.events_more_txt_view);
         moreTextView.setText(title);
+        KaFontUtils.applyCustomFont(mContext,convertView);
 
         /*container.setOnClickListener(new View.OnClickListener() {
             @Override

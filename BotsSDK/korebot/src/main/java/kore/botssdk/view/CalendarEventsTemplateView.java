@@ -56,7 +56,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
         calCustomListRoot = (LinearLayout) findViewById(R.id.calCustomListRoot);
         listView = (AutoExpandListView) findViewById(R.id.calCustomListView);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        layoutItemHeight = getResources().getDimension(R.dimen.calendar_event_list_row_height);
+       // layoutItemHeight = getResources().getDimension(R.dimen.calendar_event_list_row_height);
 
     }
 
@@ -69,6 +69,32 @@ public class CalendarEventsTemplateView extends ViewGroup {
         calAdapter.notifyDataSetChanged();
 
     }
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+        int totalHeight = getPaddingTop();
+        int childWidthSpec;
+
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
+   /*     int  childWidth = calCustomListRoot.getMeasuredWidth();
+        if (childWidth > restrictedMaxWidth) {
+            childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.AT_MOST);
+            MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
+        }*/
+        totalHeight += calCustomListRoot.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
+        if(calCustomListRoot.getMeasuredHeight() !=0 ){
+            totalHeight+=12*dp1;
+        }
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(calCustomListRoot.getMeasuredWidth(), MeasureSpec.AT_MOST);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+    }
+
+/*
 
     public int getViewHeight() {
         int viewHeight = 0;
@@ -98,7 +124,8 @@ public class CalendarEventsTemplateView extends ViewGroup {
         }
         return viewHeight;
     }
-
+*/
+/*
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -121,7 +148,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
         int parentHeightSpec = childHeightSpec;
 
         super.onMeasure(parentWidthSpec, parentHeightSpec);
-    }
+    }*/
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
