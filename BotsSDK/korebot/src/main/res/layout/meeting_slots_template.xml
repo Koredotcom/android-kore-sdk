@@ -9,6 +9,7 @@
     <kore.botssdk.view.AutoExpandListView
         android:id="@+id/slots_list"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:divider="@null" />
 
@@ -19,10 +20,9 @@
         android:id="@+id/show_more_view"
         android:text="@string/show_more"
         android:gravity="center"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:textAllCaps="true"
         android:layout_marginTop="2dp"
-        android:layout_below="@+id/slots_list"
         android:textColor="@color/splash_color"
         android:textSize="15dp" />
 </LinearLayout>

@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -82,6 +83,9 @@ public class MeetingSlotsView extends ViewGroup{
         meetingLayout = view.findViewById(R.id.meeting_layout);
         showMore = (TextView) view.findViewById(R.id.show_more_view);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            showMore.setLetterSpacing(0.06f);
+        }
     }
 
 
