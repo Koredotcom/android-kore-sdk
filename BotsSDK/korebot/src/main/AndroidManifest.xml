@@ -3,10 +3,16 @@
     package="kore.botssdk">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+	<activity
+            android:name=".activity.GenericWebViewActivity"
+            android:label="Kora"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         android:name=".application.BotApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
