@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <Button
+        android:id="@+id/btnRowIndex"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Button"
+        android:textSize="14sp"
+        android:textColor="#6168e7" />
+
+    <TextView
+        android:id="@+id/txtDateAndTime"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/btnRowIndex"
+        android:text="This shows date and time"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:textColor="#8f9397"
+        android:layout_marginLeft="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/layout_deails"
+        android:layout_width="253dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtDateAndTime"
+        android:layout_toRightOf="@id/btnRowIndex"
+        android:orientation="horizontal"
+        android:layout_marginLeft="8dp"
+        android:background="@color/color_efefef">
+        <View
+            android:id="@+id/sideBar"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/bgBlueSignup"/>
+        <LinearLayout
+
+            android:layout_width="253dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout"
+            >
+
+            <TextView
+                android:id="@+id/txtTitle"
+                android:layout_width="208dp"
+                android:layout_height="19dp"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="#4a4a4a"
+                android:text="This shows title" />
+            <TextView
+                android:id="@+id/txtPlace"
+                android:layout_width="208dp"
+                android:layout_height="19dp"
+                android:text="this shows place"
+                android:maxLines="1"
+                android:textSize="13sp"
+                android:textColor="#8f9397"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

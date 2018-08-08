@@ -26,6 +26,9 @@ public class DateUtils {
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
 
+    public static final Format calendar_list_format = new SimpleDateFormat("EEE, d MMM, h:mm a", Locale.ENGLISH);
+    public static final Format calendar_list_format_2 = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
+
 
     public static String getTimeStamp(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if(timeStamp == null || timeStamp.isEmpty())return "";

@@ -146,6 +146,15 @@ public class PayloadInner {
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
+
+    public ArrayList<CalEventsTemplateModel> getCalEventsTemplateModels() {
+        return calEventsTemplateModels;
+    }
+
+    public void setCalEventsTemplateModels(ArrayList<CalEventsTemplateModel> calEventsTemplateModels) {
+        this.calEventsTemplateModels = calEventsTemplateModels;
+    }
+
     private ArrayList<CalEventsTemplateModel> calEventsTemplateModels;
     private ArrayList<MeetingConfirmationModel> meetingConfirmationModels;
 

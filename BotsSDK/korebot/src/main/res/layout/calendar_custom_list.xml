@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calCustomListRoot"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/calCustomListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:footerDividersEnabled="true"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="4dp"
+        android:headerDividersEnabled="true"
+        android:scrollbars="none" />
+
+</LinearLayout>

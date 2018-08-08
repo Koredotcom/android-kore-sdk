@@ -12,4 +12,5 @@
     <dimen name="quick_reply_recycler_layout_padding_top">0dp</dimen>
     <dimen name="quick_reply_recycler_layout_padding_right">20dp</dimen>
     <dimen name="quick_reply_recycler_layout_padding_bottom">0dp</dimen>
+    <dimen name="calendar_event_list_row_height">25dp</dimen>
 </resources>
