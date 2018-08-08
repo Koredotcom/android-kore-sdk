@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -160,6 +159,13 @@ public class CarouselItemViewHelper {
                             composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
+                        }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(botCaourselButtonModel.getType())){
+                            String buttonTitle = botCaourselButtonModel.getTitle();
+                            composeFooterInterface.onSendClick(buttonTitle);
+                        }else{
+                            String buttonPayload = botCaourselButtonModel.getPayload();
+                            String buttonTitle = botCaourselButtonModel.getTitle();
+                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
                         }
                     }
                 }

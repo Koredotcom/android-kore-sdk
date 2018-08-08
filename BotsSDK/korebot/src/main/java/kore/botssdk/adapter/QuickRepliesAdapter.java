@@ -63,10 +63,16 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
                     if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getContent_type())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
+                        String quickReplyTitle = quickReplyTemplate.getTitle();
+                        String quickReplyPayload = quickReplyTemplate.getPayload();
+                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload);
                     } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
                         invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                    }else {
+                    }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
+                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle());
+                    }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
+                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
+                    }else{
                         String quickReplyTitle = quickReplyTemplate.getTitle();
                         String quickReplyPayload = quickReplyTemplate.getPayload();
                         composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload);
