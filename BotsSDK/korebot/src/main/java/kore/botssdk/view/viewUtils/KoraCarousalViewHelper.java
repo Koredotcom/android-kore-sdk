@@ -2,8 +2,12 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -11,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.internal.LinkedTreeMap;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -18,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 
@@ -27,9 +33,11 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.EmailModel;
+import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.DateUtils;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
@@ -46,6 +54,9 @@ public class KoraCarousalViewHelper {
         public View showMoreView;
 
     }
+    public static class KoraFilesCarousalViewHolder {
+        public View fileLookupViewRoot;
+    }
 
     public static void initializeViewHolder(View view, KoraSearchDataSetModel.ViewType viewType) {
         KoraCarousalViewHolder carouselViewHolder = new KoraCarousalViewHolder();
@@ -57,6 +68,12 @@ public class KoraCarousalViewHelper {
         carouselViewHolder.showMoreView = view.findViewById(R.id.show_more_view);
         view.setTag(carouselViewHolder);
     }
+    public static void initializeFileLookupViewHolder(View view) {
+        KoraFilesCarousalViewHolder carouselViewHolder = new KoraFilesCarousalViewHolder();
+        carouselViewHolder.fileLookupViewRoot = view.findViewById(R.id.file_lookup_view_root);
+        view.setTag(carouselViewHolder);
+    }
+
 
     public static void populateStuffs(KoraCarousalViewHolder carouselViewHolder,
                                       final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
@@ -185,7 +202,49 @@ public class KoraCarousalViewHelper {
 
     }
 
+    public static void populateFileLookUpStuffs(KoraFilesCarousalViewHolder carouselViewHolder, final KaFileLookupModel dataModel, final Context activityContext) {
+            carouselViewHolder.fileLookupViewRoot.setVisibility(View.VISIBLE);
+            TextView txtFileType = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtFileType);
+            TextView txtTitle = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtTitle);
+            TextView txtFileSize = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtFileSize);
+            TextView txtSharedByName = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtSharedByName);
+            TextView txtLastEdited = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtLastEdited);
+            ListView listView = (ListView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.flist_view);
+
+
+        GradientDrawable tvBackground = (GradientDrawable) txtFileType.getBackground();
+        int icon = FileUtils.getColorForFileType(dataModel.getFileType());
+        tvBackground.setStroke((int)(3*dp1),icon);
+        txtFileType.setBackground(tvBackground);
+        txtFileType.setTextColor(icon);
+        txtFileType.setText(dataModel.getFileType()==null?"FILE":dataModel.getFileType());
+        txtTitle.setText(dataModel.getFileName());
+        txtFileSize.setText(dataModel.getFileSize()==null?"":dataModel.getFileSize());
+        txtSharedByName.setText(dataModel.getSharedBy());
+        try{
+        Date dt = DateUtils.isoFormatter.parse(dataModel.getLastModified());
+        txtLastEdited.setText("Last Edited "+ DateUtils.calendar_list_format.format(dt));
+        }catch (Exception e){
+
+        }
+            BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
+            listView.setAdapter(botCarouselItemButtonAdapter);
+            // listView.getLayoutParams().height = (int)(emailModel.getButtons() != null ? emailModel.getButtons().size() * (48 * dp1) : 0);
+            botCarouselItemButtonAdapter.setBotCaourselButtonModels(dataModel.getButtons() != null ? dataModel.getButtons() : new ArrayList<BotCaourselButtonModel>());
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
+                    LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) botCaourselButtonModel.getCustomData().get("redirectUrl");
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get("mob")));
+                    activityContext.startActivity(browserIntent);
+                }
+            });
+
+    }
+
     private static int getButtonHeight(Context context, int itemCount, float dp1) {
         return (int) (context.getResources().getDimension(R.dimen.carousel_view_button_height_individual) * dp1 + 4 * dp1);
     }
+
 }
