@@ -89,7 +89,7 @@ public class CarouselItemViewHelper {
 
 
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
-            if (StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
+            if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
                 carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
                 carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
             }else{
