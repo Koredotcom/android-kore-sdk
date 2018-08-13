@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
@@ -31,6 +30,7 @@ import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotListDefaultModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 
 import static android.view.View.GONE;
@@ -86,14 +86,22 @@ public class CarouselItemViewHelper {
 
         if (botCarouselModel != null) {
 
-            float dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+
 
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
-            carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>","")));
-
+            if (StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
+                carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
+                carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
+            }else{
+                carouselViewHolder.carouselItemSubTitle.setVisibility(GONE);
+            }
             try {
-                if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty())
+                if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
                     Picasso.with(activityContext).load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
+                    carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
+                }else{
+                    carouselViewHolder.carouselItemImage.setVisibility(GONE);
+                }
             }catch (Exception e){
                 e.printStackTrace();
             }
