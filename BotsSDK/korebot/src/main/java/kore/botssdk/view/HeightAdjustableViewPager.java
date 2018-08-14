@@ -15,6 +15,7 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 public class HeightAdjustableViewPager extends ViewPager {
 
     private boolean swipeLocked;
+    private boolean addExtraHeight;
 
     public HeightAdjustableViewPager(Context context) {
         super(context);
@@ -41,8 +42,8 @@ public class HeightAdjustableViewPager extends ViewPager {
                     height = childMeasuredHeight;
                 }
             }
-            if (height != 0) {
-                height = height + (int) (30 * dp1);
+            if (height != 0 && addExtraHeight) {
+                height = height + (int) (25 * dp1);
             }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
     /*        for(int i = 0; i < getChildCount(); i++) {
@@ -72,5 +73,13 @@ public class HeightAdjustableViewPager extends ViewPager {
 
     public void setSwipeLocked(boolean swipeLocked) {
         this.swipeLocked = swipeLocked;
+    }
+
+    public boolean isAddExtraHeight() {
+        return addExtraHeight;
+    }
+
+    public void setAddExtraHeight(boolean addExtraHeight) {
+        this.addExtraHeight = addExtraHeight;
     }
 }
