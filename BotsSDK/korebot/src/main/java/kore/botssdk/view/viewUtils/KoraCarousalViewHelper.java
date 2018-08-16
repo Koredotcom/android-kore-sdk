@@ -217,7 +217,7 @@ public class KoraCarousalViewHelper {
         tvBackground.setStroke((int)(3*dp1),icon);
         txtFileType.setBackground(tvBackground);
         txtFileType.setTextColor(icon);
-        txtFileType.setText(dataModel.getFileType()==null?"FILE":dataModel.getFileType());
+        txtFileType.setText(dataModel.getFileType()==null?"FILE":dataModel.getFileType().toUpperCase());
         txtTitle.setText(dataModel.getFileName());
         txtFileSize.setText(dataModel.getFileSize()==null?"":dataModel.getFileSize());
         txtSharedByName.setText(dataModel.getSharedBy());

@@ -16,6 +16,7 @@
         android:focusableInTouchMode="false"
         android:maxLines="1"
         android:ellipsize="end"
+        android:textSize="15sp"
         android:text="Button"/>
 
 

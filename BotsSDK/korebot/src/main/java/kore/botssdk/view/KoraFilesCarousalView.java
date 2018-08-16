@@ -84,10 +84,10 @@ public class KoraFilesCarousalView extends ViewGroup{
         // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
         MeasureUtils.measure(carousalView, childWidthSpec, wrapSpec);
 
-        totalHeight += carousalView.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
-        if(carousalView.getMeasuredHeight() !=0 ){
+        totalHeight += carousalView.getMeasuredHeight()+getPaddingBottom();
+        /*if(carousalView.getMeasuredHeight() !=0 ){
             totalHeight+=10*dp1;
-        }
+        }*/
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, parentHeightSpec);

@@ -43,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:text="txtTitle"
                     android:textColor="#1a1a1a"
+                    android:maxLines="1"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
