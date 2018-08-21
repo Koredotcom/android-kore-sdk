@@ -95,7 +95,7 @@ public class MeetingConfirmationModel {
             if(StringUtils.isEmpty(initials)){
                 initials = getFirstChar(firstName) + getFirstChar(lastName);
             }
-            return initials;
+            return initials.toUpperCase();
         }
 
         String getFirstChar(String string){

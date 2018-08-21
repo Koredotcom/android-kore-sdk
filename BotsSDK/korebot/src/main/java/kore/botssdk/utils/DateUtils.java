@@ -65,6 +65,7 @@ public class DateUtils {
 
         long now = System.currentTimeMillis();
         long diff = now - lastModified;
+        long diffRev = lastModified -now;
         long TWO_DAY_DIFF = 172800 * 1000;
 
         String time = "";
@@ -81,7 +82,7 @@ public class DateUtils {
             }
         } else if (diff >= 0 && diff <= TWO_DAY_DIFF) {
             time = "Yesterday";
-        } else if (diff <= TWO_DAY_DIFF) {
+        } else if (diffRev >=0 && diffRev <= TWO_DAY_DIFF) {
             time = "Tomorrow" ;
         } else {
 

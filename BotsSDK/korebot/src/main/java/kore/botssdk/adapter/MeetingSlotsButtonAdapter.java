@@ -91,7 +91,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     }
 
     private void populateVIew(ViewHolder holder, int position) {
-        MeetingSlotModel.Slot slot = getItem(position);
+        final MeetingSlotModel.Slot slot = getItem(position);
         holder.textView.setTag(slot);
         String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
         String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
@@ -103,10 +103,10 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
                 if (composeFooterInterface != null && isEnabled) {
                     MeetingSlotModel.Slot meetingSlotModel = (MeetingSlotModel.Slot) v.getTag();
                     if (meetingSlotModel != null) {
-                        HashMap<String, Long> selectedSlot = new HashMap<>();
-                        selectedSlot.put("day", meetingSlotModel.getStart());
-                        selectedSlot.put("startTime", meetingSlotModel.getStart());
-                        selectedSlot.put("endTime", meetingSlotModel.getEnd());
+                        HashMap<String, ArrayList<MeetingSlotModel.Slot>> selectedSlot = new HashMap<>();
+                        ArrayList<MeetingSlotModel.Slot> slotModels = new ArrayList<>();
+                        slotModels.add(meetingSlotModel);
+                        selectedSlot.put("slots",slotModels);
                         composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0);
                     }
                 }

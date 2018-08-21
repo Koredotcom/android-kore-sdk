@@ -52,6 +52,11 @@ public class MeetingSlotModel {
 
         private long end;
         private int type;
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Slot && ((Slot) o).getStart() == getStart() && ((Slot) o).getEnd() == getEnd();
+        }
     }
 }
 

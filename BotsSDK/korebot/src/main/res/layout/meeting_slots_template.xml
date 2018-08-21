@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:tag="extra-bold"
         android:id="@+id/show_more_view"
-        android:text="@string/show_more"
+        android:text="@string/modify_slots"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:textAllCaps="true"

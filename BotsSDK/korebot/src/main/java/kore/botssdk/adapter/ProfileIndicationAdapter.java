@@ -20,13 +20,15 @@ public class ProfileIndicationAdapter extends RecyclerView.Adapter<ProfileViewHo
     Context context;
     LayoutInflater layoutInflater;
     RecyclerView parentRecyclerView;
-
+    int whiteColor,splashColor;
     ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
 
     public ProfileIndicationAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
         layoutInflater = LayoutInflater.from(context);
+        whiteColor = context.getResources().getColor(R.color.white);
+        splashColor = context.getResources().getColor(R.color.splash_color);
     }
 
     @Override
@@ -38,17 +40,15 @@ public class ProfileIndicationAdapter extends RecyclerView.Adapter<ProfileViewHo
 
     @Override
     public void onBindViewHolder(ProfileViewHolder holder, int position) {
+        holder.getProfileView().setCircle(true);
         if(position == 3 && userDetailModels.size() > 4) {
-            holder.getMoreView().setText(String.format("+%d", userDetailModels.size() - 3));
-            holder.getProfileView().setVisibility(View.GONE);
-            holder.getMoreView().setVisibility(View.VISIBLE);
-
+            holder.getProfileView().setText(String.format("+%d", userDetailModels.size() - 3));
+            holder.getProfileView().setColor(Color.parseColor("#efeffc"));
+            holder.getProfileView().setTextColor(splashColor);
         }else{
             final MeetingConfirmationModel.UserDetailModel userDetailModel = userDetailModels.get(position);
             holder.getProfileView().setText(userDetailModel.getInitials());
-            holder.getProfileView().setCircle(true);
-            holder.getProfileView().setVisibility(View.VISIBLE);
-            holder.getMoreView().setVisibility(View.GONE);
+            holder.getProfileView().setTextColor(whiteColor);
             holder.getProfileView().setColor(Color.parseColor(userDetailModel.getColor()));
         }
 

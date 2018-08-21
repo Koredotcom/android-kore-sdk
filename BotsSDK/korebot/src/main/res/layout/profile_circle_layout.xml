@@ -13,18 +13,4 @@
         android:textColor="@color/white"
         android:layout_height="28dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:textSize="11dp"
-        android:tag="extra-bold"
-        android:background="@drawable/show_more_background"
-        android:gravity="center"
-        android:text="+99"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:id="@+id/more_view"
-        android:visibility="gone"
-        android:textColor="@color/splash_color"
-        android:layout_height="28dp" />
-    
 </LinearLayout>

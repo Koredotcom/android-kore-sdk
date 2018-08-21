@@ -25,5 +25,6 @@ public class BundleConstants {
     public static String FORM_TYPE_SHOW_FORM="show_form";
 
     public static final String SLOTS_LIST = "slots_list";
+    public static final String QUICK_SLOTS = "quick_slots";
 
 }
