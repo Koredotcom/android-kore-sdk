@@ -32,6 +32,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
     float dp1;
     Gson gson = new Gson();
     private float restrictedLayoutWidth;
+    public static HashMap<Integer,ArrayList> dataMap = new HashMap<>();
 
 
 
@@ -105,7 +106,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
     }
 
 
-    public void populateData(final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
+    public void populateData(final int viewPosition,final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
         final AttendeeSlotsAdapter slotsButtonAdapter;
             ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel != null ? meetingTemplateModel.getPopularSlots() : new ArrayList<MeetingSlotModel.Slot>();
             ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel != null ? meetingTemplateModel.getOtherSlots() : new ArrayList<MeetingSlotModel.Slot>();
@@ -113,9 +114,16 @@ public class AttendeeSlotSelectionView extends ViewGroup {
             slotsButtonAdapter.setNormalSlots(otherSlots);
             slotsButtonAdapter.setPopularSlots(popularSlots);
 
-            if (meetingTemplateModel != null ) {
-                    slotsButtonAdapter.addSelectedSlots(popularSlots);
-                    slotsButtonAdapter.addSelectedSlots(otherSlots);
+            if (meetingTemplateModel != null && (!isEnabled || dataMap.get(viewPosition) == null)) {
+                slotsButtonAdapter.addSelectedSlots(popularSlots);
+                slotsButtonAdapter.addSelectedSlots(otherSlots);
+                if (isEnabled && dataMap.get(viewPosition) == null) {
+                    dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
+                }else if(!isEnabled){
+                    dataMap.remove(viewPosition);
+                }
+            } else if (isEnabled && dataMap.get(viewPosition) != null) {
+                slotsButtonAdapter.setSelectedSlots(dataMap.get(viewPosition));
             }
             autoExpandListView.setAdapter(slotsButtonAdapter);
             slotsButtonAdapter.notifyDataSetChanged();
