@@ -147,6 +147,16 @@ public class PayloadInner {
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
 
+    public ArrayList<AttendeeSlotTemplateModel> getAttendeeSlotTemplateModels() {
+        return attendeeSlotTemplateModels;
+    }
+
+    public void setAttendeeSlotTemplateModels(ArrayList<AttendeeSlotTemplateModel> attendeeSlotTemplateModels) {
+        this.attendeeSlotTemplateModels = attendeeSlotTemplateModels;
+    }
+
+    private ArrayList<AttendeeSlotTemplateModel> attendeeSlotTemplateModels;
+
     public ArrayList<CalEventsTemplateModel> getCalEventsTemplateModels() {
         return calEventsTemplateModels;
     }
@@ -321,6 +331,11 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<KaFileLookupModel>>() {
                 }.getType();
                 fileLookupModels = gson.fromJson(elementsAsString, listType);
+            }else if(BotResponse.TEMPLATE_TYPE_ATTENDEE_SLOTS.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<AttendeeSlotTemplateModel>>() {
+                }.getType();
+                attendeeSlotTemplateModels = gson.fromJson(elementsAsString, listType);
+
             }
         }
         templateValidator();

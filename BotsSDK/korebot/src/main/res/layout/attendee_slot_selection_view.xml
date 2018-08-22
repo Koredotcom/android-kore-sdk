@@ -1,12 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/meeting_layout"
+    android:background="#f8f9fa"
+    android:orientation="vertical">
 
     <kore.botssdk.view.AutoExpandListView
         android:id="@+id/slots_list"
         android:layout_width="match_parent"
-        android:visibility="visible"
         android:layout_height="wrap_content"
-        android:divider="@null" />
+        android:dividerHeight="5dp"
+        android:divider="#fafafa"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_14dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:tag="extra-bold"
+            android:text="@string/confirm"
+            android:id="@+id/confirm"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:tag="extra-bold"
+            android:id="@+id/decline"
+            android:text="Decline"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+    </LinearLayout>
 </LinearLayout>

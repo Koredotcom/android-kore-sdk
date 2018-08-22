@@ -102,15 +102,9 @@ public class MeetingConfirmationView extends ViewGroup {
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.EXACTLY);
         MeasureUtils.measure(slotLayout, childWidthSpec, wrapSpec);
-   /*     int  childWidth = slotLayout.getMeasuredWidth();
-        if (childWidth > restrictedLayoutWidth) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.AT_MOST);
-            MeasureUtils.measure(slotLayout, childWidthSpec, wrapSpec);
-        }*/
+
         totalHeight += slotLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
-       /* if(slotLayout.getMeasuredHeight() !=0 ){
-            totalHeight += 15 * dp1;
-        }*/
+
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(slotLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
@@ -132,9 +126,14 @@ public class MeetingConfirmationView extends ViewGroup {
             } else {
                 locationView.setVisibility(GONE);
             }
-            String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toLowerCase();
-            String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toLowerCase();
-            dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
+            if(meetingConfirmationModel.getDate() > 0 && meetingConfirmationModel.getSlot_end() > 0 && meetingConfirmationModel.getSlot_start() > 0) {
+                String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toLowerCase();
+                String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toLowerCase();
+                dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
+                dateView.setVisibility(VISIBLE);
+            }else{
+                dateView.setVisibility(GONE);
+            }
             profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
             profileIndicationAdapter.notifyDataSetChanged();
             recyclerView.setVisibility(VISIBLE);

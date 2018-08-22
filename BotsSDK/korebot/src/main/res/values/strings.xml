@@ -29,4 +29,9 @@
     <string name="default_header">Header %1$d</string>
     <string name="default_cell">Data [%1$d:%2$d]</string>
     <string name="modify_slots">MODIFY SLOTS</string>
+    <string name="confirm">Confirm</string>
+    <plurals name="confirm_slots">
+        <item quantity="one">Confirm Availability for 1 slot</item>
+        <item quantity="other">Confirm Availability for 3 slots</item>
+    </plurals>
 </resources>

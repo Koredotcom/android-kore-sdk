@@ -5,18 +5,21 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
+import kore.botssdk.adapter.AttendeeSlotsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
-import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -24,10 +27,12 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class AttendeeSlotSelectionView extends ViewGroup {
     private AutoExpandListView autoExpandListView;
     private View meetingLayout;
+    private TextView confirmView,declineView;
 
     float dp1;
     Gson gson = new Gson();
     private float restrictedLayoutWidth;
+
 
 
     public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
@@ -73,6 +78,9 @@ public class AttendeeSlotSelectionView extends ViewGroup {
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.attendee_slot_selection_view, this, true);
         autoExpandListView = (AutoExpandListView) view.findViewById(R.id.slots_list);
+        confirmView = (TextView) view.findViewById(R.id.confirm);
+        declineView = (TextView) view.findViewById(R.id.decline);
+
         KaFontUtils.applyCustomFont(getContext(), view);
         meetingLayout = view.findViewById(R.id.meeting_layout);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
@@ -86,16 +94,10 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.UNSPECIFIED);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.EXACTLY);
         MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
-        int childWidth = meetingLayout.getMeasuredWidth();
-        if (childWidth > restrictedLayoutWidth) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.AT_MOST);
-            MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
-        }
-        totalHeight += meetingLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
-        if (meetingLayout.getMeasuredHeight() != 0) {
-            totalHeight += 18 * dp1;
+        if(meetingLayout.getMeasuredHeight() !=0) {
+            totalHeight += meetingLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop()+12 * dp1;
         }
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(meetingLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
@@ -103,15 +105,55 @@ public class AttendeeSlotSelectionView extends ViewGroup {
     }
 
 
-    public void populateData(final MeetingTemplateModel meetingTemplateModel, boolean isEnabled) {
-        ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel != null ? meetingTemplateModel.getQuick_slots() : new ArrayList<MeetingSlotModel.Slot>();
-        MeetingSlotsButtonAdapter slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext());
-        slotsButtonAdapter.setMeetingsModelArrayList(slots);
-        slotsButtonAdapter.setEnabled(isEnabled);
-        slotsButtonAdapter.setComposeFooterInterface(composeFooterInterface);
-        autoExpandListView.setAdapter(slotsButtonAdapter);
-        slotsButtonAdapter.notifyDataSetChanged();
-        meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
+    public void populateData(final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
+        final AttendeeSlotsAdapter slotsButtonAdapter;
+            ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel != null ? meetingTemplateModel.getPopularSlots() : new ArrayList<MeetingSlotModel.Slot>();
+            ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel != null ? meetingTemplateModel.getOtherSlots() : new ArrayList<MeetingSlotModel.Slot>();
+            slotsButtonAdapter = new AttendeeSlotsAdapter(getContext());
+            slotsButtonAdapter.setNormalSlots(otherSlots);
+            slotsButtonAdapter.setPopularSlots(popularSlots);
+
+            if (meetingTemplateModel != null ) {
+                    slotsButtonAdapter.addSelectedSlots(popularSlots);
+                    slotsButtonAdapter.addSelectedSlots(otherSlots);
+            }
+            autoExpandListView.setAdapter(slotsButtonAdapter);
+            slotsButtonAdapter.notifyDataSetChanged();
+            meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
+            confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
+            meetingLayout.setVisibility(meetingTemplateModel != null ? VISIBLE : GONE);
+            autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if(isEnabled) {
+                        slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
+                        slotsButtonAdapter.notifyDataSetChanged();
+                        confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
+                    }
+
+                }
+            });
+
+            confirmView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<MeetingSlotModel.Slot> slots = slotsButtonAdapter.getSelectedSlots();
+                    if(isEnabled && slots.size() > 0){
+                        HashMap<String,ArrayList> payload = new HashMap<>();
+                        payload.put("slots",slots);
+                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots,slots.size(),slots.size()) ,gson.toJson(payload),0);
+                    }
+
+                }
+            });
+            declineView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HashMap<String,ArrayList> payload = new HashMap<>();
+                    composeFooterInterface.sendWithSomeDelay("Decline" ,gson.toJson(payload),0);
+
+                }
+            });
     }
 
 
@@ -121,7 +163,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         final int count = getChildCount();
         //get the available size of child view
         int childLeft = 0;
-        int childTop = (int) (6 * dp1);
+        int childTop = (int) (12 * dp1);
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
