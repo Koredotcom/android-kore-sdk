@@ -16,7 +16,7 @@
         android:layout_marginEnd="5dp"
         android:layout_marginTop="14dp"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:tag="bold"
         android:text="Project Kickoff Meeting"
         android:textColor="@color/color_1a1a1a"
