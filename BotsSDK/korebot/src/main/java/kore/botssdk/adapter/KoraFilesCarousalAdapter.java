@@ -21,7 +21,6 @@ import kore.botssdk.view.viewUtils.KoraCarousalViewHelper;
  */
 
 public class KoraFilesCarousalAdapter extends PagerAdapter{
-    private final String TAG = "IKIDO";
 
     private Context mContext;
     private ArrayList<KaFileLookupModel> dataList;

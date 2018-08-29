@@ -3,7 +3,7 @@
     android:insetLeft="15dp">
 
     <shape>
-        <solid android:color="#d1d1d6" />
+        <solid android:color="#c7c7cc" />
         <corners android:radius="2.0dip" />
     </shape>
 
