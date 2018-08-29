@@ -77,7 +77,6 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
         if(eventList == null || eventList.isEmpty()) val = 0;
         else if(eventList.size() <= 3) val =  eventList.size();
         else val =  (EVENTS_LIST_LIMIT + 1);
-        Log.d(TAG,"The Value of getCount is "+ val);
         return val;
     }
 
@@ -207,7 +206,6 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
 
     private void launchNativeView(String title, long beginTime) throws Exception{
         int id = listSelectedCalendars(title);
-        Log.d(TAG,"The ID " + id);
         if(id <= 0) throw new Exception("Invalid event id");
        /* Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);*/
@@ -398,8 +396,6 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
             beginVal = cur.getLong(PROJECTION_BEGIN_INDEX);
             title = cur.getString(PROJECTION_TITLE_INDEX);
 
-            Log.d(TAG,"eventId = "+eventId+" title = "+title);
-
         }
         return eventId;
     }
@@ -450,7 +446,6 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
         return convertView;
     }
 
-    private final String TAG = "IKIDO";
     private boolean debug = true;
     /**
      * Extracts the ID and calendar email from the eid parameter of a URI.
@@ -467,13 +462,12 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
     private String[] extractEidAndEmail(Uri uri) {
         try {
             String eidParam = uri.getQueryParameter("eid");
-            if (debug) Log.d(TAG, "eid=" + eidParam );
             if (eidParam == null) {
                 return null;
             }
 
             byte[] decodedBytes = Base64.decode(eidParam, Base64.DEFAULT);
-            if (debug) Log.d(TAG, "decoded eid=" + new String(decodedBytes) );
+//            if (debug) Log.d(TAG, "decoded eid=" + new String(decodedBytes) );
 
             for (int spacePosn = 0; spacePosn < decodedBytes.length; spacePosn++) {
                 if (decodedBytes[spacePosn] == ' ') {
@@ -504,7 +498,7 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
                                 domain = "group.v.calendar.google.com";
                                 break;
                             default:
-                                Log.wtf(TAG, "Unexpected one letter domain: "
+                                Log.wtf("LOG", "Unexpected one letter domain: "
                                         + decodedBytes[decodedBytes.length - 1]);
                                 // Add sql wild card char to handle new cases
                                 // that we don't know about.
@@ -515,9 +509,9 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
 
                     String eid = new String(decodedBytes, 0, spacePosn);
                     String email = new String(decodedBytes, spacePosn + 1, emailLen);
-                    if (debug) Log.d(TAG, "eid=   " + eid );
-                    if (debug) Log.d(TAG, "email= " + email );
-                    if (debug) Log.d(TAG, "domain=" + domain );
+//                    if (debug) Log.d(TAG, "eid=   " + eid );
+//                    if (debug) Log.d(TAG, "email= " + email );
+//                    if (debug) Log.d(TAG, "domain=" + domain );
                     if (domain != null) {
                         email += domain;
                     }
@@ -526,7 +520,7 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
                 }
             }
         } catch (RuntimeException e) {
-            Log.w(TAG, "Punting malformed URI " + uri);
+//            Log.w(TAG, "Punting malformed URI " + uri);
         }
         return null;
     }
