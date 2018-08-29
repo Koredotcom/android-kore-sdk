@@ -22,7 +22,7 @@
             android:tag="medium"
             android:text="9:00 AM to 10:15 AM"
             android:textColor="#333d4d"
-            android:textSize="17dp" />
+            android:textSize="15dp" />
 
 
         <Space

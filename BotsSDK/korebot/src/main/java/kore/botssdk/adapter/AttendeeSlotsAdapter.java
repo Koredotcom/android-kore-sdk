@@ -17,6 +17,7 @@ import kore.botssdk.R;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
 
+import static kore.botssdk.utils.DateUtils.getSlotsDate;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 
@@ -136,12 +137,13 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
         if (type == 1) {
             MeetingSlotModel.Slot slot = getItem(position);
-            String startTime = getTimeInAmPm(slot.getStart());
-            String endTime = getTimeInAmPm(slot.getEnd());
+            String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
+            String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
+            final String day = getSlotsDate(slot.getStart());
             boolean isSelected = isSlotSelected(slot);
             viewHolder.slotCheck.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
             ((GradientDrawable) viewHolder.rootView.getBackground()).setColor(isSelected ? selectedColor : unSelectedColor);
-            viewHolder.timeLabel.setText(MessageFormat.format("{0} to {1}", startTime, endTime));
+            viewHolder.timeLabel.setText(MessageFormat.format("{0}, {1} to {2}", day, startTime, endTime));
         } else {
             viewHolder.slotsSeparator.setText(position == 0 ? "Most Popular Slot" : "Other Mutually Available Slots");
         }
