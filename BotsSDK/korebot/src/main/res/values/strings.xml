@@ -32,6 +32,6 @@
     <string name="confirm">Confirm</string>
     <plurals name="confirm_slots">
         <item quantity="one">Confirm Availability for 1 slot</item>
-        <item quantity="other">Confirm Availability for 3 slots</item>
+        <item quantity="other">Confirm Availability for %d slots</item>
     </plurals>
 </resources>
