@@ -136,6 +136,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                     if(isEnabled) {
                         slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
                         slotsButtonAdapter.notifyDataSetChanged();
+                        dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
                         confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
                     }
 
