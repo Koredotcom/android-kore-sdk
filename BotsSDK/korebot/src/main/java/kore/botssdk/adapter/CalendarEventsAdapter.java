@@ -9,9 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.CalendarContract;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,7 +36,7 @@ import kore.botssdk.utils.KaFontUtils;
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat.OnRequestPermissionsResultCallback {
+public class CalendarEventsAdapter extends BaseAdapter {
     public ArrayList<CalEventsTemplateModel> getEventList() {
         return eventList;
     }
@@ -109,22 +107,6 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
         return convertView;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAL_PERMISSION_REQUEST) {
-            if (AppPermissionsHelper.hasPermission(mContext,Manifest.permission.READ_CALENDAR)) {
-                try {
-                    launchNativeView(gModel.getTitle(), (long) gModel.getDuration().getStart());
-                }catch (Exception e){
-                    launchWebView(gModel.getHtmlLink());
-                }
-            }else{
-                Toast.makeText(mContext, "Please grant Calendar permission!",Toast.LENGTH_LONG).show();
-                AppPermissionsHelper.startInstalledAppDetailsActivity((Activity)mContext);
-            }
-        }
-    }
-
     public interface EventSelectionListener {
         void onEventSelected(String url);
     }
@@ -175,11 +157,15 @@ public class CalendarEventsAdapter extends BaseAdapter implements ActivityCompat
                 @Override
                 public void onClick(View v) {
                     try{
-                        if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
+                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                            } else {
+                                gModel = model;
+                                AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
+                            }
+                        }else{
                             launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
-                        } else {
-                            gModel = model;
-                            AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
                         }
 
                     }catch (Exception e){

@@ -1,5 +1,6 @@
 package kore.botssdk.fragment;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ActivityNotFoundException;
@@ -12,7 +13,6 @@ import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,7 +34,6 @@ import net.gotev.speech.SpeechUtil;
 import net.gotev.speech.ui.SpeechProgressView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,7 +42,6 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.models.CustomData;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
@@ -52,6 +50,7 @@ import kore.botssdk.utils.Utility;
 import static android.app.Activity.RESULT_OK;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -126,11 +125,11 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         progress = (SpeechProgressView) view.findViewById(R.id.progress);
         int[] colors = {
-                ContextCompat.getColor(getContext(), android.R.color.black),
-                ContextCompat.getColor(getContext(), android.R.color.darker_gray),
-                ContextCompat.getColor(getContext(), android.R.color.black),
-                ContextCompat.getColor(getContext(), android.R.color.holo_orange_dark),
-                ContextCompat.getColor(getContext(), android.R.color.holo_red_dark)
+                getContext().getResources().getColor(android.R.color.black),
+                getContext().getResources().getColor(android.R.color.darker_gray),
+                getContext().getResources().getColor(android.R.color.black),
+                getContext().getResources().getColor(android.R.color.holo_orange_dark),
+                getContext().getResources().getColor(android.R.color.holo_red_dark)
         };
         progress.setColors(colors);
 
@@ -340,8 +339,10 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     }*/
 
     private void requestMicrophonePermission() {
-        AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
-                android.Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
+                    Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
+        }
     }
 
     @Override
@@ -441,7 +442,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             Speech.getInstance().stopListening();
         } else {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 //                editTextMessage.setHint("Start talking...");
                     onRecordAudioPermissionGranted();
 

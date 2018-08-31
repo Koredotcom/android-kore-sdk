@@ -1,7 +1,6 @@
 package kore.botssdk.view.tableview;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import com.google.gson.internal.LinkedTreeMap;
@@ -65,11 +64,11 @@ public class BotTableView extends TableView<MiniTableModel> {
                 alignment[i] = new String(defaultAlign);
         }
         final SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(context, headers,alignment);
-        simpleTableHeaderAdapter.setTextColor(ContextCompat.getColor(context, R.color.primaryDark));
+        simpleTableHeaderAdapter.setTextColor(context.getResources().getColor(R.color.primaryDark));
         setHeaderAdapter(simpleTableHeaderAdapter);
 
-        final int rowColorEven = ContextCompat.getColor(context, R.color.table_data_row_even);
-        final int rowColorOdd = ContextCompat.getColor(context, R.color.table_data_row_odd);
+        final int rowColorEven =context.getResources().getColor(R.color.table_data_row_even);
+        //final int rowColorOdd = context.getResources().getColor(R.color.table_data_row_odd);
         setDataRowBackgroundProvider(TableDataRowBackgroundProviders.alternatingRowColors(rowColorEven, rowColorEven));
 //        setHeaderSortStateViewProvider(SortStateViewProviders.brightArrows());
 

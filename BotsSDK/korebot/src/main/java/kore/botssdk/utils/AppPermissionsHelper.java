@@ -7,33 +7,36 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 
 /**
  * Created by Ramachandra on 03/12/16.
  */
 public class AppPermissionsHelper {
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestForPermission(Activity activity, String permission, int requestCode) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-            ActivityCompat.requestPermissions(activity, new String[]{permission},
-                    requestCode);
-        } else {
-            ActivityCompat.requestPermissions(activity, new String[]{permission},
-                    requestCode);
+
+            if (activity.shouldShowRequestPermissionRationale(permission)) {
+                activity.requestPermissions(new String[]{permission},
+                        requestCode);
+            } else {
+                activity.requestPermissions( new String[]{permission},
+                        requestCode);
+
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
+
             int permissionLength = permission.length;
             for (int i=0;i<permissionLength;i++) {
                 shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ContextCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+                        context.checkSelfPermission(permission[i]) == PackageManager.PERMISSION_GRANTED;
             }
-        }
+
         return shouldShowRequestPermissionRationale;
     }
     /**
@@ -42,33 +45,38 @@ public class AppPermissionsHelper {
      * @param requestCode : The user's request code
      * @param permission : List of desired permissions.
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestForPermission(Activity activity, int requestCode, String... permission) {
         boolean shouldShowRequestPermissionRationale = shouldShowRationale(activity, permission);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale) {
 
-        if (shouldShowRequestPermissionRationale) {
-            ActivityCompat.requestPermissions(activity, permission,
-                    requestCode);
-        } else {
-            ActivityCompat.requestPermissions(activity, permission,
-                    requestCode);
+                activity.requestPermissions(permission,
+                        requestCode);
+
+            } else {
+                activity.requestPermissions(permission,
+                        requestCode);
+            }
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean shouldShowRationale(Activity activity, String... permission) {
         boolean shouldShowRequestPermissionRationale = false;
-        int permissionLength = permission.length;
-        for (int i=0;i<permissionLength;i++) {
-            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale || ActivityCompat.shouldShowRequestPermissionRationale(activity, permission[i]);
+        for (String aPermission : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale || activity.shouldShowRequestPermissionRationale(aPermission);
         }
         return shouldShowRequestPermissionRationale;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestForPermission(Activity activity, String permission[], int requestCode) {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission[0])) {
-            ActivityCompat.requestPermissions(activity, permission,
+        if (activity.shouldShowRequestPermissionRationale(permission[0])) {
+            activity.requestPermissions( permission,
                     requestCode);
         } else {
-            ActivityCompat.requestPermissions(activity, permission,
+            activity.requestPermissions( permission,
                     requestCode);
         }
     }
