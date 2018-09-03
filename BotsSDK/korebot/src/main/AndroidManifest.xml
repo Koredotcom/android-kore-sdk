@@ -36,6 +36,9 @@
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
         <service
+            android:name=".net.BotDemoRestService"
+            android:exported="false" />
+        <service
             android:name=".net.BotRestService"
             android:exported="false" />
     </application>
