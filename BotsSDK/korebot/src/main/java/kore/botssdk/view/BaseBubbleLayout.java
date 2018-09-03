@@ -31,6 +31,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -87,12 +88,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_READ_RECEIPT = 0;
 
     Paint paint;
-    protected int RIGHT_COLOR_SELECTED = getResources().getColor(R.color.right_bubble_selected);
-    protected int RIGHT_COLOR_UNSELECTED = getResources().getColor(R.color.right_bubble_unselected);
-    protected int LEFT_COLOR_SELECTED = getResources().getColor(R.color.left_bubble_selected);
-    protected int LEFT_COLOR_UNSELECTED = getResources().getColor(R.color.left_bubble_unselected);
-    protected int BUBBLE_WHITE_COLOR = getResources().getColor(R.color.bubble_white_color);
-    protected int POLICY_BUBBLE_COLOR = getResources().getColor(R.color.policy_bubble_color);
+
     protected int WHITE_COLOR = 0xffffffff;
     public static String NON_KORE_COLOR = "#AEBFC4";
 
@@ -196,17 +192,17 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         if (isLeftSide()) {
             if (!isDoDrawBubbleBackground()) {
-                paint.setColor(BUBBLE_WHITE_COLOR);
+                paint.setColor(Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor));
             } else if (isSelected()) {
-                paint.setColor(LEFT_COLOR_SELECTED);
+                paint.setColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
             } else {
-                paint.setColor(LEFT_COLOR_UNSELECTED);
+                paint.setColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected));
             }
         } else if (!isLeftSide()) {
             if (isSelected()) {
-                paint.setColor(RIGHT_COLOR_SELECTED);
+                paint.setColor(Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected));
             } else {
-                paint.setColor(RIGHT_COLOR_UNSELECTED);
+                paint.setColor(Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleUnSelected));
             }
         }
     }
