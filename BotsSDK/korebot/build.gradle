@@ -19,15 +19,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions 'asana','shopbot2','sales_ot'
     productFlavors {
         asana {
             applicationId 'kore.botssdk.asana'
+            dimension "asana"
         }
         shopbot2{
             applicationId 'kore.botssdk.shopbot2'
+            dimension "shopbot2"
         }
         sales_ot{
             applicationId 'kore.botssdk.salesot'
+            dimension "sales_ot"
         }
     }
 }
