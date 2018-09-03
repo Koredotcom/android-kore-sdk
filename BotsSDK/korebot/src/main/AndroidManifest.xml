@@ -7,18 +7,18 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application
-	<activity
-            android:name=".activity.GenericWebViewActivity"
-            android:label="Kora"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
-        android:name=".application.BotApplication"
+    <application android:name=".application.BotApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+	<activity
+            android:name=".activity.GenericWebViewActivity"
+            android:label="Kora"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".activity.BotHomeActivity"
             android:screenOrientation="portrait">
@@ -34,16 +34,9 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity
-            android:name=".activity.GenericWebViewActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
 
         <service
             android:name=".net.BotRestService"
-            android:exported="false" />
-        <service
-            android:name=".net.BotDemoRestService"
             android:exported="false" />
     </application>
 
