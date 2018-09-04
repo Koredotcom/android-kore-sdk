@@ -16,6 +16,8 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.UUID;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.BotSocketConnectionManager;
+import kore.botssdk.listener.SocketUpdateListener;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.BotRestService;
@@ -30,8 +32,7 @@ import kore.botssdk.utils.BundleUtils;
 public class BotHomeActivity extends BotAppCompactActivity {
 
     private Button launchBotBtn;
-    private SpiceManager spiceManager = new SpiceManager(BotRestService.class);
-    private SpiceManager spiceManagerForJWT = new SpiceManager(BotDemoRestService.class);
+
 
 
     @Override
@@ -58,16 +59,12 @@ public class BotHomeActivity extends BotAppCompactActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        spiceManager.start(getApplicationContext());
-        spiceManagerForJWT.start(getApplicationContext());
     }
 
 
 
     @Override
     protected void onStop() {
-        spiceManager.shouldStop();
-        spiceManagerForJWT.shouldStop();
         super.onStop();
     }
 
@@ -79,45 +76,23 @@ public class BotHomeActivity extends BotAppCompactActivity {
         @Override
         public void onClick(View v) {
             if (isOnline()) {
-                showProgress("",true);
-                getJWTToken();
+                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), SocketUpdateListener.getInstance(getApplicationContext(),null,null));
+                launchBotChatActivity();
             } else {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();
             }
         }
     };
 
-    /**
-     * This Service call to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
-     */
-
-    private void getJWTToken(){
-        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
-                SDKConfiguration.Client.client_secret,SDKConfiguration.Server.IS_ANONYMOUS_USER? UUID.randomUUID().toString():SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
-        spiceManagerForJWT.execute(request, new RequestListener<JWTTokenResponse>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                dismissProgress();
-                Toast.makeText(BotHomeActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onRequestSuccess(JWTTokenResponse jwt) {
-                dismissProgress();
-                launchBotChatActivity(jwt.getJwt());
-            }
-        });
-    }
 
     /**
      * Launching BotchatActivity where user can interact with bot
-     * @param jwt
+     *
      */
-    private void launchBotChatActivity(String jwt){
+    private void launchBotChatActivity(){
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
-        bundle.putString(BundleUtils.JWT_TOKEN, jwt);
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
         bundle.putString(BundleUtils.BOT_NAME_INITIALS,SDKConfiguration.Client.bot_name.charAt(0)+"");
         intent.putExtras(bundle);

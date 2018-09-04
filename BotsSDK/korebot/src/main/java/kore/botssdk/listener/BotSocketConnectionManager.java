@@ -32,6 +32,8 @@ import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 
+import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
+
 /**
  * Created by Ramachandra Pradeep on 03-Jan-18.
  */
@@ -55,7 +57,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.connection_state = connection_state;
     }
 
-    private CONNECTION_STATE connection_state;
+    private CONNECTION_STATE connection_state = DISCONNECTED;
     private String botAccessToken,botUserId;
     private String botName, streamId;
 
@@ -126,7 +128,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 }else {
                     Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             }
 
             @Override
@@ -153,7 +155,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 }else {
                     Log.d("token refresh", e.getMessage());
                 }
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             }
 
             @Override
@@ -178,7 +180,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, SocketUpdateListener socketUpdateListener) {
-        if(connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
+        if(connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             this.userId = userId;
             this.accessToken = accessToken;
@@ -199,7 +201,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void startAndInitiateConnectionWithConfig(Context mContext,SocketUpdateListener socketUpdateListener) {
-        if(connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
+        if(connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
             KoreEventCenter.post(connection_state);
@@ -220,7 +222,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private void initiateConnection() {
         if(!NetworkUtility.isNetworkConnectionAvailable(mContext)){
 //            Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
-            connection_state = CONNECTION_STATE.DISCONNECTED;
+            connection_state = DISCONNECTED;
             KoreEventCenter.post(connection_state);
             return;
         }
@@ -395,7 +397,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             refreshJwtToken();
             return;
         }
-        if(connection_state == CONNECTION_STATE.DISCONNECTED)
+        if(connection_state == DISCONNECTED)
             initiateConnection();
         else if(connection_state == CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED){
             refreshJwtToken();

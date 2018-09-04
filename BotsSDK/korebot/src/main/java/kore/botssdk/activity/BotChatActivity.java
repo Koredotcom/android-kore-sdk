@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.CarouselFragment;
@@ -113,6 +114,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
         botClient = new BotClient(this);
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
+        KoreEventCenter.register(this);
 
        // connectToWebSocketAnonymous();
 
@@ -121,6 +123,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
     @Override
     protected void onDestroy() {
         botClient.disconnect();
+        KoreEventCenter.unregister(this);
         super.onDestroy();
     }
 
@@ -158,6 +161,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                     botClient.sendMessage("welcomedialog",chatBot,taskBotId);
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
+                composeFooterFragment.enableSendButton();
                 updateActionBar();
                 break;
             case DISCONNECTED:
@@ -235,30 +239,12 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
     @Override
     public void onSendClick(String message) {
-        onSendClick(message, message);
+        BotSocketConnectionManager.getInstance().sendMessage(message, null);
     }
 
     @Override
     public void onSendClick(String message, String payload) {
-        stopTextToSpeech();
-        botClient.sendMessage(payload, chatBot, taskBotId);
-
-        if (botContentFragmentUpdate != null) {
-            //Update the bot content list with the send message
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-            botPayLoad.setMessage(botMessage);
-            BotInfoModel botInfo = new BotInfoModel(chatBot, taskBotId);
-            botPayLoad.setBotInfo(botInfo);
-            Gson gson = new Gson();
-            String jsonPayload = gson.toJson(botPayLoad);
-
-            BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-            botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-
-            botContentFragmentUpdate.updateContentListOnSend(botRequest);
-        }
-
+        BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         toggleQuickRepliesVisiblity(false);
     }
 
