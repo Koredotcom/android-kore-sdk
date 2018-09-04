@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,10 +16,10 @@ import com.octo.android.robospice.request.listener.RequestListener;
 import java.util.UUID;
 
 import kore.botssdk.R;
+import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.BotRestService;
 import kore.botssdk.net.JWTGrantRequest;
-import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
@@ -95,7 +94,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
     private void getJWTToken(){
         JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
                 SDKConfiguration.Client.client_secret,SDKConfiguration.Server.IS_ANONYMOUS_USER? UUID.randomUUID().toString():SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
-        spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
+        spiceManagerForJWT.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 dismissProgress();
@@ -103,7 +102,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
             }
 
             @Override
-            public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
+            public void onRequestSuccess(JWTTokenResponse jwt) {
                 dismissProgress();
                 launchBotChatActivity(jwt.getJwt());
             }

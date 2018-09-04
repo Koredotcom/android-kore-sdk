@@ -26,5 +26,11 @@ public class BundleConstants {
 
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";
+    public static final String DELAY_MESSAGES[] = { "I’m working on it…", "Still, working on it…",
+            "This is taking a bit longer. Please wait…", "Things are slower than usual today. Please wait…",
+            "I’m sorry. The server response seems really slow today. Please continue to wait...",
+            "I’m sorry. I haven’t gotten a response from the server yet. Please continue to wait...",
+            "I apologize. The server is has not responded yet. Please continue to wait…"};
+
 
 }

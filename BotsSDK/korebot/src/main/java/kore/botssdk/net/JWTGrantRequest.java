@@ -2,16 +2,18 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
+import kore.botssdk.models.JWTTokenResponse;
+
 /**
  * Created by Ramachandra Pradeep on 15-Mar-17.
  */
-public class JWTGrantRequest extends DemoRestRequest<RestResponse.JWTTokenResponse> {
+public class JWTGrantRequest extends DemoRestRequest<JWTTokenResponse> {
     private String clientId;
     private String clientSecret;
     private String identity;
     private Boolean isAnonymous;
     public JWTGrantRequest(String clientId, String clientSecret, String identity, Boolean isAnonymous) {
-        super(RestResponse.JWTTokenResponse.class);
+        super(JWTTokenResponse.class);
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.identity = identity;
@@ -19,7 +21,7 @@ public class JWTGrantRequest extends DemoRestRequest<RestResponse.JWTTokenRespon
     }
 
     @Override
-    public RestResponse.JWTTokenResponse loadDataFromNetwork() throws Exception {
+    public JWTTokenResponse loadDataFromNetwork() throws Exception {
         HashMap<String, Object> hsh = new HashMap<>();
         hsh.put("clientId", clientId);
         hsh.put("clientSecret",clientSecret);
@@ -27,7 +29,7 @@ public class JWTGrantRequest extends DemoRestRequest<RestResponse.JWTTokenRespon
         hsh.put("aud","https://idproxy.kore.com/authorize");
         hsh.put("isAnonymous",isAnonymous);
 
-        RestResponse.JWTTokenResponse jwt = getService().getJWTToken(hsh);
+        JWTTokenResponse jwt = getService().getJWTToken(hsh);
         return jwt;
     }
 }
