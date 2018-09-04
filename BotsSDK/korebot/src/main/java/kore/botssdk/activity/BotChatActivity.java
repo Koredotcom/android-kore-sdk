@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -17,13 +16,15 @@ import java.util.Date;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.CarouselFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
+import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
@@ -37,20 +38,18 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
-import kore.botssdk.utils.SocketConnectionEventStates;
-import kore.botssdk.utils.StringConstants;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
-import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends BotAppCompactActivity implements SocketConnectionListener, ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
+public class BotChatActivity extends BotAppCompactActivity implements  ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -76,6 +75,7 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +114,7 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
 
-        connectToWebSocketAnonymous();
+       // connectToWebSocketAnonymous();
 
     }
 
@@ -145,7 +145,7 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
 //        getSupportActionBar().setSubtitle(botName);
     }
 
-    private void updateTitleBar(SocketConnectionEventStates socketConnectionEvents) {
+    private void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
         String titleMsg = "";
         switch (socketConnectionEvents) {
@@ -165,15 +165,11 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
                 taskProgressBar.setVisibility(View.GONE);
                 updateActionBar();
                 break;
-            case FAILED_TO_CONNECT:
-                titleMsg = getString(R.string.socket_failed);
+            default:
+                titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.GONE);
                 updateActionBar();
-                break;
-            case RECONNECTING:
-                titleMsg = getString(R.string.socket_connected);
-                taskProgressBar.setVisibility(View.VISIBLE);
-                break;
+
         }
 
         if (Utils.isNetworkAvailable(this) && !titleMsg.isEmpty()) {
@@ -185,16 +181,31 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
     }
 
     private void setupTextToSpeech() {
-        composeFooterFragment.setTtsUpdate(BotChatActivity.this);
-        botContentFragment.setTtsUpdate(BotChatActivity.this);
-    }
-
-    private void connectToWebSocketAnonymous() {
-        botClient.connectAsAnonymousUser(jwt, SDKConfiguration.Client.client_id, chatBot, taskBotId, BotChatActivity.this);
-        updateTitleBar(SocketConnectionEventStates.CONNECTING);
+        composeFooterFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
+        botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
 
+
+    public void onEvent(SocketDataTransferModel data) {
+        if (data == null) return;
+        if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
+            processPayload(data.getPayLoad(), null);
+        } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
+            if (botContentFragment != null) {
+                botContentFragment.updateContentListOnSend(data.getBotRequest());
+            }
+        }
+    }
+
+    public void onEvent(BaseSocketConnectionManager.CONNECTION_STATE states) {
+        updateTitleBar(states);
+    }
+
+
+    public void onEvent(BotResponse botResponse) {
+        processPayload("", botResponse);
+    }
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
@@ -219,56 +230,8 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
         super.onPause();
     }
 
-    @Override
-    public void onOpen() {
-        if (composeFooterUpdate != null) {
-            composeFooterUpdate.enableSendButton();
-            composeFooterUpdate = null;
-        }
-        //By sending null initiating sending which are un-delivered in pool
-        botClient.sendMessage(null, null, null);
-        if(isItFirstConnect && SDKConfiguration.TRIGGER_INIT_MESSAGE) {
-            botClient.sendMessage(SDKConfiguration.INIT_MESSAGE, chatBot, taskBotId);
-            isItFirstConnect = false;
-        }
-        updateTitleBar(SocketConnectionEventStates.CONNECTED);
-    }
 
-    @Override
-    public void refreshJwtToken() {
 
-    }
-
-    @Override
-    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-        switch (code) {
-            case CONNECTION_LOST:
-                updateTitleBar(SocketConnectionEventStates.DISCONNECTED);
-                return;
-            case CANNOT_CONNECT:
-            case PROTOCOL_ERROR:
-            case INTERNAL_ERROR:
-            case SERVER_ERROR:
-                updateTitleBar(SocketConnectionEventStates.FAILED_TO_CONNECT);
-                break;
-        }
-        updateTitleBar();
-    }
-
-    @Override
-    public void onTextMessage(String payload) {
-        processPayload(payload);
-    }
-
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-
-    }
-
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-
-    }
 
     @Override
     public void onSendClick(String message) {
@@ -328,42 +291,74 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
         onSendClick(text);
     }
 
-    private void processPayload(String payload) {
+    /**
+     * payload processing
+     */
 
-        Gson gson = new Gson();
+    private void processPayload(String payload, BotResponse botLocalResponse) {
+        if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
+
         try {
-            final BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
-            if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+            final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
+            if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
             }
 
             Log.d(LOG_TAG, payload);
+            boolean resolved = true;
+            PayloadOuter payOuter = null;
+//            PayloadInner payInner = null;
             if (!botResponse.getMessage().isEmpty()) {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
                 if (compModel != null) {
-                    PayloadOuter payOuter = compModel.getPayload();
-                    PayloadInner payInner;
-                    if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                        payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
-                    }
-                    if (payOuter.getPayload() != null) {
-                        payOuter.getPayload().convertElementToAppropriate();
+                    payOuter = compModel.getPayload();
+                    if (payOuter != null) {
+                        /*if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                            payOuter.setText(payOuter.getText().replace("&quot;", "\""));
+                            payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                            // payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                        }*/
+
+                        if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                            Gson gson = new Gson();
+                            payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                        }
                     }
                 }
             }
+            final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
+            if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
+                BotSocketConnectionManager.getInstance().startDelayMsgTimer();
+            }
             botContentFragment.showTypingStatus(botResponse);
-
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    botContentFragment.setQuickRepliesIntoFooter(botResponse);
-                    botContentFragment.addMessageToBotChatAdapter(botResponse);
-                    textToSpeech(botResponse);
-                }
-            }, StringConstants.TYPING_STATUS_TIME);
-        } catch (JsonSyntaxException e) {
-            Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();
+            if (payloadInner != null) {
+                payloadInner.convertElementToAppropriate();
+            }
+            if (resolved) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        botContentFragment.addMessageToBotChatAdapter(botResponse);
+                        textToSpeech(botResponse);
+                        botContentFragment.setQuickRepliesIntoFooter(botResponse);
+                    }
+                }, BundleConstants.TYPING_STATUS_TIME);
+            }
+        } catch (Exception e) {
+            /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
+            if (e instanceof JsonSyntaxException) {
+                try {
+                    //This is the case Bot returning user sent message from another channel
+                    if (botContentFragment != null) {
+                        BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
+                        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+                        botContentFragment.updateContentListOnSend(botRequest);
+                    }
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
 
     }
@@ -383,6 +378,30 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
 
 
     }
+    @Override
+    public void onStop() {
+        BotSocketConnectionManager.getInstance().unSubscribe();
+        super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                BotSocketConnectionManager.getInstance().subscribe();
+            }
+        });
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext());
+        updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
+        super.onResume();
+    }
+
 
     @Override
     public void ttsUpdateListener(boolean isTTSEnabled) {
@@ -448,8 +467,9 @@ public class BotChatActivity extends BotAppCompactActivity implements SocketConn
                         }
                     }
                 }
-                if(!Utils.isNullOrEmpty(botResponseTextualFormat))
-                ttsSynthesizer.speak(botResponseTextualFormat.replaceAll("\\<.*?>",""),botClient.getAccessToken());
+            if (BotSocketConnectionManager.getInstance().isTTSEnabled()) {
+                BotSocketConnectionManager.getInstance().startSpeak(botResponseTextualFormat);
+            }
             }
         }
 

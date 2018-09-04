@@ -12,6 +12,7 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
@@ -21,8 +22,10 @@ import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
+import kore.botssdk.net.JWTGrantRequest;
 import kore.botssdk.net.KaJwtRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
@@ -105,6 +108,42 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void refreshJwtToken() {
+        if(isWithAuth) {
+            makeJwtCallWithToken(true);
+        }else{
+            makeJwtCallWithConfig(true);
+        }
+    }
+
+    private void makeJwtCallWithConfig(final boolean isRefresh) {
+        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
+                SDKConfiguration.Client.client_secret,SDKConfiguration.Server.IS_ANONYMOUS_USER? UUID.randomUUID().toString():SDKConfiguration.Client.identity,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+        botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                if (e instanceof NoNetworkException){
+//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
+            }
+
+            @Override
+            public void onRequestSuccess(JWTTokenResponse jwt) {
+                jwtKeyResponse = jwt;
+                botName = SDKConfiguration.Client.bot_name;
+                streamId = SDKConfiguration.Client.bot_id;
+                if (!isRefresh) {
+                    botClient.connectAsAnonymousUser(jwt.getJwt(), SDKConfiguration.Client.client_id, botName, streamId, botSocketConnectionManager);
+                }else{
+                    KoreEventCenter.post(jwt.getJwt());
+                }
+            }
+        });
+    }
+
+    private void makeJwtCallWithToken(final boolean isRefresh){
         KaJwtRequest request = new KaJwtRequest(accessToken,true);
         botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
@@ -114,7 +153,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 }else {
                     Log.d("token refresh", e.getMessage());
                 }
-                connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
             }
 
             @Override
@@ -122,9 +161,12 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 jwtKeyResponse = jwt;
                 botName = jwtKeyResponse.getBotName();
                 streamId = jwtKeyResponse.getStreamId();
-                /*botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(),jwtKeyResponse.getClientId(),
-                        jwtKeyResponse.getBotName(),jwtKeyResponse.getStreamId(), botSocketConnectionManager);*/
-                KoreEventCenter.post(jwt.getJwt());
+                if (!isRefresh) {
+                    botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
+                            jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
+                } else {
+                    KoreEventCenter.post(jwt.getJwt());
+                }
             }
         });
     }
@@ -135,12 +177,13 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onBinaryMessage(byte[] payload) {}
 
     @Override
-    public void startAndInitiateConnection(Context mContext, String userId, String accessToken,SocketUpdateListener socketUpdateListener) {
+    public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, SocketUpdateListener socketUpdateListener) {
         if(connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
             this.mContext = mContext;
             this.userId = userId;
             this.accessToken = accessToken;
             connection_state = CONNECTION_STATE.CONNECTING;
+            this.isWithAuth = true;
             KoreEventCenter.post(connection_state);
             RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
             botCustomData.put("kmUId", userId);
@@ -153,6 +196,27 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             initiateConnection();
         }
     }
+
+    @Override
+    public void startAndInitiateConnectionWithConfig(Context mContext,SocketUpdateListener socketUpdateListener) {
+        if(connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
+            this.mContext = mContext;
+            connection_state = CONNECTION_STATE.CONNECTING;
+            KoreEventCenter.post(connection_state);
+            RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
+            botCustomData.put("kmUId", userId);
+            botCustomData.put("kmToken", accessToken);
+            this.isWithAuth = false;
+            botClient = new BotClient(mContext, botCustomData);
+            ttsSynthesizer = new TTSSynthesizer(mContext);
+            this.socketUpdateListener = socketUpdateListener;
+            if (!botsSpiceManager.isStarted())
+                botsSpiceManager.start(this.mContext);
+            initiateConnection();
+        }
+    }
+
+
     private void initiateConnection() {
         if(!NetworkUtility.isNetworkConnectionAvailable(mContext)){
 //            Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
@@ -160,27 +224,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             KoreEventCenter.post(connection_state);
             return;
         }
-        KaJwtRequest request = new KaJwtRequest(accessToken,true);
-        botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                if (e instanceof NoNetworkException){
-//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
-                }
-                connection_state = CONNECTION_STATE.DISCONNECTED;
-            }
-
-            @Override
-            public void onRequestSuccess(JWTTokenResponse jwt) {
-                jwtKeyResponse = jwt;
-                botName = jwtKeyResponse.getBotName();
-                streamId = jwtKeyResponse.getStreamId();
-                botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(),jwtKeyResponse.getClientId(),
-                        jwtKeyResponse.getBotName(),jwtKeyResponse.getStreamId(), botSocketConnectionManager);
-            }
-        });
+        if(isWithAuth) {
+            makeJwtCallWithToken(false);
+        }else{
+            makeJwtCallWithConfig(false);
+        }
     }
 
     public String getStreamId() {

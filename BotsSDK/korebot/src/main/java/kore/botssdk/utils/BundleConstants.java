@@ -23,7 +23,8 @@ public class BundleConstants {
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
-
+    public final static String SHOW_PIC = "showPic";
+    public static final int TYPING_STATUS_TIME = 1500; //in millisecond
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";
     public static final String DELAY_MESSAGES[] = { "I’m working on it…", "Still, working on it…",
