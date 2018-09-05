@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/korebot" />
             <option value="$PROJECT_DIR$/korebotsdklib" />
             <option value="$PROJECT_DIR$/korefileuploadsdk" />
+            <option value="$PROJECT_DIR$/stickyListHeaders" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
