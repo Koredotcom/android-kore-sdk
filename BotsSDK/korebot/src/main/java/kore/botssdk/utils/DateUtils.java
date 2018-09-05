@@ -98,6 +98,55 @@ public class DateUtils {
         return time;
     }
 
+
+    /**
+     * Just now
+     * Today, JUN 08
+     */
+    public static String formattedSentDateV6(long lastModified) {
+        // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+
+        // OVERRIDE SOME symbols WHILE RETAINING OTHERS
+        symbols.setAmPmStrings(new String[]{"am", "pm"});
+        dateWeekDay.setDateFormatSymbols(symbols);
+
+        int messageDay = Integer.parseInt(dateDay.format(new Date(lastModified)));
+        int currentDay = Integer.parseInt(dateDay.format(new Date()));
+
+        int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
+        int currentYear = Integer.parseInt(yearFormat.format(new Date()));
+
+        int messageMonth = Integer.parseInt(dateMonth.format(new Date(lastModified)));
+        int currentMonth = Integer.parseInt(dateMonth.format(new Date()));
+
+        long now = System.currentTimeMillis();
+        long diff = now - lastModified;
+        long TWO_DAY_DIFF = 172800 * 1000;
+        long diffRev = lastModified -now;
+        String time = "";
+
+        if (currentDay == messageDay && currentYear == messageYear && currentMonth == messageMonth) {
+            time = "Today, " + dateMonthDay.format(new Date(lastModified));
+        } else if (currentYear == messageYear && currentMonth == messageMonth) {
+            if (currentDay - 1 == messageDay) {
+                time = "Yesterday, " + dateMonthDay.format(new Date(lastModified));
+            } else if (currentDay + 1 == messageDay) {
+                time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
+            } else {
+                time = dateWeekMsg.format(new Date(lastModified));
+            }
+        } else if (diff >= 0 && diff <= TWO_DAY_DIFF) {
+            time = "Yesterday , " + dateMonthDay.format(new Date(lastModified));
+        } else if (diffRev >=0 && diffRev <= TWO_DAY_DIFF ) {
+            time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
+        } else {
+
+            time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
+        }
+
+        return time;
+    }
     public static String getDate(long lastModified){
        return dateWeekMsg.format(new Date(lastModified));
     }
