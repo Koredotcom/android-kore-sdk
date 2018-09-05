@@ -20,6 +20,7 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -246,9 +247,11 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 //                    for(BotMiniTableModel model:payInner.getMiniTableDataModels()) {
                         miniTableView.setData(payInner.getTemplate_type(), payInner);
 //                    }
+                }else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
+                    bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                }else{
+                }else {
                     bubbleTextMediaLayout.populateText(payOuter.getText());
                 }
             }else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())){
