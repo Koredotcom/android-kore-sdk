@@ -5,11 +5,8 @@
     android:layout_height="@dimen/list_item_view_height"
     android:background="@android:color/white"
     android:minHeight="@dimen/list_item_view_height"
-    android:orientation="vertical"
-    android:paddingBottom="7dp"
-    android:paddingLeft="7dp"
-    android:paddingRight="7dp"
-    android:paddingTop="7dp">
+    android:padding="5dp"
+    android:orientation="vertical">
 
     <!-- Item image -->
     <ImageView
@@ -57,6 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
         android:layout_alignParentRight="true"
         android:textColor="@android:color/holo_blue_dark"
         android:background="@drawable/rounded_image_bg_blue"

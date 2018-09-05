@@ -4,39 +4,18 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Bot Chat Content Fragment"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="28sp"
-        android:visibility="gone" />
 
-    <ListView
-        android:id="@+id/botsBubblesListView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/chatContentListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:alwaysDrawnWithCache="false"
-        android:animationCache="false"
         android:choiceMode="singleChoice"
-        android:clipToPadding="false"
         android:divider="@android:color/transparent"
-        android:listSelector="@android:color/white"
-        android:overScrollMode="never"
-        android:paddingBottom="45dp"
-        android:paddingTop="10dp"
-        android:scrollbars="none"
-        android:scrollingCache="false"
-        android:smoothScrollbar="true"
-        android:stackFromBottom="true"
+        android:listSelector="@color/colorPrimary"
+        android:layout_marginBottom="2dp"
         android:visibility="visible" />
 
-    <kore.botssdk.view.BotCarouselView
-        android:id="@+id/botCV"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"/>
 
     <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
         xmlns:dots="http://schemas.android.com/apk/res-auto"

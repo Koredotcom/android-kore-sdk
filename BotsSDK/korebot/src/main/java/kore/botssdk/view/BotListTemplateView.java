@@ -132,34 +132,31 @@ public class BotListTemplateView extends ViewGroup {
             if (autoExpandListView.getAdapter() != null) {
                 count = autoExpandListView.getAdapter().getCount();
             }
-            viewHeight = (count > 0) ? (int) restrictedMaxWidth : 0;
+            viewHeight = (count > 0) ? (int) (restrictedMaxWidth -2*dp1) : 0;
         }
         return viewHeight;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
-        int viewHeight = getViewHeight();
-        int viewWidth = getViewWidth();
-        int childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);
-        int childWidthSpec = MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY);
+        int totalHeight = getPaddingTop();
+        int childWidthSpec;
+        int totalWidth = getPaddingLeft();
 
-        MeasureUtils.measure(autoExpandListView, childWidthSpec, childHeightSpec);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botCustomListRoot, childWidthSpec, wrapSpec);
 
-        MeasureUtils.measure(botCustomListViewButton, childWidthSpec, wrapSpec);
+        totalHeight += botCustomListRoot.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
+        totalWidth += botCustomListRoot.getMeasuredWidth() + getPaddingLeft()+getPaddingRight();
+        if(totalHeight != 0){
+            totalWidth = totalWidth + (int)(3 * dp1);
+        }
 
-        viewHeight += botCustomListViewButton.getMeasuredHeight();
-        childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(botCustomListRoot, childWidthSpec, childHeightSpec);
-
-        int parentWidthSpec = childWidthSpec;
-        int parentHeightSpec = childHeightSpec;
-
-        super.onMeasure(parentWidthSpec, parentHeightSpec);
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.AT_MOST);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
     @Override

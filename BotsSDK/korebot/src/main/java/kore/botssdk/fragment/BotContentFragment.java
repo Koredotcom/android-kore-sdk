@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotsChatAdapter;
+import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
@@ -28,6 +29,7 @@ import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -35,8 +37,8 @@ import kore.botssdk.views.DotsTextView;
  */
 public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
 
-    ListView botsBubblesListView;
-    BotsChatAdapter botsChatAdapter;
+    StickyListHeadersListView botsBubblesListView;
+    ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
     private LinearLayout botTypingStatusRl;
@@ -44,7 +46,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private DotsTextView typingStatusItemDots;
     ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-
     boolean shallShowProfilePic;
     private String mChannelIconURL;
     private String mBotNameInitials;
@@ -63,15 +64,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     }
     BotCarouselView botCarouselView;
     private void findViews(View view) {
-        botsBubblesListView = (ListView) view.findViewById(R.id.botsBubblesListView);
-        botCarouselView = (BotCarouselView) view.findViewById(R.id.botCV);
-//        botCarouselView.setFragmentManager(getFragmentManager());
-//        botCarouselView.setActivityContext(getActivity());
-        botCarouselView.setVisibility(View.GONE);
+        botsBubblesListView = (StickyListHeadersListView) view.findViewById(R.id.chatContentListView);
     }
 
     private void setupAdapter() {
-        botsChatAdapter = new BotsChatAdapter(getActivity());
+        botsChatAdapter = new ChatAdapter(getActivity());
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());

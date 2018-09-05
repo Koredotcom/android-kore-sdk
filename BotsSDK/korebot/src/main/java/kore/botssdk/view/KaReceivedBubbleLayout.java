@@ -134,7 +134,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 textMediaDimen[1] + botCarouselView.getMeasuredHeight() + koraCarouselView.getMeasuredHeight() + meetingSlotsView.getMeasuredHeight() +filesCarousalView.getMeasuredHeight()+
                 meetingConfirmationView.getMeasuredHeight() +attendeeSlotSelectionView.getMeasuredHeight()+ botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() + lineChartView.getMeasuredHeight()
                 + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() +calendarEventsView.getMeasuredHeight()
-                + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 || botListTemplateView.getMeasuredHeight() != 0 ||
+                + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0|| attendeeSlotSelectionView.getMeasuredHeight() != 0 || (calendarEventsView.getVisibility()!=View.GONE && calendarEventsView.getMeasuredHeight()!=0) ? dp2 : 0);
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + koraCarouselView.getMeasuredHeight()+filesCarousalView.getMeasuredHeight()
                 + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
@@ -246,8 +246,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botListTemplateView.setVisibility(View.VISIBLE);
-                    botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
+                    botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth()+ BUBBLE_CONTENT_RIGHT_MARGIN);
                     botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
+                    bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botPieChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
@@ -517,12 +518,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         LayoutUtils.layoutChild(botButtonView, left, top);
 
 
-        /*
-         * For OptionsList
-         * */
-        left = botButtonView.getLeft();
-        top = bubbleTextMediaLayout.getBottom() - BUBBLE_CONTENT_TOP_MARGIN;
-        LayoutUtils.layoutChild(botListTemplateView, left, top);
 
         left = bubbleTextMediaLayout.getLeft();
         top = bubbleTextMediaLayout.getBottom()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
@@ -572,6 +567,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (10 * dp1) : minimumTop;
         LayoutUtils.layoutChild(filesCarousalView, left, top);
 
+        /*
+         * For Button View
+         */
+        left = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN+dp1);
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (10 * dp1) : minimumTop;
+        LayoutUtils.layoutChild(botListTemplateView, left, top);
 
 
 
