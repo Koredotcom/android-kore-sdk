@@ -50,13 +50,18 @@ public class SDKConfiguration {
         public static final String bot_id = "st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
     }
 
+
     public static class BubbleColors {
-        public static final String rightBubbleSelected ="#0268de";
-        public static final String rightBubbleUnSelected="#0076FF";
+        public static final String rightBubbleSelected ="#6168e7";
+        public static final String rightBubbleUnSelected="#6168e7";
         public static final String leftBubbleSelected="#D3D3D3";
-        public static final String leftBubbleUnSelected="#EBEBEB";
+        public static final String leftBubbleUnSelected="#f8f9f8";
         public static final String leftBubbleTextColor="#444444";
         public static final String rightBubbleTextColor="#FFFFFF";
+        public static final String whiteColor="#FFFFFF";
+        public static final String leftBubbleBorderColor = "#eeeef2";
+        public static final String rightLinkColor="#FFFFFF";
+        public static final String leftLinkColor = "#6168e7";
 
     }
 

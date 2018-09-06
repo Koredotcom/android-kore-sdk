@@ -63,7 +63,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     }
 
     public int getLinkTextColor() {
-        return getResources().getColor(R.color.splash_color);
+        return LEFT_BUBBLE_LINK_COLOR;
     }
 
     private void init() {

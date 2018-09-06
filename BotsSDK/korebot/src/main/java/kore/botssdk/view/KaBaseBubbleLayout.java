@@ -31,6 +31,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
@@ -89,13 +90,20 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_READ_RECEIPT = 0;
 
     Paint paint;
-    protected int RIGHT_COLOR_SELECTED = getResources().getColor(R.color.splash_color);
-    protected int RIGHT_COLOR_UNSELECTED = getResources().getColor(R.color.splash_color);
-    protected int LEFT_COLOR_SELECTED = getResources().getColor(R.color.left_bubble_selected);
-    protected int LEFT_COLOR_UNSELECTED = getResources().getColor(R.color.color_faf9f8);
-    protected int BUBBLE_WHITE_COLOR = getResources().getColor(R.color.bubble_white_color);
 
-/*
+    protected int RIGHT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected);
+    protected int RIGHT_COLOR_UNSELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleUnSelected);
+    protected int LEFT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected);
+    protected int LEFT_COLOR_UNSELECTED =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected);
+    protected int BUBBLE_WHITE_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.whiteColor);
+    protected int LEFT_BUBBLE_BORDER_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleBorderColor);
+    protected int LEFT_BUBBLE_LINK_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
+    protected int RIGHT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor);
+
+    protected int LEFT_TEXT_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
+    protected int RIGHT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor);
+
+    /*
     protected int LEFT_GRADIENT_START = getResources().getColor(R.color.gradient_left_start);
     protected int LEFT_GRADIENT_END = getResources().getColor(R.color.gradient_left_end);
     protected int LEFT_GRADIENT_MIDDLE = getResources().getColor(R.color.gradient_left_middle);
@@ -239,7 +247,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                     new int[]{LEFT_COLOR_UNSELECTED,LEFT_COLOR_UNSELECTED});
             leftGradientDrawable.setShape(GradientDrawable.RECTANGLE);
             leftGradientDrawable.setGradientRadius((float) (Math.sqrt(2) * 60));
-            leftGradientDrawable.setStroke((int)dp1,context.getResources().getColor(R.color.color_eeeef2));
+            leftGradientDrawable.setStroke((int)dp1,LEFT_BUBBLE_BORDER_COLOR);
             leftGradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
             leftGradientDrawable.setCornerRadii(new float[]{dp12, dp12, dp12, dp12, isLeftSide() ? dp12 : dp1, isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1});
         }
@@ -317,39 +325,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     }
 
-    protected void setInivisiblePaintColor(Paint paint) {
-        paint.setColor(0x00000000);
-    }
 
-    protected void initiliazePathCoordinates(boolean isLeft) {
-
-        if (triangleCoordA == null || triangleCoordB == null || triangleCoordC == null) {
-            triangleCoordA = new Point(0, 0);
-            triangleCoordB = new Point(0, 0);
-            triangleCoordC = new Point(0, 0);
-        }
-
-        if (isLeft) {
-            triangleCoordA.x = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
-            triangleCoordA.y = bubbleTextMediaLayout.getTop() + BUBBLE_ARROW_TOP_Y;
-            triangleCoordB.x = triangleCoordA.x - BUBBLE_LEFT_ARROW_WIDTH;
-            triangleCoordB.y = triangleCoordA.y + BUBBLE_ARROW_MIDDLE_Y;
-            triangleCoordC.x = triangleCoordA.x;
-            triangleCoordC.y = triangleCoordA.y + BUBBLE_ARROW_END_Y;
-        } else {
-            triangleCoordA.x = bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN;
-            triangleCoordA.y = bubbleTextMediaLayout.getTop() + BUBBLE_ARROW_TOP_Y;
-            triangleCoordB.x = triangleCoordA.x + BUBBLE_RIGHT_ARROW_WIDTH;
-            triangleCoordB.y = triangleCoordA.y + BUBBLE_ARROW_MIDDLE_Y;
-            triangleCoordC.x = triangleCoordA.x;
-            triangleCoordC.y = triangleCoordA.y + BUBBLE_ARROW_END_Y;
-        }
-    }
-
-    private void initializeLineCoordinates() {
-        lineStart = new Point(triangleCoordA.x, (int) (triangleCoordA.y + dp1));
-        lineEnd = new Point(triangleCoordC.x, (int) (triangleCoordC.y - dp1));
-    }
 
     abstract void initializeBubbleBorderPass1();
 
@@ -389,36 +365,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         paint.setStrokeWidth(dp1);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
-
-
-
-    private Paint curvePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-    private Bitmap formCurveBitmap(int channelImageRadius, int bubbleRadius) {
-
-        Bitmap curveBitmap = Bitmap.createBitmap((int) (channelImageRadius + bubbleRadius + 3 * dp1), channelImageRadius, Bitmap.Config.ARGB_8888);
-        Canvas curveCanvas = new Canvas(curveBitmap);
-
-        curvePaint.setXfermode(null);
-        setPaintColor(curvePaint);
-        curvePaint.setStrokeWidth(dp1);
-        curvePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        curveCanvas.drawRect(BUBBLE_LEFT_BORDER, 0, BUBBLE_LEFT_BORDER + channelImageRadius + bubbleRadius + 3 * dp1, channelImageRadius, curvePaint);
-
-        curvePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        curvePaint.setColor(Color.WHITE);
-        if (isLeftSide()) {
-            curveCanvas.drawCircle(BUBBLE_LEFT_BORDER + 4 * dp1 - dp1 / 3, 0, channelImageRadius, curvePaint);
-        } else {
-            int circularCurveX = (int) ((isGroupMessage) ? channelImageRadius + bubbleRadius + 3 * dp1 : channelImageRadius + bubbleRadius + 3 * dp1);
-            curveCanvas.drawCircle(circularCurveX, 0, channelImageRadius, curvePaint);
-        }
-
-        return curveBitmap;
-    }
-
-
 
     public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
@@ -543,15 +489,15 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected void determineTextColor() {
         if (isLeftSide()) {
             if (isSelected()) {
-                textColor = context.getResources().getColor(R.color.bubble_light_text_color);
+                textColor = LEFT_TEXT_COLOR;
             } else {
-                textColor = context.getResources().getColor(R.color.bubble_dark_text_color);
+                textColor = LEFT_TEXT_COLOR;
             }
         } else {
-            if (isLeftSide()) {
-                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
-            } else if (!isLeftSide()) {
-                textColor = context.getResources().getColor(R.color.right_bubble_text_color);
+            if (isSelected()) {
+                textColor = RIGHT_TEXT_COLOR;
+            } else {
+                textColor = RIGHT_TEXT_COLOR;
             }
         }
     }
