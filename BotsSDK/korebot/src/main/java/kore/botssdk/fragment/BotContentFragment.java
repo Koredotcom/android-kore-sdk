@@ -1,5 +1,6 @@
 package kore.botssdk.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -147,7 +148,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
-        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, 0, true);
+        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
     }
 
