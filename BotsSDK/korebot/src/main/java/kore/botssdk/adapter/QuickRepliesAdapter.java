@@ -1,6 +1,9 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +17,7 @@ import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
 
@@ -25,21 +29,24 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
 
     private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
     Context context;
-    LayoutInflater layoutInflater;
-    RecyclerView parentRecyclerView;
+    private LayoutInflater layoutInflater;
+    private RecyclerView parentRecyclerView;
 
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private int quickWidgetColor;
 
     public QuickRepliesAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
         layoutInflater = LayoutInflater.from(context);
+        quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
     }
 
     @Override
     public QuickReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View convertView = layoutInflater.inflate(R.layout.quick_reply_item_layout, null);
+        ( (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground()).setColor(quickWidgetColor);
         return new QuickReplyViewHolder(convertView);
     }
 

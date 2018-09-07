@@ -77,7 +77,7 @@ public class CircularProfileView extends RoundedImageView {
 
         //Essentials
         if (!isInEditMode()) {
-            dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = (int) AppControl.getInstance(getContext()).getDimensionUtil().dp1;
             SDK = android.os.Build.VERSION.SDK_INT;
             DEFAULT_HEIGHT = dp1 * 52;
             DEFAULT_WIDTH = dp1 * 52;

@@ -35,7 +35,7 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        public static  String KORE_BOT_SERVER_URL = "https://qa-bots.kore.ai";//https://qa-bots.kore.ai";
+        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
@@ -43,25 +43,93 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-        public static final String client_id = "cs-5649368e-68bb-555a-8803-935f223db585";
-        public static final String client_secret = "AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static final String identity = "reshma@testadmin3.xyz";
-        public static final String bot_name = "Twitter_Auth";
-        public static final String bot_id = "st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+        public static  String client_id = "cs-788ba0c0-4bae-5d39-8b8b-6e670d95246e";
+
+        public static void setClient_id(String client_id) {
+            Client.client_id = client_id;
+        }
+
+        public static void setClient_secret(String client_secret) {
+            Client.client_secret = client_secret;
+        }
+
+        public static void setIdentity(String identity) {
+            Client.identity = identity;
+        }
+
+        public static void setBot_name(String bot_name) {
+            Client.bot_name = bot_name;
+        }
+
+        public static void setBot_id(String bot_id) {
+            Client.bot_id = bot_id;
+        }
+
+        public static  String client_secret = "mLDXXoiRp02dZspAk40ZVvzQlwPy0zCWCJYuX7Lbof4=";
+        public static  String identity = "ramesh.silveru@kore.com";
+        public static  String bot_name = "Signify TSC Bot";
+        public static  String bot_id = "st-b4022c09-daf5-5fd6-833d-b729cadae596";
     }
 
 
     public static class BubbleColors {
-        public static final String rightBubbleSelected ="#6168e7";
-        public static final String rightBubbleUnSelected="#6168e7";
-        public static final String leftBubbleSelected="#D3D3D3";
-        public static final String leftBubbleUnSelected="#f8f9f8";
-        public static final String leftBubbleTextColor="#444444";
-        public static final String rightBubbleTextColor="#FFFFFF";
-        public static final String whiteColor="#FFFFFF";
-        public static final String leftBubbleBorderColor = "#eeeef2";
-        public static final String rightLinkColor="#FFFFFF";
-        public static final String leftLinkColor = "#6168e7";
+        public static  String rightBubbleSelected ="#6168e7";
+
+        public static void setRightBubbleSelected(String rightBubbleSelected) {
+            BubbleColors.rightBubbleSelected = rightBubbleSelected;
+        }
+
+        public static void setRightBubbleUnSelected(String rightBubbleUnSelected) {
+            BubbleColors.rightBubbleUnSelected = rightBubbleUnSelected;
+        }
+
+        public static void setLeftBubbleSelected(String leftBubbleSelected) {
+            BubbleColors.leftBubbleSelected = leftBubbleSelected;
+        }
+
+        public static void setLeftBubbleUnSelected(String leftBubbleUnSelected) {
+            BubbleColors.leftBubbleUnSelected = leftBubbleUnSelected;
+        }
+
+        public static void setLeftBubbleTextColor(String leftBubbleTextColor) {
+            BubbleColors.leftBubbleTextColor = leftBubbleTextColor;
+        }
+
+        public static void setRightBubbleTextColor(String rightBubbleTextColor) {
+            BubbleColors.rightBubbleTextColor = rightBubbleTextColor;
+        }
+
+        public static void setWhiteColor(String whiteColor) {
+            BubbleColors.whiteColor = whiteColor;
+        }
+
+        public static void setLeftBubbleBorderColor(String leftBubbleBorderColor) {
+            BubbleColors.leftBubbleBorderColor = leftBubbleBorderColor;
+        }
+
+        public static void setRightLinkColor(String rightLinkColor) {
+            BubbleColors.rightLinkColor = rightLinkColor;
+        }
+
+        public static void setLeftLinkColor(String leftLinkColor) {
+            BubbleColors.leftLinkColor = leftLinkColor;
+        }
+
+        public static  String rightBubbleUnSelected="#6168e7";
+        public static  String leftBubbleSelected="#D3D3D3";
+        public static  String leftBubbleUnSelected="#f8f9f8";
+        public static  String leftBubbleTextColor="#444444";
+        public static  String rightBubbleTextColor="#FFFFFF";
+        public static  String whiteColor="#FFFFFF";
+        public static  String leftBubbleBorderColor = "#eeeef2";
+        public static  String rightLinkColor="#FFFFFF";
+        public static  String leftLinkColor = "#6168e7";
+
+        public static void setQuickReplyColor(String quickReplyColor) {
+            BubbleColors.quickReplyColor = quickReplyColor;
+        }
+
+        public static  String quickReplyColor = "#6168e7";
 
     }
 

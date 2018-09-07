@@ -16,6 +16,7 @@
         android:background="@drawable/quick_reply_textbackground"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
+        android:id="@+id/quick_reply_view"
         android:layout_gravity="center_vertical"
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
