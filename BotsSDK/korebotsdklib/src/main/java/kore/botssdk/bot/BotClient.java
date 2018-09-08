@@ -27,6 +27,16 @@ import kore.botssdk.websocket.SocketWrapper;
 public class BotClient {
     private Context mContext;
     private RestResponse.BotCustomData customData;
+
+    public BotInfoModel getBotInfoModel() {
+        return botInfoModel;
+    }
+
+    public void setBotInfoModel(BotInfoModel botInfoModel) {
+        this.botInfoModel = botInfoModel;
+    }
+
+    private BotInfoModel botInfoModel;
     private BotClient() {
     }
 
@@ -46,8 +56,8 @@ public class BotClient {
 
     public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken, clientId, chatBotName, taskBotId, uuid, socketConnectionListener);
-
+        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
+        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, uuid, socketConnectionListener);
     }
     /**
      * Connection for anonymous user
@@ -57,8 +67,8 @@ public class BotClient {
      */
     public void connectAsAnonymousUser(String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, clientId, chatBotName, taskBotId, uuid, socketConnectionListener);
-
+        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
     }
 
     public  String getAccessToken(){
@@ -92,7 +102,7 @@ public class BotClient {
      *
      * @param msg
      */
-    public void sendMessage(String msg, String chatBotName, String taskBotId) {
+    public void sendMessage(String msg) {
 
         if (msg != null && !msg.isEmpty()) {
 
@@ -104,9 +114,7 @@ public class BotClient {
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
-
-            BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
-            botPayLoad.setBotInfo(botInfo);
+            botPayLoad.setBotInfo(botInfoModel);
 
             RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
             botPayLoad.setMeta(meta);
@@ -117,42 +125,19 @@ public class BotClient {
             Log.d("BotClient", "Payload : " + jsonPayload);
             BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
         }
-
-        if (!BotRequestPool.isPoolEmpty()) {
-            if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
-                ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
-                int len = botRequestStringArrayList.size();
-                for (int i = 0; i < len; i++) {
-                    String botRequestPayload = botRequestStringArrayList.get(i);
-                    boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
-                    if (wasSuccessfullySend) {
-                        BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
-                        i--; //reset the parameter
-                        len--; //reset the length.
-                    } else {
-                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
-                    }
-                }
-            }
-        }
+        sendQueMessages();
     }
 
-    public void sendFormData(String payLoad, String chatBotName, String taskBotId,String message) {
+    public void sendFormData(String payLoad,String message) {
 
         if (payLoad != null && !payLoad.isEmpty()) {
-
-
-
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botMessage.setParams(payLoad);
             botPayLoad.setMessage(botMessage);
-
-            BotInfoModel botInfo = new BotInfoModel(chatBotName,taskBotId);
-            botPayLoad.setBotInfo(botInfo);
+            botPayLoad.setBotInfo(botInfoModel);
 
             RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
             botPayLoad.setMeta(meta);
@@ -162,8 +147,12 @@ public class BotClient {
 
             Log.d("BotClient", "Payload : " + jsonPayload);
             BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+            sendQueMessages();
         }
 
+    }
+
+    private void sendQueMessages(){
         if (!BotRequestPool.isPoolEmpty()) {
             if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
                 ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();

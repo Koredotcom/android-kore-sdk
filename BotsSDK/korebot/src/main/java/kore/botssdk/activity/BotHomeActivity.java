@@ -76,7 +76,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
         @Override
         public void onClick(View v) {
             if (isOnline()) {
-                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), SocketUpdateListener.getInstance(getApplicationContext(),null,null));
+                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null, SocketUpdateListener.getInstance(getApplicationContext(),null,null));
                 launchBotChatActivity();
             } else {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();

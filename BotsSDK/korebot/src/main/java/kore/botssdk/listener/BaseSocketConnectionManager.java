@@ -6,6 +6,7 @@ import com.octo.android.robospice.SpiceManager;
 
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.BotDemoRestService;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
@@ -44,9 +45,9 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
         CONNECTED_BUT_DISCONNECTED
     }
 
-    public abstract void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, SocketUpdateListener socketUpdateListener);
+    public abstract void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, RestResponse.BotCustomData botCustomData, SocketUpdateListener socketUpdateListener);
     public abstract void shutDownConnection();
     public abstract void subscribe();
     public abstract void unSubscribe();
-    public abstract void startAndInitiateConnectionWithConfig(Context mContext,SocketUpdateListener socketUpdateListener);
+    public abstract void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData,SocketUpdateListener socketUpdateListener);
 }

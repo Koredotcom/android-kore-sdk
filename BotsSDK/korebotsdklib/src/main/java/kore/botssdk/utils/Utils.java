@@ -81,7 +81,7 @@ public class Utils {
         calendar.setTimeInMillis(date - offset);
         botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
 
-        BotInfoModel bInfo = new BotInfoModel("KoraAssistantNew","st-9a1144d3-9f30-526e-8e64-e065154b92b9");
+        BotInfoModel bInfo = new BotInfoModel("KoraAssistantNew","st-9a1144d3-9f30-526e-8e64-e065154b92b9",null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();

@@ -19,7 +19,6 @@ import kore.botssdk.autobahn.WebSocketConnection;
 import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.models.BotInfoModel;
-import kore.botssdk.models.CustomData;
 import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
@@ -48,13 +47,11 @@ public final class SocketWrapper extends BaseSpiceManager {
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
     private String userAccessToken = null;
-    private String clientId;
     private String JWTToken;
     private String uuId;
-    private String chatBotName;
-    private String taskBotId;
     private String auth;
     private String botUserId;
+    private BotInfoModel botInfoModel;
 
     private Context mContext;
     /**
@@ -109,20 +106,12 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Method to invoke connection for authenticated user
      *
      * @param accessToken   : AccessToken of the loged user.
-     * @param chatBotName:      Name of the chat-bot
-     * @param taskBotId:    Chat-bot's taskId
      */
-    public void connect(String accessToken, String chatBotName, String taskBotId,SocketConnectionListener socketConnectionListener) {
-
+    public void connect(String accessToken,final BotInfoModel botInfoModel,SocketConnectionListener socketConnectionListener) {
+        this.botInfoModel= botInfoModel;
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
-//        mIsReconnectionAttemptNeeded = true;
-
-        final String chatBotArg = (chatBotName == null) ? "" : chatBotName;
-        final String taskBotIdArg = (taskBotId == null) ? "" : taskBotId;
-
-        BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
         optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
 
         //If spiceManager is not started then start it
@@ -136,8 +125,6 @@ public final class SocketWrapper extends BaseSpiceManager {
                 RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
-
-                BotInfoModel botInfoModel = new BotInfoModel(chatBotArg, taskBotIdArg);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
                 RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
@@ -168,26 +155,23 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     }
 
-    public void ConnectAnonymousForKora(final String userAccessToken, final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener){
+    public void ConnectAnonymousForKora(final String userAccessToken, final String sJwtGrant, BotInfoModel botInfoModel, final String uuId,SocketConnectionListener socketConnectionListener){
         this.userAccessToken = userAccessToken;
-        connectAnonymous(sJwtGrant,clientId,chatBotName,taskBotId,uuId,socketConnectionListener);
+        this.botInfoModel = botInfoModel;
+        connectAnonymous(sJwtGrant,botInfoModel,uuId,socketConnectionListener);
     }
 
     /**
      * Method to invoke connection for anonymous
      *
      * These keys are generated from bot admin console
-     * @param clientId : generated clientId
      */
-    public void connectAnonymous(final String sJwtGrant, final String clientId, final String chatBotName, final String taskBotId, final String uuId,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final String uuId,SocketConnectionListener socketConnectionListener) {
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
-        this.clientId = clientId;
         this.JWTToken = sJwtGrant;
         this.uuId = uuId;
-        this.chatBotName = chatBotName;
-        this.taskBotId = taskBotId;
-
+        this.botInfoModel = botInfoModel;
         //If spiceManager is not started then start it
         if (!isConnected()) {
             start(mContext);
@@ -198,8 +182,6 @@ public final class SocketWrapper extends BaseSpiceManager {
                 setPriority(PRIORITY_HIGH);
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
-
-                BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
 
@@ -398,7 +380,6 @@ public final class SocketWrapper extends BaseSpiceManager {
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, JWTToken);
 
-                BotInfoModel botInfoModel = new BotInfoModel(chatBotName, taskBotId);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
 
 
