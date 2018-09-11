@@ -1,9 +1,12 @@
 package kore.botssdk.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -139,5 +142,33 @@ public class Utils {
 
         return buffer.toString();
     }
+    public static void showHideVirtualKeyboard(Activity activity, View view, boolean show) {
+        if (activity == null) {
+            return;
+        }
 
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (show) { //show keyboard
+            if (view == null) {
+                return;
+            }
+
+            imm.showSoftInput(view, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+
+        } else {  // hide keyboard
+
+            View focusView = activity.getCurrentFocus();
+            if (focusView == null) {
+                return;
+            }
+
+            imm.hideSoftInputFromWindow(focusView.getWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        }
+    }
+
+    public static void toggleVirtualKeyboard(Activity activity, int showFlags, int hideFlags) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(showFlags, hideFlags);
+    }
 }

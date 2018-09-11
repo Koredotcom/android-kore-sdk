@@ -146,6 +146,7 @@ public class PayloadInner {
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
+    private ArrayList<QuickReplyTemplate> pickerTemplateModels;
 
     public ArrayList<AttendeeSlotTemplateModel> getAttendeeSlotTemplateModels() {
         return attendeeSlotTemplateModels;
@@ -336,6 +337,11 @@ public class PayloadInner {
                 }.getType();
                 attendeeSlotTemplateModels = gson.fromJson(elementsAsString, listType);
 
+            }else if(BotResponse.TEMPLATE_TYPE_PICKER.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<QuickReplyTemplate>>() {
+                }.getType();
+                pickerTemplateModels = gson.fromJson(elementsAsString, listType);
+
             }
         }
         templateValidator();
@@ -450,5 +456,13 @@ public class PayloadInner {
 
     public void setMeetingConfirmationModels(ArrayList<MeetingConfirmationModel> meetingConfirmationModels) {
         this.meetingConfirmationModels = meetingConfirmationModels;
+    }
+
+    public ArrayList<QuickReplyTemplate> getPickerTemplateModels() {
+        return pickerTemplateModels;
+    }
+
+    public void setPickerTemplateModels(ArrayList<QuickReplyTemplate> pickerTemplateModels) {
+        this.pickerTemplateModels = pickerTemplateModels;
     }
 }

@@ -32,6 +32,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_CAL_EVENTS = "calendar_events";
     public static final String TEMPLATE_TYPE_FILES_LOOKUP = "files_search_carousel";
     public static final String  TEMPLATE_TYPE_ATTENDEE_SLOTS = "attendee_slots_template";
+    public static final String TEMPLATE_TYPE_PICKER = "picker";
 
 
     private String type;
