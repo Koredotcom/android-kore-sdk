@@ -12,7 +12,7 @@
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:listSelector="@color/colorPrimary"
+        android:listSelector="@color/white"
         android:layout_marginBottom="2dp"
         android:visibility="visible" />
 
