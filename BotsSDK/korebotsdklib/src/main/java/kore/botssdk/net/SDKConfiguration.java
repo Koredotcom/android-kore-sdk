@@ -13,6 +13,23 @@ public class SDKConfiguration {
      * bot init text  and related settings
      */
     public static  boolean TRIGGER_INIT_MESSAGE = false;
+
+    public static boolean isTriggerInitMessage() {
+        return TRIGGER_INIT_MESSAGE;
+    }
+
+    public static void setTriggerInitMessage(boolean triggerInitMessage) {
+        TRIGGER_INIT_MESSAGE = triggerInitMessage;
+    }
+
+    public static String getInitMessage() {
+        return INIT_MESSAGE;
+    }
+
+    public static void setInitMessage(String initMessage) {
+        INIT_MESSAGE = initMessage;
+    }
+
     public static  String INIT_MESSAGE = "Welpro";
     public static final String BOT_ICON_URL = "";
     //JWTServer related configurations

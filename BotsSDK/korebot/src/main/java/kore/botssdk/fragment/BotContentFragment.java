@@ -63,7 +63,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         setupAdapter();
         return view;
     }
-    BotCarouselView botCarouselView;
     private void findViews(View view) {
         botsBubblesListView = (StickyListHeadersListView) view.findViewById(R.id.chatContentListView);
     }
@@ -74,6 +73,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
+        botsBubblesListView.setAreHeadersSticky(false);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
 
         quickReplyView = new QuickReplyView(getContext());
