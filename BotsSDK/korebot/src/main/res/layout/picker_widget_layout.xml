@@ -20,7 +20,8 @@
     <NumberPicker
         android:id="@+id/pickerWidget"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:theme="@style/AppTheme.Picker"
         android:descendantFocusability="blocksDescendants"
         android:layout_below="@+id/done"
         android:background="@color/white" />

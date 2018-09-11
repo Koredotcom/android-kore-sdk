@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.net.SDKConfiguration;
 
 /**
  * Created by Anil Kumar on 12/1/2016.
@@ -72,7 +74,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     void initializeViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
         viewHolder.botItemButton = (TextView) view.findViewById(R.id.bot_carousel_item_button);
-
+        viewHolder.botItemButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         view.setTag(viewHolder);
     }
 
