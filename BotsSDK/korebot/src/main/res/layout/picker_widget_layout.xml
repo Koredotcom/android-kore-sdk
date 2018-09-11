@@ -1,3 +1,4 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/pickerWidgetLayout"
     android:layout_width="match_parent"
@@ -17,12 +18,10 @@
         android:textColor="#2b86b2"
         android:textSize="16dp" />
 
-    <NumberPicker
-        android:id="@+id/pickerWidget"
+
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:theme="@style/AppTheme.Picker"
-        android:descendantFocusability="blocksDescendants"
         android:layout_below="@+id/done"
-        android:background="@color/white" />
+        android:id="@+id/single_selectable"
+        android:layout_height="300dp"/>
 </RelativeLayout>
