@@ -123,7 +123,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         // headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), koraCarouselView.getMeasuredWidth(), filesCarousalView.getMeasuredWidth(),
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), koraCarouselView.getMeasuredWidth(), filesCarousalView.getMeasuredWidth(),timeStampsTextView.getMeasuredWidth(),
                 meetingSlotsView.getMeasuredWidth(),attendeeSlotSelectionView.getMeasuredWidth(),meetingConfirmationView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(), lineChartView.getMeasuredWidth(),
                 botListTemplateView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(),calendarEventsView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
@@ -131,13 +131,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         maxBubbleDimen[0] = maxContentDimen[0];
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                textMediaDimen[1] + botCarouselView.getMeasuredHeight() + koraCarouselView.getMeasuredHeight() + meetingSlotsView.getMeasuredHeight() +filesCarousalView.getMeasuredHeight()+
+                textMediaDimen[1] + botCarouselView.getMeasuredHeight() + koraCarouselView.getMeasuredHeight() + meetingSlotsView.getMeasuredHeight() +filesCarousalView.getMeasuredHeight()+ timeStampsTextView.getMeasuredHeight()+
                 meetingConfirmationView.getMeasuredHeight() +attendeeSlotSelectionView.getMeasuredHeight()+ botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() + lineChartView.getMeasuredHeight()
                 + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() +calendarEventsView.getMeasuredHeight()
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0|| attendeeSlotSelectionView.getMeasuredHeight() != 0 || (calendarEventsView.getVisibility()!=View.GONE && calendarEventsView.getMeasuredHeight()!=0) ? dp2 : 0);
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + koraCarouselView.getMeasuredHeight()+filesCarousalView.getMeasuredHeight()
-                + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
+                +timeStampsTextView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
                 tableView.getMeasuredHeight() + lineChartView.getMeasuredHeight() + meetingSlotsView.getMeasuredHeight()+attendeeSlotSelectionView.getMeasuredHeight()+
                 +calendarEventsView.getMeasuredHeight()+ meetingConfirmationView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
     }
@@ -173,6 +173,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         lineChartView.setVisibility(GONE);
         calendarEventsView.setVisibility(View.GONE);
         calendarEventsView.populateCalendarEvents(null);
+
     }
 
     @Override
@@ -216,7 +217,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         attendeeSlotSelectionView.setVisibility(GONE);
         attendeeSlotSelectionView.populateData(-1,null,false);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-
         calendarEventsView.setVisibility(View.GONE);
         calendarEventsView.populateCalendarEvents(null);
 
@@ -394,6 +394,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(meetingConfirmationView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(calendarEventsView,childWidthSpec,wrapSpec);
         MeasureUtils.measure(attendeeSlotSelectionView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
 
         /*
          * For Sender icon [CPV]
@@ -507,9 +508,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
 
-
-
-
         /*
          * For Button View
          */
@@ -522,6 +520,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         left = bubbleTextMediaLayout.getLeft();
         top = bubbleTextMediaLayout.getBottom()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
         LayoutUtils.layoutChild(meetingSlotsView, left, top);
+
+
 
         left = bubbleTextMediaLayout.getLeft();
         top = bubbleTextMediaLayout.getBottom()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
@@ -595,6 +595,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (10 * dp1) : minimumTop;
         LayoutUtils.layoutChild(lineChartView, left, top);
 
+
+
+        left = (int) (bubbleTextMediaLayout.getLeft());
+        top = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom()-BUBBLE_CONTENT_BOTTOM_MARGIN,botButtonView.getBottom(),botListTemplateView.getBottom(),koraCarouselView.getBottom(),filesCarousalView.getBottom(),botCarouselView.getBottom(),meetingConfirmationView.getBottom(),meetingSlotsView.getBottom(),attendeeSlotSelectionView.getBottom(),calendarEventsView.getBottom(),lineChartView.getBottom(),botPieChartView.getBottom(),tableView.getBottom()));
+        LayoutUtils.layoutChild(timeStampsTextView, left, top);
         botCarouselView.bringToFront();
         koraCarouselView.bringToFront();
         filesCarousalView.bringToFront();

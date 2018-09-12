@@ -12,7 +12,7 @@ public class SDKConfiguration {
     /**
      * bot init text  and related settings
      */
-    public static  boolean TRIGGER_INIT_MESSAGE = false;
+    private static  boolean TRIGGER_INIT_MESSAGE = false;
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -30,7 +30,7 @@ public class SDKConfiguration {
         INIT_MESSAGE = initMessage;
     }
 
-    public static  String INIT_MESSAGE = "Welpro";
+    private static  String INIT_MESSAGE = "Welpro";
     public static final String BOT_ICON_URL = "";
     //JWTServer related configurations
     public static class JWTServer{
@@ -149,6 +149,16 @@ public class SDKConfiguration {
         public static  String quickReplyColor = "#6168e7";
 
     }
+
+    public static boolean isTimeStampsRequired() {
+        return TIME_STAMPS_REQUIRED;
+    }
+
+    public static void setTimeStampsRequired(boolean timeStampsRequired) {
+        TIME_STAMPS_REQUIRED = timeStampsRequired;
+    }
+
+    private static boolean TIME_STAMPS_REQUIRED = true;
 
 
 }

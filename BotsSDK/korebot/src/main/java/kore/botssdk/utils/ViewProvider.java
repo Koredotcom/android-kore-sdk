@@ -2,9 +2,14 @@ package kore.botssdk.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -13,6 +18,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
@@ -217,6 +223,16 @@ public class ViewProvider {
         KoraFilesCarousalView koraCarouselView = new KoraFilesCarousalView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);
         return koraCarouselView;
+    }
+
+    public static TextView getTimeStampTextView(Context context){
+        TextView textView = new TextView(context);
+        textView.setId(TEXTVIEW_ID);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView.setLayoutParams(layoutParams);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        textView.setTextColor(Color.parseColor("#818691"));
+        return textView;
     }
 
 }

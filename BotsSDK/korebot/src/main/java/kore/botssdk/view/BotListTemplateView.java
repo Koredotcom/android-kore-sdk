@@ -76,6 +76,7 @@ public class BotListTemplateView extends ViewGroup {
         botListTemplateAdapter.notifyDataSetChanged();
 
         if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+            botCustomListRoot.setVisibility(VISIBLE);
             botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
             botCustomListViewButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -93,6 +94,7 @@ public class BotListTemplateView extends ViewGroup {
             });
             botCustomListViewButton.setVisibility(VISIBLE);
         } else {
+            botCustomListRoot.setVisibility(GONE);
             botCustomListViewButton.setVisibility(GONE);
         }
     }

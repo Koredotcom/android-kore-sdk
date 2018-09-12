@@ -14,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
@@ -142,7 +144,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected GradientDrawable leftGradientDrawable,rightGradientDrawable;
 
     LayoutInflater ownLayoutInflater;
-
+    protected TextView timeStampsTextView;
 
 
     public KaBaseBubbleLayout(Context context) {
@@ -322,6 +324,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         filesCarousalView = ViewProvider.getKoraFilesCarouselView(context);
         addView(filesCarousalView);
 
+        timeStampsTextView = ViewProvider.getTimeStampTextView(context);
+        addView(timeStampsTextView);
+        timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
 
     }
 
@@ -458,6 +463,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel);
 
+        timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
+        timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
         // Header Layout
        /* populateHeaderLayout(position, baseBotMessage);*/
 
@@ -534,6 +541,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
 
         bubbleTextMediaLayout.startup(message, dimens);
+
     }
 
   /*  abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);*/
