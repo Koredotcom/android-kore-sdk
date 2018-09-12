@@ -230,8 +230,10 @@ public class ViewProvider {
         textView.setId(TEXTVIEW_ID);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(layoutParams);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
-        textView.setTextColor(Color.parseColor("#818691"));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10);
+        textView.setTextColor(Color.parseColor("#B0B0B0"));
+        textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
+        textView.setTypeface(KaFontUtils.getCustomTypeface(KaFontUtils.ROBOTO_MEDIUM,context));
         return textView;
     }
 
