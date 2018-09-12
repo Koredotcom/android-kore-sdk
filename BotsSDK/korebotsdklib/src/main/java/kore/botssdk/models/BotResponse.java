@@ -33,6 +33,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_FILES_LOOKUP = "files_search_carousel";
     public static final String  TEMPLATE_TYPE_ATTENDEE_SLOTS = "attendee_slots_template";
     public static final String TEMPLATE_TYPE_PICKER = "picker";
+    public static final String TEMPLATE_TYPE_SESSION_END = "session_end";
+    public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
 
 
     private String type;

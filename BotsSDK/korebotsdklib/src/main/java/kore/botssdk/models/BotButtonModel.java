@@ -11,6 +11,16 @@ public class BotButtonModel {
     String url;
     String title;
     String payload;
+
+    public boolean isIs_actionable() {
+        return is_actionable;
+    }
+
+    public void setIs_actionable(boolean is_actionable) {
+        this.is_actionable = is_actionable;
+    }
+
+    boolean is_actionable;
     public HashMap<String, Object> getCustomData() {
         return customData;
     }

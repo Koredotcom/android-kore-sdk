@@ -223,7 +223,7 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
                 return headersMap.get(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
             else return 0;
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
             return 0;
         }
     }

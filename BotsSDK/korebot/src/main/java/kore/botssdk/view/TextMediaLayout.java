@@ -117,7 +117,7 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     public void populateText(String textualContent) {
-        if (textualContent != null) {
+        if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),

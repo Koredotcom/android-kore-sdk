@@ -167,6 +167,7 @@ public class Utils {
         }
     }
 
+
     public static void toggleVirtualKeyboard(Activity activity, int showFlags, int hideFlags) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(showFlags, hideFlags);

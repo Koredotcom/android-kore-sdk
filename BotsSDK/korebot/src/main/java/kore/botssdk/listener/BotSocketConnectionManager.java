@@ -19,6 +19,7 @@ import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
 import kore.botssdk.events.NetworkEvents;
+import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
@@ -44,6 +45,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private TTSSynthesizer ttsSynthesizer;
     private static BotSocketConnectionManager botSocketConnectionManager;
     private String accessToken;
+    private SocketChatListener chatListener;
 
 
     private final String LOG_TAG = getClass().getSimpleName();
@@ -81,11 +83,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void onOpen() {
         connection_state = CONNECTION_STATE.CONNECTED;
-        KoreEventCenter.post(connection_state);
+//        KoreEventCenter.post(connection_state);
+        if(chatListener != null && isSubscribed){
+            chatListener.onConnectionStateChanged(connection_state);
+        }
         botAccessToken = botClient.getAccessToken();
         botUserId = botClient.getUserId();
         botClient.sendMessage(null);
-        socketUpdateListener.onConnectionUpdated();
+//        socketUpdateListener.onConnectionUpdated();
 
     }
 
@@ -93,12 +98,20 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
         connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
-        KoreEventCenter.post(connection_state);
+//        KoreEventCenter.post(connection_state);
+        if(chatListener != null && isSubscribed){
+            chatListener.onConnectionStateChanged(connection_state);
+        }
     }
 
     @Override
     public void onTextMessage(String payload) {
-        socketUpdateListener.onMessageUpdate(payload, false, null);
+//        socketUpdateListener.onMessageUpdate(payload, false, null);
+        Log.d("IKIDO","Got the response from Server");
+//        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
+        if(chatListener != null && isSubscribed){
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
+        }
     }
 
     public static void killInstance() {
@@ -110,11 +123,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void refreshJwtToken() {
-        if (isWithAuth) {
+        /*if (isWithAuth) {
             makeJwtCallWithToken(true);
-        } else {
+        } else {*/
             makeJwtCallWithConfig(true);
-        }
+//        }
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
@@ -181,8 +194,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onBinaryMessage(byte[] payload) {
     }
 
-    @Override
-    public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken,RestResponse.BotCustomData botCustomData, SocketUpdateListener socketUpdateListener) {
+    /*@Override
+    public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken,RestResponse.BotCustomData botCustomData) {
         if (connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             this.userId = userId;
@@ -197,28 +210,31 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botCustomData.put("kmToken", accessToken);
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
-            this.socketUpdateListener = socketUpdateListener;
+//            this.socketUpdateListener = socketUpdateListener;
             if (!botsSpiceManager.isStarted())
                 botsSpiceManager.start(this.mContext);
             initiateConnection();
         }
-    }
+    }*/
 
     @Override
-    public void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData, SocketUpdateListener socketUpdateListener) {
+    public void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData) {
         if (connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
-            KoreEventCenter.post(connection_state);
+//            KoreEventCenter.post(connection_state);
+            if(chatListener != null && isSubscribed){
+                chatListener.onConnectionStateChanged(connection_state);
+            }
             if(botCustomData == null) {
                 botCustomData = new RestResponse.BotCustomData();
             }
             botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);
-            this.isWithAuth = false;
+//            this.isWithAuth = false;
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
-            this.socketUpdateListener = socketUpdateListener;
+//            this.socketUpdateListener = socketUpdateListener;
             if (!botsSpiceManager.isStarted())
                 botsSpiceManager.start(this.mContext);
             initiateConnection();
@@ -230,14 +246,17 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
 //            Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
             connection_state = DISCONNECTED;
-            KoreEventCenter.post(connection_state);
+//            KoreEventCenter.post(connection_state);
+            if(chatListener != null && isSubscribed){
+                chatListener.onConnectionStateChanged(connection_state);
+            }
             return;
         }
-        if (isWithAuth) {
+        /*if (isWithAuth) {
             makeJwtCallWithToken(false);
-        } else {
+        } else {*/
             makeJwtCallWithConfig(false);
-        }
+//        }
     }
 
     public String getStreamId() {
@@ -270,7 +289,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        if(chatListener != null && isSubscribed){
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        }
 
     }
 
@@ -292,7 +315,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        if(chatListener != null && isSubscribed){
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        }
 
     }
 
@@ -310,7 +337,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
+        if(chatListener != null && isSubscribed){
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
+        }
 
     }
 
@@ -330,6 +361,15 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void subscribe() {
         isSubscribed = true;
+    }
+
+    @Override
+    public void subscribe(SocketChatListener listener) {
+        isSubscribed = true;
+        this.chatListener = listener;
+        if(chatListener != null){
+            chatListener.onConnectionStateChanged(connection_state);
+        }
     }
 
     @Override
@@ -357,7 +397,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void setTtsEnabled(boolean ttsEnabled) {
-        ttsSynthesizer.setTtsEnabled(ttsEnabled);
+        if(ttsSynthesizer != null) {
+            ttsSynthesizer.setTtsEnabled(ttsEnabled);
+        }
     }
 
     public boolean isTTSEnabled() {
@@ -450,7 +492,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 @Override
                 public void run() {
                     if (mIsAttemptNeeded) {
-                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
+//                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
+                        if(chatListener != null && isSubscribed){
+                            chatListener.onMessage(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
+                        }
                         postDelayMessage();
                     }
 

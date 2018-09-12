@@ -121,4 +121,5 @@
     <color name="color_dfdfeb">#dfdfeb</color>
     <color name="color_fafbfc">#fafbfc</color>
     <color name="color_efeffc">#efeffc</color>
+    <color name="black">#000000</color>
 </resources>

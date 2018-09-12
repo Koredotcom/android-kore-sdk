@@ -9,19 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.octo.android.robospice.SpiceManager;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
-
-import java.util.UUID;
-
 import kore.botssdk.R;
 import kore.botssdk.listener.BotSocketConnectionManager;
-import kore.botssdk.listener.SocketUpdateListener;
-import kore.botssdk.models.JWTTokenResponse;
-import kore.botssdk.net.BotDemoRestService;
-import kore.botssdk.net.BotRestService;
-import kore.botssdk.net.JWTGrantRequest;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
@@ -76,7 +65,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
         @Override
         public void onClick(View v) {
             if (isOnline()) {
-                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null, SocketUpdateListener.getInstance(getApplicationContext(),null,null));
+                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
                 launchBotChatActivity();
             } else {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();

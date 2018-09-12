@@ -460,10 +460,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
         populateBubbleTextMedia(baseBotMessage, componentModel, constrictLayout, dimens);
+        timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel);
 
-        timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
+
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
         // Header Layout
        /* populateHeaderLayout(position, baseBotMessage);*/
