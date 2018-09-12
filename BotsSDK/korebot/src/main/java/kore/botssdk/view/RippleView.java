@@ -218,7 +218,7 @@ public class RippleView extends RelativeLayout {
         scaleAnimation = new ScaleAnimation(1.0f, zoomScale, 1.0f, zoomScale, w / 2, h / 2);
         scaleAnimation.setDuration(zoomDuration);
         scaleAnimation.setRepeatMode(Animation.REVERSE);
-        scaleAnimation.setRepeatCount(1);
+        scaleAnimation.setRepeatCount(Animation.INFINITE);
     }
 
     /**
@@ -325,7 +325,7 @@ public class RippleView extends RelativeLayout {
      *
      * @param rippleColor New color resource
      */
-    @ColorRes
+
     public void setRippleColor(int rippleColor) {
         this.rippleColor = getResources().getColor(rippleColor);
     }
