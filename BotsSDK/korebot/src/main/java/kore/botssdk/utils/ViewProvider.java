@@ -233,7 +233,7 @@ public class ViewProvider {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10);
         textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-        textView.setTypeface(KaFontUtils.getCustomTypeface(KaFontUtils.ROBOTO_MEDIUM,context));
+        KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
     }
 

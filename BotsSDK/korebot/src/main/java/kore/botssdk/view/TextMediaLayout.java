@@ -97,7 +97,7 @@ public class TextMediaLayout extends MediaLayout {
         float dp5 = dp1 * 5;
         botContentTextView.setPadding(0, 0, 0, (int) dp5);
         botContentTextView.setLinkTextColor(linkTextColor);
-        botContentTextView.setTypeface(KaFontUtils.getCustomTypeface(KaFontUtils.ROBOTO_REGULAR,getContext()));
+        KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         if (gravity == GRAVITY_LEFT) {
             botContentTextView.setGravity(Gravity.LEFT);
 

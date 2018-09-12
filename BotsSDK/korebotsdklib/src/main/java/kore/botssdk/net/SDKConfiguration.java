@@ -32,6 +32,15 @@ public class SDKConfiguration {
 
     private static  String INIT_MESSAGE = "Welpro";
     public static final String BOT_ICON_URL = "";
+
+    public static boolean isApplyFontStyle() {
+        return APPLY_FONT_STYLE;
+    }
+
+    public static void setApplyFontStyle(boolean applyFontStyle) {
+        APPLY_FONT_STYLE = applyFontStyle;
+    }
+
     //JWTServer related configurations
     public static class JWTServer{
         public static void setJwtServerUrl(String jwtServerUrl) {
@@ -159,6 +168,7 @@ public class SDKConfiguration {
     }
 
     private static boolean TIME_STAMPS_REQUIRED = true;
+    private static boolean APPLY_FONT_STYLE = true;
 
 
 }

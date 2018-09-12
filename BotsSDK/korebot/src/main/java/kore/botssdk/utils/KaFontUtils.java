@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import kore.botssdk.net.SDKConfiguration;
+
 public class KaFontUtils {
 
     private static final String LOG_TAG = KaFontUtils.class.getSimpleName();
@@ -42,15 +44,17 @@ public class KaFontUtils {
     public static final String ROBOTO_EXTRA_BOLD = "extra-bold";
 
     public static void applyCustomFont(Context context, View root) {
-        if (root instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) root;
-            for (int count = 0; count <= viewGroup.getChildCount(); count++) {
-                applyCustomFont(context, viewGroup.getChildAt(count));
-            }
-        } else if (root instanceof TextView || root instanceof Button || root instanceof EditText) {
-            TextView myview = (TextView) root;
-            setCustomFont(myview, context);
+        if(SDKConfiguration.isApplyFontStyle()) {
+            if (root instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) root;
+                for (int count = 0; count <= viewGroup.getChildCount(); count++) {
+                    applyCustomFont(context, viewGroup.getChildAt(count));
+                }
+            } else if (root instanceof TextView || root instanceof Button || root instanceof EditText) {
+                TextView myview = (TextView) root;
+                setCustomFont(myview, context);
 
+            }
         }
     }
 
@@ -116,7 +120,14 @@ public class KaFontUtils {
         }
     }
 
-    public static Typeface getCustomTypeface(String tag, Context context) {
+
+    public static void setCustomTypeface(TextView view,String tag,Context context){
+        if(SDKConfiguration.isApplyFontStyle()) {
+            view.setTypeface(getCustomTypeface(tag, context));
+        }
+    }
+
+    private static Typeface getCustomTypeface(String tag, Context context) {
 
         switch (tag) {
             case ROBOTO_LIGHT:

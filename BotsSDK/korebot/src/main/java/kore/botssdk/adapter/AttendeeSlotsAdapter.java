@@ -164,7 +164,7 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
             viewHolder.rootView = convertView.findViewById(R.id.root_layout);
         } else {
             viewHolder.slotsSeparator = (TextView) convertView.findViewById(R.id.separator);
-            viewHolder.slotsSeparator.setTypeface(KaFontUtils.getCustomTypeface(KaFontUtils.ROBOTO_REGULAR, mContext));
+            KaFontUtils.setCustomTypeface(viewHolder.slotsSeparator,KaFontUtils.ROBOTO_REGULAR, mContext);
         }
         convertView.setTag(viewHolder);
     }
