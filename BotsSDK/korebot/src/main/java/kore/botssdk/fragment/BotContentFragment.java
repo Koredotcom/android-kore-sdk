@@ -51,6 +51,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private String mChannelIconURL;
     private String mBotNameInitials;
     private TTSUpdate ttsUpdate;
+    private int mBotIconId;
 
     @Nullable
     @Override
@@ -100,6 +101,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
             mBotNameInitials = bundle.getString(BundleUtils.BOT_NAME_INITIALS,"B");
+            mBotIconId = bundle.getInt(BundleUtils.BOT_ICON_ID,-1);
         }
     }
 
@@ -148,7 +150,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
-        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
+        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
     }
 
