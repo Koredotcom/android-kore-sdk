@@ -32,6 +32,7 @@ import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 
+import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.CONNECTING;
 import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
 
 /**
@@ -274,11 +275,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void sendInitMessage(String initialMessage) {
-        try{
-            throw new Exception("Disconnected from");
-        }catch (Exception ee){
-            ee.printStackTrace();
-        }
         botClient.sendMessage(initialMessage);
     }
 
@@ -441,18 +437,19 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
         if (event.getNetworkInfo() != null && event.getNetworkInfo().isConnected()) {
-            checkConnectionAndRetry(mContext);
+            checkConnectionAndRetry(mContext,false);
         }
     }
 
     public void onEvent(AuthTokenUpdateEvent ev) {
         if (ev.getAccessToken() != null) {
             accessToken = ev.getAccessToken();
-            checkConnectionAndRetry(mContext);
+            checkConnectionAndRetry(mContext,false);
         }
     }
 
-    public void checkConnectionAndRetry(Context mContext) {
+    public void checkConnectionAndRetry(Context mContext, boolean isFirstTime) {
+        Log.d("IKIDO","The state of the activity is "+isFirstTime);
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
@@ -460,7 +457,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);
             botClient = new BotClient(mContext, botCustomData);
-            refreshJwtToken();
+            if(isFirstTime){
+                if(chatListener != null && isSubscribed){
+                    chatListener.onConnectionStateChanged(CONNECTING);
+                }
+                initiateConnection();
+            }else {
+                refreshJwtToken();
+            }
             return;
         }
         if (connection_state == DISCONNECTED)

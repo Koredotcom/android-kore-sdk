@@ -45,11 +45,6 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
         CONNECTED_BUT_DISCONNECTED
     }
 
-    public enum ACTIVITY_STATE{
-        STATE_NORMAL,
-        STATE_RESTARTED
-    }
-
 //    public abstract void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, RestResponse.BotCustomData botCustomData);
     public abstract void shutDownConnection();
     public abstract void subscribe();

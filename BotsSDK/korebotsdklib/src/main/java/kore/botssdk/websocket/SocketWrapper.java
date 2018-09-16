@@ -229,7 +229,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             this.url = url;
 //            this.uri = new URI(url);
             WebSocketOptions connectOptions = new WebSocketOptions();
-            connectOptions.setReconnectInterval(0);
+            connectOptions.setReconnectInterval(2000);
             try {
                 mConnection.connect(url, new  WebSocketConnectionHandler() {
                     @Override
@@ -490,11 +490,6 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Call this method when the user logged out
      */
     public void disConnect() {
-        try{
-            throw new Exception("Disconnected from");
-        }catch (Exception ee){
-            ee.printStackTrace();
-        }
         mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {

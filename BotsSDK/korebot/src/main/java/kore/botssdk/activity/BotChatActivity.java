@@ -383,7 +383,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
     @Override
     protected void onResume() {
-        BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext());
+        BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
         updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
         super.onResume();
     }
