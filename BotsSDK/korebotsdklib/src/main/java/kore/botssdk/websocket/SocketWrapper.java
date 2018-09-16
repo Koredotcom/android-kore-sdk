@@ -7,17 +7,18 @@ import android.util.Log;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import kore.botssdk.autobahn.WebSocket;
-import kore.botssdk.autobahn.WebSocketConnection;
-import kore.botssdk.autobahn.WebSocketException;
 import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException;
+import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
+import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
@@ -36,12 +37,13 @@ public final class SocketWrapper extends BaseSpiceManager {
     public static SocketWrapper pKorePresenceInstance;
     private SocketConnectionListener socketConnectionListener = null;
 
-    private final WebSocketConnection mConnection = new WebSocketConnection();
+//    private final WebSocketConnection mConnection = new WebSocketConnection();
+    private final IWebSocket mConnection = new WebSocketConnection();
     private static Timer timer = new Timer();
     private boolean mIsReconnectionAttemptNeeded = true;
 
     private String url;
-    private URI uri;
+//    private URI uri;
 //    private boolean mTLSEnabled = false;
 
     private HashMap<String, Object> optParameterBotInfo;
@@ -82,11 +84,11 @@ public final class SocketWrapper extends BaseSpiceManager {
      */
     public static SocketWrapper getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
-            synchronized (SocketWrapper.class) {
-                if(pKorePresenceInstance == null) {
+//            synchronized (SocketWrapper.class) {
+//                if(pKorePresenceInstance == null) {
                     pKorePresenceInstance = new SocketWrapper(mContext);
-                }
-            }
+//                }
+//            }
         }
         return pKorePresenceInstance;
     }
@@ -225,9 +227,11 @@ public final class SocketWrapper extends BaseSpiceManager {
     private void connectToSocket(String url) throws URISyntaxException {
         if (url != null) {
             this.url = url;
-            this.uri = new URI(url);
+//            this.uri = new URI(url);
+            WebSocketOptions connectOptions = new WebSocketOptions();
+            connectOptions.setReconnectInterval(0);
             try {
-                mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
+                mConnection.connect(url, new  WebSocketConnectionHandler() {
                     @Override
                     public void onOpen() {
                         Log.d(LOG_TAG, "Connection Open.");
@@ -240,7 +244,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     }
 
                     @Override
-                    public void onClose(WebSocketCloseNotification code, String reason) {
+                    public void onClose(int code, String reason) {
                         Log.d(LOG_TAG, "Connection Lost.");
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
@@ -257,14 +261,14 @@ public final class SocketWrapper extends BaseSpiceManager {
                     }
 
                     @Override
-                    public void onTextMessage(String payload) {
+                    public void onMessage(String payload) {
 //                        Log.d(LOG_TAG, "onTextMessage payload :" + payload);
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onTextMessage(payload);
                         }
                     }
 
-                    @Override
+                    /*@Override
                     public void onRawTextMessage(byte[] payload) {
 //                        Log.d(LOG_TAG, "onRawTextMessage payload:" + payload);
                         if (socketConnectionListener != null) {
@@ -278,7 +282,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onBinaryMessage(payload);
                         }
-                    }
+                    }*/
                 });
             } catch (WebSocketException e) {
                 e.printStackTrace();
@@ -291,7 +295,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             public void run() {
                 try {
                     if (mConnection != null && mConnection.isConnected()) {
-                        mConnection.sendTextMessage("pong from the client");
+                        mConnection.sendPing("pong from the client".getBytes());
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -425,7 +429,7 @@ public final class SocketWrapper extends BaseSpiceManager {
      */
     public boolean sendMessage(String msg) {
         if (mConnection != null && mConnection.isConnected()) {
-            mConnection.sendTextMessage(msg);
+            mConnection.sendMessage(msg);
             return true;
         } else {
             if(userAccessToken != null && socketConnectionListener != null){
@@ -486,10 +490,15 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Call this method when the user logged out
      */
     public void disConnect() {
+        try{
+            throw new Exception("Disconnected from");
+        }catch (Exception ee){
+            ee.printStackTrace();
+        }
         mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {
-                mConnection.disconnect();
+                mConnection.sendClose();
             } catch (Exception e) {
                 Log.d(LOG_TAG, "Exception while disconnection");
             }

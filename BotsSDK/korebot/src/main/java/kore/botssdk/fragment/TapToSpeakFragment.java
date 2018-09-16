@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.event.TapToSpeakEventPublisher;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.speechtotext.AudioCue;
@@ -140,7 +139,7 @@ public class TapToSpeakFragment extends Fragment {
         }
 
         @Override
-        public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+        public void onClose(int code, String reason) {
             Log.d(LOG_TAG, "Connection closed reason " + reason);
             mRecordingThread.stop();
             sbf.delete(0, sbf.length());

@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
-import kore.botssdk.autobahn.WebSocket;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
@@ -71,10 +70,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public static BotSocketConnectionManager getInstance() {
         if (botSocketConnectionManager == null) {
-            synchronized (BotSocketConnectionManager.class) {
-                if (botSocketConnectionManager == null)
+//            synchronized (BotSocketConnectionManager.class) {
+//                if (botSocketConnectionManager == null)
                     botSocketConnectionManager = new BotSocketConnectionManager();
-            }
+//            }
         }
         return botSocketConnectionManager;
     }
@@ -96,7 +95,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
     @Override
-    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+    public void onClose(int code, String reason) {
         connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
 //        KoreEventCenter.post(connection_state);
         if(chatListener != null && isSubscribed){
@@ -131,6 +130,13 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
+        Log.d("IKIDO","clientid = "+SDKConfiguration.Client.client_id);
+        Log.d("IKIDO","Client Secret is "+ SDKConfiguration.Client.client_secret);
+        Log.d("IKIDO","is botsSpiceManager is null "+ (botsSpiceManager == null));
+        if(botsSpiceManager != null) {
+            if(!botsSpiceManager.isStarted())botsSpiceManager.start(mContext);
+            Log.d("IKIDO", "is botsSpiceManager is started " + botsSpiceManager.isStarted());
+        }
         JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
                 SDKConfiguration.Client.client_secret, SDKConfiguration.Server.IS_ANONYMOUS_USER ? UUID.randomUUID().toString() : SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
         botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
@@ -268,6 +274,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void sendInitMessage(String initialMessage) {
+        try{
+            throw new Exception("Disconnected from");
+        }catch (Exception ee){
+            ee.printStackTrace();
+        }
         botClient.sendMessage(initialMessage);
     }
 
@@ -442,6 +453,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void checkConnectionAndRetry(Context mContext) {
+        ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
             RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();

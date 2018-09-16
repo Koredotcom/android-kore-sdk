@@ -1,6 +1,5 @@
 package kore.botssdk.websocket;
 
-import kore.botssdk.autobahn.WebSocket;
 
 /**
  * Created by Ramachandra
@@ -21,7 +20,7 @@ public interface SocketConnectionListener {
      * @param code   Close code.
      * @param reason Close reason (human-readable).
      */
-    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason);
+    public void onClose(int code, String reason);
 
     /**
      * Fired when a text message has been received (and text

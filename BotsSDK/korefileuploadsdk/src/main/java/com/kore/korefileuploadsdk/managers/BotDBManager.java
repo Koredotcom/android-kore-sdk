@@ -23,10 +23,10 @@ public class BotDBManager {
 
     public static BotDBManager getInstance(){
         if(botDBManager == null){
-            synchronized (BotDBManager.class){
-                if(botDBManager == null)
+//            synchronized (BotDBManager.class){
+//                if(botDBManager == null)
                     botDBManager = new BotDBManager();
-            }
+//            }
         }
         return botDBManager;
     }

@@ -8,8 +8,9 @@ import com.google.gson.Gson;
 import java.net.URI;
 import java.util.HashMap;
 
-import kore.botssdk.autobahn.WebSocket;
-import kore.botssdk.autobahn.WebSocketConnection;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.websocket.SocketConnectionListener;
 
@@ -25,9 +26,9 @@ public final class TtsWebSocketWrapper {
     public static TtsWebSocketWrapper pKorePresenceInstance;
     //    private Map<String, Object> mWebSocketConnectionArgs = Collections.emptyMap();
     private SocketConnectionListener socketConnectionListener = null;
-    private final WebSocketConnection mConnection = new WebSocketConnection();
+    private final IWebSocket mConnection = new WebSocketConnection();
 
-    private URI uri;
+//    private URI uri;
 
 //    private String accessToken;
 
@@ -46,9 +47,9 @@ public final class TtsWebSocketWrapper {
      */
     public static TtsWebSocketWrapper getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
-            synchronized (TtsWebSocketWrapper.class) {
+//            synchronized (TtsWebSocketWrapper.class) {
                 pKorePresenceInstance = new TtsWebSocketWrapper(mContext);
-            }
+//            }
         }
         return pKorePresenceInstance;
     }
@@ -91,8 +92,8 @@ public final class TtsWebSocketWrapper {
         String url = SDKConfiguration.Server.TTS_WS_URL;
         Log.d(LOG_TAG,"The url is "+ url);
         try {
-            this.uri = new URI(url);
-            mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
+//            this.uri = new URI(url);
+            mConnection.connect(url, new  WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
                     Log.d(LOG_TAG, "Connection Open.");
@@ -102,7 +103,7 @@ public final class TtsWebSocketWrapper {
                 }
 
                 @Override
-                public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+                public void onClose(int code, String reason) {
                     Log.d(LOG_TAG, "Connection Lost.");
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onClose(code, reason);
@@ -111,13 +112,13 @@ public final class TtsWebSocketWrapper {
                 }
 
                 @Override
-                public void onTextMessage(String payload) {
+                public void onMessage(String payload) {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onTextMessage(payload);
                     }
                 }
 
-                @Override
+                /*@Override
                 public void onRawTextMessage(byte[] payload) {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onRawTextMessage(payload);
@@ -129,7 +130,7 @@ public final class TtsWebSocketWrapper {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onBinaryMessage(payload);
                     }
-                }
+                }*/
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,7 +146,7 @@ public final class TtsWebSocketWrapper {
      */
     public boolean sendRawData(byte[] msg) {
         if (mConnection != null && mConnection.isConnected()) {
-            mConnection.sendBinaryMessage(msg);
+            mConnection.sendMessage(msg,true);
             return true;
         }
         return false;
@@ -164,7 +165,7 @@ public final class TtsWebSocketWrapper {
             body.put("authorization",bearer);
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(body);
-            mConnection.sendTextMessage(jsonPayload);
+            mConnection.sendMessage(jsonPayload);
             return true;
         } else {
            connect(socketConnectionListener);
@@ -181,7 +182,7 @@ public final class TtsWebSocketWrapper {
     public void disConnect() {
         if (mConnection != null && mConnection.isConnected()) {
             try {
-                mConnection.disconnect();
+                mConnection.sendClose();
             } catch (Exception e) {
                 Log.d(LOG_TAG, "Exception while disconnection");
             }

@@ -5,8 +5,9 @@ import android.util.Log;
 
 import java.net.URI;
 
-import kore.botssdk.autobahn.WebSocket;
-import kore.botssdk.autobahn.WebSocketConnection;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
+import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
+import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.websocket.SocketConnectionListener;
 
@@ -23,9 +24,9 @@ public final class SocketWrapperForTextToSpeech {
     public static SocketWrapperForTextToSpeech pKorePresenceInstance;
 //    private Map<String, Object> mWebSocketConnectionArgs = Collections.emptyMap();
     private SocketConnectionListener socketConnectionListener = null;
-    private final WebSocketConnection mConnection = new WebSocketConnection();
+    private final IWebSocket mConnection = new WebSocketConnection();
 
-    private URI uri;
+//    private URI uri;
 
 //    private String accessToken;
 
@@ -44,9 +45,9 @@ public final class SocketWrapperForTextToSpeech {
      */
     public static SocketWrapperForTextToSpeech getInstance(Context mContext) {
         if (pKorePresenceInstance == null) {
-            synchronized (SocketWrapperForTextToSpeech.class) {
+//            synchronized (SocketWrapperForTextToSpeech.class) {
                     pKorePresenceInstance = new SocketWrapperForTextToSpeech(mContext);
-            }
+//            }
         }
         return pKorePresenceInstance;
     }
@@ -88,8 +89,8 @@ public final class SocketWrapperForTextToSpeech {
         String url = SDKConfiguration.Server.SPEECH_SERVER_BASE_URL + "?" + "content-type=audio/x-raw,+layout=interleaved,+rate=16000,+format=S16LE,+channels=1"+"&email="+email;
         Log.d(LOG_TAG,"The url is "+ url);
         try {
-            this.uri = new URI(url);
-            mConnection.connect(uri, new WebSocket.WebSocketConnectionObserver() {
+//            this.uri = new URI(url);
+            mConnection.connect(url, new  WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
                     Log.d(LOG_TAG, "Connection Open.");
@@ -99,7 +100,7 @@ public final class SocketWrapperForTextToSpeech {
                 }
 
                 @Override
-                public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+                public void onClose(int code, String reason) {
                     Log.d(LOG_TAG, "Connection Lost.");
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onClose(code, reason);
@@ -108,13 +109,13 @@ public final class SocketWrapperForTextToSpeech {
                 }
 
                 @Override
-                public void onTextMessage(String payload) {
+                public void onMessage(String payload) {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onTextMessage(payload);
                     }
                 }
 
-                @Override
+                /*@Override
                 public void onRawTextMessage(byte[] payload) {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onRawTextMessage(payload);
@@ -126,7 +127,7 @@ public final class SocketWrapperForTextToSpeech {
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onBinaryMessage(payload);
                     }
-                }
+                }*/
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,7 +143,7 @@ public final class SocketWrapperForTextToSpeech {
      */
     public boolean sendRawData(byte[] msg) {
         if (mConnection != null && mConnection.isConnected()) {
-            mConnection.sendBinaryMessage(msg);
+            mConnection.sendMessage(msg,true);
             return true;
         }
         return false;
@@ -156,7 +157,7 @@ public final class SocketWrapperForTextToSpeech {
     public void disConnect() {
         if (mConnection != null && mConnection.isConnected()) {
             try {
-                mConnection.disconnect();
+                mConnection.sendClose();
             } catch (Exception e) {
                 Log.d(LOG_TAG, "Exception while disconnection");
             }
