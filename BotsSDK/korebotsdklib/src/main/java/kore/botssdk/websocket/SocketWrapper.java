@@ -40,6 +40,15 @@ public final class SocketWrapper extends BaseSpiceManager {
 //    private final WebSocketConnection mConnection = new WebSocketConnection();
     private final IWebSocket mConnection = new WebSocketConnection();
     private static Timer timer = new Timer();
+
+    public boolean ismIsReconnectionAttemptNeeded() {
+        return mIsReconnectionAttemptNeeded;
+    }
+
+    public void setmIsReconnectionAttemptNeeded(boolean mIsReconnectionAttemptNeeded) {
+        this.mIsReconnectionAttemptNeeded = mIsReconnectionAttemptNeeded;
+    }
+
     private boolean mIsReconnectionAttemptNeeded = true;
 
     private String url;
