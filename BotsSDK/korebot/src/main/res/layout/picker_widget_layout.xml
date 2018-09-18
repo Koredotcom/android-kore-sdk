@@ -14,7 +14,7 @@
         android:layout_marginEnd="15dp"
         android:gravity="center"
         android:tag="bold"
-        android:text="Done"
+        android:text="DONE"
         android:textColor="#2b86b2"
         android:textSize="16dp" />
 
