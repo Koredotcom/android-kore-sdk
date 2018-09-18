@@ -14,6 +14,7 @@
         android:layout_marginEnd="15dp"
         android:gravity="center"
         android:tag="bold"
+        android:textStyle="bold"
         android:text="DONE"
         android:textColor="#2b86b2"
         android:textSize="16dp" />
@@ -22,6 +23,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_below="@+id/done"
+        android:background="@color/white"
         android:id="@+id/single_selectable"
         android:layout_height="300dp"/>
 </RelativeLayout>
