@@ -107,7 +107,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void onTextMessage(String payload) {
 //        socketUpdateListener.onMessageUpdate(payload, false, null);
-        Log.d("IKIDO","Got the response from Server");
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
         if(chatListener != null && isSubscribed){
             chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
@@ -149,6 +148,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
                 connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                if(chatListener != null && isSubscribed)
+                    chatListener.onConnectionStateChanged(connection_state);
             }
 
             @Override
@@ -437,6 +438,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
         if (event.getNetworkInfo() != null && event.getNetworkInfo().isConnected()) {
+            if(botClient != null && botClient.isConnected())return;
             checkConnectionAndRetry(mContext,false);
         }
     }
