@@ -214,7 +214,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         if (botRequest.getMessage() != null) {
             if (botsChatAdapter != null) {
                 botsChatAdapter.addBaseBotMessage(botRequest);
-
+                quickReplyView.populateQuickReplyView(null);
                 scrollToBottom();
             }
         }
