@@ -7,17 +7,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+
+import com.google.gson.Gson;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
+import kore.botssdk.BotDb.BotChatDBResponse;
+import kore.botssdk.BotDb.BotChatsDBRequest;
+import kore.botssdk.BotDb.BotMessageDBModel;
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotsChatAdapter;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
@@ -26,7 +34,6 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
@@ -52,6 +59,9 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private String mBotNameInitials;
     private TTSUpdate ttsUpdate;
     private int mBotIconId;
+    private boolean fetching = false;
+    private boolean hasMore = true;
+    private Gson gson = new Gson();
 
     @Nullable
     @Override
@@ -62,6 +72,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         getBundleInfo();
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
+        loadChatHistory(0,limit);
         return view;
     }
     private void findViews(View view) {
@@ -164,18 +175,89 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         });
     }
 
-    @Override
+
+    private int limit = 30;
+    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
+        public int firstVisibleItem = -1;
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
+
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+   /*         if (!fetching && hasMore && totalItemCount > 0 && (totalItemCount - visibleItemCount) <= (firstVisibleItem + 6)) {
+                // I load the next page of gigs using a background task,
+                // but you can call any function here.
+                loadChatHistory(chatAdapter.getCount(),limit);
+            }*/
+            if (this.firstVisibleItem == firstVisibleItem || visibleItemCount == 0 || totalItemCount == 0) {
+                return;
+            }
+            if ((firstVisibleItem <= 10 && this.firstVisibleItem > firstVisibleItem) && !fetching && hasMore) {
+                loadChatHistory(botsChatAdapter.getCount(),limit);
+            }
+            this.firstVisibleItem = firstVisibleItem;
+        }
+
+    };
+
+
+    public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list,boolean scrollToBottom) {
+        botsChatAdapter.addBaseBotMessages(list);
+        if(scrollToBottom) {
+            scrollToBottom();
+        }
+    }
+
     public void updateContentListOnSend(BotRequest botRequest) {
         if (botRequest.getMessage() != null) {
-            if (ttsUpdate != null) {
-                ttsUpdate.ttsOnStop();
-            }
             if (botsChatAdapter != null) {
                 botsChatAdapter.addBaseBotMessage(botRequest);
-                quickReplyView.populateQuickReplyView(null);
+
                 scrollToBottom();
             }
         }
     }
+    private void loadChatHistory(final int offset, final int limit){
+        if(fetching)return;
+        fetching = true;
 
+        spiceDBManager.execute(new BotChatsDBRequest(getActivity().getApplicationContext(), null, offset, limit), new RequestListener<BotChatDBResponse>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                fetching = false;
+            }
+
+            @Override
+            public void onRequestSuccess(BotChatDBResponse list) {
+                fetching = false;
+                if(list != null && list.size() > 0){
+                    ArrayList<BaseBotMessage> baseBotMessages = new ArrayList<>(list.size());
+                    for(BotMessageDBModel botMessageDBModel : list){
+                        if(botMessageDBModel.isSentMessage()){
+                            botMessageDBModel.dProcessMesssage();
+                            String message = gson.toJson(botMessageDBModel.getMessage().get(0));
+                            BotRequest botRequest = gson.fromJson(message,BotRequest.class);
+                            baseBotMessages.add(botRequest);
+                        }else {
+                            botMessageDBModel.dProcessMesssage();
+                            String message = gson.toJson(botMessageDBModel);
+                            BotResponse botResponse = gson.fromJson(message,BotResponse.class);
+                            baseBotMessages.add(botResponse);
+                        }
+
+                    }
+                    Collections.reverse(baseBotMessages);
+                    addMessagesToBotChatAdapter(baseBotMessages,offset == 0);
+
+                }
+                if((list == null || list.size() < limit) && offset != 0){
+                    hasMore = false;
+                }
+            }
+        });
+
+
+    }
 }

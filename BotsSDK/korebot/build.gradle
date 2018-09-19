@@ -5,7 +5,7 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "kore.botssdk"
+           applicationId "kore.botssdk"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
@@ -18,21 +18,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions 'asana'
-    productFlavors {
-        asana {
-            applicationId 'kore.botssdk.asana'
-            dimension "asana"
-        }
-        shopbot2{
-            applicationId 'kore.botssdk.shopbot2'
-            dimension "asana"
-        }
-        sales_ot{
-            applicationId 'kore.botssdk.salesot'
-            dimension "asana"
-        }
-    }
+       flavorDimensions 'asana'
+       productFlavors {
+           asana {
+               applicationId 'kore.botssdk.asana'
+               dimension "asana"
+           }
+           shopbot2{
+               applicationId 'kore.botssdk.shopbot2'
+               dimension "asana"
+           }
+           sales_ot{
+               applicationId 'kore.botssdk.salesot'
+               dimension "asana"
+           }
+       }
 }
 
 
@@ -43,7 +43,7 @@ dependencies {
     compile(project(':korebotsdklib')){
         exclude module: 'support-v4'
     }
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.0'
     compile 'com.google.code.gson:gson:2.6.2'
@@ -53,4 +53,6 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile project(path: ':stickyListHeaders')
+    compile 'com.j256.ormlite:ormlite-android:4.48'
+    compile 'com.j256.ormlite:ormlite-core:4.48'
 }
