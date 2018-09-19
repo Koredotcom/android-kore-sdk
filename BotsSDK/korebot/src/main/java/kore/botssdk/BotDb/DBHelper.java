@@ -55,4 +55,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
         this.botMessageDao = null;
     }
 
+    public void clearData(){
+        try {
+            TableUtils.clearTable(getConnectionSource(), BotMessageDBModel.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

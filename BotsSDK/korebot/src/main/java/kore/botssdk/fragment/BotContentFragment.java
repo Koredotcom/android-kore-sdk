@@ -77,6 +77,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     }
     private void findViews(View view) {
         botsBubblesListView = (StickyListHeadersListView) view.findViewById(R.id.chatContentListView);
+        botsBubblesListView.setOnScrollListener(onScrollListener);
     }
 
     private void setupAdapter() {
