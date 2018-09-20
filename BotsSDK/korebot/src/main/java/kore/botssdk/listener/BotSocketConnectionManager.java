@@ -21,6 +21,7 @@ import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.JWTGrantRequest;
 import kore.botssdk.net.KaJwtRequest;
@@ -46,6 +47,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private static BotSocketConnectionManager botSocketConnectionManager;
     private String accessToken;
     private SocketChatListener chatListener;
+    private RestResponse.BotCustomData botCustomData;
 
 
     private final String LOG_TAG = getClass().getSimpleName();
@@ -226,7 +228,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }*/
 
     @Override
-    public void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData) {
+    public void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData1) {
+        this.botCustomData = botCustomData1;
         if (connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
@@ -455,9 +458,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
-            RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
+/*            if(botCustomData == null) {
+                botCustomData = new RestResponse.BotCustomData();
+            }
             botCustomData.put("kmUId", userId);
-            botCustomData.put("kmToken", accessToken);
+            botCustomData.put("kmToken", accessToken);*/
             botClient = new BotClient(mContext, botCustomData);
             if(isFirstTime){
                 if(chatListener != null && isSubscribed){
