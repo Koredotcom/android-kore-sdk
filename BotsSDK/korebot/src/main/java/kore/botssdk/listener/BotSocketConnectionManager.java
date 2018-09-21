@@ -488,11 +488,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
      * initial reconnection count
      */
     private int mAttemptCount = -1;
-    private int mAlertAttemptCount = -1;
+    private int mAlertAttemptCount = 0;
 
     private boolean mIsAttemptNeeded = true;
     private boolean mAlertIsAttemptNeeded = true;
-    private boolean isAlertAlarmReset = false;
+   // private boolean isAlertAlarmReset = false;
 
     /**
      * The reconnection attempt delay(incremental delay)
@@ -514,11 +514,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private int alertDelay() {
         mAlertAttemptCount++;
         if (mAlertAttemptCount > 3) {
-            mAlertAttemptCount = -1;
+            mAlertAttemptCount = 0;
             mAlertIsAttemptNeeded = false;
         }
-        int delay = (mAlertAttemptCount+1) * 55*1000;
-        return delay;
+
+        return 55*1000;
     }
 
 
@@ -552,10 +552,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         public void run() {
             if (mAlertIsAttemptNeeded) {
 //                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
-                if(chatListener != null && isSubscribed && !isAlertAlarmReset){
-                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount], streamId,botName));
+                if(chatListener != null){
+                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount-1], streamId,botName));
                 }
-                isAlertAlarmReset = false;
                 postAlertDelayMessage();
             }
 
@@ -587,15 +586,16 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         mIsAttemptNeeded = false;
     }
     public void stopAlertMsgTimer() {
-        mAlertAttemptCount = -1;
+        mAlertAttemptCount = 0;
         alertHandler.removeCallbacks(alertRunnable);
         mAlertIsAttemptNeeded = false;
     }
 
 
     public void resetAlertHandler(){
-        mAlertAttemptCount = -1;
-        isAlertAlarmReset = true;
+        mAlertAttemptCount = 0;
+        alertHandler.removeCallbacks(alertRunnable);
+        startAlertMsgTimer();
 
     }
 
