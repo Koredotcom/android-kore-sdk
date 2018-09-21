@@ -27,6 +27,16 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
 
+    public boolean isShowComposeBar() {
+        return hideComposeBar;
+    }
+
+    public void setShowComposeBar(boolean hideComposeBar) {
+        this.hideComposeBar = hideComposeBar;
+    }
+
+    private boolean hideComposeBar = false;
+
     public String getLayout() {
         return layout;
     }

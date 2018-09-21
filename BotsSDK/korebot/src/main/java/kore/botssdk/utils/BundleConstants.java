@@ -32,6 +32,7 @@ public class BundleConstants {
             "I’m sorry. The server response seems really slow today. Please continue to wait...",
             "I’m sorry. I haven’t gotten a response from the server yet. Please continue to wait...",
             "I apologize. The server is has not responded yet. Please continue to wait…"};
-
+    public static final String SESSION_END_ALERT_MESSAGES[] = {"Your session will expire very soon as you are inactive more than 100 sec...",
+    "Your session is expiring now...","Your session is going to expire soon as you are inactive for last one min... "};
 
 }

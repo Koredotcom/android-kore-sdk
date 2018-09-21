@@ -118,6 +118,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public static void killInstance() {
         if (botSocketConnectionManager != null) {
             botSocketConnectionManager.stopDelayMsgTimer();
+            botSocketConnectionManager.stopAlertMsgTimer();
             botSocketConnectionManager.shutDownConnection();
         }
     }
@@ -279,7 +280,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void sendInitMessage(String initialMessage) {
-        botClient.sendMessage(initialMessage);
+        if(botClient != null)
+            botClient.sendMessage(initialMessage);
     }
 
     public void sendMessage(String message, String payLoad) {
@@ -399,7 +401,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         stopTextToSpeech();
     }
 
-    private void stopTextToSpeech() {
+    public void stopTextToSpeech() {
         try {
             ttsSynthesizer.stopTextToSpeech();
         } catch (IllegalArgumentException | NullPointerException exception) {
@@ -486,8 +488,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
      * initial reconnection count
      */
     private int mAttemptCount = -1;
+    private int mAlertAttemptCount = -1;
 
     private boolean mIsAttemptNeeded = true;
+    private boolean mAlertIsAttemptNeeded = true;
+    private boolean isAlertAlarmReset = false;
 
     /**
      * The reconnection attempt delay(incremental delay)
@@ -505,6 +510,17 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (delay < 3000) delay = 5000;
         return delay;
     }
+
+    private int alertDelay() {
+        mAlertAttemptCount++;
+        if (mAlertAttemptCount > 3) {
+            mAlertAttemptCount = -1;
+            mAlertIsAttemptNeeded = false;
+        }
+        int delay = (mAlertAttemptCount+1) * 55*1000;
+        return delay;
+    }
+
 
     private void postDelayMessage() {
         int mDelay = getDelay();
@@ -529,10 +545,40 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             Log.d("KoraSocketConnection", ":: The Exception is " + e.toString());
         }
     }
+    static Handler alertHandler = new Handler();
+    Runnable alertRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            if (mAlertIsAttemptNeeded) {
+//                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
+                if(chatListener != null && isSubscribed && !isAlertAlarmReset){
+                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount], null));
+                }
+                isAlertAlarmReset = false;
+                postAlertDelayMessage();
+            }
+
+        }
+    };
+    private void postAlertDelayMessage() {
+        int mDelay = alertDelay();
+        try {
+//            final Handler _handler = new Handler();
+
+            alertHandler.postDelayed(alertRunnable, mDelay);
+        } catch (Exception e) {
+            Log.d("KoraSocketConnection", ":: The Exception is " + e.toString());
+        }
+    }
 
     public void startDelayMsgTimer() {
         mIsAttemptNeeded = true;
         postDelayMessage();
+    }
+    public void startAlertMsgTimer() {
+        mAlertIsAttemptNeeded = true;
+        postAlertDelayMessage();
     }
 
 
@@ -540,7 +586,18 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         mAttemptCount = -1;
         mIsAttemptNeeded = false;
     }
+    public void stopAlertMsgTimer() {
+        mAlertAttemptCount = -1;
+        alertHandler.removeCallbacks(alertRunnable);
+        mAlertIsAttemptNeeded = false;
+    }
 
+
+    public void resetAlertHandler(){
+        mAlertAttemptCount = -1;
+        isAlertAlarmReset = true;
+
+    }
 
     public String getUserId() {
         return userId;
