@@ -141,7 +141,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             Log.d("IKIDO", "is botsSpiceManager is started " + botsSpiceManager.isStarted());
         }
         JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
-                SDKConfiguration.Client.client_secret, SDKConfiguration.Server.IS_ANONYMOUS_USER ? UUID.randomUUID().toString() : SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
+                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
         botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
