@@ -17,6 +17,7 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 
 /**
@@ -71,12 +72,12 @@ public class Utils {
     }
 
 
-    public static BotResponse buildBotMessage(String msg, String icon){
+    public static BotResponse buildBotMessage(String msg, String streamId,String botName){
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
         botResponse.setFrom("bot");
-        botResponse.setIcon(icon);
+
 
         Calendar calendar = Calendar.getInstance();
         long date = System.currentTimeMillis();
@@ -84,7 +85,7 @@ public class Utils {
         calendar.setTimeInMillis(date - offset);
         botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
 
-        BotInfoModel bInfo = new BotInfoModel("KoraAssistantNew","st-9a1144d3-9f30-526e-8e64-e065154b92b9",null);
+        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();
@@ -105,6 +106,9 @@ public class Utils {
 
         return botResponse;
     }
+
+
+
     /**
      * Pass media length in seconds, and get in below format
      * 00:00:00 (hrs:mins:sec)

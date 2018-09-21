@@ -18,6 +18,11 @@ public class PayloadInner {
     }
 
     private String template_type;
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
     private String text;
     private String table_design;
     private String pie_type;

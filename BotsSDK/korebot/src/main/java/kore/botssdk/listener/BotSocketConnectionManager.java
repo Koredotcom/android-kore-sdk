@@ -533,7 +533,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     if (mIsAttemptNeeded) {
 //                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
                         if(chatListener != null){
-                            chatListener.onMessage(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
+                            chatListener.onMessage(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], streamId,botName));
                         }
                         postDelayMessage();
                     }
@@ -553,7 +553,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if (mAlertIsAttemptNeeded) {
 //                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
                 if(chatListener != null && isSubscribed && !isAlertAlarmReset){
-                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount], null));
+                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount], streamId,botName));
                 }
                 isAlertAlarmReset = false;
                 postAlertDelayMessage();

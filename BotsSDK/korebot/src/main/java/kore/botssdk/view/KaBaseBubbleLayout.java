@@ -145,6 +145,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
+    protected TextView timeLineView;
 
 
     public KaBaseBubbleLayout(Context context) {
@@ -328,6 +329,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         addView(timeStampsTextView);
         timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
 
+        timeLineView = ViewProvider.getTimeLineView(context);
+        addView(timeLineView);
+
     }
 
 
@@ -462,9 +466,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         populateBubbleTextMedia(baseBotMessage, componentModel, constrictLayout, dimens);
         timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
-        populateForTemplates(position,isLastItem,componentModel);
+        populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
 
-
+        timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
         // Header Layout
        /* populateHeaderLayout(position, baseBotMessage);*/
@@ -510,7 +514,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
     }
 
-    protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel) {
+    protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
     }
 
     protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, int... dimens) {

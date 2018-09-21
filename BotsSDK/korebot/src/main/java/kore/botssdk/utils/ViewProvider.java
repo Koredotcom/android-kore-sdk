@@ -55,6 +55,7 @@ public class ViewProvider {
     public static final int FILES_CAROUSAL_VIEW_ID = 19800678;
     public static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     public static final int QUICK_RPVIEW = 1988881;
+    public static final int TIMELINE_VIEW_ID = 1980094;
 
 
     public static Path RoundedRect(
@@ -231,6 +232,18 @@ public class ViewProvider {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(layoutParams);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10);
+        textView.setTextColor(Color.parseColor("#B0B0B0"));
+        textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
+        KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
+        return textView;
+    }
+
+    public static TextView getTimeLineView(Context context){
+        TextView textView = new TextView(context);
+        textView.setId(TIMELINE_VIEW_ID);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textView.setLayoutParams(layoutParams);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
         textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
         KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
