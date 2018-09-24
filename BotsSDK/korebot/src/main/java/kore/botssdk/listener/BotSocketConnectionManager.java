@@ -46,12 +46,22 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private TTSSynthesizer ttsSynthesizer;
     private static BotSocketConnectionManager botSocketConnectionManager;
     private String accessToken;
+
+    public SocketChatListener getChatListener() {
+        return chatListener;
+    }
+
+    public void setChatListener(SocketChatListener chatListener) {
+        this.chatListener = chatListener;
+    }
+
     private SocketChatListener chatListener;
     private RestResponse.BotCustomData botCustomData;
 
 
     private final String LOG_TAG = getClass().getSimpleName();
     private Gson gson = new Gson();
+    private boolean isWithAuth;
 
     public CONNECTION_STATE getConnection_state() {
         return connection_state;
@@ -125,11 +135,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void refreshJwtToken() {
-        /*if (isWithAuth) {
+        if (isWithAuth) {
             makeJwtCallWithToken(true);
-        } else {*/
+        } else {
             makeJwtCallWithConfig(true);
-//        }
+        }
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
@@ -205,7 +215,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onBinaryMessage(byte[] payload) {
     }
 
-    /*@Override
+    @Override
     public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken,RestResponse.BotCustomData botCustomData) {
         if (connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
@@ -226,7 +236,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 botsSpiceManager.start(this.mContext);
             initiateConnection();
         }
-    }*/
+    }
 
     @Override
     public void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData1) {
@@ -243,7 +253,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             }
             botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);
-//            this.isWithAuth = false;
+            this.isWithAuth = false;
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
 //            this.socketUpdateListener = socketUpdateListener;
@@ -264,11 +274,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             }
             return;
         }
-        /*if (isWithAuth) {
+        if (isWithAuth) {
             makeJwtCallWithToken(false);
-        } else {*/
+        } else {
             makeJwtCallWithConfig(false);
-//        }
+        }
     }
 
     public String getStreamId() {
