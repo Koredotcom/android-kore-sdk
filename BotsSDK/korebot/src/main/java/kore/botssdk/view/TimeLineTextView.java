@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -73,12 +74,13 @@ public class TimeLineTextView extends ViewGroup {
         unreadTimeLineTextView.setGravity(Gravity.CENTER);
         unreadTimeLineTextView.setText(UNREAD_TIMELINE_TEXT);
         unreadTimeLineTextView.setTextColor(DARK_TIMELINE_COLOR);
-        unreadTimeLineTextView.setTag("bold");
+        unreadTimeLineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        unreadTimeLineTextView.setTag(KaFontUtils.ROBOTO_MEDIUM);
         unreadTimeLineTextView.setCompoundDrawablePadding(5 * dp1);
       //  unreadTimeLineTextView.setCompoundDrawablesWithIntrinsicBounds(UNREAD_TIMELINE_DOWN_ARROW, null, UNREAD_TIMELINE_DOWN_ARROW, null);
         unreadTimeLineTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         unreadTimeLineTextView.setPadding(5 * dp1, 5 * dp1, 5 * dp1, 5 * dp1);
-
+        KaFontUtils.applyCustomFont(getContext(),unreadTimeLineTextView);
         //Now add all view
         addView(unreadTimeLineTextView);
 
