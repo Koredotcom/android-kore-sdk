@@ -145,7 +145,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
-    protected TextView timeLineView;
+    protected TimeLineTextView timeLineView;
 
 
     public KaBaseBubbleLayout(Context context) {
@@ -468,7 +468,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
 
-        timeLineView.setGravity(Gravity.CENTER);
+       // timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
         // Header Layout
        /* populateHeaderLayout(position, baseBotMessage);*/

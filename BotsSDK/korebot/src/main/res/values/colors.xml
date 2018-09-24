@@ -87,6 +87,7 @@
     <color name="splash_color">#6168e7</color>
     <color name="color_eeeef2">#eeeef2</color>
     <color name="color_faf9f8">#faf9f8</color>
+    <color name="color_B0B0B0">#B0B0B0</color>
 
     <string-array name="color_set">
         <item>#4E74F0</item>

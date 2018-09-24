@@ -34,6 +34,7 @@ import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
+import kore.botssdk.view.TimeLineTextView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
@@ -238,15 +239,15 @@ public class ViewProvider {
         return textView;
     }
 
-    public static TextView getTimeLineView(Context context){
-        TextView textView = new TextView(context);
+    public static TimeLineTextView getTimeLineView(Context context){
+        TimeLineTextView textView = new TimeLineTextView(context);
         textView.setId(TIMELINE_VIEW_ID);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(layoutParams);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
-        textView.setTextColor(Color.parseColor("#B0B0B0"));
+        //textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
+        //textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-        KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
+      //  KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
     }
 

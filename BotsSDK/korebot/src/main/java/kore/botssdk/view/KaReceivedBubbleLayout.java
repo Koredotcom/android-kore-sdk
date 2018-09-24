@@ -612,7 +612,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         left = (int) (bubbleTextMediaLayout.getLeft());
         top = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom()-BUBBLE_CONTENT_BOTTOM_MARGIN,botButtonView.getBottom(),botListTemplateView.getBottom(),koraCarouselView.getBottom(),filesCarousalView.getBottom(),botCarouselView.getBottom(),meetingConfirmationView.getBottom(),meetingSlotsView.getBottom(),attendeeSlotSelectionView.getBottom(),calendarEventsView.getBottom(),lineChartView.getBottom(),botPieChartView.getBottom(),tableView.getBottom()));
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
-        LayoutUtils.layoutChild(timeLineView, (int)(screenWidth/2)-timeLineView.getMeasuredWidth()/2, top);
+        LayoutUtils.layoutChild(timeLineView, 0, top);
 
         botCarouselView.bringToFront();
         koraCarouselView.bringToFront();
