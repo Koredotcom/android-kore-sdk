@@ -235,7 +235,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             payInner = payOuter.getPayload();
             if (payInner != null)
                 payInner.convertElementToAppropriate();
-            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType())) {
+            if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 checkBubbleVisibilityAndHideCpv(payInner);
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botButtonView.setVisibility(View.VISIBLE);
@@ -244,6 +244,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                    if(StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
+                        timeStampsTextView.setText("");
+                    }
                 } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCarouselView.setVisibility(View.VISIBLE);
                     botCarouselView.populateCarouselView(payInner.getCarouselElements());
@@ -289,6 +292,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_AUTO_FORMS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                    if(StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
+                        timeStampsTextView.setText("");
+                    }
                 } else if (BotResponse.TEMPLATE_TYPE_SLOT_PICKER.equalsIgnoreCase(payInner.getTemplate_type())) {
                     ArrayList<MeetingTemplateModel> meetingTemplateModels = payInner.getMeetingTemplateModels();
                     if (meetingTemplateModels != null && meetingTemplateModels.size() > 0) {
@@ -336,7 +342,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }
 
-            } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
+            } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 bubbleTextMediaLayout.populateText(payInner.getText());
             } else {
                 bubbleTextMediaLayout.populateText(payOuter.getText());
