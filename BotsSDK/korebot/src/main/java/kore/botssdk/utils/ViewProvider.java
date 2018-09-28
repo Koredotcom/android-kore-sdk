@@ -18,7 +18,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;

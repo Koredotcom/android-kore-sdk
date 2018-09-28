@@ -10,6 +10,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
@@ -62,13 +64,23 @@ public class BotClient {
     /**
      * Connection for anonymous user
      *
-     * @param clientId
      * @param socketConnectionListener
      */
-    public void connectAsAnonymousUser(String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
+    public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
+
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
         SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
+    }
+
+    public String generateJWT(String email,String secret,String clientId, boolean isAnonymousUser){
+        long curTime = System.currentTimeMillis();
+        long expTime = curTime+86400000;
+//        hsh.put("clientSecret",clientSecret);
+
+        return Jwts.builder().claim("iss", clientId).claim("iat",curTime).claim("exp",expTime)
+                .claim("aud","https://idproxy.kore.com/authorize").claim("sub", email).claim("isAnonymous", isAnonymousUser).
+                        signWith(SignatureAlgorithm.HS256,secret.getBytes()).compact();
     }
 
     public  String getAccessToken(){

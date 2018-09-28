@@ -1,6 +1,7 @@
 package kore.botssdk.listener;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 
+import static android.content.Context.MODE_PRIVATE;
 import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.CONNECTING;
 import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
 
@@ -143,16 +145,32 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
-        Log.d("IKIDO","clientid = "+SDKConfiguration.Client.client_id);
-        Log.d("IKIDO","Client Secret is "+ SDKConfiguration.Client.client_secret);
-        Log.d("IKIDO","is botsSpiceManager is null "+ (botsSpiceManager == null));
         if(botsSpiceManager != null) {
             if(!botsSpiceManager.isStarted())botsSpiceManager.start(mContext);
-            Log.d("IKIDO", "is botsSpiceManager is started " + botsSpiceManager.isStarted());
         }
-        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
-                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
-        botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
+
+//        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Client.client_id,
+//                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
+
+        try{
+            Log.d("IKIDO", "Generating token");
+            String jwt = botClient.generateJWT(botCustomData.get("identity").toString(),SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+            Log.d("IKIDO", "Generated token");
+            botName = SDKConfiguration.Client.bot_name;
+            streamId = SDKConfiguration.Client.bot_id;
+            if (!isRefresh) {
+                botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager);
+            } else {
+                KoreEventCenter.post(jwt);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            if(chatListener != null && isSubscribed)
+                chatListener.onConnectionStateChanged(connection_state);
+        }
+        /*botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 if (e instanceof NoNetworkException) {
@@ -176,7 +194,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     KoreEventCenter.post(jwt.getJwt());
                 }
             }
-        });
+        });*/
     }
 
     private void makeJwtCallWithToken(final boolean isRefresh) {
@@ -466,7 +484,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void checkConnectionAndRetry(Context mContext, boolean isFirstTime) {
-        Log.d("IKIDO","The state of the activity is "+isFirstTime);
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
@@ -474,6 +491,42 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 botCustomData = new RestResponse.BotCustomData();
             }
             botCustomData.put("kmUId", userId);
+            botCustomData.put("kmToken", accessToken);*/
+            botClient = new BotClient(mContext, botCustomData);
+            if(isFirstTime){
+                if(chatListener != null && isSubscribed){
+                    chatListener.onConnectionStateChanged(CONNECTING);
+                }
+                initiateConnection();
+            }else {
+                refreshJwtToken();
+            }
+            return;
+        }
+        if (connection_state == DISCONNECTED)
+            initiateConnection();
+        else if (connection_state == CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED) {
+            refreshJwtToken();
+        }
+    }
+    public void checkConnectionAndRetryForSignify(Context mContext, boolean isFirstTime) {
+        Log.d("IKIDO","The state of the activity is "+isFirstTime);
+        ///here going to refresh jwt token from chat activity and it should not
+        if (botClient == null) {
+            this.mContext = mContext;
+            if(botCustomData == null) {
+                final String IDENTITY = "identity";
+                final String USERNAME = "userName";
+                SharedPreferences preferences = mContext.getSharedPreferences("signify_preferences", MODE_PRIVATE);
+                final String identity = preferences.getString(IDENTITY, "");
+                final String userName = preferences.getString(USERNAME, "");
+
+                botCustomData = new RestResponse.BotCustomData();
+                botCustomData.put(USERNAME, userName);
+                botCustomData.put(IDENTITY, identity);
+                botCustomData.put("userAgent", System.getProperty("http.agent"));
+            }
+            /*botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);*/
             botClient = new BotClient(mContext, botCustomData);
             if(isFirstTime){
@@ -563,7 +616,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if (mAlertIsAttemptNeeded) {
 //                        KoreEventCenter.post(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], null));
                 if(chatListener != null){
-                    chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount-1], streamId,botName));
+                    try {
+                        chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount - 1], streamId, botName));
+                    }catch (ArrayIndexOutOfBoundsException aiobe){}
                 }
                 postAlertDelayMessage();
             }
