@@ -48,8 +48,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(this.getClass().getSimpleName(), "The URL is " + url);
-                boolean value = super.shouldOverrideUrlLoading(view, url);
-                return value;
+                return super.shouldOverrideUrlLoading(view, url);
             }
 
 

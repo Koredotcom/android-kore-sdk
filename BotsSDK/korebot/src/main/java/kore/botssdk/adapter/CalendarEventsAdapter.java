@@ -191,7 +191,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
 
 
     private void launchNativeView(String title, long beginTime) throws Exception{
-        int id = listSelectedCalendars(title);
+        int id = listSelectedCalendars(title,beginTime);
         if(id <= 0) throw new Exception("Invalid event id");
        /* Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);*/
@@ -264,7 +264,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         CalendarService.readCalendar(mContext,218,0);
     }*/
 
-    private int listSelectedCalendars(String eventtitle) {
+    private int listSelectedCalendars(String eventtitle,long beginTime) {
 
 
         Uri eventUri;
@@ -285,11 +285,11 @@ public class CalendarEventsAdapter extends BaseAdapter {
         final Cursor cursor = contentResolver.query(Uri.parse("content://com.android.calendar/calendars"),
                 (new String[] { "_id", "displayName", "selected" }), null, null, null);*/
 
-        Cursor lcursor = contentResolver.query(Uri.parse("content://com.android.calendar/events"),
+     /*   Cursor lcursor = contentResolver.query(eventUri,
                 new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" },
                 null, null, null);
 
-
+*/
         // Create a set containing all of the calendar IDs available on the phone
 //        HashSet<String> calendarIds = CalendarService.getCalenderIds(lcursor);
 
@@ -302,22 +302,24 @@ public class CalendarEventsAdapter extends BaseAdapter {
 
                 String calName;
                 String calID;
-//                String startTime;
-//                String endTime;
+                String startTime;
+           //    String endTime;
 
                 int nameCol = cursor.getColumnIndex(projection[1]);
                 int idCol = cursor.getColumnIndex(projection[0]);
-//                int startTimeCol = cursor.getColumnIndex(projection[2]);
-//                int endTimeCol = cursor.getColumnIndex(projection[3]);
+                int startTimeCol = cursor.getColumnIndex(projection[2]);
+           //     int endTimeCol = cursor.getColumnIndex(projection[3]);
                 do {
                     calName = cursor.getString(nameCol);
                     calID = cursor.getString(idCol);
-//                    startTime = cursor.getString(startTimeCol);
-//                    endTime = cursor.getString(endTimeCol);
+                    startTime = cursor.getString(startTimeCol);
+                 //   endTime = cursor.getString(endTimeCol);
 
                     if (calName != null && calName.equalsIgnoreCase(eventtitle)) {
 //                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
-                        return result = Integer.parseInt(calID);
+                        return  Integer.parseInt(calID);
+                    }else if(Long.parseLong(startTime) == beginTime){
+                        result = Integer.parseInt(calID);
                     }
 
                 } while (cursor.moveToNext());
