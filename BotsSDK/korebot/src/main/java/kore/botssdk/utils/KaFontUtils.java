@@ -193,7 +193,7 @@ public class KaFontUtils {
         }
     }
 
-    /*public static Typeface resolveTypeface(int typefaceValue, Context context) {
+    public static Typeface resolveTypeface(int typefaceValue, Context context) {
         String typefaceTag = null;
         switch (typefaceValue) {
             case 0:
@@ -228,5 +228,5 @@ public class KaFontUtils {
                 break;
         }
         return KaFontUtils.getCustomTypeface(typefaceTag, context);
-    }*/
+    }
 }
