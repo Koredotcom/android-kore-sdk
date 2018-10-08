@@ -11,7 +11,7 @@ public interface SocketConnectionListener {
      * Fired when the WebSockets connection has been established.
      * After this happened, messages may be sent.
      */
-    public void onOpen();
+    public void onOpen(boolean isReconnection);
 
     /**
      * Fired when the WebSockets connection has deceased (or could

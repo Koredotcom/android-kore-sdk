@@ -95,11 +95,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
     @Override
-    public void onOpen() {
+    public void onOpen(boolean isReconnection) {
         connection_state = CONNECTION_STATE.CONNECTED;
 //        KoreEventCenter.post(connection_state);
         if(chatListener != null && isSubscribed){
-            chatListener.onConnectionStateChanged(connection_state);
+            chatListener.onConnectionStateChanged(connection_state,isReconnection);
         }
         botAccessToken = botClient.getAccessToken();
         botUserId = botClient.getUserId();
@@ -113,8 +113,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onClose(int code, String reason) {
         connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
 //        KoreEventCenter.post(connection_state);
-        if(chatListener != null && isSubscribed){
-            chatListener.onConnectionStateChanged(connection_state);
+        if(chatListener != null){
+            chatListener.onConnectionStateChanged(connection_state,false);
         }
     }
 
@@ -153,9 +153,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //                SDKConfiguration.Client.client_secret,SDKConfiguration.Client.identity, SDKConfiguration.Server.IS_ANONYMOUS_USER);
 
         try{
-            Log.d("IKIDO", "Generating token");
             String jwt = botClient.generateJWT(botCustomData.get("identity").toString(),SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
-            Log.d("IKIDO", "Generated token");
             botName = SDKConfiguration.Client.bot_name;
             streamId = SDKConfiguration.Client.bot_id;
             if (!isRefresh) {
@@ -168,7 +166,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
             connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             if(chatListener != null && isSubscribed)
-                chatListener.onConnectionStateChanged(connection_state);
+                chatListener.onConnectionStateChanged(connection_state,false);
         }
         /*botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
@@ -264,7 +262,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             connection_state = CONNECTION_STATE.CONNECTING;
 //            KoreEventCenter.post(connection_state);
             if(chatListener != null && isSubscribed){
-                chatListener.onConnectionStateChanged(connection_state);
+                chatListener.onConnectionStateChanged(connection_state,false);
             }
             if(botCustomData == null) {
                 botCustomData = new RestResponse.BotCustomData();
@@ -288,7 +286,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             connection_state = DISCONNECTED;
 //            KoreEventCenter.post(connection_state);
             if(chatListener != null && isSubscribed){
-                chatListener.onConnectionStateChanged(connection_state);
+                chatListener.onConnectionStateChanged(connection_state,false);
             }
             return;
         }
@@ -409,7 +407,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         isSubscribed = true;
         this.chatListener = listener;
         if(chatListener != null){
-            chatListener.onConnectionStateChanged(connection_state);
+            chatListener.onConnectionStateChanged(connection_state,false);
         }
     }
 
@@ -495,7 +493,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient = new BotClient(mContext, botCustomData);
             if(isFirstTime){
                 if(chatListener != null && isSubscribed){
-                    chatListener.onConnectionStateChanged(CONNECTING);
+                    chatListener.onConnectionStateChanged(CONNECTING,false);
                 }
                 initiateConnection();
             }else {
@@ -510,7 +508,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
     }
     public void checkConnectionAndRetryForSignify(Context mContext, boolean isFirstTime) {
-        Log.d("IKIDO","The state of the activity is "+isFirstTime);
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
@@ -529,9 +526,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             /*botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);*/
             botClient = new BotClient(mContext, botCustomData);
-            if(isFirstTime){
+            if(!isFirstTime){
                 if(chatListener != null && isSubscribed){
-                    chatListener.onConnectionStateChanged(CONNECTING);
+                    chatListener.onConnectionStateChanged(CONNECTING,false);
                 }
                 initiateConnection();
             }else {

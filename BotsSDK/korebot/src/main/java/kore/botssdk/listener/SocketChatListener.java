@@ -9,6 +9,6 @@ import kore.botssdk.models.BotResponse;
 
 public interface SocketChatListener {
     void onMessage(BotResponse resp);
-    void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state);
+    void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection);
     void onMessage(SocketDataTransferModel data);
 }

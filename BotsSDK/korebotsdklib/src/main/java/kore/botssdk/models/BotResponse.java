@@ -37,11 +37,27 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
     public static final String TEMPLATE_TYPE_AGENT_TRANSFER = "agent_transfer_mode";
 
+    public static final String TEMPLATE_TYPE_CONVERSATION_END = "conversation_end";
+
+
+    public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
+    public static final String MESSAGE_TYPE_INCOMING = "incoming";
+
 
     private String type;
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
     private String icon;
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    private String messageId;
 
     public String getType() {
         return type;

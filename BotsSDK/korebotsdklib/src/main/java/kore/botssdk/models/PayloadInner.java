@@ -32,7 +32,7 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
 
-    public boolean isShowComposeBar() {
+    public boolean shouldHideComposeBar() {
         return hideComposeBar;
     }
 

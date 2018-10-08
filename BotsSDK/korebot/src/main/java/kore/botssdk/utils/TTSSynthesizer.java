@@ -127,7 +127,7 @@ public class TTSSynthesizer {
     }
     SocketConnectionListener sListener = new SocketConnectionListener() {
         @Override
-        public void onOpen() {
+        public void onOpen(boolean isReconnection) {
             Log.d(LOG_TAG, "Connection opened");
 
         }

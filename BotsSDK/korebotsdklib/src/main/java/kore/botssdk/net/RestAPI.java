@@ -2,6 +2,7 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
+import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
 import retrofit.client.Response;
@@ -66,4 +67,6 @@ public interface RestAPI {
     @POST("/api/users/{userId}/sdknotifications/unsubscribe")
     Response unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
+    @GET("/api" + URL_VERSION + "/botmessages/rtm")
+    BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
 }
