@@ -98,7 +98,7 @@ public final class TtsWebSocketWrapper {
                 public void onOpen() {
                     Log.d(LOG_TAG, "Connection Open.");
                     if (socketConnectionListener != null) {
-                        socketConnectionListener.onOpen();
+                        socketConnectionListener.onOpen(false);
                     }
                 }
 

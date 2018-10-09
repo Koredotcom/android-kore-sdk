@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -13,7 +12,6 @@ import java.util.UUID;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
-import kore.botssdk.net.BotRequestPool;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
@@ -135,9 +133,10 @@ public class BotClient {
             String jsonPayload = gson.toJson(botPayLoad);
 
             Log.d("BotClient", "Payload : " + jsonPayload);
-            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+            SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
+//            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
         }
-        sendQueMessages();
+//        sendQueMessages();
     }
 
     public void sendFormData(String payLoad,String message) {
@@ -158,13 +157,14 @@ public class BotClient {
             String jsonPayload = gson.toJson(botPayLoad);
 
             Log.d("BotClient", "Payload : " + jsonPayload);
-            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
-            sendQueMessages();
+            SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
+//            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+//            sendQueMessages();
         }
 
     }
 
-    private void sendQueMessages(){
+    /*private void sendQueMessages(){
         if (!BotRequestPool.isPoolEmpty()) {
             if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
                 ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
@@ -182,6 +182,6 @@ public class BotClient {
                 }
             }
         }
-    }
+    }*/
 
 }

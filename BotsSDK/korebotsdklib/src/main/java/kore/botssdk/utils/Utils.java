@@ -8,8 +8,11 @@ import android.net.NetworkInfo;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import kore.botssdk.models.BaseBotMessage;
@@ -26,6 +29,7 @@ import kore.botssdk.models.PayloadOuter;
  */
 public class Utils {
 
+    public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
     /**
      * Retrieve The version name of this package, as specified by the manifest
      *
@@ -73,17 +77,30 @@ public class Utils {
 
 
     public static BotResponse buildBotMessage(String msg, String streamId,String botName){
-        BotResponse botResponse = new BotResponse();
-
-        botResponse.setType("bot_response");
-        botResponse.setFrom("bot");
-
 
         Calendar calendar = Calendar.getInstance();
         long date = System.currentTimeMillis();
         int offset = TimeZone.getDefault().getOffset(date);
         calendar.setTimeInMillis(date - offset);
-        botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
+
+        return buildBotMessage(msg,streamId,botName,BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
+
+    }
+
+    public static BotResponse buildBotMessage(String msg, String streamId,String botName, String createdOn){
+        return buildBotMessage(msg,streamId,botName,createdOn,null);
+    }
+
+    public static BotResponse buildBotMessage(String msg, String streamId,String botName, String createdOn, String msgId){
+        BotResponse botResponse = new BotResponse();
+
+        botResponse.setType("bot_response");
+        botResponse.setFrom("bot");
+
+        if(msgId != null){
+            botResponse.setMessageId(msgId);
+        }
+        botResponse.setCreatedOn(createdOn);
 
         BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
         botResponse.setBotInfo(bInfo);
@@ -97,6 +114,70 @@ public class Utils {
         PayloadOuter pOuter = new PayloadOuter();
         pOuter.setText(msg);
 
+        cModel.setPayload(pOuter);
+        botResponseMessage.setComponent(cModel);
+        ArrayList<BotResponseMessage> message = new ArrayList<>(1);
+        message.add(botResponseMessage);
+        botResponse.setMessage(message);
+
+
+        return botResponse;
+    }
+
+    public static BotResponse buildBotMessage(PayloadOuter pOuter, String streamId,String botName, String createdOn, String msgId){
+        BotResponse botResponse = new BotResponse();
+
+        botResponse.setType("bot_response");
+        botResponse.setFrom("bot");
+
+        if(msgId != null){
+            botResponse.setMessageId(msgId);
+        }
+        botResponse.setCreatedOn(createdOn);
+
+        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
+        botResponse.setBotInfo(bInfo);
+
+        BotResponseMessage botResponseMessage = new BotResponseMessage();
+        botResponseMessage.setType(BotResponse.COMPONENT_TYPE_TEXT);
+
+        ComponentModel cModel = new ComponentModel();
+        cModel.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
+
+        cModel.setPayload(pOuter);
+        botResponseMessage.setComponent(cModel);
+        ArrayList<BotResponseMessage> message = new ArrayList<>(1);
+        message.add(botResponseMessage);
+        botResponse.setMessage(message);
+
+
+        return botResponse;
+    }
+    public static BotResponse buildBotMessageForConversationEnd(long time,String botName,String streamId){
+        BotResponse botResponse = new BotResponse();
+
+        botResponse.setType("bot_response");
+        botResponse.setFrom("bot");
+
+        botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(time).toString());
+
+        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
+        botResponse.setBotInfo(bInfo);
+
+        BotResponseMessage botResponseMessage = new BotResponseMessage();
+        botResponseMessage.setType(BotResponse.COMPONENT_TYPE_TEXT);
+
+        ComponentModel cModel = new ComponentModel();
+        cModel.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
+
+        PayloadOuter pOuter = new PayloadOuter();
+        pOuter.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
+
+        PayloadInner payloadInner = new PayloadInner();
+        payloadInner.setTemplate_type(BotResponse.TEMPLATE_TYPE_CONVERSATION_END);
+        payloadInner.setText("This conversation has been ended!");
+        payloadInner.setShowComposeBar(true);
+        pOuter.setPayload(payloadInner);
         cModel.setPayload(pOuter);
         botResponseMessage.setComponent(cModel);
         ArrayList<BotResponseMessage> message = new ArrayList<>(1);
@@ -175,5 +256,11 @@ public class Utils {
     public static void toggleVirtualKeyboard(Activity activity, int showFlags, int hideFlags) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(showFlags, hideFlags);
+    }
+
+    public static long getTimeInMillis(String timeStamp) throws ParseException {
+        if(timeStamp == null || timeStamp.isEmpty())return System.currentTimeMillis();
+        return isoFormatter.parse(timeStamp).getTime();
+
     }
 }

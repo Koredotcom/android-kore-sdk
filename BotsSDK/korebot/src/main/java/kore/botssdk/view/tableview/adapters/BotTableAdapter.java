@@ -29,7 +29,6 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
         final String  str = getRowData(rowIndex).getElements().get(columnIndex);
         View renderedView = null;
-//        Log.d("IKIDO","The String is "+str);
         renderedView = renderString(columnIndex,str);
 
         return renderedView;

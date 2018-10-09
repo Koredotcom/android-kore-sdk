@@ -332,11 +332,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<KaFileLookupModel> fileList = payInner.getFileLookupModels();
                     if (fileList != null)
                         filesCarousalView.prepareDatasetAndPopulate(fileList);
-                }else if(BotResponse.TEMPLATE_TYPE_SESSION_END.equalsIgnoreCase(payInner.getTemplate_type())){
+                }else if(BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())){
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));
                 }else if(BotResponse.TEMPLATE_TYPE_SHOW_PROGRESS.equalsIgnoreCase(payInner.getTemplate_type())){
+                    timeStampsTextView.setText("");
+                }else if(BotResponse.TEMPLATE_TYPE_SESSION_END.equalsIgnoreCase(payInner.getTemplate_type())){
                     timeStampsTextView.setText("");
                 }else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
                     bubbleTextMediaLayout.populateText(payInner.getText());

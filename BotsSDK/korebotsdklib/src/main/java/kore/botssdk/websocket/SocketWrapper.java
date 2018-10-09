@@ -157,7 +157,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl(), false);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -219,7 +219,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    connectToSocket(response.getUrl());
+                    connectToSocket(response.getUrl(),false);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -233,7 +233,7 @@ public final class SocketWrapper extends BaseSpiceManager {
      * @param url : to connect the socket to
      * @throws URISyntaxException
      */
-    private void connectToSocket(String url) throws URISyntaxException {
+    private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
         if (url != null) {
             this.url = url;
 //            this.uri = new URI(url);
@@ -245,7 +245,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     public void onOpen() {
                         Log.d(LOG_TAG, "Connection Open.");
                         if (socketConnectionListener != null) {
-                            socketConnectionListener.onOpen();
+                            socketConnectionListener.onOpen(isReconnectionAttaempt);
                         }
                         startSendingPong();
                         mReconnectionCount = 1;
@@ -366,7 +366,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    connectToSocket(response.getUrl().concat("&isReconnect=true"));
+                    connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
@@ -419,7 +419,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public void onRequestSuccess(RestResponse.RTMUrl response) {
                 try {
-                    connectToSocket(response.getUrl().concat("&isReconnect=true"));
+                    connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }

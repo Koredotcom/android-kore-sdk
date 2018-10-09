@@ -39,7 +39,7 @@ public class BotDataPersister extends SpiceRequest<Void> {
     }
 
 
-    public void persistChats() {
+    private void persistChats() {
         Log.d("==========++++========="," The user Id is "+userId+" Hey The Payl load is "+payload);
         BotMessageDBModel botMessageDBModel = null;
         if (gson == null) {
@@ -92,6 +92,7 @@ public class BotDataPersister extends SpiceRequest<Void> {
             if (botMessageDBModel != null/* && botMessageDBModel.isMessageNeedToPersist()*/ && !botMessageDBModel.getType().equals("ack")) {
                 botMessageDBModel.setSentMessage(isSentMessage);
                 botMessageDAO.createOrUpdate(botMessageDBModel);
+                botMessageDAO.refresh(botMessageDBModel);
             }
         } catch (Exception e) {
             e.printStackTrace();
