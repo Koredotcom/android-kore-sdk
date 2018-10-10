@@ -33,9 +33,9 @@ dependencies {
     compile files('libs/MPAndroidChart-v3.0.1.jar');
 
     //For jwt
-    compile 'io.jsonwebtoken:jjwt-api:0.10.5'
-//    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
-    compile('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+    api 'io.jsonwebtoken:jjwt-api:0.10.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
+    runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
         exclude group: 'org.json', module: 'json' //provided by Android natively
     }
     // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
