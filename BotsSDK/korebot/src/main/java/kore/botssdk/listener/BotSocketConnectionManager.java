@@ -573,7 +573,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     private int alertDelay() {
         mAlertAttemptCount++;
-        if (mAlertAttemptCount > 3) {
+        if (mAlertAttemptCount > 2) {
             mAlertAttemptCount = 0;
             mAlertIsAttemptNeeded = false;
         }
