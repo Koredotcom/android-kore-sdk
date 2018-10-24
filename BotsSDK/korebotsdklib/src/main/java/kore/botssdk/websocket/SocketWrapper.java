@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -13,6 +11,14 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
@@ -20,8 +26,8 @@ import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
-import kore.botssdk.net.BaseSpiceManager;
-import kore.botssdk.net.RestRequest;
+import kore.botssdk.net.BotRestBuilder;
+import kore.botssdk.net.RestAPI;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.Utils;
@@ -30,7 +36,7 @@ import kore.botssdk.utils.Utils;
  * Created by Ramachandra Pradeep on 6/1/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public final class SocketWrapper extends BaseSpiceManager {
+public final class SocketWrapper{
 
     private final String LOG_TAG = SocketWrapper.class.getSimpleName();
 
@@ -79,7 +85,7 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Restricting outside object creation
      */
     private SocketWrapper(Context mContext) {
-        start(mContext);
+//        start(mContext);
         this.mContext = mContext;
         KoreEventCenter.register(this);
     }
@@ -113,56 +119,84 @@ public final class SocketWrapper extends BaseSpiceManager {
         return new CloneNotSupportedException("Clone not supported");
     }
 
+    final RestAPI restAPI = BotRestBuilder.getBotRestService();
+    private Observable<RestResponse.RTMUrl> getRtmUrl(String accessToken,final BotInfoModel botInfoModel){
+
+        return restAPI.getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse, ObservableSource<RestResponse.BotAuthorization>>() {
+            @Override
+            public ObservableSource<RestResponse.BotAuthorization> apply(RestResponse.JWTTokenResponse jwtTokenResponse) throws Exception {
+                HashMap<String, Object> hsh = new HashMap<>();
+                hsh.put(Constants.KEY_ASSERTION, jwtTokenResponse.getJwt());
+                hsh.put(Constants.BOT_INFO, botInfoModel);
+                return restAPI.jwtGrant(hsh);
+            }
+        }).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+            @Override
+            public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
+                auth = botAuthorization.getAuthorization().getAccessToken();
+                botUserId = botAuthorization.getUserInfo().getUserId();
+                return restAPI.getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), optParameterBotInfo);
+            }
+        });
+
+    }
+
+    private Observable<RestResponse.RTMUrl> getRtmUrlForConnectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel){
+        HashMap<String, Object> hsh = new HashMap<>();
+        hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
+        hsh.put(Constants.BOT_INFO, botInfoModel);
+
+        return restAPI.jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+            @Override
+            public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
+                HashMap<String, Object> hsh1 = new HashMap<>();
+                hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                botUserId = botAuthorization.getUserInfo().getUserId();
+                auth = botAuthorization.getAuthorization().getAccessToken();
+                return restAPI.getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), hsh1);
+            }
+        });
+
+    }
+
+
     /**
      * Method to invoke connection for authenticated user
      *
      * @param accessToken   : AccessToken of the loged user.
      */
     public void connect(String accessToken,final BotInfoModel botInfoModel,SocketConnectionListener socketConnectionListener) {
-        this.botInfoModel= botInfoModel;
+        this.botInfoModel = botInfoModel;
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = accessToken;
         optParameterBotInfo = new HashMap<>();
         optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
 
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
+        }*/
+        getRtmUrl(accessToken,botInfoModel).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {}
 
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
-            @Override
-            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
-                HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
-                hsh.put(Constants.BOT_INFO, botInfoModel);
+                    @Override
+                    public void onNext(RestResponse.RTMUrl rtmUrl) {try {
+                            connectToSocket(rtmUrl.getUrl(), false);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable throwable) {}
 
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-                auth = jwtGrant.getAuthorization().getAccessToken();
-                this.accessToken = jwtGrant.getAuthorization().getAccessToken();
-                botUserId = jwtGrant.getUserInfo().getUserId();
+                    @Override
+                    public void onComplete() {}
+                });
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
-                return rtmUrl;
-            }
-        };
-
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, e.getMessage());
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.RTMUrl response) {
-                try {
-                    connectToSocket(response.getUrl(), false);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
     }
 
@@ -184,47 +218,37 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.uuId = uuId;
         this.botInfoModel = botInfoModel;
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
-            @Override
-            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                setPriority(PRIORITY_HIGH);
-                HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
-                hsh.put(Constants.BOT_INFO, botInfoModel);
+        }*/
+
+        getRtmUrlForConnectAnonymous(sJwtGrant,botInfoModel).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                        Log.d("HI","on Subscribe");
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl rtmUrl) {
+                        try {
+                            connectToSocket(rtmUrl.getUrl(),false);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        Log.d("HI","on error");
+                    }
+                    @Override
+                    public void onComplete() {
+                        Log.d("HI","on next");
+                    }
+                });
 
 
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-
-                HashMap<String, Object> hsh1 = new HashMap<>();
-                hsh1.put(Constants.BOT_INFO, botInfoModel);
-
-                botUserId = jwtGrant.getUserInfo().getUserId();
-                this.accessToken = jwtGrant.getAuthorization().getAccessToken();
-                auth = jwtGrant.getAuthorization().getAccessToken();
-
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
-                return rtmUrl;
-            }
-        };
-
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, e.getMessage());
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.RTMUrl response) {
-                try {
-                    connectToSocket(response.getUrl(),false);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     /**
@@ -262,9 +286,9 @@ public final class SocketWrapper extends BaseSpiceManager {
                             timer.cancel();
                             timer = null;
                         }
-                        if (isConnected()) {
+                        /*if (isConnected()) {
                             stop();
-                        }
+                        }*/
                         if(Utils.isNetworkAvailable(mContext))
                             reconnectAttempt();
                     }
@@ -333,47 +357,75 @@ public final class SocketWrapper extends BaseSpiceManager {
         }
     }
 
+    private Observable<RestResponse.RTMUrl> getRtmUrlReconnectForAuthenticUser(String accessToken){
+
+        return restAPI.getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse, ObservableSource<RestResponse.BotAuthorization>>() {
+            @Override
+            public ObservableSource<RestResponse.BotAuthorization> apply(RestResponse.JWTTokenResponse jwtTokenResponse) throws Exception {
+                HashMap<String, Object> hsh = new HashMap<>(1);
+                hsh.put(Constants.KEY_ASSERTION, jwtTokenResponse.getJwt());
+                return restAPI.jwtGrant(hsh);
+            }
+        }).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+            @Override
+            public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
+                return restAPI.getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), optParameterBotInfo,true);
+            }
+        });
+    }
     /**
      * Reconnection for authentic user
      */
     private void reconnectForAuthenticUser() {
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
 
-        //If spiceManager is not started then start it
-        if (!isConnected()) {
-            start(mContext);
-        }
+        getRtmUrlReconnectForAuthenticUser(accessToken).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                    }
 
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
-            @Override
-            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
-                HashMap<String, Object> hsh = new HashMap<>(1);
-                hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
+                    @Override
+                    public void onNext(RestResponse.RTMUrl rtmUrl) {
+                        try {
+                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"), true);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo, true);
-                return rtmUrl;
-            }
-        };
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
 
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, e.getMessage());
-            }
+                    @Override
+                    public void onComplete() {
+                    }
+                });
 
-            @Override
-            public void onRequestSuccess(RestResponse.RTMUrl response) {
-                try {
-                    connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
     }
 
+    private Observable<RestResponse.RTMUrl> getRtmUrlReconnectForAnonymousUser(){
+        HashMap<String, Object> hsh = new HashMap<>();
+        hsh.put(Constants.KEY_ASSERTION, JWTToken);
+
+        hsh.put(Constants.BOT_INFO, botInfoModel);
+            return restAPI.jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+                @Override
+                public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
+                    HashMap<String, Object> hsh1 = new HashMap<>();
+                    hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                    auth = botAuthorization.getAuthorization().getAccessToken();
+                    botUserId = botAuthorization.getUserInfo().getUserId();
+
+                    return restAPI.getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), hsh1,true);
+                }
+            });
+
+    }
     /**
      * Reconnection for anonymous user
      */
@@ -381,50 +433,31 @@ public final class SocketWrapper extends BaseSpiceManager {
 
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
 
-        //If spiceManager is not started then start it
-        if (!isConnected()) {
-            start(mContext);
-        }
+        getRtmUrlReconnectForAnonymousUser().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable disposable) {
+                    }
 
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
-            @Override
-            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
+                    @Override
+                    public void onNext(RestResponse.RTMUrl rtmUrl) {
+                        try {
+                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"),true);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                HashMap<String, Object> hsh = new HashMap<>();
-                hsh.put(Constants.KEY_ASSERTION, JWTToken);
+                    @Override
+                    public void onError(Throwable throwable) {
+                    }
 
-                hsh.put(Constants.BOT_INFO, botInfoModel);
+                    @Override
+                    public void onComplete() {
+                    }
+                });
 
-
-                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
-
-                HashMap<String, Object> hsh1 = new HashMap<>();
-                hsh1.put(Constants.BOT_INFO, botInfoModel);
-
-                this.accessToken = jwtGrant.getAuthorization().getAccessToken();
-                auth = jwtGrant.getAuthorization().getAccessToken();
-                botUserId = jwtGrant.getUserInfo().getUserId();
-                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
-                return rtmUrl;
-            }
-        };
-
-
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                Log.e(LOG_TAG, e.getMessage());
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.RTMUrl response) {
-                try {
-                    connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     public void onEvent(String token){
@@ -510,9 +543,9 @@ public final class SocketWrapper extends BaseSpiceManager {
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
-        if (isConnected()) {
+        /*if (isConnected()) {
             stop();
-        }
+        }*/
     }
 
     /**

@@ -1,13 +1,16 @@
+/*
 package kore.botssdk.net;
 
 import android.content.Context;
 
 import java.util.HashMap;
 
+*/
 /**
  * Created by Pradeep Mahato on 30-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class LoginRequest extends RestRequest<RestResponse.LoginResponse> {
 
     protected HashMap<String, Object> userCredentials;
@@ -26,3 +29,4 @@ public class LoginRequest extends RestRequest<RestResponse.LoginResponse> {
     }
 
 }
+*/

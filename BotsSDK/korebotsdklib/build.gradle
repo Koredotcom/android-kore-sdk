@@ -17,27 +17,38 @@ android {
         }
     }
     useLibrary 'org.apache.http.legacy'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+        compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile files('libs/robospice-1.4.12.jar')
-    compile files('libs/robospice-cache-1.4.12.jar')
-    compile files('libs/robospice-retrofit-1.4.12.jar')
+        compile files('libs/robospice-1.4.12.jar')
+        compile files('libs/robospice-cache-1.4.12.jar')
+        compile files('libs/robospice-retrofit-1.4.12.jar')
     compile files('libs/jackson-core-asl-1.9.7.jar')
     compile files('libs/commons-lang3-3.2.1.jar')
-    compile files('libs/MPAndroidChart-v3.0.1.jar');
-
+    compile files('libs/MPAndroidChart-v3.0.1.jar')
     //For jwt
-    api 'io.jsonwebtoken:jjwt-api:0.10.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.5'
-    runtimeOnly('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
+    compile 'io.jsonwebtoken:jjwt-api:0.10.5'
+    compile 'io.jsonwebtoken:jjwt-impl:0.10.5'
+    compile('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
         exclude group: 'org.json', module: 'json' //provided by Android natively
     }
     // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
     //runtimeOnly 'org.bouncycastle:bcprov-jdk15on:1.60'
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+    compile 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
 }

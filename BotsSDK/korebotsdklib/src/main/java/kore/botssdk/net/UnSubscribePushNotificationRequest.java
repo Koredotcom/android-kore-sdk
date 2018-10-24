@@ -1,13 +1,16 @@
+/*
 package kore.botssdk.net;
 
 import java.util.HashMap;
 
 import retrofit.client.Response;
 
+*/
 /**
  * Created by Pradeep Mahato on 08-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class UnSubscribePushNotificationRequest extends RestRequest<Response> {
 
     private HashMap<String, Object> request;
@@ -23,3 +26,4 @@ public class UnSubscribePushNotificationRequest extends RestRequest<Response> {
         return response;
     }
 }
+*/

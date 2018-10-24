@@ -127,7 +127,7 @@ public class KaFontUtils {
         }
     }
 
-    private static Typeface getCustomTypeface(String tag, Context context) {
+    public static Typeface getCustomTypeface(String tag, Context context) {
 
         switch (tag) {
             case ROBOTO_LIGHT:

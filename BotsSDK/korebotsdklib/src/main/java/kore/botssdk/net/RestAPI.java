@@ -2,17 +2,19 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
+import io.reactivex.Observable;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Header;
-import retrofit.http.Headers;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -23,22 +25,22 @@ public interface RestAPI {
 
     /** Login Service **/
     @POST("/api/oAuth/token")
-    RestResponse.LoginResponse loginUser(@Body HashMap<String, Object> userCredentials);
+    Call<RestResponse.LoginResponse> loginUser(@Body HashMap<String, Object> userCredentials);
 
     @POST("/api/oAuth/token")
-    KoreLoginResponse loginNormalUser(@Body HashMap<String, Object> userCredentials);
+    Call<KoreLoginResponse> loginNormalUser(@Body HashMap<String, Object> userCredentials);
 
     // Get JWT Token
     @POST("/api" + URL_VERSION + "/users/jwttoken")
-    JWTTokenResponse getJWTToken(@Header("Authorization") String token, @Body HashMap<String, Object> body);
+    Call<JWTTokenResponse> getJWTToken(@Header("Authorization") String token, @Body HashMap<String, Object> body);
 
     // Get JWT Token
     @POST("/api/users/sts")
-    RestResponse.JWTTokenResponse getJWTToken(@Header("Authorization") String token);
+    Observable<RestResponse.JWTTokenResponse> getJWTToken(@Header("Authorization") String token);
 
     //Getting jwt grant
     @POST("/api/oAuth/token/jwtgrant")
-    RestResponse.BotAuthorization jwtGrant(@Body HashMap<String,Object> jwtToken);
+    Observable<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String,Object> jwtToken);
 
 //    //Getting jwt grant Anonymous
 //    @POST("/api/oAuth/token/jwtgrant/anonymous")
@@ -46,18 +48,18 @@ public interface RestAPI {
 
     //Getting rtm URL
     @POST("/api/rtm/start")
-    RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
+    Observable<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
 
     @POST("/api/rtm/start")
-    RestResponse.RTMUrl getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
+    Observable<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
     @GET("/api/users/{userId}/builder/streams")
-    MarketStreamList getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
+    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Subscribe to Push notification
     @POST("/api/users/{userId}/sdknotifications/subscribe")
-    Response subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
+    Call<Response> subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
 
     //Unsubscribe to Push notification
     @Headers({
@@ -65,8 +67,8 @@ public interface RestAPI {
             "X-HTTP-Method-Override:DELETE"
     })
     @POST("/api/users/{userId}/sdknotifications/unsubscribe")
-    Response unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
+    Call<Response> unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
-    BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
+    Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
 }
