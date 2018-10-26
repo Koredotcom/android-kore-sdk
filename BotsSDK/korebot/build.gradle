@@ -40,7 +40,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:27.1.1'
     compile(project(':korebotsdklib')) {
         exclude module: 'support-v4'
@@ -48,7 +47,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.0'
-    compile 'com.google.code.gson:gson:2.6.2'
+//    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.android.support:cardview-v7:27.1.1'
     compile 'com.android.support:recyclerview-v7:27.1.1'
     compile('net.gotev:speech:1.3.1') {
