@@ -279,6 +279,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
     }
 
+    @Override
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken) {
+
+    }
+
 
     private void initiateConnection() {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
