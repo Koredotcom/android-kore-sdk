@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.content.Context;
@@ -62,4 +63,4 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
     }
-}
+}*/

@@ -1,20 +1,19 @@
+/*
 package kore.botssdk.BotDb;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 06-Mar-18.
- */
+ *//*
 
-@DatabaseTable(tableName = "BOT_MESSAGE", daoClass = BotMessageDaoImpl.class)
+
 public class BotMessageDBModel extends BotDbModel {
 
     public interface BotMessageColumns{
@@ -36,49 +35,49 @@ public class BotMessageDBModel extends BotDbModel {
 
     private static Gson gson = new Gson();
 
-    @DatabaseField(generatedId = true, columnName = "id", dataType = DataType.INTEGER)
+//    @DatabaseField(generatedId = true, columnName = "id", dataType = DataType.INTEGER)
     private int id;
 
-    @DatabaseField(columnName = BotMessageColumns.IS_SENT_MESSAGE, dataType = DataType.BOOLEAN)
+//    @DatabaseField(columnName = BotMessageColumns.IS_SENT_MESSAGE, dataType = DataType.BOOLEAN)
     private boolean isSentMessage;
 
-    @DatabaseField(columnName = BotMessageColumns.TYPE, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.TYPE, dataType = DataType.STRING)
     private String type;
 
-    @DatabaseField(columnName = BotMessageColumns.FROM, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.FROM, dataType = DataType.STRING)
     private String from;
 
     private List<Object> message;
 
-    @DatabaseField(columnName = BotMessageColumns.MESSAGE, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.MESSAGE, dataType = DataType.STRING)
     private String message_str;
 
-    @DatabaseField(columnName = BotMessageColumns.MESSAGE_ID, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.MESSAGE_ID, dataType = DataType.STRING)
     private String messageId;
 
-    @DatabaseField(columnName = BotMessageColumns.BOT_INFO, dataType = DataType.SERIALIZABLE)
+//    @DatabaseField(columnName = BotMessageColumns.BOT_INFO, dataType = DataType.SERIALIZABLE)
     HashMap<String, Object> botInfo;
 
-    @DatabaseField(columnName = BotMessageColumns.CLIENT_INFO, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.CLIENT_INFO, dataType = DataType.STRING)
     private String client;
 
-    @DatabaseField(columnName = BotMessageColumns.META, dataType = DataType.SERIALIZABLE)
+//    @DatabaseField(columnName = BotMessageColumns.META, dataType = DataType.SERIALIZABLE)
     HashMap<String, Object> meta;
 
 //    @DatabaseField(columnName = BotMessageColumns.CREATED_ON, dataType = DataType.STRING)
 //    private String createdOn;
 
-    @DatabaseField(columnName = BotMessageColumns.BOT_ICON, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.BOT_ICON, dataType = DataType.STRING)
     private String icon;
 
-    @DatabaseField(columnName = BotMessageColumns.RESOURCE_ID, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.RESOURCE_ID, dataType = DataType.STRING)
     private String resourceid;
 
-    @DatabaseField(columnName = BotMessageColumns.TRACE_ID, dataType = DataType.STRING)
+//    @DatabaseField(columnName = BotMessageColumns.TRACE_ID, dataType = DataType.STRING)
     private String traceId;
 
 
-    @DatabaseField(columnName = BotMessageColumns.IS_MESSAGE_NEED_TO_PERSIST, dataType = DataType.BOOLEAN)
+//    @DatabaseField(columnName = BotMessageColumns.IS_MESSAGE_NEED_TO_PERSIST, dataType = DataType.BOOLEAN)
     private boolean isMessageNeedToPersist;
 
     public boolean isSentMessage() {
@@ -208,3 +207,4 @@ public class BotMessageDBModel extends BotDbModel {
     }
 
 }
+*/

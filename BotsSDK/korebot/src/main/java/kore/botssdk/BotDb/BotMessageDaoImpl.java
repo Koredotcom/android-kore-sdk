@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.content.Context;
@@ -35,3 +36,4 @@ public class BotMessageDaoImpl extends BotDaoImpl<BotMessageDBModel, String> imp
         return null;
     }
 }
+*/

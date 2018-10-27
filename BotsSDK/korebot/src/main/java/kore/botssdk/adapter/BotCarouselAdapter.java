@@ -3,26 +3,19 @@ package kore.botssdk.adapter;
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
-import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Pradeep Mahato on 14-July-17.

@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;

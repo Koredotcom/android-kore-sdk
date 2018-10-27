@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.database.Cursor;
@@ -20,3 +21,4 @@ public interface BotBaseDao<T, ID> extends Dao<T, ID> {
     public boolean exists(T data, String columnName, Object value)
             throws SQLException;
 }
+*/

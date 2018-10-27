@@ -11,15 +11,9 @@ import android.widget.AbsListView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-import kore.botssdk.BotDb.BotChatDBResponse;
-import kore.botssdk.BotDb.BotChatsDBRequest;
-import kore.botssdk.BotDb.BotMessageDBModel;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
@@ -224,7 +218,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         if(fetching)return;
         fetching = true;
 
-        spiceDBManager.execute(new BotChatsDBRequest(getActivity().getApplicationContext(), null, offset, limit), new RequestListener<BotChatDBResponse>() {
+        /*spiceDBManager.execute(new BotChatsDBRequest(getActivity().getApplicationContext(), null, offset, limit), new RequestListener<BotChatDBResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 fetching = false;
@@ -257,7 +251,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                     hasMore = false;
                 }
             }
-        });
+        });*/
 
 
     }

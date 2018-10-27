@@ -1,7 +1,6 @@
 package kore.botssdk.events;
 
 import kore.botssdk.listener.BaseSocketConnectionManager;
-
 import kore.botssdk.models.BotRequest;
 
 /**

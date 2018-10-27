@@ -3,8 +3,6 @@ package kore.botssdk.view.tableview.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import kore.botssdk.view.tableview.model.TableColumnModel;
-
 /**
  * A {@link TableColumnModel} implementation holding absolute column widths in pixel.
  *

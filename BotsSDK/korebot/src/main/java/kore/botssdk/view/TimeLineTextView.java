@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -12,6 +11,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.KaFontUtils;

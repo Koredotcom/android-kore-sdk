@@ -7,7 +7,6 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.Collections;
 
-import kore.botssdk.R;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 

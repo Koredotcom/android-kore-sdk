@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.content.Context;
@@ -86,21 +87,24 @@ public class BotDataPersister extends SpiceRequest<Void> {
 
             }
         }
-        DBHelper dbHelper = new DBHelper(mContext);
-        BotMessageDao botMessageDAO = dbHelper.getBotMessageDao();
+//        DBHelper dbHelper = new DBHelper(mContext);
+//        BotMessageDao botMessageDAO = dbHelper.getBotMessageDao();
         try {
-            if (botMessageDBModel != null/* && botMessageDBModel.isMessageNeedToPersist()*/ && !botMessageDBModel.getType().equals("ack")) {
+            if (botMessageDBModel != null*/
+/* && botMessageDBModel.isMessageNeedToPersist()*//*
+ && !botMessageDBModel.getType().equals("ack")) {
                 botMessageDBModel.setSentMessage(isSentMessage);
-                botMessageDAO.createOrUpdate(botMessageDBModel);
-                botMessageDAO.refresh(botMessageDBModel);
+//                botMessageDAO.createOrUpdate(botMessageDBModel);
+//                botMessageDAO.refresh(botMessageDBModel);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-       dbHelper.close();
+//       dbHelper.close();
 
     }
 
 }
+*/

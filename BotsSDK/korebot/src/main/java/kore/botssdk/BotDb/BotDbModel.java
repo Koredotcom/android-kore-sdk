@@ -1,7 +1,6 @@
+/*
 package kore.botssdk.BotDb;
 
-import com.j256.ormlite.field.DataType;
-import com.j256.ormlite.field.DatabaseField;
 
 public class BotDbModel {
 
@@ -15,19 +14,19 @@ public class BotDbModel {
         public static final String RESOLVED_ON = "resolved_on";
     }
 
-    @DatabaseField(columnName = BotDBModelColumns.IS_DIRTY, dataType= DataType.BOOLEAN)
+//    @DatabaseField(columnName = BotDBModelColumns.IS_DIRTY, dataType= DataType.BOOLEAN)
     private boolean isDirty;
 
-    @DatabaseField(columnName = BotDBModelColumns.IS_RESOLVED, dataType= DataType.BOOLEAN)
+//    @DatabaseField(columnName = BotDBModelColumns.IS_RESOLVED, dataType= DataType.BOOLEAN)
     private boolean isResolved;
 
-    @DatabaseField(columnName = BotDBModelColumns.CREATED_ON, dataType= DataType.STRING)
+//    @DatabaseField(columnName = BotDBModelColumns.CREATED_ON, dataType= DataType.STRING)
     private String createdOn;
 
-    @DatabaseField(columnName = BotDBModelColumns.LAST_MODIFIED, dataType= DataType.STRING)
+//    @DatabaseField(columnName = BotDBModelColumns.LAST_MODIFIED, dataType= DataType.STRING)
     private String lastModifiedOn;
 
-    @DatabaseField(columnName = BotDBModelColumns.RESOLVED_ON, dataType= DataType.STRING)
+//    @DatabaseField(columnName = BotDBModelColumns.RESOLVED_ON, dataType= DataType.STRING)
     private String resolvedOn;
 
     public boolean isDirty() {
@@ -76,3 +75,4 @@ public class BotDbModel {
 
 
 }
+*/

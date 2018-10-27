@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.database.Cursor;
@@ -81,8 +82,10 @@ public class BotDaoImpl<T, ID> extends BaseDaoImpl<T, ID> implements BotBaseDao<
     }
 
     public CreateOrUpdateStatus createOrUpdate(T data) throws SQLException {
-        /*if (data instanceof BotDbModel)
-            ((BotDbModel) data).processForPersistance();*/
+        */
+/*if (data instanceof BotDbModel)
+            ((BotDbModel) data).processForPersistance();*//*
+
         return super.createOrUpdate(data);
     }
 
@@ -128,9 +131,11 @@ public class BotDaoImpl<T, ID> extends BaseDaoImpl<T, ID> implements BotBaseDao<
                 .compile(readOnlyConn, StatementBuilder.StatementType.SELECT);
 
         Cursor base = stmt.getCursor();
-        /*String idColumnName = getTableInfo().getIdField().getColumnName();
+        */
+/*String idColumnName = getTableInfo().getIdField().getColumnName();
         int idColumnIndex = base.getColumnIndex(idColumnName);
-        KoreNoIdCursorWrapper wrapper = new KoreNoIdCursorWrapper(base, idColumnIndex);*/
+        KoreNoIdCursorWrapper wrapper = new KoreNoIdCursorWrapper(base, idColumnIndex);*//*
+
         return base;
     }
 
@@ -138,3 +143,4 @@ public class BotDaoImpl<T, ID> extends BaseDaoImpl<T, ID> implements BotBaseDao<
         return getCursor(queryBuilder().prepare());
     }
 }
+*/

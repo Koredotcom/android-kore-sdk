@@ -54,6 +54,6 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile project(path: ':stickyListHeaders')
-    compile 'com.j256.ormlite:ormlite-android:4.48'
-    compile 'com.j256.ormlite:ormlite-core:4.48'
+//    compile 'com.j256.ormlite:ormlite-android:4.48'
+//    compile 'com.j256.ormlite:ormlite-core:4.48'
 }

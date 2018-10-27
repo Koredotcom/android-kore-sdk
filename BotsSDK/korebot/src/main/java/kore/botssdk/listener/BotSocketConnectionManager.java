@@ -13,7 +13,6 @@ import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -22,9 +21,7 @@ import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.JWTTokenResponse;
-import kore.botssdk.net.JWTGrantRequest;
 import kore.botssdk.net.KaJwtRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
