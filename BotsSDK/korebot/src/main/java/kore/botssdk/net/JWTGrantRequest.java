@@ -1,12 +1,15 @@
+/*
 package kore.botssdk.net;
 
 import java.util.HashMap;
 
 import kore.botssdk.models.JWTTokenResponse;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 15-Mar-17.
- */
+ *//*
+
 public class JWTGrantRequest extends DemoRestRequest<JWTTokenResponse> {
     private String clientId;
     private String clientSecret;
@@ -33,3 +36,4 @@ public class JWTGrantRequest extends DemoRestRequest<JWTTokenResponse> {
         return jwt;
     }
 }
+*/

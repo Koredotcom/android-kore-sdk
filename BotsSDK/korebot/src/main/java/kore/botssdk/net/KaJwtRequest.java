@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import com.octo.android.robospice.request.SpiceRequest;
@@ -6,9 +7,11 @@ import java.util.HashMap;
 
 import kore.botssdk.models.JWTTokenResponse;
 
+*/
 /**
  * Created by Shiva Krishna on 11/16/2017.
- */
+ *//*
+
 public class KaJwtRequest extends DemoRestRequest<JWTTokenResponse> {
     private String clientId;
     private String clientSecret;
@@ -44,9 +47,12 @@ public class KaJwtRequest extends DemoRestRequest<JWTTokenResponse> {
             hsh.put("aud", "https://idproxy.kore.com/authorize");
             hsh.put("isAnonymous", isAnonymous);
 
-            return getService().getJWTToken(hsh/*,accessTokenHeader()*/);
+            return getService().getJWTToken(hsh*/
+/*,accessTokenHeader()*//*
+);
         }else{
             return getService().getJWTToken(accessTokenHeader(), new HashMap<String, Object>());
         }
     }
 }
+*/

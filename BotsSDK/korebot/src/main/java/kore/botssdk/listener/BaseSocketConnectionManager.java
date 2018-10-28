@@ -2,10 +2,8 @@ package kore.botssdk.listener;
 
 import android.content.Context;
 
-import com.octo.android.robospice.SpiceManager;
 
 import kore.botssdk.models.JWTTokenResponse;
-import kore.botssdk.net.BotDemoRestService;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
 
@@ -15,7 +13,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
 
 public abstract class BaseSocketConnectionManager implements SocketConnectionListener,TTSUpdate {
 
-    protected SpiceManager botsSpiceManager = new SpiceManager(BotDemoRestService.class);
+//    protected SpiceManager botsSpiceManager = new SpiceManager(BotDemoRestService.class);
     protected Context mContext;
 //    public SocketUpdateListener socketUpdateListener;
 //    public boolean isWithAuth;

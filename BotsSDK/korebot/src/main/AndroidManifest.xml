@@ -51,15 +51,15 @@
                android:theme="@style/Theme.AppCompat.NoActionBar"
                android:windowSoftInputMode="adjustResize" />
 
-        <service
+        <!--<service
             android:name=".net.BotDemoRestService"
-            android:exported="false" />
-        <service
+            android:exported="false" />-->
+        <!--<service
             android:name=".net.BotRestService"
-            android:exported="false" />
-        <service
+            android:exported="false" />-->
+        <!--<service
             android:name=".net.BotLocalService"
-            android:exported="false" />
+            android:exported="false" />-->
     </application>
 
 </manifest>

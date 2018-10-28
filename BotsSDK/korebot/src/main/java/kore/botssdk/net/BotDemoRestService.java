@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import android.os.Build;
@@ -19,9 +20,11 @@ import retrofit.RestAdapter;
 import retrofit.converter.Converter;
 import retrofit.converter.GsonConverter;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 15-Mar-17.
- */
+ *//*
+
 public class BotDemoRestService extends RetrofitGsonSpiceService {
 
     @Override
@@ -73,4 +76,4 @@ public class BotDemoRestService extends RetrofitGsonSpiceService {
             return value;
         }
     }
-}
+}*/
