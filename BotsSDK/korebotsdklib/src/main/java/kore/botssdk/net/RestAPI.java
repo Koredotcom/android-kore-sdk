@@ -1,5 +1,7 @@
 package kore.botssdk.net;
 
+import com.squareup.okhttp.ResponseBody;
+
 import java.util.HashMap;
 
 import io.reactivex.Observable;
@@ -7,7 +9,6 @@ import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -59,7 +60,7 @@ public interface RestAPI {
 
     //Subscribe to Push notification
     @POST("/api/users/{userId}/sdknotifications/subscribe")
-    Call<Response> subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
+    Call<ResponseBody> subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
 
     //Unsubscribe to Push notification
     @Headers({
@@ -67,7 +68,7 @@ public interface RestAPI {
             "X-HTTP-Method-Override:DELETE"
     })
     @POST("/api/users/{userId}/sdknotifications/unsubscribe")
-    Call<Response> unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
+    Call<ResponseBody> unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
     Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
