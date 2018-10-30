@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -75,7 +76,9 @@ public class Utils {
         return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
     }
 
-
+    public static boolean isPhoneNo(String text) {
+        return !isNullOrEmpty(text) && Patterns.PHONE.matcher(text).matches();
+    }
     public static BotResponse buildBotMessage(String msg, String streamId,String botName){
 
         Calendar calendar = Calendar.getInstance();
