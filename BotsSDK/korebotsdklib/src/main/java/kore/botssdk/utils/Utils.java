@@ -94,9 +94,6 @@ public class Utils {
         return buildBotMessage(msg,streamId,botName,createdOn,null);
     }
 
-    public static boolean isPhoneNo(String text) {
-        return Patterns.PHONE.matcher(text).matches();
-    }
     public static BotResponse buildBotMessage(String msg, String streamId,String botName, String createdOn, String msgId){
         BotResponse botResponse = new BotResponse();
 
