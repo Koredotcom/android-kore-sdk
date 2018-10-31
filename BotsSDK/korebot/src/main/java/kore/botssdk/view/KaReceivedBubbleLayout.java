@@ -224,7 +224,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         timeLineView.setText("");
         timeLineView.setVisibility(GONE);
         if (compModel != null) {
-            String compType = compModel.getType();
+
             PayloadOuter payOuter = compModel.getPayload();
             PayloadInner payInner;
             if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
@@ -246,8 +246,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if(StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
                         timeStampsTextView.setText("");
                     }
-                } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCarouselView.setVisibility(View.VISIBLE);
+                    botCarouselView.setType(payInner.getTemplate_type());
                     botCarouselView.populateCarouselView(payInner.getCarouselElements());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -341,6 +342,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                 }else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                }else if(StringUtils.isNullOrEmptyWithTrim(payOuter.getText())){
+                        timeStampsTextView.setText("");
                 }
 
             } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {

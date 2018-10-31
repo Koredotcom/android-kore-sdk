@@ -7,6 +7,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -23,12 +24,13 @@ import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
  */
 public class BotCarouselAdapter extends PagerAdapter {
 
-    ArrayList<? extends BotCarouselModel> botCarouselModels = new ArrayList<>();
-    Activity activityContext;
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflater;
-    float pageWidth = 0.8f;
+    private ArrayList<? extends BotCarouselModel> botCarouselModels = new ArrayList<>();
+    private Activity activityContext;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private LayoutInflater ownLayoutInflater;
+    private float pageWidth = 0.8f;
+    private String type;
 
     public BotCarouselAdapter(ComposeFooterInterface composeFooterInterface,
                               InvokeGenericWebViewInterface invokeGenericWebViewInterface,
@@ -63,7 +65,9 @@ public class BotCarouselAdapter extends PagerAdapter {
         final View carouselItemLayout = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);
         KaFontUtils.applyCustomFont(activityContext,carouselItemLayout);
         CarouselItemViewHelper.initializeViewHolder(carouselItemLayout);
-        CarouselItemViewHelper.populateStuffs((CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag(), composeFooterInterface, invokeGenericWebViewInterface, botCarouselModels.get(position), activityContext);
+        CarouselItemViewHelper.CarouselViewHolder carouselViewHolder = (CarouselItemViewHelper.CarouselViewHolder) carouselItemLayout.getTag();
+       // carouselViewHolder.carouselItemSubTitle.setMaxLines(maxLines);
+        CarouselItemViewHelper.populateStuffs(carouselViewHolder, composeFooterInterface, invokeGenericWebViewInterface, botCarouselModels.get(position), activityContext,type);
         container.addView(carouselItemLayout);
 /*        ViewTreeObserver vto = carouselItemLayout.getViewTreeObserver();
         vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
@@ -114,4 +118,11 @@ public class BotCarouselAdapter extends PagerAdapter {
         container.removeView(( CardView) object);
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

@@ -28,6 +28,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotListDefaultModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
@@ -82,7 +83,7 @@ public class CarouselItemViewHelper {
                                       final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final BotCarouselModel botCarouselModel,
-                                      final Context activityContext) {
+                                      final Context activityContext,final String type) {
 
         if (botCarouselModel != null) {
 
@@ -90,7 +91,8 @@ public class CarouselItemViewHelper {
 
             carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
             if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
-                carouselViewHolder.carouselItemSubTitle.setText(Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
+                carouselViewHolder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
+               carouselViewHolder.carouselItemSubTitle.setMaxLines(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? Integer.MAX_VALUE : 3);
                 carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
             }else{
                 carouselViewHolder.carouselItemSubTitle.setVisibility(GONE);

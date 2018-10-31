@@ -290,7 +290,7 @@ public class PayloadInner {
         Gson gson = new Gson();
         if (elements != null) {
             elementsAsString = gson.toJson(elements);
-            if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type)) {
+            if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
                 Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
                 }.getType();
                 carouselElements = gson.fromJson(elementsAsString, carouselType);

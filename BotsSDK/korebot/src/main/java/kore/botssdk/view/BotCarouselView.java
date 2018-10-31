@@ -16,6 +16,8 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -35,6 +37,7 @@ public class BotCarouselView extends ViewGroup {
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     BotCarouselAdapter botCarouselAdapter;
+    private String type;
 
     public BotCarouselView(Context context) {
         super(context);
@@ -70,6 +73,7 @@ public class BotCarouselView extends ViewGroup {
                 carouselViewpager.setOffscreenPageLimit(4);
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+                botCarouselAdapter.setType(type);
                 carouselViewpager.setAdapter(botCarouselAdapter);
                 botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setSwipeLocked(botCarouselModelArrayList != null && botCarouselModelArrayList.size() ==1);
@@ -153,5 +157,13 @@ public class BotCarouselView extends ViewGroup {
                 childTop += child.getMeasuredHeight();
             }
         }
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
