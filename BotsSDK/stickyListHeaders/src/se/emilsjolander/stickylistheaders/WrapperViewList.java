@@ -29,7 +29,7 @@ class WrapperViewList extends ListView {
 	public WrapperViewList(Context context) {
 		super(context);
 
-		// Use reflection to be able to change the size/position of the list
+	/*	// Use reflection to be able to change the size/position of the list
 		// selector so it does not come under/over the header
 		try {
 			Field selectorRectField = AbsListView.class.getDeclaredField("mSelectorRect");
@@ -46,7 +46,7 @@ class WrapperViewList extends ListView {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	@Override
