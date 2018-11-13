@@ -318,6 +318,14 @@ public final class SocketWrapper{
                     }*/
                 });
             } catch (WebSocketException e) {
+                if(e.getMessage() != null && e.getMessage().equals("already connected")){
+                    if (socketConnectionListener != null) {
+                        socketConnectionListener.onOpen(isReconnectionAttaempt);
+                    }
+                    startSendingPong();
+                    mReconnectionCount = 1;
+                    mReconnectDelay = 1000;
+                }
                 e.printStackTrace();
             }
         }
