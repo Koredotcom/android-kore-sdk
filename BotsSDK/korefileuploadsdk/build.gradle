@@ -3,7 +3,8 @@ apply plugin: 'com.android.library'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 28
-    buildToolsVersion "28.0.2"
+    buildToolsVersion '28.0.3'
+
 
 
     defaultConfig {
