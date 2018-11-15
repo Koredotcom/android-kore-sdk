@@ -151,6 +151,16 @@ public class SDKConfiguration {
         public static  String rightLinkColor="#FFFFFF";
         public static  String leftLinkColor = "#6168e7";
 
+        public static String getQuickReplyFill() {
+            return quickReplyFill;
+        }
+
+        public static void setQuickReplyFill(String quickReplyFill) {
+            BubbleColors.quickReplyFill = quickReplyFill;
+        }
+
+        public static String quickReplyFill = "#FFFFFF";
+
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
         }

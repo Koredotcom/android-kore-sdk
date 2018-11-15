@@ -346,7 +346,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
             } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 bubbleTextMediaLayout.populateText(payInner.getText());
-            } else {
+            } else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType()) && payInner != null){
+                bubbleTextMediaLayout.populateText(payInner.getText());
+            }else{
                 bubbleTextMediaLayout.populateText(payOuter.getText());
 
             }

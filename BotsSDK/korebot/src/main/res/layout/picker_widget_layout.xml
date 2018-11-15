@@ -16,7 +16,7 @@
         android:tag="bold"
         android:textStyle="bold"
         android:text="DONE"
-        android:textColor="#2b86b2"
+        android:textColor="#14e696"
         android:textSize="16dp" />
 
 
