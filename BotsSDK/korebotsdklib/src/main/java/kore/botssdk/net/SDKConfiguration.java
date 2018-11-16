@@ -41,6 +41,14 @@ public class SDKConfiguration {
         APPLY_FONT_STYLE = applyFontStyle;
     }
 
+    public static FONT_TYPES getFontType() {
+        return fontType;
+    }
+
+    public  static void setFontType(FONT_TYPES fontType) {
+        SDKConfiguration.fontType = fontType;
+    }
+
     //JWTServer related configurations
     public static class JWTServer{
         public static void setJwtServerUrl(String jwtServerUrl) {
@@ -165,7 +173,17 @@ public class SDKConfiguration {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#6168e7";
+        public static String quickReplyColor = "#6168e7";
+
+        public static String getQuickReplyFontColor() {
+            return quickReplyFontColor;
+        }
+
+        public static void setQuickReplyFontColor(String quickReplyFontColor) {
+            BubbleColors.quickReplyFontColor = quickReplyFontColor;
+        }
+
+        public static  String quickReplyFontColor = "#ffffff";
 
     }
 
@@ -180,5 +198,10 @@ public class SDKConfiguration {
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static boolean APPLY_FONT_STYLE = true;
 
+    /**
+     * don't use relative it is licenced version
+     */
+    public   enum FONT_TYPES{ROBOTO,RELATIVE}
+    private static FONT_TYPES fontType = FONT_TYPES.ROBOTO;
 
 }

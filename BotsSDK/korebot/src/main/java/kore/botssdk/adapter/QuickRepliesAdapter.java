@@ -35,7 +35,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
 
     private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int quickWidgetColor,fillColor;
+    private int quickWidgetColor,fillColor,quickReplyFontColor;
     private int dp1;
 
     public QuickRepliesAdapter(Context context, RecyclerView parentRecyclerView) {
@@ -44,6 +44,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         layoutInflater = LayoutInflater.from(context);
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyFill);
+        quickReplyFontColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyFontColor);
         dp1= (int)AppControl.getInstance(context).getDimensionUtil().dp1;
     }
 
@@ -54,7 +55,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         gradientDrawable.setStroke(dp1, quickWidgetColor);
         gradientDrawable.setColor(fillColor);
         QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
-        viewHolder.getQuickReplyTitle().setTextColor(quickWidgetColor);
+        viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);
         return viewHolder;
     }
 
