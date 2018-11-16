@@ -159,6 +159,16 @@ public class SDKConfiguration {
         public static  String rightLinkColor="#FFFFFF";
         public static  String leftLinkColor = "#6168e7";
 
+        public static String getTypingStatusDotsColor() {
+            return typingStatusDotsColor;
+        }
+
+        public static void setTypingStatusDotsColor(String typingStatusDotsColor) {
+            BubbleColors.typingStatusDotsColor = typingStatusDotsColor;
+        }
+
+        public static String typingStatusDotsColor = "#6168e7";
+
         public static String getQuickReplyFill() {
             return quickReplyFill;
         }

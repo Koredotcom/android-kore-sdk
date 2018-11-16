@@ -164,7 +164,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
         botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
-        typingStatusItemDots.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected));
+        typingStatusItemDots.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.typingStatusDotsColor));
     }
 
     private void scrollToBottom() {
