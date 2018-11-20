@@ -1,1 +1,1 @@
-include ':korebot', ':korebotsdklib', ':korefileuploadsdk',':stickyListHeaders'
+include ':korebot', ':korebotsdklib', ':korefileuploadsdk'
