@@ -20,17 +20,26 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.TimeZone;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
+import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
+
+import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
@@ -54,10 +63,14 @@ public class CalendarEventsAdapter extends BaseAdapter {
     private static String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
+    private String type;
+    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private  Gson gson = new Gson();
 
-    public CalendarEventsAdapter(Context mContext) {
+    public CalendarEventsAdapter(Context mContext,String type) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
+        this.type = type;
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";
     }
@@ -105,6 +118,14 @@ public class CalendarEventsAdapter extends BaseAdapter {
 //        }
 
         return convertView;
+    }
+
+    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+        return composeFooterInterface;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
     }
 
     public interface EventSelectionListener {
@@ -156,33 +177,29 @@ public class CalendarEventsAdapter extends BaseAdapter {
             holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try{
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                    if(BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
+                                    launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                } else {
+                                    gModel = model;
+                                    AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
+                                }
                             } else {
-                                gModel = model;
-                                AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
+                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
                             }
-                        }else{
-                            launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+
+                        } catch (Exception e) {
+                            launchWebView(model.getHtmlLink());
                         }
 
-                    }catch (Exception e){
-                        launchWebView(model.getHtmlLink());
+                    }else{
+                        HashMap<String,String> hashMap = new HashMap<>();
+                        hashMap.put("meetingId",model.getEventId());
+                        String message = "Cancel \""+ model.getTitle()+"\" "+  getDateinDayFormat((long)model.getDuration().getStart())+", "+ getTimeInAmPm((long)model.getDuration().getStart())+" - "+getTimeInAmPm((long)model.getDuration().getEnd());
+                        composeFooterInterface.sendWithSomeDelay(message,gson.toJson(hashMap),0);
                     }
-//                    int eventId = getEventId(model.getTitle(),(long)model.getDuration().getStart(),(long)model.getDuration().getEnd());
-                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_NO_HISTORY
-                            | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, model.getDuration().getStart());
-                    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, model.getDuration().getEnd());
-                    mContext.startActivity(intent);*/
-
                 }
             });
         }
@@ -193,12 +210,6 @@ public class CalendarEventsAdapter extends BaseAdapter {
     private void launchNativeView(String title, long beginTime) throws Exception{
         int id = listSelectedCalendars(title,beginTime);
         if(id <= 0) throw new Exception("Invalid event id");
-       /* Uri uri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
-        Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);*/
-
-        /*Calendar mCalendar = new GregorianCalendar();
-        TimeZone mTimeZone = mCalendar.getTimeZone();
-        int mGMTOffset = mTimeZone.getRawOffset();*/
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));

@@ -37,6 +37,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
     public static final String TEMPLATE_TYPE_AGENT_TRANSFER = "agent_transfer_mode";
     public static final String TEMPLATE_TYPE_WELCOME_CAROUSEL = "kora_welcome_carousel";
+    public static final String TEMPLATE_TYPE_CANCEL_EVENT = "cancel_calendar_events";
 
     public static final String TEMPLATE_TYPE_CONVERSATION_END = "conversation_end";
 

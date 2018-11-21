@@ -23,7 +23,7 @@ public class DateUtils {
     public static final Format dateMonth = new SimpleDateFormat("MM", Locale.ENGLISH);    //03
     public static final Format monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     public static final Format dateWeekDayV2_1 = new SimpleDateFormat("EEEE", Locale.ENGLISH);
-
+    public static final Format dateFormatDay = new SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
 
@@ -223,5 +223,7 @@ public class DateUtils {
 
         return lastModifiedYr == currentYr;
     }
-
+    public static  String getDateinDayFormat(long dateInMs){
+        return dateFormatDay.format(new Date(dateInMs));
+    }
 }

@@ -316,6 +316,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         addView(lineChartView);
 
         calendarEventsView = ViewProvider.getCalenderTemplateView(context);
+        calendarEventsView.setComposeFooterInterface(composeFooterInterface);
         addView(calendarEventsView);
 
         filesCarousalView = ViewProvider.getKoraFilesCarouselView(context);
@@ -393,6 +394,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(attendeeSlotSelectionView != null){
             attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if(calendarEventsView != null){
+            calendarEventsView.setComposeFooterInterface(composeFooterInterface);
         }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {

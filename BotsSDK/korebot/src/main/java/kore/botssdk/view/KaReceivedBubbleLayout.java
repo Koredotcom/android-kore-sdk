@@ -173,7 +173,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         tableView.setVisibility(View.GONE);
         lineChartView.setVisibility(GONE);
         calendarEventsView.setVisibility(View.GONE);
-        calendarEventsView.populateCalendarEvents(null);
+        calendarEventsView.populateCalendarEvents(null,null);
         timeLineView.setVisibility(GONE);
         timeLineView.setText("");
     }
@@ -220,7 +220,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         attendeeSlotSelectionView.populateData(-1,null,false);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
         calendarEventsView.setVisibility(View.GONE);
-        calendarEventsView.populateCalendarEvents(null);
+        calendarEventsView.populateCalendarEvents(null,null);
         timeLineView.setText("");
         timeLineView.setVisibility(GONE);
         if (compModel != null) {
@@ -318,12 +318,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         attendeeSlotSelectionView.setVisibility(View.VISIBLE);
                         attendeeSlotSelectionView.populateData(position,meetingTemplateModels.get(0),isLastItem);
                     }
-                }else if(BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type())){
+                }else if(BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(payInner.getTemplate_type())){
                     ArrayList<CalEventsTemplateModel> calList = payInner.getCalEventsTemplateModels();
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
                     if(calList != null && !calList.isEmpty()){
                         calendarEventsView.setVisibility(View.VISIBLE);
-                        calendarEventsView.populateCalendarEvents(calList);
+                        calendarEventsView.populateCalendarEvents(calList,payInner.getTemplate_type());
                         calendarEventsView.setRestrictedMaxWidth(BubbleViewUtil.getSlotsContentWidth());
                     }
                     bubbleTextMediaLayout.populateText(payInner.getText());

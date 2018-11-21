@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.CalendarEventsAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -25,6 +26,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
     private AutoExpandListView listView;
     private LinearLayout calCustomListRoot;
     private float dp1, layoutItemHeight = 0;
+    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
 
     public float getRestrictedMaxWidth() {
         return restrictedMaxWidth;
@@ -60,10 +62,11 @@ public class CalendarEventsTemplateView extends ViewGroup {
 
     }
 
-    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList){
+    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList,String type){
         calCustomListRoot.setVisibility(eventsList == null || eventsList.size() == 0 ? GONE : VISIBLE);
         CalendarEventsAdapter calAdapter;
-        calAdapter = new CalendarEventsAdapter(getContext());
+        calAdapter = new CalendarEventsAdapter(getContext(),type);
+        calAdapter.setComposeFooterInterface(composeFooterInterface);
         listView.setAdapter(calAdapter);
         calAdapter.setEventList(eventsList);
         calAdapter.notifyDataSetChanged();
@@ -169,5 +172,13 @@ public class CalendarEventsTemplateView extends ViewGroup {
                 childTop += child.getMeasuredHeight();
             }
         }
+    }
+
+    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+        return composeFooterInterface;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
     }
 }
