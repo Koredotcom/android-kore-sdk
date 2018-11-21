@@ -64,13 +64,15 @@ public class CalendarEventsAdapter extends BaseAdapter {
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
     private String type;
+    private boolean isEnabled;
     private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
     private  Gson gson = new Gson();
 
-    public CalendarEventsAdapter(Context mContext,String type) {
+    public CalendarEventsAdapter(Context mContext,String type,boolean isEnabled) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
+        this.isEnabled = isEnabled;
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";
     }
@@ -138,8 +140,8 @@ public class CalendarEventsAdapter extends BaseAdapter {
 
     public static class ViewHolder {
         public TextView rowIndex;
-        public TextView txtDateTime;
-        public LinearLayout layoutDetails;
+        TextView txtDateTime;
+        LinearLayout layoutDetails;
         public View sideBar;
         public TextView txtTitle;
         public TextView txtPlace;
@@ -194,7 +196,8 @@ public class CalendarEventsAdapter extends BaseAdapter {
                             launchWebView(model.getHtmlLink());
                         }
 
-                    }else{
+                    }else if(isEnabled){
+
                         HashMap<String,String> hashMap = new HashMap<>();
                         hashMap.put("meetingId",model.getEventId());
                         String message = "Cancel \""+ model.getTitle()+"\" "+  getDateinDayFormat((long)model.getDuration().getStart())+", "+ getTimeInAmPm((long)model.getDuration().getStart())+" - "+getTimeInAmPm((long)model.getDuration().getEnd());

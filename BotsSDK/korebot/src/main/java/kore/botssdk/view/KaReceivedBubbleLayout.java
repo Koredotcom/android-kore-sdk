@@ -173,7 +173,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         tableView.setVisibility(View.GONE);
         lineChartView.setVisibility(GONE);
         calendarEventsView.setVisibility(View.GONE);
-        calendarEventsView.populateCalendarEvents(null,null);
+        calendarEventsView.populateCalendarEvents(null,null,false);
         timeLineView.setVisibility(GONE);
         timeLineView.setText("");
     }
@@ -220,7 +220,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         attendeeSlotSelectionView.populateData(-1,null,false);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
         calendarEventsView.setVisibility(View.GONE);
-        calendarEventsView.populateCalendarEvents(null,null);
+        calendarEventsView.populateCalendarEvents(null,null,false);
         timeLineView.setText("");
         timeLineView.setVisibility(GONE);
         if (compModel != null) {
@@ -323,7 +323,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
                     if(calList != null && !calList.isEmpty()){
                         calendarEventsView.setVisibility(View.VISIBLE);
-                        calendarEventsView.populateCalendarEvents(calList,payInner.getTemplate_type());
+                        calendarEventsView.populateCalendarEvents(calList,payInner.getTemplate_type(),isLastItem || BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type()));
                         calendarEventsView.setRestrictedMaxWidth(BubbleViewUtil.getSlotsContentWidth());
                     }
                     bubbleTextMediaLayout.populateText(payInner.getText());

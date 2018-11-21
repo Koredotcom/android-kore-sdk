@@ -25,7 +25,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
 
     private AutoExpandListView listView;
     private LinearLayout calCustomListRoot;
-    private float dp1, layoutItemHeight = 0;
+    private float dp1 = 0;
     private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
 
     public float getRestrictedMaxWidth() {
@@ -62,14 +62,16 @@ public class CalendarEventsTemplateView extends ViewGroup {
 
     }
 
-    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList,String type){
+    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList,String type, final boolean isEnabled){
         calCustomListRoot.setVisibility(eventsList == null || eventsList.size() == 0 ? GONE : VISIBLE);
         CalendarEventsAdapter calAdapter;
-        calAdapter = new CalendarEventsAdapter(getContext(),type);
+        calAdapter = new CalendarEventsAdapter(getContext(),type,isEnabled);
         calAdapter.setComposeFooterInterface(composeFooterInterface);
         listView.setAdapter(calAdapter);
         calAdapter.setEventList(eventsList);
         calAdapter.notifyDataSetChanged();
+        calCustomListRoot.setAlpha(isEnabled ? 1.0f : 0.5f);
+        calCustomListRoot.setClickable(false);
 
     }
 
