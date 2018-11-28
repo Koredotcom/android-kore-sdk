@@ -521,8 +521,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         String message = null;
         String textColor = "#000000";
-        if (baseBotMessage.isSend()) {
-            message = ((BotRequest) baseBotMessage).getMessage().getBody();
+        if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
+            if(((BotRequest) baseBotMessage).getMessage() != null)
+                message = ((BotRequest) baseBotMessage).getMessage().getBody();
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
             if (componentModel != null) {
