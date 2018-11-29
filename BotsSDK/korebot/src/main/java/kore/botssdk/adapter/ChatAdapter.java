@@ -33,14 +33,14 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 /**
  * Created by Shiva Krishna on 11/17/2017.
  */
-public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class ChatAdapter extends BaseAdapter {
 
     public static String LOG_TAG = ChatAdapter.class.getSimpleName();
 
     Context context;
     Activity activityContext;
     private LayoutInflater ownLayoutInflater;
-    private HashMap<String,Integer> headersMap = new HashMap<>();
+    private HashMap<String, Integer> headersMap = new HashMap<>();
 
     public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -111,9 +111,9 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
 
     @Override
     public BaseBotMessage getItem(int position) {
-        if(position<=baseBotMessageArrayList.size()-1 && position != -1) {
+        if (position <= baseBotMessageArrayList.size() - 1 && position != -1) {
             return baseBotMessageArrayList.get(position);
-        }else{
+        } else {
             return null;
         }
     }
@@ -144,7 +144,9 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
         if (convertView.getTag() == null) {
             initializeViewHolder(convertView, position);
         }
-        headersMap.put(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()),position);
+        if (headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == null) {
+            headersMap.put(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()), position);
+        }
 
         if (listView == null) {
             listView = (ListView) parent;
@@ -160,8 +162,9 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
             holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
             holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             holder.baseBubbleLayout.setActivityContext(activityContext);
-            holder.baseBubbleLayout.fillBubbleLayout(position,position == getCount()-1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
-
+            holder.baseBubbleLayout.fillBubbleLayout(position, position == getCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
+            holder.textView.setText(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()));
+            holder.headerView.setVisibility(position != 0 && headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == position ? View.VISIBLE :View.GONE);
 
         }
 
@@ -184,16 +187,20 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
             holder.baseBubbleLayout = (KaReceivedBubbleLayout) view.findViewById(R.id.receivedBubbleLayout);
             holder.baseBubbleContainer = (KaReceivedBubbleContainer) view.findViewById(R.id.received_bubble_layout_container);
         }
+        holder.headerView = view.findViewById(R.id.headerLayout);
+        holder.textView = view.findViewById(R.id.filesSectionHeader);
 
         view.setTag(holder);
 
         return view;
 
     }
-    private class HeaderViewHolder {
+
+/*    private class HeaderViewHolder {
         TextView txtViewHeader;
-    }
-    @Override
+    }*/
+
+/*    @Override
     public View getHeaderView(int position, View convertView, ViewGroup parent) {
         HeaderViewHolder holder;
 
@@ -209,7 +216,7 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
 
 
         BaseBotMessage baseBotMessage = ((BaseBotMessage) getItem(position));
-        if(baseBotMessage != null) {
+        if (baseBotMessage != null) {
             holder.txtViewHeader.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
         }
         return convertView;
@@ -219,19 +226,21 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
     public long getHeaderId(int position) {
         try {
             BaseBotMessage baseBotMessage = ((BaseBotMessage) getItem(position));
-            if(baseBotMessage != null)
+            if (baseBotMessage != null)
                 return headersMap.get(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
             else return 0;
-        }catch (Exception e){
+        } catch (Exception e) {
 //            e.printStackTrace();
             return 0;
         }
-    }
+    }*/
 
     private static class ViewHolder {
         KaBaseBubbleContainer baseBubbleContainer;
         KaBaseBubbleLayout baseBubbleLayout;
         RelativeLayout bubbleLayoutContainer;
+        View headerView;
+        TextView textView;
     }
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
@@ -239,8 +248,8 @@ public class ChatAdapter extends BaseAdapter implements StickyListHeadersAdapter
         notifyDataSetChanged();
     }
 
-    public void addBaseBotMessages(ArrayList<BaseBotMessage> list){
-        baseBotMessageArrayList.addAll(0,list);
+    public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
+        baseBotMessageArrayList.addAll(0, list);
         notifyDataSetChanged();
     }
 

@@ -17,7 +17,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class KaSendBubbleContainer extends KaBaseBubbleContainer {
 
     KaSendBubbleLayout sendBubbleLayout;
-
+    View headerLayout;
     public KaSendBubbleContainer(Context context) {
         super(context);
     }
@@ -40,6 +40,7 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
 
         //Find views...
         sendBubbleLayout = (KaSendBubbleLayout) findViewById(R.id.sendBubbleLayout);
+        headerLayout = findViewById(R.id.headerLayout);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 
     }
@@ -64,7 +65,11 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
         childWidthSpec = View.MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, View.MeasureSpec.AT_MOST);
         MeasureUtils.measure(sendBubbleLayout, childWidthSpec, wrapSpec);
 
+        childWidthSpec = MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, MeasureSpec.AT_MOST);
+        MeasureUtils.measure(headerLayout, childWidthSpec, wrapSpec);
+
         totalHeight += sendBubbleLayout.getMeasuredHeight();
+        totalHeight += headerLayout.getMeasuredHeight();
 
         int parentHeightSpec = View.MeasureSpec.makeMeasureSpec(totalHeight, View.MeasureSpec.EXACTLY);
 
