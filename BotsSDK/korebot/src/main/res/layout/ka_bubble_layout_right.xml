@@ -6,6 +6,10 @@
     android:descendantFocusability="blocksDescendants"
     android:focusable="false">
 
+    <include
+        android:id="@+id/headerLayout"
+        layout="@layout/kora_timestamps_header" />
+
     <!-- Send Bubble -->
     <kore.botssdk.view.KaSendBubbleLayout
         android:id="@+id/sendBubbleLayout"

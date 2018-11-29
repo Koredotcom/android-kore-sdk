@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
@@ -15,6 +16,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class SendBubbleContainer extends BaseBubbleContainer {
 
     SendBubbleLayout sendBubbleLayout;
+    View headerLayout;
 
     public SendBubbleContainer(Context context) {
         super(context);
@@ -38,6 +40,8 @@ public class SendBubbleContainer extends BaseBubbleContainer {
 
         //Find views...
         sendBubbleLayout = (SendBubbleLayout) findViewById(R.id.sendBubbleLayout);
+        headerLayout = findViewById(R.id.headerLayout);
+
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 
     }
@@ -62,7 +66,11 @@ public class SendBubbleContainer extends BaseBubbleContainer {
         childWidthSpec = MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, MeasureSpec.AT_MOST);
         MeasureUtils.measure(sendBubbleLayout, childWidthSpec, wrapSpec);
 
+        childWidthSpec = MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, MeasureSpec.AT_MOST);
+        MeasureUtils.measure(headerLayout, childWidthSpec, wrapSpec);
+
         totalHeight += sendBubbleLayout.getMeasuredHeight();
+        totalHeight += headerLayout.getMeasuredHeight();
 
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
 

@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.octo.android.robospice.persistence.exception.SpiceException;
@@ -34,6 +36,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
@@ -45,7 +48,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
 
-    StickyListHeadersListView botsBubblesListView;
+    ListView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
@@ -61,6 +64,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private int mBotIconId;
     private boolean fetching = false;
     private boolean hasMore = true;
+    private TextView headerView;
     private Gson gson = new Gson();
 
     @Nullable
@@ -76,7 +80,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         return view;
     }
     private void findViews(View view) {
-        botsBubblesListView = (StickyListHeadersListView) view.findViewById(R.id.chatContentListView);
+        botsBubblesListView = (ListView) view.findViewById(R.id.chatContentListView);
+        headerView = view.findViewById(R.id.filesSectionHeader);
         botsBubblesListView.setOnScrollListener(onScrollListener);
     }
 
@@ -86,7 +91,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
-        botsBubblesListView.setAreHeadersSticky(false);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
 
         quickReplyView = new QuickReplyView(getContext());
@@ -193,6 +197,10 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 // but you can call any function here.
                 loadChatHistory(chatAdapter.getCount(),limit);
             }*/
+            BaseBotMessage baseBotMessage = ((BaseBotMessage) botsChatAdapter.getItem(firstVisibleItem));
+            if(baseBotMessage != null) {
+                headerView.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
+            }
             if (this.firstVisibleItem == firstVisibleItem || visibleItemCount == 0 || totalItemCount == 0) {
                 return;
             }
