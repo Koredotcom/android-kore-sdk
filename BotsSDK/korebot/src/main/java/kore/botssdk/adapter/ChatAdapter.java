@@ -20,7 +20,6 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.utils.DateUtils;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.KaBaseBubbleContainer;
 import kore.botssdk.view.KaBaseBubbleLayout;
@@ -28,7 +27,6 @@ import kore.botssdk.view.KaReceivedBubbleContainer;
 import kore.botssdk.view.KaReceivedBubbleLayout;
 import kore.botssdk.view.KaSendBubbleLayout;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Created by Shiva Krishna on 11/17/2017.

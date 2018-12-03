@@ -34,7 +34,6 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.

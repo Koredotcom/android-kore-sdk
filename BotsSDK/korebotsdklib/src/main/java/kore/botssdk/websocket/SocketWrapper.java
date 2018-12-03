@@ -246,7 +246,7 @@ public final class SocketWrapper{
                     }
                     @Override
                     public void onComplete() {
-                        Log.d("HI","on next");
+                        Log.d("IKIDO","on complete called man");
                     }
                 });
 
@@ -261,11 +261,6 @@ public final class SocketWrapper{
      */
     private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
         Log.d("IKIDO","Step 9 "+isReconnectionAttaempt);
-        try{
-            throw new Exception("Hey");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         if((isConnecting || isConnected())) return;
         isConnecting = true;
         if (url != null) {
