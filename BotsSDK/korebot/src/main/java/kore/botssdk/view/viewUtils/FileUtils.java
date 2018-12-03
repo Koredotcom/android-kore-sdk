@@ -131,6 +131,7 @@ public class FileUtils {
     public static final String EXT_XLR = "xlr";
     public static final String EXT_XLS = "xls";
     public static final String EXT_XLSX = "xlsx";
+    public static final String EXT_GSHEET = "gsheet";
 
 
     //textFileFormats
@@ -188,7 +189,7 @@ public class FileUtils {
         else if(fileType.equalsIgnoreCase(EXT_PAGES) || fileType.equalsIgnoreCase(EXT_RTF) || fileType.equalsIgnoreCase(EXT_WPD)) return Color.parseColor(COLOR_WPS);
         else if(fileType.equalsIgnoreCase(EXT_DOC) || fileType.equalsIgnoreCase(EXT_DOCX) || fileType.equalsIgnoreCase(EXT_JPG) || fileType.equalsIgnoreCase(EXT_JPEG)
             || fileType.equalsIgnoreCase(EXT_MPG))return Color.parseColor(COLOR_DOCX);
-        else if(fileType.equalsIgnoreCase(EXT_XLS) || fileType.equalsIgnoreCase(EXT_XLSX))return Color.parseColor(COLOR_XLS);
+        else if(fileType.equalsIgnoreCase(EXT_XLS) || fileType.equalsIgnoreCase(EXT_XLSX) || fileType.equalsIgnoreCase(EXT_GSHEET)) return Color.parseColor(COLOR_XLS);
         else if(fileType.equalsIgnoreCase(EXT_MP3) || fileType.equalsIgnoreCase(EXT_WAV) || fileType.equalsIgnoreCase(EXT_MP4))return Color.parseColor(COLOR_AUDIO);
         else if(fileType.equalsIgnoreCase(EXT_SKETCH) || fileType.equalsIgnoreCase("crdownload"))return Color.parseColor(COLOR_SKETCH);
         else if(fileType.equalsIgnoreCase(EXT_TXT) || fileType.equalsIgnoreCase(EXT_HTML) || fileType.equalsIgnoreCase(EXT_ZIP) || fileType.equalsIgnoreCase(EXT_7ZIP)

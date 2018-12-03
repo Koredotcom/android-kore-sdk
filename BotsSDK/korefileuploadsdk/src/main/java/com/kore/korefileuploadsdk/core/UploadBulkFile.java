@@ -2,12 +2,15 @@ package com.kore.korefileuploadsdk.core;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -80,6 +83,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	BotDBManager helper;
 //	KoreBaseDao<FileUploadInfo, String> fileDao;
 	FileUploadInfo uploadInfo = new FileUploadInfo();;
+	public static final long FILE_SIZE_20MB = 20 * 1024*1024;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
@@ -179,16 +183,21 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		byte[] buffer = new byte[BUFFER_SIZE];
 
 		try {
-			InputStream fis = null;
-				fis = new FileInputStream(outFilePath);
-				FileInputStream fisForChunkCount = new FileInputStream(outFilePath);
-				if (fisForChunkCount.available() > 0) {
-					int chunkCount = 0;
-					while ((fisForChunkCount.read(buffer)) > 0) {
+			FileInputStream fis =  new FileInputStream(outFilePath);
+//				FileInputStream fisForChunkCount = new FileInputStream(outFilePath);
+			if(fis.getChannel().size() > FILE_SIZE_20MB){
+				sendUploadFailedNotice(false);
+				showToastMsg("File size can't be more than 20 mb!");
+				Log.d(LOG_TAG, "File size can't be more than 20 mb");
+				return;
+			}
+				if (fis.available() > 0) {
+					int chunkCount = (int)fis.getChannel().size()/BUFFER_SIZE;
+					if((int)fis.getChannel().size()%BUFFER_SIZE > 0){
 						chunkCount++;
 					}
 					setChunkCount(chunkCount);
-					fisForChunkCount.close();
+//					fisForChunkCount.close();
 				} else {
 					sendUploadFailedNotice(false);
 					showToastMsg("File not available");
@@ -246,7 +255,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		Runnable myRunnable = new Runnable() {
 			@Override
 			public void run() {
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+				Toast toastView = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+				toastView.setGravity(Gravity.CENTER,0,0);
+				toastView.show();
+
 			}
 		};
 		mainHandler.post(myRunnable);
