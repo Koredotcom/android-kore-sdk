@@ -109,7 +109,7 @@ public class ChatAdapter extends BaseAdapter {
 
     @Override
     public BaseBotMessage getItem(int position) {
-        if (position <= baseBotMessageArrayList.size() - 1 && position != -1) {
+        if (baseBotMessageArrayList != null && position <= baseBotMessageArrayList.size() - 1 && position != -1) {
             return baseBotMessageArrayList.get(position);
         } else {
             return null;
