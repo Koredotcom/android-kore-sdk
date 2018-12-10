@@ -32,7 +32,7 @@ public class DateUtils {
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
-
+    public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, h:mm a", Locale.ENGLISH);
 
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
@@ -149,6 +149,10 @@ public class DateUtils {
     }
     public static String getDate(long lastModified){
        return dateWeekMsg.format(new Date(lastModified));
+    }
+
+    public static String getDateWithTime(long lastModified){
+       return dateWeekMsgTime.format(lastModified);
     }
 
     public static String getFormattedSentDateCoreFunctionality(long sentDate) {

@@ -131,9 +131,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected CalendarEventsTemplateView calendarEventsView;
     protected KoraFilesCarousalView filesCarousalView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
-
-
-
+    protected TaskViewWidget taskViewWidget;
     protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
@@ -304,6 +302,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         koraCarouselView.setComposeFooterInterface(composeFooterInterface);
         addView(koraCarouselView);
 
+        taskViewWidget = ViewProvider.getTaskViewWidget(context);
+        taskViewWidget.setComposeFooterInterface(composeFooterInterface);
+        taskViewWidget.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth());
+        addView(taskViewWidget);
+
 
 
         botPieChartView = ViewProvider.getPieChartView(context);
@@ -398,6 +401,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(calendarEventsView != null){
             calendarEventsView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(taskViewWidget != null){
+            taskViewWidget.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -429,12 +435,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             rectBottom = (int) (calendarEventsView.getBottom() + dp1);
         }else if(attendeeSlotSelectionView.getMeasuredHeight() > 0){
             rectBottom = (int) (attendeeSlotSelectionView.getBottom() + dp1);
+        } else if(taskViewWidget.getMeasuredHeight() > 0){
+            rectBottom = (taskViewWidget.getBottom());
         }else {
             rectBottom = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         }
         int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
                 botButtonView.getRight(),
-                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight(),calendarEventsView.getRight()));
+                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight(),taskViewWidget.getRight(),calendarEventsView.getRight()));
 
         GradientDrawable gradientDrawable = getGradientBubble();
         gradientDrawable.setBounds(new Rect(rectLeft,rectTop,rectRight,rectBottom));

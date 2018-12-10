@@ -20,6 +20,7 @@ import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
+import kore.botssdk.models.UserNameModel;
 import kore.botssdk.net.BotJWTRestAPI;
 import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestResponse;
@@ -277,7 +278,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     @Override
-    public void startAndInitiateConnection(Context mContext, String userId, String accessToken) {
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel) {
 
     }
 

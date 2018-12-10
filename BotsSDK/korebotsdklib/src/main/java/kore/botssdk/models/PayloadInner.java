@@ -183,6 +183,16 @@ public class PayloadInner {
 
     private ArrayList<CalEventsTemplateModel> calEventsTemplateModels;
     private ArrayList<MeetingConfirmationModel> meetingConfirmationModels;
+
+    public ArrayList<TaskTemplateModel> getTaskTemplateModels() {
+        return taskTemplateModels;
+    }
+
+    public void setTaskTemplateModels(ArrayList<TaskTemplateModel> taskTemplateModels) {
+        this.taskTemplateModels = taskTemplateModels;
+    }
+
+    private ArrayList<TaskTemplateModel> taskTemplateModels;
     private ArrayList<KaFileLookupModel> fileLookupModels;
 
     public ArrayList<KaFileLookupModel> getFileLookupModels() {
@@ -343,6 +353,10 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
                 }.getType();
                 meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
+            }else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type)) {
+                Type listType = new TypeToken<ArrayList<TaskTemplateModel>>() {
+                }.getType();
+                taskTemplateModels = gson.fromJson(elementsAsString, listType);
             }else if(BotResponse.TEMPLATE_TYPE_FILES_LOOKUP.equalsIgnoreCase(template_type)){
                 Type listType = new TypeToken<ArrayList<KaFileLookupModel>>() {
                 }.getType();

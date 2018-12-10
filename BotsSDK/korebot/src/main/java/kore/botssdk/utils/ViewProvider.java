@@ -32,6 +32,7 @@ import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
+import kore.botssdk.view.TaskViewWidget;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
 
@@ -56,6 +57,7 @@ public class ViewProvider {
     public static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     public static final int QUICK_RPVIEW = 1988881;
     public static final int TIMELINE_VIEW_ID = 1980094;
+    public static final int TASK_VIEW_ID = 1981234;
 
 
     public static Path RoundedRect(
@@ -209,6 +211,11 @@ public class ViewProvider {
         return meetingConfirmationView;
     }
 
+    public static TaskViewWidget getTaskViewWidget(Context context){
+        TaskViewWidget taskViewWidget = new TaskViewWidget(context);
+        taskViewWidget.setId(TABLE_VIEW_ID);
+        return taskViewWidget;
+    }
     public static AttendeeSlotSelectionView getAttendeeSlotSelectionView(Context context){
         AttendeeSlotSelectionView attendeeSlotSelectionView = new AttendeeSlotSelectionView(context);
         attendeeSlotSelectionView.setId(ATTENDEE_SLOT_VIEW_ID);
