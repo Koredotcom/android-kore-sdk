@@ -21,7 +21,6 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
-import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -119,7 +118,7 @@ public class TextMediaLayout extends MediaLayout {
     public void populateText(String textualContent) {
         if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
-            textualContent = MarkdownUtil.processMarkDown(textualContent);
+//            textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
                     new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
