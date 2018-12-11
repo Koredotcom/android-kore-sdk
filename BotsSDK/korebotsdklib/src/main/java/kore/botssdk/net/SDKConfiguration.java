@@ -61,11 +61,26 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
+        public static void setServerIp(String serverIp){
+            SERVER_IP = serverIp;
+        }
+
+        public static void setServerPort(String serverPort){
+            SERVER_PORT = serverPort;
+        }
+
+        public static void setIsPresenceSsl(boolean isPresenceSsl){
+            IS_PRESENCE_SSL = isPresenceSsl;
+        }
+
         public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = true;
         public static   String SERVER_URL ="https://demo.kore.net";
+        public static String SERVER_IP = "qa.kore.ai";
+        public static String SERVER_PORT = "443";
+        public static Boolean IS_PRESENCE_SSL = true;
     }
 
     public static class Client {
