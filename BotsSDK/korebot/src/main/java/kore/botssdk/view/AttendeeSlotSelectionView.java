@@ -107,7 +107,10 @@ public class AttendeeSlotSelectionView extends ViewGroup {
 
 
     public void populateData(final int viewPosition,final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
-        final AttendeeSlotsAdapter slotsButtonAdapter;
+
+        if(meetingTemplateModel != null) {
+            meetingLayout.setVisibility(VISIBLE);
+            final AttendeeSlotsAdapter slotsButtonAdapter;
             ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel != null ? meetingTemplateModel.getPopularSlots() : new ArrayList<MeetingSlotModel.Slot>();
             ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel != null ? meetingTemplateModel.getOtherSlots() : new ArrayList<MeetingSlotModel.Slot>();
             slotsButtonAdapter = new AttendeeSlotsAdapter(getContext());
@@ -119,7 +122,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                 slotsButtonAdapter.addSelectedSlots(otherSlots);
                 if (isEnabled && dataMap.get(viewPosition) == null) {
                     dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
-                }else if(!isEnabled){
+                } else if (!isEnabled) {
                     dataMap.remove(viewPosition);
                 }
             } else if (isEnabled && dataMap.get(viewPosition) != null) {
@@ -133,7 +136,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(isEnabled) {
+                    if (isEnabled) {
                         slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
                         slotsButtonAdapter.notifyDataSetChanged();
                         dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
@@ -147,10 +150,10 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                 @Override
                 public void onClick(View v) {
                     ArrayList<MeetingSlotModel.Slot> slots = slotsButtonAdapter.getSelectedSlots();
-                    if(isEnabled && slots.size() > 0){
-                        HashMap<String,ArrayList> payload = new HashMap<>();
-                        payload.put("slots",slots);
-                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots,slots.size(),slots.size()) ,gson.toJson(payload),0);
+                    if (isEnabled && slots.size() > 0) {
+                        HashMap<String, ArrayList> payload = new HashMap<>();
+                        payload.put("slots", slots);
+                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0);
                     }
 
                 }
@@ -158,11 +161,14 @@ public class AttendeeSlotSelectionView extends ViewGroup {
             declineView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HashMap<String,ArrayList> payload = new HashMap<>();
-                    composeFooterInterface.sendWithSomeDelay("Decline" ,gson.toJson(payload),0);
+                    HashMap<String, ArrayList> payload = new HashMap<>();
+                    composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0);
 
                 }
             });
+        }else{
+            meetingLayout.setVisibility(GONE);
+        }
     }
 
 

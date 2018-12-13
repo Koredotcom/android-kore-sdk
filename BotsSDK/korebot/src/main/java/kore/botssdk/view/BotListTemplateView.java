@@ -63,19 +63,20 @@ public class BotListTemplateView extends ViewGroup {
     }
 
     public void populateListTemplateView(ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList) {
-        BotListTemplateAdapter botListTemplateAdapter;
-        if (autoExpandListView.getAdapter() == null) {
-            botListTemplateAdapter = new BotListTemplateAdapter(getContext(), autoExpandListView);
-            autoExpandListView.setAdapter(botListTemplateAdapter);
-            botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        } else {
-            botListTemplateAdapter = (BotListTemplateAdapter) autoExpandListView.getAdapter();
-        }
-        botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
-        botListTemplateAdapter.notifyDataSetChanged();
+
 
         if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+            BotListTemplateAdapter botListTemplateAdapter;
+            if (autoExpandListView.getAdapter() == null) {
+                botListTemplateAdapter = new BotListTemplateAdapter(getContext(), autoExpandListView);
+                autoExpandListView.setAdapter(botListTemplateAdapter);
+                botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+                botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+            } else {
+                botListTemplateAdapter = (BotListTemplateAdapter) autoExpandListView.getAdapter();
+            }
+            botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
+            botListTemplateAdapter.notifyDataSetChanged();
             botCustomListRoot.setVisibility(VISIBLE);
             botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
             botCustomListViewButton.setOnClickListener(new OnClickListener() {

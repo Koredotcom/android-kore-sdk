@@ -114,25 +114,31 @@ public class MeetingSlotsView extends ViewGroup{
 
 
     public void populateData(final MeetingTemplateModel meetingTemplateModel, boolean isEnabled){
-        ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel != null ? meetingTemplateModel.getQuick_slots() : new ArrayList<MeetingSlotModel.Slot>();
-        MeetingSlotsButtonAdapter slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext());
-        slotsButtonAdapter.setMeetingsModelArrayList(slots);
-        slotsButtonAdapter.setEnabled(isEnabled);
-        slotsButtonAdapter.setComposeFooterInterface(composeFooterInterface);
-        autoExpandListView.setAdapter(slotsButtonAdapter);
-        slotsButtonAdapter.notifyDataSetChanged();
-        showMore.setVisibility(slots.size() > 0 && meetingTemplateModel != null && meetingTemplateModel.isShowMore() ? VISIBLE : GONE);
-        meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
-        showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
-        showMore.setOnClickListener(isEnabled ? new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(BundleConstants.SLOTS_LIST,meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getWorking_hours()) : "");
-                bundle.putString(BundleConstants.QUICK_SLOTS,meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getQuick_slots()) : "");
-                composeFooterInterface.launchActivityWithBundle(0,bundle);
-            }
-        } : null);
+
+        if(meetingTemplateModel != null) {
+            meetingLayout.setVisibility(VISIBLE);
+            ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel != null ? meetingTemplateModel.getQuick_slots() : new ArrayList<MeetingSlotModel.Slot>();
+            MeetingSlotsButtonAdapter slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext());
+            slotsButtonAdapter.setMeetingsModelArrayList(slots);
+            slotsButtonAdapter.setEnabled(isEnabled);
+            slotsButtonAdapter.setComposeFooterInterface(composeFooterInterface);
+            autoExpandListView.setAdapter(slotsButtonAdapter);
+            slotsButtonAdapter.notifyDataSetChanged();
+            showMore.setVisibility(slots.size() > 0 && meetingTemplateModel != null && meetingTemplateModel.isShowMore() ? VISIBLE : GONE);
+            meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
+            showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+            showMore.setOnClickListener(isEnabled ? new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(BundleConstants.SLOTS_LIST, meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getWorking_hours()) : "");
+                    bundle.putString(BundleConstants.QUICK_SLOTS, meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getQuick_slots()) : "");
+                    composeFooterInterface.launchActivityWithBundle(0, bundle);
+                }
+            } : null);
+        }else{
+            meetingLayout.setVisibility(GONE);
+        }
     }
 
 

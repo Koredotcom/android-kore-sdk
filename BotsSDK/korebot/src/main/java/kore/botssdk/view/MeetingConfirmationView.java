@@ -112,12 +112,13 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
     public void populateData(final MeetingConfirmationModel meetingConfirmationModel) {
-        ProfileIndicationAdapter profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
-        recyclerView.setAdapter(profileIndicationAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
         if (meetingConfirmationModel != null) {
+            ProfileIndicationAdapter profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
+            recyclerView.setAdapter(profileIndicationAdapter);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
             slotLayout.setVisibility(VISIBLE);
             titleView.setText(meetingConfirmationModel.getTitle());
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
@@ -139,7 +140,6 @@ public class MeetingConfirmationView extends ViewGroup {
             recyclerView.setVisibility(VISIBLE);
         } else {
             slotLayout.setVisibility(GONE);
-            profileIndicationAdapter.notifyDataSetChanged();
         }
 
     }
