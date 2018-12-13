@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/slot_confirm_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -50,6 +51,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:orientation="horizontal"
         android:layout_below="@+id/location_view"
         android:layout_alignParentBottom="true"
         android:layout_alignWithParentIfMissing="true"

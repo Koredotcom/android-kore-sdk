@@ -116,7 +116,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_CONTENT_RIGHT_BORDER = 0; //this is always 0...
         BUBBLE_CONTENT_LEFT_BORDER = 0; //this is always 0...
 
-        invalidate();
+      //  invalidate();
     }
 
     @Override

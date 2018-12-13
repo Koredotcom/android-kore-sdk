@@ -67,7 +67,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_CONTENT_RIGHT_BORDER = 0; //this is always 0...
         BUBBLE_CONTENT_LEFT_BORDER = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
 
-        invalidate();
+      //  invalidate();
     }
 
     @Override

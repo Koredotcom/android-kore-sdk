@@ -85,17 +85,17 @@ public class MeetingConfirmationView extends ViewGroup {
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        //recyclerView.setLayoutManager(layoutManager);
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
         KaFontUtils.applyCustomFont(getContext(), view);
         locationView = (TextView) view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
         titleView = (TextView) view.findViewById(R.id.title_view);
         dateView = (TextView) view.findViewById(R.id.date_view);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
-        slotLayout.setBackground(backgroundDrawable);
+        //backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
+        //slotLayout.setBackground(backgroundDrawable);
     }
 
 
@@ -120,8 +120,16 @@ public class MeetingConfirmationView extends ViewGroup {
     public void populateData(final MeetingConfirmationModel meetingConfirmationModel) {
 
         if (meetingConfirmationModel != null) {
-            ProfileIndicationAdapter profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
-            recyclerView.setAdapter(profileIndicationAdapter);
+            ProfileIndicationAdapter profileIndicationAdapter;
+            if(recyclerView.getAdapter() == null) {
+                profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
+                recyclerView.setAdapter(profileIndicationAdapter);
+            }else{
+                profileIndicationAdapter = (ProfileIndicationAdapter) recyclerView.getAdapter();
+            }
+            profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
+            profileIndicationAdapter.notifyDataSetChanged();
+
             slotLayout.setVisibility(VISIBLE);
             titleView.setText(meetingConfirmationModel.getTitle());
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
@@ -138,8 +146,6 @@ public class MeetingConfirmationView extends ViewGroup {
             }else{
                 dateView.setVisibility(GONE);
             }
-            profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
-            profileIndicationAdapter.notifyDataSetChanged();
             recyclerView.setVisibility(VISIBLE);
         } else {
             slotLayout.setVisibility(GONE);
