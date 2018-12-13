@@ -48,7 +48,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginBottom="@dimen/dimen_14dp"
         android:layout_marginTop="7dp"
         android:visibility="gone" />

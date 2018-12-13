@@ -84,6 +84,9 @@ public class MeetingConfirmationView extends ViewGroup {
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         KaFontUtils.applyCustomFont(getContext(), view);
         locationView = (TextView) view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
@@ -116,9 +119,6 @@ public class MeetingConfirmationView extends ViewGroup {
         if (meetingConfirmationModel != null) {
             ProfileIndicationAdapter profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
             recyclerView.setAdapter(profileIndicationAdapter);
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
             slotLayout.setVisibility(VISIBLE);
             titleView.setText(meetingConfirmationModel.getTitle());
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
