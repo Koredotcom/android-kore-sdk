@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,8 +38,8 @@ public class MeetingConfirmationView extends ViewGroup {
     private View slotLayout;
 
     float dp1;
-    Gson gson = new Gson();
     private float restrictedLayoutWidth;
+    private Drawable backgroundDrawable;
 
 
     public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
@@ -93,6 +94,8 @@ public class MeetingConfirmationView extends ViewGroup {
         titleView = (TextView) view.findViewById(R.id.title_view);
         dateView = (TextView) view.findViewById(R.id.date_view);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
+        slotLayout.setBackground(backgroundDrawable);
     }
 
 
