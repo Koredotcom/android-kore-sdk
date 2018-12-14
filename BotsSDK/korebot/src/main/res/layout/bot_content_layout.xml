@@ -2,20 +2,29 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
     <include layout="@layout/kora_timestamps_header"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/chatContentListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        android:orientation="vertical"
         android:divider="@android:color/transparent"
         android:listSelector="@color/white"
         android:layout_marginBottom="2dp"
         android:transcriptMode="normal"
         android:visibility="visible" />
+
+    <kore.botssdk.view.QuickReplyView
+        android:layout_width="match_parent"
+        android:id="@+id/quick_reply_view"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatContentListView" />
 
 
     <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"

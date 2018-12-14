@@ -3,6 +3,8 @@ package kore.botssdk.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +43,7 @@ import kore.botssdk.views.DotsTextView;
  */
 public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
 
-    ListView botsBubblesListView;
+    RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
@@ -59,6 +61,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private boolean hasMore = true;
     private TextView headerView;
     private Gson gson = new Gson();
+    private LinearLayoutManager mLayoutManager;
 
     @Nullable
     @Override
@@ -73,9 +76,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         return view;
     }
     private void findViews(View view) {
-        botsBubblesListView = (ListView) view.findViewById(R.id.chatContentListView);
+        botsBubblesListView = (RecyclerView) view.findViewById(R.id.chatContentListView);
         headerView = view.findViewById(R.id.filesSectionHeader);
-        botsBubblesListView.setOnScrollListener(onScrollListener);
+        botsBubblesListView.addOnScrollListener(onScrollListener);
+        quickReplyView = view.findViewById(R.id.quick_reply_view);
+        mLayoutManager = (LinearLayoutManager) botsBubblesListView.getLayoutManager();
     }
 
     private void setupAdapter() {
@@ -85,11 +90,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
         botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
-
-        quickReplyView = new QuickReplyView(getContext());
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        botsBubblesListView.addFooterView(quickReplyView);
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
@@ -153,7 +155,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     public void addMessageToBotChatAdapter(BotResponse botResponse) {
         botsChatAdapter.addBaseBotMessage(botResponse);
         botTypingStatusRl.setVisibility(View.GONE);
-        botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
+        botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getItemCount());
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
@@ -164,44 +166,32 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     }
 
     private void scrollToBottom() {
-        final int count = botsChatAdapter.getCount();
+        final int count = botsChatAdapter.getItemCount();
         botsBubblesListView.post(new Runnable() {
             @Override
             public void run() {
-                botsBubblesListView.setSelection(count - 1);
+                botsBubblesListView.scrollToPosition(count - 1);
             }
         });
     }
 
 
     private int limit = 30;
-    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        public int firstVisibleItem = -1;
-
+    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-        }
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
 
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-   /*         if (!fetching && hasMore && totalItemCount > 0 && (totalItemCount - visibleItemCount) <= (firstVisibleItem + 6)) {
-                // I load the next page of gigs using a background task,
-                // but you can call any function here.
-                loadChatHistory(chatAdapter.getCount(),limit);
-            }*/
-            BaseBotMessage baseBotMessage = ((BaseBotMessage) botsChatAdapter.getItem(firstVisibleItem));
-            if(baseBotMessage != null) {
-                headerView.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
+            if (dy > 0) //check for scroll down
+            {
+                if (!fetching && hasMore) {
+                    if (pastVisiblesItems <= 10) {
+                        fetching = true;
+                        loadChatHistory(botsChatAdapter.getItemCount(), limit);
+                    }
+                }
             }
-            if (this.firstVisibleItem == firstVisibleItem || visibleItemCount == 0 || totalItemCount == 0) {
-                return;
-            }
-            if ((firstVisibleItem <= 10 && this.firstVisibleItem > firstVisibleItem) && !fetching && hasMore) {
-                loadChatHistory(botsChatAdapter.getCount(),limit);
-            }
-            this.firstVisibleItem = firstVisibleItem;
         }
-
     };
 
 
