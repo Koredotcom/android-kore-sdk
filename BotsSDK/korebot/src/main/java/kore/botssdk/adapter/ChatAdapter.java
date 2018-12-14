@@ -113,8 +113,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()));
         holder.headerView.setVisibility(position != 0 && headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == position ? View.VISIBLE : View.GONE);
-
-
     }
 
 
@@ -214,7 +212,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
         baseBotMessageArrayList.add(baseBotMessage);
-        notifyItemInserted(getItemCount()-1);
+        notifyDataSetChanged();
     }
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
