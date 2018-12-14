@@ -63,7 +63,6 @@ public class ChatAdapter extends BaseAdapter {
     private ListView listView;
     int viewWidth;
     int dp1;
-    int position;
     boolean shallShowProfilePic;
 
     private ArrayList<BaseBotMessage> baseBotMessageArrayList;
@@ -124,7 +123,6 @@ public class ChatAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        this.position = position;
         boolean isRight = false;
 
         int itemViewType = getItemViewType(position);
@@ -162,7 +160,7 @@ public class ChatAdapter extends BaseAdapter {
             holder.baseBubbleLayout.setActivityContext(activityContext);
             holder.baseBubbleLayout.fillBubbleLayout(position, position == getCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
             holder.textView.setText(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()));
-            holder.headerView.setVisibility(position != 0 && headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == position ? View.VISIBLE :View.GONE);
+            holder.headerView.setVisibility(position != 0 && headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == position ? View.VISIBLE : View.GONE);
 
         }
 

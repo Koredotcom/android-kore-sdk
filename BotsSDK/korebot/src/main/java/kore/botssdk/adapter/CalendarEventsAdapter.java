@@ -54,13 +54,14 @@ public class CalendarEventsAdapter extends BaseAdapter {
         if(eventList != null) {
             this.eventList.clear();
             this.eventList.addAll(eventList);
+            this.title = "SHOW MORE";
         }
     }
 
     ArrayList<CalEventsTemplateModel> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
     private int EVENTS_LIST_LIMIT = 3;
-    private static String title = "SHOW MORE";
+    private  String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
     private String type;
