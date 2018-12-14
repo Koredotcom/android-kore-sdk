@@ -63,7 +63,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
-    private ListView listView;
     int viewWidth;
     int dp1;
     boolean shallShowProfilePic;
