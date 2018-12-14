@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Handler;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
@@ -213,12 +214,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
         baseBotMessageArrayList.add(baseBotMessage);
-        notifyDataSetChanged();
+        notifyItemInserted(getItemCount()-1);
     }
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0, list.size() - 1);
+        //notifyItemRangeInserted(getItemCount(),list.size());
     }
 
     public void setShallShowProfilePic(boolean shallShowProfilePic) {
