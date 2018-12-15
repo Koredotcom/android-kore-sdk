@@ -22,6 +22,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.KaBaseBubbleContainer;
@@ -101,9 +102,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == null) {
-            headersMap.put(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()), position);
-        }
+
         holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.baseBubbleLayout.setContinuousMessage(false);
         holder.baseBubbleLayout.setGroupMessage(false);
@@ -111,8 +110,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
         holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
-        holder.textView.setText(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis()));
-        holder.headerView.setVisibility(position != 0 && headersMap.get(DateUtils.formattedSentDateV6(getItem(position).getCreatedInMillis())) == position ? View.VISIBLE : View.GONE);
+        holder.textView.setText(getItem(position).getFormattedDate());
+        holder.headerView.setVisibility(headersMap.get(getItem(position).getFormattedDate()) == position ? View.VISIBLE : View.GONE);
     }
 
 
@@ -212,11 +211,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
         baseBotMessageArrayList.add(baseBotMessage);
+        if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
+            headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() -1);
+        }
         notifyDataSetChanged();
     }
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
+        prepareHeaderMap();
         notifyItemRangeInserted(0, list.size() - 1);
     }
 
@@ -226,5 +229,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public void setActivityContext(Activity activityContext) {
         this.activityContext = activityContext;
+    }
+
+    private void prepareHeaderMap() {
+        int i = 0;
+        headersMap.clear();
+        for (i = 0; i < baseBotMessageArrayList.size(); i++) {
+            BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
+            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
+                headersMap.put(baseBotMessage.getFormattedDate(), i);
+            }
+        }
+
     }
 }
