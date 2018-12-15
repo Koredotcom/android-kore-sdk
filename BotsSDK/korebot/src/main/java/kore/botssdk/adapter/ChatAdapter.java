@@ -218,7 +218,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         notifyItemRangeInserted(0, list.size() - 1);
-        //notifyItemRangeInserted(getItemCount(),list.size());
     }
 
     public void setShallShowProfilePic(boolean shallShowProfilePic) {

@@ -40,6 +40,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         super.onFinishInflate();
         receivedBubbleLayout = (KaReceivedBubbleLayout) findViewById(R.id.receivedBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
+        headerLayout.setVisibility(VISIBLE);
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
@@ -53,7 +54,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         int totalHeight = getPaddingTop();
 
         int childWidthSpec;
-        childWidthSpec = View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY);
+       int childWidthSpec1 = View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY);
 
         totalHeight += dp1;
 
@@ -63,8 +64,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         childWidthSpec = View.MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, View.MeasureSpec.AT_MOST);
         MeasureUtils.measure(receivedBubbleLayout, childWidthSpec, wrapSpec);
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, MeasureSpec.AT_MOST);
-        MeasureUtils.measure(headerLayout, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(headerLayout, childWidthSpec1, wrapSpec);
 
         totalHeight += receivedBubbleLayout.getMeasuredHeight();
         totalHeight += headerLayout.getMeasuredHeight();
@@ -90,6 +90,8 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
          * For Received Bubble Layout
          */
         top = dp1;
+        LayoutUtils.layoutChild(headerLayout,left,top);
+        top = headerLayout.getBottom();
         LayoutUtils.layoutChild(receivedBubbleLayout, left, top);
     }
 }
