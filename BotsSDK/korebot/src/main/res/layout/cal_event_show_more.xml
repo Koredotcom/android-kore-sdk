@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:ellipsize="end"
         android:gravity="center"
-        android:tag="extra-bold"
+        android:tag="bold"
         android:singleLine="true"
         android:text="SHOW MORE"
         android:textColor="@color/splash_color"

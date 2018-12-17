@@ -15,6 +15,6 @@
         android:background="@drawable/secure_email_file_background"
         android:textColor="#8d8d8d"
         android:textSize="14dp"
-        android:tag="semi-bold" />
+        android:tag="medium" />
 
 </RelativeLayout>

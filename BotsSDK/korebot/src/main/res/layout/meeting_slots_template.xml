@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="extra-bold"
+        android:tag="bold"
         android:id="@+id/show_more_view"
         android:text="@string/modify_slots"
         android:gravity="center"

@@ -31,7 +31,7 @@
         android:layout_below="@+id/title_view"
         android:layout_marginBottom="7dp"
         android:gravity="center"
-        android:tag="semi-bold"
+        android:tag="medium"
         android:text="13,jul 2018"
         android:textColor="@color/color_485260"
         android:textSize="13dp" />
@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:tag="semi-bold"
+        android:tag="medium"
         android:text="13"
         android:layout_below="@+id/date_view"
         android:textColor="@color/color_485260"
