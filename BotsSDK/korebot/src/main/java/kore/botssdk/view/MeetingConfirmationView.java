@@ -88,7 +88,7 @@ public class MeetingConfirmationView extends ViewGroup {
         //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         //recyclerView.setLayoutManager(layoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
-        KaFontUtils.applyCustomFont(getContext(), view);
+       // KaFontUtils.applyCustomFont(getContext(), view);
         locationView = (TextView) view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
         titleView = (TextView) view.findViewById(R.id.title_view);

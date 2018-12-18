@@ -19,6 +19,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:tag="bold"
+        android:fontFamily="@font/roboto_bold"
         android:text="Project Kickoff Meeting"
         android:textColor="@color/color_1a1a1a"
         android:textSize="18dp" />
@@ -32,6 +33,7 @@
         android:layout_marginBottom="7dp"
         android:gravity="center"
         android:tag="medium"
+        android:fontFamily="@font/roboto_medium_style"
         android:text="13,jul 2018"
         android:textColor="@color/color_485260"
         android:textSize="13dp" />
@@ -42,6 +44,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:tag="medium"
+        android:fontFamily="@font/roboto_medium"
         android:text="13"
         android:layout_below="@+id/date_view"
         android:textColor="@color/color_485260"
