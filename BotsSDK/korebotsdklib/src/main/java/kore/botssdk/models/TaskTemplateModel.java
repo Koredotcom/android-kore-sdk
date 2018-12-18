@@ -21,11 +21,11 @@ public class TaskTemplateModel {
         this.status = status;
     }
 
-    public String getDueDate() {
+    public long getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(long dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -45,7 +45,7 @@ public class TaskTemplateModel {
         this.owner = owner;
     }
 
-    private String dueDate;
+    private long dueDate;
     private UserNameModel assignee;
     private UserNameModel owner;
 

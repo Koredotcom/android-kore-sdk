@@ -3,7 +3,9 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
-
+    dataBinding{
+        enabled = true
+    }
 
     defaultConfig {
         minSdkVersion 15

@@ -5,26 +5,25 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import kore.botssdk.R;
+import kore.botssdk.adapter.TasksListAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class TaskViewWidget extends ViewGroup {
-    private TextView creatorView;
-    private TextView titleView;
-    private TextView dateView;
-    private TextView assigneeView;
-    private TextView statusView;
+    private ListView listView;
     private View rootView;
 
     float dp1;
@@ -73,14 +72,10 @@ public class TaskViewWidget extends ViewGroup {
 
 
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.task_view_layout, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.task_preview_layout, this, true);
         KaFontUtils.applyCustomFont(getContext(), view);
-        creatorView = (TextView) view.findViewById(R.id.creator_view);
-        assigneeView = view.findViewById(R.id.assignee_view);
         rootView = view.findViewById(R.id.root_layout);
-        titleView = (TextView) view.findViewById(R.id.title_view);
-        dateView = (TextView) view.findViewById(R.id.date_view);
-        statusView = (TextView) view.findViewById(R.id.status_view);
+        listView = view.findViewById(R.id.botCustomButtonList);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
 
@@ -103,14 +98,19 @@ public class TaskViewWidget extends ViewGroup {
     }
 
 
-    public void populateData(final TaskTemplateModel taskTemplateModel) {
+    public void populateData(final TaskTemplateResponse taskTemplateModel) {
         if (taskTemplateModel != null) {
+            TasksListAdapter tasksListAdapter;
+            if(listView.getAdapter() == null) {
+                 tasksListAdapter = new TasksListAdapter(getContext(), taskTemplateModel.getTaskData(), taskTemplateModel.isShowButton());
+                 listView.setAdapter(tasksListAdapter);
+            }else{
+                 tasksListAdapter = (TasksListAdapter) listView.getAdapter();
+            }
+            tasksListAdapter.setModels(taskTemplateModel.getTaskData());
+            tasksListAdapter.setShowButton(tasksListAdapter.isShowButton());
+            tasksListAdapter.notifyDataSetChanged();
             rootView.setVisibility(VISIBLE);
-            titleView.setText(taskTemplateModel.getTitle());
-            creatorView.setText(taskTemplateModel.getOwner().getNameInFirstNameFormat());
-            assigneeView.setText(taskTemplateModel.getAssignee().getNameInFirstNameFormat());
-            statusView.setText(taskTemplateModel.getStatus());
-            dateView.setText(taskTemplateModel.getDueDate());
 
         } else {
             rootView.setVisibility(GONE);

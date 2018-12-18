@@ -27,6 +27,7 @@ import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
@@ -318,7 +319,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth() - 24 * dp1);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    ArrayList<TaskTemplateModel> taskTemplateModels = payInner.getTaskTemplateModels();
+                    ArrayList<TaskTemplateResponse> taskTemplateModels = payInner.getTaskTemplateModels();
                     if (taskTemplateModels != null && taskTemplateModels.size() > 0) {
                         taskViewWidget.setVisibility(View.VISIBLE);
                         taskViewWidget.populateData(taskTemplateModels.get(0));
