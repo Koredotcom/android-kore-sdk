@@ -4,6 +4,7 @@ package kore.botssdk.models;
 public class TaskTemplateModel {
     private String title;
     private String status;
+    private String id;
 
     public String getTitle() {
         return title;
@@ -49,5 +50,12 @@ public class TaskTemplateModel {
     private UserNameModel assignee;
     private UserNameModel owner;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
 

@@ -9,72 +9,78 @@
         android:layout_height="32dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:gravity="center"
         android:background="#e8e9f7"
-        android:textSize="14dp"
-        android:textColor="#6168e7" />
+        android:fontFamily="@font/roboto_normal"
+        android:gravity="center"
+        android:textColor="#6168e7"
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/txtDateAndTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/btnRowIndex"
-        android:text="This shows date and time"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="5dp"
-        android:textSize="12sp"
+        android:layout_toEndOf="@+id/btnRowIndex"
+        android:fontFamily="@font/roboto_normal"
+        android:text="This shows date and time"
         android:textColor="#8f9397"
-        android:layout_marginLeft="8dp"/>
+        android:textSize="12sp" />
 
     <LinearLayout
         android:id="@+id/layout_deails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtDateAndTime"
-        android:layout_toEndOf="@id/btnRowIndex"
-        android:orientation="horizontal"
         android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/btnRowIndex"
+        android:background="@color/color_efefef"
         android:minWidth="230dp"
-        android:background="@color/color_efefef">
+        android:orientation="horizontal">
+
         <View
             android:id="@+id/sideBar"
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/bgBlueSignup"/>
+            android:background="@color/bgBlueSignup" />
+
         <LinearLayout
 
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
-            android:orientation="vertical"
-            android:id="@+id/linearLayout">
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_normal"
                 android:gravity="center_vertical"
                 android:maxLines="2"
-                android:ellipsize="end"
+                android:text="This shows title"
                 android:textColor="@color/color_4a4a4a"
-                android:text="This shows title" />
+                android:textSize="14dp" />
+
             <TextView
                 android:id="@+id/txtPlace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="this shows place"
-                android:maxLines="1"
-                android:textSize="13dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/roboto_normal"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="this shows place"
                 android:textColor="#8f9397"
-                android:gravity="center_vertical"/>
+                android:textSize="13dp" />
         </LinearLayout>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

@@ -5,16 +5,21 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.TasksListAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.DateUtils;
@@ -25,11 +30,15 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class TaskViewWidget extends ViewGroup {
     private ListView listView;
     private View rootView;
+    private View buttonView;
+
+    private TextView button1;
+    private TextView button2;
 
     float dp1;
     Gson gson = new Gson();
     private float restrictedLayoutWidth;
-
+    public static HashMap<Integer,ArrayList> dataMap = new HashMap<>();
 
     public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
         this.restrictedLayoutWidth = restrictedLayoutWidth;
@@ -76,6 +85,9 @@ public class TaskViewWidget extends ViewGroup {
         KaFontUtils.applyCustomFont(getContext(), view);
         rootView = view.findViewById(R.id.root_layout);
         listView = view.findViewById(R.id.botCustomButtonList);
+        buttonView = view.findViewById(R.id.buttonPanel);
+        button1 = view.findViewById(R.id.button1);
+        button2 = view.findViewById(R.id.button2);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
 
@@ -98,19 +110,74 @@ public class TaskViewWidget extends ViewGroup {
     }
 
 
-    public void populateData(final TaskTemplateResponse taskTemplateModel) {
+    public void populateData(final TaskTemplateResponse taskTemplateModel,int viewPosition,boolean isEnabled) {
         if (taskTemplateModel != null) {
-            TasksListAdapter tasksListAdapter;
-            if(listView.getAdapter() == null) {
-                 tasksListAdapter = new TasksListAdapter(getContext(), taskTemplateModel.getTaskData(), taskTemplateModel.isShowButton());
-                 listView.setAdapter(tasksListAdapter);
-            }else{
-                 tasksListAdapter = (TasksListAdapter) listView.getAdapter();
+            TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), taskTemplateModel.getTaskData(), taskTemplateModel.isShowButton());
+            listView.setAdapter(tasksListAdapter);
+            if ( isEnabled && dataMap.get(viewPosition) != null) {
+                tasksListAdapter.addSelectedTasks(dataMap.get(viewPosition));
             }
-            tasksListAdapter.setModels(taskTemplateModel.getTaskData());
-            tasksListAdapter.setShowButton(tasksListAdapter.isShowButton());
+            rootView.setAlpha(isEnabled || !taskTemplateModel.isShowButton() ? 1.0f : 0.5f);
             tasksListAdapter.notifyDataSetChanged();
             rootView.setVisibility(VISIBLE);
+            buttonView.setVisibility(GONE);
+            ArrayList<BotButtonModel> buttonModels = taskTemplateModel.getButtons();
+            if (taskTemplateModel.isShowButton() && buttonModels != null) {
+                button1.setVisibility(GONE);
+                button2.setVisibility(GONE);
+                buttonView.setVisibility(VISIBLE);
+                for (int i = 0; i <= buttonModels.size() - 1; i++) {
+                    if (i == 0) {
+                        button1.setVisibility(VISIBLE);
+                        button1.setText(buttonModels.get(i).getTitle());
+                    } else if (i == 1) {
+                        button2.setVisibility(VISIBLE);
+                        button2.setText(buttonModels.get(i).getTitle());
+                    } else {
+                        break;
+                    }
+                }
+            }
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if (isEnabled) {
+                        tasksListAdapter.addOrRemoveSelectedTask(tasksListAdapter.getItem(position).getId());
+                        tasksListAdapter.notifyDataSetChanged();
+                        dataMap.put(viewPosition, tasksListAdapter.getSelectedTasks());
+                        buttonView.setAlpha(tasksListAdapter.getSelectedTasks().size() > 0 ? 1.0f : 0.5f);
+
+                    }
+
+                }
+            });
+            button1.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> selectedTasks = tasksListAdapter.getSelectedTasks();
+                    if(buttonModels != null && buttonModels.size() > 0 && selectedTasks.size()>0){
+                        HashMap<String,Object> hashMap = new HashMap<>();
+                        hashMap.put("action",buttonModels.get(0).getAction());
+                        hashMap.put("tIds",selectedTasks);
+                        composeFooterInterface.sendWithSomeDelay(String.format(getContext().getResources().getString(R.string.selected_task_completion), selectedTasks.size(),tasksListAdapter.getCount()), gson.toJson(hashMap), 0);
+                    }
+
+                }
+            });
+
+
+            button2.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> selectedTasks = tasksListAdapter.getSelectedTasks();
+                    if(buttonModels != null && buttonModels.size() > 0 && selectedTasks.size()>0){
+                        HashMap<String,Object> hashMap = new HashMap<>();
+                        hashMap.put("action",buttonModels.get(1).getAction());
+                        hashMap.put("tIds",selectedTasks);
+                        composeFooterInterface.sendWithSomeDelay(String.format(getContext().getResources().getString(R.string.selected_task_duedate), selectedTasks.size(),tasksListAdapter.getCount()), gson.toJson(hashMap), 0);
+                    }
+                }
+            });
 
         } else {
             rootView.setVisibility(GONE);

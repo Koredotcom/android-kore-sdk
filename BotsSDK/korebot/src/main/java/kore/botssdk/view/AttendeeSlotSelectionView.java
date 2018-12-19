@@ -137,7 +137,6 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (isEnabled) {
-                        meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
                         slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
                         slotsButtonAdapter.notifyDataSetChanged();
                         dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());

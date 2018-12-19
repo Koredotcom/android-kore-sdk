@@ -13,13 +13,15 @@
             type="java.lang.Boolean" />
 
         <import type="kore.botssdk.utils.DateUtils" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottom_right_rounded_rectangle"
+        android:background="@drawable/task_item_background"
         android:orientation="vertical"
         android:paddingStart="12dp"
         android:paddingEnd="12dp"
@@ -31,13 +33,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:tag="bold"
             android:text="@{task.title}"
             android:textColor="@color/color_1a1a1a"
-            android:textSize="18dp" />
+            android:textSize="16dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -50,8 +51,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/ic_triangle_2"
-                android:drawablePadding="10dp"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:singleLine="true"
                 android:tag="medium"
                 android:text="@{task.owner.nameInFirstNameFormat}"
                 android:textColor="@color/color_485260"
@@ -61,44 +64,38 @@
                 android:id="@+id/assignee_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@+id/creator_view"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:singleLine="true"
                 android:tag="medium"
                 android:text="@{task.assignee.nameInFirstNameFormat}"
                 android:textColor="@color/color_485260"
                 android:textSize="13dp" />
+
+            <ImageView
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/assignee_view"
+                android:gravity="center_vertical"
+                android:tag="@{task.id}"
+                android:visibility="@{createMode ? View.GONE : View.VISIBLE}" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/date_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <TextView
-                android:id="@+id/date_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:tag="medium"
-                android:text="@{DateUtils.getDateWithTime(task.dueDate)}"
-                android:textColor="@color/color_485260"
-                android:textSize="13dp" />
-
-            <TextView
-                android:id="@+id/status_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_toEndOf="@+id/date_view"
-                android:drawableStart="@drawable/ic_open"
-                android:drawablePadding="10dp"
-                android:gravity="center"
-                android:tag="medium"
-                android:text="@{task.status}"
-                android:textColor="@color/color_f6bf25"
-                android:textSize="13dp" />
-        </RelativeLayout>
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:tag="medium"
+            android:text="@{DateUtils.getDateWithTime(task.dueDate)}"
+            android:textColor="@color/color_485260"
+            android:textSize="13dp" />
 
     </LinearLayout>
 </layout>

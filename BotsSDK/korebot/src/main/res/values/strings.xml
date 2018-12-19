@@ -35,4 +35,6 @@
         <item quantity="one">Confirm availability for 1 slot</item>
         <item quantity="other">Confirm availability for %d slots</item>
     </plurals>
+    <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
+    <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
 </resources>

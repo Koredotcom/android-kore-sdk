@@ -170,7 +170,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         attendeeSlotSelectionView.setVisibility(GONE);
         meetingConfirmationView.populateData(null);
         meetingConfirmationView.setVisibility(GONE);
-        taskViewWidget.populateData(null);
+        taskViewWidget.populateData(null,-1,false);
         taskViewWidget.setVisibility(GONE);
         botListTemplateView.setVisibility(View.GONE);
         botPieChartView.setVisibility(View.GONE);
@@ -219,7 +219,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         meetingSlotsView.setVisibility(GONE);
         meetingSlotsView.populateData(null,false);
         meetingConfirmationView.setVisibility(GONE);
-        taskViewWidget.populateData(null);
+        taskViewWidget.populateData(null,-1,false);
         taskViewWidget.setVisibility(GONE);
         meetingConfirmationView.populateData(null);
         attendeeSlotSelectionView.setVisibility(GONE);
@@ -322,7 +322,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<TaskTemplateResponse> taskTemplateModels = payInner.getTaskTemplateModels();
                     if (taskTemplateModels != null && taskTemplateModels.size() > 0) {
                         taskViewWidget.setVisibility(View.VISIBLE);
-                        taskViewWidget.populateData(taskTemplateModels.get(0));
+                        taskViewWidget.populateData(taskTemplateModels.get(0),position,isLastItem);
                         // BUBBLE_CONTENT_RIGHT_MARGIN = 0;
                     }
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth() - 24 * dp1);
