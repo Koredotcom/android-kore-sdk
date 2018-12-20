@@ -5,26 +5,21 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Handler;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.net.RestResponse;
-import kore.botssdk.utils.DateUtils;
-import kore.botssdk.view.AttendeeSlotSelectionView;
+import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.KaBaseBubbleContainer;
 import kore.botssdk.view.KaBaseBubbleLayout;
 import kore.botssdk.view.KaReceivedBubbleContainer;
@@ -71,7 +66,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     private ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
-    public static final int BUBBLE_ADAPTER_DIFFERENT_VIEW_COUNTS = 3;
     public static final int BUBBLE_LEFT_LAYOUT = 0;
     public static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;
 
@@ -84,15 +78,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
         viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         baseBotMessageArrayList = new ArrayList<>();
-        AttendeeSlotSelectionView.dataMap = new HashMap<>();
     }
 
-/*
-    @Override
-    public int getViewTypeCount() {
-        return BUBBLE_ADAPTER_DIFFERENT_VIEW_COUNTS;
-    }
-*/
+
 
     @NonNull
     @Override
@@ -214,8 +202,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
             headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() -1);
         }
+        SelectionUtils.resetSelectionTasks();
+        SelectionUtils.resetSelectionSlots();
         notifyDataSetChanged();
     }
+
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);

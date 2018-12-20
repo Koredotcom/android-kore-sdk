@@ -21,6 +21,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -32,7 +33,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
     float dp1;
     Gson gson = new Gson();
     private float restrictedLayoutWidth;
-    public static HashMap<Integer,ArrayList> dataMap = new HashMap<>();
+    //public static HashMap<Integer,ArrayList> dataMap = new HashMap<>();
 
 
 
@@ -111,35 +112,29 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         if(meetingTemplateModel != null) {
             meetingLayout.setVisibility(VISIBLE);
             final AttendeeSlotsAdapter slotsButtonAdapter;
-            ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel != null ? meetingTemplateModel.getPopularSlots() : new ArrayList<MeetingSlotModel.Slot>();
-            ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel != null ? meetingTemplateModel.getOtherSlots() : new ArrayList<MeetingSlotModel.Slot>();
+            ArrayList<MeetingSlotModel.Slot> popularSlots =  meetingTemplateModel.getPopularSlots();
+            ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel.getOtherSlots();
             slotsButtonAdapter = new AttendeeSlotsAdapter(getContext());
             slotsButtonAdapter.setNormalSlots(otherSlots);
             slotsButtonAdapter.setPopularSlots(popularSlots);
 
-            if ((!isEnabled || dataMap.get(viewPosition) == null)) {
+            if ((!isEnabled || SelectionUtils.getSelectedSlots() == null)) {
                 slotsButtonAdapter.addSelectedSlots(popularSlots);
                 slotsButtonAdapter.addSelectedSlots(otherSlots);
-                if (isEnabled && dataMap.get(viewPosition) == null) {
-                    dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
-                } else if (!isEnabled) {
-                    dataMap.remove(viewPosition);
-                }
-            } else if ( dataMap.get(viewPosition) != null) {
-                slotsButtonAdapter.setSelectedSlots(dataMap.get(viewPosition));
+            } else {
+                slotsButtonAdapter.setSelectedSlots(SelectionUtils.getSelectedSlots());
             }
             autoExpandListView.setAdapter(slotsButtonAdapter);
             slotsButtonAdapter.notifyDataSetChanged();
             meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
             confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
-            meetingLayout.setVisibility(meetingTemplateModel != null ? VISIBLE : GONE);
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (isEnabled) {
                         slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
                         slotsButtonAdapter.notifyDataSetChanged();
-                        dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
+                        SelectionUtils.setSelectedSlots(slotsButtonAdapter.getSelectedSlots());
                         confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
 
                     }
@@ -154,7 +149,6 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                     if (isEnabled && slots.size() > 0) {
                         HashMap<String, ArrayList> payload = new HashMap<>();
                         payload.put("slots", slots);
-                        meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
                         composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0);
                     }
 
