@@ -7,11 +7,6 @@
             name="task"
             type="kore.botssdk.models.TaskTemplateModel" />
 
-
-        <variable
-            name="createMode"
-            type="java.lang.Boolean" />
-
         <import type="kore.botssdk.utils.DateUtils" />
 
         <import type="android.view.View" />
@@ -83,8 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:gravity="center_vertical|end"
-                android:tag="@{task.id}"
-                android:visibility="@{createMode ? View.GONE : View.VISIBLE}" />
+                android:tag="@{task.id}" />
         </RelativeLayout>
 
         <TextView
