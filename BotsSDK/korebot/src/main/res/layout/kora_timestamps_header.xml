@@ -12,7 +12,6 @@
         android:gravity="center"
         android:padding="5dp"
         android:layout_margin="5dp"
-        android:fontFamily="@font/roboto_medium"
         android:background="@drawable/secure_email_file_background"
         android:textColor="#8d8d8d"
         android:textSize="14dp"
