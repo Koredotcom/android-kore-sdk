@@ -31,4 +31,23 @@ public class TaskTemplateResponse {
     public boolean isShowButton() {
         return showButton;
     }
+    private boolean showMore;
+    private String url;
+
+    public boolean isShowMore() {
+        return showMore;
+    }
+
+    public void setShowMore(boolean showMore) {
+        this.showMore = showMore;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
+

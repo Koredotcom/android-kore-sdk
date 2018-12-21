@@ -6,12 +6,6 @@ package kore.botssdk.utils;
  */
 public class BundleConstants {
 
-    public static String CAROUSEL_ITEM_IMAGE_URL;
-    public static String CAROUSEL_ITEM_TITLE;
-    public static String CAROUSEL_ITEM_SUBTITLE;
-    public static String CAROUSEL_ITEM_DEFAULT_ACTION_TYPE;
-    public static String CAROUSEL_ITEM_DEFAULT_ACTION_URL;
-    public static String CAROUSEL_ITEM_BUTTON;
 
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
@@ -23,8 +17,6 @@ public class BundleConstants {
     public static String BUTTON_TYPE_IFRAME_WEB_URL = "iframe_web_url";
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static String FORM_TYPE_OPEN_FORM="open_form";
-    public static String FORM_TYPE_SHOW_FORM="show_form";
-    public final static String SHOW_PIC = "showPic";
     public static final int TYPING_STATUS_TIME = 1500; //in millisecond
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";
@@ -35,5 +27,5 @@ public class BundleConstants {
             "I apologize. The server is has not responded yet. Please continue to wait…"};
     public static final String SESSION_END_ALERT_MESSAGES[] = {"We have noticed that chat is inactive for around a minute. The chat will be closed soon",
     "The chat is still inactive for around two minutes, it will be closed in about a minute","Your session is going to expire soon as you are inactive for last 3 min... "};
-
+    public static final String TASK_INFO = "task_information";
 }

@@ -99,7 +99,7 @@ public class TasksListAdapter extends BaseAdapter {
             taskViewLayoutBinding = (TaskViewLayoutBinding) convertView.getTag();
         }
         boolean isSelected = selectedTasks.contains(taskTemplateModel.getId()) && isShowButton();
-        boolean isClosed = taskTemplateModel.getStatus().equalsIgnoreCase("close");
+        boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getStatus());
         taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : taskViewLayoutBinding.titleView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
         taskViewLayoutBinding.checkbox.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
         taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && !isClosed ? View.VISIBLE :View.GONE);
@@ -107,4 +107,5 @@ public class TasksListAdapter extends BaseAdapter {
       //  ((GradientDrawable)taskViewLayoutBinding.rootLayout.getBackground()).setColor(isSelected ? selectedColor : unSelectedColor);
         return taskViewLayoutBinding.getRoot();
     }
+
 }

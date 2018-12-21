@@ -353,7 +353,7 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
                 }.getType();
                 meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
-            }else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type)) {
+            }else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TASK_FULLVIEW.equalsIgnoreCase(template_type)) {
                 Type listType = new TypeToken<ArrayList<TaskTemplateResponse>>() {
                 }.getType();
                 taskTemplateModels = gson.fromJson(elementsAsString, listType);
