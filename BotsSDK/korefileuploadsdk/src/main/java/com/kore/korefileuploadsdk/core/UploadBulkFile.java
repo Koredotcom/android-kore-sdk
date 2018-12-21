@@ -187,7 +187,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //				FileInputStream fisForChunkCount = new FileInputStream(outFilePath);
 			if(fis.getChannel().size() > FILE_SIZE_20MB){
 				sendUploadFailedNotice(false);
-				showToastMsg("File size can't be more than 20 mb!");
+				showToastMsg("File size can't be more than 20 MB!");
 				Log.d(LOG_TAG, "File size can't be more than 20 mb");
 				return;
 			}
