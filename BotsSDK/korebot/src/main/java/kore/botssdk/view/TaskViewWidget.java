@@ -159,7 +159,7 @@ public class TaskViewWidget extends ViewGroup {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("action", buttonModels.get(0).getAction());
                         hashMap.put("tIds", selectedTasks);
-                        composeFooterInterface.sendWithSomeDelay(String.format(getContext().getResources().getString(R.string.selected_task_completion), selectedTasks.size(), tasksListAdapter.getCount()), gson.toJson(hashMap), 0);
+                        composeFooterInterface.sendWithSomeDelay(buttonModels.get(0).getPayload(), gson.toJson(hashMap), 0);
                     }
 
                 }
@@ -174,7 +174,7 @@ public class TaskViewWidget extends ViewGroup {
                         HashMap<String, Object> hashMap = new HashMap<>();
                         hashMap.put("action", buttonModels.get(1).getAction());
                         hashMap.put("tIds", selectedTasks);
-                        composeFooterInterface.sendWithSomeDelay(String.format(getContext().getResources().getString(R.string.selected_task_duedate), selectedTasks.size(), tasksListAdapter.getCount()), gson.toJson(hashMap), 0);
+                        composeFooterInterface.sendWithSomeDelay(buttonModels.get(1).getPayload(), gson.toJson(hashMap), 0);
                     }
                 }
             });
