@@ -72,4 +72,7 @@ public interface RestAPI {
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
     Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
+
+    @GET("/api" + URL_VERSION + "/botmessages/rtm")
+    Call<BotHistory> getInitHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
 }
