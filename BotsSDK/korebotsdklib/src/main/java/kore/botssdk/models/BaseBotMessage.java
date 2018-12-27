@@ -31,7 +31,6 @@ public abstract class BaseBotMessage {
     protected boolean isSend;
     protected String createdOn;
     private long createdInMillis;
-    private String formattedDate;
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     public abstract boolean isSend();
@@ -55,7 +54,7 @@ public abstract class BaseBotMessage {
         return createdInMillis;
     }
 
-    public long getTimeInMillis(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
+    private long getTimeInMillis(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return System.currentTimeMillis();
         return isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
 
@@ -66,13 +65,6 @@ public abstract class BaseBotMessage {
     }
 
     public String getFormattedDate() {
-        if (formattedDate == null) {
-            formattedDate = DateUtils.formattedSentDateV6(getCreatedInMillis());
-        }
-        return formattedDate;
-    }
-
-    public void setFormattedDate(String formattedDate) {
-        this.formattedDate = formattedDate;
+        return DateUtils.formattedSentDateV6(getCreatedInMillis());
     }
 }
