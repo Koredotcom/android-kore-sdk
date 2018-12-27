@@ -121,6 +121,7 @@ public class TaskViewWidget extends ViewGroup {
             tasksListAdapter.notifyDataSetChanged();
             rootView.setVisibility(VISIBLE);
             buttonView.setVisibility(GONE);
+            buttonView.setAlpha(isEnabled && tasksListAdapter.getSelectedTasks().size() > 0 ? 1.0f : 0.5f);
             ArrayList<BotButtonModel> buttonModels = taskTemplateModel.getButtons();
             if (taskTemplateModel.isShowButton() && buttonModels != null) {
                 button1.setVisibility(GONE);
@@ -141,7 +142,7 @@ public class TaskViewWidget extends ViewGroup {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (isEnabled) {
+                    if (isEnabled && !"close".equalsIgnoreCase(tasksListAdapter.getItem(position).getStatus())) {
                         tasksListAdapter.addOrRemoveSelectedTask(tasksListAdapter.getItem(position).getId());
                         tasksListAdapter.notifyDataSetChanged();
                         SelectionUtils.setSelectedTasks(tasksListAdapter.getSelectedTasks());
