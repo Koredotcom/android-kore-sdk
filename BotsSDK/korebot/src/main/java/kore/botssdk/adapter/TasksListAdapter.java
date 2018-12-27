@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -104,6 +105,7 @@ public class TasksListAdapter extends BaseAdapter {
         taskViewLayoutBinding.checkbox.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
         taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && !isClosed ? View.VISIBLE :View.GONE);
         taskViewLayoutBinding.setTask(taskTemplateModel);
+        taskViewLayoutBinding.titleView.setTypeface(null,isClosed ? Typeface.NORMAL : Typeface.BOLD);
       //  ((GradientDrawable)taskViewLayoutBinding.rootLayout.getBackground()).setColor(isSelected ? selectedColor : unSelectedColor);
         return taskViewLayoutBinding.getRoot();
     }
