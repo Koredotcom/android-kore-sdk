@@ -90,7 +90,7 @@
             android:gravity="center"
             android:tag="medium"
             android:text="@{DateUtils.getDateWithTime(task.dueDate)}"
-            android:textColor="@color/color_485260"
+            android:textColor="@{task.isOverDue ? @color/color_red : @color/color_485260}"
             android:textSize="13dp" />
 
     </LinearLayout>

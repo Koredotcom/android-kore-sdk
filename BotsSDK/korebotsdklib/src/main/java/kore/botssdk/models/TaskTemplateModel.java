@@ -1,10 +1,13 @@
 package kore.botssdk.models;
 
 
+import java.util.Calendar;
+
 public class TaskTemplateModel {
     private String title;
     private String status;
     private String id;
+
 
     public String getTitle() {
         return title;
@@ -56,6 +59,10 @@ public class TaskTemplateModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isOverDue(){
+     return  "open".equalsIgnoreCase(status) && Calendar.getInstance().getTimeInMillis() > dueDate;
     }
 }
 
