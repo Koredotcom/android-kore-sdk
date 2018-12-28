@@ -3,6 +3,8 @@ package kore.botssdk.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Patterns;
@@ -268,5 +270,12 @@ public class Utils {
     }
     public static String ah(String accessToken){
         return "bearer "+accessToken;
+    }
+    public static int getMaxLinesOfText(String text,float width,int currentTextSize){
+        Rect bounds = new Rect();
+        Paint paint = new Paint();
+        paint.setTextSize(currentTextSize);
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        return  (int) Math.ceil((float) bounds.width() / width);
     }
 }

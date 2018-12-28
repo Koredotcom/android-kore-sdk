@@ -113,6 +113,7 @@ public class TaskViewWidget extends ViewGroup {
     public void populateData(final TaskTemplateResponse taskTemplateModel, int viewPosition, boolean isEnabled) {
         if (taskTemplateModel != null) {
             TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), taskTemplateModel.getTaskData(), taskTemplateModel.isShowButton());
+            tasksListAdapter.setMaxWidth(restrictedLayoutWidth);
             listView.setAdapter(tasksListAdapter);
             if (isEnabled && SelectionUtils.getSelectedTasks() != null) {
                 tasksListAdapter.addSelectedTasks(SelectionUtils.getSelectedTasks());

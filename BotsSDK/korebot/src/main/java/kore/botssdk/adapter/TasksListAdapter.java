@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
+import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.Utils;
+
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class TasksListAdapter extends BaseAdapter {
     private final Drawable selectedCheck;
@@ -25,6 +29,8 @@ public class TasksListAdapter extends BaseAdapter {
     private final int selectedColor;
     private final int unSelectedColor;
     private Context context;
+    private float maxWidth;
+    private int textSize;
 
     public ArrayList<String> getSelectedTasks() {
         return selectedTasks;
@@ -71,6 +77,7 @@ public class TasksListAdapter extends BaseAdapter {
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
         selectedColor = context.getResources().getColor(R.color.color_dfdfeb);
         unSelectedColor = context.getResources().getColor(R.color.color_efeffc);
+        textSize = (int)(16 * AppControl.getInstance().getDimensionUtil().dp1);
     }
     @Override
     public int getCount() {
@@ -106,8 +113,20 @@ public class TasksListAdapter extends BaseAdapter {
         taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && !isClosed ? View.VISIBLE :View.GONE);
         taskViewLayoutBinding.setTask(taskTemplateModel);
         taskViewLayoutBinding.titleView.setTypeface(null,isClosed ? Typeface.NORMAL : Typeface.BOLD);
+        if(Utils.getMaxLinesOfText(taskTemplateModel.getTitle(),maxWidth - 50* dp1 ,textSize) > 1){
+            taskViewLayoutBinding.rootLayout.setMinimumHeight((int)(130 * dp1));
+        }else{
+            taskViewLayoutBinding.rootLayout.setMinimumHeight(0);
+        }
       //  ((GradientDrawable)taskViewLayoutBinding.rootLayout.getBackground()).setColor(isSelected ? selectedColor : unSelectedColor);
         return taskViewLayoutBinding.getRoot();
     }
 
+    public float getMaxWidth() {
+        return maxWidth;
+    }
+
+    public void setMaxWidth(float maxWidth) {
+        this.maxWidth = maxWidth;
+    }
 }
