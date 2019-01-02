@@ -60,36 +60,16 @@ public class DateUtils {
 
         // OVERRIDE SOME symbols WHILE RETAINING OTHERS
          symbols.setAmPmStrings(new String[]{"am", "pm"});
-        int messageDay = Integer.parseInt(dateDay.format(new Date(lastModified)));
-        int currentDay = Integer.parseInt(dateDay.format(new Date()));
-
         int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
         int currentYear = Integer.parseInt(yearFormat.format(new Date()));
-
-        int messageMonth = Integer.parseInt(dateMonth.format(new Date(lastModified)));
-        int currentMonth = Integer.parseInt(dateMonth.format(new Date()));
-
-        long now = System.currentTimeMillis();
-        long diff = now - lastModified;
-        long diffRev = lastModified -now;
-        long TWO_DAY_DIFF = 172800 * 1000;
-
         String time = "";
 
-        if (currentDay == messageDay && currentYear == messageYear && currentMonth == messageMonth) {
+        if (android.text.format.DateUtils.isToday(lastModified)){
             time = "Today";
-        } else if (currentYear == messageYear && currentMonth == messageMonth) {
-            if (currentDay - 1 == messageDay) {
-                time = "Yesterday";
-            } else if (currentDay + 1 == messageDay) {
-                time = "Tomorrow" ;
-            } else {
-                time = dateWeekMsg.format(new Date(lastModified));
-            }
-        } else if (diff >= 0 && diff <= TWO_DAY_DIFF) {
+        } else if (isYesterday(lastModified)) {
             time = "Yesterday";
-        } else if (diffRev >=0 && diffRev <= TWO_DAY_DIFF) {
-            time = "Tomorrow" ;
+        } else if (isTomorrow(lastModified)) {
+            time = "Tomorrow";
         } else {
 
             time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
@@ -110,40 +90,20 @@ public class DateUtils {
         // OVERRIDE SOME symbols WHILE RETAINING OTHERS
         symbols.setAmPmStrings(new String[]{"am", "pm"});
         dateWeekDay.setDateFormatSymbols(symbols);
-
-        int messageDay = Integer.parseInt(dateDay.format(new Date(lastModified)));
-        int currentDay = Integer.parseInt(dateDay.format(new Date()));
-
         int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
         int currentYear = Integer.parseInt(yearFormat.format(new Date()));
 
-        int messageMonth = Integer.parseInt(dateMonth.format(new Date(lastModified)));
-        int currentMonth = Integer.parseInt(dateMonth.format(new Date()));
-
-        long now = System.currentTimeMillis();
-        long diff = now - lastModified;
-        long TWO_DAY_DIFF = 172800 * 1000;
-        long diffRev = lastModified -now;
         String time = "";
-
-        if (currentDay == messageDay && currentYear == messageYear && currentMonth == messageMonth) {
+        if (android.text.format.DateUtils.isToday(lastModified)) {
             time = "Today, " + dateMonthDay.format(new Date(lastModified));
-        } else if (currentYear == messageYear && currentMonth == messageMonth) {
-            if (currentDay - 1 == messageDay) {
-                time = "Yesterday, " + dateMonthDay.format(new Date(lastModified));
-            } else if (currentDay + 1 == messageDay) {
-                time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
-            } else {
-                time = dateWeekMsg.format(new Date(lastModified));
-            }
-        } else if (diff >= 0 && diff <= TWO_DAY_DIFF) {
-            time = "Yesterday , " + dateMonthDay.format(new Date(lastModified));
-        } else if (diffRev >=0 && diffRev <= TWO_DAY_DIFF ) {
+        } else if (isYesterday(lastModified)) {
+            time = "Yesterday, " + dateMonthDay.format(new Date(lastModified));
+        } else if (isTomorrow(lastModified)) {
             time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
         } else {
-
             time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
         }
+
 
         return time;
     }
@@ -153,6 +113,13 @@ public class DateUtils {
 
     public static String getDateWithTime(long lastModified){
        return dateWeekMsgTime.format(lastModified);
+    }
+
+    public static boolean isYesterday(long millis) {
+        return android.text.format.DateUtils.isToday(millis + android.text.format.DateUtils.DAY_IN_MILLIS);
+    }
+    public static boolean isTomorrow(long millis) {
+        return  android.text.format.DateUtils.isToday(millis - android.text.format.DateUtils.DAY_IN_MILLIS);
     }
 
     public static String getFormattedSentDateCoreFunctionality(long sentDate) {
