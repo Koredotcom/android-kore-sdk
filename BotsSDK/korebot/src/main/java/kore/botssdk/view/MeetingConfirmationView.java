@@ -90,8 +90,8 @@ public class MeetingConfirmationView extends ViewGroup {
         titleView = (TextView) view.findViewById(R.id.title_view);
         dateView = (TextView) view.findViewById(R.id.date_view);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        //backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
-        //slotLayout.setBackground(backgroundDrawable);
+        backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
+        slotLayout.setBackground(backgroundDrawable);
     }
 
 
