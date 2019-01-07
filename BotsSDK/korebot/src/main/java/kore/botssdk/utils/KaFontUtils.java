@@ -7,7 +7,7 @@ package kore.botssdk.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.content.res.ResourcesCompat;
+import androidx.core.content.res.ResourcesCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;

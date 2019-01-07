@@ -1,18 +1,16 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;

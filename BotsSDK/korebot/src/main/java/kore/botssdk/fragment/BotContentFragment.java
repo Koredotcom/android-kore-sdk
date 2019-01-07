@@ -2,16 +2,14 @@ package kore.botssdk.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -32,7 +30,6 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;

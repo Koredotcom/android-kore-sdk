@@ -30,7 +30,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:28.0.0'
+    compile 'androidx.appcompat:appcompat:1.1.0-alpha01'
     compile files('libs/httpmime-4.2.5.jar')
     compile 'com.google.code.gson:gson:2.8.5'
 

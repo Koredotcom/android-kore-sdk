@@ -7,8 +7,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by Ramachandra on 03/12/16.

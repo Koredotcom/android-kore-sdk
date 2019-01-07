@@ -43,16 +43,16 @@ android {
 
 dependencies {
 //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:28.0.0'
+    compile 'androidx.appcompat:appcompat:1.1.0-alpha01'
     compile(project(':korebotsdklib')) {
         exclude module: 'support-v4'
     }
-    compile 'com.android.support:multidex:1.0.3'
+    compile 'androidx.multidex:multidex:2.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.0'
 //    compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.android.support:cardview-v7:28.0.0'
-    compile 'com.android.support:recyclerview-v7:28.0.0'
+    compile 'androidx.cardview:cardview:1.0.0'
+    compile 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
 //    compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile('net.gotev:speech:1.3.1') {
         exclude module: 'support-v4'
