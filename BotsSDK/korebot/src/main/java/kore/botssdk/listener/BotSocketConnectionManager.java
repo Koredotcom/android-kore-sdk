@@ -206,8 +206,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 botName = jwtKeyResponse.getBotName();
                 streamId = jwtKeyResponse.getStreamId();
                 if (!isRefresh) {
-                    botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
-                            jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
+                    //Last three null objects must be review, that is for Kora
+                    botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(),
+                            jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager,null,null,null);
                 } else {
                     KoreEventCenter.post(jwtKeyResponse.getJwt());
                 }

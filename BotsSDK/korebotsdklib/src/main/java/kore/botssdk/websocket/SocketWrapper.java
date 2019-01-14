@@ -35,7 +35,7 @@ import kore.botssdk.utils.Utils;
  */
 public final class SocketWrapper{
 
-    private final String LOG_TAG = SocketWrapper.class.getSimpleName();
+    private final String LOG_TAG = "IKIDO";
 
     public static SocketWrapper pKorePresenceInstance;
     private SocketConnectionListener socketConnectionListener = null;
@@ -63,7 +63,6 @@ public final class SocketWrapper{
     private String accessToken;
     private String userAccessToken = null;
     private String JWTToken;
-    private String uuId;
     private String auth;
     private String botUserId;
     private BotInfoModel botInfoModel;
@@ -120,7 +119,8 @@ public final class SocketWrapper{
 //    final RestAPI restAPI = BotRestBuilder.getBotRestService();
     private Observable<RestResponse.RTMUrl> getRtmUrl(String accessToken,final BotInfoModel botInfoModel){
 
-        return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse, ObservableSource<RestResponse.BotAuthorization>>() {
+        return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse,
+                ObservableSource<RestResponse.BotAuthorization>>() {
             @Override
             public ObservableSource<RestResponse.BotAuthorization> apply(RestResponse.JWTTokenResponse jwtTokenResponse) throws Exception {
                 HashMap<String, Object> hsh = new HashMap<>();
@@ -139,6 +139,7 @@ public final class SocketWrapper{
 
     }
 
+    //TODO For speed connection
     private Observable<RestResponse.RTMUrl> getRtmUrlForConnectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel){
         HashMap<String, Object> hsh = new HashMap<>();
         hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
@@ -198,11 +199,22 @@ public final class SocketWrapper{
 
     }
 
-    public void ConnectAnonymousForKora(final String userAccessToken, final String sJwtGrant, BotInfoModel botInfoModel, final String uuId,SocketConnectionListener socketConnectionListener){
-        Log.d("IKIDO","Step 6");
+    public void ConnectAnonymousForKora(final String userAccessToken, final String sJwtGrant, BotInfoModel botInfoModel, SocketConnectionListener socketConnectionListener,
+                                        final String url, String botUserId, String auth){
         this.userAccessToken = userAccessToken;
         this.botInfoModel = botInfoModel;
-        connectAnonymous(sJwtGrant,botInfoModel,uuId,socketConnectionListener);
+        this.socketConnectionListener = socketConnectionListener;
+        this.accessToken = null;
+        this.JWTToken = sJwtGrant;
+        this.botInfoModel = botInfoModel;
+        this.botUserId = botUserId;
+        this.auth = auth;
+        Log.d("IKIDO","Hey Initiating Socket");
+        try {
+            connectToSocket(url,false);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -210,17 +222,15 @@ public final class SocketWrapper{
      *
      * These keys are generated from bot admin console
      */
-    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final String uuId,SocketConnectionListener socketConnectionListener) {
+    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final SocketConnectionListener socketConnectionListener) {
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.JWTToken = sJwtGrant;
-        this.uuId = uuId;
         this.botInfoModel = botInfoModel;
         //If spiceManager is not started then start it
         /*if (!isConnected()) {
             start(mContext);
         }*/
-        Log.d("IKIDO","Step 7");
         getRtmUrlForConnectAnonymous(sJwtGrant,botInfoModel).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RestResponse.RTMUrl>() {
@@ -231,7 +241,6 @@ public final class SocketWrapper{
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            Log.d("IKIDO","Step 8");
                             connectToSocket(rtmUrl.getUrl(),false);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
@@ -246,7 +255,7 @@ public final class SocketWrapper{
                     }
                     @Override
                     public void onComplete() {
-                        Log.d("IKIDO","on complete called man");
+//                        Log.d("IKIDO","on complete called man");
                     }
                 });
 
@@ -260,7 +269,6 @@ public final class SocketWrapper{
      * @throws URISyntaxException
      */
     private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
-        Log.d("IKIDO","Step 9 "+isReconnectionAttaempt);
         if((isConnecting || isConnected())) return;
         isConnecting = true;
         if (url != null) {
@@ -272,10 +280,8 @@ public final class SocketWrapper{
                 mConnection.connect(url, new  WebSocketConnectionHandler() {
                     @Override
                     public void onOpen() {
-                        Log.d("IKIDO","Step 10");
                         Log.d(LOG_TAG, "Connection Open.");
                         if (socketConnectionListener != null) {
-                            Log.d("IKIDO","Step 11");
                             socketConnectionListener.onOpen(isReconnectionAttaempt);
                         }else{
                             Log.d("IKIDO","Hey listener is null");

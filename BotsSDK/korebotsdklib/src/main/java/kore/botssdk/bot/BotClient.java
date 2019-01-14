@@ -26,6 +26,15 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 public class BotClient {
     private Context mContext;
+
+    public RestResponse.BotCustomData getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(RestResponse.BotCustomData customData) {
+        this.customData = customData;
+    }
+
     private RestResponse.BotCustomData customData;
 
     public BotInfoModel getBotInfoModel() {
@@ -54,10 +63,12 @@ public class BotClient {
     }
 
 
-    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
-        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
+                                              String url, String botUserId, String auth) {
+//        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+        Log.d("IKIDO","In BotClient");
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, uuid, socketConnectionListener);
+        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, socketConnectionListener,url, botUserId, auth);
     }
     /**
      * Connection for anonymous user
@@ -66,9 +77,9 @@ public class BotClient {
      */
     public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
 
-        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
+//        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+//        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
+//        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
     }
 
     public String generateJWT(String email,String secret,String clientId, boolean isAnonymousUser){
