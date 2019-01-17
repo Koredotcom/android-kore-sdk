@@ -114,16 +114,18 @@ public class AttendeeSlotSelectionView extends ViewGroup {
             final AttendeeSlotsAdapter slotsButtonAdapter;
             ArrayList<MeetingSlotModel.Slot> popularSlots =  meetingTemplateModel.getPopularSlots();
             ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel.getOtherSlots();
+
             slotsButtonAdapter = new AttendeeSlotsAdapter(getContext());
             slotsButtonAdapter.setNormalSlots(otherSlots);
             slotsButtonAdapter.setPopularSlots(popularSlots);
 
-            if ((!isEnabled || SelectionUtils.getSelectedSlots() == null)) {
+            if (SelectionUtils.getSelectedSlots() == null || SelectionUtils.getSelectedSlots().size() == 0 ) {
                 slotsButtonAdapter.addSelectedSlots(popularSlots);
                 slotsButtonAdapter.addSelectedSlots(otherSlots);
             } else {
                 slotsButtonAdapter.setSelectedSlots(SelectionUtils.getSelectedSlots());
             }
+
             autoExpandListView.setAdapter(slotsButtonAdapter);
             slotsButtonAdapter.notifyDataSetChanged();
             meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);

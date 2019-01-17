@@ -41,7 +41,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String  TEMPLATE_TYPE_TASK_VIEW = "task_list_preview";
     public static final String TEMPLATE_TYPE_CONVERSATION_END = "conversation_end";
     public static final String TEMPLATE_TASK_FULLVIEW = "task_list_full_preview";
-
+    public static final String KA_SWITCH_SKILL = "ka_switch_skill";
+    public static final String KA_SKILL_RESPONSE = "ka_skill_response";
 
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";

@@ -12,6 +12,15 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     String lMod;
     String imageUrl;
 
+    public String getSharedBy() {
+        return sharedBy;
+    }
+
+    public void setSharedBy(String sharedBy) {
+        this.sharedBy = sharedBy;
+    }
+
+    String sharedBy;
     String lMUId;
 
     public long getViews() {

@@ -351,6 +351,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));
+                }else if(BotResponse.KA_SWITCH_SKILL.equalsIgnoreCase(payInner.getTemplate_type())){
+                    timeStampsTextView.setText("");
+                    timeLineView.setVisibility(VISIBLE);
+                    timeLineView.setText(payInner.getText());
                 }else if(BotResponse.TEMPLATE_TYPE_SHOW_PROGRESS.equalsIgnoreCase(payInner.getTemplate_type())){
                     timeStampsTextView.setText("");
                 }else if(BotResponse.TEMPLATE_TYPE_SESSION_END.equalsIgnoreCase(payInner.getTemplate_type())){
