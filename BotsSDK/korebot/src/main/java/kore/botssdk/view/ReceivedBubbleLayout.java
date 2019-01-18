@@ -197,7 +197,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                 } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCarouselView.setVisibility(View.VISIBLE);
-                    botCarouselView.populateCarouselView(payInner.getCarouselElements());
+                    botCarouselView.populateCarouselView(payInner.getCarouselElements(),payInner.getTemplate_type());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                     if(!isDoDrawBubbleBackground()){

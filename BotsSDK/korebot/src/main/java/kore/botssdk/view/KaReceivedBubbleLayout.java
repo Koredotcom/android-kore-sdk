@@ -254,8 +254,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCarouselView.setVisibility(View.VISIBLE);
-                    botCarouselView.setType(payInner.getTemplate_type());
-                    botCarouselView.populateCarouselView(payInner.getCarouselElements());
+                    botCarouselView.populateCarouselView(payInner.getCarouselElements(),payInner.getTemplate_type());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botListTemplateView.setVisibility(View.VISIBLE);
@@ -290,7 +289,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     // payInner.setTemplate_type(BotResponse.TEMPLATE_TYPE_CAROUSEL);
                     botCarouselView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    botCarouselView.populateCarouselView(knowledgeData);
+                    botCarouselView.populateCarouselView(knowledgeData,payInner.getTemplate_type());
                 } else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     koraCarouselView.setVisibility(View.VISIBLE);
                     if (payInner.getKoraSearchResultsModel() != null)
