@@ -15,6 +15,7 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -90,6 +91,7 @@ public class TimeLineTextView extends ViewGroup {
     }
 
     public void setText(String text){
+        unreadTimeLineTextView.setVisibility(StringUtils.isNullOrEmpty(text) ? GONE :VISIBLE);
         unreadTimeLineTextView.setText(text);
     }
 
@@ -179,6 +181,7 @@ public class TimeLineTextView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if(unreadTimeLineTextView == null) return;
         //Consider the paddings and manupulate them it first..
         l += getPaddingLeft();
         t += getPaddingTop();
