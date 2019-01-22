@@ -182,7 +182,7 @@ public class SDKConfiguration {
         TIME_STAMPS_REQUIRED = timeStampsRequired;
     }
 
-    private static boolean TIME_STAMPS_REQUIRED = false;
+    private static boolean TIME_STAMPS_REQUIRED = true;
     private static boolean APPLY_FONT_STYLE = false;
 
 
