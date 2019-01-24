@@ -118,12 +118,8 @@ public class MeetingConfirmationView extends ViewGroup {
 
         if (meetingConfirmationModel != null) {
             ProfileIndicationAdapter profileIndicationAdapter;
-            if(recyclerView.getAdapter() == null) {
-                profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
-                recyclerView.setAdapter(profileIndicationAdapter);
-            }else{
-                profileIndicationAdapter = (ProfileIndicationAdapter) recyclerView.getAdapter();
-            }
+            profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
+            recyclerView.setAdapter(profileIndicationAdapter);
             profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
             profileIndicationAdapter.notifyDataSetChanged();
 
