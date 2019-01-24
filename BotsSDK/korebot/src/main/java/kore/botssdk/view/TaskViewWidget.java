@@ -18,6 +18,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.TasksListAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.TaskTemplateModel;
@@ -68,16 +69,16 @@ public class TaskViewWidget extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
     private void init() {

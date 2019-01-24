@@ -97,23 +97,16 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
+        int maxAllowedWidth = View.MeasureSpec.getSize(widthMeasureSpec);
         int wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-        int totalHeight = getPaddingTop();
-        int totalWidth = getPaddingLeft();
 
         int childWidthSpec;
-        int childHeightSpec;
-        int contentWidth = 0;
-
         /*
          * For TextMedia Layout
          */
         childWidthSpec = View.MeasureSpec.makeMeasureSpec(maxAllowedWidth, View.MeasureSpec.AT_MOST);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
-        contentWidth = bubbleTextMediaLayout.getMeasuredWidth();
         MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
 
 
@@ -128,16 +121,10 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
-        //Consider the paddings and manupulate them it first..
-        l += getPaddingLeft();
-        t += getPaddingTop();
-        r -= getPaddingRight();
-        b -= getPaddingBottom();
 
-        int bubbleTextMediaLayouMarginLeft = BUBBLE_CONTENT_LEFT_MARGIN;
         int bubbleTextMediaLayouMarginTop = BUBBLE_CONTENT_TOP_MARGIN;
         int bubbleTextMediaLayouMarginRight = BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
-        int bubbleTextMediaLayouMarginBottom = BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+
 
         int top = getPaddingTop()  + BUBBLE_SEPARATION_DISTANCE, left;
         int containerWidth = getMeasuredWidth();

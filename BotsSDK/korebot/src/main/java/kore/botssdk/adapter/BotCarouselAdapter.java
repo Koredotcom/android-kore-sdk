@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.utils.KaFontUtils;

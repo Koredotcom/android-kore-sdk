@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -80,7 +79,7 @@ public class TextMediaLayout extends MediaLayout {
         }
 
         //Add a textView
-        botContentTextView = new TextView(getContext());
+        botContentTextView = new LinkifyTextView(getContext());
 
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
@@ -127,13 +126,15 @@ public class TextMediaLayout extends MediaLayout {
                 makeLinkClickable(strBuilder, span);
             }
             botContentTextView.setText(strBuilder);
-            botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            botContentTextView.setMovementMethod(null);
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
         }
     }
+
+
 
     protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
         int start = strBuilder.getSpanStart(span);

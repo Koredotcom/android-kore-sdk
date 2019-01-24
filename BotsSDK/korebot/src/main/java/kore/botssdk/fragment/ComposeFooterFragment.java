@@ -40,6 +40,7 @@ import java.util.Locale;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.TapToSpeakEvent;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.FormActionTemplate;
@@ -207,24 +208,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         setListener();
     }
 
-    public interface ComposeFooterInterface {
-        /**
-         * @param message : Title and payload, Both are same
-         */
-        void onSendClick(String message);
 
-        /**
-         * @param message : Title of the button
-         * @param payload : Payload to be send
-         */
-        void onSendClick(String message, String payload);
-
-        void onFormActionButtonClicked(FormActionTemplate fTemplate);
-
-        void launchActivityWithBundle(int type,Bundle payload);
-
-        void sendWithSomeDelay(String message,String payload,long time);
-    }
 
     TextWatcher composeTextWatcher = new TextWatcher() {
         @Override

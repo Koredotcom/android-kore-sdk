@@ -31,6 +31,7 @@ import java.util.TimeZone;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.PayloadInner;
@@ -66,7 +67,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
     private Context mContext;
     private String type;
     private boolean isEnabled;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
     private  Gson gson = new Gson();
 
     public CalendarEventsAdapter(Context mContext,String type,boolean isEnabled) {
@@ -123,11 +124,11 @@ public class CalendarEventsAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

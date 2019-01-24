@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.FormActionTemplate;
@@ -41,22 +42,22 @@ import kore.botssdk.view.TimeLineTextView;
  */
 
 public class ViewProvider {
-    public static final int TEXTVIEW_ID = 1980081;
-    public static final int LIST_ID = 1980045;
+    private static final int TEXTVIEW_ID = 1980081;
+    private static final int LIST_ID = 1980045;
     public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
-    public static final int CAROUSEL_VIEW_ID = 1980053;
-    public static final int BUTTON_VIEW_ID = 1980098;
-    public static final int PIECHART_VIEW_ID = 19800123;
-    public static final int TABLE_VIEW_ID = 19800345;
-    public static final int LINECHART_VIEW_ID = 19800335;
-    public static final int KORA_CAROUSEL_VIEW_ID = 1980050;
-    public static final int MEETING_SLOTS_VIEW_ID = 1980089;
-    public static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
-    public static final int CALENDER_EVENTS_VIEW_ID = 19800456;
-    public static final int FILES_CAROUSAL_VIEW_ID = 19800678;
-    public static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
-    public static final int QUICK_RPVIEW = 1988881;
-    public static final int TIMELINE_VIEW_ID = 1980094;
+    private static final int CAROUSEL_VIEW_ID = 1980053;
+    private static final int BUTTON_VIEW_ID = 1980098;
+    private static final int PIECHART_VIEW_ID = 19800123;
+    private static final int TABLE_VIEW_ID = 19800345;
+    private static final int LINECHART_VIEW_ID = 19800335;
+    private static final int KORA_CAROUSEL_VIEW_ID = 1980050;
+    private static final int MEETING_SLOTS_VIEW_ID = 1980089;
+    private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
+    private static final int CALENDER_EVENTS_VIEW_ID = 19800456;
+    private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
+    private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
+    private static final int QUICK_RPVIEW = 1988881;
+    private static final int TIMELINE_VIEW_ID = 1980094;
     public static final int TASK_VIEW_ID = 1981234;
 
 
@@ -130,7 +131,7 @@ public class ViewProvider {
     }
 
 
-    public static QuickReplyView getQuickReplyView(Context context, ArrayList<QuickReplyTemplate> data, ComposeFooterFragment.ComposeFooterInterface listener, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public static QuickReplyView getQuickReplyView(Context context, ArrayList<QuickReplyTemplate> data, ComposeFooterInterface listener, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         if (context != null) {
             QuickReplyView quickReplyView = new QuickReplyView(context);
             quickReplyView.setId(QUICK_RPVIEW);
@@ -143,7 +144,7 @@ public class ViewProvider {
         }
     }
 
-    public static FormActionView getFormActionView(Context context, ArrayList<FormActionTemplate> data, ComposeFooterFragment.ComposeFooterInterface listener) {
+    public static FormActionView getFormActionView(Context context, ArrayList<FormActionTemplate> data, ComposeFooterInterface listener) {
         if (context != null) {
             FormActionView formActionView = new FormActionView(context);
             formActionView.setId(QUICK_RPVIEW);
@@ -155,7 +156,7 @@ public class ViewProvider {
         }
     }
 
-    public static BotButtonView getBotButtonView(Context context, ArrayList<BotButtonModel> data, ComposeFooterFragment.ComposeFooterInterface listener) {
+    public static BotButtonView getBotButtonView(Context context, ArrayList<BotButtonModel> data, ComposeFooterInterface listener) {
         BotButtonView botButtonView = new BotButtonView(context);
         botButtonView.setId(BUTTON_VIEW_ID);
         botButtonView.setComposeFooterInterface(listener);

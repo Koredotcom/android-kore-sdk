@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
@@ -80,7 +81,7 @@ public class CarouselItemViewHelper {
     }
 
     public static void populateStuffs(CarouselViewHolder carouselViewHolder,
-                                      final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
+                                      final ComposeFooterInterface composeFooterInterface,
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final BotCarouselModel botCarouselModel,
                                       final Context activityContext,final String type) {

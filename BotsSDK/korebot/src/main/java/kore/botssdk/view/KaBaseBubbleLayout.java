@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
@@ -42,7 +43,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     Context context;
     Activity activityContext;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected float dp1, dp2, dp4, dp10,dp12, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
             dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
@@ -53,10 +54,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected boolean isSeparatedClosely = false;
     protected boolean doDrawBubbleBackground = true;
     protected boolean isGroupMessage = false;
-    private Point triangleCoordA, triangleCoordB, triangleCoordC;
-    private Point lineStart, lineEnd;
-    private int linkTextColor;
-
     protected int[] textMediaDimen;
     protected int[] maxBubbleDimen;
   //  protected int[] headerLayoutDimen;
@@ -375,7 +372,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
         if (botCarouselView != null) {
             botCarouselView.setComposeFooterInterface(composeFooterInterface);

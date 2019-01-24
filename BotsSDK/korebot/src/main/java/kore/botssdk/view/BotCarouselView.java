@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;

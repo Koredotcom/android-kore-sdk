@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
@@ -34,7 +35,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
 
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflator;
     Context context;
@@ -144,7 +145,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
         this.botListModelArrayList = botListModelArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

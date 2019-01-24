@@ -17,6 +17,7 @@ import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
 
@@ -28,7 +29,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     String LOG_TAG = MeetingSlotsButtonAdapter.class.getSimpleName();
 
     private ArrayList<MeetingSlotModel.Slot> meetingSlotModels = new ArrayList<>();
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
     private LayoutInflater ownLayoutInflator;
     Context context;
 
@@ -120,7 +121,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
         this.meetingSlotModels = meetingsModelArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BaseBotMessage;
@@ -47,7 +48,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     boolean shallShowProfilePic;
     private String mChannelIconURL;
@@ -86,7 +87,6 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
-        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
     }
@@ -95,7 +95,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         this.ttsUpdate = ttsUpdate;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

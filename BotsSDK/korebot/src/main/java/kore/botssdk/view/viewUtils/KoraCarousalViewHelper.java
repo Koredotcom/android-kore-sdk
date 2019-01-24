@@ -22,6 +22,7 @@ import java.util.Date;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.EmailModel;
@@ -68,7 +69,7 @@ public class KoraCarousalViewHelper {
 
 
     public static void populateStuffs(KoraCarousalViewHolder carouselViewHolder,
-                                      final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
+                                      final ComposeFooterInterface composeFooterInterface,
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final KoraSearchDataSetModel dataSetModel,
                                       final Context activityContext) {

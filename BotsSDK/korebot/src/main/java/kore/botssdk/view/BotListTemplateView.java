@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListTemplateAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;

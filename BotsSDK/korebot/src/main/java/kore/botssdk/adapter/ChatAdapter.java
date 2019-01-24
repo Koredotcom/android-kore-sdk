@@ -1,6 +1,8 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.Resources;
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,8 +21,10 @@ import io.jsonwebtoken.lang.Collections;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotRequest;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.KaBaseBubbleContainer;
 import kore.botssdk.view.KaBaseBubbleLayout;
@@ -35,17 +40,16 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public static String LOG_TAG = ChatAdapter.class.getSimpleName();
-
     Context context;
-    Activity activityContext;
+    private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
     private HashMap<String, Integer> headersMap = new HashMap<>();
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
@@ -57,27 +61,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
-    int viewWidth;
-    int dp1;
-    boolean shallShowProfilePic;
+
 
     private ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
-    public static final int BUBBLE_LEFT_LAYOUT = 0;
-    public static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;
+    private static final int BUBBLE_LEFT_LAYOUT = 0;
+    private static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;
 
     public ChatAdapter(Context context) {
         this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
-        dp1 = (int) AppControl.getInstance(context).getDimensionUtil().dp1;
-
         BUBBLE_CONTENT_LAYOUT_WIDTH = BubbleViewUtil.getBubbleContentWidth();
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
-        viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         baseBotMessageArrayList = new ArrayList<>();
     }
 
@@ -100,8 +99,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setActivityContext(activityContext);
         holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(getItem(position).getFormattedDate());
-        if(Collections.isEmpty(headersMap)) prepareHeaderMap();
-        holder.headerView.setVisibility(headersMap.get(getItem(position).getFormattedDate()) == position ? View.VISIBLE : View.GONE);
+        if(Collections.isEmpty(headersMap)) {
+            prepareHeaderMap();
+        }
+        holder.headerView.setVisibility(getItem(position) != null && headersMap.get(getItem(position).getFormattedDate()) == position ? View.VISIBLE : View.GONE);
+        if(getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
+            holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    BotRequest botRequest = (BotRequest)getItem(position);
+                    composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody());
+                    return true;
+                }
+            });
+        }
     }
 
 
@@ -179,7 +190,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public class ViewHolder extends RecyclerView.ViewHolder{
         KaBaseBubbleContainer baseBubbleContainer;
         KaBaseBubbleLayout baseBubbleLayout;
-        RelativeLayout bubbleLayoutContainer;
         View headerView;
         TextView textView;
         public ViewHolder(View view,int viewType){
@@ -216,9 +226,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         notifyItemRangeInserted(0, list.size() - 1);
     }
 
-    public void setShallShowProfilePic(boolean shallShowProfilePic) {
-        this.shallShowProfilePic = shallShowProfilePic;
-    }
+
 
     public void setActivityContext(Activity activityContext) {
         this.activityContext = activityContext;

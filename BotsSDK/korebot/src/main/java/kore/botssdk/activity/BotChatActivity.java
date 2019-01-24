@@ -26,6 +26,7 @@ import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
@@ -48,7 +49,7 @@ import kore.botssdk.utils.Utils;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends BotAppCompactActivity implements  ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
+public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -258,6 +259,11 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
     @Override
     public void sendWithSomeDelay(String message, String payload,long time) {
+
+    }
+
+    @Override
+    public void copyMessageToComposer(String text) {
 
     }
 

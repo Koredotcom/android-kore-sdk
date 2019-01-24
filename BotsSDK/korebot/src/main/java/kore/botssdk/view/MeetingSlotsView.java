@@ -17,6 +17,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
@@ -63,16 +64,16 @@ public class MeetingSlotsView extends ViewGroup{
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
 

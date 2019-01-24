@@ -17,6 +17,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.AttendeeSlotsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
@@ -65,16 +66,16 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
     private void init() {

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
@@ -31,7 +32,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
     private LayoutInflater layoutInflater;
     private RecyclerView parentRecyclerView;
 
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int quickWidgetColor;
 
@@ -107,7 +108,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         this.quickReplyTemplateArrayList = quickReplyTemplateArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

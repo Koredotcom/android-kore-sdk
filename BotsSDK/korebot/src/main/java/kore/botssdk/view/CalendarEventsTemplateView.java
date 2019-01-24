@@ -13,6 +13,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.CalendarEventsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -26,7 +27,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
     private AutoExpandListView listView;
     private LinearLayout calCustomListRoot;
     private float dp1 = 0;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
     public float getRestrictedMaxWidth() {
         return restrictedMaxWidth;
@@ -180,11 +181,11 @@ public class CalendarEventsTemplateView extends ViewGroup {
         }
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 }

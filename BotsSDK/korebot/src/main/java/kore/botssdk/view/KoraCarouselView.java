@@ -14,6 +14,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.KoraCarousalAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.EmailModel;
 import kore.botssdk.models.KnowledgeDetailModel;
@@ -53,16 +54,16 @@ public class KoraCarouselView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
     public KoraCarouselView(Context mContext){
