@@ -40,6 +40,8 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public static String LOG_TAG = ChatAdapter.class.getSimpleName();
+    private final ClipboardManager clipboardManager;
+
     Context context;
     private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
@@ -75,6 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public ChatAdapter(Context context) {
         this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
+        clipboardManager= (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         BUBBLE_CONTENT_LAYOUT_WIDTH = BubbleViewUtil.getBubbleContentWidth();
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
         baseBotMessageArrayList = new ArrayList<>();
@@ -107,9 +110,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    BotRequest botRequest = (BotRequest)getItem(position);
-                    composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody());
+                    BotRequest botRequest = (BotRequest) getItem(position);
+                    ClipData clip = ClipData.newPlainText("message", botRequest.getMessage().getBody());
+                    clipboardManager.setPrimaryClip(clip);
+                    Toast.makeText(context,"Message copied to clipboard",Toast.LENGTH_LONG).show();
                     return true;
+                }
+            });
+            holder.baseBubbleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BotRequest botRequest = (BotRequest) getItem(position);
+                    composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody());
                 }
             });
         }
