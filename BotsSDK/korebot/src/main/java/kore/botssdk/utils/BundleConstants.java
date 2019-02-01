@@ -9,12 +9,12 @@ public class BundleConstants {
 
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
-
+    public static String RESOURCE_ID = "resource_id";
     public static String BUTTON_TYPE_POSTBACK = "postback";
     public static String BUTTON_TYPE_TEXT = "text";
     public static String BUTTON_TYPE_POSTBACK_DISP_PAYLOAD = "postback_disp_payload";
     public static String BUTTON_TYPE_WEB_URL = "web_url";
-    public static String BUTTON_TYPE_IFRAME_WEB_URL = "iframe_web_url";
+    public static String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static final int TYPING_STATUS_TIME = 1500; //in millisecond

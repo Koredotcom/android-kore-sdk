@@ -2,6 +2,8 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 import androidx.cardview.widget.CardView;
+
+import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
@@ -158,12 +159,16 @@ public class CarouselItemViewHelper {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                         BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCaourselButtonModel.getType()) || BundleConstants.BUTTON_TYPE_IFRAME_WEB_URL.equalsIgnoreCase(botCaourselButtonModel.getType())) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botCaourselButtonModel.getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
                             composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                        }else if(BundleConstants.BUTTON_TYPE_HELP_RESOLVE.equalsIgnoreCase(botCaourselButtonModel.getType())){
+                            Bundle extras = new Bundle();
+                            extras.putString(BundleConstants.RESOURCE_ID,botCaourselButtonModel.getId());
+                            composeFooterInterface.launchActivityWithBundle(1,extras);
                         }else if(BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             String buttonPayload = botCaourselButtonModel.getPayload();
 //                            String buttonTitle = botCaourselButtonModel.getTitle();
