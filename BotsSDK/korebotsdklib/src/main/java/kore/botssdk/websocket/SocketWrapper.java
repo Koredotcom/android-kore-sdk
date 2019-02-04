@@ -11,6 +11,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,11 +25,15 @@ import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.BotRestBuilder;
 import kore.botssdk.net.RestAPI;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
@@ -119,7 +125,38 @@ public final class SocketWrapper{
 //    final RestAPI restAPI = BotRestBuilder.getBotRestService();
     private Observable<RestResponse.RTMUrl> getRtmUrl(String accessToken,final BotInfoModel botInfoModel){
 
-        return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse,
+        return Observable.create(new ObservableOnSubscribe<RestResponse.RTMUrl>() {
+            @Override
+            public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
+                try {
+
+                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
+                    Response<RestResponse.JWTTokenResponse> jwtTokenResponseResponse = jwtTokenResponseCall.execute();
+
+                    HashMap<String, Object> hsh = new HashMap<>();
+                    hsh.put(Constants.KEY_ASSERTION, jwtTokenResponseResponse.body().getJwt());
+                    hsh.put(Constants.BOT_INFO, botInfoModel);
+
+
+
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+
+                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
+
+                    observableEmitter.onNext(rtmUrlResponse.body());
+                    observableEmitter.onComplete();
+                } catch (Exception e) {
+                    observableEmitter.onError(e);
+                }
+            }
+        });
+
+        /*return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse,
                 ObservableSource<RestResponse.BotAuthorization>>() {
             @Override
             public ObservableSource<RestResponse.BotAuthorization> apply(RestResponse.JWTTokenResponse jwtTokenResponse) throws Exception {
@@ -135,17 +172,42 @@ public final class SocketWrapper{
                 botUserId = botAuthorization.getUserInfo().getUserId();
                 return BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), optParameterBotInfo);
             }
-        });
+        });*/
 
     }
 
     //TODO For speed connection
     private Observable<RestResponse.RTMUrl> getRtmUrlForConnectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel){
-        HashMap<String, Object> hsh = new HashMap<>();
-        hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
-        hsh.put(Constants.BOT_INFO, botInfoModel);
 
-        return BotRestBuilder.getBotRestService().jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+        return Observable.create(new ObservableOnSubscribe<RestResponse.RTMUrl>() {
+            @Override
+            public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
+                try {
+                    HashMap<String, Object> hsh = new HashMap<>();
+                    hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
+                    hsh.put(Constants.BOT_INFO, botInfoModel);
+
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+
+                    HashMap<String, Object> hsh1 = new HashMap<>();
+                    hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
+
+                    observableEmitter.onNext(rtmUrlResponse.body());
+                    observableEmitter.onComplete();
+                } catch (Exception e) {
+                    observableEmitter.onError(e);
+                }
+            }
+        });
+
+        /*return BotRestBuilder.getBotRestService().jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
             @Override
             public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
                 HashMap<String, Object> hsh1 = new HashMap<>();
@@ -155,7 +217,7 @@ public final class SocketWrapper{
                 auth = botAuthorization.getAuthorization().getAccessToken();
                 return BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), hsh1);
             }
-        });
+        });*/
 
     }
 
@@ -389,7 +451,43 @@ public final class SocketWrapper{
 
     private Observable<RestResponse.RTMUrl> getRtmUrlReconnectForAuthenticUser(String accessToken){
 
-        return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse, ObservableSource<RestResponse.BotAuthorization>>() {
+        return Observable.create(new ObservableOnSubscribe<RestResponse.RTMUrl>() {
+            @Override
+            public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
+                try {
+                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
+                    Response<RestResponse.JWTTokenResponse> jwtTokenResponseResponse = jwtTokenResponseCall.execute();
+                    HashMap<String, Object> hsh = new HashMap<>(1);
+                    hsh.put(Constants.KEY_ASSERTION, jwtTokenResponseResponse.body().getJwt());
+
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo,true);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
+
+                    /*Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+                    HashMap<String, Object> hsh1 = new HashMap<>();
+                    hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1,true);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();*/
+
+
+
+                    observableEmitter.onNext(rtmUrlResponse.body());
+                    observableEmitter.onComplete();
+                } catch (Exception e) {
+                    observableEmitter.onError(e);
+                }
+            }
+        });
+
+        /*return BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken).flatMap(new Function<RestResponse.JWTTokenResponse, ObservableSource<RestResponse.BotAuthorization>>() {
             @Override
             public ObservableSource<RestResponse.BotAuthorization> apply(RestResponse.JWTTokenResponse jwtTokenResponse) throws Exception {
                 HashMap<String, Object> hsh = new HashMap<>(1);
@@ -401,7 +499,7 @@ public final class SocketWrapper{
             public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
                 return BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), optParameterBotInfo,true);
             }
-        });
+        });*/
     }
     /**
      * Reconnection for authentic user
@@ -438,11 +536,59 @@ public final class SocketWrapper{
     }
 
     private Observable<RestResponse.RTMUrl> getRtmUrlReconnectForAnonymousUser(){
-        HashMap<String, Object> hsh = new HashMap<>();
-        hsh.put(Constants.KEY_ASSERTION, JWTToken);
 
-        hsh.put(Constants.BOT_INFO, botInfoModel);
-            return BotRestBuilder.getBotRestService().jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
+        return Observable.create(new ObservableOnSubscribe<RestResponse.RTMUrl>() {
+            @Override
+            public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
+                try {
+                    HashMap<String, Object> hsh = new HashMap<>();
+                    hsh.put(Constants.KEY_ASSERTION, JWTToken);
+                    hsh.put(Constants.BOT_INFO, botInfoModel);
+
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+                    HashMap<String, Object> hsh1 = new HashMap<>();
+                    hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1,true);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
+
+                    /*Call<JWTTokenResponse> jwtTokenResponseCall = KaRestBuilder.getKaRestAPI().getJWTToken(Utils.ah(accessToken),new HashMap<String, Object>());
+                    Response<JWTTokenResponse> jwtTokenResponse = jwtTokenResponseCall.execute();
+
+                    SDKConfiguration.Server.setKoreBotServerUrl(jwtTokenResponse.body().getBotsUrl());
+                    KoraSocketConnectionManager.this.jwtKeyResponse = jwtTokenResponse.body();
+                    botName = jwtKeyResponse.getBotName();
+                    streamId = jwtKeyResponse.getStreamId();
+
+                    HashMap<String, Object> hsh = new HashMap<>();
+                    botInfoModel = new BotInfoModel(jwtTokenResponse.body().getBotName(),jwtTokenResponse.body().getStreamId(),botClient.getCustomData());
+                    hsh.put(Constants.KEY_ASSERTION, jwtTokenResponse.body().getJwt());
+                    hsh.put(Constants.BOT_INFO, botInfoModel);
+
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
+
+                    HashMap<String, Object> optParameterBotInfo = new HashMap<>();
+                    optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
+                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+                    botAccessToken = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo);
+                    Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();*/
+
+                    observableEmitter.onNext(rtmUrlResponse.body());
+                    observableEmitter.onComplete();
+                } catch (Exception e) {
+                    observableEmitter.onError(e);
+                }
+            }
+        });
+
+            /*return BotRestBuilder.getBotRestService().jwtGrant(hsh).flatMap(new Function<RestResponse.BotAuthorization, ObservableSource<RestResponse.RTMUrl>>() {
                 @Override
                 public ObservableSource<RestResponse.RTMUrl> apply(RestResponse.BotAuthorization botAuthorization) throws Exception {
                     HashMap<String, Object> hsh1 = new HashMap<>();
@@ -453,7 +599,7 @@ public final class SocketWrapper{
 
                     return BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorization.getAuthorization().getAccessToken(), hsh1,true);
                 }
-            });
+            });*/
 
     }
     /**

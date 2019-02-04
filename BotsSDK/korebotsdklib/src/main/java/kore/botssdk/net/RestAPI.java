@@ -37,11 +37,11 @@ public interface RestAPI {
 
     // Get JWT Token
     @POST("/api/users/sts")
-    Observable<RestResponse.JWTTokenResponse> getJWTToken(@Header("Authorization") String token);
+    Call<RestResponse.JWTTokenResponse> getJWTToken(@Header("Authorization") String token);
 
     //Getting jwt grant
     @POST("/api/oAuth/token/jwtgrant")
-    Observable<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String,Object> jwtToken);
+    Call<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String,Object> jwtToken);
 
 //    //Getting jwt grant Anonymous
 //    @POST("/api/oAuth/token/jwtgrant/anonymous")
@@ -49,10 +49,10 @@ public interface RestAPI {
 
     //Getting rtm URL
     @POST("/api/rtm/start")
-    Observable<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
+    Call<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo);
 
     @POST("/api/rtm/start")
-    Observable<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
+    Call<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
     @GET("/api/users/{userId}/builder/streams")

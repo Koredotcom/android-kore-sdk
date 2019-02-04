@@ -5,7 +5,7 @@
     android:id="@+id/separator"
     android:gravity="center_vertical"
     android:background="#f8f9fa"
-    android:textColor="#485260"
+    android:textColor="@color/color_485260"
     android:minHeight="39dp"
     android:textSize="17dp" />
 

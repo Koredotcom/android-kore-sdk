@@ -150,6 +150,12 @@ public class BotClient {
 //        sendQueMessages();
     }
 
+    public void updateAuthToken(String accessToken){
+        if(customData != null){
+            customData.put("kmToken",accessToken);
+        }
+    }
+
     public void sendFormData(String payLoad,String message) {
 
         if (payLoad != null && !payLoad.isEmpty()) {
