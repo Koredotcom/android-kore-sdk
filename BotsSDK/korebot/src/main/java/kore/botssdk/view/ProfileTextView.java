@@ -79,9 +79,9 @@ public class ProfileTextView extends TextView {
             this.setHeight(diameter);
             this.setWidth(diameter);
 
-            canvas.drawCircle(diameter / 2 +1, diameter / 2, radius-2, paint);
+            canvas.drawCircle(diameter / 2 , diameter / 2, radius-2, paint);
             tPaint.setColor(Color.parseColor("#485260"));
-            canvas.drawCircle(diameter / 2 , diameter / 2, radius, tPaint);
+            canvas.drawCircle(diameter / 2 , diameter / 2, radius-1, tPaint);
         }else if (isCircle) {
             int  h = this.getHeight();
             int  w = this.getWidth();
