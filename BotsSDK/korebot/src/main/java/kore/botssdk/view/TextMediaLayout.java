@@ -115,13 +115,13 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     public void populateText(String textualContent) {
-        if (textualContent != null && !textualContent.isEmpty()) {
+        if (textualContent != null && !textualContent.isEmpty()) {/*
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
 //            textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
-                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
-            SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-            URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());*/
+            SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
+            URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
