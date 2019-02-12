@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -264,6 +265,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void copyMessageToComposer(String text) {
+
+    }
+
+    @Override
+    public void openFullView(String templateType, ArrayList data) {
 
     }
 

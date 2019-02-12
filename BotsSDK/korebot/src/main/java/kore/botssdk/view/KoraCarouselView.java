@@ -144,7 +144,7 @@ public class KoraCarouselView extends ViewGroup {
         }
     }
 
-    public void prepareDatasetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
+    public void prepareDataSetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
 
         if (invokeGenericWebViewInterface != null && composeFooterInterface != null) {
             ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels = new ArrayList<>();

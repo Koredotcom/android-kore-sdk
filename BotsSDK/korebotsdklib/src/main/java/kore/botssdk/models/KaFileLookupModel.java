@@ -1,20 +1,23 @@
 package kore.botssdk.models;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import kore.botssdk.utils.DateUtils;
 
 /**
  * Created by Ramachandra Pradeep on 09-Aug-18.
  */
 
 public class KaFileLookupModel {
-
+    private static DecimalFormat df2 = new DecimalFormat("###.##");
     private String fileName;
     private String fileId;
     private String sharedBy;
     private String iconLink;
     private String thumbnailLink;
     private String lastModified;
-    private String fileSize;
+    private long fileSize;
 
     public String getFileType() {
         return fileType;
@@ -34,11 +37,11 @@ public class KaFileLookupModel {
         this.lastModified = lastModified;
     }
 
-    public String getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(String fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
@@ -95,6 +98,13 @@ public class KaFileLookupModel {
         this.thumbnailLink = thumbnailLink;
     }
 
+    public String getFileSizeMegaBytes() {
+        if(fileSize < (1024*1024)){
+            return df2.format((double) fileSize / (1024)) + "KB";
+        }else	return df2.format((double)fileSize / (1024 * 1024)) + " MB";
+    }
 
-
+    public String getLastModifiedDate(){
+        return "Last Edited "+ DateUtils.getDateFromString(lastModified);
+    }
 }

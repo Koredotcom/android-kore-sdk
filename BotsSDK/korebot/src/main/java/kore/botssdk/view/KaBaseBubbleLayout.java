@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
@@ -122,11 +120,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected PieChartView botPieChartView;
     protected BotMainTableView tableView;
     protected LineChartView lineChartView;
-    protected KoraCarouselView koraCarouselView;
+  //  protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected CalendarEventsTemplateView calendarEventsView;
-    protected KoraFilesCarousalView filesCarousalView;
+    protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
     protected TaskViewWidget taskViewWidget;
     protected int[] dimens;
@@ -295,9 +293,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
         addView(botCarouselView);
 
-        koraCarouselView =  ViewProvider.getKoraCarouselView(context);
+      /*  koraCarouselView =  ViewProvider.getKoraCarouselView(context);
         koraCarouselView.setComposeFooterInterface(composeFooterInterface);
-        addView(koraCarouselView);
+        addView(koraCarouselView);*/
 
         taskViewWidget = ViewProvider.getTaskViewWidget(context);
         taskViewWidget.setComposeFooterInterface(composeFooterInterface);
@@ -319,8 +317,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         calendarEventsView.setComposeFooterInterface(composeFooterInterface);
         addView(calendarEventsView);
 
-        filesCarousalView = ViewProvider.getKoraFilesCarouselView(context);
-        addView(filesCarousalView);
+        verticalListView = ViewProvider.getVerticalListView(context);
+        addView(verticalListView);
+        verticalListView.setComposeFooterInterface(composeFooterInterface);
+        verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
         timeStampsTextView = ViewProvider.getTimeStampTextView(context);
         addView(timeStampsTextView);
@@ -383,8 +383,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botListTemplateView != null) {
             botListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(koraCarouselView != null){
-            koraCarouselView.setComposeFooterInterface(composeFooterInterface);
+
+        if(verticalListView != null){
+            verticalListView.setComposeFooterInterface(composeFooterInterface);
         }
         if(meetingSlotsView != null){
             meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
@@ -407,14 +408,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botCarouselView != null) {
             botCarouselView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if (koraCarouselView != null) {
-            koraCarouselView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        }
         if (botButtonView != null) {
             botButtonView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if (botListTemplateView != null) {
             botListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (verticalListView != null) {
+            verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
@@ -638,12 +639,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botCarouselView != null) {
             botCarouselView.setActivityContext(activityContext);
         }
-        if (koraCarouselView != null) {
-            koraCarouselView.setActivityContext(activityContext);
-        }
-        if(filesCarousalView != null){
-            filesCarousalView.setActivityContext(activityContext);
-        }
+
     }
 
     public boolean isDoDrawBubbleBackground() {

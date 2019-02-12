@@ -1,5 +1,7 @@
 package kore.botssdk.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
@@ -120,6 +122,27 @@ public class DateUtils {
     }
     public static boolean isTomorrow(long millis) {
         return  android.text.format.DateUtils.isToday(millis - android.text.format.DateUtils.DAY_IN_MILLIS);
+    }
+    public static String getDateFromString(String time){
+        if(time  == null || time.isEmpty()) return "";
+        try {
+            Date date = DateUtils.isoFormatter.parse(time);
+            return calendar_list_format.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getDateFromStringByDate(String time){
+        if(time  == null || time.isEmpty()) return "";
+        try {
+            Date date = new Date(time);
+            return dateFormat.format(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public static String getFormattedSentDateCoreFunctionality(long sentDate) {

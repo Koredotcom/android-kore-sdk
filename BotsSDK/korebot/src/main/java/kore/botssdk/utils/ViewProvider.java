@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
@@ -27,7 +26,7 @@ import kore.botssdk.view.BotMainTableView;
 import kore.botssdk.view.CalendarEventsTemplateView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
-import kore.botssdk.view.KoraFilesCarousalView;
+import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
@@ -228,8 +227,8 @@ public class ViewProvider {
         calendarEventsTemplateView.setId(CALENDER_EVENTS_VIEW_ID);
         return calendarEventsTemplateView;
     }
-    public static KoraFilesCarousalView getKoraFilesCarouselView(Context context){
-        KoraFilesCarousalView koraCarouselView = new KoraFilesCarousalView(context);
+    public static VerticalListView getVerticalListView(Context context){
+        VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);
         return koraCarouselView;
     }

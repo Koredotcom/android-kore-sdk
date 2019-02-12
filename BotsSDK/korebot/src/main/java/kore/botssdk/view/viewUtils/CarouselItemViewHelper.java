@@ -208,52 +208,8 @@ public class CarouselItemViewHelper {
                     }
                 }
             });
-            if(botCarouselModel instanceof KnowledgeDetailModel){
 
-                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getImage_url())) {
-                    carouselViewHolder.carouselItemImage.setVisibility(GONE);
-                } else {
-                    carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
-                    carouselViewHolder.carouselItemImage.setScaleType(ImageView.ScaleType.FIT_XY);
-                }
-
-
-                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getTitle())) {
-                    carouselViewHolder.carouselItemTitle.setVisibility(GONE);
-                } else {
-                    carouselViewHolder.carouselItemTitle.setVisibility(View.VISIBLE);
-                }
-
-                if (org.apache.commons.lang3.StringUtils.isEmpty(botCarouselModel.getSubtitle())) {
-                    carouselViewHolder.carouselItemSubTitle.setVisibility(GONE);
-                } else {
-                    carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
-                }
-
-                carouselViewHolder.carouselItemTitle.setGravity(Gravity.LEFT);
-                carouselViewHolder.carouselItemSubTitle.setGravity(Gravity.LEFT);
-                carouselViewHolder.koraItems.setVisibility(View.VISIBLE);
-                ArrayList<String> hashTags = ((KnowledgeDetailModel)botCarouselModel).getHashTag();
-                StringBuilder hashText = new StringBuilder();
-                if(hashTags != null && hashTags.size()> 0) {
-                    for (String tag : hashTags) {
-                        if(!tag.trim().isEmpty())
-                            hashText.append("  #").append(tag);
-                        if(hashText.length()>3) {
-                            carouselViewHolder.hashTagsView.setText(hashText.substring(2));
-                            carouselViewHolder.hashTagsView.setVisibility(View.VISIBLE);
-                        }else{
-                            carouselViewHolder.hashTagsView.setVisibility(View.GONE);
-                        }
-                    }
-                }else{
-                    carouselViewHolder.hashTagsView.setVisibility(GONE);
-                }
-                carouselViewHolder.knowledgeType.setText("Article");
-                carouselViewHolder.knowledgeMode.setText(((KnowledgeDetailModel) botCarouselModel).getSharesCount()== 0 ? "Private" : "Shared");
-            }else{
                 carouselViewHolder.koraItems.setVisibility(View.GONE);
-            }
 
         }
     }

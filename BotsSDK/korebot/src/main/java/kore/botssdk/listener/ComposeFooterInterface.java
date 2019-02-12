@@ -2,6 +2,8 @@ package kore.botssdk.listener;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import kore.botssdk.models.FormActionTemplate;
 
 public interface ComposeFooterInterface {
@@ -22,4 +24,5 @@ public interface ComposeFooterInterface {
 
     void sendWithSomeDelay(String message,String payload,long time);
     void copyMessageToComposer(String text);
+    void openFullView(String templateType, ArrayList data);
 }

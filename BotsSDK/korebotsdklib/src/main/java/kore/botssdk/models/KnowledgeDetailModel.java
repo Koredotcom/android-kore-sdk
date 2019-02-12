@@ -6,11 +6,12 @@ import java.util.ArrayList;
  * Created by Shiva Krishna on 1/30/2018.
  */
 
-public class KnowledgeDetailModel extends BotCarouselModel {
+public class KnowledgeDetailModel  {
     String streamId;
     String creator;
     String lMod;
     String imageUrl;
+    private String title;
 
     public String getSharedBy() {
         return sharedBy;
@@ -256,9 +257,16 @@ public class KnowledgeDetailModel extends BotCarouselModel {
 
     MyActions myActions;
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 
-   public class VoteModel {
+    public class VoteModel {
          int vote;
 
        public int getVote() {

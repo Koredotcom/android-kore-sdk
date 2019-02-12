@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<kore.botssdk.view.HeightAdjustableViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fcarouselViewpager"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:clipChildren="false"
-    android:paddingBottom="@dimen/carousel_view_padding_bottom"
-    android:paddingLeft="@dimen/carousel_view_padding_left"
-    android:paddingRight="@dimen/carousel_view_padding_right"
-    android:paddingTop="@dimen/carousel_view_padding_top"
-    android:visibility="visible" />
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    app:cardCornerRadius="4dp"
+    app:cardUseCompatPadding="true">
 
-<!--
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fCarousalViewRoot"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/txtHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#4a5e79"
-        android:letterSpacing="0.2"
-        android:text="FILES"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        android:gravity="center"/>
-
-    <kore.botssdk.view.HeightAdjustableViewPager
-        android:id="@+id/fcarouselViewpager"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:clipChildren="false"
-        android:paddingBottom="@dimen/carousel_view_padding_bottom"
-        android:paddingLeft="@dimen/carousel_view_padding_left"
-        android:paddingRight="@dimen/carousel_view_padding_right"
-        android:paddingTop="@dimen/carousel_view_padding_top"
-        android:visibility="visible" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-</LinearLayout>-->
+        <TextView
+            android:id="@+id/view_more"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:drawableEnd="@drawable/ic_arrow_right"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:text="View More"
+            android:layout_marginEnd="15dp"
+            android:textColor="#737d87"
+            android:textSize="@dimen/dimen_12dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

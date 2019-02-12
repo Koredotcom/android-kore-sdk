@@ -1,122 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/file_lookup_view_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardCornerRadius="4dp"
-    app:cardUseCompatPadding="true">
+<layout>
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="fileModel"
+            type="kore.botssdk.models.KaFileLookupModel" />
+
+        <import type="android.view.View"/>
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="15dp">
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtFileType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/file_round_rect"
-                android:padding="10dp"
-                android:text="PDF"
-                android:textColor="#d0021b"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txtTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="txtTitle"
-                    android:textColor="#1a1a1a"
-                    android:maxLines="1"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txtFileSize"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="txtSize"
-                    android:textColor="#858585"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtSharedBy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Shared by "
-                android:textColor="#858585"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtSharedByName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Challa"
-                android:textColor="#1a1a1a"
-                android:textSize="14sp" />
-
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="36dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitCenter" />
 
         <TextView
-            android:id="@+id/txtLastEdited"
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/image"
+            android:fontFamily="sans-serif-medium"
+            android:text="@{fileModel.fileName}"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/color_485260"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/size"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/image"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:visibility="@{fileModel.fileSize > 0 ? View.VISIBLE : View.GONE}"
+            android:text="@{fileModel.getFileSizeMegaBytes()}"
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/size"
+            android:layout_alignStart="@+id/size"
             android:layout_marginTop="5dp"
-            android:text="Last edited "
-            android:textColor="#858585"
-            android:textSize="12sp" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#efefef" />
-
-        <kore.botssdk.view.AutoExpandListView
-            android:id="@+id/flist_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="#efefef"
-            android:dividerHeight="1dp"
-            android:footerDividersEnabled="false"
-            android:headerDividersEnabled="true" />
-
-    </LinearLayout>
-
-
-</androidx.cardview.widget.CardView>
+            android:text="@{fileModel.getLastModifiedDate()}"
+            android:layout_toEndOf="@+id/image"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+    </RelativeLayout>
+</layout>

@@ -37,4 +37,5 @@
     </plurals>
     <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
     <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
+    <string name="view_more">View %d more</string>
 </resources>
