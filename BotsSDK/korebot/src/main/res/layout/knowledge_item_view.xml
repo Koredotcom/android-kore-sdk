@@ -15,9 +15,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingStart="@dimen/dimen_12dp"
-        android:paddingTop="@dimen/dimen_12dp"
-        android:paddingEnd="@dimen/dimen_12dp"
-        android:paddingBottom="@dimen/dimen_12dp">
+        android:paddingTop="@dimen/dimen_12dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -41,11 +39,12 @@
 
             <TextView
                 android:id="@+id/name_view"
-                android:layout_width="326dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_toEndOf="@+id/profile_view"
                 android:fontFamily="sans-serif-medium"
+                android:paddingEnd="@dimen/dimen_12dp"
                 android:text="@{knowledge.owner.getName()}"
                 android:textColor="@color/color_465360"
                 android:textSize="15sp" />
@@ -55,8 +54,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/name_view"
-                android:layout_marginTop="3dp"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="3dp"
                 android:layout_toEndOf="@+id/profile_view"
                 android:text="@{DateUtils.formattedSentDateV6(knowledge.createdOn)}"
                 android:textColor="@color/color_a3b0be"
@@ -71,6 +70,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
+            android:paddingEnd="@dimen/dimen_12dp"
             android:text="@{knowledge.title}"
             android:textColor="@color/color_465360"
             android:textSize="15sp" />
@@ -82,8 +82,15 @@
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingEnd="@dimen/dimen_12dp"
             android:text="@{knowledge.desc}"
             android:textColor="@color/color_232323"
             android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/inset_65_divider" />
     </LinearLayout>
 </layout>
