@@ -1,18 +1,20 @@
 package kore.botssdk.models;
 import java.util.ArrayList;
 
+import kore.botssdk.utils.StringUtils;
+
 
 /**
  * Created by Shiva Krishna on 1/30/2018.
  */
 
 public class KnowledgeDetailModel  {
-    String streamId;
-    String creator;
-    String lMod;
-    String imageUrl;
+    private String streamId;
+    private String creator;
+    private String lMod;
+    private String imageUrl;
     private String title;
-
+    private ContactInfo owner;
     public String getSharedBy() {
         return sharedBy;
     }
@@ -21,8 +23,8 @@ public class KnowledgeDetailModel  {
         this.sharedBy = sharedBy;
     }
 
-    String sharedBy;
-    String lMUId;
+    private String sharedBy;
+    private String lMUId;
 
     public long getViews() {
         return views;
@@ -32,7 +34,7 @@ public class KnowledgeDetailModel  {
         this.views = views;
     }
 
-    long views;
+    private long views;
 
     public int getCount() {
         return count;
@@ -42,7 +44,7 @@ public class KnowledgeDetailModel  {
         this.count = count;
     }
 
-    int count;
+    private int count;
 
     public String getStreamId() {
         return streamId;
@@ -149,13 +151,13 @@ public class KnowledgeDetailModel  {
         this.linkPreviews = linkPreviews;
     }
 
-    String pId;
+    private String pId;
     String id;
 
     String type;
-    String orgId;
-    String desc;
-    long createdOn;
+    private String orgId;
+    private String desc;
+    private long createdOn;
 
     public ArrayList<String> getHashTag() {
         return hashTag;
@@ -165,11 +167,11 @@ public class KnowledgeDetailModel  {
         this.hashTag = hashTag;
     }
 
-    ArrayList<String> hashTag;
+    private ArrayList<String> hashTag;
 
-    ArrayList<KoreComponentModel> components;
-    ArrayList<LinkPreviewModel> linkPreviews;
-    ArrayList<VoteModel> votes;
+    private ArrayList<KoreComponentModel> components;
+    private ArrayList<LinkPreviewModel> linkPreviews;
+    private ArrayList<VoteModel> votes;
 
     public ArrayList<String> getFollowers() {
         return followers;
@@ -179,7 +181,7 @@ public class KnowledgeDetailModel  {
         this.followers = followers;
     }
 
-    ArrayList<String> followers;
+    private ArrayList<String> followers;
 
     public ArrayList<VoteModel> getVotes() {
         return votes;
@@ -213,9 +215,9 @@ public class KnowledgeDetailModel  {
         this.downVoteCount = downVoteCount;
     }
 
-    int upVoteCount;
-    int downVoteCount;
-    int sharesCount;
+    private int upVoteCount;
+    private int downVoteCount;
+    private int sharesCount;
 
     public int getCommentsCount() {
         return commentsCount;
@@ -225,7 +227,7 @@ public class KnowledgeDetailModel  {
         this.commentsCount = commentsCount;
     }
 
-    int commentsCount;
+    private int commentsCount;
 
     public ArrayList<CommentModel> getComments() {
         return comments;
@@ -235,7 +237,7 @@ public class KnowledgeDetailModel  {
         this.comments = comments;
     }
 
-    ArrayList<CommentModel> comments;
+    private ArrayList<CommentModel> comments;
 
     public int getFollowCount() {
         return followCount;
@@ -245,7 +247,7 @@ public class KnowledgeDetailModel  {
         this.followCount = followCount;
     }
 
-    int followCount;
+    private int followCount;
 
     public MyActions getMyActions() {
         return myActions;
@@ -255,7 +257,7 @@ public class KnowledgeDetailModel  {
         this.myActions = myActions;
     }
 
-    MyActions myActions;
+    private MyActions myActions;
 
     public String getTitle() {
         return title;
@@ -263,6 +265,14 @@ public class KnowledgeDetailModel  {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public ContactInfo getOwner() {
+        return owner;
+    }
+
+    public void setOwner(ContactInfo owner) {
+        this.owner = owner;
     }
 
 
@@ -385,5 +395,63 @@ public class KnowledgeDetailModel  {
         private String comment;
         private String label;
 
+    }
+
+    public class ContactInfo{
+        public String getlN() {
+            return lN;
+        }
+
+        public void setlN(String lN) {
+            this.lN = lN;
+        }
+
+        private String lN;
+        private String fN;
+        private String id;
+
+
+
+        public String getfN() {
+            return fN;
+        }
+
+        public void setfN(String fN) {
+            this.fN = fN;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public String getEmailId() {
+            return emailId;
+        }
+
+        public void setEmailId(String emailId) {
+            this.emailId = emailId;
+        }
+
+        private String color;
+        private String emailId;
+
+        public String getInitials(){
+           return StringUtils.getInitials(fN,lN);
+        }
+        public String getName(){
+            return fN+" "+lN;
+        }
     }
 }

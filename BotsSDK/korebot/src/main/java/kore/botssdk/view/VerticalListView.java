@@ -34,7 +34,8 @@ public class VerticalListView extends ViewGroup {
     private CardView rootLayout;
     private int dp1;
     private TextView viewMore;
-    private DividerItemDecoration divider;
+    private DividerItemDecoration dividerKnowledge,dividerEmail,dividerDrive;
+
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -87,11 +88,19 @@ public class VerticalListView extends ViewGroup {
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 
-        divider = new
+        dividerDrive = new
                 DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL);
-        recyclerDrawable = getResources().getDrawable(R.drawable.recycler_divider);
-        insetDrawable = getResources().getDrawable(R.drawable.inset_65_divider);
+        dividerEmail = new
+                DividerItemDecoration(getContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerKnowledge = new
+                DividerItemDecoration(getContext(),
+                DividerItemDecoration.VERTICAL);
+
+        dividerEmail.setDrawable(getResources().getDrawable(R.drawable.recycler_divider));
+        dividerKnowledge.setDrawable(getResources().getDrawable(R.drawable.recycler_divider));
+        dividerDrive.setDrawable(getResources().getDrawable(R.drawable.inset_65_divider));
 
     }
 
@@ -149,16 +158,14 @@ public class VerticalListView extends ViewGroup {
                 case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                     KoraFilesRecyclerAdapter koraCarousalAdapter = new KoraFilesRecyclerAdapter(data, getContext());
                     recyclerView.setAdapter(koraCarousalAdapter);
-                    divider.setDrawable(insetDrawable);
-                    recyclerView.addItemDecoration(divider);
+                    recyclerView.addItemDecoration(dividerDrive);
                     koraCarousalAdapter.notifyDataSetChanged();
                     break;
                 case BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL:
                     KoraEmailRecyclerAdapter koraEmailRecyclerAdapter = new KoraEmailRecyclerAdapter(data, getContext());
                     koraEmailRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                     recyclerView.setAdapter(koraEmailRecyclerAdapter);
-                    divider.setDrawable(recyclerDrawable);
-                    recyclerView.addItemDecoration(divider);
+                    recyclerView.addItemDecoration(dividerEmail);
                     koraEmailRecyclerAdapter.notifyDataSetChanged();
                     break;
                 case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
@@ -166,8 +173,7 @@ public class VerticalListView extends ViewGroup {
                     knowledgeRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                     knowledgeRecyclerAdapter.setComposeFooterInterface(composeFooterInterface);
                     recyclerView.setAdapter(knowledgeRecyclerAdapter);
-                    divider.setDrawable(recyclerDrawable);
-                    recyclerView.addItemDecoration(divider);
+                    recyclerView.addItemDecoration(dividerKnowledge);
                     knowledgeRecyclerAdapter.notifyDataSetChanged();
                 default:
 

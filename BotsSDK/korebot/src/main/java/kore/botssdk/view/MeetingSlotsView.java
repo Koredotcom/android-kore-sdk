@@ -19,6 +19,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.utils.BundleConstants;
@@ -132,9 +133,9 @@ public class MeetingSlotsView extends ViewGroup{
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putString(BundleConstants.SLOTS_LIST, meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getWorking_hours()) : "");
-                    bundle.putString(BundleConstants.QUICK_SLOTS, meetingTemplateModel != null ? gson.toJson(meetingTemplateModel.getQuick_slots()) : "");
-                    composeFooterInterface.launchActivityWithBundle(0, bundle);
+                    bundle.putString(BundleConstants.SLOTS_LIST, gson.toJson(meetingTemplateModel.getWorking_hours()));
+                    bundle.putString(BundleConstants.QUICK_SLOTS,  gson.toJson(meetingTemplateModel.getQuick_slots()));
+                    composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_SLOT_PICKER, bundle);
                 }
             } : null);
         }else{

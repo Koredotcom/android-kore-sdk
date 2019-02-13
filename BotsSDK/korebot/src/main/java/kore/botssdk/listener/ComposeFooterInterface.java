@@ -20,7 +20,7 @@ public interface ComposeFooterInterface {
 
     void onFormActionButtonClicked(FormActionTemplate fTemplate);
 
-    void launchActivityWithBundle(int type,Bundle payload);
+    void launchActivityWithBundle(String type,Bundle payload);
 
     void sendWithSomeDelay(String message,String payload,long time);
     void copyMessageToComposer(String text);

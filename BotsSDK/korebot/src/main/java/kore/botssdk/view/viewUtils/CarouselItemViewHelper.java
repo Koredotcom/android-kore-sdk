@@ -168,7 +168,7 @@ public class CarouselItemViewHelper {
                         }else if(BundleConstants.BUTTON_TYPE_HELP_RESOLVE.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             Bundle extras = new Bundle();
                             extras.putString(BundleConstants.RESOURCE_ID,botCaourselButtonModel.getId());
-                            composeFooterInterface.launchActivityWithBundle(1,extras);
+                            composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL,extras);
                         }else if(BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             String buttonPayload = botCaourselButtonModel.getPayload();
 //                            String buttonTitle = botCaourselButtonModel.getTitle();

@@ -3,6 +3,7 @@ package kore.botssdk.utils;
 import java.io.StringWriter;
 import java.util.HashMap;
 
+
 /**
  * Created by Ramachandra Pradeep on 12/20/2016.
  */
@@ -217,4 +218,21 @@ public class StringUtils {
     public static boolean isNullOrEmptyWithTrim(CharSequence charSequence) {
         return charSequence == null || charSequence.toString().trim().isEmpty();
     }
+    public static String getInitials(String name) {
+        if (!StringUtils.isNullOrEmptyWithTrim(name)) {
+            String[] strings = name.trim().split("\\s+");
+            String str = (strings.length == 1) ? "" + strings[0].charAt(0) : ("" + strings[0].charAt(0) + strings[1].charAt(0));
+            return str.toUpperCase();
+        }
+        return "";
+    }
+
+    public static String getInitials(String fn, String ln) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "");
+        stringBuilder.append(" ");
+        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
+        return stringBuilder.toString().trim();
+    }
+
 }

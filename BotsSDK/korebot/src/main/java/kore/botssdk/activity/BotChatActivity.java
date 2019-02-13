@@ -254,7 +254,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void launchActivityWithBundle(int type, Bundle payload) {
+    public void launchActivityWithBundle(String type, Bundle payload) {
 
     }
 
