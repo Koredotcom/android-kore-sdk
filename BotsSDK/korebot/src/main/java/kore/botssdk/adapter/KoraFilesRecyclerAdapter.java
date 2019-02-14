@@ -21,6 +21,7 @@ import kore.botssdk.databinding.KoraFileLookupViewBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.view.viewUtils.FileUtils;
@@ -34,6 +35,8 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter<KoraFilesRecy
     private Context context;
     private ArrayList<KaFileLookupModel> kaFileLookupModels;
     private boolean isExpanded;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
+
 
     public KoraFilesRecyclerAdapter(ArrayList<KaFileLookupModel> fileLookupModels, Context context) {
         this.kaFileLookupModels = fileLookupModels;
@@ -55,17 +58,12 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter<KoraFilesRecy
             public void onClick(View v) {
                 KaFileLookupModel kaFileLookupModel = kaFileLookupModels.get(position);
                 if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
-                    launchDetails(kaFileLookupModel.getButtons().get(0));
-                }
+                    verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
+            }
             }
         });
     }
 
-    private void launchDetails(BotCaourselButtonModel botCaourselButtonModel) {
-        LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) botCaourselButtonModel.getCustomData().get("redirectUrl");
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get("mob")));
-        context.startActivity(browserIntent);
-    }
 
     @Override
     public int getItemCount() {
@@ -81,14 +79,10 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter<KoraFilesRecy
     }
 
     @Override
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
-    @Override
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-
-    }
 
     @Override
     public ArrayList getData() {

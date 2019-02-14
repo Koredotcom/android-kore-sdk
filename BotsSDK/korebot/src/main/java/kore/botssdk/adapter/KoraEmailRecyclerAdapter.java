@@ -15,6 +15,7 @@ import kore.botssdk.databinding.EmailLookupViewBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.EmailModel;
 
@@ -27,7 +28,7 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
     private Context context;
     private ArrayList<EmailModel> emailModels;
     private boolean isExpanded;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
 
     public KoraEmailRecyclerAdapter(ArrayList<EmailModel> emailModels, Context context) {
         this.emailModels = emailModels;
@@ -49,7 +50,7 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
                 EmailModel emailModel = emailModels.get(position);
                 if (emailModel.getButtons() == null || emailModel.getButtons().size() == 0) return;
                 BotCaourselButtonModel botCaourselButtonModel = emailModels.get(position).getButtons().get(0);
-                invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(), botCaourselButtonModel.getCustomData());
+                verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
             }
         });
     }
@@ -68,6 +69,11 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
     }
 
     @Override
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
+    }
+
+    @Override
     public ArrayList getData() {
         return emailModels;
     }
@@ -75,15 +81,6 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
     @Override
     public void setData(ArrayList data) {
         emailModels = data;
-
-    }
-
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    @Override
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
 
     }
 

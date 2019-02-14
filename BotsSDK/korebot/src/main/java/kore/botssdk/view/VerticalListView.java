@@ -1,14 +1,20 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.internal.LinkedTreeMap;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,6 +27,8 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -29,11 +37,12 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  * Created by Ramachandra Pradeep on 09-Aug-18.
  */
 
-public class VerticalListView extends ViewGroup {
+public class VerticalListView extends ViewGroup implements VerticalListViewActionHelper {
     private RecyclerView recyclerView;
     private CardView rootLayout;
     private int dp1;
     private TextView viewMore;
+
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
@@ -41,9 +50,6 @@ public class VerticalListView extends ViewGroup {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-        if(recyclerView.getAdapter() != null){
-            ((RecyclerViewDataAccessor)(recyclerView.getAdapter())).setComposeFooterInterface(composeFooterInterface);
-        }
     }
 
     private ComposeFooterInterface composeFooterInterface;
@@ -138,22 +144,14 @@ public class VerticalListView extends ViewGroup {
         } else {
             switch (templateType) {
                 case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
-                    KoraFilesRecyclerAdapter koraCarousalAdapter = new KoraFilesRecyclerAdapter(data, getContext());
-                    recyclerView.setAdapter(koraCarousalAdapter);
-                    koraCarousalAdapter.notifyDataSetChanged();
+                    setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
                     break;
                 case BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL:
-                    KoraEmailRecyclerAdapter koraEmailRecyclerAdapter = new KoraEmailRecyclerAdapter(data, getContext());
-                    koraEmailRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                    recyclerView.setAdapter(koraEmailRecyclerAdapter);
-                    koraEmailRecyclerAdapter.notifyDataSetChanged();
+                    setAdapter(new KoraEmailRecyclerAdapter(data, getContext()));
                     break;
                 case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
-                    KnowledgeRecyclerAdapter knowledgeRecyclerAdapter = new KnowledgeRecyclerAdapter(data,getContext());
-                    knowledgeRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                    knowledgeRecyclerAdapter.setComposeFooterInterface(composeFooterInterface);
-                    recyclerView.setAdapter(knowledgeRecyclerAdapter);
-                    knowledgeRecyclerAdapter.notifyDataSetChanged();
+                    setAdapter(new KnowledgeRecyclerAdapter(data, getContext()));
+                    break;
                 default:
 
             }
@@ -167,10 +165,30 @@ public class VerticalListView extends ViewGroup {
 
     }
 
+    public void setAdapter(RecyclerView.Adapter adapter) {
+        recyclerView.setAdapter(adapter);
+        ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
+        adapter.notifyDataSetChanged();
+    }
+
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-        if(recyclerView.getAdapter() != null){
-            ((RecyclerViewDataAccessor)(recyclerView.getAdapter())).setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        }
+    }
+
+    @Override
+    public void knowledgeItemClicked(Bundle extras) {
+        composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
+    }
+
+    @Override
+    public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {
+        LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) botCaourselButtonModel.getCustomData().get("redirectUrl");
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get("mob")));
+        getContext().startActivity(browserIntent);
+    }
+
+    @Override
+    public void emailItemClicked(String action, HashMap customData) {
+        invokeGenericWebViewInterface.handleUserActions(action, customData);
     }
 }

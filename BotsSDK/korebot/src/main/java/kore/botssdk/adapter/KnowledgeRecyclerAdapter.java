@@ -18,6 +18,7 @@ import kore.botssdk.databinding.KnowledgeItemViewBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
@@ -31,8 +32,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     private Context context;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterInterface composeFooterInterface;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
 
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
@@ -58,7 +58,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
             public void onClick(View v) {
                 Bundle extras = new Bundle();
                 extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
-                composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
+                verticalListViewActionHelper.knowledgeItemClicked(extras);
             }
         });
     }
@@ -77,6 +77,11 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     }
 
     @Override
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
+    }
+
+    @Override
     public ArrayList getData() {
         return knowledgeDetailModels;
     }
@@ -87,14 +92,6 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
 
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    @Override
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         KnowledgeItemViewBinding knowledgeItemViewBinding;
