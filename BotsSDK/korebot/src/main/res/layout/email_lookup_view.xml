@@ -89,6 +89,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="1"
+            android:visibility="@{emailModel.desc == null  || emailModel.desc.isEmpty() ? View.GONE : View.VISIBLE}"
             android:text="@{emailModel.desc}"
             android:textColor="#465360"
             android:textSize="15sp" />
