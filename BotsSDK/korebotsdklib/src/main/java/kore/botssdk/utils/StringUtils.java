@@ -230,7 +230,6 @@ public class StringUtils {
     public static String getInitials(String fn, String ln) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "");
-        stringBuilder.append(" ");
         stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
         return stringBuilder.toString().trim();
     }
