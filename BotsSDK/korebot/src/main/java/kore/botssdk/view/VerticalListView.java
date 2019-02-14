@@ -79,12 +79,12 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         viewMore.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecyclerView.Adapter adapter = recyclerView.getAdapter();
+               RecyclerView.Adapter adapter = recyclerView.getAdapter();
                 if (adapter == null) return;
-                ((RecyclerViewDataAccessor) adapter).setExpanded(true);
-                adapter.notifyDataSetChanged();
+          /*       ((RecyclerViewDataAccessor) adapter).setExpanded(true);
+                adapter.notifyDataSetChanged();*/
                 composeFooterInterface.openFullView(getTemplateType(adapter), ((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData());
-                viewMore.setVisibility(GONE);
+             //   viewMore.setVisibility(GONE);
             }
         });
 
@@ -98,7 +98,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         } else if (adapter instanceof KoraEmailRecyclerAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL;
         } else {
-            return "";
+            return BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL;
         }
     }
 

@@ -41,8 +41,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="14dp"
             android:fontFamily="sans-serif"
-            android:paddingEnd="12dp"
             android:text="@{emailModel.getDateFormat()}"
             android:textColor="#a3b0be"
             android:textSize="15sp" />
@@ -71,10 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/from"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/dimen_8dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginEnd="14dp"
             android:scaleType="fitCenter"
-            android:paddingEnd="12dp"
             android:src="@mipmap/icon_attachment_doc"
             android:visibility="@{emailModel.attachments == null || emailModel.attachments.length == 0 ? View.GONE : View.VISIBLE}" />
 
