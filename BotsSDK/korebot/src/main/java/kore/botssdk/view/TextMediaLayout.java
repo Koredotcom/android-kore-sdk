@@ -122,6 +122,7 @@ public class TextMediaLayout extends MediaLayout {
             textualContent = unescapeHtml4(textualContent.trim());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
             URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
+
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
