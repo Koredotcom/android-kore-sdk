@@ -218,7 +218,6 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
         bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
-        bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
       /*  bubbleTextMediaLayout.setLinkTextColor(getLinkTextColor());*/
         addView(bubbleTextMediaLayout);
 
@@ -469,15 +468,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected void determineTextColor() {
         if (isLeftSide()) {
             if (isSelected()) {
-                textColor = context.getResources().getColor(R.color.bubble_light_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             } else {
-                textColor = context.getResources().getColor(R.color.bubble_dark_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             }
         } else {
             if (isLeftSide()) {
                 textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             } else if (!isLeftSide()) {
-                textColor = context.getResources().getColor(R.color.right_bubble_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             }
         }
     }

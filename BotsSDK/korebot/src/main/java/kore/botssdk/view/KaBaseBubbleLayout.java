@@ -32,6 +32,8 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
+
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -50,7 +52,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     private boolean leftSide;
     protected boolean isContinuousMessage = false;
     protected boolean isSeparatedClosely = false;
-    protected boolean doDrawBubbleBackground = true;
+    protected boolean doDrawBubbleBackground = false;
     protected boolean isGroupMessage = false;
     protected int[] textMediaDimen;
     protected int[] maxBubbleDimen;
@@ -164,11 +166,13 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     private void init() {
         initiliazeCoordinates();
-        setWillNotDraw(false);
-        paint = new Paint();
-        paint.setXfermode(null);
-        setPaintColor(paint);
-        paint.setAntiAlias(true);
+        if(isDoDrawBubbleBackground()) {
+            setWillNotDraw(false);
+            paint = new Paint();
+            paint.setXfermode(null);
+            setPaintColor(paint);
+            paint.setAntiAlias(true);
+        }
         viewAddition();
     }
 
@@ -202,7 +206,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             BUBBLE_CONTENT_LEFT_MARGIN = (int) dp12;
             BUBBLE_CONTENT_TOP_MARGIN = (int) (8 * dp1);
             BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp12;
-            BUBBLE_CONTENT_BOTTOM_MARGIN = (int) (8 * dp1);
+            BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 23 * dp1);
             senderImageRadius = (int) (dp1 * 17); // Change this value if sender image width and height is changed
             bubbleCornerRadius = (int) dp15;
             float arrow_factor = 1f;//(float) (1 / Math.sqrt(3));
@@ -265,7 +269,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
         bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
-        bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         addView(bubbleTextMediaLayout);
 
         botButtonView = ViewProvider.getBotButtonView(context,null,null);
@@ -323,6 +326,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
         timeStampsTextView = ViewProvider.getTimeStampTextView(context);
+        timeStampsTextView.setPadding(0,(int)dp1*3  ,0,0);
         addView(timeStampsTextView);
         timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
 
@@ -339,23 +343,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if(isDoDrawBubbleBackground()) {
+            //First clear everything
+            clearCanvas(canvas);
 
-        //First clear everything
-        clearCanvas(canvas);
-
-        //Set the Paint
-        setPaintStroke(paint, !isSelected());
-/*
-
-        //Draw Arrow
-        if (isContinuousMessage() && isSeparatedClosely()) {
-        } else {
-            drawCurve(canvas);
+            //Set the Paint
+            setPaintStroke(paint, !isSelected());
+            drawBubbleBackground(canvas);
         }
-*/
-
-        //Draw Rectangle
-        drawBubbleBackground(canvas);
     }
 
     private void clearCanvas(Canvas canvas) {
@@ -457,9 +452,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage,
                                  boolean constrictLayout,int... dimens) {
 
-
+    //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
         this.dimens = dimens;
-
+        bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         // Customize BubbleSeparation
         setSeparatedClosely(true);
         // Customise BubbleTimeLineGrouping Height
@@ -482,6 +477,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         // 70% of UI-alignments happens here...
         cosmeticChanges(baseBotMessage);
 
+
     }
 
     private ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
@@ -493,7 +489,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
     protected void preCosmeticChanges() {
-        setDoDrawBubbleBackground(true);
+        setDoDrawBubbleBackground(false);
         determineTextColor();
         textViewCosmeticChanges();
     }
@@ -502,6 +498,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
      * UI changes
      */
     protected void cosmeticChanges(BaseBotMessage baseBotMessage) {
+        bubbleTextMediaLayout.setGravityAndTypeFace();
     }
 
     protected void determineTextColor() {

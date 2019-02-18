@@ -10,6 +10,8 @@ import java.util.Collections;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
+
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -47,7 +49,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void initializeBubbleBorderPass1() {
         BUBBLE_CONTENT_TOP_MARGIN = (int) (8 * dp1);
-        BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(8 * dp1);
+        BUBBLE_CONTENT_BOTTOM_MARGIN = BubbleUI ? (int)(8 * dp1) : (int)(23 * dp1);
         BUBBLE_LEFT_PROFILE_PIC = 0;
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) (1 * dp1);
@@ -55,10 +57,10 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
             BUBBLE_TOP_BORDER = (int) (8 * dp1);
         }
         BUBBLE_LEFT_BORDER = 0;
-        BUBBLE_RIGHT_BORDER = (int) (2 * dp6 + dp6 + 2 * dp1);
+        BUBBLE_RIGHT_BORDER = BubbleUI ? (int) (2 * dp6 + dp6 + 2 * dp1) : 0;
         BUBBLE_DOWN_BORDER = 0;
         BUBBLE_LEFT_ARROW_WIDTH = 0;
-        BUBBLE_RIGHT_ARROW_WIDTH = (int) dp6;
+        BUBBLE_RIGHT_ARROW_WIDTH = BubbleUI ?(int) dp6 : 0;
 
     }
 
@@ -140,7 +142,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
 
 
         left = containerWidth - (timeStampsTextView.getMeasuredWidth()+bubbleTextMediaLayouMarginRight);
-        top = bubbleTextMediaLayout.getBottom()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
+        top = bubbleTextMediaLayout.getBottom();
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
     }

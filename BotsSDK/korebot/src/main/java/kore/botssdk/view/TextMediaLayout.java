@@ -2,6 +2,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
@@ -50,7 +52,7 @@ public class TextMediaLayout extends MediaLayout {
 
     public static int GRAVITY_LEFT = 0;
     public static int GRAVITY_RIGHT = 1;
-   public int gravity = 0;
+    public int gravity = 0;
 
     public static int MATCH_PARENT = 0;
     public static int WRAP_CONTENT = 1;
@@ -59,8 +61,9 @@ public class TextMediaLayout extends MediaLayout {
     float dp1;
     private Context mContext;
     final String TEXT_COLOR = "#000000";
-    private int linkTextColor ;
-
+    private int linkTextColor;
+    private Typeface medium, regular;
+    private Drawable drawable;
 
 
     public TextMediaLayout(Context context) {
@@ -69,14 +72,17 @@ public class TextMediaLayout extends MediaLayout {
         init();
     }
 
-    public TextMediaLayout(Context context,int linkTextColor) {
+    public TextMediaLayout(Context context, int linkTextColor) {
         super(context);
         this.mContext = context;
         this.linkTextColor = linkTextColor;
         init();
     }
-    private void init() {
 
+    private void init() {
+        medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+        regular = Typeface.create("sans-serif", Typeface.NORMAL);
+        drawable = getResources().getDrawable(R.drawable.ic_quote);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
@@ -87,10 +93,11 @@ public class TextMediaLayout extends MediaLayout {
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
         botContentTextView.setText("");
-
-        botContentTextView.setLayoutParams(txtVwParams);
+      /*  botContentTextView.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
+        botContentTextView.setCompoundDrawablePadding((int)10 * dp1);
+      */  botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
@@ -98,14 +105,7 @@ public class TextMediaLayout extends MediaLayout {
         float dp5 = dp1 * 5;
         botContentTextView.setPadding(0, 0, 0, (int) dp5);
         botContentTextView.setLinkTextColor(linkTextColor);
-        KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
-        if (gravity == GRAVITY_LEFT) {
-            botContentTextView.setGravity(Gravity.LEFT);
-
-        } else if (gravity == GRAVITY_RIGHT) {
-            botContentTextView.setGravity(Gravity.RIGHT);
-
-        }
+        // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
         botContentTextView.setLongClickable(false);
@@ -133,9 +133,19 @@ public class TextMediaLayout extends MediaLayout {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
         }
+
     }
 
+    public void setGravityAndTypeFace(){
+        if (gravity == GRAVITY_LEFT) {
+            botContentTextView.setGravity(Gravity.START);
+            botContentTextView.setTypeface(medium);
 
+        } else {
+            botContentTextView.setGravity(Gravity.END);
+            botContentTextView.setTypeface(regular);
+        }
+    }
 
     protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
         int start = strBuilder.getSpanStart(span);
