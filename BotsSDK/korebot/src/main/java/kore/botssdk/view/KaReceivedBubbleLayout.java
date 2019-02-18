@@ -537,13 +537,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For Carousel View
          */
         left = 0;
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(botCarouselView, left, top);
 
 
         /*Files carousal */
         left = (int)(16 * dp1);
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(verticalListView, left, top);
 
 
@@ -551,7 +551,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For Button View
          */
         left = bubbleTextMediaLayout.getLeft()- (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(botListTemplateView, left, top);
 
 
@@ -560,7 +560,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For PieChat view
          */
         left = cpvSenderImage.getRight() / 2;
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(botPieChartView, left, top);
 
 
@@ -568,11 +568,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For Table view
          */
         left = cpvSenderImage.getRight() / 2;
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() : minimumTop;
         LayoutUtils.layoutChild(tableView, left, top);
 
         left = cpvSenderImage.getRight() / 2;
-        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (5 * dp1) : minimumTop;
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() : minimumTop;
         LayoutUtils.layoutChild(lineChartView, left, top);
 
 

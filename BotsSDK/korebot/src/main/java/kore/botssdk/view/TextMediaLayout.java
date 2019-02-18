@@ -102,8 +102,7 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView.setClickable(false);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
         botContentTextView.setId(TEXTVIEW_ID);
-        float dp5 = dp1 * 5;
-        botContentTextView.setPadding(0, 0, 0, (int) dp5);
+        botContentTextView.setPadding(0, 0, 0, 0);
         botContentTextView.setLinkTextColor(linkTextColor);
         // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         botContentTextView.setFocusable(false);
