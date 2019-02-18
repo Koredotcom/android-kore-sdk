@@ -159,6 +159,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     }
     private void resetAll(){
         botButtonView.setVisibility(View.GONE);
+        botButtonView.populateButtonList(null);
         botCarouselView.populateCarouselView(null);
         botCarouselView.setVisibility(View.GONE);
         verticalListView.prepareDataSetAndPopulate(null,null);
@@ -172,6 +173,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         taskViewWidget.populateData(null,-1,false);
         taskViewWidget.setVisibility(GONE);
         botListTemplateView.setVisibility(View.GONE);
+        botListTemplateView.populateListTemplateView(null,null);
         botPieChartView.setVisibility(View.GONE);
         tableView.setVisibility(View.GONE);
         lineChartView.setVisibility(GONE);
