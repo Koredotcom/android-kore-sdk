@@ -87,10 +87,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_LEFT_PROFILE_PIC = cpvSenderImage.getMeasuredWidth();
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? (int) (10 * dp1) : 0;
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? 0 : 0;
-        if (isContinuousMessage && isSeparatedClosely) {
+        if (isContinuousMessage) {
             BUBBLE_TOP_BORDER = (int) dp1;
         } else {
-            BUBBLE_TOP_BORDER = (int) (8 * dp1);
+            BUBBLE_TOP_BORDER = (int) (10 * dp1);
         }
         BUBBLE_LEFT_BORDER = (int) ((!isGroupMessage) ? BubbleUI ? dp4 : 0 : dp1);
         BUBBLE_RIGHT_BORDER = (int) dp1;
@@ -99,8 +99,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_LEFT_ARROW_WIDTH = (int) (BubbleUI ? BUBBLE_ARROW_WIDTH / 2 + 7 * dp1 : 0);
         BUBBLE_RIGHT_ARROW_WIDTH = 0;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0) {
-            BUBBLE_CONTENT_TOP_MARGIN = (int) (8 * dp1);
-            BUBBLE_CONTENT_BOTTOM_MARGIN = (int) (BubbleUI ?  8 * dp1 : 23 * dp1);
+            BUBBLE_CONTENT_TOP_MARGIN = 0;
+            BUBBLE_CONTENT_BOTTOM_MARGIN = (int) (BubbleUI ?  8 * dp1 : 21 * dp1);
         } else {
             BUBBLE_CONTENT_TOP_MARGIN = 0;
             BUBBLE_CONTENT_BOTTOM_MARGIN = 0;

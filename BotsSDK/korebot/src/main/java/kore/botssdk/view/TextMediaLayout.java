@@ -2,9 +2,10 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -18,14 +19,10 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
-import kore.botssdk.utils.markdown.MarkdownTagHandler;
+import kore.botssdk.drawables.TopGravityDrawable;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 /**
@@ -82,7 +79,8 @@ public class TextMediaLayout extends MediaLayout {
     private void init() {
         medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         regular = Typeface.create("sans-serif", Typeface.NORMAL);
-        drawable = getResources().getDrawable(R.drawable.ic_quote);
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_quote);
+        drawable = new TopGravityDrawable(getResources(), bitmap);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
@@ -95,9 +93,7 @@ public class TextMediaLayout extends MediaLayout {
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
         botContentTextView.setText("");
-      /*  botContentTextView.setCompoundDrawablesWithIntrinsicBounds(drawable,null,null,null);
-        botContentTextView.setCompoundDrawablePadding((int)10 * dp1);
-      */  botContentTextView.setLayoutParams(txtVwParams);
+        botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
@@ -137,12 +133,14 @@ public class TextMediaLayout extends MediaLayout {
 
     public void setGravityAndTypeFace(){
         if (gravity == GRAVITY_LEFT) {
-            botContentTextView.setGravity(Gravity.START);
+         //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
-
+            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
         } else {
-            botContentTextView.setGravity(Gravity.END);
+           // botContentTextView.setGravity(Gravity.END);
             botContentTextView.setTypeface(regular);
+            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,null,null,null);
+            botContentTextView.setCompoundDrawablePadding((int)(4 * dp1));
         }
     }
 

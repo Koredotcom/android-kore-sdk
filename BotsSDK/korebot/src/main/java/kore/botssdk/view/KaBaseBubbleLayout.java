@@ -51,7 +51,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int senderImageRadius, bubbleCornerRadius;
     private boolean leftSide;
     protected boolean isContinuousMessage = false;
-    protected boolean isSeparatedClosely = false;
     protected boolean doDrawBubbleBackground = false;
     protected boolean isGroupMessage = false;
     protected int[] textMediaDimen;
@@ -204,9 +203,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             BUBBLE_READ_RECEIPT = (int) (dp1 * 7);
             BUBBLE_ARROW_WIDTH = (int) dp1;
             BUBBLE_CONTENT_LEFT_MARGIN = (int) dp12;
-            BUBBLE_CONTENT_TOP_MARGIN = (int) (8 * dp1);
+            BUBBLE_CONTENT_TOP_MARGIN = 0;
             BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp12;
-            BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 23 * dp1);
+            BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 21 * dp1);
             senderImageRadius = (int) (dp1 * 17); // Change this value if sender image width and height is changed
             bubbleCornerRadius = (int) dp15;
             float arrow_factor = 1f;//(float) (1 / Math.sqrt(3));
@@ -456,7 +455,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         this.dimens = dimens;
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         // Customize BubbleSeparation
-        setSeparatedClosely(true);
         // Customise BubbleTimeLineGrouping Height
         BUBBLE_GROUPING_TIMELINE = 0;
 
@@ -616,14 +614,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     public void setContinuousMessage(boolean isContinuousMessage) {
         this.isContinuousMessage = isContinuousMessage;
-    }
-
-    public boolean isSeparatedClosely() {
-        return isSeparatedClosely;
-    }
-
-    public void setSeparatedClosely(boolean isSeparatedClosely) {
-        this.isSeparatedClosely = isSeparatedClosely;
     }
 
     public void setGroupMessage(boolean groupMessage) {

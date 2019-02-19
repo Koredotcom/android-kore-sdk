@@ -97,7 +97,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
-        holder.baseBubbleLayout.setContinuousMessage(false);
+        holder.baseBubbleLayout.setContinuousMessage(position == 0 || checkIsContinuous(position));
         holder.baseBubbleLayout.setGroupMessage(false);
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -134,6 +134,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
                 }
             });
         }
+    }
+
+    private boolean checkIsContinuous(int position) {
+        if(getItem(position).isSend() && getItem(position-1).isSend()){
+            return true;
+        }else return !getItem(position).isSend() && !getItem(position - 1).isSend();
     }
 
 
