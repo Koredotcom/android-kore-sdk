@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +107,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         if(Collections.isEmpty(headersMap)) {
             prepareHeaderMap();
         }
-        holder.headerView.setVisibility(getItem(position) != null && headersMap.get(getItem(position).getFormattedDate()) == position ? View.VISIBLE : View.GONE);
+        //TODO Need to re visit : Handled crash in a bad way(if you change time zone and come back app crashing)
+        boolean fDate = false;
+        try {
+            fDate = headersMap.get(getItem(position).getFormattedDate()) == position;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        holder.headerView.setVisibility(getItem(position) != null && fDate ? View.VISIBLE : View.GONE);
         if(getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
