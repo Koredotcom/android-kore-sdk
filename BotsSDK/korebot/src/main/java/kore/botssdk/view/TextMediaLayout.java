@@ -2,7 +2,10 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Html;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -16,14 +19,10 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
-import kore.botssdk.utils.markdown.MarkdownTagHandler;
+import kore.botssdk.drawables.TopGravityDrawable;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 /**
@@ -50,7 +49,7 @@ public class TextMediaLayout extends MediaLayout {
 
     public static int GRAVITY_LEFT = 0;
     public static int GRAVITY_RIGHT = 1;
-   public int gravity = 0;
+    public int gravity = 0;
 
     public static int MATCH_PARENT = 0;
     public static int WRAP_CONTENT = 1;
@@ -59,8 +58,9 @@ public class TextMediaLayout extends MediaLayout {
     float dp1;
     private Context mContext;
     final String TEXT_COLOR = "#000000";
-    private int linkTextColor ;
-
+    private int linkTextColor;
+    private Typeface medium, regular;
+    private Drawable drawable;
 
 
     public TextMediaLayout(Context context) {
@@ -69,14 +69,18 @@ public class TextMediaLayout extends MediaLayout {
         init();
     }
 
-    public TextMediaLayout(Context context,int linkTextColor) {
+    public TextMediaLayout(Context context, int linkTextColor) {
         super(context);
         this.mContext = context;
         this.linkTextColor = linkTextColor;
         init();
     }
-    private void init() {
 
+    private void init() {
+        medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+        regular = Typeface.create("sans-serif", Typeface.NORMAL);
+        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_quote);
+        drawable = new TopGravityDrawable(getResources(), bitmap);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
@@ -87,25 +91,16 @@ public class TextMediaLayout extends MediaLayout {
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
         botContentTextView.setText("");
-
         botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
         botContentTextView.setId(TEXTVIEW_ID);
-        float dp5 = dp1 * 5;
-        botContentTextView.setPadding(0, 0, 0, (int) dp5);
+        botContentTextView.setPadding(0, 0, 0, 0);
         botContentTextView.setLinkTextColor(linkTextColor);
-        KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
-        if (gravity == GRAVITY_LEFT) {
-            botContentTextView.setGravity(Gravity.LEFT);
-
-        } else if (gravity == GRAVITY_RIGHT) {
-            botContentTextView.setGravity(Gravity.RIGHT);
-
-        }
+        // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
         botContentTextView.setLongClickable(false);
@@ -133,9 +128,21 @@ public class TextMediaLayout extends MediaLayout {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
         }
+
     }
 
-
+    public void setGravityAndTypeFace(){
+        if (gravity == GRAVITY_LEFT) {
+         //   botContentTextView.setGravity(Gravity.START);
+            botContentTextView.setTypeface(medium);
+            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+        } else {
+           // botContentTextView.setGravity(Gravity.END);
+            botContentTextView.setTypeface(regular);
+            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,null,null,null);
+            botContentTextView.setCompoundDrawablePadding((int)(4 * dp1));
+        }
+    }
 
     protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
         int start = strBuilder.getSpanStart(span);

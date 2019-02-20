@@ -31,6 +31,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
@@ -211,6 +212,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         processPayload("", botResponse);
     }
 
+    public void updateActionbar(boolean isSelected,String type) {
+
+    }
+
+    @Override
+    public void actionItemClicked(BotButtonModel botButtonModel) {
+
+    }
+
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
             actionBarTitleUpdateHandler = new Handler();
@@ -272,6 +282,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void openFullView(String templateType, ArrayList data) {
 
     }
+
+
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;

@@ -10,5 +10,6 @@ public interface VerticalListViewActionHelper {
     void knowledgeItemClicked(Bundle extras);
     void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel);
     void emailItemClicked(String action, HashMap customData);
+    void tasksSelectedOrDeselected(boolean selecetd);
 
 }

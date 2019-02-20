@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -210,3 +211,4 @@ public class TaskViewWidget extends ViewGroup {
     }
 }
 
+*/

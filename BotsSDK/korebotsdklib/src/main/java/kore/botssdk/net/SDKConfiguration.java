@@ -159,12 +159,13 @@ public class SDKConfiguration {
         public static  String rightBubbleUnSelected="#6168e7";
         public static  String leftBubbleSelected="#D3D3D3";
         public static  String leftBubbleUnSelected="#f8f9f8";
-        public static  String leftBubbleTextColor="#444444";
-        public static  String rightBubbleTextColor="#FFFFFF";
+        public static  String leftBubbleTextColor="#465360";
+        public static  String rightBubbleTextColor="#465360";
         public static  String whiteColor="#FFFFFF";
         public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor="#FFFFFF";
+        public static  String rightLinkColor="#6168e7";
         public static  String leftLinkColor = "#6168e7";
+        public static final boolean BubbleUI = false;
 
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
