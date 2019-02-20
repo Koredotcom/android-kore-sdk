@@ -4,13 +4,19 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.ProfileIndicationAdapter;
@@ -30,7 +36,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private RecyclerView recyclerView;
     private TextView locationView;
     private TextView titleView;
-    private TextView dateView;
+    private TextView dateView, tv_time, tv_users;
 
     private View slotLayout;
 
@@ -85,14 +91,16 @@ public class MeetingConfirmationView extends ViewGroup {
         //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         //recyclerView.setLayoutManager(layoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
-       // KaFontUtils.applyCustomFont(getContext(), view);
+        // KaFontUtils.applyCustomFont(getContext(), view);
         locationView = (TextView) view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
         titleView = (TextView) view.findViewById(R.id.title_view);
         dateView = (TextView) view.findViewById(R.id.date_view);
+        tv_users = (TextView) view.findViewById(R.id.tv_users);
+        tv_time = (TextView) view.findViewById(R.id.tv_time);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
-        slotLayout.setBackground(backgroundDrawable);
+        //backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
+        // slotLayout.setBackground(backgroundDrawable);
     }
 
 
@@ -120,6 +128,7 @@ public class MeetingConfirmationView extends ViewGroup {
             ProfileIndicationAdapter profileIndicationAdapter;
             profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
             recyclerView.setAdapter(profileIndicationAdapter);
+
             profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
             profileIndicationAdapter.notifyDataSetChanged();
 
@@ -131,21 +140,81 @@ public class MeetingConfirmationView extends ViewGroup {
             } else {
                 locationView.setVisibility(GONE);
             }
-            if(meetingConfirmationModel.getDate() > 0 && meetingConfirmationModel.getSlot_end() > 0 && meetingConfirmationModel.getSlot_start() > 0) {
-                String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toLowerCase();
-                String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toLowerCase();
-                dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
+            if (meetingConfirmationModel.getDate() > 0 && meetingConfirmationModel.getSlot_end() > 0 && meetingConfirmationModel.getSlot_start() > 0) {
+                String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toUpperCase();
+                String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toUpperCase();
+                //  dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
+                dateView.setText(MessageFormat.format("{0}", DateUtils.getDateinMeetingFormat(meetingConfirmationModel.getDate()).toUpperCase()));
+                tv_time.setText(startTime + "\n" + endTime);
+
+
+                tv_users.setText((getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())));
                 dateView.setVisibility(VISIBLE);
-            }else{
+                tv_time.setVisibility(VISIBLE);
+            } else {
                 dateView.setVisibility(GONE);
+                tv_time.setVisibility(GONE);
             }
-            recyclerView.setVisibility(VISIBLE);
+            //GONE
+            recyclerView.setVisibility(GONE);
         } else {
             slotLayout.setVisibility(GONE);
         }
 
     }
 
+   /* private String getAttendies(ArrayList<String> list) {
+        String users = "";
+        if (list != null && list.size() > 0) {
+
+
+            for (int i = 0; i < list.size(); i++) {
+
+                if (list.size() == 1) {
+                    users += list.get(i);
+                    return users;
+                } else if (i > 2) {
+                    int remaining_users = list.size() - 3;
+                    users = String.format(users + " and %1$d others", remaining_users);
+                    return users;
+                } else if (i == (list.size() - 1)) {
+                    users += " And " + list.get(i);
+                } else {
+                    users += TextUtils.isEmpty(users) ? "" : ", ";
+                    users += list.get(i);
+                }
+                //  users.substring(0, users.length() - 2);
+            }
+
+        }
+
+
+        return users;
+    }*/
+
+
+    private String getFormatedAttendiesFromList(ArrayList<MeetingConfirmationModel.UserDetailModel> userDetailModels) {
+        String users = "";
+        if (userDetailModels != null && userDetailModels.size() > 0) {
+            if (userDetailModels.size() == 1) {
+                return userDetailModels.get(0).getFirstName();
+            } else if (userDetailModels.size() == 2) {
+
+                return String.format("%1$s And %2$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName());
+            } else if (userDetailModels.size() == 3) {
+
+                return String.format("%1$s , %2$s And %3$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName(), userDetailModels.get(2).getFirstName());
+            } else {
+                int remaining = userDetailModels.size() - 3;
+                return String.format("%1$s , %2$s , %3$s and %4$d others", userDetailModels.get(0).getFirstName(),
+                        userDetailModels.get(1).getFirstName(), userDetailModels.get(2).getFirstName(), remaining);
+            }
+        }
+
+
+        return users;
+
+    }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {

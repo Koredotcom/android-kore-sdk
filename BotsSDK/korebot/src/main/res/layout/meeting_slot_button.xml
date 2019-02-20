@@ -15,6 +15,7 @@
         android:text="hi"
         android:gravity="center"
         android:maxLines="1"
+        android:minHeight="40dp"
         android:tag="medium"
         android:layout_marginBottom="@dimen/dimen_12dp"
         android:textColor="@color/white"

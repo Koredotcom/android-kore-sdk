@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -129,6 +130,8 @@ public class MeetingSlotsView extends ViewGroup{
             showMore.setVisibility(slots.size() > 0 && meetingTemplateModel != null && meetingTemplateModel.isShowMore() ? VISIBLE : GONE);
             meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
             showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+            ((GradientDrawable) showMore.getBackground()).setStroke(2,isEnabled ?getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+
             showMore.setOnClickListener(isEnabled ? new OnClickListener() {
                 @Override
                 public void onClick(View v) {

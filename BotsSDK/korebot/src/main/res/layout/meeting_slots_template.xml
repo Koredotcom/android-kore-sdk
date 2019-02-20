@@ -20,9 +20,11 @@
         android:id="@+id/show_more_view"
         android:text="@string/modify_slots"
         android:gravity="center"
+        android:background="@drawable/meeting_slot_modify_background"
         android:layout_gravity="center_horizontal"
         android:textAllCaps="true"
         android:layout_marginTop="2dp"
+        android:minHeight="40dp"
         android:textColor="@color/splash_color"
         android:textSize="15dp" />
 </LinearLayout>

@@ -26,6 +26,7 @@ public class DateUtils {
     public static final Format monthFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
     public static final Format dateWeekDayV2_1 = new SimpleDateFormat("EEEE", Locale.ENGLISH);
     public static final Format dateFormatDay = new SimpleDateFormat("EEE, d MMM yyyy", Locale.ENGLISH);
+    public static final Format dateFormatDay_meeting = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
 
@@ -219,5 +220,9 @@ public class DateUtils {
     }
     public static  String getDateinDayFormat(long dateInMs){
         return dateFormatDay.format(new Date(dateInMs));
+    }
+
+    public static  String getDateinMeetingFormat(long dateInMs){
+        return dateFormatDay_meeting.format(new Date(dateInMs));
     }
 }
