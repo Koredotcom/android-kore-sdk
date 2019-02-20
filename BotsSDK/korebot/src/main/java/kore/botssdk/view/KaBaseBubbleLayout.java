@@ -12,6 +12,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -40,7 +41,6 @@ import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public abstract class KaBaseBubbleLayout extends ViewGroup {
-
     Context context;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
@@ -93,20 +93,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int LEFT_BUBBLE_BORDER_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleBorderColor);
     protected int LEFT_BUBBLE_LINK_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
     protected int RIGHT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor);
-
     protected int LEFT_TEXT_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
     protected int RIGHT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor);
 
-    /*
-    protected int LEFT_GRADIENT_START = getResources().getColor(R.color.gradient_left_start);
-    protected int LEFT_GRADIENT_END = getResources().getColor(R.color.gradient_left_end);
-    protected int LEFT_GRADIENT_MIDDLE = getResources().getColor(R.color.gradient_left_middle);
 
-    protected int RIGHT_GRADIENT_START =getResources().getColor(R.color.gradient_right_start);
-    protected int RIGHT_GRADIENT_END = getResources().getColor(R.color.gradient_right_end);
-    protected int RIGHT_GRADIENT_MIDDLE = getResources().getColor(R.color.gradient_right_middle);
-
-*/
 
 
     protected int WHITE_COLOR = 0xffffffff;
@@ -127,7 +117,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected CalendarEventsTemplateView calendarEventsView;
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
-    protected TaskViewWidget taskViewWidget;
     protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
@@ -136,6 +125,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
     protected TimeLineTextView timeLineView;
+
 
 
     public KaBaseBubbleLayout(Context context) {
@@ -174,6 +164,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         viewAddition();
     }
+
+
 
     private void initiliazeCoordinates() {
         if (AppControl.getInstance() != null
@@ -295,17 +287,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
         addView(botCarouselView);
 
-      /*  koraCarouselView =  ViewProvider.getKoraCarouselView(context);
-        koraCarouselView.setComposeFooterInterface(composeFooterInterface);
-        addView(koraCarouselView);*/
-
-        taskViewWidget = ViewProvider.getTaskViewWidget(context);
-        taskViewWidget.setComposeFooterInterface(composeFooterInterface);
-        taskViewWidget.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth());
-        addView(taskViewWidget);
-
-
-
         botPieChartView = ViewProvider.getPieChartView(context);
         addView(botPieChartView);
 
@@ -393,9 +374,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(calendarEventsView != null){
             calendarEventsView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(taskViewWidget != null){
-            taskViewWidget.setComposeFooterInterface(composeFooterInterface);
-        }
+
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -427,14 +406,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             rectBottom = (int) (calendarEventsView.getBottom() + dp1);
         }else if(attendeeSlotSelectionView.getMeasuredHeight() > 0){
             rectBottom = (int) (attendeeSlotSelectionView.getBottom() + dp1);
-        } else if(taskViewWidget.getMeasuredHeight() > 0){
-            rectBottom = (taskViewWidget.getBottom());
-        }else {
+        } else {
             rectBottom = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         }
         int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
                 botButtonView.getRight(),
-                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight(),taskViewWidget.getRight(),calendarEventsView.getRight()));
+                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight(),calendarEventsView.getRight()));
 
         GradientDrawable gradientDrawable = getGradientBubble();
         gradientDrawable.setBounds(new Rect(rectLeft,rectTop,rectRight,rectBottom));
@@ -636,6 +613,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     public void setDoDrawBubbleBackground(boolean doDrawBubbleBackground) {
         this.doDrawBubbleBackground = doDrawBubbleBackground;
     }
+
 
 
 }

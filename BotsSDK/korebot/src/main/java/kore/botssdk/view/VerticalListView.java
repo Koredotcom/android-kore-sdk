@@ -2,8 +2,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.adapter.KoraEmailRecyclerAdapter;
 import kore.botssdk.adapter.KoraFilesRecyclerAdapter;
+import kore.botssdk.adapter.TasksListAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -30,6 +30,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -74,17 +75,15 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.kora_files_carousel_view, this, true);
         recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setItemAnimator(null);
         viewMore = view.findViewById(R.id.view_more);
         rootLayout = view.findViewById(R.id.root_layout);
         viewMore.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               RecyclerView.Adapter adapter = recyclerView.getAdapter();
+                RecyclerView.Adapter adapter = recyclerView.getAdapter();
                 if (adapter == null) return;
-          /*       ((RecyclerViewDataAccessor) adapter).setExpanded(true);
-                adapter.notifyDataSetChanged();*/
                 composeFooterInterface.openFullView(getTemplateType(adapter), ((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData());
-             //   viewMore.setVisibility(GONE);
             }
         });
 
@@ -97,8 +96,10 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             return BotResponse.TEMPLATE_TYPE_FILES_LOOKUP;
         } else if (adapter instanceof KoraEmailRecyclerAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL;
-        } else {
+        } else if (adapter instanceof KnowledgeRecyclerAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL;
+        } else {
+            return BotResponse.TEMPLATE_TYPE_TASK_VIEW;
         }
     }
 
@@ -138,7 +139,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         }
     }
 
-    public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
+    public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
         if (data == null || data.size() == 0) {
             rootLayout.setVisibility(GONE);
         } else {
@@ -152,10 +153,18 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
                 case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
                     setAdapter(new KnowledgeRecyclerAdapter(data, getContext()));
                     break;
+                case BotResponse.TEMPLATE_TYPE_TASK_VIEW:
+                    TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), data, isEnabled);
+                    tasksListAdapter.setHasStableIds(true);
+                    setAdapter(tasksListAdapter);
+                    if(SelectionUtils.getSelectedTasks().size() > 0){
+                        tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
+                        tasksListAdapter.notifyDataSetChanged();
+                    }
+                    break;
                 default:
 
             }
-
             viewMore.setVisibility(data.size() > 3 ? VISIBLE : GONE);
             if (data.size() > 3) {
                 viewMore.setText(String.format(getContext().getResources().getString(R.string.view_more), data.size() - 3));
@@ -163,6 +172,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             rootLayout.setVisibility(VISIBLE);
         }
 
+
+    }
+
+    public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
+        prepareDataSetAndPopulate(data, templateType, true);
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
@@ -190,5 +204,14 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     @Override
     public void emailItemClicked(String action, HashMap customData) {
         invokeGenericWebViewInterface.handleUserActions(action, customData);
+    }
+
+    @Override
+    public void tasksSelectedOrDeselected(boolean selecetd) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setTranslationZ(500*dp1);
+        }
+        bringToFront();
+        composeFooterInterface.updateActionbar(selecetd,getTemplateType(recyclerView.getAdapter()));
     }
 }
