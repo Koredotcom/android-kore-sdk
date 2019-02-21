@@ -75,6 +75,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         inflater = LayoutInflater.from(mContext);
         this.type = type;
         this.isEnabled = isEnabled;
+        notifyDataSetChanged();
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";
     }
@@ -144,9 +145,10 @@ public class CalendarEventsAdapter extends BaseAdapter {
         public TextView rowIndex;
         TextView txtDateTime;
         LinearLayout layoutDetails;
-        public View sideBar;
+        public View sideBar,bottomborder;
         public TextView txtTitle;
         public TextView txtPlace;
+        public TextView tvborder;
     }
 
     private CalEventsTemplateModel gModel;
@@ -157,12 +159,14 @@ public class CalendarEventsAdapter extends BaseAdapter {
         if (convertView == null || convertView.getTag() == null) {
             vi = inflater.inflate(R.layout.calendar_event_list_item, null);
             holder = new ViewHolder();
-            holder.rowIndex = (TextView) vi.findViewById(R.id.btnRowIndex);
+           // holder.rowIndex = (TextView) vi.findViewById(R.id.btnRowIndex);
             holder.txtDateTime = (TextView) vi.findViewById(R.id.txtDateAndTime);
             holder.layoutDetails = (LinearLayout) vi.findViewById(R.id.layout_deails);
             holder.sideBar = vi.findViewById(R.id.sideBar);
+            holder.bottomborder = vi.findViewById(R.id.bottomborder);
             holder.txtTitle = (TextView) vi.findViewById(R.id.txtTitle);
             holder.txtPlace = (TextView) vi.findViewById(R.id.txtPlace);
+            holder.tvborder = (TextView) vi.findViewById(R.id.tvborder);
             KaFontUtils.applyCustomFont(mContext,vi);
             vi.setTag(holder);
         } else
@@ -171,13 +175,29 @@ public class CalendarEventsAdapter extends BaseAdapter {
         if (eventList == null || eventList.size() <= 0) {
             holder.txtTitle.setText("No Data");
         } else {
+
+            if(position==0)
+            {
+                holder.txtDateTime.setVisibility(View.VISIBLE);
+                holder.tvborder.setVisibility(View.VISIBLE);
+            }
+            if(eventList.size()==1)
+            {
+                holder.bottomborder.setVisibility(View.INVISIBLE);
+            }
+        int size=   eventList.size()>1?eventList.size()-1:eventList.size();
+           if(size==position)
+            {
+                holder.bottomborder.setVisibility(View.INVISIBLE);
+            }
             final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
-            holder.rowIndex.setText("" + (position + 1));
+          //  holder.rowIndex.setText("" + (position + 1));
             holder.txtDateTime.setText(DateUtils.calendar_list_format.format(model.getDuration().getStart()) +" - "+DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
             holder.txtTitle.setText(model.getTitle());
             holder.txtPlace.setText(model.getWhere());
+
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
-            holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
+          //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
             holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
