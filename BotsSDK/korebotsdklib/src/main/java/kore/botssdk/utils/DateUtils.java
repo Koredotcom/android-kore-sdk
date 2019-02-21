@@ -29,10 +29,10 @@ public class DateUtils {
     public static final Format dateFormatDay_meeting = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
-
+    public static final SimpleDateFormat dateTime1 = new SimpleDateFormat("hh:mma", Locale.ENGLISH);
     public static final Format calendar_list_format = new SimpleDateFormat("EEE, d MMM, h:mm a", Locale.ENGLISH);
     public static final Format calendar_list_format_2 = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
-
+    public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mma", Locale.ENGLISH);
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, h:mm a", Locale.ENGLISH);
@@ -225,4 +225,47 @@ public class DateUtils {
     public static  String getDateinMeetingFormat(long dateInMs){
         return dateFormatDay_meeting.format(new Date(dateInMs));
     }
+
+
+    /**
+     * Just now
+     * Today, JUN 08
+     */
+    public static String formattedSentDateV8(long lastModified,boolean isDetailView) {
+        // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
+
+        // OVERRIDE SOME symbols WHILE RETAINING OTHERS
+        symbols.setAmPmStrings(new String[]{"am", "pm"});
+        dateWeekDay.setDateFormatSymbols(symbols);
+        int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
+        int currentYear = Integer.parseInt(yearFormat.format(new Date()));
+
+        String time = "";
+
+        if(isDetailView) {
+            if (android.text.format.DateUtils.isToday(lastModified)) {
+                time = "Today at " + dateTime1.format(new Date(lastModified));
+            } else if (isYesterday(lastModified)) {
+                time = "Yesterday, " + dateTime1.format(new Date(lastModified));
+            } else if (isTomorrow(lastModified)) {
+                time = "Tomorrow, " + dateTime1.format(new Date(lastModified));
+            }else{
+                time = dateWeekDayTime.format(new Date(lastModified));
+            }
+        }else{
+
+            if (android.text.format.DateUtils.isToday(lastModified)) {
+                time = "Today, " + dateMonthDay.format(new Date(lastModified));
+            } else if (isYesterday(lastModified)) {
+                time = "Yesterday, " + dateMonthDay.format(new Date(lastModified));
+            } else if (isTomorrow(lastModified)) {
+                time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
+            } else {
+                time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
+            }
+        }
+        return time;
+    }
+
 }

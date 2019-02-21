@@ -1,6 +1,7 @@
 package kore.botssdk.models;
 import java.util.ArrayList;
 
+import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 
 
@@ -15,26 +16,58 @@ public class KnowledgeDetailModel  {
     private String imageUrl;
     private String title;
     private ContactInfo owner;
+    private String url;
+    private int nLikes;
+
+    public long getLastMod() {
+        return lastMod;
+    }
+
+    public void setLastMod(long lastMod) {
+        this.lastMod = lastMod;
+    }
+
+    private long lastMod;
     public String getSharedBy() {
         return sharedBy;
     }
+    public String getFormattedModifiedDate() {
+        if(formattedModifiedDate == null){
+            formattedModifiedDate =   DateUtils.formattedSentDateV6((Long) lastMod);
+        }
+        return formattedModifiedDate;
+    }
+
+    public String getFormattedHeaderDate() {
+        if(formattedHeaderDate == null){
+            formattedHeaderDate = DateUtils.formattedSentDateV8((Long) lastMod,false);
+        }
+        return formattedHeaderDate;
+    }
+
+    private String formattedHeaderDate;
+
+    public void setFormattedModifiedDate(String formattedModifiedDate) {
+        this.formattedModifiedDate = formattedModifiedDate;
+    }
+
+    private String formattedModifiedDate;
+
 
     public void setSharedBy(String sharedBy) {
         this.sharedBy = sharedBy;
     }
 
     private String sharedBy;
-    private String lMUId;
-
-    public long getViews() {
-        return views;
+    public long getnViews() {
+        return nViews;
     }
 
-    public void setViews(long views) {
-        this.views = views;
+    public void setnViews(long nViews) {
+        this.nViews = nViews;
     }
 
-    private long views;
+    private long nViews;
 
     public int getCount() {
         return count;
@@ -78,22 +111,6 @@ public class KnowledgeDetailModel  {
         this.imageUrl = imageUrl;
     }
 
-    public String getlMUId() {
-        return lMUId;
-    }
-
-    public void setlMUId(String lMUId) {
-        this.lMUId = lMUId;
-    }
-
-    public String getpId() {
-        return pId;
-    }
-
-    public void setpId(String pId) {
-        this.pId = pId;
-    }
-
     public String getId() {
         return id;
     }
@@ -111,13 +128,6 @@ public class KnowledgeDetailModel  {
         this.type = type;
     }
 
-    public String getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
-    }
 
     public String getDesc() {
         return desc;
@@ -158,6 +168,7 @@ public class KnowledgeDetailModel  {
     private String orgId;
     private String desc;
     private long createdOn;
+    private String description;
 
     public ArrayList<String> getHashTag() {
         return hashTag;
@@ -171,7 +182,7 @@ public class KnowledgeDetailModel  {
 
     private ArrayList<KoreComponentModel> components;
     private ArrayList<LinkPreviewModel> linkPreviews;
-    private ArrayList<VoteModel> votes;
+    private ArrayList<String> likes;
 
     public ArrayList<String> getFollowers() {
         return followers;
@@ -182,52 +193,25 @@ public class KnowledgeDetailModel  {
     }
 
     private ArrayList<String> followers;
-
-    public ArrayList<VoteModel> getVotes() {
-        return votes;
+    public int getnShares() {
+        return nShares;
     }
 
-    public void setVotes(ArrayList<VoteModel> votes) {
-        this.votes = votes;
+    public void setnShares(int nShares) {
+        this.nShares = nShares;
     }
 
-    public int getSharesCount() {
-        return sharesCount;
+    private int nShares;
+
+    public int getnComments() {
+        return nComments;
     }
 
-    public void setSharesCount(int sharesCount) {
-        this.sharesCount = sharesCount;
+    public void setnComments(int nComments) {
+        this.nComments = nComments;
     }
 
-    public int getUpVoteCount() {
-        return upVoteCount;
-    }
-
-    public void setUpVoteCount(int upVoteCount) {
-        this.upVoteCount = upVoteCount;
-    }
-
-    public int getDownVoteCount() {
-        return downVoteCount;
-    }
-
-    public void setDownVoteCount(int downVoteCount) {
-        this.downVoteCount = downVoteCount;
-    }
-
-    private int upVoteCount;
-    private int downVoteCount;
-    private int sharesCount;
-
-    public int getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-    }
-
-    private int commentsCount;
+    private int nComments;
 
     public ArrayList<CommentModel> getComments() {
         return comments;
@@ -275,6 +259,38 @@ public class KnowledgeDetailModel  {
         this.owner = owner;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getnLikes() {
+        return nLikes;
+    }
+
+    public void setnLikes(int nLikes) {
+        this.nLikes = nLikes;
+    }
+
+    public ArrayList<String> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(ArrayList<String> likes) {
+        this.likes = likes;
+    }
+
 
     public class VoteModel {
          int vote;
@@ -299,7 +315,6 @@ public class KnowledgeDetailModel  {
    }
 
    public class MyActions{
-       int vote;
        boolean like;
        boolean follow;
 
@@ -312,14 +327,6 @@ public class KnowledgeDetailModel  {
        }
 
        int privilege;
-
-       public int getVote() {
-           return vote;
-       }
-
-       public void setVote(int vote) {
-           this.vote = vote;
-       }
 
        public boolean isLike() {
            return like;
@@ -453,5 +460,29 @@ public class KnowledgeDetailModel  {
         public String getName(){
             return fN+" "+lN;
         }
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj ==null) return false;
+        if (obj == this) return true;
+        if(obj instanceof KnowledgeDetailModel){
+            if(this.getId() != null && ((KnowledgeDetailModel) obj).getId() != null) {
+                return this.getId().equals(((KnowledgeDetailModel) obj).getId());
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to avoid same hash code generation if any of fields are equal like in one object email and other object kore id are same and remaining or null
+     * for that we are multiplying with different numbers
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        int result = id == null ? 0 : 31 * id.hashCode();
+        result = 32 * result + (id == null ? 0 : id.hashCode());
+        result = 33 * result + (creator == null ? 0 : creator.hashCode());
+        return result;
     }
 }
