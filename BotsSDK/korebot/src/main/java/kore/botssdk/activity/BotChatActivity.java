@@ -212,14 +212,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         processPayload("", botResponse);
     }
 
-    public void updateActionbar(boolean isSelected,String type) {
+    public void updateActionbar(boolean isSelected,String type,ArrayList<BotButtonModel> buttonModels) {
 
     }
 
-    @Override
-    public void actionItemClicked(BotButtonModel botButtonModel) {
 
-    }
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
@@ -279,7 +276,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void openFullView(String templateType, ArrayList data) {
+    public void openFullView(String templateType, String data) {
 
     }
 

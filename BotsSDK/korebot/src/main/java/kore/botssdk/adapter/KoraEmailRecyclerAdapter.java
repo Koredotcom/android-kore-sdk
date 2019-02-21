@@ -34,6 +34,11 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
         this.emailModels = emailModels;
         this.context = context;
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
 
     @NonNull
     @Override

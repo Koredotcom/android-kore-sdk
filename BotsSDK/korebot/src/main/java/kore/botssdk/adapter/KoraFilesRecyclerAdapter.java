@@ -42,6 +42,10 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter<KoraFilesRecy
         this.kaFileLookupModels = fileLookupModels;
         this.context = context;
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @NonNull
     @Override

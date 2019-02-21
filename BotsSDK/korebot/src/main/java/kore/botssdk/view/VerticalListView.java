@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
@@ -28,8 +29,11 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -55,6 +59,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private Gson gson = new Gson();
 
     public VerticalListView(Context mContext) {
 
@@ -83,12 +88,22 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             public void onClick(View v) {
                 RecyclerView.Adapter adapter = recyclerView.getAdapter();
                 if (adapter == null) return;
-                composeFooterInterface.openFullView(getTemplateType(adapter), ((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData());
+                String type = getTemplateType(adapter);
+                handleViewMore(type, adapter);
+
             }
         });
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 
+    }
+
+    private void handleViewMore(String type, RecyclerView.Adapter adapter) {
+        if (type.equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_TASK_VIEW) || type.equalsIgnoreCase(BotResponse.TEMPLATE_TASK_FULLVIEW)) {
+            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()));
+        } else {
+            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()));
+        }
     }
 
     private String getTemplateType(RecyclerView.Adapter adapter) {
@@ -101,6 +116,13 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         } else {
             return BotResponse.TEMPLATE_TYPE_TASK_VIEW;
         }
+    }
+
+    private ArrayList<BotButtonModel> getActions(RecyclerView.Adapter adapter) {
+        if (adapter instanceof TasksListAdapter) {
+            return ((TasksListAdapter) adapter).getTaskTemplateResponse().getButtons();
+        }
+        return new ArrayList<>();
     }
 
     @Override
@@ -139,32 +161,24 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         }
     }
 
-    public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
+    public void prepareDataSetAndPopulate(TaskTemplateResponse data, String templateType, boolean isEnabled) {
+        TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), data, isEnabled);
+        tasksListAdapter.setHasStableIds(true);
+        setAdapter(tasksListAdapter);
+        if (SelectionUtils.getSelectedTasks().size() > 0) {
+            tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
+            tasksListAdapter.notifyDataSetChanged();
+        }
+        prepareDataSetAndPopulate(data.getTaskData(), templateType);
+
+
+    }
+
+    public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
         if (data == null || data.size() == 0) {
             rootLayout.setVisibility(GONE);
         } else {
-            switch (templateType) {
-                case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
-                    setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
-                    break;
-                case BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL:
-                    setAdapter(new KoraEmailRecyclerAdapter(data, getContext()));
-                    break;
-                case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
-                    setAdapter(new KnowledgeRecyclerAdapter(data, getContext()));
-                    break;
-                case BotResponse.TEMPLATE_TYPE_TASK_VIEW:
-                    TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), data, isEnabled);
-                    tasksListAdapter.setHasStableIds(true);
-                    setAdapter(tasksListAdapter);
-                    if(SelectionUtils.getSelectedTasks().size() > 0){
-                        tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
-                        tasksListAdapter.notifyDataSetChanged();
-                    }
-                    break;
-                default:
-
-            }
+            setAdapterByData(data, templateType);
             viewMore.setVisibility(data.size() > 3 ? VISIBLE : GONE);
             if (data.size() > 3) {
                 viewMore.setText(String.format(getContext().getResources().getString(R.string.view_more), data.size() - 3));
@@ -172,17 +186,29 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             rootLayout.setVisibility(VISIBLE);
         }
 
-
-    }
-
-    public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
-        prepareDataSetAndPopulate(data, templateType, true);
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
+        recyclerView.setItemAnimator(null);
+        adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
         adapter.notifyDataSetChanged();
+    }
+
+    public void setAdapterByData(ArrayList data, String type) {
+        switch (type) {
+            case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
+                setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
+                break;
+            case BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL:
+                setAdapter(new KoraEmailRecyclerAdapter(data, getContext()));
+                break;
+            case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
+                setAdapter(new KnowledgeRecyclerAdapter(data, getContext()));
+                break;
+            default:
+        }
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -209,9 +235,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     @Override
     public void tasksSelectedOrDeselected(boolean selecetd) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTranslationZ(500*dp1);
+            setTranslationZ(500 * dp1);
         }
         bringToFront();
-        composeFooterInterface.updateActionbar(selecetd,getTemplateType(recyclerView.getAdapter()));
+        composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
     }
 }

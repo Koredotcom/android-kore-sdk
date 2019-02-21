@@ -18,7 +18,9 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.Utils;
 
@@ -32,6 +34,9 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
 
+    public void addTaskTemplateModels(ArrayList<TaskTemplateModel> models){
+        this.models.addAll(models);
+    }
     public ArrayList<String> getSelectedTasks() {
         return selectedTasks;
     }
@@ -42,7 +47,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
 
     private ArrayList<String> selectedTasks = new ArrayList<>();
 
-    public void addOrRemoveSelectedTask(String taskId) {
+    private void addOrRemoveSelectedTask(String taskId) {
         if (selectedTasks.contains(taskId)) {
             selectedTasks.remove(taskId);
         } else {
@@ -54,15 +59,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         selectedTasks.addAll(tasks);
     }
 
-    public ArrayList<TaskTemplateModel> getModels() {
-        return models;
-    }
-
-    public void setModels(ArrayList<TaskTemplateModel> models) {
-        this.models = models;
-    }
-
-    public boolean isShowButton() {
+    private boolean isShowButton() {
         return showButton;
     }
 
@@ -70,13 +67,15 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         this.showButton = showButton;
     }
 
-    private ArrayList<TaskTemplateModel> models;
+    private TaskTemplateResponse taskTemplateResponse;
     private boolean showButton;
+    private ArrayList<TaskTemplateModel> models;
 
-    public TasksListAdapter(Context context, ArrayList<TaskTemplateModel> models, boolean showButtons) {
+    public TasksListAdapter(Context context, TaskTemplateResponse taskTemplateResponse, boolean showButtons) {
         this.context = context;
-        this.models = models;
+        this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
+        this.models  = taskTemplateResponse.getTaskData();
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
     }
@@ -106,11 +105,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         holder.taskViewLayoutBinding.checkbox.setEnabled(!isClosed);
         holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
         holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
-        /*if (Utils.getMaxLinesOfText(taskTemplateModel.getTitle(), maxWidth - 50 * dp1, textSize) > 1) {
-            holder.taskViewLayoutBinding.rootLayout.setMinimumHeight((int) (130 * dp1));
-        } else {
-            holder.taskViewLayoutBinding.rootLayout.setMinimumHeight(0);
-        }*/
+
         holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,6 +164,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
     @Override
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
         this.verticalListViewActionHelper = verticalListViewActionHelper;
+    }
+
+    public TaskTemplateResponse getTaskTemplateResponse() {
+        return taskTemplateResponse;
+    }
+
+    public void setTaskTemplateResponse(TaskTemplateResponse taskTemplateResponse) {
+        this.taskTemplateResponse = taskTemplateResponse;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

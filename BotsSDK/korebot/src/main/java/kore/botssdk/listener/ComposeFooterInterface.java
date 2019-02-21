@@ -25,7 +25,6 @@ public interface ComposeFooterInterface {
 
     void sendWithSomeDelay(String message,String payload,long time);
     void copyMessageToComposer(String text);
-    void openFullView(String templateType, ArrayList data);
-    void updateActionbar(boolean selected,String templateType);
-    void actionItemClicked(BotButtonModel botButtonModel);
+    void openFullView(String templateType, String data);
+    void updateActionbar(boolean selected,String templateType,ArrayList<BotButtonModel> buttonModels);
 }

@@ -62,6 +62,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
             }
         });
     }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public int getItemCount() {

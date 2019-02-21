@@ -20,12 +20,13 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
     private Context context;
     private ArrayList<BotButtonModel> botButtonModels;
     private Drawable drawable;
-    private ComposeFooterInterface composeFooterInterface;
+    private ActionHelper actionHelper;
 
-    public ActionsAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, Drawable drawable) {
+    public ActionsAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, Drawable drawable,ActionHelper actionHelper) {
         this.context = context;
         this.botButtonModels = botButtonModels;
         this.drawable = drawable;
+        this.actionHelper = actionHelper;
     }
 
     @NonNull
@@ -42,7 +43,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
         holder.actionItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                composeFooterInterface.actionItemClicked(botButtonModels.get(position));
+                actionHelper.actionItemClicked(botButtonModels.get(position));
             }
         });
     }
@@ -52,13 +53,6 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
         return botButtonModels == null ? 0 : botButtonModels.size();
     }
 
-    public ComposeFooterInterface getComposeFooterInterface() {
-        return composeFooterInterface;
-    }
-
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ActionItemLayoutBinding actionItemLayoutBinding;
@@ -67,5 +61,9 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
             super(actionItemLayoutBinding.getRoot());
             this.actionItemLayoutBinding = actionItemLayoutBinding;
         }
+    }
+
+    public interface ActionHelper{
+        public void actionItemClicked(BotButtonModel botButtonModel);
     }
 }

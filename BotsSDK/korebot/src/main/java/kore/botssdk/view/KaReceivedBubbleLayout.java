@@ -294,7 +294,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if (taskTemplateModels != null && taskTemplateModels.size() > 0) {
                         TaskTemplateResponse taskTemplateModel = taskTemplateModels.get(0);
                         verticalListView.setVisibility(VISIBLE);
-                        verticalListView.prepareDataSetAndPopulate(taskTemplateModel.getTaskData(),BotResponse.TEMPLATE_TYPE_TASK_VIEW,isLastItem && (taskTemplateModel.getButtons() != null && taskTemplateModel.getButtons().size() > 0));
+                        verticalListView.prepareDataSetAndPopulate(taskTemplateModel,BotResponse.TEMPLATE_TYPE_TASK_VIEW,isLastItem && (taskTemplateModel.getButtons() != null && taskTemplateModel.getButtons().size() > 0));
                     }
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth() - 24 * dp1);
                     bubbleTextMediaLayout.populateText(payInner.getText());
