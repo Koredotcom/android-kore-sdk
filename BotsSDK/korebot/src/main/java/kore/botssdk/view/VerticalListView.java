@@ -175,6 +175,13 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
 
     }
+    public void prepareDataSetAndPopulate(ArrayList data, String templateType,boolean isEnabled) {
+        CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(),templateType,isEnabled);
+        calendarEventsAdapter.setData(data);
+        calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
+        setAdapter(calendarEventsAdapter);
+        prepareDataSetAndPopulate(data,templateType);
+    }
 
     public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
         if (data == null || data.size() == 0) {
