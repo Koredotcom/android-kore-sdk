@@ -223,15 +223,15 @@ public class KnowledgeDetailModel  {
 
     private ArrayList<CommentModel> comments;
 
-    public int getFollowCount() {
-        return followCount;
+    public int getnFollows() {
+        return nFollows;
     }
 
-    public void setFollowCount(int followCount) {
-        this.followCount = followCount;
+    public void setnFollows(int nFollows) {
+        this.nFollows = nFollows;
     }
 
-    private int followCount;
+    private int nFollows;
 
     public MyActions getMyActions() {
         return myActions;
