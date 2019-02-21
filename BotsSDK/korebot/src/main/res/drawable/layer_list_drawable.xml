@@ -1,0 +1,14 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#ffffff" />
+        </shape>
+    </item>
+
+    <item
+        android:right="4dp"
+        android:top="5dp" android:drawable="@drawable/ic_quote" android:gravity="start|top">
+
+    </item>
+
+</layer-list>

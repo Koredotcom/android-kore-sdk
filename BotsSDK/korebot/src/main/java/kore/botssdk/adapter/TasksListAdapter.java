@@ -27,11 +27,8 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.ViewHolder> implements RecyclerViewDataAccessor {
     private final Drawable selectedCheck;
     private final Drawable unSelectedCheck;
-    private final int selectedColor;
-    private final int unSelectedColor;
     private Context context;
     private float maxWidth;
-    private int textSize;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
 
@@ -82,9 +79,6 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         this.showButton = showButtons;
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
-        selectedColor = context.getResources().getColor(R.color.color_dfdfeb);
-        unSelectedColor = context.getResources().getColor(R.color.color_efeffc);
-        textSize = (int) (16 * AppControl.getInstance().getDimensionUtil().dp1);
     }
 
     @NonNull

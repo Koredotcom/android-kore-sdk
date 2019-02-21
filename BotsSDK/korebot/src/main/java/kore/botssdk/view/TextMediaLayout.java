@@ -6,13 +6,19 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,9 +35,10 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class TextMediaLayout extends MediaLayout {
+public class TextMediaLayout extends ViewGroup {
 
     TextView botContentTextView;
+    ImageView imageView;
 
     public static final int TEXTVIEW_ID = 1980081;
     public static final int LIST_ID = 1980045;
@@ -60,8 +67,7 @@ public class TextMediaLayout extends MediaLayout {
     final String TEXT_COLOR = "#000000";
     private int linkTextColor;
     private Typeface medium, regular;
-    private Drawable drawable;
-
+    private LinearLayout rootLayout;
 
     public TextMediaLayout(Context context) {
         super(context);
@@ -77,34 +83,23 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     private void init() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.text_media_layout, this, true);
+        rootLayout = view.findViewById(R.id.root_layout);
         medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         regular = Typeface.create("sans-serif", Typeface.NORMAL);
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_quote);
-        drawable = new TopGravityDrawable(getResources(), bitmap);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
 
         //Add a textView
-        botContentTextView = new LinkifyTextView(getContext());
-
-
-        RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
-        botContentTextView.setText("");
-        botContentTextView.setLayoutParams(txtVwParams);
-        botContentTextView.setSingleLine(false);
-        botContentTextView.setClickable(false);
+        botContentTextView = view.findViewById(R.id.text_view);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
-        botContentTextView.setId(TEXTVIEW_ID);
-        botContentTextView.setPadding(0, 0, 0, 0);
         botContentTextView.setLinkTextColor(linkTextColor);
-        // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
         botContentTextView.setLongClickable(false);
-        addView(botContentTextView);
+
+        imageView = view.findViewById(R.id.image);
 
     }
 
@@ -121,26 +116,29 @@ public class TextMediaLayout extends MediaLayout {
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
+            if(gravity ==GRAVITY_RIGHT){
+                imageView.setVisibility(VISIBLE);
+            }else{
+                imageView.setVisibility(GONE);
+            }
             botContentTextView.setText(strBuilder);
             botContentTextView.setMovementMethod(null);
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
+            imageView.setVisibility(GONE);
         }
 
     }
 
     public void setGravityAndTypeFace(){
         if (gravity == GRAVITY_LEFT) {
-         //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
-            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null,null);
+            rootLayout.setGravity(Gravity.START);
         } else {
-           // botContentTextView.setGravity(Gravity.END);
+            rootLayout.setGravity(Gravity.END);
             botContentTextView.setTypeface(regular);
-            botContentTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable,null,null,null);
-            botContentTextView.setCompoundDrawablePadding((int)(4 * dp1));
         }
     }
 
@@ -174,62 +172,31 @@ public class TextMediaLayout extends MediaLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int totalHeight = getPaddingTop();
+        int childWidthSpec;
 
-        int childWidthSpec, childHeightSpec;
-        int wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        int containerWidth = 0;
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(rootLayout, childWidthSpec, wrapSpec);
 
-        final int count = getChildCount();
-        int totalHeight = 0;
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            int childHeight = 0, childWidth = 0;
-
-            switch (child.getId()) {
-                case TEXTVIEW_ID:
-                    childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.UNSPECIFIED);
-                    MeasureUtils.measure(child, childWidthSpec, wrapSpec);
-                    childWidth = child.getMeasuredWidth();
-                    if (childWidth > restrictedLayoutWidth) {
-                        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.AT_MOST);
-                        MeasureUtils.measure(child, childWidthSpec, wrapSpec);
-                    }
-                    childHeight = child.getMeasuredHeight();
-                    break;
-                default:
-
-            }
-
-            totalHeight += childHeight;
-            containerWidth = (containerWidth < child.getMeasuredWidth()) ? child.getMeasuredWidth() : containerWidth;
-        }
-
-        if (widthStyle == MATCH_PARENT) {
-            containerWidth = parentWidth;
-        } else if (widthStyle == WRAP_CONTENT) {
-            containerWidth = containerWidth;
-        }
+        totalHeight += rootLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
 
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(rootLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
 
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
         final int count = getChildCount();
         int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
-        int childLeft = this.getPaddingLeft();
-        int childTop = this.getPaddingTop();
+        int childLeft = 0;
+        int childTop = 0;
 
-        //walk through each child, and arrange it from left to right
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
