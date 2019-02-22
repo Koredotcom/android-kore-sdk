@@ -192,7 +192,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             setAdapterByData(data, templateType);
             viewMore.setVisibility(data.size() > 3 ? VISIBLE : GONE);
             if (data.size() > 3) {
-                viewMore.setText(String.format(getContext().getResources().getString(R.string.view_more)));
+                viewMore.setText(getContext().getResources().getString(R.string.view_more));
             }
             rootLayout.setVisibility(VISIBLE);
         }

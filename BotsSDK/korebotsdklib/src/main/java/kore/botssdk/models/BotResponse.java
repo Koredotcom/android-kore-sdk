@@ -44,6 +44,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String KA_SWITCH_SKILL = "ka_switch_skill";
     public static final String KA_SKILL_RESPONSE = "ka_skill_response";
 
+    // When (google/O365)token expires bot returns this template
+    public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";
+
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";
