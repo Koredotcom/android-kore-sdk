@@ -115,7 +115,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             return BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL;
         } else if (adapter instanceof KnowledgeRecyclerAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL;
-        } else {
+        } else if(adapter instanceof CalendarEventsAdapter){
+            return BotResponse.TEMPLATE_TYPE_CAL_EVENTS;
+        }else {
             return BotResponse.TEMPLATE_TYPE_TASK_VIEW;
         }
     }
