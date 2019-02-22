@@ -3,6 +3,7 @@
     android:id="@+id/event_options_more"
     android:layout_width="match_parent"
     android:layout_height="46dp"
+
     android:gravity="center"
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal">

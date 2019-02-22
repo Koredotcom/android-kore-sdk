@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -18,9 +19,11 @@ import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
- */
+ *//*
+
 
 public class CalendarEventsTemplateView extends ViewGroup {
 
@@ -58,6 +61,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
         LayoutInflater.from(getContext()).inflate(R.layout.calendar_custom_list, this, true);
         calCustomListRoot = (LinearLayout) findViewById(R.id.calCustomListRoot);
         listView = (AutoExpandListView) findViewById(R.id.calCustomListView);
+
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
        // layoutItemHeight = getResources().getDimension(R.dimen.calendar_event_list_row_height);
 
@@ -90,11 +94,15 @@ public class CalendarEventsTemplateView extends ViewGroup {
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
         MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
-   /*     int  childWidth = calCustomListRoot.getMeasuredWidth();
+
+
+   */
+/*     int  childWidth = calCustomListRoot.getMeasuredWidth();
         if (childWidth > restrictedMaxWidth) {
             childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.AT_MOST);
             MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
-        }*/
+        }*//*
+
         totalHeight += calCustomListRoot.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
         if(calCustomListRoot.getMeasuredHeight() !=0 ){
             totalHeight+=12*dp1;
@@ -104,6 +112,15 @@ public class CalendarEventsTemplateView extends ViewGroup {
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
+
+
+
+
+
+
+
+
+*/
 /*
 
     public int getViewHeight() {
@@ -134,6 +151,8 @@ public class CalendarEventsTemplateView extends ViewGroup {
         }
         return viewHeight;
     }
+*//*
+
 */
 /*
     @Override
@@ -158,7 +177,8 @@ public class CalendarEventsTemplateView extends ViewGroup {
         int parentHeightSpec = childHeightSpec;
 
         super.onMeasure(parentWidthSpec, parentHeightSpec);
-    }*/
+    }*//*
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -188,4 +208,7 @@ public class CalendarEventsTemplateView extends ViewGroup {
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
+
+
 }
+*/

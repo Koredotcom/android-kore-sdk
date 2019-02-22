@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.MessageFormat;
@@ -37,7 +38,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private TextView locationView;
     private TextView titleView;
     private TextView dateView, tv_time, tv_users;
-
+    LinearLayout lin_timeview;
     private View slotLayout;
 
     float dp1;
@@ -98,6 +99,7 @@ public class MeetingConfirmationView extends ViewGroup {
         dateView = (TextView) view.findViewById(R.id.date_view);
         tv_users = (TextView) view.findViewById(R.id.tv_users);
         tv_time = (TextView) view.findViewById(R.id.tv_time);
+        lin_timeview = (LinearLayout) view.findViewById(R.id.lin_timeview);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         //backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
         // slotLayout.setBackground(backgroundDrawable);
@@ -140,20 +142,25 @@ public class MeetingConfirmationView extends ViewGroup {
             } else {
                 locationView.setVisibility(GONE);
             }
-            if (meetingConfirmationModel.getDate() > 0 && meetingConfirmationModel.getSlot_end() > 0 && meetingConfirmationModel.getSlot_start() > 0) {
+
+            if (    meetingConfirmationModel.getDate() > 0 &&
+                    meetingConfirmationModel.getSlot_end() > 0 &&
+                    meetingConfirmationModel.getSlot_start() > 0) {
+
                 String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toUpperCase();
                 String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toUpperCase();
                 //  dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
                 dateView.setText(MessageFormat.format("{0}", DateUtils.getDateinMeetingFormat(meetingConfirmationModel.getDate()).toUpperCase()));
                 tv_time.setText(startTime + "\n" + endTime);
-
-
                 tv_users.setText((getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())));
                 dateView.setVisibility(VISIBLE);
                 tv_time.setVisibility(VISIBLE);
             } else {
                 dateView.setVisibility(GONE);
                 tv_time.setVisibility(GONE);
+                lin_timeview.setVisibility(GONE);
+
+
             }
             //GONE
             recyclerView.setVisibility(GONE);

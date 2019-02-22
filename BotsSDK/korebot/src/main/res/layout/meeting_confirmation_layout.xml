@@ -33,7 +33,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_margin="10dp"
-                android:text="MON 7,OCT"
+                android:text=""
                 android:textColor="#485260"
                 android:textSize="14dp"
 
@@ -57,6 +57,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
+                    android:id="@+id/lin_timeview"
                     android:orientation="horizontal">
 
                     <TextView
@@ -64,7 +65,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="10:45 AM\n11:15 AM"
+                        android:text=""
                         android:textColor="#485260"
                         android:textSize="12sp" />
 
@@ -89,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:ellipsize="end"
-                        android:text="Starting a Fire"
+                        android:text=""
                         android:textColor="#485260"
                         android:textSize="16sp" />
 
@@ -109,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="Common Room"
+                            android:text=""
                             android:textColor="#485260"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -129,7 +130,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="Brain,Joyce And Annie"
+                            android:text=""
                             android:textColor="#485260"
                             android:textSize="13sp" />
                     </LinearLayout>

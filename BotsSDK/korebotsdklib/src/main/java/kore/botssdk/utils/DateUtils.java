@@ -33,6 +33,9 @@ public class DateUtils {
     public static final Format calendar_list_format = new SimpleDateFormat("EEE, d MMM, h:mm a", Locale.ENGLISH);
     public static final Format calendar_list_format_2 = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mma", Locale.ENGLISH);
+
+    public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
+
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, h:mm a", Locale.ENGLISH);

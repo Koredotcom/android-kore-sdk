@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -349,6 +351,7 @@ public class PayloadInner {
                 meetingTemplateModels = gson.fromJson(elementsAsString, listType);
             }else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(template_type)){
                 Type tableType = new TypeToken<ArrayList<CalEventsTemplateModel>>(){}.getType();
+
                 calEventsTemplateModels = gson.fromJson(elementsAsString,tableType);
             }else if (BotResponse.TEMPLATE_TYPE_MEETING_CONFIRM.equalsIgnoreCase(template_type)) {
                 Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {

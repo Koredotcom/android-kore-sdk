@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import java.util.List;
+
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
@@ -12,7 +14,7 @@ public class CalEventsTemplateModel {
     private String color;
     private String htmlLink;
     private String eventId;
-
+    private List<Attendee> attendees = null;
     public Duration getDuration() {
         return duration;
     }
@@ -60,6 +62,13 @@ public class CalEventsTemplateModel {
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
+    public List<Attendee> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(List<Attendee> attendees) {
+        this.attendees = attendees;
+    }
 
     public class Duration{
 
@@ -81,5 +90,30 @@ public class CalEventsTemplateModel {
         public void setEnd(double end) {
             this.end = end;
         }
+    }
+
+    public class Attendee {
+
+
+        private String email;
+
+        private String name;
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
     }
 }

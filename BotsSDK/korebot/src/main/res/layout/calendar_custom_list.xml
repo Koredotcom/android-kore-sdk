@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/calCustomListRoot"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
 
     android:orientation="vertical">
 
@@ -11,15 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
+        app:cardUseCompatPadding="true"
         app:elevation="10dp">
     <kore.botssdk.view.AutoExpandListView
         android:id="@+id/calCustomListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:footerDividersEnabled="true"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="4dp"
 
+        android:dividerHeight="1dp"
+        android:divider="@drawable/event_list_divider"
+        android:insetLeft="100dp"
         android:headerDividersEnabled="true"
         android:scrollbars="none" />
     </androidx.cardview.widget.CardView>

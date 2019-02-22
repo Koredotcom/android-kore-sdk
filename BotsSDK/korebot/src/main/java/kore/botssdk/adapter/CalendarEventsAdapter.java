@@ -26,14 +26,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
@@ -46,61 +53,106 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalendarEventsAdapter extends BaseAdapter {
+public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAdapter.ViewHolder> implements RecyclerViewDataAccessor {
+    private boolean isExpanded = false;
+    VerticalListViewActionHelper verticalListViewActionHelper;
+
     public ArrayList<CalEventsTemplateModel> getEventList() {
         return eventList;
     }
 
     public void setEventList(ArrayList<CalEventsTemplateModel> eventList) {
-        if(eventList != null) {
+        if (eventList != null) {
             this.eventList.clear();
             this.eventList.addAll(eventList);
             this.title = "SHOW MORE";
+
         }
     }
 
     ArrayList<CalEventsTemplateModel> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
     private int EVENTS_LIST_LIMIT = 3;
-    private  String title = "SHOW MORE";
+    private String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
     private String type;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
-    private  Gson gson = new Gson();
+    private Gson gson = new Gson();
 
-    public CalendarEventsAdapter(Context mContext,String type,boolean isEnabled) {
+    public CalendarEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
         this.isEnabled = isEnabled;
-        notifyDataSetChanged();
+
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";
     }
 
-    /*private boolean showMore() {
-        if (eventList != null && !eventList.isEmpty()) {
-            return (eventList.size() > EVENTS_LIST_LIMIT) ? true : false;
-        }
-        return false;
-    }*/
 
+    public CalEventsTemplateModel getItem(int position) {
+        if (position < eventList.size())
+            return eventList.get(position);
+        else return null;
+    }
+
+    @NonNull
     @Override
-    public int getCount() {
-        int val;
-        if(eventList == null || eventList.isEmpty()) val = 0;
-        else if(eventList.size() <= 3) val =  eventList.size();
-        else val =  (EVENTS_LIST_LIMIT + 1);
-        return val;
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, null));
     }
 
     @Override
-    public CalEventsTemplateModel getItem(int position) {
-        if(position < eventList.size())
-            return eventList.get(position);
-        else return null;
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
+        //  holder.rowIndex.setText("" + (position + 1));
+
+        holder.txtDateTime.setText(DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase());
+        holder.txtTitle.setText(model.getTitle());
+        holder.txtPlace.setText(model.getWhere());
+        holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+
+        holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
+        if (position == 0) {
+            holder.tvborder.setVisibility(View.VISIBLE);
+            holder.txtDateTime.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvborder.setVisibility(View.GONE);
+            holder.txtDateTime.setVisibility(View.GONE);
+        }
+        holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
+        //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
+        holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
+                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                            } else {
+                                gModel = model;
+                                AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
+                            }
+                        } else {
+                            launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                        }
+
+                    } catch (Exception e) {
+                        launchWebView(model.getHtmlLink());
+                    }
+
+                } else if (isEnabled) {
+
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put("meetingId", model.getEventId());
+                    String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                    composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
+                }
+            }
+        });
     }
 
     @Override
@@ -109,21 +161,10 @@ public class CalendarEventsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-//        CalEventsTemplateModel event = getItem(position);
-//        if (event != null) {
-
-            if (position == EVENTS_LIST_LIMIT) {
-                convertView = getShowMoreView(convertView, parent);
-            } else {
-                convertView = getOptionsView(convertView, position);
-            }
-
-//        }
-
-        return convertView;
+    public int getItemCount() {
+        return eventList != null ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 0;
     }
+
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -131,6 +172,28 @@ public class CalendarEventsAdapter extends BaseAdapter {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    @Override
+    public ArrayList getData() {
+        return eventList;
+    }
+
+    @Override
+    public void setData(ArrayList data) {
+        this.eventList = data;
+
+    }
+
+    @Override
+    public void setExpanded(boolean isExpanded) {
+        this.isExpanded = isExpanded;
+    }
+
+    @Override
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
+
     }
 
     public interface EventSelectionListener {
@@ -141,100 +204,39 @@ public class CalendarEventsAdapter extends BaseAdapter {
         this.eventSelectionListener = eventSelectionListener;
     }
 
-    public static class ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView rowIndex;
         TextView txtDateTime;
         LinearLayout layoutDetails;
-        public View sideBar,bottomborder;
+        public View sideBar;
         public TextView txtTitle;
         public TextView txtPlace;
-        public TextView tvborder;
+        public TextView tv_time;
+        public TextView tvborder, tv_users;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            txtDateTime = (TextView) itemView.findViewById(R.id.txtDateAndTime);
+            layoutDetails = (LinearLayout) itemView.findViewById(R.id.layout_deails);
+            sideBar = itemView.findViewById(R.id.sideBar);
+
+            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
+            tv_time = (TextView) itemView.findViewById(R.id.tv_time);
+            txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
+            tvborder = (TextView) itemView.findViewById(R.id.tvborder);
+            tv_users = (TextView) itemView.findViewById(R.id.tv_users);
+
+        }
     }
+
 
     private CalEventsTemplateModel gModel;
     private final int CAL_PERMISSION_REQUEST = 3221;
-    private View getOptionsView(View convertView, int position) {
-        View vi = convertView;
-        ViewHolder holder;
-        if (convertView == null || convertView.getTag() == null) {
-            vi = inflater.inflate(R.layout.calendar_event_list_item, null);
-            holder = new ViewHolder();
-           // holder.rowIndex = (TextView) vi.findViewById(R.id.btnRowIndex);
-            holder.txtDateTime = (TextView) vi.findViewById(R.id.txtDateAndTime);
-            holder.layoutDetails = (LinearLayout) vi.findViewById(R.id.layout_deails);
-            holder.sideBar = vi.findViewById(R.id.sideBar);
-            holder.bottomborder = vi.findViewById(R.id.bottomborder);
-            holder.txtTitle = (TextView) vi.findViewById(R.id.txtTitle);
-            holder.txtPlace = (TextView) vi.findViewById(R.id.txtPlace);
-            holder.tvborder = (TextView) vi.findViewById(R.id.tvborder);
-            KaFontUtils.applyCustomFont(mContext,vi);
-            vi.setTag(holder);
-        } else
-            holder = (ViewHolder) vi.getTag();
-
-        if (eventList == null || eventList.size() <= 0) {
-            holder.txtTitle.setText("No Data");
-        } else {
-
-            if(position==0)
-            {
-                holder.txtDateTime.setVisibility(View.VISIBLE);
-                holder.tvborder.setVisibility(View.VISIBLE);
-            }
-            if(eventList.size()==1)
-            {
-                holder.bottomborder.setVisibility(View.INVISIBLE);
-            }
-        int size=   eventList.size()>1?eventList.size()-1:eventList.size();
-           if(size==position)
-            {
-                holder.bottomborder.setVisibility(View.INVISIBLE);
-            }
-            final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
-          //  holder.rowIndex.setText("" + (position + 1));
-            holder.txtDateTime.setText(DateUtils.calendar_list_format.format(model.getDuration().getStart()) +" - "+DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
-            holder.txtTitle.setText(model.getTitle());
-            holder.txtPlace.setText(model.getWhere());
-
-            holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
-          //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
-            holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
-                        try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                    launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
-                                } else {
-                                    gModel = model;
-                                    AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
-                                }
-                            } else {
-                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
-                            }
-
-                        } catch (Exception e) {
-                            launchWebView(model.getHtmlLink());
-                        }
-
-                    }else if(isEnabled){
-
-                        HashMap<String,String> hashMap = new HashMap<>();
-                        hashMap.put("meetingId",model.getEventId());
-                        String message = "Cancel \""+ model.getTitle()+"\" "+  getDateinDayFormat((long)model.getDuration().getStart())+", "+ getTimeInAmPm((long)model.getDuration().getStart())+" - "+getTimeInAmPm((long)model.getDuration().getEnd());
-                        composeFooterInterface.sendWithSomeDelay(message,gson.toJson(hashMap),0);
-                    }
-                }
-            });
-        }
-        return vi;
-    }
 
 
-    private void launchNativeView(String title, long beginTime) throws Exception{
-        int id = listSelectedCalendars(title,beginTime);
-        if(id <= 0) throw new Exception("Invalid event id");
+    private void launchNativeView(String title, long beginTime) throws Exception {
+        int id = listSelectedCalendars(title, beginTime);
+        if (id <= 0) throw new Exception("Invalid event id");
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));
@@ -247,7 +249,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         mContext.startActivity(intent);
     }
 
-    private void launchWebView(String htmlLink){
+    private void launchWebView(String htmlLink) {
         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
         intent.putExtra("url", htmlLink);
         intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
@@ -266,6 +268,36 @@ public class CalendarEventsAdapter extends BaseAdapter {
             CalendarContract.Events.DURATION, // 3
     };
 
+    private String getFormatedAttendiesFromList(List<CalEventsTemplateModel.Attendee> userDetailModels) {
+        String users = "";
+        if (userDetailModels != null && userDetailModels.size() > 0) {
+            if (userDetailModels.size() == 1) {
+
+                return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
+            } else if (userDetailModels.size() == 2) {
+
+                return String.format("%1$s And %2$s",
+                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
+                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail());
+            } else if (userDetailModels.size() == 3) {
+
+                return String.format("%1$s , %2$s And %3$s",
+                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
+                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
+                        userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail());
+            } else {
+                int remaining = userDetailModels.size() - 3;
+                return String.format("%1$s , %2$s , %3$s and %4$d others",
+                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
+                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
+                        userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail(), remaining);
+            }
+        }
+
+
+        return users;
+
+    }
     /*private void openCalendar(Uri uri) {
         String[] eidParts = extractEidAndEmail(uri);
         *//*if (uri != null) {
@@ -300,7 +332,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         CalendarService.readCalendar(mContext,218,0);
     }*/
 
-    private int listSelectedCalendars(String eventtitle,long beginTime) {
+    private int listSelectedCalendars(String eventtitle, long beginTime) {
 
 
         Uri eventUri;
@@ -330,45 +362,45 @@ public class CalendarEventsAdapter extends BaseAdapter {
 //        HashSet<String> calendarIds = CalendarService.getCalenderIds(lcursor);
 
 //        for(String id:calendarIds) {
-            String projection[] = {"_id", "title", CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
-            Cursor cursor = mContext.getContentResolver().query(eventUri, null, null,
-                    null, null);
+        String projection[] = {"_id", "title", CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
+        Cursor cursor = mContext.getContentResolver().query(eventUri, null, null,
+                null, null);
 
-            if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
 
-                String calName;
-                String calID;
-                String startTime;
-           //    String endTime;
+            String calName;
+            String calID;
+            String startTime;
+            //    String endTime;
 
-                int nameCol = cursor.getColumnIndex(projection[1]);
-                int idCol = cursor.getColumnIndex(projection[0]);
-                int startTimeCol = cursor.getColumnIndex(projection[2]);
-           //     int endTimeCol = cursor.getColumnIndex(projection[3]);
-                do {
-                    calName = cursor.getString(nameCol);
-                    calID = cursor.getString(idCol);
-                    startTime = cursor.getString(startTimeCol);
-                 //   endTime = cursor.getString(endTimeCol);
+            int nameCol = cursor.getColumnIndex(projection[1]);
+            int idCol = cursor.getColumnIndex(projection[0]);
+            int startTimeCol = cursor.getColumnIndex(projection[2]);
+            //     int endTimeCol = cursor.getColumnIndex(projection[3]);
+            do {
+                calName = cursor.getString(nameCol);
+                calID = cursor.getString(idCol);
+                startTime = cursor.getString(startTimeCol);
+                //   endTime = cursor.getString(endTimeCol);
 
-                    if (calName != null && calName.equalsIgnoreCase(eventtitle)) {
+                if (calName != null && calName.equalsIgnoreCase(eventtitle)) {
 //                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
-                        return  Integer.parseInt(calID);
-                    }else if(Long.parseLong(startTime) == beginTime){
-                        result = Integer.parseInt(calID);
-                    }
+                    return Integer.parseInt(calID);
+                } else if (Long.parseLong(startTime) == beginTime) {
+                    result = Integer.parseInt(calID);
+                }
 
-                } while (cursor.moveToNext());
-                cursor.close();
-            }
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
 //        }
 
         return result;
 
     }
 
-    private int getEventId(String title, long startTime, long endTime){
-        final String[] INSTANCE_PROJECTION = new String[] {
+    private int getEventId(String title, long startTime, long endTime) {
+        final String[] INSTANCE_PROJECTION = new String[]{
                 CalendarContract.Instances.EVENT_ID,      // 0
                 CalendarContract.Instances.BEGIN,         // 1
                 CalendarContract.Instances.TITLE          // 2
@@ -387,8 +419,8 @@ public class CalendarEventsAdapter extends BaseAdapter {
         int mGMTOffset = mTimeZone.getRawOffset();
 
         int eventId = 0;
-        long startMillis = startTime+mGMTOffset;
-        long endMillis = endTime+mGMTOffset;
+        long startMillis = startTime + mGMTOffset;
+        long endMillis = endTime + mGMTOffset;
 
         Cursor cur = null;
         ContentResolver cr = mContext.getContentResolver();
@@ -396,7 +428,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
 // The ID of the recurring event whose instances you are searching
 // for in the Instances table
         String selection = CalendarContract.Instances.EVENT_ID + " = ?";
-        String[] selectionArgs = new String[] {"207"};
+        String[] selectionArgs = new String[]{"207"};
 
 // Construct the query with the desired date range.
         Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
@@ -404,7 +436,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         ContentUris.appendId(builder, endMillis);
 
 // Submit the query
-        cur =  cr.query(builder.build(),
+        cur = cr.query(builder.build(),
                 INSTANCE_PROJECTION,
                 selection,
                 selectionArgs,
@@ -431,7 +463,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         LinearLayout container = (LinearLayout) convertView.findViewById(R.id.event_options_more);
         final TextView moreTextView = (TextView) convertView.findViewById(R.id.events_more_txt_view);
         moreTextView.setText(title);
-        KaFontUtils.applyCustomFont(mContext,convertView);
+        KaFontUtils.applyCustomFont(mContext, convertView);
 
         /*container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -443,7 +475,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
         moreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(eventList != null) {
+                if (eventList != null) {
                     if (moreTextView.getText().equals("SHOW MORE")) {
                         if (eventList.size() > EVENTS_LIST_LIMIT) {
                             if (eventList.size() - EVENTS_LIST_LIMIT > 3)
@@ -453,11 +485,11 @@ public class CalendarEventsAdapter extends BaseAdapter {
                                 EVENTS_LIST_LIMIT = EVENTS_LIST_LIMIT + (eventList.size() - EVENTS_LIST_LIMIT);
                                 title = "SHOW LESS";
                             }
-                            if(EVENTS_LIST_LIMIT >= 12)
+                            if (EVENTS_LIST_LIMIT >= 12)
                                 title = "SHOW LESS";
                             notifyDataSetChanged();
                         }
-                    }else if(moreTextView.getText().equals("SHOW LESS")){
+                    } else if (moreTextView.getText().equals("SHOW LESS")) {
                         EVENTS_LIST_LIMIT = 3;
                         title = "SHOW MORE";
                         notifyDataSetChanged();
@@ -471,9 +503,10 @@ public class CalendarEventsAdapter extends BaseAdapter {
     }
 
     private boolean debug = true;
+
     /**
      * Extracts the ID and calendar email from the eid parameter of a URI.
-     *
+     * <p>
      * The URI contains an "eid" parameter, which is comprised of an ID, followed
      * by a space, followed by the calendar email address. The domain is sometimes
      * shortened. See the switch statement. This is Base64-encoded before being
@@ -505,7 +538,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
                         // Drop the special one character domain
                         emailLen--;
 
-                        switch(decodedBytes[decodedBytes.length - 1]) {
+                        switch (decodedBytes[decodedBytes.length - 1]) {
                             case 'm':
                                 domain = "gmail.com";
                                 break;
@@ -540,7 +573,7 @@ public class CalendarEventsAdapter extends BaseAdapter {
                         email += domain;
                     }
 
-                    return new String[] { eid, email };
+                    return new String[]{eid, email};
                 }
             }
         } catch (RuntimeException e) {

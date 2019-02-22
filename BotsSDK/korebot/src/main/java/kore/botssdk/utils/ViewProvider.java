@@ -23,7 +23,7 @@ import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotMainTableView;
-import kore.botssdk.view.CalendarEventsTemplateView;
+
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.VerticalListView;
@@ -217,11 +217,11 @@ public class ViewProvider {
         return attendeeSlotSelectionView;
     }
 
-    public static CalendarEventsTemplateView getCalenderTemplateView(Context context){
+    /*public static CalendarEventsTemplateView getCalenderTemplateView(Context context){
         CalendarEventsTemplateView calendarEventsTemplateView = new CalendarEventsTemplateView(context);
         calendarEventsTemplateView.setId(CALENDER_EVENTS_VIEW_ID);
         return calendarEventsTemplateView;
-    }
+    }*/
     public static VerticalListView getVerticalListView(Context context){
         VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);

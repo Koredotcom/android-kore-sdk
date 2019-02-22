@@ -114,7 +114,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
   //  protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
     protected MeetingConfirmationView meetingConfirmationView;
-    protected CalendarEventsTemplateView calendarEventsView;
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
     protected int[] dimens;
@@ -296,10 +295,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         lineChartView = ViewProvider.getLineChartView(context);
         addView(lineChartView);
 
-        calendarEventsView = ViewProvider.getCalenderTemplateView(context);
-        calendarEventsView.setComposeFooterInterface(composeFooterInterface);
-      //  calendarEventsView.setRestrictedMaxWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
-        addView(calendarEventsView);
 
         verticalListView = ViewProvider.getVerticalListView(context);
         addView(verticalListView);
@@ -372,9 +367,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(attendeeSlotSelectionView != null){
             attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(calendarEventsView != null){
-            calendarEventsView.setComposeFooterInterface(composeFooterInterface);
-        }
+
 
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -403,8 +396,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             rectBottom = (int) (meetingSlotsView.getBottom() + dp1);
         } else if(meetingConfirmationView.getMeasuredHeight() > 0){
             rectBottom = (meetingConfirmationView.getBottom());
-        }else if(calendarEventsView.getMeasuredHeight() > 0 && calendarEventsView.getVisibility() != ViewGroup.GONE){
-            rectBottom = (int) (calendarEventsView.getBottom() + dp1);
         }else if(attendeeSlotSelectionView.getMeasuredHeight() > 0){
             rectBottom = (int) (attendeeSlotSelectionView.getBottom() + dp1);
         } else {
@@ -412,7 +403,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
                 botButtonView.getRight(),
-                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight(),calendarEventsView.getRight()));
+                meetingSlotsView.getRight()+ (int)dp2,attendeeSlotSelectionView.getRight()+ (int)dp12,meetingConfirmationView.getRight()));
 
         GradientDrawable gradientDrawable = getGradientBubble();
         gradientDrawable.setBounds(new Rect(rectLeft,rectTop,rectRight,rectBottom));
