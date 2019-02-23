@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="knowledge"
             type="kore.botssdk.models.KnowledgeDetailModel" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.view.View" />
 
         <import type="kore.botssdk.utils.DateUtils" />
     </data>
@@ -83,9 +87,69 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingEnd="@dimen/dimen_12dp"
-            android:text="@{knowledge.desc}"
             android:textColor="@color/color_232323"
             android:textSize="15sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+
+            <ImageView
+                android:id="@+id/icon_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:srcCompat="@drawable/vector_mesage" />
+
+            <TextView
+                android:id="@+id/chat_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+
+                android:layout_toEndOf="@+id/icon_chat"
+                android:text="@{String.valueOf(knowledge.NComments)}"
+
+                android:textSize="15sp" />
+
+
+            <ImageView
+                android:id="@+id/icon_eye"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/chat_count"
+                app:srcCompat="@drawable/eye_knowledge" />
+
+            <TextView
+                android:id="@+id/eye_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/icon_eye"
+                android:text="@{String.valueOf(knowledge.NViews)}"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:id="@+id/icon_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_toLeftOf="@id/like_count"
+                app:srcCompat="@drawable/vector_thumb" />
+
+            <TextView
+                android:id="@+id/like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="14dp"
+
+                android:text="@{Integer.toString(knowledge.NLikes)}"
+                android:textSize="15sp" />
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"

@@ -4,6 +4,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.databinding.KnowledgeItemViewBinding;
-import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 
 /**
  * Created by Shiva Krishna Kongara on 06-feb-19.
@@ -53,6 +52,20 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
         } catch (Exception e) {
             holder.knowledgeItemViewBinding.profileView.setColor(context.getResources().getColor(R.color.splash_color));
         }
+
+
+        String desc = (knowledgeDetailModels.get(position).getDesc());
+        try {
+            if (desc == null || desc.trim().isEmpty() || desc.charAt(0) == 160) {
+                desc = "No Description Available";
+                holder.knowledgeItemViewBinding.description.setTextColor(Color.parseColor("#A4A4A4"));
+            }
+        }catch (Exception e){
+
+        }
+            holder.knowledgeItemViewBinding.description.setText(desc);
+
+
         holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -59,11 +59,11 @@ public class KnowledgeDetailModel  {
     }
 
     private String sharedBy;
-    public long getnViews() {
+    public long getNViews() {
         return nViews;
     }
 
-    public void setnViews(long nViews) {
+    public void setNViews(long nViews) {
         this.nViews = nViews;
     }
 
@@ -203,11 +203,11 @@ public class KnowledgeDetailModel  {
 
     private int nShares;
 
-    public int getnComments() {
+    public int getNComments() {
         return nComments;
     }
 
-    public void setnComments(int nComments) {
+    public void setNComments(int nComments) {
         this.nComments = nComments;
     }
 
@@ -275,11 +275,11 @@ public class KnowledgeDetailModel  {
         this.description = description;
     }
 
-    public int getnLikes() {
+    public int getNLikes() {
         return nLikes;
     }
 
-    public void setnLikes(int nLikes) {
+    public void setNLikes(int nLikes) {
         this.nLikes = nLikes;
     }
 
