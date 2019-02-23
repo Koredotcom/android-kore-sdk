@@ -45,7 +45,10 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
@@ -111,16 +114,24 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
 
         holder.txtDateTime.setText(DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase());
         holder.txtTitle.setText(model.getTitle());
-        holder.txtPlace.setText(model.getWhere());
+       // holder.txtPlace.setText(model.getWhere());
+        if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
+            holder.txtPlace.setText(model.getWhere());
+            holder.txtPlace.setVisibility(VISIBLE);
+            holder.lin_cal_loc.setVisibility(VISIBLE);
+        } else {
+            holder.txtPlace.setVisibility(GONE);
+            holder.lin_cal_loc.setVisibility(GONE);
+        }
         holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
 
         holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
         if (position == 0) {
-            holder.tvborder.setVisibility(View.VISIBLE);
-            holder.txtDateTime.setVisibility(View.VISIBLE);
+            holder.tvborder.setVisibility(VISIBLE);
+            holder.txtDateTime.setVisibility(VISIBLE);
         } else {
-            holder.tvborder.setVisibility(View.GONE);
-            holder.txtDateTime.setVisibility(View.GONE);
+            holder.tvborder.setVisibility(GONE);
+            holder.txtDateTime.setVisibility(GONE);
         }
         holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
         //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
@@ -207,7 +218,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView rowIndex;
         TextView txtDateTime;
-        LinearLayout layoutDetails;
+        LinearLayout layoutDetails,lin_cal_loc;
         public View sideBar;
         public TextView txtTitle;
         public TextView txtPlace;
@@ -225,6 +236,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
             txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
             tvborder = (TextView) itemView.findViewById(R.id.tvborder);
             tv_users = (TextView) itemView.findViewById(R.id.tv_users);
+            lin_cal_loc = (LinearLayout) itemView.findViewById(R.id.lin_cal_loc);
 
         }
     }

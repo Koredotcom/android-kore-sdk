@@ -92,13 +92,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:id="@+id/lin_cal_loc"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginTop="2dp"
-                        android:src="@drawable/vector_location_icon" />
+                        app:srcCompat="@drawable/vector_location_icon" />
 
                     <TextView
                         android:id="@+id/txtPlace"
@@ -123,7 +124,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_marginTop="3dp"
-                        android:src="@drawable/vector_person" />
+                        app:srcCompat="@drawable/vector_person" />
 
                     <TextView
                         android:id="@+id/tv_users"

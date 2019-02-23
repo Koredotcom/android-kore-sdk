@@ -38,7 +38,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private TextView locationView;
     private TextView titleView;
     private TextView dateView, tv_time, tv_users;
-    LinearLayout lin_timeview;
+    LinearLayout lin_timeview,linlocation;
     private View slotLayout;
 
     float dp1;
@@ -100,6 +100,7 @@ public class MeetingConfirmationView extends ViewGroup {
         tv_users = (TextView) view.findViewById(R.id.tv_users);
         tv_time = (TextView) view.findViewById(R.id.tv_time);
         lin_timeview = (LinearLayout) view.findViewById(R.id.lin_timeview);
+        linlocation = (LinearLayout) view.findViewById(R.id.linlocation);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         //backgroundDrawable = getContext().getResources().getDrawable(R.drawable.bottom_right_rounded_rectangle);
         // slotLayout.setBackground(backgroundDrawable);
@@ -139,8 +140,10 @@ public class MeetingConfirmationView extends ViewGroup {
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
                 locationView.setText(meetingConfirmationModel.getWhere());
                 locationView.setVisibility(VISIBLE);
+                linlocation.setVisibility(VISIBLE);
             } else {
                 locationView.setVisibility(GONE);
+                linlocation.setVisibility(GONE);
             }
 
             if (    meetingConfirmationModel.getDate() > 0 &&
