@@ -193,9 +193,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             dp283 = 283 * dp1;
             BUBBLE_READ_RECEIPT = (int) (dp1 * 7);
             BUBBLE_ARROW_WIDTH = (int) dp1;
-            BUBBLE_CONTENT_LEFT_MARGIN = (int) dp12;
+            BUBBLE_CONTENT_LEFT_MARGIN = (int) dp14;
             BUBBLE_CONTENT_TOP_MARGIN = 0;
-            BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp12;
+            BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp14;
             BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 21 * dp1);
             senderImageRadius = (int) (dp1 * 17); // Change this value if sender image width and height is changed
             bubbleCornerRadius = (int) dp15;

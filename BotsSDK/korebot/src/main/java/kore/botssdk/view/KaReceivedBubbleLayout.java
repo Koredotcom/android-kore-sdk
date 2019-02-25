@@ -529,7 +529,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
         /*Files carousal */
-        left = (int)(16 * dp1);
+        left = (int)(14 * dp1);
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(verticalListView, left, top);
 

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +33,6 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -80,7 +78,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.kora_files_carousel_view, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.vertical_list_view, this, true);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setItemAnimator(null);
         viewMore = view.findViewById(R.id.view_more);
@@ -138,7 +136,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) parentWidth - 32 * dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) parentWidth - 28 * dp1, MeasureSpec.EXACTLY);
         MeasureUtils.measure(rootLayout, childWidthSpec, wrapSpec);
 
         totalHeight += rootLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
