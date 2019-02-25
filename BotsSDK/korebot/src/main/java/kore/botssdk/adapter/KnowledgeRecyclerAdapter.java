@@ -53,19 +53,6 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
             holder.knowledgeItemViewBinding.profileView.setColor(context.getResources().getColor(R.color.splash_color));
         }
 
-
-        String desc = (knowledgeDetailModels.get(position).getDesc());
-        try {
-            if (desc == null || desc.trim().isEmpty() || desc.charAt(0) == 160) {
-                desc = "No Description Available";
-                holder.knowledgeItemViewBinding.description.setTextColor(Color.parseColor("#A4A4A4"));
-            }
-        }catch (Exception e){
-
-        }
-            holder.knowledgeItemViewBinding.description.setText(desc);
-
-
         holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

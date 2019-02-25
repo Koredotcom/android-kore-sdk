@@ -1,5 +1,10 @@
 package kore.botssdk.utils;
 
+import android.text.Html;
+import android.text.Spanned;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -233,5 +238,6 @@ public class StringUtils {
         stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
         return stringBuilder.toString().trim();
     }
+
 
 }

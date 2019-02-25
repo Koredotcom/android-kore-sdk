@@ -12,6 +12,8 @@
         <import type="android.view.View" />
 
         <import type="kore.botssdk.utils.DateUtils" />
+
+        <import type="kore.botssdk.utils.StringUtils" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -87,66 +89,52 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingEnd="@dimen/dimen_12dp"
+            android:text="@{knowledge.getSpannedString()}"
             android:textColor="@color/color_232323"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:visibility="@{StringUtils.isNullOrEmptyWithTrim(knowledge.desc) ? View.GONE : View.VISIBLE}" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
 
-
-            <ImageView
-                android:id="@+id/icon_chat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                app:srcCompat="@drawable/vector_mesage" />
 
             <TextView
                 android:id="@+id/chat_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-
-                android:layout_toEndOf="@+id/icon_chat"
+                android:layout_alignParentStart="true"
+                android:drawableStart="@drawable/ic_comment"
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
                 android:text="@{String.valueOf(knowledge.NComments)}"
-
                 android:textSize="15sp" />
 
-
-            <ImageView
-                android:id="@+id/icon_eye"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/chat_count"
-                app:srcCompat="@drawable/eye_knowledge" />
 
             <TextView
                 android:id="@+id/eye_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/icon_eye"
+                android:layout_marginStart="20dp"
+                android:layout_toEndOf="@+id/chat_count"
+                android:drawableStart="@drawable/eye_knowledge"
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
                 android:text="@{String.valueOf(knowledge.NViews)}"
                 android:textSize="15sp" />
 
-            <ImageView
-                android:id="@+id/icon_like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_toLeftOf="@id/like_count"
-                app:srcCompat="@drawable/vector_thumb" />
 
             <TextView
                 android:id="@+id/like_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="14dp"
-
+                android:gravity="center_vertical"
+                android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_yes"
                 android:text="@{Integer.toString(knowledge.NLikes)}"
                 android:textSize="15sp" />
         </RelativeLayout>

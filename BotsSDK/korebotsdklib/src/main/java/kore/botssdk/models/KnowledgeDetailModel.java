@@ -1,4 +1,9 @@
 package kore.botssdk.models;
+import android.text.Html;
+import android.text.Spanned;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.ArrayList;
 
 import kore.botssdk.utils.DateUtils;
@@ -484,5 +489,9 @@ public class KnowledgeDetailModel  {
         result = 32 * result + (id == null ? 0 : id.hashCode());
         result = 33 * result + (creator == null ? 0 : creator.hashCode());
         return result;
+    }
+    public Spanned getSpannedString() {
+
+        return StringUtils.isNullOrEmpty(desc) ? null : Html.fromHtml(StringEscapeUtils.unescapeHtml4(desc.replaceAll("<br>", " ")));
     }
 }
