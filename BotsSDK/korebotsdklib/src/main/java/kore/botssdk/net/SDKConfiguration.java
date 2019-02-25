@@ -167,6 +167,16 @@ public class SDKConfiguration {
         public static  String leftLinkColor = "#6168e7";
         public static final boolean BubbleUI = false;
 
+        public static String getProfileColor() {
+            return profileColor;
+        }
+
+        public static void setProfileColor(String profileColor) {
+            BubbleColors.profileColor = profileColor;
+        }
+
+        public static String profileColor = "#6168e7";
+
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
         }

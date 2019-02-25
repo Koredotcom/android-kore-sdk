@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -26,6 +27,7 @@ import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.drawables.TopGravityDrawable;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -98,8 +100,12 @@ public class TextMediaLayout extends ViewGroup {
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
         botContentTextView.setLongClickable(false);
-
         imageView = view.findViewById(R.id.image);
+        try {
+            imageView.setColorFilter(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()), android.graphics.PorterDuff.Mode.SRC_IN);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
