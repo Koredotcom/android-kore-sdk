@@ -22,16 +22,17 @@
 
 
         <TextView
-            android:id="@+id/from"
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/date_view"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="sans-serif"
             android:maxLines="1"
-            android:text="@{StringEscapeUtils.unescapeHtml4(emailModel.getFrom())}"
+            android:textStyle="bold"
+            android:text="@{emailModel.subject}"
             android:textColor="@color/color_485260"
             android:textSize="17sp" />
 
@@ -49,19 +50,19 @@
 
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/from"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/from"
+            android:layout_below="@id/title"
             android:layout_alignBaseline="@+id/image"
-            android:layout_alignStart="@+id/from"
+            android:layout_alignStart="@+id/title"
             android:layout_marginTop="8dp"
             android:layout_toStartOf="@+id/image"
             android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="@{emailModel.subject}"
+            android:text="@{StringEscapeUtils.unescapeHtml4(emailModel.getFrom())}"
             android:textColor="@color/color_485260"
             android:textSize="15sp" />
 
@@ -69,7 +70,7 @@
             android:id="@+id/image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/from"
+            android:layout_below="@+id/title"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/dimen_8dp"
@@ -82,7 +83,7 @@
             android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title"
+            android:layout_below="@id/from"
             android:layout_alignStart="@+id/title"
             android:layout_alignEnd="@+id/date_view"
             android:layout_marginTop="8dp"
