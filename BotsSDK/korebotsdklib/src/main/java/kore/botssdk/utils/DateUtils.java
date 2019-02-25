@@ -141,8 +141,13 @@ public class DateUtils {
     public static String getDateFromStringByDate(String time){
         if(time  == null || time.isEmpty()) return "";
         try {
-            Date date = new Date(time);
-            return dateFormat.format(date);
+            long lastModified = new Date(time).getTime();
+            if (android.text.format.DateUtils.isToday(lastModified)) {
+                return "Today";
+            } else if (isYesterday(lastModified)) {
+                return "Yesterday";
+            }
+            return dateFormat.format(lastModified);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -354,6 +354,7 @@ public class FileUtils {
         docTypes.add("txt");
         docTypes.add("wpd");
         docTypes.add("wps");
+        docTypes.add("gdoc");
     }
 
     private static void loadPresentationTypes() {

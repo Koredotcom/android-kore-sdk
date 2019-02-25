@@ -24,6 +24,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.KaFileLookupModel;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.FileUtils;
 
 /**
@@ -56,7 +57,8 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter<KoraFilesRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.koraFileLookupViewBinding.setFileModel(kaFileLookupModels.get(position));
-        holder.koraFileLookupViewBinding.image.setImageResource(FileUtils.getDrawableByExt(kaFileLookupModels.get(position).getFileType()));
+        String type = kaFileLookupModels.get(position).getFileType();
+        holder.koraFileLookupViewBinding.image.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(type) ? type.toLowerCase() : ""));
         holder.koraFileLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -104,6 +104,9 @@ public class KaFileLookupModel {
         }else	return df2.format((double)fileSize / (1024 * 1024)) + " MB";
     }
 
+    public String getSharedByDetails(){
+        return "Shared by "+ sharedBy;
+    }
     public String getLastModifiedDate(){
         return "Last Edited "+ DateUtils.getDateFromString(lastModified);
     }

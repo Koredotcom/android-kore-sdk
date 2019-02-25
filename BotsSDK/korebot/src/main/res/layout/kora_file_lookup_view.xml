@@ -42,7 +42,7 @@
 
 
         <TextView
-            android:id="@+id/size"
+            android:id="@+id/sharedBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title"
@@ -52,20 +52,21 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="@{fileModel.getFileSizeMegaBytes()}"
+            android:text="@{fileModel.getSharedByDetails()}"
             android:textColor="#a3b0be"
-            android:textSize="13sp"
-            android:visibility="@{fileModel.fileSize > 0 ? View.VISIBLE : View.GONE}" />
+            android:textSize="13sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/size"
-            android:layout_alignStart="@+id/size"
+            android:layout_below="@id/sharedBy"
+            android:layout_alignStart="@+id/sharedBy"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/image"
             android:fontFamily="sans-serif-medium"
             android:id="@+id/last_edited"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="@{fileModel.getLastModifiedDate()}"
             android:textColor="#a3b0be"
             android:textSize="13sp" />
@@ -74,7 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/last_edited"
-            android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/title"
             android:layout_marginTop="15dp"
             android:background="@drawable/inset_65_divider" />
