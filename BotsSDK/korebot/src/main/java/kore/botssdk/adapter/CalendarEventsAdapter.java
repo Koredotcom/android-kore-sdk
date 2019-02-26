@@ -254,15 +254,19 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         int id = listSelectedCalendars(title, beginTime);
         if (id <= 0) throw new Exception("Invalid event id");
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_NO_HISTORY
-                | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime);
-        mContext.startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY
+                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime);
+            mContext.startActivity(intent);
+        }catch (Exception e){
+            throw new Exception("Invalid event id");
+        }
     }
 
     private void launchWebView(String htmlLink) {
@@ -399,7 +403,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                 startTime = cursor.getString(startTimeCol);
                 //   endTime = cursor.getString(endTimeCol);
 
-                if (calName != null && calName.equalsIgnoreCase(eventtitle)) {
+                if (calName != null && calName.equals(eventtitle)) {
+                    Log.d("HI","Hello");
 //                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
                     return Integer.parseInt(calID);
                 } else if (Long.parseLong(startTime) == beginTime) {
