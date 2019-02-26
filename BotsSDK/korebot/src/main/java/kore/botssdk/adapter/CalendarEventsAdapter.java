@@ -79,6 +79,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     private String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
+    private String dateLast="";
     private String type;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
@@ -111,8 +112,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
         //  holder.rowIndex.setText("" + (position + 1));
+        String date=DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+        holder.txtDateTime.setText(date);
 
-        holder.txtDateTime.setText(DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase());
+
         holder.txtTitle.setText(model.getTitle());
        // holder.txtPlace.setText(model.getWhere());
         if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
@@ -126,13 +129,14 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
 
         holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
-        if (position == 0) {
+        if (position == 0 || !date.equalsIgnoreCase(dateLast)) {
             holder.tvborder.setVisibility(VISIBLE);
             holder.txtDateTime.setVisibility(VISIBLE);
         } else {
             holder.tvborder.setVisibility(GONE);
             holder.txtDateTime.setVisibility(GONE);
         }
+        dateLast=date;
         holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
         //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
         holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
@@ -288,12 +292,12 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                 return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
             } else if (userDetailModels.size() == 2) {
 
-                return String.format("%1$s And %2$s",
+                return String.format("%1$s and %2$s",
                         userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
                         userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail());
             } else if (userDetailModels.size() == 3) {
 
-                return String.format("%1$s , %2$s And %3$s",
+                return String.format("%1$s , %2$s and %3$s",
                         userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
                         userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
                         userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail());

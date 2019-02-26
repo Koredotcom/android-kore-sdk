@@ -38,7 +38,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private TextView locationView;
     private TextView titleView;
     private TextView dateView, tv_time, tv_users;
-    LinearLayout lin_timeview,linlocation;
+    LinearLayout lin_timeview, linlocation;
     private View slotLayout;
 
     float dp1;
@@ -146,7 +146,11 @@ public class MeetingConfirmationView extends ViewGroup {
                 linlocation.setVisibility(GONE);
             }
 
-            if (    meetingConfirmationModel.getDate() > 0 &&
+            tv_users.setText(TextUtils.isEmpty(getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())) ? ""
+                    : getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees()));
+
+
+            if (meetingConfirmationModel.getDate() > 0 &&
                     meetingConfirmationModel.getSlot_end() > 0 &&
                     meetingConfirmationModel.getSlot_start() > 0) {
 
@@ -155,7 +159,6 @@ public class MeetingConfirmationView extends ViewGroup {
                 //  dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
                 dateView.setText(MessageFormat.format("{0}", DateUtils.getDateinMeetingFormat(meetingConfirmationModel.getDate()).toUpperCase()));
                 tv_time.setText(startTime + "\n" + endTime);
-                tv_users.setText((getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())));
                 dateView.setVisibility(VISIBLE);
                 tv_time.setVisibility(VISIBLE);
             } else {
@@ -210,10 +213,10 @@ public class MeetingConfirmationView extends ViewGroup {
                 return userDetailModels.get(0).getFirstName();
             } else if (userDetailModels.size() == 2) {
 
-                return String.format("%1$s And %2$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName());
+                return String.format("%1$s and %2$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName());
             } else if (userDetailModels.size() == 3) {
 
-                return String.format("%1$s , %2$s And %3$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName(), userDetailModels.get(2).getFirstName());
+                return String.format("%1$s , %2$s and %3$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName(), userDetailModels.get(2).getFirstName());
             } else {
                 int remaining = userDetailModels.size() - 3;
                 return String.format("%1$s , %2$s , %3$s and %4$d others", userDetailModels.get(0).getFirstName(),
