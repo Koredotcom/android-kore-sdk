@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:background="@android:color/transparent"
-        android:textColor="#6168e7"
+        android:textColor="#3942f6"
         android:clickable="false"
         android:focusable="false"
         android:tag="medium"

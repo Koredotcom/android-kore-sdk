@@ -163,7 +163,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         botButtonView.populateButtonList(null);
         botCarouselView.populateCarouselView(null);
         botCarouselView.setVisibility(View.GONE);
-        verticalListView.prepareDataSetAndPopulate(null,null);
+        verticalListView.prepareDataSetAndPopulate(null,null,false);
         verticalListView.setVisibility(GONE);
         meetingSlotsView.populateData(null, false);
         meetingSlotsView.setVisibility(GONE);
@@ -263,11 +263,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<KnowledgeDetailModel> knowledgeData = payInner.getKnowledgeDetailModels();
                     verticalListView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    verticalListView.prepareDataSetAndPopulate(knowledgeData,payInner.getTemplate_type());
+                    verticalListView.prepareDataSetAndPopulate(knowledgeData,payInner.getTemplate_type(),isLastItem);
                 } else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     verticalListView.setVisibility(View.VISIBLE);
                     if (payInner.getKoraSearchResultsModel() != null)
-                        verticalListView.prepareDataSetAndPopulate(payInner.getKoraSearchResultsModel().get(0).getEmails(),BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL);
+                        verticalListView.prepareDataSetAndPopulate(payInner.getKoraSearchResultsModel().get(0).getEmails(),BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL,isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_AUTO_FORMS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
@@ -296,7 +296,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if (taskTemplateModels != null && taskTemplateModels.size() > 0) {
                         TaskTemplateResponse taskTemplateModel = taskTemplateModels.get(0);
                         verticalListView.setVisibility(VISIBLE);
-                        verticalListView.prepareDataSetAndPopulate(taskTemplateModel,BotResponse.TEMPLATE_TYPE_TASK_VIEW,isLastItem && (taskTemplateModel.getButtons() != null && taskTemplateModel.getButtons().size() > 0));
+                        verticalListView.prepareDataToTasks(taskTemplateModel,BotResponse.TEMPLATE_TYPE_TASK_VIEW,isLastItem && (taskTemplateModel.getButtons() != null && taskTemplateModel.getButtons().size() > 0));
                     }
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotConfirmationWidth() - 24 * dp1);
                     bubbleTextMediaLayout.populateText(payInner.getText());
@@ -311,14 +311,14 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
                     if(calList != null && !calList.isEmpty()){
                         verticalListView.setVisibility(View.VISIBLE);
-                        verticalListView.prepareDataSetAndPopulate(calList,payInner.getTemplate_type(),isLastItem || BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type()));
+                        verticalListView.prepareDataSetAndPopulate(calList,payInner.getTemplate_type(),isLastItem);
                     }
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if(BotResponse.TEMPLATE_TYPE_FILES_LOOKUP.equalsIgnoreCase(payInner.getTemplate_type())){
                     verticalListView.setVisibility(View.VISIBLE);
                     ArrayList<KaFileLookupModel> fileList = payInner.getFileLookupModels();
                     if (fileList != null)
-                        verticalListView.prepareDataSetAndPopulate(fileList,BotResponse.TEMPLATE_TYPE_FILES_LOOKUP);
+                        verticalListView.prepareDataSetAndPopulate(fileList,BotResponse.TEMPLATE_TYPE_FILES_LOOKUP,isLastItem);
                 }else if(BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())){
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);

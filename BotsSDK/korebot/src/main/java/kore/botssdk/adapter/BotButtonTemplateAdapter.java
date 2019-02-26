@@ -2,6 +2,8 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +22,11 @@ import kore.botssdk.net.SDKConfiguration;
 public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
     private LayoutInflater ownLayoutInflater = null;
+    private int splashColor;
 
     public BotButtonTemplateAdapter(Context context) {
         ownLayoutInflater = LayoutInflater.from(context);
+        splashColor = context.getResources().getColor(R.color.splash_color);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflater.inflate(R.layout.bot_carousel_item_button_layout, null);
+            convertView = ownLayoutInflater.inflate(R.layout.meeting_slot_button, null);
         }
 
         if (convertView.getTag() == null) {
@@ -68,13 +72,13 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        public TextView botItemButton;
+        TextView botItemButton;
     }
 
-    void initializeViewHolder(View view) {
+    private void initializeViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.botItemButton = (TextView) view.findViewById(R.id.bot_carousel_item_button);
-        viewHolder.botItemButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        viewHolder.botItemButton = (TextView) view.findViewById(R.id.text_view);
+        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(splashColor);
         view.setTag(viewHolder);
     }
 

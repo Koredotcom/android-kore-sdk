@@ -70,7 +70,8 @@ public class BotButtonView extends ViewGroup {
 
     public void populateButtonList(ArrayList<BotButtonModel> botButtonModels) {
         BotButtonTemplateAdapter buttonTypeAdapter;
-        if (autoExpandListView.getAdapter() == null) {
+        if (botButtonModels != null) {
+            autoExpandListView.setVisibility(VISIBLE);
             buttonTypeAdapter = new BotButtonTemplateAdapter(getContext());
             autoExpandListView.setAdapter(buttonTypeAdapter);
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -90,11 +91,13 @@ public class BotButtonView extends ViewGroup {
                     }
                 }
             });
+            buttonTypeAdapter.setBotButtonModels(botButtonModels);
+            buttonTypeAdapter.notifyDataSetChanged();
         } else {
-            buttonTypeAdapter = (BotButtonTemplateAdapter) autoExpandListView.getAdapter();
+            autoExpandListView.setAdapter(null);
+            autoExpandListView.setVisibility(GONE);
         }
-        buttonTypeAdapter.setBotButtonModels(botButtonModels);
-        buttonTypeAdapter.notifyDataSetChanged();
+
     }
 
     private int getViewHeight() {

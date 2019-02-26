@@ -163,7 +163,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         }
     }
 
-    public void prepareDataSetAndPopulate(TaskTemplateResponse data, String templateType, boolean isEnabled) {
+    public void prepareDataToTasks(TaskTemplateResponse data, String templateType, boolean isEnabled) {
         TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), data, isEnabled);
         tasksListAdapter.setHasStableIds(true);
         setAdapter(tasksListAdapter);
@@ -171,24 +171,24 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
             tasksListAdapter.notifyDataSetChanged();
         }
-        prepareDataSetAndPopulate(data.getTaskData(), templateType);
+        prepareDataSetAndPopulate(data.getTaskData(), templateType,isEnabled);
 
 
     }
-    public void prepareDataSetAndPopulate(ArrayList data, String templateType,boolean isEnabled) {
+/*    public void prepareDataSetAndPopulate(ArrayList data, String templateType,boolean isEnabled) {
         CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(),templateType,isEnabled);
         calendarEventsAdapter.setData(data);
         calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
         setAdapter(calendarEventsAdapter);
-        prepareDataSetAndPopulate(data,templateType);
-    }
+      //  prepareDataSetAndPopulate(data,templateType);
+    }*/
 
-    public void prepareDataSetAndPopulate(ArrayList data, String templateType) {
+    public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
         if (data == null || data.size() == 0) {
             rootLayout.setVisibility(GONE);
         } else {
-            setAdapterByData(data, templateType);
-            viewMore.setVisibility(data.size() > 3 ? VISIBLE : GONE);
+            setAdapterByData(data, templateType,isEnabled);
+            viewMore.setVisibility(data.size() > 3 && isEnabled ? VISIBLE : GONE);
             if (data.size() > 3) {
                 viewMore.setText(getContext().getResources().getString(R.string.view_more));
             }
@@ -205,7 +205,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         adapter.notifyDataSetChanged();
     }
 
-    public void setAdapterByData(ArrayList data, String type) {
+    public void setAdapterByData(ArrayList data, String type,boolean isEnabled) {
         switch (type) {
             case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                 setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
@@ -216,6 +216,12 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             case BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL:
                 setAdapter(new KnowledgeRecyclerAdapter(data, getContext()));
                 break;
+            case BotResponse.TEMPLATE_TYPE_CAL_EVENTS:
+            case BotResponse.TEMPLATE_TYPE_CANCEL_EVENT:
+                CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(),type,isEnabled);
+                calendarEventsAdapter.setData(data);
+                calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
+                setAdapter(calendarEventsAdapter);
             default:
         }
     }

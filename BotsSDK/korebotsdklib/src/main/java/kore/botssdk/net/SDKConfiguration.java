@@ -118,7 +118,7 @@ public class SDKConfiguration {
 
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected ="#6168e7";
+        public static  String rightBubbleSelected ="#3942f6";
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -160,15 +160,15 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-        public static  String rightBubbleUnSelected="#6168e7";
+        public static  String rightBubbleUnSelected="#3942f6";
         public static  String leftBubbleSelected="#D3D3D3";
         public static  String leftBubbleUnSelected="#f8f9f8";
         public static  String leftBubbleTextColor="#465360";
         public static  String rightBubbleTextColor="#465360";
         public static  String whiteColor="#FFFFFF";
         public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor="#6168e7";
-        public static  String leftLinkColor = "#6168e7";
+        public static  String rightLinkColor="#3942f6";
+        public static  String leftLinkColor = "#3942f6";
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = false;
 
@@ -191,13 +191,13 @@ public class SDKConfiguration {
             BubbleColors.profileColor = profileColor;
         }
 
-        static String profileColor = "#6168e7";
+        static String profileColor = "#3942f6";
 
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#6168e7";
+        public static  String quickReplyColor = "#3942f6";
 
     }
 

@@ -136,7 +136,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:tag="regular"
-                android:textColor="@color/color_6168e7"
+                android:textColor="@color/color_3942f6"
                 android:textSize="14sp" />
 
             <TextView
