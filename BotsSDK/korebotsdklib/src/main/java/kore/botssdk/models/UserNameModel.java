@@ -8,6 +8,7 @@ public class UserNameModel {
     public String getfN() {
         return fN;
     }
+    private String _id;
 
     public void setfN(String fN) {
         this.fN = fN;
@@ -33,5 +34,13 @@ public class UserNameModel {
         }else{
             return StringUtils.capitalize(lN);
         }
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 }

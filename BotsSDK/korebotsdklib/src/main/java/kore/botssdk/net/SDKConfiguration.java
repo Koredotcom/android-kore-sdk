@@ -5,6 +5,10 @@ package kore.botssdk.net;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
+import android.graphics.drawable.Drawable;
+
+import kore.korebotsdklib.R;
+
 /**
  * This class is for defining properties
  */
@@ -47,7 +51,7 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        public static  String JWT_SERVER_URL = "https://demo.kore.net";
+        static  String JWT_SERVER_URL = "https://demo.kore.net";
     }
 
     //Server related configurations
@@ -73,7 +77,7 @@ public class SDKConfiguration {
             IS_PRESENCE_SSL = isPresenceSsl;
         }
 
-        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
+        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = true;
@@ -166,6 +170,18 @@ public class SDKConfiguration {
         public static  String rightLinkColor="#6168e7";
         public static  String leftLinkColor = "#6168e7";
         public static final boolean BubbleUI = false;
+        public static final boolean showIcon = false;
+
+        public static int getIcon() {
+            return icon;
+        }
+
+        public static void setIcon(int icon) {
+            BubbleColors.icon = icon;
+        }
+
+        private static int icon = -1;
+
 
         public static String getProfileColor() {
             return profileColor;
@@ -175,7 +191,7 @@ public class SDKConfiguration {
             BubbleColors.profileColor = profileColor;
         }
 
-        public static String profileColor = "#6168e7";
+        static String profileColor = "#6168e7";
 
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;

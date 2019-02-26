@@ -23,8 +23,8 @@ import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
@@ -190,13 +190,17 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
     protected void cosmetiseForProfilePic(BaseBotMessage baseBotMessage) {
-        if (isGroupMessage) {
+/*        if (isGroupMessage) {
             String icon = ((BotResponse) baseBotMessage).getIcon();
             cpvSenderImage.setVisibility(VISIBLE);
-            cpvSenderImage.populateLayout(" ", null, icon, null, -1, 0, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+            cpvSenderImage.populateLayout(" ", null, icon, null, SDKConfiguration.BubbleColors.getIcon(), 0, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
         } else {
             cpvSenderImage.setVisibility(GONE);
-        }
+        }*/
+        String icon = ((BotResponse) baseBotMessage).getIcon();
+        cpvSenderImage.setVisibility(SDKConfiguration.BubbleColors.showIcon ? VISIBLE : GONE);
+        cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+
     }
 
     protected void populateForTemplates(int position,boolean isLastItem,ComponentModel compModel,BaseBotMessage baseBotMessage) {
@@ -380,18 +384,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For Sender icon [CPV]
          */
-        float cpvSenderImageDimen = dp1 * 35;
+        float cpvSenderImageDimen = dp1 * 21;
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
         MeasureUtils.measure(cpvSenderImage, childWidthSpec, childHeightSpec);
 
-        int cpvMarginLeft, cpvMarginRight;
-        if (cpvSenderImage.getMeasuredWidth() != 0) {
-            cpvMarginLeft = cpvMarginRight = (int) dp4;
-        } else {
-            cpvMarginLeft = cpvMarginRight = 0;
-        }
 
 
 
@@ -462,16 +460,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         left = BUBBLE_LEFT_BORDER;
         top = minimumTop;
 
-        /*
-         * For Sender icon [CPV]
-         */
-        if (cpvSenderImage.getVisibility() != GONE) {
-            left = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            LayoutUtils.layoutChild(cpvSenderImage, left, top);
-            left = cpvSenderImage.getRight() + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH;
-        } else {
-            left = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH;
-        }
 
         int bubbleTextMediaLayouMarginLeft = BUBBLE_CONTENT_LEFT_MARGIN;
         int bubbleTextMediaLayouMarginTop = BUBBLE_CONTENT_TOP_MARGIN + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT;
@@ -510,17 +498,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
         /*
-         * For re-adjusting CPV
-         */
-        if (cpvSenderImage.getVisibility() != GONE) {
-            int cpvLeft = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT;
-            int cpvTop = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom(),
-                    botButtonView.getBottom() + (int) dp1,
-                    /*  botCarouselView.getBottom() - BUBBLE_CAROUSEL_BOTTOM_SHADE_MARGIN,*/
-                    botListTemplateView.getBottom()+ (int) dp1,   meetingSlotsView.getBottom() + (int) dp1, attendeeSlotSelectionView.getBottom() + (int) dp1,meetingConfirmationView.getBottom() + (int) dp1)) - cpvSenderImage.getMeasuredHeight();
-            LayoutUtils.layoutChild(cpvSenderImage, cpvLeft, cpvTop);
-        }
-        /*
          * For Carousel View
          */
         left = 0;
@@ -529,7 +506,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
         /*Files carousal */
-        left = (int)(14 * dp1);
+        left = (int)(12 * dp1);
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(verticalListView, left, top);
 
@@ -546,7 +523,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /**
          * For PieChat view
          */
-        left = cpvSenderImage.getRight() / 2;
+        left = bubbleTextMediaLayout.getLeft()- (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom()  : minimumTop;
         LayoutUtils.layoutChild(botPieChartView, left, top);
 
@@ -554,11 +531,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /**
          * For Table view
          */
-        left = cpvSenderImage.getRight() / 2;
+        left = bubbleTextMediaLayout.getLeft()- (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() : minimumTop;
         LayoutUtils.layoutChild(tableView, left, top);
 
-        left = cpvSenderImage.getRight() / 2;
+        left = bubbleTextMediaLayout.getLeft()- (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() : minimumTop;
         LayoutUtils.layoutChild(lineChartView, left, top);
 
@@ -566,6 +543,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         left = (int) (bubbleTextMediaLayout.getLeft());
         top = Collections.max(Arrays.asList(bubbleTextMediaLayout.getBottom(),botButtonView.getBottom(),botListTemplateView.getBottom(), verticalListView.getBottom(),botCarouselView.getBottom(),meetingConfirmationView.getBottom(),meetingSlotsView.getBottom(),attendeeSlotSelectionView.getBottom(),lineChartView.getBottom(),botPieChartView.getBottom(),tableView.getBottom()));
+        LayoutUtils.layoutChild(cpvSenderImage,left,top);
+        if(cpvSenderImage.getMeasuredWidth() > 0) {
+            left = cpvSenderImage.getRight() + (int) (9 * dp1);
+        }
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         LayoutUtils.layoutChild(timeLineView, 0, top);
 
