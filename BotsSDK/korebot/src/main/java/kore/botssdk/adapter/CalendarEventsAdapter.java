@@ -81,6 +81,15 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
     private String dateLast="";
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     private String type;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
@@ -168,7 +177,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("meetingId", model.getEventId());
                     String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
-                    composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
                 }
             }
         });
@@ -371,7 +381,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
             eventUri = Uri.parse("content://com.android.calendar/events");
         }
 
-        int result = 0;
+        int result = -1;
         ContentResolver contentResolver = mContext.getContentResolver();
 
         /*// Create a cursor and read from the calendar (for Android API below 4.0)
@@ -385,7 +395,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
 */
         // Create a set containing all of the calendar IDs available on the phone
 //        HashSet<String> calendarIds = CalendarService.getCalenderIds(lcursor);
-
+//        beginTime = beginTime + TimeZone.getDefault().getRawOffset();
 //        for(String id:calendarIds) {
         String projection[] = {"_id", "title", CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
         Cursor cursor = mContext.getContentResolver().query(eventUri, null, null,
@@ -408,14 +418,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                 startTime = cursor.getString(startTimeCol);
                 //   endTime = cursor.getString(endTimeCol);
 
-                if (calName != null && calName.equals(eventtitle)) {
-                    Log.d("HI","Hello");
-//                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
-                    return Integer.parseInt(calID);
-                } else if (Long.parseLong(startTime) == beginTime) {
-                    result = Integer.parseInt(calID);
-                }
 
+                if (calName != null && calName.equals(eventtitle)) {
+                    if(Long.parseLong(startTime) == beginTime) {
+//                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
+                        return  Integer.parseInt(calID);
+                    }
+                }
             } while (cursor.moveToNext());
             cursor.close();
         }
