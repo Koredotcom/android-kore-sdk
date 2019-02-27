@@ -5,6 +5,7 @@
     android:id="@+id/slot_confirm_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
 
     android:orientation="vertical">
 
@@ -13,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:cardCornerRadius="8dp"
-        app:cardElevation="5dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="4dp"
         app:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -28,11 +29,11 @@
                 android:id="@+id/date_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:layout_margin="10dp"
                 android:text=""
                 android:textColor="#485260"
                 android:textSize="14dp"
@@ -54,10 +55,10 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/lin_timeview"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.25"
-                    android:id="@+id/lin_timeview"
+                    android:layout_weight="0.23"
                     android:orientation="horizontal">
 
                     <TextView
@@ -65,14 +66,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="end"
                         android:text=""
                         android:textColor="#485260"
                         android:textSize="12sp" />
 
                     <TextView
-                        android:layout_width="1dp"
+                        android:layout_width="2dp"
                         android:layout_height="match_parent"
+                        android:layout_marginStart="9dp"
                         android:layout_marginTop="5dp"
+                        android:layout_marginEnd="9dp"
 
                         android:background="#f4511f" />
                 </LinearLayout>
@@ -80,27 +84,29 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="0.75"
+
+                    android:layout_weight="0.77"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/title_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:gravity="start|top"
+
+                        android:maxLines="1"
+
                         android:text=""
                         android:textColor="#485260"
                         android:textSize="16sp" />
 
                     <LinearLayout
+                        android:id="@+id/linlocation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:id="@+id/linlocation"
                         android:orientation="horizontal">
-
 
 
                         <TextView
@@ -109,9 +115,9 @@
                             android:layout_height="wrap_content"
 
 
+                            android:drawableStart="@drawable/vector_location_icon"
                             android:drawablePadding="5dp"
                             android:gravity="center|start"
-                            android:drawableStart="@drawable/vector_location_icon"
 
                             android:textColor="#485260"
                             android:textSize="13sp" />
@@ -123,16 +129,15 @@
                         android:orientation="horizontal">
 
 
-
                         <TextView
                             android:id="@+id/tv_users"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
+                            android:drawableStart="@drawable/vector_person"
                             android:drawablePadding="5dp"
-                            android:gravity="center|start"
 
-                             android:drawableStart="@drawable/vector_person"
+                            android:gravity="center|start"
                             android:textColor="#485260"
                             android:textSize="13sp" />
                     </LinearLayout>

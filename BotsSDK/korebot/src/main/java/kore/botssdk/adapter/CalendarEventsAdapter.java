@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -90,6 +91,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         inflater = LayoutInflater.from(mContext);
         this.type = type;
         this.isEnabled = isEnabled;
+        notifyDataSetChanged();
 
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";
@@ -105,7 +107,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, null));
+        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent,false));
     }
 
     @Override
@@ -121,10 +123,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
             holder.txtPlace.setText(model.getWhere());
             holder.txtPlace.setVisibility(VISIBLE);
-            holder.lin_cal_loc.setVisibility(VISIBLE);
+
         } else {
             holder.txtPlace.setVisibility(GONE);
-            holder.lin_cal_loc.setVisibility(GONE);
+
         }
         holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
 
@@ -146,16 +148,18 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                 launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
                             } else {
                                 gModel = model;
                                 AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
                             }
                         } else {
+
                             launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
                         }
 
                     } catch (Exception e) {
+
                         launchWebView(model.getHtmlLink());
                     }
 
@@ -197,6 +201,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     @Override
     public void setData(ArrayList data) {
         this.eventList = data;
+        notifyDataSetChanged();
 
     }
 
@@ -222,7 +227,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView rowIndex;
         TextView txtDateTime;
-        LinearLayout layoutDetails,lin_cal_loc;
+        LinearLayout layoutDetails;
         public View sideBar;
         public TextView txtTitle;
         public TextView txtPlace;
@@ -240,7 +245,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
             txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
             tvborder = (TextView) itemView.findViewById(R.id.tvborder);
             tv_users = (TextView) itemView.findViewById(R.id.tv_users);
-            lin_cal_loc = (LinearLayout) itemView.findViewById(R.id.lin_cal_loc);
+
 
         }
     }
