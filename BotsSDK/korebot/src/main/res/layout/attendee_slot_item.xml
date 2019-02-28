@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:minHeight="42dp"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root_layout"
-    android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:background="@drawable/slots_background"
-    android:gravity="center_vertical"
-    android:minHeight="48dp"
-    android:orientation="horizontal"
-    android:paddingEnd="7dp"
-    android:paddingStart="7dp">
+        <ImageView
+            android:id="@+id/slot_check"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@mipmap/checkbox_off" />
 
-
-    <TextView
-        android:id="@+id/slot_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/slot_check"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="10dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:tag="medium"
-        android:text="9:00 AM to 10:15 AM"
-        android:textColor="#333d4d"
-        android:textSize="15dp" />
-
-
-    <ImageView
-        android:id="@+id/slot_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="15dp"
-        android:src="@mipmap/checkbox_off" />
-</RelativeLayout>
+        <TextView
+            android:id="@+id/slot_time"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/slot_check"
+            android:ellipsize="end"
+            android:gravity="start|center_vertical"
+            android:maxLines="1"
+            android:tag="medium"
+            android:fontFamily="sans-serif-medium"
+            android:text="9:00 AM to 10:15 AM"
+            android:textColor="@color/color_465360"
+            android:textSize="13sp" />
+    </RelativeLayout>
+</layout>
