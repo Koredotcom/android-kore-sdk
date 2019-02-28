@@ -9,6 +9,6 @@
     android:textAllCaps="true"
     android:paddingStart="10dp"
     android:drawablePadding="10dp"
-    android:drawableStart="@drawable/ic_round_star_rate_18px"
+    android:drawableStart="@drawable/ic_popular"
     android:layout_height="42dp"/>
 
