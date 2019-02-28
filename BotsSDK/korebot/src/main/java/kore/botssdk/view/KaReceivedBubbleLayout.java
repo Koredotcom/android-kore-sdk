@@ -482,10 +482,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         layoutView(botButtonView,top,left,arrayList);
         layoutView(meetingSlotsView,top,left,arrayList);
-        layoutView(attendeeSlotSelectionView,top,(int)(left - 1 * dp1),arrayList);
-        layoutView(meetingConfirmationView,top,(int)(left - 1 * dp1),arrayList);
+        layoutView(attendeeSlotSelectionView,top,(int)(left -  dp1),arrayList);
+        layoutView(meetingConfirmationView,top,(int)(left - dp1),arrayList);
         layoutView(botCarouselView,top,left,arrayList);
-        layoutView(verticalListView,top,(int)(left - 1 * dp1),arrayList);
+        layoutView(verticalListView,top,(int)(left -  dp1),arrayList);
         layoutView(botListTemplateView,top,left,arrayList);
         layoutView(botPieChartView,top,left,arrayList);
         layoutView(tableView,top,left,arrayList);
