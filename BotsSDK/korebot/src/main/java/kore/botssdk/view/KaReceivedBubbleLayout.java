@@ -477,21 +477,22 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
         arrayList.add(bubbleTextMediaLayout.getBottom());
 
-        layoutView(botButtonView,minimumTop,arrayList);
-        layoutView(meetingSlotsView,minimumTop,arrayList);
-        layoutView(attendeeSlotSelectionView,minimumTop,arrayList);
-        layoutView(meetingConfirmationView,minimumTop,arrayList);
-        layoutView(botCarouselView,minimumTop,arrayList);
-        layoutView(verticalListView,minimumTop,arrayList);
-        layoutView(botListTemplateView,minimumTop,arrayList);
-        layoutView(botPieChartView,minimumTop,arrayList);
-        layoutView(tableView,minimumTop,arrayList);
-        layoutView(lineChartView,minimumTop,arrayList);
+        top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) dp15 : minimumTop;
+        left = bubbleTextMediaLayout.getLeft() - (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
+
+        layoutView(botButtonView,top,left,arrayList);
+        layoutView(meetingSlotsView,top,left,arrayList);
+        layoutView(attendeeSlotSelectionView,top,left,arrayList);
+        layoutView(meetingConfirmationView,top,left,arrayList);
+        layoutView(botCarouselView,top,left,arrayList);
+        layoutView(verticalListView,top,left,arrayList);
+        layoutView(botListTemplateView,top,left,arrayList);
+        layoutView(botPieChartView,top,left,arrayList);
+        layoutView(tableView,top,left,arrayList);
+        layoutView(lineChartView,top,left,arrayList);
 
         left = (int) (bubbleTextMediaLayout.getLeft());
-
         top = Collections.max(arrayList);
-
         LayoutUtils.layoutChild(cpvSenderImage, left, top);
         if (cpvSenderImage.getMeasuredWidth() > 0) {
             left = cpvSenderImage.getRight() + (int) (9 * dp1);
@@ -500,18 +501,14 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         LayoutUtils.layoutChild(timeLineView, 0, top);
-        botCarouselView.bringToFront();
-        verticalListView.bringToFront();
-        attendeeSlotSelectionView.bringToFront();
 
+        botCarouselView.bringToFront();
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 
     }
 
-    private void layoutView(View view,int minimumTop,ArrayList arrayList){
+    private void layoutView(View view,int top,int left,ArrayList<Integer> arrayList){
         if (view.getVisibility() == VISIBLE) {
-            int left = bubbleTextMediaLayout.getLeft() - (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
-            int top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) dp15 : minimumTop;
             LayoutUtils.layoutChild(view, left, top);
             arrayList.add(view.getBottom());
         }
