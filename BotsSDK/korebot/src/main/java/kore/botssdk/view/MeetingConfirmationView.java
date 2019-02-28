@@ -2,12 +2,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +12,9 @@ import android.widget.TextView;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.ProfileIndicationAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.MeetingConfirmationModel;
@@ -34,7 +26,6 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class MeetingConfirmationView extends ViewGroup {
-    private RecyclerView recyclerView;
     private TextView locationView;
     private TextView titleView;
     private TextView dateView, tv_time, tv_users;
@@ -88,7 +79,6 @@ public class MeetingConfirmationView extends ViewGroup {
 
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         //RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         //recyclerView.setLayoutManager(layoutManager);
         //recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -109,16 +99,18 @@ public class MeetingConfirmationView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
 
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) (parentWidth - 28 * dp1), MeasureSpec.EXACTLY);
         MeasureUtils.measure(slotLayout, childWidthSpec, wrapSpec);
-
-        totalHeight += slotLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
-
+        if(slotLayout.getVisibility() == VISIBLE ) {
+            totalHeight += slotLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
+        }
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(slotLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
@@ -128,13 +120,6 @@ public class MeetingConfirmationView extends ViewGroup {
     public void populateData(final MeetingConfirmationModel meetingConfirmationModel) {
 
         if (meetingConfirmationModel != null) {
-            ProfileIndicationAdapter profileIndicationAdapter;
-            profileIndicationAdapter = new ProfileIndicationAdapter(getContext(), recyclerView);
-            recyclerView.setAdapter(profileIndicationAdapter);
-
-            profileIndicationAdapter.setUserDetailModels(meetingConfirmationModel.getAttendees());
-            profileIndicationAdapter.notifyDataSetChanged();
-
             slotLayout.setVisibility(VISIBLE);
             titleView.setText(meetingConfirmationModel.getTitle());
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
@@ -168,8 +153,7 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
             }
-            //GONE
-            recyclerView.setVisibility(GONE);
+            //GON
         } else {
             slotLayout.setVisibility(GONE);
         }

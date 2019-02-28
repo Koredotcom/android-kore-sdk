@@ -2,7 +2,13 @@ package kore.botssdk.models;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import kore.botssdk.utils.DateUtils;
+
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class MeetingConfirmationModel {
     private String title;
@@ -60,6 +66,12 @@ public class MeetingConfirmationModel {
     public void setWhere(String where) {
         this.where = where;
     }
+    public String getDateAndTimeString(){
+        String startTime = getTimeInAmPm(slot_start).toUpperCase();
+        String endTime = getTimeInAmPm(slot_end).toUpperCase();
+          return MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(date), startTime, endTime);
+
+    }
 
     public class UserDetailModel {
         public String getFirstName() {
@@ -104,6 +116,19 @@ public class MeetingConfirmationModel {
 
         public void setInitials(String initials) {
             this.initials = initials;
+        }
+    }
+
+    public String getparticipantsAsString(){
+        if(attendees != null && attendees.size() > 0){
+            int size = attendees.size();
+            if(size == 1){
+                return  attendees.get(0).getFirstName();
+            }else{
+                return attendees.get(0).getFirstName() + " and "+ (size-1) +(size - 1 > 1 ?  " others" : " other");
+            }
+        }else{
+            return "";
         }
     }
 }

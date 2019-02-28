@@ -107,9 +107,6 @@ public class MeetingSlotsView extends ViewGroup{
             MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
         }
         totalHeight += meetingLayout.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
-        if(meetingLayout.getMeasuredHeight() !=0 ){
-            totalHeight+=18*dp1;
-        }
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(meetingLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
@@ -142,6 +139,7 @@ public class MeetingSlotsView extends ViewGroup{
                 }
             } : null);
         }else{
+            autoExpandListView.setAdapter(null);
             meetingLayout.setVisibility(GONE);
         }
     }
@@ -156,7 +154,7 @@ public class MeetingSlotsView extends ViewGroup{
 
         //get the available size of child view
         int childLeft = 0;
-        int childTop =(int)(6 * dp1);
+        int childTop = 0;
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);

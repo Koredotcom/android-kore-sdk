@@ -88,7 +88,7 @@
     <color name="color_eeeef2">#eeeef2</color>
     <color name="color_faf9f8">#faf9f8</color>
     <color name="color_B0B0B0">#B0B0B0</color>
-
+    <color name="color_f4f4f4">#f4f4f4</color>
     <string-array name="color_set">
         <item>#4E74F0</item>
         <item>#E44929</item>
@@ -129,4 +129,5 @@
     <color name="color_a3b0be">#a3b0be</color>
     <color name="color_232323">#232323</color>
     <color name="color_ffeaec">#ffeaec</color>
+    <color name="color_404051">#404051</color>
 </resources>

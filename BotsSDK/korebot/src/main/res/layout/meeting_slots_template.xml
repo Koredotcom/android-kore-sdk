@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
+    android:paddingBottom="2dp"
     android:id="@+id/meeting_layout">
 
     <kore.botssdk.view.AutoExpandListView

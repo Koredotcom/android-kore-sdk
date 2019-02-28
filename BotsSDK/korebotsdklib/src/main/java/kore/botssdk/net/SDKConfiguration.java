@@ -170,7 +170,7 @@ public class SDKConfiguration {
         public static  String rightLinkColor="#3942f6";
         public static  String leftLinkColor = "#3942f6";
         public static final boolean BubbleUI = false;
-        public static final boolean showIcon = false;
+        public static final boolean showIcon = true;
 
         public static int getIcon() {
             return icon;
