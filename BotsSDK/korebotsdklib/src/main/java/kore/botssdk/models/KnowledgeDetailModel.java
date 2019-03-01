@@ -26,7 +26,7 @@ public class KnowledgeDetailModel  {
     private String lMod;
     private String imageUrl;
     private String title;
-    private ContactInfo owner;
+    private ContactInfoModel owner;
     private String url;
     private int nLikes;
 
@@ -265,11 +265,11 @@ public class KnowledgeDetailModel  {
         this.title = title;
     }
 
-    public ContactInfo getOwner() {
+    public ContactInfoModel getOwner() {
         return owner;
     }
 
-    public void setOwner(ContactInfo owner) {
+    public void setOwner(ContactInfoModel owner) {
         this.owner = owner;
     }
 
@@ -418,63 +418,6 @@ public class KnowledgeDetailModel  {
 
     }
 
-    public class ContactInfo{
-        public String getlN() {
-            return lN;
-        }
-
-        public void setlN(String lN) {
-            this.lN = lN;
-        }
-
-        private String lN;
-        private String fN;
-        private String id;
-
-
-
-        public String getfN() {
-            return fN;
-        }
-
-        public void setfN(String fN) {
-            this.fN = fN;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
-
-        public String getEmailId() {
-            return emailId;
-        }
-
-        public void setEmailId(String emailId) {
-            this.emailId = emailId;
-        }
-
-        private String color;
-        private String emailId;
-
-        public String getInitials(){
-           return StringUtils.getInitials(fN,lN);
-        }
-        public String getName(){
-            return fN+" "+lN;
-        }
-    }
     @Override
     public boolean equals(Object obj) {
         if(obj ==null) return false;

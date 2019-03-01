@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="contactInfo"
+            type="kore.botssdk.models.ContactInfoModel" />
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.ContactInfoView"/>
+        <import type="android.view.View" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_14dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="@dimen/dimen_14dp"
+            android:layout_marginBottom="18dp">
+
+            <kore.botssdk.view.ProfileTextView
+                android:id="@+id/initials"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="24dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="@{contactInfo.getInitials()}"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="19sp" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/initials"
+                android:fontFamily="sans-serif-medium"
+                android:text="@{contactInfo.getName()}"
+                android:textColor="@color/color_404051"
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/role"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name"
+                android:layout_alignStart="@+id/name"
+                android:layout_marginTop="6dp"
+                android:layout_toEndOf="@+id/initials"
+                android:fontFamily="sans-serif"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{contactInfo.getTitle()}"
+                android:textColor="#757587"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/initials"
+                android:layout_alignStart="@+id/initials"
+                android:drawableStart="@drawable/ic_mail_drawable"
+                android:drawablePadding="15dp"
+                android:layout_marginBottom="@dimen/dimen_14dp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:text="@{contactInfo.getEmail()}"
+                android:textColor="@color/splash_color"
+                android:textSize="15sp"
+                android:onClick="@{()->viewBase.launchEmail(contactInfo.getEmail)}"
+                android:visibility="@{contactInfo.email== null || contactInfo.email.empty ? View.GONE : View.VISIBLE }" />
+
+            <TextView
+                android:id="@+id/phone1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/email"
+                android:layout_alignStart="@+id/initials"
+                android:layout_marginBottom="13dp"
+                android:drawablePadding="15dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="15sp"
+                android:textColor="@color/splash_color"
+                android:drawableStart="@drawable/ic_phone_icon"
+                android:onClick="@{()->viewBase.launchDialer(contactInfo.getPhoneNoByIndex(0))}"
+                android:text="@{contactInfo.getPhoneNoByIndex(0)}"
+                android:visibility="@{contactInfo.phone == null || contactInfo.phone.empty ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:id="@+id/phone2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/phone1"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="30dp"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="15sp"
+                android:textColor="@color/splash_color"
+                android:layout_marginBottom="@dimen/dimen_14dp"
+                android:onClick="@{()->viewBase.launchDialer(contactInfo.getPhoneNoByIndex(1))}"
+                android:text="@{contactInfo.getPhoneNoByIndex(1)}"
+                android:visibility="@{contactInfo.phone == null || contactInfo.phone.size() &lt; 2 ? View.GONE : View.VISIBLE}" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/phone2"
+                android:background="@drawable/button_drawable_stroke"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:layout_alignWithParentIfMissing="true"
+                android:text="View Details"
+                android:onClick="@{()->viewBase.openDetails(contactInfo)}"
+                android:textColor="@color/splash_color"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

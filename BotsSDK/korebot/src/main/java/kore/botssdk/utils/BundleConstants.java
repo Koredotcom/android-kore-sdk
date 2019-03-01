@@ -28,4 +28,18 @@ public class BundleConstants {
     public static final String SESSION_END_ALERT_MESSAGES[] = {"We have noticed that chat is inactive for around a minute. The chat will be closed soon",
     "The chat is still inactive for around two minutes, it will be closed in about a minute","Your session is going to expire soon as you are inactive for last 3 min... "};
     public static final String TASK_INFO = "task_information";
+
+    public static final String CONTACT_SUGGESTIONS = "contact_suggestion";
+    public static final String QUESTION_ASKED = "question_asked";
+    public static final String INFORMATION_EDITOR = "INFORMATION_EDITOR";
+    public static final String ARTICLE_OPTIONS = "article_options";
+    public static final String MEETING_REQUEST = "MEETING_REQUEST";
+    public static final String MEETING_INFO = "MEETING_INFO";
+    public static final String INFO_SHARE = "INFO_SHARE";
+    public static final String INFO_TEACH = "INFO_TRAIN";
+    public static final String INFO_VIEW_DETAILS = "INFO_VIEW_DETAILS";
+    public static final String EMAIL_REDIRECT = "EMAIL_REDIRECT";
+    public static final String OPEN_DIALER = "OPEN_DIALER";
+    public static final String OPEN_EMAIL = "OPEN_EMAIL";
+    public static final String VIEW_CONTACT = "VIEW_CONTACT";
 }

@@ -1,7 +1,5 @@
 package kore.botssdk.models;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -150,6 +148,7 @@ public class PayloadInner {
     private ArrayList<BotButtonModel> buttons;
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<FormActionTemplate> form_actions;
+    private ArrayList<ContactInfoModel> contactInfoModels;
 
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
@@ -375,9 +374,13 @@ public class PayloadInner {
                 }.getType();
                 pickerTemplateModels = gson.fromJson(elementsAsString, listType);
 
+            }else if(BotResponse.KA_CONTACT_VIEW.equalsIgnoreCase(template_type)){
+                Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
+                }.getType();
+                contactInfoModels = gson.fromJson(elementsAsString, listType);
             }
         }
-        templateValidator();
+       // templateValidator();
     }
 
     private void templateValidator() throws JsonSyntaxException {
@@ -501,6 +504,14 @@ public class PayloadInner {
 
     public Skill getSkill() {
         return skill;
+    }
+
+    public ArrayList<ContactInfoModel> getContactInfoModels() {
+        return contactInfoModels;
+    }
+
+    public void setContactInfoModels(ArrayList<ContactInfoModel> contactInfoModels) {
+        this.contactInfoModels = contactInfoModels;
     }
 
     public class Skill{

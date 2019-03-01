@@ -111,7 +111,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected PieChartView botPieChartView;
     protected BotMainTableView tableView;
     protected LineChartView lineChartView;
-  //  protected KoraCarouselView koraCarouselView;
+    protected ContactInfoView contactInfoView;
     protected MeetingSlotsView meetingSlotsView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
@@ -269,6 +269,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
         addView(meetingSlotsView);
 
+        contactInfoView = ViewProvider.getContactInfoView(context);
+        contactInfoView.setComposeFooterInterface(composeFooterInterface);
+        contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(contactInfoView);
+
         meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
         meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
         meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
@@ -360,6 +365,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(meetingSlotsView != null){
             meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(contactInfoView != null){
+            contactInfoView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(meetingConfirmationView != null){
             meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -382,6 +390,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (verticalListView != null) {
             verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(contactInfoView != null){
+            contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

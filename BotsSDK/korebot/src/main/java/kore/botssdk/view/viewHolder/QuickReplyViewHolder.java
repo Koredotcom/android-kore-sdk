@@ -13,9 +13,9 @@ import kore.botssdk.R;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class QuickReplyViewHolder extends RecyclerView.ViewHolder{
-    TextView quickReplyTitle;
-    ImageView quickReplyImage;
-    LinearLayout quickReplyRoot;
+    private TextView quickReplyTitle;
+    private ImageView quickReplyImage;
+    private LinearLayout quickReplyRoot;
 
     public QuickReplyViewHolder(View view) {
         super(view);

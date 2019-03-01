@@ -197,7 +197,7 @@ public class SDKConfiguration {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#3942f6";
+        public static  String quickReplyColor = "#EEEEF0";
 
     }
 
