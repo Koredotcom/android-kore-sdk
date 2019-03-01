@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -7,97 +8,82 @@
             name="knowledge"
             type="kore.botssdk.models.KnowledgeDetailModel" />
 
-        <import type="android.text.TextUtils" />
+        <variable
+            name="adapter"
+            type="kore.botssdk.adapter.KnowledgeRecyclerAdapter" />
 
         <import type="android.view.View" />
-
-        <import type="kore.botssdk.utils.DateUtils" />
 
         <import type="kore.botssdk.utils.StringUtils" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:paddingStart="@dimen/dimen_12dp"
-        android:paddingTop="@dimen/dimen_12dp">
+        android:paddingTop="@dimen/dimen_12dp"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:paddingEnd="@dimen/dimen_12dp"
+            android:layout_height="wrap_content">
 
-            <kore.botssdk.view.ProfileTextView
-                android:id="@+id/profile_view"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerInParent="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/background_circle"
-                android:gravity="center"
-                android:text="@{knowledge.owner.getInitials()}"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/link_image"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="5dp"
+                android:scaleType="fitXY"
+                android:visibility="visible"
+                app:loadImage="@{knowledge.imageUrl}" />
 
             <TextView
-                android:id="@+id/name_view"
-                android:layout_width="wrap_content"
+                android:id="@+id/title"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_toEndOf="@+id/profile_view"
+                android:layout_toStartOf="@+id/link_image"
+                android:ellipsize="end"
                 android:fontFamily="sans-serif-medium"
-                android:paddingEnd="@dimen/dimen_12dp"
-                android:text="@{knowledge.owner.getName()}"
+                android:maxLines="1"
+                android:text="@{knowledge.title}"
                 android:textColor="@color/color_465360"
-                android:textSize="15sp" />
+                android:textSize="21sp" />
 
             <TextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/name_view"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="3dp"
-                android:layout_toEndOf="@+id/profile_view"
-                android:text="@{DateUtils.formattedSentDateV6(knowledge.createdOn)}"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/link_image"
+                android:text="@{knowledge.getLastModifiedDate()}"
                 android:textColor="@color/color_a3b0be"
                 android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/time"
+                android:layout_marginTop="11dp"
+                android:layout_toStartOf="@+id/link_image"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{knowledge.getSpannedString()}"
+                android:textColor="@color/color_232323"
+                android:textSize="15sp"
+                android:visibility="@{StringUtils.isNullOrEmptyWithTrim(knowledge.desc) ? View.GONE : View.VISIBLE}" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
-            android:paddingEnd="@dimen/dimen_12dp"
-            android:text="@{knowledge.title}"
-            android:textColor="@color/color_465360"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:paddingEnd="@dimen/dimen_12dp"
-            android:text="@{knowledge.getSpannedString()}"
-            android:textColor="@color/color_232323"
-            android:textSize="15sp"
-            android:visibility="@{StringUtils.isNullOrEmptyWithTrim(knowledge.desc) ? View.GONE : View.VISIBLE}" />
-
         <RelativeLayout
+            android:id="@+id/counter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
+            android:paddingEnd="@dimen/dimen_12dp"
             android:gravity="center_vertical">
 
 
@@ -132,17 +118,19 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="14dp"
-                android:gravity="center_vertical"
-                android:drawablePadding="7dp"
                 android:drawableStart="@drawable/ic_yes"
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
                 android:text="@{Integer.toString(knowledge.NLikes)}"
                 android:textSize="15sp" />
         </RelativeLayout>
 
         <View
+            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/inset_65_divider" />
+
     </LinearLayout>
 </layout>

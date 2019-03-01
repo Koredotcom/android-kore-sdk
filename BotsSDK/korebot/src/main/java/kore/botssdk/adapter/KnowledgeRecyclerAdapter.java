@@ -8,10 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
@@ -21,6 +25,8 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 /**
  * Created by Shiva Krishna Kongara on 06-feb-19.
@@ -32,7 +38,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
     private VerticalListViewActionHelper verticalListViewActionHelper;
-
+    private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
@@ -47,12 +53,6 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
-        try {
-            holder.knowledgeItemViewBinding.profileView.setColor(Color.parseColor(knowledgeDetailModels.get(position).getOwner().getColor()));
-        } catch (Exception e) {
-            holder.knowledgeItemViewBinding.profileView.setColor(context.getResources().getColor(R.color.splash_color));
-        }
-
         holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,6 +103,25 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
         public ViewHolder(@NonNull KnowledgeItemViewBinding itemView) {
             super(itemView.getRoot());
             this.knowledgeItemViewBinding = itemView;
+        }
+    }
+
+    @BindingAdapter("loadImage")
+    public static void loadImage(ImageView imageView, String src){
+        if(!StringUtils.isNullOrEmpty(src)) {
+            Picasso.with(imageView.getContext()).load(src).transform(roundedCornersTransform).resize(imageView.getWidth(),imageView.getHeight()).into(imageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    imageView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError() {
+                    imageView.setVisibility(View.GONE);
+                }
+            });
+        }else{
+            imageView.setVisibility(View.GONE);
         }
     }
 

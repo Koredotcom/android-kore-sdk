@@ -1,11 +1,17 @@
 package kore.botssdk.models;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 
+import androidx.databinding.BindingAdapter;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -54,6 +60,9 @@ public class KnowledgeDetailModel  {
 
     public void setFormattedModifiedDate(String formattedModifiedDate) {
         this.formattedModifiedDate = formattedModifiedDate;
+    }
+    public String getLastModifiedDate(){
+        return "Modified "+ DateUtils.formattedSentDateV8(lastMod,true);
     }
 
     private String formattedModifiedDate;
@@ -494,4 +503,5 @@ public class KnowledgeDetailModel  {
 
         return StringUtils.isNullOrEmpty(desc) ? null : Html.fromHtml(StringEscapeUtils.unescapeHtml4(desc.replaceAll("<br>", " ")));
     }
+
 }

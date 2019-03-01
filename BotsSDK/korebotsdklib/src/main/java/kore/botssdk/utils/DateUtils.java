@@ -32,7 +32,7 @@ public class DateUtils {
     public static final SimpleDateFormat dateTime1 = new SimpleDateFormat("hh:mma", Locale.ENGLISH);
     public static final Format calendar_list_format = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.ENGLISH);
     public static final Format calendar_list_format_2 = new SimpleDateFormat("h:mm a", Locale.ENGLISH);
-    public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mma", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
