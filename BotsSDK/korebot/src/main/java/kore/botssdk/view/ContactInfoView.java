@@ -99,6 +99,7 @@ public class ContactInfoView extends ViewGroup {
             contactInfoViewBinding.setContactInfo(contactInfoModel);
             contactInfoViewBinding.initials.setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
         } else {
+            contactInfoViewBinding.setContactInfo(null);
             contactInfoViewBinding.getRoot().setVisibility(GONE);
         }
     }

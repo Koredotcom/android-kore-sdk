@@ -125,7 +125,6 @@
                 android:background="@drawable/button_drawable_stroke"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:layout_alignWithParentIfMissing="true"
                 android:text="View Details"
                 android:onClick="@{()->viewBase.openDetails(contactInfo)}"
                 android:textColor="@color/splash_color"
