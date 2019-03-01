@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,6 @@ public class ContactInfoView extends ViewGroup {
     float dp1;
     private int splashColor;
     private ContactInfoViewBinding contactInfoViewBinding;
-
     public ContactInfoView(Context context) {
         super(context);
         init();
@@ -87,7 +87,7 @@ public class ContactInfoView extends ViewGroup {
         totalHeight += rootView.getMeasuredHeight() + getPaddingBottom();
 
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(rootView.getMeasuredWidth(), MeasureSpec.AT_MOST);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(rootView.getMeasuredWidth(), MeasureSpec.EXACTLY);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
@@ -97,10 +97,15 @@ public class ContactInfoView extends ViewGroup {
         if (contactInfoModel != null) {
             contactInfoViewBinding.getRoot().setVisibility(VISIBLE);
             contactInfoViewBinding.setContactInfo(contactInfoModel);
-            contactInfoViewBinding.initials.setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
+            ((GradientDrawable)contactInfoViewBinding.initials.getBackground()).setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
         } else {
-            contactInfoViewBinding.setContactInfo(null);
             contactInfoViewBinding.getRoot().setVisibility(GONE);
+            contactInfoViewBinding.email.setText("");
+            contactInfoViewBinding.phone1.setText("");
+            contactInfoViewBinding.phone2.setText("");
+            contactInfoViewBinding.email.setVisibility(GONE);
+            contactInfoViewBinding.phone1.setVisibility(GONE);
+            contactInfoViewBinding.phone2.setVisibility(GONE);
         }
     }
 
