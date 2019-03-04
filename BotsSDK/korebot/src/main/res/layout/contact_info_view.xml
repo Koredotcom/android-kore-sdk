@@ -75,7 +75,7 @@
                     android:text="@{contactInfo.getTitle()}"
                     android:textColor="#757587"
                     android:textSize="15sp"
-                    android:visibility="@{contactInfo.getTitle() == null || contactInfo.getTitle().trim().empty ? View.GONE : View.VISIBLE}" />
+                    android:visibility="@{contactInfo.getTitle() == null || contactInfo.getTitle().trim().empty ? View.GONE : View.VISIBLE,default = gone}" />
 
             </LinearLayout>
 
@@ -94,7 +94,7 @@
                 android:text="@{contactInfo.getEmail()}"
                 android:textColor="@color/splash_color"
                 android:textSize="15sp"
-                android:visibility="@{contactInfo.email != null &amp;&amp; !contactInfo.email.empty ? View.VISIBLE : View.GONE }" />
+                android:visibility="@{contactInfo.email != null &amp;&amp; !contactInfo.email.empty ? View.VISIBLE : View.GONE,default = gone }" />
 
             <TextView
                 android:id="@+id/phone1"
@@ -110,7 +110,7 @@
                 android:text="@{contactInfo.getPhoneNoByIndex(0)}"
                 android:textColor="@color/splash_color"
                 android:textSize="15sp"
-                android:visibility="@{contactInfo.phone != null &amp;&amp; !contactInfo.phone.empty ? View.VISIBLE : View.GONE}" />
+                android:visibility="@{contactInfo.phone != null &amp;&amp; !contactInfo.phone.empty ? View.VISIBLE : View.GONE,default = gone}" />
 
             <TextView
                 android:id="@+id/phone2"
@@ -125,7 +125,7 @@
                 android:text="@{contactInfo.getPhoneNoByIndex(1)}"
                 android:textColor="@color/splash_color"
                 android:textSize="15sp"
-                android:visibility="@{contactInfo.phone == null || contactInfo.phone.size() &lt; 2 ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{contactInfo.phone == null || contactInfo.phone.size() &lt; 2 ? View.GONE : View.VISIBLE,default = gone}" />
 
 
             <TextView

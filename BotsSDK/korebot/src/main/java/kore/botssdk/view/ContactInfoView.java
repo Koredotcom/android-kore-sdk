@@ -100,12 +100,7 @@ public class ContactInfoView extends ViewGroup {
             ((GradientDrawable)contactInfoViewBinding.initials.getBackground()).setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
         } else {
             contactInfoViewBinding.getRoot().setVisibility(GONE);
-            contactInfoViewBinding.email.setText("");
-            contactInfoViewBinding.phone1.setText("");
-            contactInfoViewBinding.phone2.setText("");
-            contactInfoViewBinding.email.setVisibility(GONE);
-            contactInfoViewBinding.phone1.setVisibility(GONE);
-            contactInfoViewBinding.phone2.setVisibility(GONE);
+            contactInfoViewBinding.setContactInfo(null);
         }
     }
 
