@@ -49,9 +49,10 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/initials"
                 android:gravity="center_vertical"
+                android:minHeight="50dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -136,7 +137,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:onClick="@{()->viewBase.openDetails(contactInfo)}"
-                android:text="View Details"
+                android:text="Details"
                 android:textColor="@color/splash_color"
                 android:textSize="15sp" />
         </RelativeLayout>
