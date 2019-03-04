@@ -32,7 +32,7 @@
             android:fontFamily="sans-serif"
             android:maxLines="1"
             android:textStyle="bold"
-            android:text="@{emailModel.subject}"
+            android:text='@{emailModel.subject == null || emailModel.subject.empty ? "(No Subject)" : emailModel.subject}'
             android:textColor="@color/color_485260"
             android:textSize="17sp" />
 
@@ -90,8 +90,7 @@
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:maxLines="1"
-            android:visibility="@{emailModel.desc == null  || emailModel.desc.isEmpty() ? View.GONE : View.VISIBLE}"
-            android:text="@{emailModel.desc}"
+            android:text='@{emailModel.desc == null || emailModel.desc.empty ? "(No Body)" : emailModel.desc}'
             android:textColor="#465360"
             android:textSize="15sp" />
 

@@ -435,10 +435,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
        // timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
-        // Header Layout
-       /* populateHeaderLayout(position, baseBotMessage);*/
 
-        // 70% of UI-alignments happens here...
         cosmeticChanges(baseBotMessage);
 
 
