@@ -19,6 +19,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
+import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.KnowledgeItemViewBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -39,9 +40,11 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     private boolean isExpanded;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
+    private static int dp1;
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
+        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
 
     @NonNull
@@ -109,7 +112,8 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
     @BindingAdapter("loadImage")
     public static void loadImage(ImageView imageView, String src){
         if(!StringUtils.isNullOrEmpty(src)) {
-            Picasso.with(imageView.getContext()).load(src).transform(roundedCornersTransform).resize(imageView.getWidth(),imageView.getHeight()).into(imageView, new com.squareup.picasso.Callback() {
+            Picasso.with(imageView.getContext()).load(src).transform(roundedCornersTransform)
+                    .resize(imageView.getWidth()>0?imageView.getWidth():(40*dp1),imageView.getHeight()>0?imageView.getWidth():(40*dp1)).into(imageView, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     imageView.setVisibility(View.VISIBLE);

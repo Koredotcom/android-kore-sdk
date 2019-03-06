@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.CancelEvent;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
@@ -177,8 +179,12 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put("meetingId", model.getEventId());
                     String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
-                    if(composeFooterInterface != null)
+                    if(composeFooterInterface != null) {
                         composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
+                    }else{
+                        KoreEventCenter.post(new CancelEvent(message,gson.toJson(hashMap),0));
+                        ((Activity)mContext).finish();
+                    }
                 }
             }
         });
