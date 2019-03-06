@@ -191,11 +191,17 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
     private String getFormatedAttendiesFromList(ArrayList<MeetingConfirmationModel.UserDetailModel> userDetailModels) {
-        String users = "";
+        //  String users = "";
         if (userDetailModels != null && userDetailModels.size() > 0) {
             if (userDetailModels.size() == 1) {
                 return userDetailModels.get(0).getFirstName();
-            } else if (userDetailModels.size() == 2) {
+            }
+            else {
+                int remaining = userDetailModels.size() - 1;
+                return String.format("%1$s  and %2$d others", userDetailModels.get(0).getFirstName(), remaining);
+
+            }
+                /*else if (userDetailModels.size() == 2) {
 
                 return String.format("%1$s and %2$s", userDetailModels.get(0).getFirstName(), userDetailModels.get(1).getFirstName());
             } else if (userDetailModels.size() == 3) {
@@ -205,11 +211,13 @@ public class MeetingConfirmationView extends ViewGroup {
                 int remaining = userDetailModels.size() - 3;
                 return String.format("%1$s , %2$s , %3$s and %4$d others", userDetailModels.get(0).getFirstName(),
                         userDetailModels.get(1).getFirstName(), userDetailModels.get(2).getFirstName(), remaining);
-            }
+            }*/
         }
 
 
-        return users;
+
+        return "";
+
 
     }
 

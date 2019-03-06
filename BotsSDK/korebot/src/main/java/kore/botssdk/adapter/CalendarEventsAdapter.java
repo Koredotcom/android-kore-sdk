@@ -315,7 +315,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
             if (userDetailModels.size() == 1) {
 
                 return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
-            } else if (userDetailModels.size() == 2) {
+            } else {
+                int remaining = userDetailModels.size() - 1;
+                return String.format("%1$s and %2$d others",
+                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+
+            }
+            /* else if (userDetailModels.size() == 2) {
 
                 return String.format("%1$s and %2$s",
                         userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
@@ -332,7 +338,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                         userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
                         userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
                         userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail(), remaining);
-            }
+            }*/
         }
 
 
