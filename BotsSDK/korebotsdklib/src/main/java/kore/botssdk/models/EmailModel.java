@@ -102,6 +102,6 @@ public class EmailModel{
 
     private String[] attachments;
     public String getDateFormat(){
-     return DateUtils.getDateFromStringByDate(date != null && date.contains("+") ? date.substring(0,date.indexOf("+")):date);
+     return DateUtils.getDateFromStringByDate(date);
     }
 }
