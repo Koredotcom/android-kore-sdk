@@ -24,6 +24,7 @@ import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotMainTableView;
 
+import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.VerticalListView;
@@ -51,7 +52,7 @@ public class ViewProvider {
     private static final int KORA_CAROUSEL_VIEW_ID = 1980050;
     private static final int MEETING_SLOTS_VIEW_ID = 1980089;
     private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
-    private static final int CALENDER_EVENTS_VIEW_ID = 19800456;
+    private static final int CONTACT_VIEW_ID = 19800456;
     private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     private static final int QUICK_RPVIEW = 1988881;
@@ -217,11 +218,11 @@ public class ViewProvider {
         return attendeeSlotSelectionView;
     }
 
-    /*public static CalendarEventsTemplateView getCalenderTemplateView(Context context){
-        CalendarEventsTemplateView calendarEventsTemplateView = new CalendarEventsTemplateView(context);
-        calendarEventsTemplateView.setId(CALENDER_EVENTS_VIEW_ID);
-        return calendarEventsTemplateView;
-    }*/
+    public static ContactInfoView getContactInfoView(Context context){
+        ContactInfoView contactInfoView = new ContactInfoView(context);
+        contactInfoView.setId(CONTACT_VIEW_ID);
+        return contactInfoView;
+    }
     public static VerticalListView getVerticalListView(Context context){
         VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);

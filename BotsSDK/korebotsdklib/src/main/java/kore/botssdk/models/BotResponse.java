@@ -32,7 +32,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_CAL_EVENTS = "calendar_events";
     public static final String TEMPLATE_TYPE_FILES_LOOKUP = "files_search_carousel";
     public static final String  TEMPLATE_TYPE_ATTENDEE_SLOTS = "attendee_slots_template";
-    public static final String TEMPLATE_TYPE_PICKER = "picker";
+    static final String TEMPLATE_TYPE_PICKER = "picker";
     public static final String TEMPLATE_TYPE_SESSION_END = "session_end";
     public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
     public static final String TEMPLATE_TYPE_AGENT_TRANSFER = "agent_transfer_mode";
@@ -43,6 +43,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TASK_FULLVIEW = "task_list_full_preview";
     public static final String KA_SWITCH_SKILL = "ka_switch_skill";
     public static final String KA_SKILL_RESPONSE = "ka_skill_response";
+    public static final String KA_CONTACT_VIEW = "kora_contact_lookup";
 
     // When (google/O365)token expires bot returns this template
     public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";

@@ -3,6 +3,8 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,15 +45,16 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
     }
 
+    @NonNull
     @Override
-    public QuickReplyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public QuickReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View convertView = layoutInflater.inflate(R.layout.quick_reply_item_layout, null);
         ( (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground()).setColor(quickWidgetColor);
         return new QuickReplyViewHolder(convertView);
     }
 
     @Override
-    public void onBindViewHolder(QuickReplyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull QuickReplyViewHolder holder, int position) {
         QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
         if (quickReplyTemplate.getImage_url() != null && !quickReplyTemplate.getImage_url().isEmpty()) {

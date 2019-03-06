@@ -364,6 +364,7 @@ public class FileUtils {
         presentationTypes.add("pps");
         presentationTypes.add("ppt");
         presentationTypes.add("pptx");
+        presentationTypes.add("gslide");
     }
 
     private static void loadThreeDImgTypes() {
