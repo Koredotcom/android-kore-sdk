@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,18 +27,22 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+
 
 /**
  * Created by Shiva Krishna Kongara on 06-feb-19.
  */
 
-public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
+public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
     private Context context;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
+    private int EMPTY_CARD_FLAG = 0;
+    private int DATA_CARD_FLAG = 1;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     private static int dp1;
@@ -45,26 +50,55 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == DATA_CARD_FLAG) {
+            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
+        } else {
+            return new EmptyWidgetViewHolder(LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false));
+
+
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
-        holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle extras = new Bundle();
-                extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
-                verticalListViewActionHelper.knowledgeItemClicked(extras);
-            }
-        });
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderdata, int position) {
+        if (holderdata instanceof ViewHolder) {
+            ViewHolder holder = (ViewHolder) holderdata;
+            holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
+            holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle extras = new Bundle();
+                    extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
+                    verticalListViewActionHelper.knowledgeItemClicked(extras);
+                }
+            });
+        } else {
+            EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;
+            ((EmptyWidgetViewHolder) holder).tv_disrcription.setText("No knowledge items found");
+            holder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
+
+
+        }
+
     }
+
+
+    @Override
+    public int getItemViewType(int position) {
+
+        if (knowledgeDetailModels != null && knowledgeDetailModels.size() > 0)
+            return DATA_CARD_FLAG;
+
+
+        return EMPTY_CARD_FLAG;
+    }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -72,7 +106,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
 
     @Override
     public int getItemCount() {
-        return knowledgeDetailModels != null ? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 0;
+        return knowledgeDetailModels != null ? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
     }
 
     public boolean isExpanded() {
@@ -124,7 +158,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter<KnowledgeRecy
                     imageView.setVisibility(View.GONE);
                 }
             });
-        }else{
+        } else {
             imageView.setVisibility(View.GONE);
         }
     }
