@@ -82,7 +82,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     private String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
-    private String dateLast="";
+    private String dateLast = "";
 
     public String getType() {
         return type;
@@ -105,7 +105,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         notifyDataSetChanged();
 
 //        EVENTS_LIST_LIMIT = 3;
-//        title = "SHOW MORE";
+//        title = "SHOW MORE";txtDateAndTime
     }
 
 
@@ -118,19 +118,19 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent,false));
+        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
         //  holder.rowIndex.setText("" + (position + 1));
-        String date=DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+        String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
         holder.txtDateTime.setText(date);
 
 
         holder.txtTitle.setText(model.getTitle());
-       // holder.txtPlace.setText(model.getWhere());
+        // holder.txtPlace.setText(model.getWhere());
         if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
             holder.txtPlace.setText(model.getWhere());
             holder.txtPlace.setVisibility(VISIBLE);
@@ -149,7 +149,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
             holder.tvborder.setVisibility(GONE);
             holder.txtDateTime.setVisibility(GONE);
         }
-        dateLast=date;
+        dateLast = date;
         holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
         //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
         holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +159,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                 launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
                             } else {
                                 gModel = model;
                                 AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
@@ -285,7 +285,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                     | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime);
             mContext.startActivity(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("Invalid event id");
         }
     }
@@ -432,9 +432,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
 
 
                 if (calName != null && calName.equals(eventtitle)) {
-                    if(Long.parseLong(startTime) == beginTime) {
+                    if (Long.parseLong(startTime) == beginTime) {
 //                        boolean val = (Long.parseLong(startTime) == sTime && Long.parseLong(endTime) == eTime);
-                        return  Integer.parseInt(calID);
+                        return Integer.parseInt(calID);
                     }
                 }
             } while (cursor.moveToNext());
