@@ -155,11 +155,10 @@ public class ViewProvider {
         }
     }
 
-    public static BotButtonView getBotButtonView(Context context, ArrayList<BotButtonModel> data, ComposeFooterInterface listener) {
+    public static BotButtonView getBotButtonView(Context context, ComposeFooterInterface listener) {
         BotButtonView botButtonView = new BotButtonView(context);
         botButtonView.setId(BUTTON_VIEW_ID);
         botButtonView.setComposeFooterInterface(listener);
-        botButtonView.populateButtonList(data);
         return botButtonView;
     }
 

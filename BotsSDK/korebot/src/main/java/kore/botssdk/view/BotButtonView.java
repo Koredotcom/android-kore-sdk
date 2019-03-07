@@ -68,16 +68,17 @@ public class BotButtonView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void populateButtonList(ArrayList<BotButtonModel> botButtonModels) {
+    public void populateButtonList(ArrayList<BotButtonModel> botButtonModels,boolean enabled) {
         BotButtonTemplateAdapter buttonTypeAdapter;
         if (botButtonModels != null) {
             autoExpandListView.setVisibility(VISIBLE);
             buttonTypeAdapter = new BotButtonTemplateAdapter(getContext());
+            buttonTypeAdapter.setEnabled(enabled);
             autoExpandListView.setAdapter(buttonTypeAdapter);
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null && enabled) {
                         BotButtonModel botButtonModel = ((BotButtonModel) parent.getItemAtPosition(position));
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());

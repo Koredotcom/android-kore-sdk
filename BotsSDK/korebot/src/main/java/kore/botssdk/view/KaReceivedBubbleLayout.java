@@ -175,7 +175,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     private void resetAll() {
         arrayList.clear();
         botButtonView.setVisibility(View.GONE);
-        botButtonView.populateButtonList(null);
+        botButtonView.populateButtonList(null,false);
         botCarouselView.populateCarouselView(null);
         botCarouselView.setVisibility(View.GONE);
         verticalListView.prepareDataSetAndPopulate(null, null, false);
@@ -236,7 +236,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botButtonView.setVisibility(View.VISIBLE);
                     botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() + BUBBLE_CONTENT_RIGHT_MARGIN);
-                    botButtonView.populateButtonList(payInner.getButtons());
+                    botButtonView.populateButtonList(payInner.getButtons(),isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
