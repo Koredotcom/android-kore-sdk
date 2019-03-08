@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -79,8 +80,9 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
                 }
             });
         } else {
+
             EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;
-            ((EmptyWidgetViewHolder) holder).tv_disrcription.setText("No knowledge items found");
+            holder.tv_disrcription.setText("No knowledge items found");
             holder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
 
 
@@ -106,7 +108,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     @Override
     public int getItemCount() {
-        return knowledgeDetailModels != null ? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
+        return knowledgeDetailModels != null &&knowledgeDetailModels.size()>0? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
     }
 
     public boolean isExpanded() {
