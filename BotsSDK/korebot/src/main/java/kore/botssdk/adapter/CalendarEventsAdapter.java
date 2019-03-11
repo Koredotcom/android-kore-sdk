@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
@@ -49,6 +51,7 @@ import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -59,7 +62,7 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAdapter.ViewHolder> implements RecyclerViewDataAccessor {
+public class CalendarEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
@@ -83,6 +86,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
     private String dateLast = "";
+
+    private int DATA_FOUND = 1;
+    private int EMPTY_CARD = 0;
 
     public String getType() {
         return type;
@@ -115,79 +121,130 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
         else return null;
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        if (eventList != null && eventList.size() > 0) {
+            return DATA_FOUND;
+        }
+        return EMPTY_CARD;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if (viewType == EMPTY_CARD) {
+            View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
+            return new EmptyWidgetViewHolder(view);
+        } else
+            return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
-        //  holder.rowIndex.setText("" + (position + 1));
-        String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
-        holder.txtDateTime.setText(date);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
+        if (holderData.getItemViewType() == EMPTY_CARD) {
+            EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
+            emptyHolder.tv_disrcription.setText("No Upcoming Meetings");
+            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.no_meeting));
 
-        holder.txtTitle.setText(model.getTitle());
-        // holder.txtPlace.setText(model.getWhere());
-        if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
-            holder.txtPlace.setText(model.getWhere());
-            holder.txtPlace.setVisibility(VISIBLE);
 
         } else {
-            holder.txtPlace.setVisibility(GONE);
 
-        }
-        holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+            ViewHolder holder = (ViewHolder) holderData;
+            final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
+            //  holder.rowIndex.setText("" + (position + 1));
+            String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+            holder.txtDateTime.setText(date);
 
-        holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
-        if (position == 0 || !date.equalsIgnoreCase(dateLast)) {
-            holder.tvborder.setVisibility(VISIBLE);
-            holder.txtDateTime.setVisibility(VISIBLE);
-        } else {
-            holder.tvborder.setVisibility(GONE);
-            holder.txtDateTime.setVisibility(GONE);
-        }
-        dateLast = date;
-        holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
-        //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
-        holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+
+            holder.txtTitle.setText(model.getTitle());
+            // holder.txtPlace.setText(model.getWhere());
+            if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
+                holder.txtPlace.setText(model.getWhere());
+                holder.txtPlace.setVisibility(VISIBLE);
+
+            } else {
+                holder.txtPlace.setVisibility(GONE);
+
+            }
+            holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+
+            holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
+            if (position == 0 || !date.equalsIgnoreCase(dateLast)) {
+                holder.tvborder.setVisibility(VISIBLE);
+                holder.txtDateTime.setVisibility(VISIBLE);
+            } else {
+                holder.tvborder.setVisibility(GONE);
+                holder.txtDateTime.setVisibility(GONE);
+            }
+            dateLast = date;
+            holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
+            //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
+            holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
+                        try {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
+                                    launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                } else {
+                                    gModel = model;
+                                    AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
+                                }
                             } else {
-                                gModel = model;
-                                AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
-                            }
-                        } else {
 
-                            launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                            }
+
+                        } catch (Exception e) {
+
+                            launchWebView(model.getHtmlLink());
                         }
 
-                    } catch (Exception e) {
+                    } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type)) {
+                        //from left widget click
 
-                        launchWebView(model.getHtmlLink());
+                /*          WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
+                widgetDialogModel.setAttendies("test@gmail.com");
+                widgetDialogModel.setLocation("office");
+                widgetDialogModel.setTime("12.00 PM\n1.00 PM");
+                widgetDialogModel.setTitle("Testing dummy");
+                widgetDialogModel.setColor("#000000");
+
+                WidgetDialogActivity dialogActivity = new WidgetDialogActivity(activityObj,widgetDialogModel);
+                dialogActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+
+                dialogActivity.setCanceledOnTouchOutside(false);
+
+                dialogActivity.show();
+
+                dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        dialogActivity.dismiss();
                     }
+                });*/
 
-                } else if (isEnabled) {
+                    } else if (isEnabled) {
 
-                    HashMap<String, String> hashMap = new HashMap<>();
-                    hashMap.put("meetingId", model.getEventId());
-                    String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
-                    if(composeFooterInterface != null) {
-                        composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
-                    }else{
-                        KoreEventCenter.post(new CancelEvent(message,gson.toJson(hashMap),0));
-                        ((Activity)mContext).finish();
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("meetingId", model.getEventId());
+                        String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                        if (composeFooterInterface != null) {
+                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
+                        } else {
+                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0));
+                            ((Activity) mContext).finish();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -197,7 +254,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
 
     @Override
     public int getItemCount() {
-        return eventList != null ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 0;
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 1;
     }
 
 
@@ -321,24 +378,6 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter<CalendarEventsAd
                         userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
 
             }
-            /* else if (userDetailModels.size() == 2) {
-
-                return String.format("%1$s and %2$s",
-                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
-                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail());
-            } else if (userDetailModels.size() == 3) {
-
-                return String.format("%1$s , %2$s and %3$s",
-                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
-                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
-                        userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail());
-            } else {
-                int remaining = userDetailModels.size() - 3;
-                return String.format("%1$s , %2$s , %3$s and %4$d others",
-                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(),
-                        userDetailModels.get(1).getName() != null ? userDetailModels.get(1).getName() : userDetailModels.get(1).getEmail(),
-                        userDetailModels.get(2).getName() != null ? userDetailModels.get(2).getName() : userDetailModels.get(2).getEmail(), remaining);
-            }*/
         }
 
 

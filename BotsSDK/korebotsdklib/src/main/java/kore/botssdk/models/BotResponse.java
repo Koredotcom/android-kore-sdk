@@ -45,6 +45,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String KA_SKILL_RESPONSE = "ka_skill_response";
     public static final String KA_CONTACT_VIEW = "kora_contact_lookup";
 
+
+
+    public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events";
     // When (google/O365)token expires bot returns this template
     public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";
 
