@@ -131,5 +131,12 @@
     <color name="color_ffeaec">#ffeaec</color>
     <color name="color_404051">#404051</color>
     <color name="color_eeeef0">#EEEEF0</color>
+
     <color name="color_A7A9BE">#A7A9BE</color>
+
+
+    <color name="color_626281">#626281</color>
+    <color name="trasparent_widget">#80FFFFFF</color>
+    <color name="color_728296">#485260</color>
+
 </resources>

@@ -46,7 +46,7 @@
                 android:id="@+id/lin_timeview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.23"
+                android:layout_weight="0.25"
                 android:orientation="horizontal">
 
                 <TextView
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
-                android:layout_weight="0.77"
+                android:layout_weight="0.75"
                 android:orientation="vertical">
 
                 <TextView

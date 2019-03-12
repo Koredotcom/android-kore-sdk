@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
+import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.fragment.ComposeFooterFragment;
@@ -47,6 +48,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
@@ -141,6 +143,19 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
     }
 
+
+    public String checkStringNull(String value)
+    {
+
+        if(value!=null && !value.trim().equalsIgnoreCase(""))
+        {
+            return value.trim();
+        }
+        return "";
+
+
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if (holderData.getItemViewType() == EMPTY_CARD) {
@@ -207,28 +222,25 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type)) {
                         //from left widget click
 
-                /*          WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
-                widgetDialogModel.setAttendies("test@gmail.com");
-                widgetDialogModel.setLocation("office");
-                widgetDialogModel.setTime("12.00 PM\n1.00 PM");
-                widgetDialogModel.setTitle("Testing dummy");
-                widgetDialogModel.setColor("#000000");
 
-                WidgetDialogActivity dialogActivity = new WidgetDialogActivity(activityObj,widgetDialogModel);
-                dialogActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
+                        widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText()!=null?holder.tv_users.getText().toString().trim():""));
+                        widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText()!=null?holder.txtPlace.getText().toString().trim():""));
+                        widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText()!=null?holder.tv_time.getText().toString().trim():""));
+                        widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText()!=null?holder.txtTitle.getText().toString().trim():""));
+                        widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
+                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext,widgetDialogModel);
 
-                dialogActivity.setCanceledOnTouchOutside(false);
+                        dialogActivity.show();
 
-                dialogActivity.show();
+                        dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        dialogActivity.dismiss();
-                    }
-                });*/
+                                dialogActivity.dismiss();
+                            }
+                        });
 
                     } else if (isEnabled) {
 
