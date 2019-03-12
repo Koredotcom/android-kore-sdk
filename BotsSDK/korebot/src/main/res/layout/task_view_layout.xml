@@ -41,6 +41,7 @@
             android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/checkbox"
             android:ellipsize="end"
+            android:gravity="start"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:tag="bold"
