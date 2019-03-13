@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:background="#FFFFFF"
+        android:background="@drawable/widget_dialog_background"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -162,11 +162,11 @@
     </LinearLayout>
 
 
-    <View
+    <!--<View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/recycler_actions"
-        android:background="@drawable/inset_65_divider" />
+        android:background="@drawable/inset_65_divider" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_actions"
@@ -174,7 +174,8 @@
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center|start"
-        android:background="#FFFFFF"
+        android:padding="@dimen/dimen_12dp"
+        android:background="@drawable/widget_dialog_background"
         android:minHeight="60dp">
 
     </androidx.recyclerview.widget.RecyclerView>

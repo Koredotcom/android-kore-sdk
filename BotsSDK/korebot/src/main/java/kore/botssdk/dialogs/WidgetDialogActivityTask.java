@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -22,6 +23,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetCancelActionsAdapter;
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
 import kore.botssdk.databinding.WidgetFilesItemSelectionDialogBinding;
+import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 
@@ -33,19 +35,19 @@ public class WidgetDialogActivityTask extends Dialog {
     ImageView checkbox;
 
     RecyclerView recycler_actions;
-
-
     Context mContext;
+    List<CalEventsTemplateModel.Action> actionList;
 
 
     /* public WidgetDialogActivity(@NonNull Context context) {
          super(context);
      }
  */
-    public WidgetDialogActivityTask(Context mContext, TaskTemplateModel widgetDialogModel) {
+    public WidgetDialogActivityTask(Context mContext, TaskTemplateModel widgetDialogModel, List<CalEventsTemplateModel.Action> actionList) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
+        this.actionList = actionList;
     }
 
 
@@ -57,10 +59,10 @@ public class WidgetDialogActivityTask extends Dialog {
 
         setCanceledOnTouchOutside(false);
 
-        getWindow().setBackgroundDrawableResource(R.color.trasparent_widget);
+        getWindow().setBackgroundDrawableResource(R.color.transparent_card);
        // ViewDataBinding mBinding = DataBindingUtil.setContentView(this,R.layout.widget_files_item_selection_dialog);
 
-        WidgetFilesItemSelectionDialogBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout. widget_files_item_selection_dialog, null, false);
+        WidgetFilesItemSelectionDialogBinding binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.widget_files_item_selection_dialog, null, false);
         setContentView(binding.getRoot());
 
         binding.setTaskData(widgetDialogModel);
@@ -70,16 +72,6 @@ public class WidgetDialogActivityTask extends Dialog {
 
         // setContentView(R.layout.widget_files_item_selection_dialog);
         initViews();
-
-
-
-        ArrayList<String> actionList = new ArrayList<>();
-        actionList.add("Reschedule");
-        actionList.add("Add another");
-        actionList.add("Cancel");
-        actionList.add("Add another");
-        actionList.add("Cancel");
-
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(WidgetDialogActivityTask.this, actionList);
         LinearLayoutManager layoutManager
@@ -100,6 +92,5 @@ public class WidgetDialogActivityTask extends Dialog {
         recycler_actions = findViewById(R.id.recycler_actions);
 
     }
-
 
 }

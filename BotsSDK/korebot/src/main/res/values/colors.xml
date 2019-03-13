@@ -135,8 +135,9 @@
     <color name="color_A7A9BE">#A7A9BE</color>
 
 
-    <color name="color_626281">#626281</color>
-    <color name="trasparent_widget">#80FFFFFF</color>
+    <color name="color_626281">#3e3e51</color>
+    <color name="transparent_widget">#40000000</color>
+    <color name="transparent_card">#90FFFFFF</color>
     <color name="color_728296">#485260</color>
 
 </resources>

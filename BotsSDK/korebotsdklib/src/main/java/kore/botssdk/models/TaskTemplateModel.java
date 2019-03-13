@@ -2,11 +2,22 @@ package kore.botssdk.models;
 
 
 import java.util.Calendar;
+import java.util.List;
 
 public class TaskTemplateModel {
     private String title;
     private String status;
     private String id;
+
+    public List<CalEventsTemplateModel.Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<CalEventsTemplateModel.Action> actions) {
+        this.actions = actions;
+    }
+
+    private List<CalEventsTemplateModel.Action> actions = null;
 
 
     public String getTitle() {

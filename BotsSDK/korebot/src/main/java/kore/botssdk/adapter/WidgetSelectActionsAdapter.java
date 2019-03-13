@@ -6,19 +6,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
+import kore.botssdk.models.CalEventsTemplateModel;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetDialogActivityTask widgetDialogActivity;
-    ArrayList<String> actionList;
+    List<CalEventsTemplateModel.Action> actionList;
 
-    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, ArrayList<String> actionList) {
+    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, List<CalEventsTemplateModel.Action> actionList) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.actionList = actionList;
         notifyDataSetChanged();
@@ -35,7 +37,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     @Override
     public void onBindViewHolder(@NonNull WidgetCancelViewHolder holder, int position) {
 
-        holder.tv_actions.setText(actionList.get(position));
+        holder.tv_actions.setText(actionList.get(position).getTitle());
 
         holder.tv_actions.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +50,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
     @Override
     public int getItemCount() {
-        return actionList.size();
+        return actionList!= null?actionList.size():0;
     }
 
     class WidgetCancelViewHolder extends RecyclerView.ViewHolder {

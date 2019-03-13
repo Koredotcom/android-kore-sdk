@@ -15,6 +15,16 @@ public class CalEventsTemplateModel {
     private String htmlLink;
     private String eventId;
     private List<Attendee> attendees = null;
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
+
+    private List<Action> actions = null;
     public Duration getDuration() {
         return duration;
     }
@@ -115,5 +125,34 @@ public class CalEventsTemplateModel {
             this.name = name;
         }
 
+    }
+    public class Action {
+        private String type;
+        private String title;
+        private String utterance;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getUtterance() {
+            return utterance;
+        }
+
+        public void setUtterance(String utterance) {
+            this.utterance = utterance;
+        }
     }
 }

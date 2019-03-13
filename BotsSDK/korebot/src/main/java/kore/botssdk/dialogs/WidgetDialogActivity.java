@@ -14,12 +14,14 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetCancelActionsAdapter;
+import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 
 
@@ -31,9 +33,7 @@ public class WidgetDialogActivity extends Dialog {
     View sideBar;
 
     RecyclerView recycler_actions;
-
-
-
+    List<CalEventsTemplateModel.Action> actionList;
     Context mContext;
 
 
@@ -42,10 +42,11 @@ public class WidgetDialogActivity extends Dialog {
          super(context);
      }
  */
-    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel) {
+    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, List<CalEventsTemplateModel.Action> actionList) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
+        this.actionList = actionList;
     }
 
 
@@ -57,7 +58,7 @@ public class WidgetDialogActivity extends Dialog {
 
         setCanceledOnTouchOutside(false);
 
-        getWindow().setBackgroundDrawableResource(R.color.trasparent_widget);
+        getWindow().setBackgroundDrawableResource(R.color.transparent_card);
         setContentView(R.layout.item_selection_dialog);
         initViews();
 
@@ -69,12 +70,6 @@ public class WidgetDialogActivity extends Dialog {
         txtPlace.setVisibility(widgetDialogModel.getLocation() != null && !TextUtils.isEmpty(widgetDialogModel.getLocation()) ? View.VISIBLE : View.GONE);
         sideBar.setBackgroundColor(Color.parseColor(widgetDialogModel.getColor()));
 
-        ArrayList<String> actionList = new ArrayList<>();
-        actionList.add("Reschedule");
-        actionList.add("Add another");
-        actionList.add("Cancel");
-        actionList.add("Add another");
-        actionList.add("Cancel");
         WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, actionList);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
