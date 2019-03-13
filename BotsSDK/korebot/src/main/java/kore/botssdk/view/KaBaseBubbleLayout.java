@@ -261,7 +261,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);
 
-        botButtonView = ViewProvider.getBotButtonView(context,null,null);
+        botButtonView = ViewProvider.getBotButtonView(context,null);
         addView(botButtonView);
 
         meetingSlotsView = ViewProvider.getMeetingSlotsView(context);

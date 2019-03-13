@@ -165,7 +165,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void populateForTemplates(int position, ComponentModel compModel) {
 
         // Default out everything
-        botButtonView.populateButtonList(null);
+        botButtonView.populateButtonList(null,false);
         botListTemplateView.populateListTemplateView(null, null);
 
         botListTemplateView.setVisibility(View.GONE);
@@ -189,7 +189,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botButtonView.setVisibility(View.VISIBLE);
                     botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                    botButtonView.populateButtonList(payInner.getButtons());
+                    botButtonView.populateButtonList(payInner.getButtons(),false);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {

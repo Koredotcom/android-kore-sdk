@@ -23,10 +23,12 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
     private LayoutInflater ownLayoutInflater = null;
     private int splashColor;
-
+    private int disabledColor;
+    private boolean isEnabled;
     public BotButtonTemplateAdapter(Context context) {
         ownLayoutInflater = LayoutInflater.from(context);
         splashColor = context.getResources().getColor(R.color.splash_color);
+        disabledColor = context.getResources().getColor(R.color.meetingsDisabled);
     }
 
     @Override
@@ -71,6 +73,14 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         holder.botItemButton.setText(buttonTemplate.getTitle());
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public static class ViewHolder {
         TextView botItemButton;
     }
@@ -78,7 +88,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
         viewHolder.botItemButton = (TextView) view.findViewById(R.id.text_view);
-        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(splashColor);
+        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(isEnabled ? splashColor : disabledColor);
         view.setTag(viewHolder);
     }
 
