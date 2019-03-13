@@ -48,6 +48,12 @@ public class BotResponse extends BaseBotMessage {
 
 
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
+
+    //left widget constants
+    public static final String  WIDGET_TYPE="WIDGET_TYPE";
+    public static final String  WIDGET_DATA="WIDGET_DATA";
+
+
     // When (google/O365)token expires bot returns this template
     public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";
 
