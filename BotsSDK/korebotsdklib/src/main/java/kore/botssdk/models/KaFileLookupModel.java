@@ -19,6 +19,16 @@ public class KaFileLookupModel {
     private String lastModified;
     private long fileSize;
 
+    public String getWebViewLink() {
+        return webViewLink;
+    }
+
+    public void setWebViewLink(String webViewLink) {
+        this.webViewLink = webViewLink;
+    }
+
+    private String webViewLink;
+
     public String getFileType() {
         return fileType;
     }

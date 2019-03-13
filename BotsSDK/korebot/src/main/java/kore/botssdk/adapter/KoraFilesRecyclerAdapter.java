@@ -93,6 +93,9 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements Re
                     KaFileLookupModel kaFileLookupModel = kaFileLookupModels.get(position);
                     if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
                         verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
+                    }else if(kaFileLookupModel.getWebViewLink() != null){
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(kaFileLookupModel.getWebViewLink()));
+                        context.startActivity(browserIntent);
                     }
                 }
             });
