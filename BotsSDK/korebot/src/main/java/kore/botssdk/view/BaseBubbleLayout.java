@@ -216,7 +216,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout = new TextMediaLayout(context,getLinkTextColor());
         bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-        bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
+     //   bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
       /*  bubbleTextMediaLayout.setLinkTextColor(getLinkTextColor());*/
         addView(bubbleTextMediaLayout);

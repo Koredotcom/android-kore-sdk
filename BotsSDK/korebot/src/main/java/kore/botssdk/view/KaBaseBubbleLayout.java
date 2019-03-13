@@ -32,6 +32,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
@@ -165,11 +166,13 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
 
-
+    public void setTimeStampVisible(){
+        timeStampsTextView.setVisibility(VISIBLE);
+    }
     private void initiliazeCoordinates() {
         if (AppControl.getInstance() != null
                 && AppControl.getInstance().getDimensionUtil() != null) {
-            dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = DimensionUtil.dp1;
             dp4 = 4 * dp1;
             dp2 = 2 * dp1;
             dp6 = 6 * dp1;
@@ -257,7 +260,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         bubbleTextMediaLayout = ViewProvider.getTextMediaLayout(context,getLinkTextColor());
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-        bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
+      //  bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);
 
@@ -445,8 +448,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
 
        // timeLineView.setGravity(Gravity.CENTER);
-        timeStampsTextView.setGravity(isLeftSide() ? Gravity.LEFT : Gravity.RIGHT);
-
+        timeStampsTextView.setGravity(isLeftSide() ? Gravity.START : Gravity.END);
         cosmeticChanges(baseBotMessage);
 
 
@@ -464,6 +466,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         setDoDrawBubbleBackground(false);
         determineTextColor();
         textViewCosmeticChanges();
+        timeStampsTextView.setVisibility(GONE);
     }
 
     /**

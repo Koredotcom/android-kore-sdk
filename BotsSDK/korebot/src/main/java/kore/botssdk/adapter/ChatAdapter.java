@@ -36,13 +36,13 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     public static String LOG_TAG = ChatAdapter.class.getSimpleName();
-    private final ClipboardManager clipboardManager;
-
     Context context;
     private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
     private HashMap<String, Integer> headersMap = new HashMap<>();
     private boolean isAlpha = false;
+    private int selectedItem = -1;
+
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -74,7 +74,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public ChatAdapter(Context context) {
         this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
-        clipboardManager= (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         BUBBLE_CONTENT_LAYOUT_WIDTH = BubbleViewUtil.getBubbleContentWidth();
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
         baseBotMessageArrayList = new ArrayList<>();
@@ -100,6 +99,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setActivityContext(activityContext);
         holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(getItem(position).getFormattedDate());
+
         if(Collections.isEmpty(headersMap)) {
             prepareHeaderMap();
         }
@@ -111,14 +111,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
             e.printStackTrace();
         }
         holder.headerView.setVisibility(getItem(position) != null && fDate ? View.VISIBLE : View.GONE);
+        if(selectedItem == position){
+            holder.baseBubbleLayout.setTimeStampVisible();
+        }
         if(getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    BotRequest botRequest = (BotRequest) getItem(position);
-                    ClipData clip = ClipData.newPlainText("message", botRequest.getMessage().getBody());
-                    clipboardManager.setPrimaryClip(clip);
-                    Toast.makeText(context,"Message copied to clipboard",Toast.LENGTH_LONG).show();
+                    if(selectedItem != -1){
+                        notifyItemChanged(selectedItem);
+                    }
+                    selectedItem = position;
+                    holder.baseBubbleLayout.setTimeStampVisible();
                     return true;
                 }
             });
@@ -126,7 +130,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
                 @Override
                 public void onClick(View v) {
                     BotRequest botRequest = (BotRequest) getItem(position);
-                    composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody());
+                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody());
                 }
             });
         }
@@ -179,45 +183,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
 
 
-/*    private class HeaderViewHolder {
-        TextView txtViewHeader;
-    }*/
-
-/*    @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
-        HeaderViewHolder holder;
-
-        if (convertView == null) {
-            holder = new HeaderViewHolder();
-            convertView = ownLayoutInflater.inflate(R.layout.kora_timestamps_header, parent, false);
-            holder.txtViewHeader = (TextView) convertView.findViewById(R.id.filesSectionHeader);
-            KaFontUtils.applyCustomFont(context, holder.txtViewHeader);
-            convertView.setTag(holder);
-        } else {
-            holder = (HeaderViewHolder) convertView.getTag();
-        }
-
-
-        BaseBotMessage baseBotMessage = ((BaseBotMessage) getItem(position));
-        if (baseBotMessage != null) {
-            holder.txtViewHeader.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
-        }
-        return convertView;
-    }
-
-    @Override
-    public long getHeaderId(int position) {
-        try {
-            BaseBotMessage baseBotMessage = ((BaseBotMessage) getItem(position));
-            if (baseBotMessage != null)
-                return headersMap.get(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
-            else return 0;
-        } catch (Exception e) {
-//            e.printStackTrace();
-            return 0;
-        }
-    }*/
-
     public class ViewHolder extends RecyclerView.ViewHolder{
         KaBaseBubbleContainer baseBubbleContainer;
         KaBaseBubbleLayout baseBubbleLayout;
@@ -255,6 +220,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         prepareHeaderMap();
+        if(selectedItem != -1) {
+            selectedItem = selectedItem + list.size()-1;
+        }
         notifyItemRangeInserted(0, list.size() - 1);
     }
 
