@@ -104,6 +104,15 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
     private Gson gson = new Gson();
+    private boolean isFromWidget;
+
+    public boolean isFromWidget() {
+        return isFromWidget;
+    }
+
+    public void setFromWidget(boolean fromWidget) {
+        isFromWidget = fromWidget;
+    }
 
     public CalendarEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
@@ -144,11 +153,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
 
-    public String checkStringNull(String value)
-    {
+    public String checkStringNull(String value) {
 
-        if(value!=null && !value.trim().equalsIgnoreCase(""))
-        {
+        if (value != null && !value.trim().equalsIgnoreCase("")) {
             return value.trim();
         }
         return "";
@@ -200,7 +207,30 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
+                    if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type) || isFromWidget()) {
+                        //from left widget click
+
+
+                        WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
+                        widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
+                        widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
+                        widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText() != null ? holder.tv_time.getText().toString().trim() : ""));
+                        widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
+                        widgetDialogModel.setColor(checkStringNull(model.getColor()));
+
+                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model.getActions());
+
+                        dialogActivity.show();
+
+                        dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                dialogActivity.dismiss();
+                            }
+                        });
+
+                    } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
@@ -218,29 +248,6 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
                             launchWebView(model.getHtmlLink());
                         }
-
-                    } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type)) {
-                        //from left widget click
-
-
-                        WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
-                        widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText()!=null?holder.tv_users.getText().toString().trim():""));
-                        widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText()!=null?holder.txtPlace.getText().toString().trim():""));
-                        widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText()!=null?holder.tv_time.getText().toString().trim():""));
-                        widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText()!=null?holder.txtTitle.getText().toString().trim():""));
-                        widgetDialogModel.setColor(checkStringNull(model.getColor()));
-
-                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext,widgetDialogModel,model.getActions());
-
-                        dialogActivity.show();
-
-                        dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                dialogActivity.dismiss();
-                            }
-                        });
 
                     } else if (isEnabled) {
 

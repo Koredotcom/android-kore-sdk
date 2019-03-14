@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
+import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
@@ -23,10 +25,11 @@ import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.ViewHolder> implements RecyclerViewDataAccessor {
+public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private final Drawable selectedCheck;
     private final Drawable unSelectedCheck;
     private Context context;
@@ -34,9 +37,33 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
 
-    public void addTaskTemplateModels(ArrayList<TaskTemplateModel> models){
+    private int DATA_FOUND = 1;
+    private int NO_DATA = 0;
+    private String nodata_meesage = "";
+
+    public String getNodata_meesage() {
+        return nodata_meesage;
+    }
+
+    public void setNodata_meesage(String nodata_meesage) {
+        this.nodata_meesage = nodata_meesage;
+    }
+
+    //created for widget
+    private boolean from_widget = false;
+
+    public boolean isFrom_widget() {
+        return from_widget;
+    }
+
+    public void setFrom_widget(boolean from_widget) {
+        this.from_widget = from_widget;
+    }
+
+    public void addTaskTemplateModels(ArrayList<TaskTemplateModel> models) {
         this.models.addAll(models);
     }
+
     public ArrayList<String> getSelectedTasks() {
         return selectedTasks;
     }
@@ -53,6 +80,14 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         } else {
             selectedTasks.add(taskId);
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (models != null && models.size() > 0) {
+            return DATA_FOUND;
+        }
+        return NO_DATA;
     }
 
     public void addSelectedTasks(ArrayList<String> tasks) {
@@ -75,55 +110,90 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         this.context = context;
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
-        this.models  = taskTemplateResponse.getTaskData();
+        this.models = taskTemplateResponse.getTaskData();
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.task_view_layout, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == NO_DATA) {
+
+            View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
+            return new EmptyWidgetViewHolder(view);
+        } else {
+            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.task_view_layout, parent, false));
+
+        }
     }
+
     @Override
     public long getItemId(int position) {
         return position;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHoldermain, int position) {
+        if (viewHoldermain.getItemViewType() == DATA_FOUND) {
 
-        TaskTemplateModel taskTemplateModel = models.get(position);
-        holder.taskViewLayoutBinding.setTask(taskTemplateModel);
-        boolean isSelected = selectedTasks.contains(taskTemplateModel.getId()) && isShowButton();
-        boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getStatus());
-        holder.taskViewLayoutBinding.getRoot().setSelected(isSelected);
-        holder.taskViewLayoutBinding.getRoot().setEnabled(!isClosed && isShowButton());
-        holder.taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : holder.taskViewLayoutBinding.titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-        holder.taskViewLayoutBinding.checkbox.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
-        holder.taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && selectedTasks.size() > 0 ?  View.VISIBLE  : View.GONE);
-        holder.taskViewLayoutBinding.checkbox.setEnabled(!isClosed);
-        holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
-        holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
+            ViewHolder holder = (ViewHolder) viewHoldermain;
+            TaskTemplateModel taskTemplateModel = models.get(position);
+            holder.taskViewLayoutBinding.setTask(taskTemplateModel);
+            boolean isSelected = selectedTasks.contains(taskTemplateModel.getId()) && isShowButton();
+            boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getStatus());
+            holder.taskViewLayoutBinding.getRoot().setSelected(isSelected);
+            holder.taskViewLayoutBinding.getRoot().setEnabled(!isClosed && isShowButton());
+            holder.taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : holder.taskViewLayoutBinding.titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+            holder.taskViewLayoutBinding.checkbox.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
+            holder.taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && selectedTasks.size() > 0 ? View.VISIBLE : View.GONE);
+            holder.taskViewLayoutBinding.checkbox.setEnabled(!isClosed);
+            holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
+            holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
 
-        holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus()) && selectedTasks.size() > 0) {
-                   updateThings(taskTemplateModel);
+
+            holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!isFrom_widget()) {
+                        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus()) && selectedTasks.size() > 0) {
+                            updateThings(taskTemplateModel);
+                        }
+                    } else {
+                        WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel.getActions());
+
+                        dialogActivity.show();
+
+                        dialogActivity.findViewById(kore.botssdk.R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                dialogActivity.dismiss();
+                            }
+                        });
+                    }
                 }
-            }
-        });
-        holder.taskViewLayoutBinding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                updateThings(taskTemplateModel);
-                return true;
-            }
-        });
+            });
+            holder.taskViewLayoutBinding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                  //  if (!isFrom_widget()) {
+                        updateThings(taskTemplateModel);
+                        return true;
+                   // }
+                   // return false;
+                }
+            });
+        } else {
+            EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) viewHoldermain;
+
+            emptyHolder.tv_disrcription.setText(getNodata_meesage());
+            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, kore.botssdk.R.drawable.no_meeting));
+        }
     }
-    private void updateThings(TaskTemplateModel taskTemplateModel){
-        if(showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
+
+    private void updateThings(TaskTemplateModel taskTemplateModel) {
+        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
             addOrRemoveSelectedTask(taskTemplateModel.getId());
             SelectionUtils.setSelectedTasks(selectedTasks);
             verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
@@ -134,7 +204,7 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
 
     @Override
     public int getItemCount() {
-        return models != null ? (!isExpanded && models.size() > 3 ? 3 : models.size()) : 0;
+        return models != null && models.size() > 0 ? (!isExpanded && models.size() > 3 ? 3 : models.size()) : 1;
     }
 
 
