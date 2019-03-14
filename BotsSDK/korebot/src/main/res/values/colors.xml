@@ -139,5 +139,9 @@
     <color name="transparent_widget">#40000000</color>
     <color name="transparent_card">#90FFFFFF</color>
     <color name="color_728296">#485260</color>
-
+    <color name="color_626281_widget">#3e3e51</color>
+    <color name="color_255255255_widget">#ffffff</color>
+    <color name="color_7165250_widget">#4741fa</color>
+    <color name="color_167_169_190">#a7a9be</color>
+    <color name="color_333">#030303</color>
 </resources>
