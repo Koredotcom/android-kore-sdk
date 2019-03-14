@@ -32,7 +32,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
     @Override
     public WidgetCancelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(widgetDialogActivity.getContext()).inflate(R.layout.widget_cancel_laout, parent, false);
+        View v = LayoutInflater.from(widgetDialogActivity.getContext()).inflate(R.layout.widget_select_laout, parent, false);
         return new WidgetCancelViewHolder(v);
     }
 

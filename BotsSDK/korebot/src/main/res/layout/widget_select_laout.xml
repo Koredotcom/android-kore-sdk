@@ -10,7 +10,7 @@
         android:id="@+id/tv_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/cancel_action_back_task"
+        android:background="@drawable/cancel_action_back"
         android:gravity="center"
         android:minHeight="40dp"
 
