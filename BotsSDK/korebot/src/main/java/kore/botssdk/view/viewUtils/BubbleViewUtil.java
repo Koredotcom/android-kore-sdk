@@ -4,6 +4,8 @@ import android.content.res.Resources;
 
 import kore.botssdk.application.AppControl;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -12,7 +14,7 @@ public class BubbleViewUtil {
 
     public static int getBubbleContentWidth() {
         int viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        return (int) (0.8 * viewWidth);
+        return (int) (viewWidth -34*dp1);
     }
 
     public static int getSlotsContentWidth() {

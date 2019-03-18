@@ -83,7 +83,7 @@ public class TextMediaLayout extends MediaLayout {
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 19);
+        botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
         botContentTextView.setText("");
         botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);

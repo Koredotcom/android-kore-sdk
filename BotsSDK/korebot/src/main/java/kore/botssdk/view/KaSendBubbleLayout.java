@@ -135,7 +135,8 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For TextMedia Layout
          */
-        left = containerWidth - (bubbleTextMediaLayouMarginRight + bubbleTextMediaLayout.getMeasuredWidth());
+        left = (int)(40 * dp1) + (int)(containerWidth- bubbleTextMediaLayout.getMeasuredWidth()-54 * dp1);
+      //  left = containerWidth - (bubbleTextMediaLayouMarginRight + bubbleTextMediaLayout.getMeasuredWidth());
         top += bubbleTextMediaLayouMarginTop+BUBBLE_TOP_BORDER;
 
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
