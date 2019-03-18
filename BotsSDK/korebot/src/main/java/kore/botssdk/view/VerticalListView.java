@@ -255,4 +255,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         bringToFront();
         composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
     }
+
+    @Override
+    public void widgetItemSelected(boolean isSelected, int count) {
+
+    }
 }

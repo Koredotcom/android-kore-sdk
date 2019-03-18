@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +69,7 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 public class CalendarEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
+    ArrayList<String> selectedIds = null;
 
     public ArrayList<CalEventsTemplateModel> getEventList() {
         return eventList;
@@ -110,9 +113,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         return isFromWidget;
     }
 
+    Drawable selectedCheck;
+    Drawable unSelectedCheck;
+
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
     }
+
 
     public CalendarEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
@@ -120,11 +127,16 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         this.type = type;
         this.isEnabled = isEnabled;
         notifyDataSetChanged();
-
+        selectedIds = new ArrayList<>();
+        selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
+        unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
     }
 
+    public void clearSelectedItems() {
+        selectedIds.clear();
+    }
 
     public CalEventsTemplateModel getItem(int position) {
         if (position < eventList.size())
@@ -138,6 +150,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         if (eventList != null && eventList.size() > 0) {
             return DATA_FOUND;
         }
+
         return EMPTY_CARD;
     }
 
@@ -146,6 +159,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (viewType == EMPTY_CARD) {
+
+
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         } else
@@ -180,6 +195,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
 
+            if (selectedIds.size() > 0) {
+                holder.checkbox.setVisibility(VISIBLE);
+                holder.checkbox.setImageDrawable(selectedIds.contains(model.getEventId()) ? selectedCheck : unSelectedCheck);
+            } else {
+                holder.checkbox.setVisibility(GONE);
+            }
+
 
             holder.txtTitle.setText(model.getTitle());
             // holder.txtPlace.setText(model.getWhere());
@@ -204,6 +226,25 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             dateLast = date;
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
             //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
+
+
+            holder.layoutDetails.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (verticalListViewActionHelper != null) {
+                        if (selectedIds.contains(model.getEventId())) {
+                            selectedIds.remove(model.getEventId());
+                        } else {
+                            selectedIds.add(model.getEventId());
+
+                        }
+                        verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
+                        notifyDataSetChanged();
+                        return true;
+                    }
+                    return false;
+                }
+            });
             holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -325,6 +366,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         public TextView txtPlace;
         public TextView tv_time;
         public TextView tvborder, tv_users;
+        public ImageView checkbox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -337,7 +379,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
             tvborder = (TextView) itemView.findViewById(R.id.tvborder);
             tv_users = (TextView) itemView.findViewById(R.id.tv_users);
-
+            checkbox = itemView.findViewById(R.id.checkbox);
 
         }
     }

@@ -174,6 +174,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                 public boolean onLongClick(View v) {
                   //  if (!isFrom_widget()) {
                         updateThings(taskTemplateModel);
+
                         return true;
                    // }
                    // return false;
@@ -188,11 +189,13 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
     }
 
     private void updateThings(TaskTemplateModel taskTemplateModel) {
+        if(verticalListViewActionHelper!=null){
         if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
             addOrRemoveSelectedTask(taskTemplateModel.getId());
             SelectionUtils.setSelectedTasks(selectedTasks);
             verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
             notifyDataSetChanged();
+        }
         }
     }
 
