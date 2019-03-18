@@ -226,6 +226,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         if (compModel != null) {
 
             PayloadOuter payOuter = compModel.getPayload();
+            if(payOuter == null) return;
             PayloadInner payInner;
             if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
 //                Gson gson = new Gson();

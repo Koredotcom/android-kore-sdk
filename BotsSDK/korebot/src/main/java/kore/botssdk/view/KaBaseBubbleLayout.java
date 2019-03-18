@@ -502,12 +502,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
             if(((BotRequest) baseBotMessage).getMessage() != null)
                 message = ((BotRequest) baseBotMessage).getMessage().getBody();
-        } else {
-            BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
-            if (componentModel != null) {
+        } else if (componentModel != null) {
                 String compType = componentModel.getType();
                 PayloadOuter payOuter = componentModel.getPayload();
-                message = payOuter.getText();
+                if(payOuter != null) message = payOuter.getText();
+                else return;
                 if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
                     message = payOuter.getText();
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
@@ -522,8 +521,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                     }
                 }
             }
-        }
-
         bubbleTextMediaLayout.startup(message, dimens);
 
     }

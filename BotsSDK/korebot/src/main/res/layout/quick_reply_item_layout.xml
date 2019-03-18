@@ -7,8 +7,7 @@
     android:orientation="horizontal"
     android:paddingStart="0dp"
     android:paddingEnd="10dp"
-    android:paddingTop="3dp"
-    android:paddingBottom="3dp">
+    android:paddingTop="3dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,7 +27,7 @@
             android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"
             android:background="@drawable/round_rect_image"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginEnd="5dp"/>
 
         <TextView
             android:id="@+id/quick_reply_item_text"
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/color_465360"
             android:ellipsize="end"
-            android:padding="5dp"
+            android:text="Hello"
             android:maxLines="1"
             android:textSize="14sp"
             android:layout_gravity="center_vertical" />
