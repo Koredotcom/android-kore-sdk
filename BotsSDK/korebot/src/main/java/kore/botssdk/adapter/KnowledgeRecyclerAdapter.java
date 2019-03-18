@@ -82,7 +82,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         } else {
 
             EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;
-            holder.tv_disrcription.setText("No knowledge items found");
+            holder.tv_disrcription.setText("No knowledge articles");
             holder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
 
 

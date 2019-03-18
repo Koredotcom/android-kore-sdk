@@ -15,19 +15,14 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
-import kore.botssdk.utils.Utils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private final Drawable selectedCheck;
