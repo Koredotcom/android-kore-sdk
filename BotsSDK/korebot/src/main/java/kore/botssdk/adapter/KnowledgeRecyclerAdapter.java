@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -70,6 +71,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderdata, int position) {
         if (holderdata instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) holderdata;
+            holder.followers_count.setText(knowledgeDetailModels.get(position).getnFollows()+"");
             holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
             holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -138,10 +140,11 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         KnowledgeItemViewBinding knowledgeItemViewBinding;
-
+        TextView followers_count;
         public ViewHolder(@NonNull KnowledgeItemViewBinding itemView) {
             super(itemView.getRoot());
             this.knowledgeItemViewBinding = itemView;
+            followers_count=itemView.followersCount;
         }
     }
 

@@ -86,29 +86,44 @@
             android:paddingEnd="@dimen/dimen_12dp"
             android:gravity="center_vertical">
 
+            <TextView
+                android:id="@+id/eye_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+
+                android:drawableStart="@drawable/ic_views"
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
+                android:text="@{String.valueOf(knowledge.NViews)}"
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/chat_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
+
                 android:drawableStart="@drawable/ic_comments"
                 android:drawablePadding="7dp"
+                android:layout_marginStart="37dp"
                 android:gravity="center_vertical"
+                android:layout_toEndOf="@+id/eye_count"
                 android:text="@{String.valueOf(knowledge.NComments)}"
                 android:textSize="15sp" />
 
 
+
             <TextView
-                android:id="@+id/eye_count"
+                android:id="@+id/followers_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@+id/chat_count"
-                android:drawableStart="@drawable/ic_views"
+
+                android:drawableStart="@drawable/ic_followers"
                 android:drawablePadding="7dp"
+                android:layout_marginStart="37dp"
                 android:gravity="center_vertical"
-                android:text="@{String.valueOf(knowledge.NViews)}"
+                android:layout_toEndOf="@+id/chat_count"
+
                 android:textSize="15sp" />
 
 

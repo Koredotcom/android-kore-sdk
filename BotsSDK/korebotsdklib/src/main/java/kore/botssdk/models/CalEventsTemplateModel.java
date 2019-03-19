@@ -14,10 +14,15 @@ public class CalEventsTemplateModel {
     private String color;
     private String htmlLink;
     private String eventId;
+    boolean showDate;
     private List<Attendee> attendees = null;
 
     public List<Action> getActions() {
         return actions;
+    }
+
+    public boolean isShowDate() {
+        return showDate;
     }
 
     public void setActions(List<Action> actions) {
@@ -78,6 +83,11 @@ public class CalEventsTemplateModel {
 
     public void setAttendees(List<Attendee> attendees) {
         this.attendees = attendees;
+    }
+
+    public void setShowDate(boolean flag) {
+
+        showDate=flag;
     }
 
     public class Duration{

@@ -26,11 +26,18 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
@@ -90,7 +97,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
     private Context mContext;
-    private String dateLast = "";
+
 
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
@@ -216,14 +223,14 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
 
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
-            if (position == 0 || !date.equalsIgnoreCase(dateLast)) {
+            if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
                 holder.txtDateTime.setVisibility(VISIBLE);
             } else {
                 holder.tvborder.setVisibility(GONE);
                 holder.txtDateTime.setVisibility(GONE);
             }
-            dateLast = date;
+
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
             //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
 
@@ -231,7 +238,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             holder.layoutDetails.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (verticalListViewActionHelper != null &&isFromWidget()) {
+                    if (verticalListViewActionHelper != null && isFromWidget()) {
                         if (selectedIds.contains(model.getEventId())) {
                             selectedIds.remove(model.getEventId());
                         } else {
@@ -334,8 +341,48 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     @Override
     public void setData(ArrayList data) {
         this.eventList = data;
+        this.eventList = sortEventList(eventList);
         notifyDataSetChanged();
 
+    }
+
+    public ArrayList<CalEventsTemplateModel> sortEventList(ArrayList<CalEventsTemplateModel> eventList) {
+
+        ArrayList<CalEventsTemplateModel> newSortedData = new ArrayList<>();
+        LinkedHashMap<String, ArrayList<CalEventsTemplateModel>> list = new LinkedHashMap<>();
+        Collections.sort(eventList, new Comparator<CalEventsTemplateModel>() {
+            public int compare(CalEventsTemplateModel o1, CalEventsTemplateModel o2) {
+
+                DateFormat format = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
+                try {
+                    return format.parse(o1.getDuration().getStart() + "").compareTo(format.parse(o2.getDuration().getStart() + ""));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+
+
+            }
+        });
+        for (CalEventsTemplateModel data : eventList) {
+            String date = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
+            ArrayList<CalEventsTemplateModel> sortmap = list.get(date);
+            if (sortmap == null) {
+                ArrayList<CalEventsTemplateModel> temp = new ArrayList<>();
+                data.setShowDate(true);
+                temp.add(data);
+                list.put(date, temp);
+
+            } else {
+                sortmap.add(data);
+                list.put(date, sortmap);
+            }
+        }
+        Set<String> keys = list.keySet();
+        for (String k : keys) {
+            newSortedData.addAll(list.get(k));
+        }
+        return newSortedData;
     }
 
     @Override
