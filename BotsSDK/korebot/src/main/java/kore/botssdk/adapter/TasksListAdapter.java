@@ -193,7 +193,8 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
             addOrRemoveSelectedTask(taskTemplateModel.getId());
             SelectionUtils.setSelectedTasks(selectedTasks);
-            verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
+            if(verticalListViewActionHelper != null)
+                verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
             notifyDataSetChanged();
         }
         }
