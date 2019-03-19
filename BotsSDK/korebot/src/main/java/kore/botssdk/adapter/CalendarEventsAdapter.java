@@ -231,7 +231,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             holder.layoutDetails.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (verticalListViewActionHelper != null) {
+                    if (verticalListViewActionHelper != null &&isFromWidget()) {
                         if (selectedIds.contains(model.getEventId())) {
                             selectedIds.remove(model.getEventId());
                         } else {

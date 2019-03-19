@@ -20,13 +20,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/dimen_12dp"
+
         android:paddingTop="@dimen/dimen_12dp"
         android:orientation="vertical">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:paddingEnd="@dimen/dimen_12dp"
+
             android:layout_height="wrap_content">
 
             <ImageView
