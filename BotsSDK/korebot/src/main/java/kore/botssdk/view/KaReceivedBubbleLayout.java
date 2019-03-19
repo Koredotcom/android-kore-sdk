@@ -239,7 +239,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 checkBubbleVisibilityAndHideCpv(payInner);
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botButtonView.setVisibility(View.VISIBLE);
-                    botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() + BUBBLE_CONTENT_RIGHT_MARGIN);
+                    botButtonView.setRestrictedMaxWidth(screenWidth - 28 * dp1 );
                     botButtonView.populateButtonList(payInner.getButtons(),isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -414,10 +414,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
 
 
-        /*
-         * For Button Templates
-         */
-        MeasureUtils.measure(botButtonView, wrapSpec, wrapSpec);
 
         /*
          * For List Templates
@@ -453,6 +449,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
         //  childHeightSpec = MeasureSpec.makeMeasureSpec((int) (carouselViewHeight) + BUBBLE_CONTENT_BOTTOM_MARGIN , MeasureSpec.EXACTLY);
+        /*
+         * For Button Templates
+         */
+        MeasureUtils.measure(botButtonView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(meetingConfirmationView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(verticalListView, childWidthSpec, wrapSpec);
