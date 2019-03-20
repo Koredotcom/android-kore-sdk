@@ -36,18 +36,18 @@ public class WidgetDialogActivityTask extends Dialog {
 
     RecyclerView recycler_actions;
     Context mContext;
-    List<CalEventsTemplateModel.Action> actionList;
+    TaskTemplateModel model;
 
 
     /* public WidgetDialogActivity(@NonNull Context context) {
          super(context);
      }
  */
-    public WidgetDialogActivityTask(Context mContext, TaskTemplateModel widgetDialogModel, List<CalEventsTemplateModel.Action> actionList) {
+    public WidgetDialogActivityTask(Context mContext, TaskTemplateModel widgetDialogModel, TaskTemplateModel model) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
-        this.actionList = actionList;
+        this.model = model;
     }
 
 
@@ -73,7 +73,7 @@ public class WidgetDialogActivityTask extends Dialog {
         // setContentView(R.layout.widget_files_item_selection_dialog);
         initViews();
 
-        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(WidgetDialogActivityTask.this, actionList);
+        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(WidgetDialogActivityTask.this, model);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         recycler_actions.setLayoutManager(layoutManager);

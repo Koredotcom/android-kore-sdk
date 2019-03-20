@@ -155,7 +155,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                             updateThings(taskTemplateModel);
                         }
                     } else {
-                        WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel.getActions());
+                        WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
                         dialogActivity.show();
 

@@ -266,7 +266,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                         widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
-                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model.getActions());
+                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
 
                         dialogActivity.show();
 

@@ -5,7 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -13,16 +16,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.CancelEvent;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.TaskTemplateModel;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetDialogActivityTask widgetDialogActivity;
     List<CalEventsTemplateModel.Action> actionList;
+    TaskTemplateModel model;
 
-    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, List<CalEventsTemplateModel.Action> actionList) {
+    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, TaskTemplateModel model) {
         this.widgetDialogActivity = widgetDialogActivity;
-        this.actionList = actionList;
+        this.model = model;
+        this.actionList = model.getActions();
         notifyDataSetChanged();
     }
 
@@ -42,7 +50,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         holder.tv_actions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("action", actionList.get(position).getTitle());
+                hashMap.put("tIds", model.getId());
+                KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
+                (widgetDialogActivity).dismiss();
             }
         });
 

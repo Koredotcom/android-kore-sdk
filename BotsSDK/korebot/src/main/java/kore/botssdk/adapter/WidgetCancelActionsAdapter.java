@@ -1,30 +1,42 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.google.gson.Gson;
+
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetDialogActivity;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.CancelEvent;
 import kore.botssdk.models.CalEventsTemplateModel;
+
+import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCancelActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetDialogActivity widgetDialogActivity;
     List<CalEventsTemplateModel.Action> actionList;
+    CalEventsTemplateModel model;
 
-    public WidgetCancelActionsAdapter(WidgetDialogActivity widgetDialogActivity, List<CalEventsTemplateModel.Action> actionList) {
+    public WidgetCancelActionsAdapter(WidgetDialogActivity widgetDialogActivity, CalEventsTemplateModel model) {
         this.widgetDialogActivity = widgetDialogActivity;
-        this.actionList = actionList;
+        this.model = model;
+        this.actionList = model.getActions();
         notifyDataSetChanged();
     }
 
@@ -44,6 +56,10 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         holder.tv_actions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("meetingId", model.getEventId());
+                    KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
+                    (widgetDialogActivity).dismiss();
 
             }
         });

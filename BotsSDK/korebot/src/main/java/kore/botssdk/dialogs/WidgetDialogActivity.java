@@ -33,7 +33,7 @@ public class WidgetDialogActivity extends Dialog {
     View sideBar;
 
     RecyclerView recycler_actions;
-    List<CalEventsTemplateModel.Action> actionList;
+    CalEventsTemplateModel model;
     Context mContext;
 
 
@@ -42,11 +42,11 @@ public class WidgetDialogActivity extends Dialog {
          super(context);
      }
  */
-    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, List<CalEventsTemplateModel.Action> actionList) {
+    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, CalEventsTemplateModel model) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
-        this.actionList = actionList;
+        this.model = model;
     }
 
 
@@ -70,7 +70,7 @@ public class WidgetDialogActivity extends Dialog {
         txtPlace.setVisibility(widgetDialogModel.getLocation() != null && !TextUtils.isEmpty(widgetDialogModel.getLocation()) ? View.VISIBLE : View.GONE);
         sideBar.setBackgroundColor(Color.parseColor(widgetDialogModel.getColor()));
 
-        WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, actionList);
+        WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, model);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         recycler_actions.setLayoutManager(layoutManager);

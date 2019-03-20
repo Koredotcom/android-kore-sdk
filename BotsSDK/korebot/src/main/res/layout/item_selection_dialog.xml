@@ -27,7 +27,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_toStartOf="@+id/img_cancel"
                 android:gravity="start"
-                android:text="What would you like to do"
+                android:text="What would you like to do?"
                 android:textColor="@color/color_626281"
                 android:textSize="19sp"
                 android:textStyle="bold" />
