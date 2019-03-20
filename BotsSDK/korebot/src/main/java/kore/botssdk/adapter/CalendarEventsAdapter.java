@@ -258,26 +258,36 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type) || isFromWidget()) {
                         //from left widget click
 
+                        if (selectedIds != null && selectedIds.size() > 0&&verticalListViewActionHelper!=null) {
+                            // multiple item can be selected after long press and single click on other items
+                            if (selectedIds.contains(model.getEventId())) {
+                                selectedIds.remove(model.getEventId());
+                            } else {
+                                selectedIds.add(model.getEventId());
+                            }
+                            verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
+                            notifyDataSetChanged();
 
-                        WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
-                        widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
-                        widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
-                        widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText() != null ? holder.tv_time.getText().toString().trim() : ""));
-                        widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
-                        widgetDialogModel.setColor(checkStringNull(model.getColor()));
+                        } else {
+                            WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
+                            widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
+                            widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
+                            widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText() != null ? holder.tv_time.getText().toString().trim() : ""));
+                            widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
+                            widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
                         WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
 
-                        dialogActivity.show();
+                            dialogActivity.show();
 
-                        dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                            dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
 
-                                dialogActivity.dismiss();
-                            }
-                        });
-
+                                    dialogActivity.dismiss();
+                                }
+                            });
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

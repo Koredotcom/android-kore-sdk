@@ -155,29 +155,34 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                             updateThings(taskTemplateModel);
                         }
                     } else {
-                        WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
-                        dialogActivity.show();
+                        if (selectedTasks != null && selectedTasks.size() > 0) {
+                            updateThings(taskTemplateModel);
+                        } else {
+                            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
-                        dialogActivity.findViewById(kore.botssdk.R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                            dialogActivity.show();
 
-                                dialogActivity.dismiss();
-                            }
-                        });
+                            dialogActivity.findViewById(kore.botssdk.R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    dialogActivity.dismiss();
+                                }
+                            });
+                        }
                     }
                 }
             });
             holder.taskViewLayoutBinding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                  //  if (!isFrom_widget()) {
-                        updateThings(taskTemplateModel);
+                    //  if (!isFrom_widget()) {
+                    updateThings(taskTemplateModel);
 
-                        return true;
-                   // }
-                   // return false;
+                    return true;
+                    // }
+                    // return false;
                 }
             });
         } else {
@@ -189,14 +194,14 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
     }
 
     private void updateThings(TaskTemplateModel taskTemplateModel) {
-        if(verticalListViewActionHelper!=null){
-        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
-            addOrRemoveSelectedTask(taskTemplateModel.getId());
-            SelectionUtils.setSelectedTasks(selectedTasks);
-            if(verticalListViewActionHelper != null)
-                verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
-            notifyDataSetChanged();
-        }
+        if (verticalListViewActionHelper != null) {
+            if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
+                addOrRemoveSelectedTask(taskTemplateModel.getId());
+                SelectionUtils.setSelectedTasks(selectedTasks);
+                if (verticalListViewActionHelper != null)
+                    verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
+                notifyDataSetChanged();
+            }
         }
     }
 
