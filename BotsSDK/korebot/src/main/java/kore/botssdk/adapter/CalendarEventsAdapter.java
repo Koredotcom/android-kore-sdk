@@ -351,7 +351,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     @Override
     public void setData(ArrayList data) {
         this.eventList = data;
-        this.eventList = sortEventList(eventList);
+        if(eventList != null) {
+            this.eventList = sortEventList(eventList);
+        }
         notifyDataSetChanged();
 
     }

@@ -145,4 +145,5 @@
     <color name="color_7165250_widget">#4741fa</color>
     <color name="color_167_169_190">#a7a9be</color>
     <color name="color_333">#030303</color>
+    <color name="background_shimmer">#DDDDDD</color>
 </resources>
