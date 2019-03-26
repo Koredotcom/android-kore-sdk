@@ -303,7 +303,7 @@ public final class SocketWrapper extends BaseSpiceManager {
             @Override
             public void run() {
                 try {
-                    if (mConnection != null && mConnection.isConnected()) {
+                    if ( mConnection.isConnected()) {
                         mConnection.sendPing("pong from the client".getBytes());
                     }
                 }catch (Exception e){

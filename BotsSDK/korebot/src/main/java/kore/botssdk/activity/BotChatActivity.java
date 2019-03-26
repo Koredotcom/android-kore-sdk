@@ -158,7 +158,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                 break;
             case CONNECTED:
                 if(isItFirstConnect)
-                    botClient.sendMessage("welcomedialog",chatBot,taskBotId);
+                    botClient.sendMessage("welcomedialog");
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();

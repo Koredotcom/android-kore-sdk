@@ -12,7 +12,7 @@ public class SDKConfiguration {
     /**
      * bot init text  and related settings
      */
-    
+
     private static  boolean TRIGGER_INIT_MESSAGE = false;
 
     public static boolean isTriggerInitMessage() {

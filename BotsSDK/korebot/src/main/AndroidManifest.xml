@@ -36,6 +36,7 @@
                android:theme="@style/Theme.AppCompat.NoActionBar"
                android:windowSoftInputMode="adjustResize" />
 
+
         <service
             android:name=".net.BotDemoRestService"
             android:exported="false" />
