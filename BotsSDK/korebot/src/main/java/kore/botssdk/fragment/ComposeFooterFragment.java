@@ -75,6 +75,14 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 //    private ProgressBar loadingTasksProgressBar,progressBarAudio;
     private static final int REQUEST_RECORD_AUDIO = 13;
 
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
+    }
+
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
@@ -141,8 +149,9 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 //        mRecordingThread = new RawAudioRecorder(audioDataReceivedListener);
     }
 
-    private void updateUI() {
+    public void updateUI() {
         sendButton.setEnabled(!isDisabled && !isFirstTime);
+        sendButton.setAlpha(sendButton.isEnabled() ? 1.0f : 0.5f);
     }
 
     private void setListener() {

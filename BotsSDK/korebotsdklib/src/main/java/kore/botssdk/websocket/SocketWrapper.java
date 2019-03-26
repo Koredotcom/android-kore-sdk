@@ -1,6 +1,7 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
+import android.net.Network;
 import android.os.Handler;
 import android.util.Log;
 
@@ -465,8 +466,9 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 @Override
                 public void run() {
+
                     Log.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
-                    if (mIsReconnectionAttemptNeeded && !isConnected()) {
+                    if (Utils.isNetworkAvailable(mContext) && mIsReconnectionAttemptNeeded && !isConnected()) {
                         reconnect();
 //                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
                         mReconnectDelay = getReconnectDelay();
@@ -476,7 +478,9 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 }
             };
-            _handler.postDelayed(r, mReconnectDelay);
+            if(Utils.isNetworkAvailable(mContext)) {
+                _handler.postDelayed(r, mReconnectDelay);
+            }
         } catch (Exception e) {
             Log.d(LOG_TAG, ":: The Exception is " + e.toString());
         }

@@ -13,7 +13,7 @@ public class SDKConfiguration {
      * bot init text  and related settings
      */
 
-    private static  boolean TRIGGER_INIT_MESSAGE = false;
+    private static boolean TRIGGER_INIT_MESSAGE = false;
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -31,7 +31,7 @@ public class SDKConfiguration {
         INIT_MESSAGE = initMessage;
     }
 
-    private static  String INIT_MESSAGE = "Welpro";
+    private static String INIT_MESSAGE = "Welpro";
     public static final String BOT_ICON_URL = "";
 
     public static boolean isApplyFontStyle() {
@@ -46,22 +46,23 @@ public class SDKConfiguration {
         return fontType;
     }
 
-    public  static void setFontType(FONT_TYPES fontType) {
+    public static void setFontType(FONT_TYPES fontType) {
         SDKConfiguration.fontType = fontType;
     }
 
 
     //JWTServer related configurations
-    public static class JWTServer{
+    public static class JWTServer {
         public static void setJwtServerUrl(String jwtServerUrl) {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        public static  String JWT_SERVER_URL = "https://demo.kore.net";
+        public static String JWT_SERVER_URL = "https://demo.kore.net/users/sts";
+
     }
 
     //Server related configurations
-    public static class Server{
+    public static class Server {
 
         public static void setKoreBotServerUrl(String koreBotServerUrl) {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
@@ -71,15 +72,14 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
+        public static String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = true;
-        public static   String SERVER_URL ="https://demo.kore.net";
+        public static String SERVER_URL = "https://demo.kore.net/users/sts";
     }
 
     public static class Client {
-        public static  String client_id = "cs-788ba0c0-4bae-5d39-8b8b-6e670d95246e";
 
         public static void setClient_id(String client_id) {
             Client.client_id = client_id;
@@ -101,16 +101,18 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static  String client_secret = "mLDXXoiRp02dZspAk40ZVvzQlwPy0zCWCJYuX7Lbof4=";
-        public static  String identity = "ramesh.silveru@kore.com";
-        public static  String bot_name = "Signify TSC Bot";
-        public static  String bot_id = "st-b4022c09-daf5-5fd6-833d-b729cadae596";
+        public static String client_id = "cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "sudharani.sanagapalli@kore.com";
+        public static String bot_name = "Chatbot";
+        public static String bot_id = "st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+
 
     }
 
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected ="#6168e7";
+        public static String rightBubbleSelected = "#6168e7";
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -152,15 +154,15 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-        public static  String rightBubbleUnSelected="#6168e7";
-        public static  String leftBubbleSelected="#D3D3D3";
-        public static  String leftBubbleUnSelected="#f8f9f8";
-        public static  String leftBubbleTextColor="#444444";
-        public static  String rightBubbleTextColor="#FFFFFF";
-        public static  String whiteColor="#FFFFFF";
-        public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor="#FFFFFF";
-        public static  String leftLinkColor = "#6168e7";
+        public static String rightBubbleUnSelected = "#6168e7";
+        public static String leftBubbleSelected = "#D3D3D3";
+        public static String leftBubbleUnSelected = "#f8f9f8";
+        public static String leftBubbleTextColor = "#444444";
+        public static String rightBubbleTextColor = "#FFFFFF";
+        public static String whiteColor = "#FFFFFF";
+        public static String leftBubbleBorderColor = "#eeeef2";
+        public static String rightLinkColor = "#FFFFFF";
+        public static String leftLinkColor = "#6168e7";
 
         public static String getTypingStatusDotsColor() {
             return typingStatusDotsColor;
@@ -196,7 +198,7 @@ public class SDKConfiguration {
             BubbleColors.quickReplyFontColor = quickReplyFontColor;
         }
 
-        public static  String quickReplyFontColor = "#ffffff";
+        public static String quickReplyFontColor = "#ffffff";
 
     }
 
@@ -214,7 +216,10 @@ public class SDKConfiguration {
     /**
      * don't use relative it is licenced version
      */
-    public   enum FONT_TYPES{ROBOTO,RELATIVE}
+    public enum FONT_TYPES {
+        ROBOTO, RELATIVE
+    }
+
     private static FONT_TYPES fontType = FONT_TYPES.ROBOTO;
 
 }

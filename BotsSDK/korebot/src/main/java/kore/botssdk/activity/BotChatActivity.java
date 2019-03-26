@@ -11,10 +11,18 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.octo.android.robospice.persistence.exception.SpiceException;
+import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
+import kore.botssdk.BotDb.BotDataPersister;
+import kore.botssdk.BotDb.BotMessageDBModel;
+import kore.botssdk.BotDb.DBHelper;
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -28,15 +36,20 @@ import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BotHistory;
+import kore.botssdk.models.BotHistoryMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -45,6 +58,7 @@ import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -84,7 +98,6 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
         setContentView(R.layout.bot_chat_layout);
         findViews();
         getBundleInfo();
-
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -115,10 +128,39 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
+        BotSocketConnectionManager.getInstance().setChatListener(sListener);
 
        // connectToWebSocketAnonymous();
 
     }
+
+    SocketChatListener sListener = new SocketChatListener() {
+        @Override
+        public void onMessage(BotResponse botResponse) {
+            processPayload("", botResponse);
+        }
+
+        @Override
+        public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
+            if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED){
+                fetchBotMessages();
+            }
+            updateTitleBar(state);
+        }
+
+        @Override
+        public void onMessage(SocketDataTransferModel data) {
+            if (data == null) return;
+            if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
+                processPayload(data.getPayLoad(), null);
+
+            } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
+                if (botContentFragment != null) {
+                    botContentFragment.updateContentListOnSend(data.getBotRequest());
+                }
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -155,6 +197,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
             case CONNECTING:
                 titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.VISIBLE);
+                updateActionBar();
                 break;
             case CONNECTED:
                 if(isItFirstConnect)
@@ -165,23 +208,115 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                 updateActionBar();
                 break;
             case DISCONNECTED:
+            case CONNECTED_BUT_DISCONNECTED:
                 titleMsg = getString(R.string.socket_disconnected);
-                taskProgressBar.setVisibility(View.GONE);
+                taskProgressBar.setVisibility(View.VISIBLE);
+                composeFooterFragment.setDisabled(true);
+                composeFooterFragment.updateUI();
                 updateActionBar();
                 break;
+
             default:
                 titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.GONE);
                 updateActionBar();
 
         }
+    }
 
-        if (Utils.isNetworkAvailable(this) && !titleMsg.isEmpty()) {
-//            getSupportActionBar().setSubtitle(titleMsg);
-        } else {
-            CustomToast.showToast(getApplicationContext(), "No network avilable.");
-//            getSupportActionBar().setSubtitle("Disconnected");
-        }
+    private void fetchBotMessages(){
+      //  showProgress("Please wait...",false);
+        RestRequest<RestResponse.BotResponses> request = new RestRequest<RestResponse.BotResponses>(RestResponse.BotResponses.class, null,null) {
+            @Override
+            public RestResponse.BotResponses loadDataFromNetwork() throws Exception {
+                DBHelper dbHelper = new DBHelper(getApplicationContext());
+                RestResponse.BotResponses botMsgs = null;
+                try {
+                    QueryBuilder<BotMessageDBModel, String> builder = dbHelper.getBotMessageDao().queryBuilder();
+                    builder.limit(1L);
+                    builder.where().eq(BotMessageDBModel.BotMessageColumns.IS_SENT_MESSAGE,false);
+                    builder.orderBy("id", false) ; // true for ascending, false for descending
+                    List<BotMessageDBModel> list = dbHelper.getBotMessageDao().query(builder.prepare());
+                    BotMessageDBModel botMessageDBModel = list != null && list.size() > 0 ? list.get(0) : null;
+
+                    if(botMessageDBModel != null){
+                        Log.d("IKIDO","The message id is "+botMessageDBModel.getMessageId());
+                        BotHistory history = getService().getHistory("bearer "+SocketWrapper.getInstance(getApplicationContext()).getAccessToken(),
+                                SDKConfiguration.Client.bot_id,100,botMessageDBModel.getMessageId(),true);
+                        List<BotHistoryMessage> messages = history.getMessages();
+                        Log.d("IKIDO","The Bot history is "+ (history!=null?history.getTotal():"0"));
+                        if(messages != null && messages.size() > 1){
+                            botMsgs = new RestResponse.BotResponses();
+                            for(int index = 0;index < messages.size(); index++){
+                                BotHistoryMessage msg = messages.get(index);
+                                if(msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
+                                    List<Component> components = msg.getComponents();
+                                    String data = components.get(0).getData().getText();
+                                    Log.d("IKIDO","The data is" + data);
+                                    try {
+                                        PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
+                                        BotResponse r = Utils.buildBotMessage(outer,msg.getBotId(),SDKConfiguration.Client.bot_name,msg.getCreatedOn(),msg.getId());
+                                        persistBotMessage(gson.toJson(r),false,null);
+                                        botMsgs.add(r);
+                                    } catch (com.google.gson.JsonSyntaxException ex) {
+                                        Log.d("IKIDO","Yes entered into catch block");
+                                        BotResponse r = Utils.buildBotMessage(data,msg.getBotId(),SDKConfiguration.Client.bot_name,msg.getCreatedOn(),msg.getId());
+                                        persistBotMessage(gson.toJson(r),false,null);
+                                        botMsgs.add(r);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    dbHelper.close();
+                }
+                return botMsgs;
+            }
+
+        };
+
+        getSpiceManager().execute(request, new RequestListener<RestResponse.BotResponses>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+        //        dismissProgress();
+            }
+
+            @Override
+            public void onRequestSuccess(RestResponse.BotResponses bResps) {
+          //      dismissProgress();
+                if(bResps != null && bResps.size() > 0){
+                    for(BotResponse bResp:bResps){
+                        if(sListener != null){
+                            sListener.onMessage(bResp);
+                        }
+                    }
+
+                }
+            }
+        });
+    }
+    private void persistBotMessage(final String payload, boolean isSentMessage, BotRequest sentMsg){
+
+        BotDataPersister botDataPersister = new BotDataPersister(getApplicationContext(), null, payload, isSentMessage, sentMsg);
+        getSpiceManager().execute(botDataPersister, new RequestListener<Void>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.d(LOG_TAG, "Persistence fail");
+            }
+
+            @Override
+            public void onRequestSuccess(Void aVoid) {
+                Log.d(LOG_TAG, "Persistence success");
+            }
+        });
+
     }
 
     private void setupTextToSpeech() {

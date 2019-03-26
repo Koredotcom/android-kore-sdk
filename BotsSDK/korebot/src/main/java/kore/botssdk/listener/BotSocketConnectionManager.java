@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
+import kore.botssdk.BotDb.BotDataPersister;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
@@ -122,6 +123,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onTextMessage(String payload) {
 //        socketUpdateListener.onMessageUpdate(payload, false, null);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
+        persistBotMessage(payload,false,null);
         if(chatListener != null){
             chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
         }
@@ -151,7 +153,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
         try{
-            String jwt = botClient.generateJWT(botCustomData.get("identity").toString(),SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+            String jwt = botClient.generateJWT(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
             botName = SDKConfiguration.Client.bot_name;
             streamId = SDKConfiguration.Client.bot_id;
             if (!isRefresh) {
@@ -169,6 +171,21 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+
+    public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg){
+        BotDataPersister botDataPersister = new BotDataPersister(mContext, userId, payload, isSentMessage, sentMsg);
+        botsSpiceManager.execute(botDataPersister, new RequestListener<Void>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.d(LOG_TAG, "Persistence fail");
+            }
+
+            @Override
+            public void onRequestSuccess(Void aVoid) {
+                Log.d(LOG_TAG, "Persistence success");
+            }
+        });
+    }
     private void makeJwtCallWithToken(final boolean isRefresh) {
         KaJwtRequest request = new KaJwtRequest(accessToken, true);
         botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
@@ -304,6 +321,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
             chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         }
@@ -330,6 +348,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
             chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         }
@@ -352,6 +371,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
+        persistBotMessage(null,true,botRequest);
         if(chatListener != null){
             chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
         }
@@ -579,8 +599,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             Log.d("KoraSocketConnection", ":: The Exception is " + e.toString());
         }
     }
-    static Handler alertHandler = new Handler();
-    Runnable alertRunnable = new Runnable() {
+    private static Handler alertHandler = new Handler();
+    private Runnable alertRunnable = new Runnable() {
 
         @Override
         public void run() {

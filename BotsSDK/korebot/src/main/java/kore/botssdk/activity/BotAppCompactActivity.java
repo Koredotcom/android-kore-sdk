@@ -1,11 +1,15 @@
 package kore.botssdk.activity;
 
 import android.app.ProgressDialog;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.octo.android.robospice.SpiceManager;
+
 import kore.botssdk.R;
+import kore.botssdk.net.BotRestService;
 
 /**
  * Created by Ramachandra Pradeep on 27-Mar-18.
@@ -15,6 +19,25 @@ public class BotAppCompactActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = getClass().getSimpleName();
     private ProgressDialog mProgressDialog;
+
+    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    public void finish() {
+        if(this.spiceManager.isStarted()) {
+            this.spiceManager.shouldStop();
+        }
+        super.finish();
+    }
+
+    protected void onCreate(Bundle data) {
+        super.onCreate(data);
+        if(!this.spiceManager.isStarted()) {
+            this.spiceManager.start(getApplicationContext());
+        }
+    }
+
+    public SpiceManager getSpiceManager() {
+        return this.spiceManager;
+    }
 
 
     protected void showProgress(String msg, boolean isCancelable) {

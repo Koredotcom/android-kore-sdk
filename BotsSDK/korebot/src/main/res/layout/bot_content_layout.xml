@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
-    <include layout="@layout/kora_timestamps_header"/>
+    <include layout="@layout/kora_timestamps_header"
+        android:id="@+id/headerLayout"/>
 
     <ListView
         android:id="@+id/chatContentListView"
@@ -11,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
+        android:layout_below="@+id/headerLayout"
         android:divider="@android:color/transparent"
         android:listSelector="@color/white"
         android:layout_marginBottom="2dp"
