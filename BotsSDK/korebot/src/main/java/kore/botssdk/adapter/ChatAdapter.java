@@ -17,12 +17,10 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
-import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.Utils;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.KaBaseBubbleContainer;
 import kore.botssdk.view.KaBaseBubbleLayout;
@@ -84,7 +82,6 @@ public class ChatAdapter extends BaseAdapter {
         BUBBLE_CONTENT_LAYOUT_HEIGHT = BubbleViewUtil.getBubbleContentHeight();
         viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         baseBotMessageArrayList = new ArrayList<>();
-      //  baseBotMessageArrayList.add(Utils.buildBotMessage("Hi, I'm your Virtual Assistant. I can help you with payments, FAQs and much more.\n \n To get started, please enter your query. You may ask questions like:\n \"What is my balance?\" \n \"I'd like to make a payment.\"",null));
         AttendeeSlotSelectionView.dataMap = new HashMap<>();
     }
 

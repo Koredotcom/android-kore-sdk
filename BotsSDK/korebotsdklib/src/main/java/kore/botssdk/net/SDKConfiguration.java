@@ -12,7 +12,7 @@ public class SDKConfiguration {
     /**
      * bot init text  and related settings
      */
-
+    
     private static  boolean TRIGGER_INIT_MESSAGE = false;
 
     public static boolean isTriggerInitMessage() {
@@ -52,16 +52,16 @@ public class SDKConfiguration {
 
 
     //JWTServer related configurations
-    public static class JWTServer {
+    public static class JWTServer{
         public static void setJwtServerUrl(String jwtServerUrl) {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        public static String JWT_SERVER_URL = "https://demo.kore.net";
+        public static  String JWT_SERVER_URL = "https://demo.kore.net";
     }
 
     //Server related configurations
-    public static class Server {
+    public static class Server{
 
         public static void setKoreBotServerUrl(String koreBotServerUrl) {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
