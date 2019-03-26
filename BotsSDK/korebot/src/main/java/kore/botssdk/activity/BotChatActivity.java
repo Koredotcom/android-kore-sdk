@@ -157,8 +157,8 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                 taskProgressBar.setVisibility(View.VISIBLE);
                 break;
             case CONNECTED:
-                if(isItFirstConnect)
-                    botClient.sendMessage("welcomedialog");
+                if(isItFirstConnect && SDKConfiguration.TRIGGER_INIT_MESSAGE)
+                    botClient.sendMessage(SDKConfiguration.INIT_MESSAGE,chatBot,taskBotId);
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
