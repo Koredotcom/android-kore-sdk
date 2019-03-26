@@ -6,5 +6,5 @@
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:elevation="4dp"
-    app:layout_scrollFlags="scroll|enterAlways"
+
   />
