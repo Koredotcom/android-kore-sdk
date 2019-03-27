@@ -2,18 +2,22 @@ package kore.botssdk.adapter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -235,7 +239,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
 
 
-            holder.layoutDetails.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if (verticalListViewActionHelper != null && isFromWidget()) {
@@ -252,13 +256,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     return false;
                 }
             });
-            holder.layoutDetails.setOnClickListener(new View.OnClickListener() {
+            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type) || isFromWidget()) {
                         //from left widget click
 
-                        if (selectedIds != null && selectedIds.size() > 0&&verticalListViewActionHelper!=null) {
+                        if (selectedIds != null && selectedIds.size() > 0 && verticalListViewActionHelper != null) {
                             // multiple item can be selected after long press and single click on other items
                             if (selectedIds.contains(model.getEventId())) {
                                 selectedIds.remove(model.getEventId());
@@ -276,15 +280,24 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
-                        WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
 
                             dialogActivity.show();
+
+
 
                             dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
-                                    dialogActivity.dismiss();
+                                    dialogActivity.dissmissanim();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dialogActivity.dismiss();
+                                        }
+                                    }, 400);
+
                                 }
                             });
                         }
@@ -351,7 +364,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     @Override
     public void setData(ArrayList data) {
         this.eventList = data;
-        if(eventList != null) {
+        if (eventList != null) {
             this.eventList = sortEventList(eventList);
         }
         notifyDataSetChanged();
@@ -419,7 +432,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView rowIndex;
         TextView txtDateTime;
-        LinearLayout layoutDetails;
+        LinearLayout layoutDetails, innerlayout;
         public View sideBar;
         public TextView txtTitle;
         public TextView txtPlace;
@@ -431,6 +444,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             super(itemView);
             txtDateTime = (TextView) itemView.findViewById(R.id.txtDateAndTime);
             layoutDetails = (LinearLayout) itemView.findViewById(R.id.layout_deails);
+            innerlayout = (LinearLayout) itemView.findViewById(R.id.innerlayout);
+
             sideBar = itemView.findViewById(R.id.sideBar);
 
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);

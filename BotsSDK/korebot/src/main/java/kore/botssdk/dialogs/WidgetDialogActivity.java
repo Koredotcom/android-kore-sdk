@@ -4,9 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +48,9 @@ public class WidgetDialogActivity extends Dialog {
          super(context);
      }
  */
+
+
+
     public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, CalEventsTemplateModel model) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
@@ -59,6 +68,7 @@ public class WidgetDialogActivity extends Dialog {
         setCanceledOnTouchOutside(false);
 
         getWindow().setBackgroundDrawableResource(R.color.transparent_card);
+
         setContentView(R.layout.item_selection_dialog);
         initViews();
 
@@ -69,14 +79,28 @@ public class WidgetDialogActivity extends Dialog {
         tv_users.setText(widgetDialogModel.getAttendies());
         txtPlace.setVisibility(widgetDialogModel.getLocation() != null && !TextUtils.isEmpty(widgetDialogModel.getLocation()) ? View.VISIBLE : View.GONE);
         sideBar.setBackgroundColor(Color.parseColor(widgetDialogModel.getColor()));
-
+        recycler_actions.setVisibility(View.GONE);
         WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, model);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         recycler_actions.setLayoutManager(layoutManager);
         recycler_actions.setAdapter(adapter);
+
+        Animation bottomUp = AnimationUtils.loadAnimation(getContext(),
+                R.anim.bottomup);
+        recycler_actions.startAnimation(bottomUp);
+        recycler_actions.setVisibility(View.VISIBLE);
         adapter.notifyDataSetChanged();
 
+    }
+
+
+    public void dissmissanim()
+    {
+        Animation bottomdown = AnimationUtils.loadAnimation(getContext(),
+                R.anim.bottomdown);
+        recycler_actions.startAnimation(bottomdown);
+        recycler_actions.setVisibility(View.INVISIBLE);
     }
 
     private void initViews() {

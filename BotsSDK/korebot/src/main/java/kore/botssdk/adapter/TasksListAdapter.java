@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,13 +164,21 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
 
                             dialogActivity.show();
 
-                            dialogActivity.findViewById(kore.botssdk.R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                            dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
-                                    dialogActivity.dismiss();
+                                    dialogActivity.dissmissanim();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            dialogActivity.dismiss();
+                                        }
+                                    }, 400);
+
                                 }
                             });
+
                         }
                     }
                 }
