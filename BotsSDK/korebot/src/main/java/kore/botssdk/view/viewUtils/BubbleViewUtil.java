@@ -14,7 +14,7 @@ public class BubbleViewUtil {
 
     public static int getBubbleContentWidth() {
         int viewWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        return (int) (viewWidth -34*dp1);
+        return (int) (viewWidth -54*dp1);
     }
 
     public static int getSlotsContentWidth() {
