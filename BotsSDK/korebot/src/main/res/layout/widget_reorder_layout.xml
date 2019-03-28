@@ -33,11 +33,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_reorder"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingEnd="12dp"
+        android:background="@color/color_ffeaec"
         android:layout_below="@+id/title"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="16dp"
+      >
 
     </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>
