@@ -39,7 +39,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginStart="5dp"
                 android:layout_marginBottom="5dp"
-                android:scaleType="fitXY"
                 android:visibility="visible"
                 app:loadImage="@{knowledge.imageUrl}" />
 
@@ -137,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:drawableStart="@drawable/ic_like"
+                android:drawableStart="@drawable/ic_yes"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:text="@{Integer.toString(knowledge.NLikes)}"

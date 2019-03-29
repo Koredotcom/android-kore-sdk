@@ -150,9 +150,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     @BindingAdapter("loadImage")
     public static void loadImage(ImageView imageView, String src){
+        //.resize(imageView.getWidth()>0?imageView.getWidth():(40*dp1),imageView.getHeight()>0?imageView.getWidth():(40*dp1))
         if(!StringUtils.isNullOrEmpty(src)) {
             Picasso.with(imageView.getContext()).load(src).transform(roundedCornersTransform)
-                    .resize(imageView.getWidth()>0?imageView.getWidth():(40*dp1),imageView.getHeight()>0?imageView.getWidth():(40*dp1)).into(imageView, new com.squareup.picasso.Callback() {
+                    .into(imageView, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     imageView.setVisibility(View.VISIBLE);

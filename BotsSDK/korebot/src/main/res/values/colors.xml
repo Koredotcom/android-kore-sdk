@@ -146,4 +146,6 @@
     <color name="color_167_169_190">#a7a9be</color>
     <color name="color_333">#030303</color>
     <color name="background_shimmer">#DDDDDD</color>
+
+    <color name="color_knowledge">#F98140</color>
 </resources>

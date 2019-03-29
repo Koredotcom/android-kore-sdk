@@ -342,7 +342,7 @@ public final class SocketWrapper{
                 mConnection.connect(url, new  WebSocketConnectionHandler() {
                     @Override
                     public void onOpen() {
-                        Log.d(LOG_TAG, "Connection Open.");
+//                        Log.d(LOG_TAG, "Connection Open.");
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onOpen(isReconnectionAttaempt);
                         }else{

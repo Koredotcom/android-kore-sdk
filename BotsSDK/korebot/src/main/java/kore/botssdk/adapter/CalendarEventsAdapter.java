@@ -384,9 +384,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         Collections.sort(eventList, new Comparator<CalEventsTemplateModel>() {
             public int compare(CalEventsTemplateModel o1, CalEventsTemplateModel o2) {
 
-                DateFormat format = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
+//                DateFormat format = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
                 try {
-                    return format.parse(o1.getDuration().getStart() + "").compareTo(format.parse(o2.getDuration().getStart() + ""));
+                    return new Double(o1.getDuration().getStart()).compareTo(new Double(o2.getDuration().getStart()));
                 } catch (Exception e) {
                     e.printStackTrace();
                     return 0;

@@ -66,7 +66,6 @@ public class BotClient {
     public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
                                               String url, String botUserId, String auth) {
 //        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        Log.d("IKIDO","In BotClient");
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
         SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, socketConnectionListener,url, botUserId, auth);
     }
