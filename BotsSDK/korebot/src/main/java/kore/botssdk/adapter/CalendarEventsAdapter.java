@@ -124,8 +124,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         return isFromWidget;
     }
 
-    Drawable selectedCheck;
-    Drawable unSelectedCheck;
+    private Drawable selectedCheck;
+    private Drawable unSelectedCheck;
+
+    private Drawable insetDivider,normalDivider;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
@@ -141,6 +143,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         selectedIds = new ArrayList<>();
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
+
+        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_65_divider);
+        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_divider_meetings);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
     }
@@ -236,8 +241,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             }
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
-            //  holder.layoutDetails.setBackgroundColor((Color.parseColor(model.getColor()) & 0x00ffffff) | (26 << 24));
-
+            if(position < getItemCount() -1){
+                holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : normalDivider);
+            }
 
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -439,6 +445,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         public TextView tv_time;
         public TextView tvborder, tv_users;
         public ImageView checkbox;
+        public View divider;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -454,6 +461,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             tvborder = (TextView) itemView.findViewById(R.id.tvborder);
             tv_users = (TextView) itemView.findViewById(R.id.tv_users);
             checkbox = itemView.findViewById(R.id.checkbox);
+            divider = itemView.findViewById(R.id.divider);
 
         }
     }
