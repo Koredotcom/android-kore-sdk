@@ -276,4 +276,12 @@ public class DateUtils {
         return time;
     }
 
+    public static String getCorrectedTimeZone(String timeZone){
+        if(kore.botssdk.utils.StringUtils.isNullOrEmptyWithTrim(timeZone)) return "";
+        timeZone = timeZone.toLowerCase();
+        if(timeZone.contains("calcutta")){
+           timeZone =  timeZone.replace("calcutta","kolkata");
+        }
+        return timeZone;
+    }
 }
