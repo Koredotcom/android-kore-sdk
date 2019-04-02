@@ -2,11 +2,8 @@ package kore.botssdk.adapter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -15,56 +12,40 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.MeetingConfirmationModel;
-import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
@@ -74,19 +55,19 @@ import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 /**
- * Created by Ramachandra Pradeep on 02-Aug-18.
+ * Created by Ramachandra Pradeep on 01-Apr-19.
  */
 
-public class CalendarEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
+public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
     ArrayList<String> selectedIds = null;
 
-    public ArrayList<CalEventsTemplateModel> getEventList() {
+    public ArrayList<WCalEventsTemplateModel> getEventList() {
         return eventList;
     }
 
-    public void setEventList(ArrayList<CalEventsTemplateModel> eventList) {
+    public void setEventList(ArrayList<WCalEventsTemplateModel> eventList) {
         if (eventList != null) {
             this.eventList.clear();
             this.eventList.addAll(eventList);
@@ -95,11 +76,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         }
     }
 
-    ArrayList<CalEventsTemplateModel> eventList = new ArrayList<>();
+    ArrayList<WCalEventsTemplateModel> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
     private int EVENTS_LIST_LIMIT = 3;
     private String title = "SHOW MORE";
-    private EventSelectionListener eventSelectionListener;
+    private CalendarEventsAdapter.EventSelectionListener eventSelectionListener;
     private Context mContext;
 
 
@@ -134,7 +115,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
 
-    public CalendarEventsAdapter(Context mContext, String type, boolean isEnabled) {
+    public WCalEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
@@ -154,7 +135,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         selectedIds.clear();
     }
 
-    public CalEventsTemplateModel getItem(int position) {
+    public WCalEventsTemplateModel getItem(int position) {
         if (position < eventList.size())
             return eventList.get(position);
         else return null;
@@ -180,7 +161,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         } else
-            return new ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
+            return new CalendarEventsAdapter.ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
     }
 
 
@@ -205,15 +186,15 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
         } else {
 
-            ViewHolder holder = (ViewHolder) holderData;
-            final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
+            CalendarEventsAdapter.ViewHolder holder = (CalendarEventsAdapter.ViewHolder) holderData;
+            final WCalEventsTemplateModel model = (WCalEventsTemplateModel) eventList.get(position);
             //  holder.rowIndex.setText("" + (position + 1));
-            String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+            String date = DateUtils.calendar_event_list_format1.format(model.getData().getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
 
             if (selectedIds.size() > 0) {
                 holder.checkbox.setVisibility(VISIBLE);
-                holder.checkbox.setImageDrawable(selectedIds.contains(model.getEventId()) ? selectedCheck : unSelectedCheck);
+                holder.checkbox.setImageDrawable(selectedIds.contains(model.getData().getEventId()) ? selectedCheck : unSelectedCheck);
             } else {
                 holder.checkbox.setVisibility(GONE);
             }
@@ -221,17 +202,17 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             holder.txtTitle.setText(model.getTitle());
             // holder.txtPlace.setText(model.getWhere());
-            if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
-                holder.txtPlace.setText(model.getWhere());
+            if (!StringUtils.isNullOrEmptyWithTrim(model.getLocation())) {
+                holder.txtPlace.setText(model.getLocation());
                 holder.txtPlace.setVisibility(VISIBLE);
 
             } else {
                 holder.txtPlace.setVisibility(GONE);
 
             }
-            holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+            holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()));
 
-            holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
+            holder.tv_users.setText(getFormatedAttendiesFromList(model.getData().getAttendees()));
             if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
                 holder.txtDateTime.setVisibility(VISIBLE);
@@ -240,7 +221,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 holder.txtDateTime.setVisibility(GONE);
             }
 
-            holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
+            holder.sideBar.setBackgroundColor(Color.parseColor(model.getData().getColor()));
             if(position < getItemCount() -1){
                 holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : normalDivider);
             }
@@ -249,10 +230,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 @Override
                 public boolean onLongClick(View view) {
                     if (verticalListViewActionHelper != null && isFromWidget()) {
-                        if (selectedIds.contains(model.getEventId())) {
-                            selectedIds.remove(model.getEventId());
+                        if (selectedIds.contains(model.getData().getEventId())) {
+                            selectedIds.remove(model.getData().getEventId());
                         } else {
-                            selectedIds.add(model.getEventId());
+                            selectedIds.add(model.getData().getEventId());
 
                         }
                         verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
@@ -270,10 +251,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
                         if (selectedIds != null && selectedIds.size() > 0 && verticalListViewActionHelper != null) {
                             // multiple item can be selected after long press and single click on other items
-                            if (selectedIds.contains(model.getEventId())) {
-                                selectedIds.remove(model.getEventId());
+                            if (selectedIds.contains(model.getData().getEventId())) {
+                                selectedIds.remove(model.getData().getEventId());
                             } else {
-                                selectedIds.add(model.getEventId());
+                                selectedIds.add(model.getData().getEventId());
                             }
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
@@ -284,9 +265,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
                             widgetDialogModel.setTime(checkStringNull(holder.tv_time.getText() != null ? holder.tv_time.getText().toString().trim() : ""));
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
-                            widgetDialogModel.setColor(checkStringNull(model.getColor()));
+                            widgetDialogModel.setColor(checkStringNull(model.getData().getColor()));
 
-                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null);
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
 
                             dialogActivity.show();
 
@@ -311,26 +292,26 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
-                                    launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                    launchNativeView(model.getTitle(), (long) model.getData().getDuration().getStart());
                                 } else {
                                     gModel = model;
                                     AppPermissionsHelper.requestForPermission((Activity) mContext, Manifest.permission.READ_CALENDAR, CAL_PERMISSION_REQUEST);
                                 }
                             } else {
 
-                                launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
+                                launchNativeView(model.getTitle(), (long) model.getData().getDuration().getStart());
                             }
 
                         } catch (Exception e) {
 
-                            launchWebView(model.getHtmlLink());
+                            launchWebView(model.getData().getHtmlLink());
                         }
 
                     } else if (isEnabled) {
 
                         HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("meetingId", model.getEventId());
-                        String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                        hashMap.put("meetingId", model.getData().getEventId());
+                        String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getData().getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getData().getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getData().getDuration().getEnd());
                         if (composeFooterInterface != null) {
                             composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
                         } else {
@@ -369,6 +350,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
     @Override
     public void setData(ArrayList data) {
+
+    }
+
+    public void setCalData(ArrayList<WCalEventsTemplateModel> data) {
         this.eventList = data;
         if (eventList != null) {
             this.eventList = sortEventList(eventList);
@@ -377,16 +362,16 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
     }
 
-    public ArrayList<CalEventsTemplateModel> sortEventList(ArrayList<CalEventsTemplateModel> eventList) {
+    public ArrayList<WCalEventsTemplateModel> sortEventList(ArrayList<WCalEventsTemplateModel> eventList) {
 
-        ArrayList<CalEventsTemplateModel> newSortedData = new ArrayList<>();
-        LinkedHashMap<String, ArrayList<CalEventsTemplateModel>> list = new LinkedHashMap<>();
-        Collections.sort(eventList, new Comparator<CalEventsTemplateModel>() {
-            public int compare(CalEventsTemplateModel o1, CalEventsTemplateModel o2) {
+        ArrayList<WCalEventsTemplateModel> newSortedData = new ArrayList<>();
+        LinkedHashMap<String, ArrayList<WCalEventsTemplateModel>> list = new LinkedHashMap<>();
+        Collections.sort(eventList, new Comparator<WCalEventsTemplateModel>() {
+            public int compare(WCalEventsTemplateModel o1, WCalEventsTemplateModel o2) {
 
 //                DateFormat format = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
                 try {
-                    return new Double(o1.getDuration().getStart()).compareTo(new Double(o2.getDuration().getStart()));
+                    return new Double(o1.getData().getDuration().getStart()).compareTo(new Double(o2.getData().getDuration().getStart()));
                 } catch (Exception e) {
                     e.printStackTrace();
                     return 0;
@@ -395,11 +380,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             }
         });
-        for (CalEventsTemplateModel data : eventList) {
-            String date = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
-            ArrayList<CalEventsTemplateModel> sortmap = list.get(date);
+        for (WCalEventsTemplateModel data : eventList) {
+            String date = DateUtils.calendar_event_list_format1.format(data.getData().getDuration().getStart()).toUpperCase();
+            ArrayList<WCalEventsTemplateModel> sortmap = list.get(date);
             if (sortmap == null) {
-                ArrayList<CalEventsTemplateModel> temp = new ArrayList<>();
+                ArrayList<WCalEventsTemplateModel> temp = new ArrayList<>();
                 data.setShowDate(true);
                 temp.add(data);
                 list.put(date, temp);
@@ -431,7 +416,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         void onEventSelected(String url);
     }
 
-    public void setMoreSelectionListener(EventSelectionListener eventSelectionListener) {
+    public void setMoreSelectionListener(CalendarEventsAdapter.EventSelectionListener eventSelectionListener) {
         this.eventSelectionListener = eventSelectionListener;
     }
 
@@ -467,7 +452,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
 
-    private CalEventsTemplateModel gModel;
+    private WCalEventsTemplateModel gModel;
     private final int CAL_PERMISSION_REQUEST = 3221;
 
 
@@ -627,5 +612,4 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         return result;
 
     }
-
 }

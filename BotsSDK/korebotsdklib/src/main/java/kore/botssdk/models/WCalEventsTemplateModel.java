@@ -62,6 +62,16 @@ public class WCalEventsTemplateModel {
     private List<WCalEventsTemplateModel.Action> actions = null;
     private CalenderEventData data;
 
+    public boolean isShowDate() {
+        return showDate;
+    }
+
+    public void setShowDate(boolean showDate) {
+        this.showDate = showDate;
+    }
+
+    private boolean showDate;
+
 
     public class Action {
         private String type;

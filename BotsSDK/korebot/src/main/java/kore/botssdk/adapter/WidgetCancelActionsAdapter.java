@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.WCalEventsTemplateModel;
 
 import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
@@ -30,10 +31,10 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCancelActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetDialogActivity widgetDialogActivity;
-    List<CalEventsTemplateModel.Action> actionList;
-    CalEventsTemplateModel model;
+    List<WCalEventsTemplateModel.Action> actionList;
+    WCalEventsTemplateModel model;
 
-    public WidgetCancelActionsAdapter(WidgetDialogActivity widgetDialogActivity, CalEventsTemplateModel model) {
+    public WidgetCancelActionsAdapter(WidgetDialogActivity widgetDialogActivity, WCalEventsTemplateModel model) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.actionList = model.getActions();
@@ -57,7 +58,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
             @Override
             public void onClick(View view) {
                 HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("meetingId", model.getEventId());
+                hashMap.put("meetingId", model.getData().getEventId());
                     KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
                     (widgetDialogActivity).dismiss();
 

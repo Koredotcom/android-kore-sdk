@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetCancelActionsAdapter;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 
 
@@ -39,7 +40,7 @@ public class WidgetDialogActivity extends Dialog {
     View sideBar;
 
     RecyclerView recycler_actions;
-    CalEventsTemplateModel model;
+    WCalEventsTemplateModel model;
     Context mContext;
 
 
@@ -51,7 +52,7 @@ public class WidgetDialogActivity extends Dialog {
 
 
 
-    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, CalEventsTemplateModel model) {
+    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, WCalEventsTemplateModel model) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
