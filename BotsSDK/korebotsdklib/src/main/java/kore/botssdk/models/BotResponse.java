@@ -49,7 +49,7 @@ public class BotResponse extends BaseBotMessage {
 
     //widgets
     public static final String TEMPLATE_TYPE_FILES_LOOKUP_WIDGET = "files_search_carousel_widget";
-
+    public static final String TEMPLATE_TASK_FULLVIEW_WIDGET = "task_list_full_preview_widget";
 
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
 

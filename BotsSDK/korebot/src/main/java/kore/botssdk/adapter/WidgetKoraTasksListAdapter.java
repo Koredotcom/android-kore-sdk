@@ -39,7 +39,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private int DATA_FOUND = 1;
     private int NO_DATA = 0;
     private String nodata_meesage = "";
-
+    int preview_length;
     public String getNodata_meesage() {
         return nodata_meesage;
     }
@@ -220,7 +220,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public int getItemCount() {
-        return models != null && models.size() > 0 ? (!isExpanded && models.size() > 3 ? 3 : models.size()) : 1;
+        return models != null && models.size() > 0 ? (!isExpanded && models.size() > preview_length ? preview_length : models.size()) : 1;
     }
 
 
@@ -258,6 +258,10 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     public void setTaskTemplateResponse(WidgetTaskTemplateResponse taskTemplateResponse) {
         this.taskTemplateResponse = taskTemplateResponse;
+    }
+
+    public void setPreviewLength(int preview_length) {
+        this.preview_length=preview_length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
