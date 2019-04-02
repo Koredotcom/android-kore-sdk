@@ -17,15 +17,18 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
+import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
+import kore.botssdk.models.WTaskTemplateModel;
+import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
-public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
+public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private final Drawable selectedCheck;
     private final Drawable unSelectedCheck;
     private Context context;
@@ -56,7 +59,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         this.from_widget = from_widget;
     }
 
-    public void addTaskTemplateModels(ArrayList<TaskTemplateModel> models) {
+    public void addTaskTemplateModels(ArrayList<WTaskTemplateModel> models) {
         this.models.addAll(models);
     }
 
@@ -98,11 +101,11 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         this.showButton = showButton;
     }
 
-    private TaskTemplateResponse taskTemplateResponse;
+    private WidgetTaskTemplateResponse taskTemplateResponse;
     private boolean showButton;
-    private ArrayList<TaskTemplateModel> models;
+    private ArrayList<WTaskTemplateModel> models;
 
-    public TasksListAdapter(Context context, TaskTemplateResponse taskTemplateResponse, boolean showButtons) {
+    public WidgetKoraTasksListAdapter(Context context, WidgetTaskTemplateResponse taskTemplateResponse, boolean showButtons) {
         this.context = context;
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
@@ -119,7 +122,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
             View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         } else {
-            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.task_view_layout, parent, false));
+            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.widget_task_view_layout, parent, false));
 
         }
     }
@@ -134,10 +137,10 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         if (viewHoldermain.getItemViewType() == DATA_FOUND) {
 
             ViewHolder holder = (ViewHolder) viewHoldermain;
-            TaskTemplateModel taskTemplateModel = models.get(position);
-            holder.taskViewLayoutBinding.setTask(taskTemplateModel);
+            WTaskTemplateModel taskTemplateModel = models.get(position);
+            holder.taskViewLayoutBinding.setWidgetTask(taskTemplateModel);
             boolean isSelected = selectedTasks.contains(taskTemplateModel.getId()) && isShowButton();
-            boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getStatus());
+            boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getData().getStatus());
             holder.taskViewLayoutBinding.getRoot().setSelected(isSelected);
             holder.taskViewLayoutBinding.getRoot().setEnabled(!isClosed && isShowButton());
             holder.taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : holder.taskViewLayoutBinding.titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
@@ -152,7 +155,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                 @Override
                 public void onClick(View v) {
                     if (!isFrom_widget()) {
-                        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus()) && selectedTasks.size() > 0) {
+                        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus()) && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
                         }
                     } else {
@@ -160,7 +163,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
                         } else {
-                /*            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
+                            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
                             dialogActivity.show();
 
@@ -177,7 +180,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                                     }, 400);
 
                                 }
-                            });*/
+                            });
 
                         }
                     }
@@ -198,13 +201,13 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) viewHoldermain;
 
             emptyHolder.tv_disrcription.setText(getNodata_meesage());
-            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, kore.botssdk.R.drawable.no_meeting));
+            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
         }
     }
 
-    private void updateThings(TaskTemplateModel taskTemplateModel) {
+    private void updateThings(WTaskTemplateModel taskTemplateModel) {
         if (verticalListViewActionHelper != null) {
-            if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus())) {
+            if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus())) {
                 addOrRemoveSelectedTask(taskTemplateModel.getId());
                 SelectionUtils.setSelectedTasks(selectedTasks);
                 if (verticalListViewActionHelper != null)
@@ -249,18 +252,18 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
-    public TaskTemplateResponse getTaskTemplateResponse() {
+    public WidgetTaskTemplateResponse getTaskTemplateResponse() {
         return taskTemplateResponse;
     }
 
-    public void setTaskTemplateResponse(TaskTemplateResponse taskTemplateResponse) {
+    public void setTaskTemplateResponse(WidgetTaskTemplateResponse taskTemplateResponse) {
         this.taskTemplateResponse = taskTemplateResponse;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TaskViewLayoutBinding taskViewLayoutBinding;
+        WidgetTaskViewLayoutBinding taskViewLayoutBinding;
 
-        public ViewHolder(@NonNull TaskViewLayoutBinding binding) {
+        public ViewHolder(@NonNull WidgetTaskViewLayoutBinding binding) {
             super(binding.getRoot());
             this.taskViewLayoutBinding = binding;
         }

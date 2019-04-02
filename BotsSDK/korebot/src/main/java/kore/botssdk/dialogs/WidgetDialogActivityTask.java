@@ -27,25 +27,26 @@ import kore.botssdk.adapter.WidgetSelectActionsAdapter;
 import kore.botssdk.databinding.WidgetFilesItemSelectionDialogBinding;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 
 
 public class WidgetDialogActivityTask extends Dialog {
 
     private ImageView img_cancel;
-    TaskTemplateModel widgetDialogModel;
+    WTaskTemplateModel widgetDialogModel;
     ImageView checkbox;
 
     RecyclerView recycler_actions;
     Context mContext;
-    TaskTemplateModel model;
+    WTaskTemplateModel model;
 
 
     /* public WidgetDialogActivity(@NonNull Context context) {
          super(context);
      }
  */
-    public WidgetDialogActivityTask(Context mContext, TaskTemplateModel widgetDialogModel, TaskTemplateModel model) {
+    public WidgetDialogActivityTask(Context mContext, WTaskTemplateModel widgetDialogModel, WTaskTemplateModel model) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;

@@ -6,7 +6,7 @@
 
         <variable
             name="task_data"
-            type="kore.botssdk.models.TaskTemplateModel" />
+            type="kore.botssdk.models.WTaskTemplateModel" />
 
 
     </data>
@@ -74,8 +74,8 @@
                 android:paddingStart="@dimen/dimen_12dp"
                 android:orientation="vertical">
 
-                <include layout="@layout/task_view_layout"
-                    app:task="@{task_data}"/>
+                <include layout="@layout/widget_task_view_layout"
+                    app:widgetTask="@{task_data}"/>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

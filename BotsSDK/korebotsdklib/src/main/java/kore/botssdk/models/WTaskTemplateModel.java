@@ -1,5 +1,6 @@
 package kore.botssdk.models;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -54,5 +55,7 @@ public class WTaskTemplateModel {
     private TaskTemplateData data;
     private List<CalEventsTemplateModel.Action> actions = null;
 
-
+    public boolean isOverDue(){
+        return  "open".equalsIgnoreCase(getData().getStatus()) && Calendar.getInstance().getTimeInMillis() > getData().getDueDate();
+    }
 }

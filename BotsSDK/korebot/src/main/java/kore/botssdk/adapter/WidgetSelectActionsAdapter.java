@@ -20,14 +20,15 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.WTaskTemplateModel;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetDialogActivityTask widgetDialogActivity;
     List<CalEventsTemplateModel.Action> actionList;
-    TaskTemplateModel model;
+    WTaskTemplateModel model;
 
-    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, TaskTemplateModel model) {
+    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, WTaskTemplateModel model) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.actionList = model.getActions();
