@@ -38,7 +38,15 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     private boolean from_widget = false;
     private int NO_DATA = 0;
     private int DATA_FOUND = 1;
+    public int getPreviewlength() {
+        return previewlength;
+    }
 
+    public void setPreviewlength(int previewlength) {
+        this.previewlength = previewlength;
+    }
+
+    int previewlength;
 
     public boolean isFrom_widget() {
         return from_widget;
@@ -102,7 +110,7 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
 
     @Override
     public int getItemCount() {
-        return kaFileLookupModels != null && kaFileLookupModels.size() > 0 ? (!isExpanded && kaFileLookupModels.size() > 3 ? 3 : kaFileLookupModels.size()) : 1;
+        return kaFileLookupModels != null && kaFileLookupModels.size() > 0 ? (!isExpanded && kaFileLookupModels.size() > previewlength ? previewlength : kaFileLookupModels.size()) : 1;
     }
 
     public boolean isExpanded() {
