@@ -26,7 +26,7 @@
         android:gravity="center"
         android:layout_marginTop="16dp"
         android:layout_below="@+id/icon"
-        android:text="Long tap on a widget and move it across to reorder the list."
+        android:text="Long tap on and drag to reorder the widget"
         android:textColor="@color/color_167_169_190"
         android:textSize="14sp" />
 

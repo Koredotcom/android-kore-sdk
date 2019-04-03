@@ -415,7 +415,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     }
 
-    public void setMulticationData(List<MultiAction> multiActions) {
+    public void setMultiActions(List<MultiAction> multiActions) {
       this.multiActions=multiActions;
     }
 
