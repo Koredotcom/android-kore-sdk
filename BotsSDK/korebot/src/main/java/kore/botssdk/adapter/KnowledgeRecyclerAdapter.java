@@ -44,6 +44,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
     private int EMPTY_CARD_FLAG = 0;
+
     private int DATA_CARD_FLAG = 1;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
@@ -71,7 +72,9 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderdata, int position) {
         if (holderdata instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) holderdata;
-            holder.followers_count.setText(knowledgeDetailModels.get(position).getnFollows()+"");
+
+
+            //holder.followers_count.setText(knowledgeDetailModels.get(position).getnFollows()+"");
             holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
             holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -136,6 +139,8 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         knowledgeDetailModels = data;
 
     }
+
+
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,7 +1,7 @@
 <layout>
 
     <data>
-
+        <import type="kore.botssdk.utils.DateUtils" />
         <variable
             name="fileModel"
             type="kore.botssdk.models.WFileLookUpModel" />
@@ -71,7 +71,7 @@
             android:paddingEnd="10dp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:text="@{fileModel.data.modifiedTime}"
+            android:text="@{DateUtils.getFilesDateSturcture(fileModel.data.modifiedTime)}"
             android:textColor="#a3b0be"
             android:textSize="13sp" />
 

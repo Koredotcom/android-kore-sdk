@@ -87,7 +87,6 @@
             android:layout_marginTop="18dp"
             android:paddingEnd="@dimen/dimen_12dp"
             android:paddingStart="10dp"
-            android:visibility="@{knowledge.getnShares() > 0 ? View.VISIBLE :View.GONE}"
             android:gravity="center_vertical">
 
             <TextView
@@ -99,6 +98,8 @@
                 android:drawableStart="@drawable/ic_views"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
+                android:visibility="@{knowledge.NViews > 0 ? View.VISIBLE :View.GONE}"
+
                 android:text="@{String.valueOf(knowledge.NViews)}"
                 android:textSize="15sp" />
 
@@ -112,6 +113,8 @@
                 android:layout_marginStart="37dp"
                 android:gravity="center_vertical"
                 android:layout_toEndOf="@+id/eye_count"
+                android:visibility="@{knowledge.NComments > 0 ? View.VISIBLE :View.GONE}"
+
                 android:text="@{String.valueOf(knowledge.NComments)}"
                 android:textSize="15sp" />
 
@@ -121,11 +124,12 @@
                 android:id="@+id/followers_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:drawableStart="@drawable/ic_followers"
                 android:drawablePadding="7dp"
                 android:layout_marginStart="37dp"
                 android:gravity="center_vertical"
+                android:visibility="@{knowledge.NFollows > 0 ? View.VISIBLE :View.GONE}"
+                android:text="@{String.valueOf(knowledge.NFollows)}"
                 android:layout_toEndOf="@+id/chat_count"
 
                 android:textSize="15sp" />
@@ -139,6 +143,8 @@
                 android:drawableStart="@drawable/ic_yes"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
+                android:visibility="@{knowledge.NLikes > 0 ? View.VISIBLE :View.GONE}"
+
                 android:text="@{Integer.toString(knowledge.NLikes)}"
                 android:textSize="15sp" />
         </RelativeLayout>

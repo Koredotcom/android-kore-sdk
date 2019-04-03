@@ -237,11 +237,11 @@ public class KnowledgeDetailModel  {
 
     private ArrayList<CommentModel> comments;
 
-    public int getnFollows() {
+    public int getNFollows() {
         return nFollows;
     }
 
-    public void setnFollows(int nFollows) {
+    public void setNFollows(int nFollows) {
         this.nFollows = nFollows;
     }
 

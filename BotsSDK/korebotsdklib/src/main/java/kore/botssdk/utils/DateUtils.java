@@ -43,7 +43,7 @@ public class DateUtils {
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
     public static String getTimeStamp(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
-        if(timeStamp == null || timeStamp.isEmpty())return "";
+        if (timeStamp == null || timeStamp.isEmpty()) return "";
         long timeStampMillis = isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
         return getTimeStamp(timeStampMillis);
     }
@@ -56,6 +56,7 @@ public class DateUtils {
     public static String getTimeInAmPm(long dateInMs) {
         return dateTime.format(new Date(dateInMs));
     }
+
     /**
      * Just now
      * Today, JUN 08
@@ -65,12 +66,12 @@ public class DateUtils {
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
 
         // OVERRIDE SOME symbols WHILE RETAINING OTHERS
-         symbols.setAmPmStrings(new String[]{"am", "pm"});
+        symbols.setAmPmStrings(new String[]{"am", "pm"});
         int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
         int currentYear = Integer.parseInt(yearFormat.format(new Date()));
         String time = "";
 
-        if (android.text.format.DateUtils.isToday(lastModified)){
+        if (android.text.format.DateUtils.isToday(lastModified)) {
             time = "Today";
         } else if (isYesterday(lastModified)) {
             time = "Yesterday";
@@ -113,33 +114,45 @@ public class DateUtils {
 
         return time;
     }
-    public static String getDate(long lastModified){
-       return dateWeekMsg.format(new Date(lastModified));
+
+    public static String getDate(long lastModified) {
+        return dateWeekMsg.format(new Date(lastModified));
     }
 
-    public static String getDateWithTime(long lastModified){
-       return dateWeekMsgTime.format(lastModified);
+    public static String getDateWithTime(long lastModified) {
+        return dateWeekMsgTime.format(lastModified);
+    }
+
+    public static String getFilesDateSturcture(String lastModified) {
+        try {
+            return "Last Edited " + getDateFromString(lastModified);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return lastModified;
+        }
     }
 
     public static boolean isYesterday(long millis) {
         return android.text.format.DateUtils.isToday(millis + android.text.format.DateUtils.DAY_IN_MILLIS);
     }
+
     public static boolean isTomorrow(long millis) {
-        return  android.text.format.DateUtils.isToday(millis - android.text.format.DateUtils.DAY_IN_MILLIS);
+        return android.text.format.DateUtils.isToday(millis - android.text.format.DateUtils.DAY_IN_MILLIS);
     }
-    public static String getDateFromString(String time){
-        if(time  == null || time.isEmpty()) return "";
+
+    public static String getDateFromString(String time) {
+        if (time == null || time.isEmpty()) return "";
         try {
             Date date = DateUtils.isoFormatter.parse(time);
             return calendar_list_format.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return "";
+        return time;
     }
 
-    public static String getDateFromStringByDate(String time){
-        if(time  == null || time.isEmpty()) return "";
+    public static String getDateFromStringByDate(String time) {
+        if (time == null || time.isEmpty()) return "";
         try {
             long lastModified = new Date(time).getTime();
             if (android.text.format.DateUtils.isToday(lastModified)) {
@@ -226,11 +239,12 @@ public class DateUtils {
 
         return lastModifiedYr == currentYr;
     }
-    public static  String getDateinDayFormat(long dateInMs){
+
+    public static String getDateinDayFormat(long dateInMs) {
         return dateFormatDay.format(new Date(dateInMs));
     }
 
-    public static  String getDateinMeetingFormat(long dateInMs){
+    public static String getDateinMeetingFormat(long dateInMs) {
         return dateFormatDay_meeting.format(new Date(dateInMs));
     }
 
@@ -239,7 +253,7 @@ public class DateUtils {
      * Just now
      * Today, JUN 08
      */
-    public static String formattedSentDateV8(long lastModified,boolean isDetailView) {
+    public static String formattedSentDateV8(long lastModified, boolean isDetailView) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
 
@@ -251,17 +265,17 @@ public class DateUtils {
 
         String time = "";
 
-        if(isDetailView) {
+        if (isDetailView) {
             if (android.text.format.DateUtils.isToday(lastModified)) {
                 time = "Today at " + dateTime1.format(new Date(lastModified));
             } else if (isYesterday(lastModified)) {
                 time = "Yesterday, " + dateTime1.format(new Date(lastModified));
             } else if (isTomorrow(lastModified)) {
                 time = "Tomorrow, " + dateTime1.format(new Date(lastModified));
-            }else{
+            } else {
                 time = dateWeekDayTime.format(new Date(lastModified));
             }
-        }else{
+        } else {
 
             if (android.text.format.DateUtils.isToday(lastModified)) {
                 time = "Today, " + dateMonthDay.format(new Date(lastModified));
@@ -276,11 +290,11 @@ public class DateUtils {
         return time;
     }
 
-    public static String getCorrectedTimeZone(String timeZone){
-        if(kore.botssdk.utils.StringUtils.isNullOrEmptyWithTrim(timeZone)) return "";
+    public static String getCorrectedTimeZone(String timeZone) {
+        if (kore.botssdk.utils.StringUtils.isNullOrEmptyWithTrim(timeZone)) return "";
         timeZone = timeZone.toLowerCase();
-        if(timeZone.contains("calcutta")){
-           timeZone =  timeZone.replace("calcutta","kolkata");
+        if (timeZone.contains("calcutta")) {
+            timeZone = timeZone.replace("calcutta", "kolkata");
         }
         return timeZone;
     }
