@@ -271,7 +271,7 @@ public final class SocketWrapper{
         this.botInfoModel = botInfoModel;
         this.botUserId = botUserId;
         this.auth = auth;
-        Log.d("IKIDO","Hey Initiating Socket");
+//        Log.d("IKIDO","Hey Initiating Socket");
         try {
             connectToSocket(url,false);
         } catch (URISyntaxException e) {

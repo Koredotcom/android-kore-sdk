@@ -21,6 +21,7 @@ import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.models.WTaskTemplateModel;
@@ -105,10 +106,21 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private boolean showButton;
     private ArrayList<WTaskTemplateModel> models;
 
-    public WidgetKoraTasksListAdapter(Context context, WidgetTaskTemplateResponse taskTemplateResponse, boolean showButtons) {
+    public ArrayList<MultiAction> getMultiActions() {
+        return multiActions;
+    }
+
+    public void setMultiActions(ArrayList<MultiAction> multiActions) {
+        this.multiActions = multiActions;
+    }
+
+    private ArrayList<MultiAction> multiActions;
+
+    public WidgetKoraTasksListAdapter(Context context, WidgetTaskTemplateResponse taskTemplateResponse,ArrayList<MultiAction> multiActions, boolean showButtons) {
         this.context = context;
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
+        this.multiActions = multiActions;
         this.models = taskTemplateResponse.getTaskData();
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
