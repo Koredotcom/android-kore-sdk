@@ -42,10 +42,12 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
@@ -113,7 +115,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
     }
-
+    List<MultiAction> multiActions;
 
     public WCalEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
@@ -236,6 +238,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             selectedIds.add(model.getData().getEventId());
 
                         }
+
                         verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                         notifyDataSetChanged();
                         return true;
@@ -410,6 +413,14 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
         this.verticalListViewActionHelper = verticalListViewActionHelper;
 
+    }
+
+    public void setMulticationData(List<MultiAction> multiActions) {
+      this.multiActions=multiActions;
+    }
+
+    public List<MultiAction> getMultiActions() {
+        return multiActions;
     }
 
     public interface EventSelectionListener {
