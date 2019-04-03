@@ -79,7 +79,9 @@ public class WidgetDialogActivityTask extends Dialog {
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(WidgetDialogActivityTask.this, model);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager.setReverseLayout(true);
         recycler_actions.setLayoutManager(layoutManager);
+
         recycler_actions.setAdapter(adapter);
 
         Animation bottomUp = AnimationUtils.loadAnimation(getContext(),

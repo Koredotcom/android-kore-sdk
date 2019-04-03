@@ -84,6 +84,7 @@ public class WidgetDialogActivity extends Dialog {
         WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, model);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        layoutManager.setReverseLayout(true);
         recycler_actions.setLayoutManager(layoutManager);
         recycler_actions.setAdapter(adapter);
 
