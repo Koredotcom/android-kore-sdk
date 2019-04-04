@@ -63,7 +63,7 @@ public class UploadExecutor implements Runnable{
 //            else
                 FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
-            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             HttpsURLConnection httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
             httpsURLConnection.setRequestMethod("POST");

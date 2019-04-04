@@ -1,3 +1,4 @@
+/*
 package com.kore.korefileuploadsdk.ssl;
 
 import android.content.Context;
@@ -16,9 +17,11 @@ import java.security.cert.CertificateFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+*/
 /**
  * Created by Naval on 24-Aug-15.
- */
+ *//*
+
 public class SSLHelper {
 
     public static String certificateType = "X.509";
@@ -113,3 +116,4 @@ public class SSLHelper {
         }
     }
 }
+*/

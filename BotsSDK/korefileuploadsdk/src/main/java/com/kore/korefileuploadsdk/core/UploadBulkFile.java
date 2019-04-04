@@ -374,7 +374,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //				else
 					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context,host + String.format(FileUploadEndPoints.MERGE_END_POINT, userOrTeamId,fileToken));
 
-				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
 				httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
 				httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
 				httpsURLConnection.setUseCaches(false);

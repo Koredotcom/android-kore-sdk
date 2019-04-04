@@ -16,14 +16,11 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
-import kore.botssdk.databinding.TaskViewLayoutBinding;
 import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.TaskTemplateModel;
-import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
@@ -36,7 +33,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private float maxWidth;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
-
+    private boolean isFromFullView;
     private int DATA_FOUND = 1;
     private int NO_DATA = 0;
     private String nodata_meesage = "";
@@ -116,7 +113,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     private ArrayList<MultiAction> multiActions;
 
-    public WidgetKoraTasksListAdapter(Context context, WidgetTaskTemplateResponse taskTemplateResponse,ArrayList<MultiAction> multiActions, boolean showButtons) {
+    public WidgetKoraTasksListAdapter(Context context, WidgetTaskTemplateResponse taskTemplateResponse,ArrayList<MultiAction> multiActions, boolean showButtons, boolean isFromFullView) {
         this.context = context;
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
@@ -124,6 +121,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         this.models = taskTemplateResponse.getTaskData();
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
+        this.isFromFullView = isFromFullView;
     }
 
     @NonNull
@@ -174,7 +172,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
-                        } else {
+                        } else if(!isFromFullView) {
                             WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
                             dialogActivity.show();

@@ -44,12 +44,12 @@ public class KoreHttpsUrlConnectionBuilder {
 
     }
 
-    public void pinKoreCertificateToConnection(){
+    /*public void pinKoreCertificateToConnection(){
         if(uri.contains("kore.com") && httpsURLConnection != null) {
             SSLContext context = SSLHelper.getSSLContextWithCertificate(mContext, uri);
             httpsURLConnection.setSSLSocketFactory(context.getSocketFactory());
         }
-    }
+    }*/
 
     public HttpsURLConnection getHttpsURLConnection(){
         return httpsURLConnection;
@@ -60,7 +60,7 @@ public class KoreHttpsUrlConnectionBuilder {
      * An {@link javax.net.ssl.SSLSocket} that doesn't allow {@code SSLv3} only connections
      * <p>fixes https://github.com/koush/ion/issues/386</p>
      */
-    private static class NoSSLv3SSLSocket extends DelegateSSLSocket {
+    /*private static class NoSSLv3SSLSocket extends DelegateSSLSocket {
 
         private NoSSLv3SSLSocket(SSLSocket delegate) {
             super(delegate);
@@ -95,12 +95,12 @@ public class KoreHttpsUrlConnectionBuilder {
             }
             super.setEnabledProtocols(protocols);
         }
-    }
+    }*/
 
     /**
      * {@link javax.net.ssl.SSLSocketFactory} that doesn't allow {@code SSLv3} only connections
      */
-    private static class NoSSLv3Factory extends SSLSocketFactory {
+    /*private static class NoSSLv3Factory extends SSLSocketFactory {
         private final SSLSocketFactory delegate;
 
         private NoSSLv3Factory(SSLSocketFactory delegate) {
@@ -148,5 +148,5 @@ public class KoreHttpsUrlConnectionBuilder {
         public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
             return makeSocketSafe(delegate.createSocket(address, port, localAddress, localPort));
         }
-    }
+    }*/
 }

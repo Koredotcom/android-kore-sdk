@@ -63,6 +63,15 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
+
+    public ArrayList<String> getSelectedIds() {
+        return selectedIds;
+    }
+
+    public void setSelectedIds(ArrayList<String> selectedIds) {
+        this.selectedIds = selectedIds;
+    }
+
     ArrayList<String> selectedIds = null;
 
     public ArrayList<WCalEventsTemplateModel> getEventList() {
@@ -118,11 +127,14 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     List<MultiAction> multiActions;
     int preview_length;
-    public WCalEventsAdapter(Context mContext, String type, boolean isEnabled) {
+    private boolean isFromFullView;
+
+    public WCalEventsAdapter(Context mContext, String type, boolean isEnabled,boolean isFromFullView) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
         this.isEnabled = isEnabled;
+        this.isFromFullView = isFromFullView;
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
@@ -263,7 +275,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
 
-                        } else {
+                        } else if(!isFromFullView){
                             WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
                             widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
                             widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));

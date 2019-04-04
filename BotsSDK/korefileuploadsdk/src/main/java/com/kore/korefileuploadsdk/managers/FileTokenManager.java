@@ -84,7 +84,7 @@ public class FileTokenManager{
 
             // Send POST data request
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(_mContext, Url);
-            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             conn = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             conn.setDoOutput(true);
             if (header != null) conn.addRequestProperty("Authorization", "bearer " + header);
