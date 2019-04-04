@@ -110,13 +110,14 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     private Drawable selectedCheck;
     private Drawable unSelectedCheck;
 
-    private Drawable insetDivider,normalDivider;
+    private Drawable insetDivider, normalDivider;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
     }
-    List<MultiAction> multiActions;
 
+    List<MultiAction> multiActions;
+    int preview_length;
     public WCalEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
@@ -191,7 +192,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             CalendarEventsAdapter.ViewHolder holder = (CalendarEventsAdapter.ViewHolder) holderData;
             final WCalEventsTemplateModel model = (WCalEventsTemplateModel) eventList.get(position);
             //  holder.rowIndex.setText("" + (position + 1));
-            String date = DateUtils.calendar_event_list_format1.format(model.getData().getDuration().getStart()).toUpperCase();
+            String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
 
             if (selectedIds.size() > 0) {
@@ -224,8 +225,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             }
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getData().getColor()));
-            if(position < getItemCount() -1){
-                holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : normalDivider);
+            if (position < getItemCount() - 1) {
+                holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }
 
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -273,7 +274,6 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
 
                             dialogActivity.show();
-
 
 
                             dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
@@ -334,7 +334,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public int getItemCount() {
-        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 1;
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > preview_length ? preview_length : eventList.size()) : 1;
     }
 
 
@@ -416,11 +416,15 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     public void setMultiActions(List<MultiAction> multiActions) {
-      this.multiActions=multiActions;
+        this.multiActions = multiActions;
     }
 
     public List<MultiAction> getMultiActions() {
         return multiActions;
+    }
+
+    public void setPreviewLength(int preview_length) {
+        this.preview_length=preview_length;
     }
 
     public interface EventSelectionListener {

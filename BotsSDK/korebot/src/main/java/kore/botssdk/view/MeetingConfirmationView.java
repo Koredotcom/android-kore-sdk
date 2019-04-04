@@ -142,7 +142,12 @@ public class MeetingConfirmationView extends ViewGroup {
                 String startTime = getTimeInAmPm(meetingConfirmationModel.getSlot_start()).toUpperCase();
                 String endTime = getTimeInAmPm(meetingConfirmationModel.getSlot_end()).toUpperCase();
                 //  dateView.setText(MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(meetingConfirmationModel.getDate()), startTime, endTime));
-                dateView.setText(MessageFormat.format("{0}", DateUtils.getDateinMeetingFormat(meetingConfirmationModel.getDate()).toUpperCase()));
+                //dateView.setText(MessageFormat.format("{0}", DateUtils.getDateinMeetingFormat(meetingConfirmationModel.getDate()).toUpperCase()));
+
+                String date = DateUtils.getDay(meetingConfirmationModel.getDate()).toUpperCase();
+                dateView.setText(date);
+
+
                 tv_time.setText(startTime + "\n" + endTime);
                 dateView.setVisibility(VISIBLE);
                 tv_time.setVisibility(VISIBLE);

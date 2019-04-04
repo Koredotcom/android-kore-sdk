@@ -38,7 +38,7 @@ public class DateUtils {
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
-    public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, h:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, hh:mm a", Locale.ENGLISH);
 
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
@@ -72,8 +72,6 @@ public class DateUtils {
         String time = "";
 
         if (android.text.format.DateUtils.isToday(lastModified)) {
-            time = "Today";
-        } else if (isYesterday(lastModified)) {
             time = "Yesterday";
         } else if (isTomorrow(lastModified)) {
             time = "Tomorrow";
@@ -120,11 +118,43 @@ public class DateUtils {
     }
 
     public static String getDateWithTime(long lastModified) {
-        return dateWeekMsgTime.format(lastModified);
+
+        String date= dateWeekMsgTime.format(lastModified);
+
+        if (android.text.format.DateUtils.isToday(lastModified)) {
+            date = "Today " +getTimeInAmPm(lastModified);
+        } else if (isYesterday(lastModified)) {
+            date = "Yesterday " +getTimeInAmPm(lastModified);
+        } else if (isTomorrow(lastModified)) {
+            date = "Tomorrow " +getTimeInAmPm(lastModified);
+        }
+        return date;
+    }
+
+    public static String getDay(long mdate) {
+    String date=    DateUtils.calendar_event_list_format1.format(mdate);
+
+        if (android.text.format.DateUtils.isToday(mdate)) {
+            date = "Today";
+        } else if (isYesterday(mdate)) {
+            date = "Yesterday";
+        } else if (isTomorrow(mdate)) {
+            date = "Tomorrow";
+        }
+        return date;
     }
 
     public static String getFilesDateSturcture(String lastModified) {
         try {
+
+            long date = new Date(getDateFromString(lastModified)).getTime();
+            if (android.text.format.DateUtils.isToday(date)) {
+                return "Last Edited Today";
+            } else if (isYesterday(date)) {
+                return "Last Edited Yesterday";
+            }
+
+
             return "Last Edited " + getDateFromString(lastModified);
         } catch (Exception e) {
             e.printStackTrace();

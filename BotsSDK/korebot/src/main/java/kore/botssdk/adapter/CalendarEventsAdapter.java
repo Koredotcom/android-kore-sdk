@@ -208,7 +208,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             ViewHolder holder = (ViewHolder) holderData;
             final CalEventsTemplateModel model = (CalEventsTemplateModel) eventList.get(position);
             //  holder.rowIndex.setText("" + (position + 1));
-            String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+           /* String date = DateUtils.calendar_event_list_format1.format(model.getDuration().getStart()).toUpperCase();
+            holder.txtDateTime.setText(date);*/
+
+            String date = DateUtils.getDay((long) model.getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
 
             if (selectedIds.size() > 0) {

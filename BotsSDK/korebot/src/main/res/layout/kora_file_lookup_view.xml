@@ -56,6 +56,9 @@
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:text="@{fileModel.getSharedByDetails()}"
+            android:visibility='@{fileModel.getSharedByDetails() == null || fileModel.getSharedByDetails.trim().equals("") ? View.GONE : View.VISIBLE}'
+
+
             android:textColor="#a3b0be"
             android:textSize="13sp" />
 
@@ -64,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/sharedBy"
             android:layout_alignStart="@+id/sharedBy"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/image"
             android:fontFamily="sans-serif-medium"
             android:id="@+id/last_edited"

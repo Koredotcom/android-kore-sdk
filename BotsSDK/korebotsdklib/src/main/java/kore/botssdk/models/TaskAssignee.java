@@ -1,5 +1,9 @@
 package kore.botssdk.models;
 
+import org.apache.commons.lang3.StringUtils;
+
+import kore.botssdk.utils.Utils;
+
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
@@ -40,7 +44,16 @@ public class TaskAssignee {
     public String getFN() {
         return fN;
     }
+    public String getNameInFirstNameFormat(){
+        if(!Utils.isNullOrEmpty(fN) && !Utils.isNullOrEmpty(lN)){
 
+            return StringUtils.capitalize( fN+ " "+ lN.charAt(0));
+        }else if(!Utils.isNullOrEmpty(fN)){
+            return StringUtils.capitalize(fN);
+        }else{
+            return StringUtils.capitalize(lN);
+        }
+    }
     public void setFN(String fN) {
         this.fN = fN;
     }
