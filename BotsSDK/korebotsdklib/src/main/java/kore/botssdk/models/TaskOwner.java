@@ -38,11 +38,11 @@ public class TaskOwner {
         this.name = name;
     }
 
-    public String getfN() {
+    public String getFN() {
         return fN;
     }
 
-    public void setfN(String fN) {
+    public void setFN(String fN) {
         this.fN = fN;
     }
 

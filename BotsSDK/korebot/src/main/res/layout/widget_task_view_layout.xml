@@ -87,7 +87,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:tag="medium"
-            android:text="@{widgetTask.data.owner.name}"
+            android:text="@{widgetTask.data.owner.FN}"
             android:textColor="@color/color_485260"
             android:textSize="13dp" />
 
@@ -103,7 +103,7 @@
             android:gravity="center|start"
             android:singleLine="true"
             android:tag="medium"
-            android:text="@{widgetTask.data.assignee.name}"
+            android:text="@{widgetTask.data.assignee.FN}"
             android:textColor="@color/color_485260"
             android:textSize="13dp" />
 
