@@ -57,8 +57,10 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         holder.tv_actions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("meetingId", model.getData().getEventId());
+                HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
+                ArrayList<String> list = new ArrayList<>(1);
+                list.add(model.getData().getEventId());
+                hashMap.put("ids", list);
                     KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
                     (widgetDialogActivity).dismiss();
 
