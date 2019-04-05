@@ -203,7 +203,12 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
             CalendarEventsAdapter.ViewHolder holder = (CalendarEventsAdapter.ViewHolder) holderData;
             final WCalEventsTemplateModel model = (WCalEventsTemplateModel) eventList.get(position);
-            //  holder.rowIndex.setText("" + (position + 1));
+
+            boolean isSelected = selectedIds.contains(model.getData().getEventId());
+            holder.innerlayout.setSelected(isSelected);
+
+
+
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
 
@@ -247,8 +252,10 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                     if (verticalListViewActionHelper != null && isFromWidget()) {
                         if (selectedIds.contains(model.getData().getEventId())) {
                             selectedIds.remove(model.getData().getEventId());
+                            holder.innerlayout.setSelected(false);
                         } else {
                             selectedIds.add(model.getData().getEventId());
+                            holder.innerlayout.setSelected(true);
 
                         }
 
@@ -269,8 +276,10 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             // multiple item can be selected after long press and single click on other items
                             if (selectedIds.contains(model.getData().getEventId())) {
                                 selectedIds.remove(model.getData().getEventId());
+                                holder.innerlayout.setSelected(false);
                             } else {
                                 selectedIds.add(model.getData().getEventId());
+                                holder.innerlayout.setSelected(true);
                             }
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
