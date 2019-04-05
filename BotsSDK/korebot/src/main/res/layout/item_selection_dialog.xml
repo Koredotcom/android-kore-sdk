@@ -170,10 +170,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_actions"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center|start"
+        android:layout_alignParentEnd="true"
         android:padding="@dimen/dimen_12dp"
         android:background="@drawable/widget_dialog_background"
         android:minHeight="60dp">

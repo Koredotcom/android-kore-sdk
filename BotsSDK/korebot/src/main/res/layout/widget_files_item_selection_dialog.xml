@@ -90,11 +90,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_actions"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:padding="@dimen/dimen_12dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center|start"
+        android:layout_alignParentEnd="true"
+
         android:minHeight="60dp">
 
     </androidx.recyclerview.widget.RecyclerView>
