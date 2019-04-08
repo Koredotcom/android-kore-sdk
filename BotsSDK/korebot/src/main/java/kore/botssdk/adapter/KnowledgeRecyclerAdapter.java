@@ -2,15 +2,12 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -31,7 +28,6 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 
 /**
@@ -54,6 +50,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         this.context = context;
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         notifyDataSetChanged();
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -95,6 +92,13 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     }
 
+    @Override
+    public long getItemId(int position) {
+        if(knowledgeDetailModels != null && knowledgeDetailModels.size()>0) {
+            KnowledgeDetailModel product = knowledgeDetailModels.get(position);
+            return product.getCreatedOn() + position;
+        }else return position;
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -106,10 +110,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         return EMPTY_CARD_FLAG;
     }
 
-    @Override
+    /*@Override
     public long getItemId(int position) {
         return position;
-    }
+    }*/
 
     @Override
     public int getItemCount() {

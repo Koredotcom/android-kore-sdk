@@ -72,6 +72,8 @@ public class DateUtils {
         String time = "";
 
         if (android.text.format.DateUtils.isToday(lastModified)) {
+            time = "Today";
+        } else if (isYesterday(lastModified)) {
             time = "Yesterday";
         } else if (isTomorrow(lastModified)) {
             time = "Tomorrow";
@@ -79,7 +81,6 @@ public class DateUtils {
 
             time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
         }
-
         return time;
     }
 
