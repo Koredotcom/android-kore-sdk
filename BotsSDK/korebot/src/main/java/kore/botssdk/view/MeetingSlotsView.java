@@ -13,13 +13,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
@@ -28,9 +29,9 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class MeetingSlotsView extends ViewGroup{
+public class MeetingSlotsView extends ViewGroup {
     private AutoExpandListView autoExpandListView;
-    private TextView showMore;
+    private TextView button1, button2;
     private View meetingLayout;
 
     float dp1;
@@ -56,10 +57,10 @@ public class MeetingSlotsView extends ViewGroup{
         super(context, attrs, defStyleAttr);
         init();
     }
+
     public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
         return invokeGenericWebViewInterface;
     }
-
 
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -78,79 +79,98 @@ public class MeetingSlotsView extends ViewGroup{
     private ComposeFooterInterface composeFooterInterface;
 
 
-
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_slots_template, this, true);
         autoExpandListView = (AutoExpandListView) view.findViewById(R.id.slots_list);
-        KaFontUtils.applyCustomFont(getContext(),view);
+        KaFontUtils.applyCustomFont(getContext(), view);
         meetingLayout = view.findViewById(R.id.meeting_layout);
-        showMore = (TextView) view.findViewById(R.id.show_more_view);
+        button1 = (TextView) view.findViewById(R.id.button1);
+        button2 = view.findViewById(R.id.button2);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            showMore.setLetterSpacing(0.06f);
+            button1.setLetterSpacing(0.06f);
+            button2.setLetterSpacing(0.06f);
         }
     }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
 
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.UNSPECIFIED);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) (parentWidth - 28 * dp1), MeasureSpec.EXACTLY);
         MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
-        int  childWidth = meetingLayout.getMeasuredWidth();
-        if (childWidth > restrictedLayoutWidth) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.AT_MOST);
-            MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
-        }
-        totalHeight += meetingLayout.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
-        int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
+
+        totalHeight += meetingLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
+
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(meetingLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
 
-    public void populateData(final MeetingTemplateModel meetingTemplateModel, boolean isEnabled){
+    public void populateData(final MeetingTemplateModel meetingTemplateModel, boolean isEnabled) {
 
-        if(meetingTemplateModel != null) {
+        if (meetingTemplateModel != null) {
             meetingLayout.setVisibility(VISIBLE);
-            ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel != null ? meetingTemplateModel.getQuick_slots() : new ArrayList<MeetingSlotModel.Slot>();
+            ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel.getQuick_slots();
             MeetingSlotsButtonAdapter slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext());
             slotsButtonAdapter.setMeetingsModelArrayList(slots);
             slotsButtonAdapter.setEnabled(isEnabled);
             slotsButtonAdapter.setComposeFooterInterface(composeFooterInterface);
             autoExpandListView.setAdapter(slotsButtonAdapter);
             slotsButtonAdapter.notifyDataSetChanged();
-            showMore.setVisibility(slots.size() > 0 && meetingTemplateModel != null && meetingTemplateModel.isShowMore() ? VISIBLE : GONE);
-            meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
-            showMore.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
-            ((GradientDrawable) showMore.getBackground()).setStroke(2,isEnabled ?getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+            ArrayList<BotButtonModel> buttonModels = meetingTemplateModel.getButtons();
+            if (buttonModels != null && buttonModels.size() > 0) {
 
-            showMore.setOnClickListener(isEnabled ? new OnClickListener() {
+                if (buttonModels.size() >= 2) {
+                    button1.setText(buttonModels.get(0).getTitle());
+                    button2.setText(buttonModels.get(1).getTitle());
+
+                    button1.setVisibility(VISIBLE);
+                    button2.setVisibility(VISIBLE);
+                }else if(meetingTemplateModel.getButtons().size() ==1){
+                    button1.setVisibility(VISIBLE);
+                    button1.setText(buttonModels.get(0).getTitle());
+                }
+            }else{
+                button1.setVisibility(GONE);
+                button2.setVisibility(GONE);
+            }
+            meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
+            button1.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+            button2.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+            ((GradientDrawable) button1.getBackground()).setStroke(2, isEnabled ? getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+            ((GradientDrawable) button2.getBackground()).setStroke(2, isEnabled ? getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+
+            button1.setOnClickListener(isEnabled ? new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(BundleConstants.SLOTS_LIST, gson.toJson(meetingTemplateModel.getWorking_hours()));
-                    bundle.putString(BundleConstants.QUICK_SLOTS,  gson.toJson(meetingTemplateModel.getQuick_slots()));
-                    composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_SLOT_PICKER, bundle);
+                    composeFooterInterface.onSendClick(buttonModels.get(0).getPayload());
                 }
             } : null);
-        }else{
+            button2.setOnClickListener(isEnabled ? new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    composeFooterInterface.onSendClick(buttonModels.get(1).getPayload());}
+            } : null);
+        } else {
             autoExpandListView.setAdapter(null);
             meetingLayout.setVisibility(GONE);
         }
     }
 
 
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
         final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
+
 
         //get the available size of child view
         int childLeft = 0;
