@@ -23,11 +23,12 @@ public class KaRoundedCornersTransform implements Transformation {
     @Override
     public Bitmap transform(Bitmap source) {
         if(source == null){
-            source = Bitmap.createBitmap((int)AppControl.getInstance().getDimensionUtil().dp1*40,
-                    (int)AppControl.getInstance().getDimensionUtil().dp1*40, Bitmap.Config.ARGB_8888);
+            source = Bitmap.createBitmap((int)dp1*40,
+                    (int)dp1*40, Bitmap.Config.ARGB_8888);
             source.eraseColor(Color.DKGRAY);
         }
-        Bitmap result = Bitmap.createBitmap(source.getWidth(), source.getHeight(), source.getConfig());
+        Bitmap.Config config = source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
+        Bitmap result = Bitmap.createBitmap(source.getWidth(),source.getHeight(), config);
         Canvas canvas = new Canvas(result);
 
         paint.setXfermode(null);
