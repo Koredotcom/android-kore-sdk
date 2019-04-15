@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/time"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="9dp"
                 android:layout_toStartOf="@+id/link_image"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -84,7 +84,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
             android:paddingEnd="@dimen/dimen_12dp">
@@ -102,7 +102,7 @@
                 android:maxLines="1"
                 android:text="@{String.valueOf(knowledge.NViews)}"
 
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:visibility="@{knowledge.NViews > 0 ? View.VISIBLE :View.GONE}" />
 
             <TextView
@@ -112,13 +112,13 @@
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/eye_count"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_comments"
+                android:drawableStart="@drawable/ic_chat"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="@{String.valueOf(knowledge.NComments)}"
 
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
 
@@ -135,7 +135,7 @@
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="@{Integer.toString(knowledge.NUpVotes)}"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
 
@@ -151,7 +151,7 @@
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:text="@{Integer.toString(knowledge.nDownVotes)}"
 
                 android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}"
