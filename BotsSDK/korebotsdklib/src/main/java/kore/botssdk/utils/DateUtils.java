@@ -34,6 +34,8 @@ public class DateUtils {
     public static final Format calendar_list_format_2 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
 
+    public static final SimpleDateFormat dateWeekDayTime2 = new SimpleDateFormat("MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
+
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
@@ -284,6 +286,26 @@ public class DateUtils {
      * Just now
      * Today, JUN 08
      */
+
+    public static String formattedSentDateV8_InKnwoledge(long lastModified) {
+        // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
+
+        String time = "";
+
+
+            if (android.text.format.DateUtils.isToday(lastModified)) {
+                time = "Today at " + dateTime1.format(new Date(lastModified));
+            } else if (isYesterday(lastModified)) {
+                time = "Yesterday, " + dateTime1.format(new Date(lastModified));
+            } else if (isTomorrow(lastModified)) {
+                time = "Tomorrow, " + dateTime1.format(new Date(lastModified));
+            } else {
+                time = dateWeekDayTime2.format(new Date(lastModified));
+            }
+
+        return time;
+    }
+
     public static String formattedSentDateV8(long lastModified, boolean isDetailView) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());

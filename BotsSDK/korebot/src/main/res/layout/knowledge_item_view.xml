@@ -21,16 +21,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/task_view_background"
-        android:paddingTop="@dimen/dimen_12dp"
+        android:orientation="vertical"
 
 
-        android:orientation="vertical">
+        android:paddingTop="@dimen/dimen_12dp">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:layout_height="wrap_content">
+            android:paddingEnd="10dp">
 
             <ImageView
                 android:id="@+id/link_image"
@@ -80,74 +80,83 @@
                 android:visibility="@{StringUtils.isNullOrEmptyWithTrim(knowledge.desc) ? View.GONE : View.VISIBLE}" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/counter"
+        <LinearLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:paddingEnd="@dimen/dimen_12dp"
+            android:gravity="center_vertical"
             android:paddingStart="10dp"
-            android:gravity="center_vertical">
+            android:paddingEnd="@dimen/dimen_12dp">
 
             <TextView
                 android:id="@+id/eye_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-
+                android:layout_weight="1"
                 android:drawableStart="@drawable/ic_views"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
-                android:visibility="@{knowledge.NViews > 0 ? View.VISIBLE :View.GONE}"
 
+                android:maxLines="1"
                 android:text="@{String.valueOf(knowledge.NViews)}"
-                android:textSize="15sp" />
+
+                android:textSize="15sp"
+                android:visibility="@{knowledge.NViews > 0 ? View.VISIBLE :View.GONE}" />
 
             <TextView
                 android:id="@+id/chat_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/eye_count"
+                android:layout_weight="1"
                 android:drawableStart="@drawable/ic_comments"
                 android:drawablePadding="7dp"
-                android:layout_marginStart="37dp"
                 android:gravity="center_vertical"
-                android:layout_toEndOf="@+id/eye_count"
-                android:visibility="@{knowledge.NComments > 0 ? View.VISIBLE :View.GONE}"
-
+                android:maxLines="1"
                 android:text="@{String.valueOf(knowledge.NComments)}"
-                android:textSize="15sp" />
 
-
-
-            <TextView
-                android:id="@+id/followers_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_followers"
-                android:drawablePadding="7dp"
-                android:layout_marginStart="37dp"
-                android:gravity="center_vertical"
-                android:visibility="@{knowledge.NFollows > 0 ? View.VISIBLE :View.GONE}"
-                android:text="@{String.valueOf(knowledge.NFollows)}"
-                android:layout_toEndOf="@+id/chat_count"
-
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
 
             <TextView
                 android:id="@+id/like_count"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:drawableStart="@drawable/ic_yes"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/chat_count"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/upvote"
+
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
-                android:visibility="@{knowledge.NLikes > 0 ? View.VISIBLE :View.GONE}"
+                android:maxLines="1"
+                android:text="@{Integer.toString(knowledge.NUpVotes)}"
+                android:textSize="15sp"
+                android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
-                android:text="@{Integer.toString(knowledge.NLikes)}"
-                android:textSize="15sp" />
-        </RelativeLayout>
+
+            <TextView
+                android:id="@+id/downvote_count"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/like_count"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/downvote"
+
+                android:drawablePadding="7dp"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textSize="15sp"
+                android:text="@{Integer.toString(knowledge.nDownVotes)}"
+
+                android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}"
+                />
+        </LinearLayout>
 
         <View
             android:id="@+id/divider"

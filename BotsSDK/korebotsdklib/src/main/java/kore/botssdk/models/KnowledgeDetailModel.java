@@ -29,7 +29,6 @@ public class KnowledgeDetailModel  {
     private ContactInfoModel owner;
     private String url;
     private int nLikes;
-
     public long getLastMod() {
         return lastMod;
     }
@@ -207,15 +206,37 @@ public class KnowledgeDetailModel  {
     }
 
     private ArrayList<String> followers;
-    public int getnShares() {
+    public int getNShares() {
         return nShares;
     }
 
-    public void setnShares(int nShares) {
+    public void setNShares(int nShares) {
         this.nShares = nShares;
     }
 
     private int nShares;
+
+    private int nDownVotes;
+
+    public int getNDownVotes() {
+        return nDownVotes;
+    }
+
+    public void setNDownVotes(int nDownVotes) {
+        this.nDownVotes = nDownVotes;
+    }
+
+    public int getNUpVotes() {
+        return nUpVotes;
+    }
+
+    public void setNUpVotes(int nUpVotes) {
+        this.nUpVotes = nUpVotes;
+    }
+
+    private int nUpVotes;
+
+
 
     public int getNComments() {
         return nComments;
@@ -256,6 +277,16 @@ public class KnowledgeDetailModel  {
     }
 
     private MyActions myActions;
+
+    private ArrayList<VoteModel> votes;
+
+    public ArrayList<VoteModel> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<VoteModel> votes) {
+        this.votes = votes;
+    }
 
     public String getTitle() {
         return title;
@@ -326,11 +357,14 @@ public class KnowledgeDetailModel  {
        }
 
        String by;
+
+
    }
 
    public class MyActions{
        boolean like;
        boolean follow;
+       int vote;
 
        public int getPrivilege() {
            return privilege;
@@ -356,6 +390,14 @@ public class KnowledgeDetailModel  {
 
        public void setFollow(boolean follow) {
            this.follow = follow;
+       }
+
+       public int getVote() {
+           return vote;
+       }
+
+       public void setVote(int vote) {
+           this.vote=vote;
        }
    }
 

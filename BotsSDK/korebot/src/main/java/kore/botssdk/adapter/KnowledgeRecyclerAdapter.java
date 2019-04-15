@@ -149,11 +149,11 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         KnowledgeItemViewBinding knowledgeItemViewBinding;
-        TextView followers_count;
+
         public ViewHolder(@NonNull KnowledgeItemViewBinding itemView) {
             super(itemView.getRoot());
             this.knowledgeItemViewBinding = itemView;
-            followers_count=itemView.followersCount;
+
         }
     }
 
