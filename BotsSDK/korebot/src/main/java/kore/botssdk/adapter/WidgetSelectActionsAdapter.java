@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,15 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     WidgetDialogActivityTask widgetDialogActivity;
     List<CalEventsTemplateModel.Action> actionList;
     WTaskTemplateModel model;
+    Activity mainContext;
+    boolean isFromFullView;
 
-    public WidgetSelectActionsAdapter(WidgetDialogActivityTask widgetDialogActivity, WTaskTemplateModel model) {
+    public WidgetSelectActionsAdapter(Activity mainContext, WidgetDialogActivityTask widgetDialogActivity, WTaskTemplateModel model, boolean isFromFullView) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.actionList = model.getActions();
+        this.mainContext = mainContext;
+        this.isFromFullView = isFromFullView;
         notifyDataSetChanged();
     }
 
@@ -56,6 +61,9 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 hashMap.put("tIds", model.getId());
                 KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
                 (widgetDialogActivity).dismiss();
+                if(mainContext != null && mainContext instanceof Activity && isFromFullView){
+                    mainContext.finish();
+                }
             }
         });
 

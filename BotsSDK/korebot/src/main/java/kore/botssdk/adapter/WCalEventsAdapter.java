@@ -284,7 +284,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
 
-                        } else if(!isFromFullView){
+                        } else /*if(!isFromFullView)*/{
                             WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
                             widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
                             widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
@@ -292,7 +292,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getData().getColor()));
 
-                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model);
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model,isFromFullView);
 
                             dialogActivity.show();
 

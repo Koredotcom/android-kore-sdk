@@ -1,5 +1,6 @@
 package kore.botssdk.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -42,6 +43,7 @@ public class WidgetDialogActivity extends Dialog {
     RecyclerView recycler_actions;
     WCalEventsTemplateModel model;
     Context mContext;
+    private boolean isFromFullView;
 
 
 
@@ -52,11 +54,12 @@ public class WidgetDialogActivity extends Dialog {
 
 
 
-    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, WCalEventsTemplateModel model) {
+    public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, WCalEventsTemplateModel model, boolean isFromFullView) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
         this.model = model;
+        this.isFromFullView = isFromFullView;
     }
 
 
@@ -81,7 +84,7 @@ public class WidgetDialogActivity extends Dialog {
         txtPlace.setVisibility(widgetDialogModel.getLocation() != null && !TextUtils.isEmpty(widgetDialogModel.getLocation()) ? View.VISIBLE : View.GONE);
         sideBar.setBackgroundColor(Color.parseColor(widgetDialogModel.getColor()));
         recycler_actions.setVisibility(View.GONE);
-        WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter(WidgetDialogActivity.this, model);
+        WidgetCancelActionsAdapter adapter = new WidgetCancelActionsAdapter((Activity) mContext,WidgetDialogActivity.this, model,isFromFullView);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
 

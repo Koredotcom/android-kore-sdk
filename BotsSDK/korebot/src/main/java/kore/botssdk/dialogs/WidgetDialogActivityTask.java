@@ -1,5 +1,6 @@
 package kore.botssdk.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -40,17 +41,19 @@ public class WidgetDialogActivityTask extends Dialog {
     RecyclerView recycler_actions;
     Context mContext;
     WTaskTemplateModel model;
+    boolean isFromFullView;
 
 
     /* public WidgetDialogActivity(@NonNull Context context) {
          super(context);
      }
  */
-    public WidgetDialogActivityTask(Context mContext, WTaskTemplateModel widgetDialogModel, WTaskTemplateModel model) {
+    public WidgetDialogActivityTask(Context mContext, WTaskTemplateModel widgetDialogModel, WTaskTemplateModel model, boolean isFromFullView) {
         super(mContext, R.style.WidgetDialog);
         this.widgetDialogModel = widgetDialogModel;
         this.mContext = mContext;
         this.model = model;
+        this.isFromFullView = isFromFullView;
     }
 
 
@@ -76,7 +79,7 @@ public class WidgetDialogActivityTask extends Dialog {
         // setContentView(R.layout.widget_files_item_selection_dialog);
         initViews();
         recycler_actions.setVisibility(View.GONE);
-        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(WidgetDialogActivityTask.this, model);
+        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) mContext,WidgetDialogActivityTask.this, model,isFromFullView);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
 

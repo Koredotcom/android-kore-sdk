@@ -37,7 +37,17 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private int DATA_FOUND = 1;
     private int NO_DATA = 0;
     private String nodata_meesage = "";
-    int preview_length;
+    private int preview_length;
+
+    public String getApi() {
+        return api;
+    }
+
+    public void setApi(String api) {
+        this.api = api;
+    }
+
+    private String api;
     public String getNodata_meesage() {
         return nodata_meesage;
     }
@@ -172,8 +182,8 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
-                        } else if(!isFromFullView) {
-                            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
+                        } else /*if(!isFromFullView)*/ {
+                            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel,isFromFullView);
 
                             dialogActivity.show();
 

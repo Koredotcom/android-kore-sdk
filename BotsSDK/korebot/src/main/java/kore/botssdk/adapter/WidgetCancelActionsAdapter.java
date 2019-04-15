@@ -33,10 +33,14 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
     WidgetDialogActivity widgetDialogActivity;
     List<WCalEventsTemplateModel.Action> actionList;
     WCalEventsTemplateModel model;
+    Activity mainContext;
+    boolean isFromFullView;
 
-    public WidgetCancelActionsAdapter(WidgetDialogActivity widgetDialogActivity, WCalEventsTemplateModel model) {
+    public WidgetCancelActionsAdapter(Activity mainContext, WidgetDialogActivity widgetDialogActivity, WCalEventsTemplateModel model,boolean isFromFullView) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
+        this.mainContext = mainContext;
+        this.isFromFullView = isFromFullView;
         this.actionList = model.getActions();
         notifyDataSetChanged();
     }
@@ -63,6 +67,9 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
                 hashMap.put("ids", list);
                     KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
                     (widgetDialogActivity).dismiss();
+                    if(mainContext != null && mainContext instanceof Activity && isFromFullView){
+                        mainContext.finish();
+                    }
 
             }
         });
