@@ -25,6 +25,7 @@
             android:layout_marginBottom="6dp"
             android:ellipsize="end"
             android:gravity="start|top"
+            android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:text=""
             android:textColor="#485260"
@@ -50,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginStart="20dp"
+            android:fontFamily="sans-serif-medium"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/color_404051"
             android:textSize="13sp" />
@@ -62,6 +64,7 @@
             android:drawableStart="@drawable/vector_location_icon"
             android:drawablePadding="5dp"
             android:gravity="center|start"
+            android:fontFamily="sans-serif-medium"
             android:textColor="#485260"
             android:textSize="13sp" />
 
