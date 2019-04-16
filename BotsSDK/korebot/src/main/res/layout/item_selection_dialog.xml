@@ -36,11 +36,11 @@
                 android:id="@+id/img_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_alignParentEnd="true"
-
-                android:layout_marginEnd="19dp"
-
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp"
+                android:layout_centerVertical="true"
                 app:srcCompat="@drawable/cancel_widget" />
         </RelativeLayout>
 
