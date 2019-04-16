@@ -29,12 +29,13 @@ public class DateUtils {
     public static final Format dateFormatDay_meeting = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsg = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDay = new SimpleDateFormat("EE, MMM dd, yyyy", Locale.ENGLISH);
-    public static final SimpleDateFormat dateTime1 = new SimpleDateFormat("hh:mma", Locale.ENGLISH);
+    public static final SimpleDateFormat dateTime1 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     public static final Format calendar_list_format = new SimpleDateFormat("EEE, MMM d, yyyy", Locale.ENGLISH);
     public static final Format calendar_list_format_2 = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime = new SimpleDateFormat("EE, MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
 
     public static final SimpleDateFormat dateWeekDayTime2 = new SimpleDateFormat("MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekDayTime3 = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
@@ -306,6 +307,22 @@ public class DateUtils {
         return time;
     }
 
+    public static String formattedSentDateV8_InAnnoucemnt(long lastModified) {
+        // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
+
+        String time = "";
+
+
+        if (android.text.format.DateUtils.isToday(lastModified)) {
+            time = dateTime1.format(new Date(lastModified));
+        } else if (isYesterday(lastModified)) {
+            time = "Yesterday, " + dateTime1.format(new Date(lastModified));
+        }  else {
+            time = dateWeekDayTime3.format(new Date(lastModified));
+        }
+
+        return time;
+    }
     public static String formattedSentDateV8(long lastModified, boolean isDetailView) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
