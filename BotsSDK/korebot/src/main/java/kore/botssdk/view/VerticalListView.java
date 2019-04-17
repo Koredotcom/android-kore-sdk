@@ -118,6 +118,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             return BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL;
         } else if(adapter instanceof CalendarEventsAdapter){
             return ((CalendarEventsAdapter) adapter).getType();
+        }else if(adapter instanceof AnnouncementAdapter){
+            return BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL;
         }else {
             return BotResponse.TEMPLATE_TYPE_TASK_VIEW;
         }
@@ -228,7 +230,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
                 break;
 
             case BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL:
-                AnnouncementAdapter announcementAdapter = new AnnouncementAdapter(getContext(),(List<AnnoucementResModel>) data);
+                AnnouncementAdapter announcementAdapter = new AnnouncementAdapter(getContext(),(ArrayList<AnnoucementResModel>) data);
                 announcementAdapter.setFullView(false);
                 setAdapter(announcementAdapter);
                 break;
