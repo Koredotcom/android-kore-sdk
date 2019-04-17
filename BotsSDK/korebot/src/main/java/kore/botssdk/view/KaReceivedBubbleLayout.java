@@ -9,8 +9,10 @@ import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotPieChartElementModel;
@@ -278,11 +280,19 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     lineChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     lineChartView.setData(payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equals(payInner.getTemplate_type())) {
+                } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equals(payInner.getTemplate_type()) ) {
                     ArrayList<KnowledgeDetailModel> knowledgeData = payInner.getKnowledgeDetailModels();
                     verticalListView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     verticalListView.prepareDataSetAndPopulate(knowledgeData, payInner.getTemplate_type(), isLastItem);
+                }else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(payInner.getTemplate_type()) ) {
+               //announcement carousal
+                    List<AnnoucementResModel> annoucementResModelsData = payInner.getAnnoucementResModels();
+                    verticalListView.setVisibility(View.VISIBLE);
+                    bubbleTextMediaLayout.populateText(payInner.getText());
+                    verticalListView.prepareDataSetAndPopulate((ArrayList) annoucementResModelsData, payInner.getTemplate_type(), isLastItem);
+
+
                 } else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     verticalListView.setVisibility(View.VISIBLE);
                     if (payInner.getKoraSearchResultsModel() != null)

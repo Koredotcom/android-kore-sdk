@@ -159,6 +159,16 @@ public class PayloadInner {
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
+
+    public List<AnnoucementResModel> getAnnoucementResModels() {
+        return annoucementResModels;
+    }
+
+    public void setAnnoucementResModels(List<AnnoucementResModel> annoucementResModels) {
+        this.annoucementResModels = annoucementResModels;
+    }
+
+    private List<AnnoucementResModel> annoucementResModels;
     private ArrayList<String> headers;
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
@@ -356,7 +366,8 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
                 }.getType();
                 meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
-            }else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TASK_FULLVIEW.equalsIgnoreCase(template_type)) {
+            }
+            else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TASK_FULLVIEW.equalsIgnoreCase(template_type)) {
                 Type listType = new TypeToken<ArrayList<TaskTemplateResponse>>() {
                 }.getType();
                 taskTemplateModels = gson.fromJson(elementsAsString, listType);

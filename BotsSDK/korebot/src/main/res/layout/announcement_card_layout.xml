@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+
+        <import type="java.lang.Long" />
+
+        <import type="kore.botssdk.utils.DateUtils" />
+
+
+        <variable
+            name="annoucement"
+            type="kore.botssdk.models.AnnoucementResModel" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:background="@drawable/task_view_background"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        >
+
+        <kore.botssdk.view.ProfileTextView
+            android:id="@+id/user_profile_name"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+
+            android:fontFamily="@font/roboto_medium_style"
+            android:gravity="center"
+            android:tag="medium"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:layout_toLeftOf="@+id/tv_time"
+            android:layout_toEndOf="@+id/user_profile_name"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center|start"
+            android:minWidth="50dp"
+            android:text="@{annoucement.owner.fullName}"
+            android:textColor="@color/color_626281"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_shared"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/user_profile_name"
+            android:layout_below="@+id/tv_user_name"
+            android:ellipsize="end"
+            android:gravity="center|start"
+            android:maxLines="1"
+            android:minWidth="50dp"
+            android:text="@{annoucement.getSharedUserList}"
+            android:textColor="@color/color_767688"
+            android:textSize="13sp"
+            android:visibility="@{annoucement.getSharedVisiblity}" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center|start"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+
+            android:minWidth="50dp"
+
+            android:textColor="@color/color_167_169_190" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_shared"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/user_profile_name"
+            android:ellipsize="end"
+            android:gravity="center|start"
+            android:maxLines="1"
+
+            android:minWidth="50dp"
+            android:visibility="@{annoucement.titleVisiblity}"
+             android:text="@{annoucement.title}"
+            android:textColor="@color/color_626281"
+
+            android:textSize="17sp" />
+
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/user_profile_name"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center|start"
+            android:minWidth="50dp"
+            android:visibility="@{annoucement.descriptionVisiblity}"
+
+            android:text="@{annoucement.desc}"
+            android:textColor="@color/color_626281"
+
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/tv_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_description"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/user_profile_name"
+            android:drawableStart="@drawable/ic_chat"
+            android:drawablePadding="7dp"
+            android:maxLines="1"
+            android:minWidth="80dp"
+            android:text="@{Long.toString(annoucement.NComments)}"
+            android:textColor="@color/color_626281"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_upvotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/tv_description"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="7dp"
+            android:layout_toEndOf="@+id/tv_comments"
+            android:drawableStart="@drawable/upvote"
+            android:drawablePadding="7dp"
+            android:maxLines="1"
+            android:minWidth="80dp"
+            android:text="@{Long.toString(annoucement.NLikes)}"
+            android:textColor="@color/color_626281"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+</layout>

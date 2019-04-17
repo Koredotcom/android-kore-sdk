@@ -25,6 +25,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String COMPONENT_TYPE_ERROR = "error";
     public static final String COMPONENT_TYPE_MESSAGE = "message";
     public static final String  TEMPLATE_TYPE_KORA_CAROUSAL = "kora_carousel";
+    public static final String  TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL = "announcement_carousel";
     public static final String  TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL = "kora_search_carousel";
     public static final String  TEMPLATE_TYPE_SLOT_PICKER = "pick_slot_template";
     public static final String  TEMPLATE_TYPE_MEETING_CONFIRM = "meeting_confirmation";

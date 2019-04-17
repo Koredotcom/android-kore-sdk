@@ -39,7 +39,8 @@
     <color name="bubble_left_unselected_url">#a5d6a7</color>
     <color name="bubble_right_selected_url">#c8ec69</color>
     <color name="bubble_right_unselected_url">#a5d6a7</color>
-
+    <color name="color_767688">#767688</color>
+    <color name="splash_background_color">#3942f6</color>
     <!-- Bubble (Hackathon changes) -->
     <color name="readReceiptGreen">#6cc249</color>
     <color name="readReceiptYellow">#fad05e</color>

@@ -1,5 +1,7 @@
 package kore.botssdk.utils;
 
+import android.content.Context;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.DateFormatSymbols;
@@ -10,13 +12,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+
+import kore.korebotsdklib.R;
 
 /**
  * Created by Pradeep Mahato on 09-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class DateUtils {
-
+    public static final long oneMin = 60 * 1000;
+    public static final long fiveMin = 5 * oneMin;
+    public static final long oneHour = 60 * 60 * 1000;
+    public static final long oneDay = 24 * oneHour;
+    public static final long oneWeek = oneDay * 7;
+    public static final long oneMonth = oneDay * 30;
+    public static final long oneYear = oneMonth * 12;
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
     public static final Format dateFormat4 = new SimpleDateFormat("d MMM yyyy 'at' h:mm a", Locale.ENGLISH);
     public static final Format dateTime = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
@@ -92,6 +103,69 @@ public class DateUtils {
      * Just now
      * Today, JUN 08
      */
+
+    public static String formattedSentDateV2_2(Context mContext, long diff) {
+        long timeOffset = 0;
+
+
+//        int messageDay = Integer.parseInt(dateDay.format(date1));
+//        int currentDay = Integer.parseInt(dateDay.format(date2));
+
+        try {
+            if (android.text.format.DateUtils.isToday(diff)) {
+                return new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(diff));
+            } else if (isYesterday(diff)) {
+                return "Yesterday";
+            } else if (diff >= oneHour && diff < oneDay) {
+                return String.format("%d%s", TimeUnit.MILLISECONDS.toHours(diff), mContext.getResources().getString(R.string.time_stamp_hours));
+            } else if (diff >= oneDay && diff < oneWeek) {
+                return String.format("%d%s", TimeUnit.MILLISECONDS.toDays(diff), mContext.getResources().getString(R.string.time_stamp_days));
+            } else if (diff >= oneWeek && diff < oneMonth) {
+                return String.format("%d%s", diff / oneWeek, mContext.getResources().getString(R.string.time_stamp_weeks));
+            } else if (diff >= oneMonth && diff < oneYear) {
+                return String.format("%d%s", diff / oneMonth, mContext.getResources().getString(R.string.time_stamp_mins_months));
+            } else {
+                return String.format("%d%s", diff / oneYear, mContext.getResources().getString(R.string.time_stamp_years));
+            }
+        } catch (Exception e) {
+            return "";
+        }
+
+    }
+    public static String getFormattedSendDateInTimeFormatCoreFunctionality2(Context mContext, long last_Modified) {
+
+
+        if (android.text.format.DateUtils.isToday(last_Modified)) {
+            return new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(last_Modified));
+        } else if (isYesterday(last_Modified)) {
+            return "Yesterday";
+        }
+
+
+        long currentTime = System.currentTimeMillis();
+        long diff = currentTime - last_Modified;
+
+        String time = "";
+
+        long oneMin = 60 * 1000;
+
+        long serverSyncOffset = 1000 * 60 * 3; //3 minutes
+        if (diff > (-serverSyncOffset)) {
+            /*if (diff < oneMin) {
+                return "Just Now";
+            } else if (diff >= oneMin) {
+                date.setTime(sentDate);
+                time = dateTime.format(date);
+            }*/
+            time = DateUtils.formattedSentDateV2_2(mContext, diff);
+        } else {
+            /*date.setTime(sentDate);
+            time = dateFormat.format(date);*/
+            time = DateUtils.formattedSentDateV2_2(mContext, last_Modified);
+        }
+
+        return time;
+    }
     public static String formattedSentDateV6(long lastModified) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());

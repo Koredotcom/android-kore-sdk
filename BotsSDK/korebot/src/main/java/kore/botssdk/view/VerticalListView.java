@@ -16,10 +16,12 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
+import kore.botssdk.adapter.AnnouncementAdapter;
 import kore.botssdk.adapter.CalendarEventsAdapter;
 import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.adapter.KoraEmailRecyclerAdapter;
@@ -30,6 +32,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
@@ -222,6 +225,14 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
                 calendarEventsAdapter.setData(data);
                 calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
                 setAdapter(calendarEventsAdapter);
+                break;
+
+            case BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL:
+                AnnouncementAdapter announcementAdapter = new AnnouncementAdapter(getContext(),(List<AnnoucementResModel>) data);
+                announcementAdapter.setFullView(false);
+                setAdapter(announcementAdapter);
+                break;
+
             default:
         }
     }
