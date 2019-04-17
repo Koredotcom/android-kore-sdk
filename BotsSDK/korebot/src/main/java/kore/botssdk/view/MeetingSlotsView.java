@@ -136,6 +136,7 @@ public class MeetingSlotsView extends ViewGroup {
                     button2.setVisibility(VISIBLE);
                 }else if(meetingTemplateModel.getButtons().size() ==1){
                     button1.setVisibility(VISIBLE);
+                    button2.setVisibility(GONE);
                     button1.setText(buttonModels.get(0).getTitle());
                 }
             }else{
