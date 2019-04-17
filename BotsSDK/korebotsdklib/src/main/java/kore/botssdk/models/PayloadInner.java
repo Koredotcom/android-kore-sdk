@@ -389,6 +389,10 @@ public class PayloadInner {
                 Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
                 }.getType();
                 contactInfoModels = gson.fromJson(elementsAsString, listType);
+            }else if(BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)){
+                Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
+                }.getType();
+                annoucementResModels = gson.fromJson(elementsAsString, listType);
             }
         }
        // templateValidator();

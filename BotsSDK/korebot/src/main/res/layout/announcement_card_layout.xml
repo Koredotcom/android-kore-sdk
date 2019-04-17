@@ -103,7 +103,7 @@
             android:visibility="@{annoucement.titleVisiblity}"
              android:text="@{annoucement.title}"
             android:textColor="@color/color_626281"
-
+            android:textStyle="bold"
             android:textSize="17sp" />
 
 
@@ -115,7 +115,7 @@
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@+id/user_profile_name"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:gravity="center|start"
             android:minWidth="50dp"
             android:visibility="@{annoucement.descriptionVisiblity}"
