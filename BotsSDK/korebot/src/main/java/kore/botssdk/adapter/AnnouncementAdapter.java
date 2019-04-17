@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -32,6 +34,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     Context context;
     List<AnnoucementResModel> data;
     boolean isViewMore;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
 
     public AnnouncementAdapter(Context context) {
         this.context = context;
@@ -78,7 +81,19 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
             } catch (Exception e) {
 
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(context.getResources().getColor(R.color.splash_background_color));
-            }}
+            }
+
+
+            ((AnnouncementViewHolder) holder).binding.viewAction.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle extras = new Bundle();
+                    extras.putString(BundleConstants.KNOWLEDGE_ID, annoucementResModel.getId());
+                   verticalListViewActionHelper.knowledgeItemClicked(extras);
+                }
+            });
+
+        }
             else
             {
                 holder=(EmptyAnnocementViewHolder)holder;
@@ -118,7 +133,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     @Override
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
     public static class AnnouncementViewHolder extends RecyclerView.ViewHolder {
@@ -133,10 +148,11 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     class EmptyAnnocementViewHolder extends RecyclerView.ViewHolder {
         TextView tv_message;
-
+        RecyclerView view_action;
         public EmptyAnnocementViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_message = itemView.findViewById(R.id.tv_message);
+            view_action=itemView.findViewById(R.id.view_action);
         }
     }
 }
