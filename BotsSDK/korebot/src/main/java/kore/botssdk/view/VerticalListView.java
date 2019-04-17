@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AnnouncementAdapter;
@@ -116,11 +118,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             return BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL;
         } else if (adapter instanceof KnowledgeRecyclerAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL;
-        } else if(adapter instanceof CalendarEventsAdapter){
+        } else if (adapter instanceof CalendarEventsAdapter) {
             return ((CalendarEventsAdapter) adapter).getType();
-        }else if(adapter instanceof AnnouncementAdapter){
+        } else if (adapter instanceof AnnouncementAdapter) {
             return BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL;
-        }else {
+        } else {
             return BotResponse.TEMPLATE_TYPE_TASK_VIEW;
         }
     }
@@ -176,7 +178,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
             tasksListAdapter.notifyDataSetChanged();
         }
-        prepareDataSetAndPopulate(data.getTaskData(), templateType,isEnabled);
+        prepareDataSetAndPopulate(data.getTaskData(), templateType, isEnabled);
 
 
     }
@@ -192,7 +194,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         if (data == null || data.size() == 0) {
             rootLayout.setVisibility(GONE);
         } else {
-            setAdapterByData(data, templateType,isEnabled);
+            setAdapterByData(data, templateType, isEnabled);
             viewMore.setVisibility(data.size() > 3 && isEnabled ? VISIBLE : GONE);
             if (data.size() > 3) {
                 viewMore.setText(getContext().getResources().getString(R.string.view_more));
@@ -206,11 +208,16 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         recyclerView.setItemAnimator(null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
+        if (adapter instanceof AnnouncementAdapter) {
+            DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.inset_65_divider));
+            recyclerView.addItemDecoration(itemDecorator);
+        }
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
         adapter.notifyDataSetChanged();
     }
 
-    public void setAdapterByData(ArrayList data, String type,boolean isEnabled) {
+    public void setAdapterByData(ArrayList data, String type, boolean isEnabled) {
         switch (type) {
             case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                 setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
@@ -223,14 +230,14 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
                 break;
             case BotResponse.TEMPLATE_TYPE_CAL_EVENTS:
             case BotResponse.TEMPLATE_TYPE_CANCEL_EVENT:
-                CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(),type,isEnabled);
+                CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(), type, isEnabled);
                 calendarEventsAdapter.setData(data);
                 calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
                 setAdapter(calendarEventsAdapter);
                 break;
 
             case BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL:
-                AnnouncementAdapter announcementAdapter = new AnnouncementAdapter(getContext(),(ArrayList<AnnoucementResModel>) data);
+                AnnouncementAdapter announcementAdapter = new AnnouncementAdapter(getContext(), (ArrayList<AnnoucementResModel>) data);
                 announcementAdapter.setFullView(false);
                 setAdapter(announcementAdapter);
                 break;
