@@ -32,7 +32,12 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     private static final int DATA_FOUND = 1;
     private static final int NO_DATA = 0;
     Context context;
-    List<AnnoucementResModel> data;
+
+//    public void setData(ArrayList<AnnoucementResModel> data) {
+//        this.data = data;
+//    }
+
+    ArrayList<AnnoucementResModel> data;
     boolean isViewMore;
     private VerticalListViewActionHelper verticalListViewActionHelper;
 
@@ -41,7 +46,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     }
 
 
-    public AnnouncementAdapter(Context activity, List<AnnoucementResModel> data) {
+    public AnnouncementAdapter(Context activity, ArrayList<AnnoucementResModel> data) {
 
         context = activity;
         this.data = data;
@@ -118,12 +123,12 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     @Override
     public ArrayList getData() {
-        return null;
+        return data;
     }
 
     @Override
     public void setData(ArrayList data) {
-
+        this.data = data;
     }
 
     @Override
