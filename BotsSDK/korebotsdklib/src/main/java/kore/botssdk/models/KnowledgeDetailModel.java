@@ -191,6 +191,11 @@ public class KnowledgeDetailModel {
         return createdOn;
     }
 
+
+public String getFormatedDate()
+{
+   return DateUtils.formattedSentDateV8_InAnnouncement(createdOn);
+}
     public void setCreatedOn(long createdOn) {
         this.createdOn = createdOn;
     }
