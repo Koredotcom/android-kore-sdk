@@ -1,8 +1,10 @@
 package kore.botssdk.models;
+
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.BindingAdapter;
 import kore.botssdk.utils.DateUtils;
@@ -20,7 +23,7 @@ import kore.botssdk.utils.StringUtils;
  * Created by Shiva Krishna on 1/30/2018.
  */
 
-public class KnowledgeDetailModel  {
+public class KnowledgeDetailModel {
     private String streamId;
     private String creator;
     private String lMod;
@@ -29,6 +32,36 @@ public class KnowledgeDetailModel  {
     private ContactInfoModel owner;
     private String url;
     private int nLikes;
+
+
+    private List<SharedList> sharedList = null;
+
+
+    public List<SharedList> getSharedList() {
+
+        return sharedList;
+    }
+
+
+    public String getSharedListWithCommaSeperate() {
+        if (sharedList != null && sharedList.size() > 0) {
+            ArrayList<String> namesList = new ArrayList<>();
+            for (SharedList shared : sharedList) {
+                if (shared != null && shared.getName() != null && !TextUtils.isEmpty(shared.getName().trim())) {
+                    namesList.add(shared.getName().trim());
+                }
+            }
+            if (namesList.size() > 0) {
+                return android.text.TextUtils.join(", ", namesList);
+            }
+        }
+        return "";
+    }
+
+    public void setSharedList(List<SharedList> sharedList) {
+        this.sharedList = sharedList;
+    }
+
     public long getLastMod() {
         return lastMod;
     }
@@ -38,19 +71,21 @@ public class KnowledgeDetailModel  {
     }
 
     private long lastMod;
+
     public String getSharedBy() {
         return sharedBy;
     }
+
     public String getFormattedModifiedDate() {
-        if(formattedModifiedDate == null){
-            formattedModifiedDate =   DateUtils.formattedSentDateV6((Long) lastMod);
+        if (formattedModifiedDate == null) {
+            formattedModifiedDate = DateUtils.formattedSentDateV6((Long) lastMod);
         }
         return formattedModifiedDate;
     }
 
     public String getFormattedHeaderDate() {
-        if(formattedHeaderDate == null){
-            formattedHeaderDate = DateUtils.formattedSentDateV8((Long) lastMod,false);
+        if (formattedHeaderDate == null) {
+            formattedHeaderDate = DateUtils.formattedSentDateV8((Long) lastMod, false);
         }
         return formattedHeaderDate;
     }
@@ -60,8 +95,9 @@ public class KnowledgeDetailModel  {
     public void setFormattedModifiedDate(String formattedModifiedDate) {
         this.formattedModifiedDate = formattedModifiedDate;
     }
-    public String getLastModifiedDate(){
-        return "Modified "+ DateUtils.formattedSentDateV8(lastMod,true);
+
+    public String getLastModifiedDate() {
+        return "Modified " + DateUtils.formattedSentDateV8(lastMod, true);
     }
 
     private String formattedModifiedDate;
@@ -72,6 +108,7 @@ public class KnowledgeDetailModel  {
     }
 
     private String sharedBy;
+
     public long getNViews() {
         return nViews;
     }
@@ -206,6 +243,7 @@ public class KnowledgeDetailModel  {
     }
 
     private ArrayList<String> followers;
+
     public int getNShares() {
         return nShares;
     }
@@ -235,7 +273,6 @@ public class KnowledgeDetailModel  {
     }
 
     private int nUpVotes;
-
 
 
     public int getNComments() {
@@ -336,70 +373,164 @@ public class KnowledgeDetailModel  {
         this.likes = likes;
     }
 
+    public class SharedList {
+
+
+        private String lN;
+
+        private String role;
+
+        private String color;
+
+        private String id;
+
+        private String name;
+
+        private String fN;
+
+        private String label;
+
+        private Boolean isPending;
+
+        private Long privilege;
+
+        public String getLN() {
+            return lN;
+        }
+
+        public void setLN(String lN) {
+            this.lN = lN;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        public void setColor(String color) {
+            this.color = color;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getFN() {
+            return fN;
+        }
+
+        public void setFN(String fN) {
+            this.fN = fN;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public Boolean getIsPending() {
+            return isPending;
+        }
+
+        public void setIsPending(Boolean isPending) {
+            this.isPending = isPending;
+        }
+
+        public Long getPrivilege() {
+            return privilege;
+        }
+
+        public void setPrivilege(Long privilege) {
+            this.privilege = privilege;
+        }
+
+    }
 
     public class VoteModel {
-         int vote;
+        int vote;
 
-       public int getVote() {
-           return vote;
-       }
+        public int getVote() {
+            return vote;
+        }
 
-       public void setVote(int vote) {
-           this.vote = vote;
-       }
+        public void setVote(int vote) {
+            this.vote = vote;
+        }
 
-       public String getBy() {
-           return by;
-       }
+        public String getBy() {
+            return by;
+        }
 
-       public void setBy(String by) {
-           this.by = by;
-       }
+        public void setBy(String by) {
+            this.by = by;
+        }
 
-       String by;
+        String by;
 
 
-   }
+    }
 
-   public class MyActions{
-       boolean like;
-       boolean follow;
-       int vote;
+    public class MyActions {
+        boolean like;
+        boolean follow;
+        int vote;
 
-       public int getPrivilege() {
-           return privilege;
-       }
+        public int getPrivilege() {
+            return privilege;
+        }
 
-       public void setPrivilege(int privilege) {
-           this.privilege = privilege;
-       }
+        public void setPrivilege(int privilege) {
+            this.privilege = privilege;
+        }
 
-       int privilege;
+        int privilege;
 
-       public boolean isLike() {
-           return like;
-       }
+        public boolean isLike() {
+            return like;
+        }
 
-       public void setLike(boolean like) {
-           this.like = like;
-       }
+        public void setLike(boolean like) {
+            this.like = like;
+        }
 
-       public boolean isFollow() {
-           return follow;
-       }
+        public boolean isFollow() {
+            return follow;
+        }
 
-       public void setFollow(boolean follow) {
-           this.follow = follow;
-       }
+        public void setFollow(boolean follow) {
+            this.follow = follow;
+        }
 
-       public int getVote() {
-           return vote;
-       }
+        public int getVote() {
+            return vote;
+        }
 
-       public void setVote(int vote) {
-           this.vote=vote;
-       }
-   }
+        public void setVote(int vote) {
+            this.vote = vote;
+        }
+    }
 
     public class CommentModel {
         private long cOn;
@@ -462,10 +593,10 @@ public class KnowledgeDetailModel  {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj ==null) return false;
+        if (obj == null) return false;
         if (obj == this) return true;
-        if(obj instanceof KnowledgeDetailModel){
-            if(this.getId() != null && ((KnowledgeDetailModel) obj).getId() != null) {
+        if (obj instanceof KnowledgeDetailModel) {
+            if (this.getId() != null && ((KnowledgeDetailModel) obj).getId() != null) {
                 return this.getId().equals(((KnowledgeDetailModel) obj).getId());
             }
         }
@@ -475,6 +606,7 @@ public class KnowledgeDetailModel  {
     /**
      * to avoid same hash code generation if any of fields are equal like in one object email and other object kore id are same and remaining or null
      * for that we are multiplying with different numbers
+     *
      * @return
      */
     @Override
@@ -484,6 +616,7 @@ public class KnowledgeDetailModel  {
         result = 33 * result + (creator == null ? 0 : creator.hashCode());
         return result;
     }
+
     public Spanned getSpannedString() {
 
         return StringUtils.isNullOrEmpty(desc) ? null : Html.fromHtml(StringEscapeUtils.unescapeHtml4(desc.replaceAll("<br>", " ")));

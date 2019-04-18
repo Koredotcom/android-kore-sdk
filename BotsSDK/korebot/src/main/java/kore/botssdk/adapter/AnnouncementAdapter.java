@@ -78,9 +78,11 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
             AnnoucementResModel annoucementResModel = data.get(position);
             ((AnnouncementViewHolder) holder).binding.setAnnoucement(annoucementResModel);
 
-            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context,annoucementResModel.getLastMod()));
+            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getLastMod()));
             ((AnnouncementViewHolder) holder).binding.userProfileName.setCircle(true);
-            ((AnnouncementViewHolder) holder).binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
+            if (annoucementResModel.getOwner() != null && annoucementResModel.getOwner().getFullName() != null) {
+                ((AnnouncementViewHolder) holder).binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
+            }
             try {
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(Color.parseColor(annoucementResModel.getOwner().getColor()));
             } catch (Exception e) {
@@ -94,18 +96,15 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
                 public void onClick(View view) {
                     Bundle extras = new Bundle();
                     extras.putString(BundleConstants.KNOWLEDGE_ID, annoucementResModel.getId());
-                   verticalListViewActionHelper.knowledgeItemClicked(extras);
+                    verticalListViewActionHelper.knowledgeItemClicked(extras);
                 }
             });
 
+        } else {
+            holder = (EmptyAnnocementViewHolder) holder;
+            ((EmptyAnnocementViewHolder) holder).tv_message.setText("No Announcements");
+
         }
-            else
-            {
-                holder=(EmptyAnnocementViewHolder)holder;
-                ((EmptyAnnocementViewHolder) holder).tv_message.setText("No Announcements");
-
-            }
-
 
 
     }
@@ -154,10 +153,11 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     class EmptyAnnocementViewHolder extends RecyclerView.ViewHolder {
         TextView tv_message;
         RecyclerView view_action;
+
         public EmptyAnnocementViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_message = itemView.findViewById(R.id.tv_message);
-            view_action=itemView.findViewById(R.id.view_action);
+            view_action = itemView.findViewById(R.id.view_action);
         }
     }
 }

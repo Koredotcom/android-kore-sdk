@@ -52,6 +52,7 @@ public class DateUtils {
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
+    private static final Format dateFormat6 = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, hh:mm a", Locale.ENGLISH);
 
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
@@ -275,6 +276,12 @@ public class DateUtils {
         return "";
     }
 
+
+    public static String getAnnoucementDateDDMMM(long dateformat)
+    {
+
+        return dateFormat6.format(dateformat);
+    }
     public static String getFormattedSentDateCoreFunctionality(long sentDate) {
         Date date = new Date();
         date.setTime(sentDate);

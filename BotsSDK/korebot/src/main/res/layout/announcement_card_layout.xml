@@ -156,7 +156,7 @@
             android:drawablePadding="7dp"
             android:maxLines="1"
             android:minWidth="80dp"
-            android:text="@{Long.toString(annoucement.NLikes)}"
+            android:text="@{Long.toString(annoucement.NUpVotes)}"
             android:textColor="@color/color_626281"
             android:textSize="12sp" />
 

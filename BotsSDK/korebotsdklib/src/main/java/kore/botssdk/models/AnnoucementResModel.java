@@ -56,6 +56,18 @@ public class AnnoucementResModel implements Serializable {
     @Expose
     private Long lastMod;
 
+    public Long getNUpVotes() {
+        return nUpVotes;
+    }
+
+    public void setnUpVotes(Long nUpVotes) {
+        this.nUpVotes = nUpVotes;
+    }
+
+    @SerializedName("nUpVotes")
+    @Expose
+    private Long nUpVotes;
+
 
     @SerializedName("sharedList")
     @Expose
