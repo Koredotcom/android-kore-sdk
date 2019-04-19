@@ -196,6 +196,14 @@ public String getFormatedDate()
 {
    return DateUtils.formattedSentDateV8_InAnnouncement(createdOn);
 }
+
+
+public boolean getDateLabelVisblity()
+{
+    return DateUtils.formattedSentDateV8_InAnnouncement2(createdOn);
+}
+
+
     public void setCreatedOn(long createdOn) {
         this.createdOn = createdOn;
     }

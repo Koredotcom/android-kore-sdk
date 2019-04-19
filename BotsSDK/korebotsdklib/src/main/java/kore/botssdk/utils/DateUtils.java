@@ -454,6 +454,18 @@ public class DateUtils {
         return timeZone;
     }
 
+
+    public static boolean formattedSentDateV8_InAnnouncement2(long createdOn) {
+     boolean isDateLabelShouldVisble=true;
+        if (android.text.format.DateUtils.isToday(createdOn)) {
+            isDateLabelShouldVisble=false;
+        } else if (isYesterday(createdOn)) {
+         isDateLabelShouldVisble=false;
+        }
+
+        return isDateLabelShouldVisble;
+
+    }
     public static String formattedSentDateV8_InAnnouncement(long createdOn) {
         String time = "";
         if (android.text.format.DateUtils.isToday(createdOn)) {
