@@ -32,7 +32,7 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
     private Skill skill;
-
+    private static Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
         return hideComposeBar;
     }
@@ -309,91 +309,94 @@ public class PayloadInner {
 
 
     public void convertElementToAppropriate() {
-        Gson gson = new Gson();
-        if (elements != null) {
-            elementsAsString = gson.toJson(elements);
-            if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
-                Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
-                }.getType();
-                carouselElements = gson.fromJson(elementsAsString, carouselType);
-            }else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
-                Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
-                }.getType();
-                carouselElements = gson.fromJson(elementsAsString, carouselType);
+
+        try {
+            if (elements != null) {
+                elementsAsString = gson.toJson(elements);
+                if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
+                    Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
+                    }.getType();
+                    carouselElements = gson.fromJson(elementsAsString, carouselType);
+                } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
+                    Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
+                    }.getType();
+                    carouselElements = gson.fromJson(elementsAsString, carouselType);
+                } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotListModel>>() {
+                    }.getType();
+                    listElements = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
+                    }.getType();
+                    pieChartElements = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotLineChartDataModel>>() {
+                    }.getType();
+                    lineChartDataModels = gson.fromJson(elementsAsString, listType);
+
+                } else if (BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotBarChartDataModel>>() {
+                    }.getType();
+                    barChartDataModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {
+                    }.getType();
+                    knowledgeDetailModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)) {
+                    Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
+                    }.getType();
+                    tableDataModel = gson.fromJson(elementsAsString, tableType);
+                } else if (BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(template_type)) {
+                    Type tableType = new TypeToken<ArrayList<BotMiniTableModel>>() {
+                    }.getType();
+                    miniTableDataModels = gson.fromJson(elementsAsString, tableType);
+                } else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(template_type)) {
+                    Type tableType = new TypeToken<ArrayList<KoraSearchResultsModel>>() {
+                    }.getType();
+                    koraSearchResultsModel = gson.fromJson(elementsAsString, tableType);
+                } else if (BotResponse.TEMPLATE_TYPE_SLOT_PICKER.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<MeetingTemplateModel>>() {
+                    }.getType();
+                    meetingTemplateModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(template_type)) {
+                    Type tableType = new TypeToken<ArrayList<CalEventsTemplateModel>>() {
+                    }.getType();
+
+                    calEventsTemplateModels = gson.fromJson(elementsAsString, tableType);
+                } else if (BotResponse.TEMPLATE_TYPE_MEETING_CONFIRM.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
+                    }.getType();
+                    meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TASK_FULLVIEW.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<TaskTemplateResponse>>() {
+                    }.getType();
+                    taskTemplateModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_FILES_LOOKUP.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<KaFileLookupModel>>() {
+                    }.getType();
+                    fileLookupModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_ATTENDEE_SLOTS.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<AttendeeSlotTemplateModel>>() {
+                    }.getType();
+                    attendeeSlotTemplateModels = gson.fromJson(elementsAsString, listType);
+
+                } else if (BotResponse.TEMPLATE_TYPE_PICKER.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<QuickReplyTemplate>>() {
+                    }.getType();
+                    pickerTemplateModels = gson.fromJson(elementsAsString, listType);
+
+                } else if (BotResponse.KA_CONTACT_VIEW.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
+                    }.getType();
+                    contactInfoModels = gson.fromJson(elementsAsString, listType);
+                } else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
+                    Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
+                    }.getType();
+                    annoucementResModels = gson.fromJson(elementsAsString, listType);
+                }
             }
-            else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
-                Type listType = new TypeToken<ArrayList<BotListModel>>() {
-                }.getType();
-                listElements = gson.fromJson(elementsAsString, listType);
-            } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(template_type)) {
-                Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
-                }.getType();
-                pieChartElements = gson.fromJson(elementsAsString, listType);
-            } else if(BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<BotLineChartDataModel>>() {
-                }.getType();
-                lineChartDataModels = gson.fromJson(elementsAsString, listType);
-
-            }else if(BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<BotBarChartDataModel>>() {
-                }.getType();
-                barChartDataModels = gson.fromJson(elementsAsString, listType);
-            }else if(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {
-                }.getType();
-                knowledgeDetailModels = gson.fromJson(elementsAsString, listType);
-            }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(template_type)){
-                Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
-                }.getType();
-                tableDataModel = gson.fromJson(elementsAsString, tableType);
-            }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(template_type)){
-                Type tableType = new TypeToken<ArrayList<BotMiniTableModel>>() {
-                }.getType();
-                miniTableDataModels = gson.fromJson(elementsAsString, tableType);
-            }else if(BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(template_type)){
-                Type tableType = new TypeToken<ArrayList<KoraSearchResultsModel>>() {
-                }.getType();
-                koraSearchResultsModel = gson.fromJson(elementsAsString, tableType);
-            }  else if (BotResponse.TEMPLATE_TYPE_SLOT_PICKER.equalsIgnoreCase(template_type)) {
-                Type listType = new TypeToken<ArrayList<MeetingTemplateModel>>() {
-                }.getType();
-                meetingTemplateModels = gson.fromJson(elementsAsString, listType);
-            }else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(template_type)){
-                Type tableType = new TypeToken<ArrayList<CalEventsTemplateModel>>(){}.getType();
-
-                calEventsTemplateModels = gson.fromJson(elementsAsString,tableType);
-            }else if (BotResponse.TEMPLATE_TYPE_MEETING_CONFIRM.equalsIgnoreCase(template_type)) {
-                Type listType = new TypeToken<ArrayList<MeetingConfirmationModel>>() {
-                }.getType();
-                meetingConfirmationModels = gson.fromJson(elementsAsString, listType);
-            }
-            else if (BotResponse.TEMPLATE_TYPE_TASK_VIEW.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TASK_FULLVIEW.equalsIgnoreCase(template_type)) {
-                Type listType = new TypeToken<ArrayList<TaskTemplateResponse>>() {
-                }.getType();
-                taskTemplateModels = gson.fromJson(elementsAsString, listType);
-            }else if(BotResponse.TEMPLATE_TYPE_FILES_LOOKUP.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<KaFileLookupModel>>() {
-                }.getType();
-                fileLookupModels = gson.fromJson(elementsAsString, listType);
-            }else if(BotResponse.TEMPLATE_TYPE_ATTENDEE_SLOTS.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<AttendeeSlotTemplateModel>>() {
-                }.getType();
-                attendeeSlotTemplateModels = gson.fromJson(elementsAsString, listType);
-
-            }else if(BotResponse.TEMPLATE_TYPE_PICKER.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<QuickReplyTemplate>>() {
-                }.getType();
-                pickerTemplateModels = gson.fromJson(elementsAsString, listType);
-
-            }else if(BotResponse.KA_CONTACT_VIEW.equalsIgnoreCase(template_type)){
-                Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
-                }.getType();
-                contactInfoModels = gson.fromJson(elementsAsString, listType);
-            }else if(BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)){
-                Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
-                }.getType();
-                annoucementResModels = gson.fromJson(elementsAsString, listType);
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
        // templateValidator();
     }

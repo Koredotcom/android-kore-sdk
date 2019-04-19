@@ -269,7 +269,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         meetingSlotsView = ViewProvider.getMeetingSlotsView(context);
         meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
-        meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
+      //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
         addView(meetingSlotsView);
 
         contactInfoView = ViewProvider.getContactInfoView(context);
@@ -279,7 +279,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
         meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
-        meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
+     //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
         addView(meetingConfirmationView);
 
         attendeeSlotSelectionView = ViewProvider.getAttendeeSlotSelectionView(context);

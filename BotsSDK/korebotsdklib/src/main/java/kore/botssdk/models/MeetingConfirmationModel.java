@@ -58,6 +58,7 @@ public class MeetingConfirmationModel {
     }
 
     private ArrayList<UserDetailModel> attendees;
+    private ArrayList<MeetingSlotModel.Slot> slots;
 
     public String getWhere() {
         return where;
@@ -71,6 +72,14 @@ public class MeetingConfirmationModel {
         String endTime = getTimeInAmPm(slot_end).toUpperCase();
           return MessageFormat.format("{0}, {1} to {2} ", DateUtils.getDate(date), startTime, endTime);
 
+    }
+
+    public ArrayList<MeetingSlotModel.Slot> getSlots() {
+        return slots;
+    }
+
+    public void setSlots(ArrayList<MeetingSlotModel.Slot> slots) {
+        this.slots = slots;
     }
 
     public class UserDetailModel {
