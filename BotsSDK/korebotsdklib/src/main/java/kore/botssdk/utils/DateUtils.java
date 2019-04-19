@@ -47,6 +47,7 @@ public class DateUtils {
 
     public static final SimpleDateFormat dateWeekDayTime2 = new SimpleDateFormat("MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime3 = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekDayTime4 = new SimpleDateFormat("dd MMM, yyyy, hh:mm a", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
@@ -133,6 +134,7 @@ public class DateUtils {
         }
 
     }
+
     public static String getFormattedSendDateInTimeFormatCoreFunctionality2(Context mContext, long last_Modified) {
 
 
@@ -167,6 +169,7 @@ public class DateUtils {
 
         return time;
     }
+
     public static String formattedSentDateV6(long lastModified) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
@@ -198,20 +201,20 @@ public class DateUtils {
 
     public static String getDateWithTime(long lastModified) {
 
-        String date= dateWeekMsgTime.format(lastModified);
+        String date = dateWeekMsgTime.format(lastModified);
 
         if (android.text.format.DateUtils.isToday(lastModified)) {
-            date = "Today " +getTimeInAmPm(lastModified);
+            date = "Today " + getTimeInAmPm(lastModified);
         } else if (isYesterday(lastModified)) {
-            date = "Yesterday " +getTimeInAmPm(lastModified);
+            date = "Yesterday " + getTimeInAmPm(lastModified);
         } else if (isTomorrow(lastModified)) {
-            date = "Tomorrow " +getTimeInAmPm(lastModified);
+            date = "Tomorrow " + getTimeInAmPm(lastModified);
         }
         return date;
     }
 
     public static String getDay(long mdate) {
-    String date=    DateUtils.calendar_event_list_format1.format(mdate);
+        String date = DateUtils.calendar_event_list_format1.format(mdate);
 
         if (android.text.format.DateUtils.isToday(mdate)) {
             date = "Today";
@@ -277,11 +280,11 @@ public class DateUtils {
     }
 
 
-    public static String getAnnoucementDateDDMMM(long dateformat)
-    {
+    public static String getAnnoucementDateDDMMM(long dateformat) {
 
         return dateFormat6.format(dateformat);
     }
+
     public static String getFormattedSentDateCoreFunctionality(long sentDate) {
         Date date = new Date();
         date.setTime(sentDate);
@@ -375,15 +378,15 @@ public class DateUtils {
         String time = "";
 
 
-            if (android.text.format.DateUtils.isToday(lastModified)) {
-                time = "Today at " + dateTime1.format(new Date(lastModified));
-            } else if (isYesterday(lastModified)) {
-                time = "Yesterday, " + dateTime1.format(new Date(lastModified));
-            } else if (isTomorrow(lastModified)) {
-                time = "Tomorrow, " + dateTime1.format(new Date(lastModified));
-            } else {
-                time = dateWeekDayTime2.format(new Date(lastModified));
-            }
+        if (android.text.format.DateUtils.isToday(lastModified)) {
+            time = "Today at " + dateTime1.format(new Date(lastModified));
+        } else if (isYesterday(lastModified)) {
+            time = "Yesterday, " + dateTime1.format(new Date(lastModified));
+        } else if (isTomorrow(lastModified)) {
+            time = "Tomorrow, " + dateTime1.format(new Date(lastModified));
+        } else {
+            time = dateWeekDayTime2.format(new Date(lastModified));
+        }
 
         return time;
     }
@@ -398,12 +401,13 @@ public class DateUtils {
             time = dateTime1.format(new Date(lastModified));
         } else if (isYesterday(lastModified)) {
             time = "Yesterday, " + dateTime1.format(new Date(lastModified));
-        }  else {
+        } else {
             time = dateWeekDayTime3.format(new Date(lastModified));
         }
 
         return time;
     }
+
     public static String formattedSentDateV8(long lastModified, boolean isDetailView) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
@@ -448,5 +452,19 @@ public class DateUtils {
             timeZone = timeZone.replace("calcutta", "kolkata");
         }
         return timeZone;
+    }
+
+    public static String formattedSentDateV8_InAnnouncement(long createdOn) {
+        String time = "";
+        if (android.text.format.DateUtils.isToday(createdOn)) {
+            time = "Today at " + dateTime1.format(new Date(createdOn));
+        } else if (isYesterday(createdOn)) {
+            time = "Yesterday, " + dateTime1.format(new Date(createdOn));
+        } else {
+            time = dateWeekDayTime4.format(new Date(createdOn));
+        }
+
+        return time;
+
     }
 }
