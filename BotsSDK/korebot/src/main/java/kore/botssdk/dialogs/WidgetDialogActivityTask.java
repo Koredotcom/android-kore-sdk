@@ -63,7 +63,7 @@ public class WidgetDialogActivityTask extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
-        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(true);
 
         getWindow().setBackgroundDrawableResource(R.color.transparent_card);
         // ViewDataBinding mBinding = DataBindingUtil.setContentView(this,R.layout.widget_files_item_selection_dialog);

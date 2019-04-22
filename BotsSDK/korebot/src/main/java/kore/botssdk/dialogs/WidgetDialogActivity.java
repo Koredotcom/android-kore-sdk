@@ -69,7 +69,7 @@ public class WidgetDialogActivity extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 
-        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(true);
 
         getWindow().setBackgroundDrawableResource(R.color.transparent_card);
 
