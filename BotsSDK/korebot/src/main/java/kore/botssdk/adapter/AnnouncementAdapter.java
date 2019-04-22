@@ -6,23 +6,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.databinding.AnnouncementCardLayoutBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AnnoucementResModel;
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.RecyclerView;
+import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
@@ -50,6 +47,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
         context = activity;
         this.data = data;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -96,7 +94,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
                 public void onClick(View view) {
                     Bundle extras = new Bundle();
                     extras.putString(BundleConstants.KNOWLEDGE_ID, annoucementResModel.getId());
-                    verticalListViewActionHelper.knowledgeItemClicked(extras);
+                    verticalListViewActionHelper.knowledgeItemClicked(extras,false);
                 }
             });
 
@@ -107,6 +105,14 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
         }
 
 
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if(data != null && data.size()>0) {
+            AnnoucementResModel model = data.get(position);
+            return model.getCreatedOn() + position;
+        }else return position;
     }
 
     @Override
@@ -152,8 +158,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     class EmptyAnnocementViewHolder extends RecyclerView.ViewHolder {
         TextView tv_message;
-        RecyclerView view_action;
-
+        RelativeLayout view_action;
         public EmptyAnnocementViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_message = itemView.findViewById(R.id.tv_message);

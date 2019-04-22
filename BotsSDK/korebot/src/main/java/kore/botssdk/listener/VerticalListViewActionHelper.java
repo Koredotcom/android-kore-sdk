@@ -7,7 +7,7 @@ import java.util.HashMap;
 import kore.botssdk.models.BotCaourselButtonModel;
 
 public interface VerticalListViewActionHelper {
-    void knowledgeItemClicked(Bundle extras);
+    void knowledgeItemClicked(Bundle extras,boolean isKnowledge);
     void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel);
     void emailItemClicked(String action, HashMap customData);
     void tasksSelectedOrDeselected(boolean selecetd);

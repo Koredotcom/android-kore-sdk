@@ -251,7 +251,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     @Override
-    public void knowledgeItemClicked(Bundle extras) {
+    public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
         composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
     }
 

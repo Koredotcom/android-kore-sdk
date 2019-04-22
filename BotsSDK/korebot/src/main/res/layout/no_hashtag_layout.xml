@@ -14,7 +14,7 @@
         android:padding="10dp"
         android:id="@+id/tv_message"
         android:text="Hashtags not found"
-        android:textColor="@color/greyHead"
+        android:textColor="#84959B"
         android:textSize="15sp" />
 
 </LinearLayout>
