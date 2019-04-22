@@ -123,11 +123,13 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
             if (meetingConfirmationModel.getSlots() != null && meetingConfirmationModel.getSlots().size() > 0) {
+                slots.setVisibility(View.VISIBLE);
                 slots.setText(getSlotsViewText(meetingConfirmationModel.getSlots()));
+                label.setVisibility(View.VISIBLE);
                 label.setText(meetingConfirmationModel.getSlots().size() > 1 ? "Selected Slots" : "Selected Slot");
             } else {
-                slots.setText("");
-                label.setText("");
+                slots.setVisibility(View.GONE);
+                label.setVisibility(View.GONE);
             }
             //GON
         } else {

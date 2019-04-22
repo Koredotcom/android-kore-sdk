@@ -36,7 +36,7 @@
             android:textColor="@color/color_465360"
             android:ellipsize="end"
             android:text="Hello"
-            android:maxLines="1"
+            android:singleLine="true"
             android:gravity="center"
             android:textSize="14sp"
             android:layout_gravity="center_vertical" />

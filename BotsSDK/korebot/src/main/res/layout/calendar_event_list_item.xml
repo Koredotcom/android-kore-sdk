@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start|top"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:minHeight="30dp"
                 android:text=""
                 android:textColor="#485260"
@@ -118,7 +118,7 @@
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
-                android:maxLines="1"
+                android:singleLine="true"
                 android:textColor="#485260"
                 android:textSize="13sp" />
 
