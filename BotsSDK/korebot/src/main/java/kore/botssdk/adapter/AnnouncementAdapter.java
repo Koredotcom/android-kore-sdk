@@ -99,12 +99,19 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
             });
 
         } else {
-            holder = (EmptyAnnocementViewHolder) holder;
+//            holder = (EmptyAnnocementViewHolder) holder;
             ((EmptyAnnocementViewHolder) holder).tv_message.setText("No Announcements");
 
         }
 
 
+    }
+
+    public void addItem(ArrayList<AnnoucementResModel> model) {
+        if (model != null) {
+            this.data.addAll(0, model);
+            notifyItemInserted(0);
+        }
     }
 
     @Override

@@ -11,9 +11,11 @@
         android:layout_height="40dp"
 
         android:gravity="center|start"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:id="@+id/tv_message"
-        android:text="Hashtags not found"
+        android:text="No Hashtags"
         android:textColor="#84959B"
         android:textSize="15sp" />
 

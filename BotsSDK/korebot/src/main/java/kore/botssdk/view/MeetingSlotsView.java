@@ -152,13 +152,15 @@ public class MeetingSlotsView extends ViewGroup {
             button1.setOnClickListener(isEnabled ? new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    composeFooterInterface.onSendClick(buttonModels.get(0).getPayload());
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.onSendClick(buttonModels.get(0).getPayload());
                 }
             } : null);
             button2.setOnClickListener(isEnabled ? new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    composeFooterInterface.onSendClick(buttonModels.get(1).getPayload());}
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.onSendClick(buttonModels.get(1).getPayload());}
             } : null);
         } else {
             autoExpandListView.setAdapter(null);
@@ -171,8 +173,6 @@ public class MeetingSlotsView extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
         final int count = getChildCount();
-
-
         //get the available size of child view
         int childLeft = 0;
         int childTop = 0;
