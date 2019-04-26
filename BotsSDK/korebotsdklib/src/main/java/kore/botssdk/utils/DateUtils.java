@@ -55,6 +55,7 @@ public class DateUtils {
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
     private static final Format dateFormat6 = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekMsgTime = new SimpleDateFormat("EE, MMM dd, hh:mm a", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekMsgTime2 = new SimpleDateFormat("MMM dd, hh:mm a", Locale.ENGLISH);
 
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
@@ -390,6 +391,22 @@ public class DateUtils {
 
         return time;
     }
+
+    public static String formattedDateInTask(long lastModified) {
+
+        String date = dateWeekMsgTime2.format(lastModified);
+
+        if (android.text.format.DateUtils.isToday(lastModified)) {
+            date = "Today, " + date;
+        } else if (isYesterday(lastModified)) {
+            date = "Yesterday, " + date;
+        } else if (isTomorrow(lastModified)) {
+            date = "Tomorrow, " + date;
+        }
+
+        return date;
+    }
+
 
     public static String formattedSentDateV8_InAnnoucemnt(long lastModified) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
