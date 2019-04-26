@@ -123,8 +123,10 @@ public class AnnoucementResModel implements Serializable {
                 return  getSharedList().get(0).getName()  ;
             } else {
                 int remaining = getSharedList().size() - 1;
-                return String.format("%1$s and %2$d others",
-                         getSharedList().get(0).getName() , remaining);
+                if(remaining > 1)
+                    return String.format("%1$s and %2$d others",getSharedList().get(0).getName() , remaining);
+                else
+                    return String.format("%1$s and %2$d other",getSharedList().get(0).getName() , remaining);
 
             }
         }

@@ -155,8 +155,10 @@ public class MeetingConfirmationView extends ViewGroup {
                 return userDetailModels.get(0).getFirstName();
             } else {
                 int remaining = userDetailModels.size() - 1;
-                return String.format("%1$s  and %2$d others", userDetailModels.get(0).getFirstName(), remaining);
-
+                if(remaining > 1)
+                    return String.format("%1$s  and %2$d others", userDetailModels.get(0).getFirstName(), remaining);
+                else
+                    return String.format("%1$s  and %2$d other", userDetailModels.get(0).getFirstName(), remaining);
             }
 
         }

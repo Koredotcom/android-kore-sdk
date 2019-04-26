@@ -92,7 +92,6 @@
             android:visibility="@{annoucement.titleVisiblity}"
              android:text="@{annoucement.title}"
             android:textColor="@color/color_626281"
-            android:textStyle="bold"
             android:textSize="17sp" />
 
 
