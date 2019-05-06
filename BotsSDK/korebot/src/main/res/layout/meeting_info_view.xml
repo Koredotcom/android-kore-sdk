@@ -21,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
-            android:maxLines="1"
+            android:singleLine="true"
             android:text="@{meetingModel.title}"
             android:textColor="@color/color_404051"
             android:textSize="16sp" />
@@ -40,6 +40,7 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="@{meetingModel.where}"
+            android:visibility="@{meetingModel.locVisibility}"
             android:textColor="@color/color_404051"
             android:textSize="13dp" />
 

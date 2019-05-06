@@ -56,7 +56,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
         if (viewType == DATA_FOUND)
             return new AnnouncementAdapter.AnnouncementViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.announcement_card_layout, parent, false));
         else {
-            View view = LayoutInflater.from(context).inflate(R.layout.no_hashtag_layout, parent, false);
+            View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
             return new AnnouncementAdapter.EmptyAnnocementViewHolder(view);
         }
     }

@@ -14,7 +14,7 @@ public class EmptyWidgetViewHolder extends RecyclerView.ViewHolder {
 
     public EmptyWidgetViewHolder(@NonNull View itemView) {
         super(itemView);
-        tv_disrcription = itemView.findViewById(R.id.tv_disrcription);
+        tv_disrcription = itemView.findViewById(R.id.tv_message);
         img_icon = itemView.findViewById(R.id.img_icon);
     }
 }

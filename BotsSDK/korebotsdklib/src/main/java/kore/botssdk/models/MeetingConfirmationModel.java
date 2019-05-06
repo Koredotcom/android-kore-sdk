@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.view.View;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
@@ -62,6 +64,9 @@ public class MeetingConfirmationModel {
 
     public String getWhere() {
         return where;
+    }
+    public int getLocVisibility(){
+        return (where==null || where.isEmpty())? View.GONE:View.VISIBLE;
     }
 
     public void setWhere(String where) {
