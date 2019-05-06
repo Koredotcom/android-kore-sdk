@@ -11,13 +11,13 @@ public interface ComposeFooterInterface {
     /**
      * @param message : Title and payload, Both are same
      */
-    void onSendClick(String message);
+    void onSendClick(String message, boolean isFromUtterance);
 
     /**
      * @param message : Title of the button
      * @param payload : Payload to be send
      */
-    void onSendClick(String message, String payload);
+    void onSendClick(String message, String payload, boolean isFromUtterance);
 
     void onFormActionButtonClicked(FormActionTemplate fTemplate);
 

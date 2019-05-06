@@ -87,7 +87,7 @@ public class BotButtonView extends ViewGroup {
                         }else{
                             String title = botButtonModel.getTitle();
                             String payload = botButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(title, payload);
+                            composeFooterInterface.onSendClick(title, payload,false);
                         }
                     }
                 }

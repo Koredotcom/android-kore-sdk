@@ -178,7 +178,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message.trim());
+            composeFooterInterface.onSendClick(message.trim(),false);
             if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");
@@ -499,7 +499,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         }else{
             if (composeFooterInterface != null) {
-                composeFooterInterface.onSendClick(result);
+                composeFooterInterface.onSendClick(result,false);
                 editTextMessage.setText("");
             } else {
                 Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");

@@ -164,7 +164,7 @@ public class CarouselItemViewHelper {
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload,false);
                         }else if(BundleConstants.BUTTON_TYPE_HELP_RESOLVE.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             Bundle extras = new Bundle();
                             extras.putString(BundleConstants.RESOURCE_ID,botCaourselButtonModel.getId());
@@ -172,16 +172,16 @@ public class CarouselItemViewHelper {
                         }else if(BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             String buttonPayload = botCaourselButtonModel.getPayload();
 //                            String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonPayload, buttonPayload);
+                            composeFooterInterface.onSendClick(buttonPayload, buttonPayload,false);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
                         }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(botCaourselButtonModel.getType())){
                             String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonTitle);
+                            composeFooterInterface.onSendClick(buttonTitle,false);
                         }else{
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload,false);
                         }
                     }
                 }
@@ -200,10 +200,10 @@ public class CarouselItemViewHelper {
                     } else if (composeFooterInterface != null && botListDefaultModel != null) {
                         if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                            composeFooterInterface.onSendClick(buttonPayload);
+                            composeFooterInterface.onSendClick(buttonPayload,false);
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
                             String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                            composeFooterInterface.onSendClick(buttonPayload);
+                            composeFooterInterface.onSendClick(buttonPayload,false);
                         }
                     }
                 }

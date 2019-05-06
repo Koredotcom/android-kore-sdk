@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -5,9 +6,11 @@ import android.util.AttributeSet;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 23-Apr-19.
- */
+ *//*
+
 
 public class AutoExpandRecyclerView extends RecyclerView {
 
@@ -50,3 +53,4 @@ public class AutoExpandRecyclerView extends RecyclerView {
         }
     }
 }
+*/

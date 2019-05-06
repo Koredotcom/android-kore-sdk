@@ -123,7 +123,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        socketUpdateListener.onMessageUpdate(payload, false, null);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
         if(chatListener != null){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null,false));
         }
     }
 
@@ -335,7 +335,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         if(chatListener != null ){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
 
     }
@@ -361,7 +361,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         if(chatListener != null ){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
 
     }
@@ -383,7 +383,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
         if(chatListener != null){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest,false));
         }
 
     }

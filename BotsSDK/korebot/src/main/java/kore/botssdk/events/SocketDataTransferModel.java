@@ -37,9 +37,20 @@ public class SocketDataTransferModel {
 
     private BotRequest botRequest;
 
-    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest){
+    public boolean isFromUtterance() {
+        return isFromUtterance;
+    }
+
+    public void setFromUtterance(boolean fromUtterance) {
+        isFromUtterance = fromUtterance;
+    }
+
+    private boolean isFromUtterance = false;
+
+    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest, boolean isFromUtterance){
         this.event_type = event_type;
         this.payLoad = payLoad;
         this.botRequest = botRequest;
+        this.isFromUtterance = isFromUtterance;
     }
 }

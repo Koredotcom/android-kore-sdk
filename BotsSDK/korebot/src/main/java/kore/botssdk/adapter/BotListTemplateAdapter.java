@@ -116,7 +116,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
                             String listElementButtonPayload = botListElementButton.getPayload();
                             String listElementButtonTitle = botListElementButton.getTitle();
-                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload);
+                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload,false);
                         }
                     }
                 }
@@ -132,7 +132,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload());
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
                         }
                     }
                 }

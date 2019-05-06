@@ -153,14 +153,14 @@ public class MeetingSlotsView extends ViewGroup {
                 @Override
                 public void onClick(View v) {
                     if(composeFooterInterface != null)
-                        composeFooterInterface.onSendClick(buttonModels.get(0).getPayload());
+                        composeFooterInterface.onSendClick(buttonModels.get(0).getPayload(),false);
                 }
             } : null);
             button2.setOnClickListener(isEnabled ? new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(composeFooterInterface != null)
-                        composeFooterInterface.onSendClick(buttonModels.get(1).getPayload());}
+                        composeFooterInterface.onSendClick(buttonModels.get(1).getPayload(),false);}
             } : null);
         } else {
             autoExpandListView.setAdapter(null);

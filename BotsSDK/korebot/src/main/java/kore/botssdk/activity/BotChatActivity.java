@@ -245,12 +245,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
 
     @Override
-    public void onSendClick(String message) {
+    public void onSendClick(String message,boolean isFromUtterance) {
         BotSocketConnectionManager.getInstance().sendMessage(message, null);
     }
 
     @Override
-    public void onSendClick(String message, String payload) {
+    public void onSendClick(String message, String payload,boolean isFromUtterance) {
         BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         toggleQuickRepliesVisiblity(false);
     }
@@ -293,7 +293,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onQuickReplyItemClicked(String text) {
-        onSendClick(text);
+        onSendClick(text,false);
     }
 
     /**
