@@ -333,7 +333,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
                         HashMap<String, String> hashMap = new HashMap<>();
                         hashMap.put("meetingId", model.getEventId());
-                        String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                        String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
                         if (composeFooterInterface != null) {
                             composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
                         } else {

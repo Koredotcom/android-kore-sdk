@@ -1,10 +1,13 @@
+/*
 package kore.botssdk.models;
 
 import java.util.ArrayList;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 14-Feb-18.
- */
+ *//*
+
 
 public class CustomData {
     private String title;
@@ -28,3 +31,4 @@ public class CustomData {
 
 
 }
+*/
