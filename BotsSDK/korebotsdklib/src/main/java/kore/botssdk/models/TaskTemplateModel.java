@@ -8,6 +8,15 @@ public class TaskTemplateModel {
     private String title;
     private String status;
     private String id;
+    private String note;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 
     public List<CalEventsTemplateModel.Action> getActions() {
         return actions;
