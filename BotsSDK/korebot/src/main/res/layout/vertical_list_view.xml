@@ -1,42 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp"
+    android:background="@drawable/vertical_list_background_rounded"
+    android:paddingStart="1dp"
+    >
 
-    app:cardCornerRadius="4dp"
-    app:cardUseCompatPadding="true">
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/vertical_list_white_back">
 
-        android:orientation="vertical">
-
-        <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/recycler_view"
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
             android:orientation="vertical"
-            android:visibility="visible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            android:padding="2dp">
 
-        <TextView
-            android:id="@+id/view_more"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center_vertical"
-            android:paddingStart="15dp"
-            android:text="@string/view_more"
-            android:layout_marginEnd="15dp"
-            android:textColor="#737d87"
-            android:textSize="@dimen/dimen_12dp" />
+            <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:layout_marginTop="1dp"
+
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <TextView
+                android:id="@+id/view_more"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginEnd="15dp"
+                android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:text="@string/view_more"
+                android:textColor="#737d87"
+                android:textSize="@dimen/dimen_12dp" />
+        </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+
+
+</FrameLayout>

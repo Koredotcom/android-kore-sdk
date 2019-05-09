@@ -49,7 +49,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class VerticalListView extends ViewGroup implements VerticalListViewActionHelper {
     private RecyclerView recyclerView;
-    private CardView rootLayout;
+    private View rootLayout;
     private int dp1;
     private TextView viewMore;
 
