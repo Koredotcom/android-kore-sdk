@@ -58,8 +58,8 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     private void init() {
-        medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
-        regular = Typeface.create("sans-serif", Typeface.NORMAL);
+        medium = Typeface.create("latomedium", Typeface.NORMAL);
+        regular = Typeface.create("latoregular", Typeface.NORMAL);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }

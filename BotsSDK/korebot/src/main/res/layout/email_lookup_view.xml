@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:layout_toStartOf="@+id/date_view"
             android:ellipsize="end"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/latoregular"
             android:maxLines="1"
             android:textStyle="bold"
             android:text='@{emailModel.subject == null || emailModel.subject.empty ? "(No Subject)" : emailModel.subject}'
@@ -43,7 +43,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="14dp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/latoregular"
             android:text="@{emailModel.getDateFormat()}"
             android:textColor="#a3b0be"
             android:textSize="15sp" />
@@ -60,7 +60,7 @@
             android:layout_toStartOf="@+id/image"
             android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-medium"
+            android:fontFamily="@font/latomedium"
             android:maxLines="1"
             android:text="@{StringEscapeUtils.unescapeHtml4(emailModel.getFrom())}"
             android:textColor="@color/color_485260"
@@ -88,7 +88,7 @@
             android:layout_alignEnd="@+id/date_view"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@font/latoregular"
             android:maxLines="1"
             android:text='@{emailModel.desc == null || emailModel.desc.empty ? "(No Body)" : emailModel.desc}'
             android:textColor="#465360"

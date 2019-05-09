@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="42dp"
     android:background="@color/white"
-    android:fontFamily="sans-serif-medium"
+    android:fontFamily="@font/latomedium"
     android:gravity="center_vertical"
     android:minHeight="42dp"
     android:layout_marginStart="10dp"
