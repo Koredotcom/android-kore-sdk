@@ -87,7 +87,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setItemAnimator(null);
         viewMore = view.findViewById(R.id.view_more);
-        rootLayout = view.findViewById(R.id.root_layout);
+        rootLayout = view.findViewById(R.id.rootLayoutvertical);
         viewMore.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

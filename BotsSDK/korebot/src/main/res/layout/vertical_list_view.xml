@@ -1,54 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/root_layout"
+    android:id="@+id/rootLayoutvertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/vertical_list_background_rounded"
-    android:paddingStart="1dp"
-    >
+    android:background="@drawable/shadow_layer_background"
+    android:orientation="vertical"
+    android:paddingStart="4dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="9dp"
+    android:paddingBottom="12dp">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/vertical_list_white_back">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="1dp"
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="2dp">
+        android:visibility="visible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                android:layout_marginTop="1dp"
+    <TextView
+        android:id="@+id/view_more"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="15dp"
+        android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:text="@string/view_more"
+        android:textColor="#737d87"
+        android:textSize="@dimen/dimen_12dp"
+        android:visibility="visible" />
+</LinearLayout>
 
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <TextView
-                android:id="@+id/view_more"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginEnd="15dp"
-                android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center_vertical"
-                android:paddingStart="15dp"
-                android:text="@string/view_more"
-                android:textColor="#737d87"
-                android:textSize="@dimen/dimen_12dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-</FrameLayout>
