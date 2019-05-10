@@ -27,9 +27,9 @@ public abstract class KaBaseBubbleContainer extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
-    public KaBaseBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    /*public KaBaseBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    }*/
 
     public void setDimensions(int containerWidth, int containerHeight) {
         BUBBLE_CONTENT_LAYOUT_WIDTH = containerWidth;

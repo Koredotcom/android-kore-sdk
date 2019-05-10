@@ -164,7 +164,7 @@ public class SDKConfiguration {
         public static  String leftBubbleSelected="#D3D3D3";
         public static  String leftBubbleUnSelected="#f8f9f8";
         public static  String leftBubbleTextColor="#404051";
-        public static  String rightBubbleTextColor="#757587";
+        public static  String rightBubbleTextColor="#161628";//"#757587";
         public static  String whiteColor="#FFFFFF";
         public static  String leftBubbleBorderColor = "#eeeef2";
         public static  String rightLinkColor="#3942f6";

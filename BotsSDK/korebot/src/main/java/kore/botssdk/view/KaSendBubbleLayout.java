@@ -7,6 +7,7 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.Collections;
 
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -42,7 +43,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     }
 
     private void init() {
-        textMediaLayoutGravity = TextMediaLayout.GRAVITY_RIGHT;
+        textMediaLayoutGravity = BubbleConstants.GRAVITY_RIGHT;
         super.setLeftSide(false);
     }
 

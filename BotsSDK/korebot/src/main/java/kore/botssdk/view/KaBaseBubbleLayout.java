@@ -12,7 +12,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -25,10 +24,10 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
@@ -101,7 +100,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
 
     protected int WHITE_COLOR = 0xffffffff;
-    public static String NON_KORE_COLOR = "#AEBFC4";
+//    public static String NON_KORE_COLOR = "#AEBFC4";
 
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
@@ -119,7 +118,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
     protected int[] dimens;
     protected int textColor;
-    protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+    protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
     protected GradientDrawable leftGradientDrawable,rightGradientDrawable;
 
     LayoutInflater ownLayoutInflater;
@@ -261,7 +260,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout = ViewProvider.getTextMediaLayout(context,getLinkTextColor());
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
       //  bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
-        bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
+        bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);
 
         botButtonView = ViewProvider.getBotButtonView(context,null);

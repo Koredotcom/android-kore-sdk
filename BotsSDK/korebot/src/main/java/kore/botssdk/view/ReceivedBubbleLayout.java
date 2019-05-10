@@ -19,6 +19,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
@@ -58,7 +59,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
     private void init() {
-        textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+        textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
         pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
         tableHeight = (int) getResources().getDimension(R.dimen.table_layout_height);

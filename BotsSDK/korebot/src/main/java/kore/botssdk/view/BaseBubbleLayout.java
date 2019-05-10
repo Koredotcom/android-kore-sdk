@@ -32,6 +32,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -90,7 +91,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     Paint paint;
 
     protected int WHITE_COLOR = 0xffffffff;
-    public static String NON_KORE_COLOR = "#AEBFC4";
+//    public static String NON_KORE_COLOR = "#AEBFC4";
 
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
@@ -109,7 +110,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected int position;
     protected int[] dimens;
     protected int textColor;
-    protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+    protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
 
     LayoutInflater ownLayoutInflater;
 
@@ -214,20 +215,20 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         // Bubble Text Media
         bubbleTextMediaLayout = new TextMediaLayout(context,getLinkTextColor());
-        bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
+        bubbleTextMediaLayout.setId(BubbleConstants.TEXT_MEDIA_LAYOUT_ID);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
      //   bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
-        bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
+        bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
       /*  bubbleTextMediaLayout.setLinkTextColor(getLinkTextColor());*/
         addView(bubbleTextMediaLayout);
 
         botListTemplateView = new BotListTemplateView(getContext());
-        botListTemplateView.setId(TextMediaLayout.LIST_ID);
+        botListTemplateView.setId(BubbleConstants.LIST_ID);
         botListTemplateView.setVisibility(View.GONE);
         addView(botListTemplateView);
 
         botButtonView = new BotButtonView(getContext());
-        botButtonView.setId(TextMediaLayout.BUTTON_VIEW_ID);
+        botButtonView.setId(BubbleConstants.BUTTON_VIEW_ID);
         botButtonView.setVisibility(View.GONE);
         addView(botButtonView);
 
@@ -235,12 +236,12 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         botCarouselView = new BotCarouselView(getContext());
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
         botCarouselView.setVisibility(View.GONE);
-        botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
+        botCarouselView.setId(BubbleConstants.CAROUSEL_VIEW_ID);
         addView(botCarouselView);
 
         botPieChartView = new PieChartView(getContext());
         botPieChartView.setVisibility(View.GONE);
-        botPieChartView.setId(TextMediaLayout.PIECHART_VIEW_ID);
+        botPieChartView.setId(BubbleConstants.PIECHART_VIEW_ID);
         addView(botPieChartView);
 
         /*tableView = new CustomTableView(getContext());
@@ -250,22 +251,22 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         lineChartView = new LineChartView(getContext());
         lineChartView.setVisibility(GONE);
-        lineChartView.setId(TextMediaLayout.LINECHART_VIEW_ID);
+        lineChartView.setId(BubbleConstants.LINECHART_VIEW_ID);
         addView(lineChartView);
 
         barChartView = new BarChartView(getContext());
         barChartView.setVisibility(GONE);
-        barChartView.setId(TextMediaLayout.BARCHART_VIEW_ID);
+        barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
         addView(barChartView);
 
         stackedBarChatView = new StackedBarChatView(getContext());
         stackedBarChatView.setVisibility(GONE);
-        stackedBarChatView.setId(TextMediaLayout.STACK_BARCHAT_VIEW_ID);
+        stackedBarChatView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
         addView(stackedBarChatView);
 
         miniTableView = new BotMainTableView(getContext());
         miniTableView.setVisibility(GONE);
-        miniTableView.setId(TextMediaLayout.MINI_TABLE_VIEW_ID);
+        miniTableView.setId(BubbleConstants.MINI_TABLE_VIEW_ID);
         addView(miniTableView);
 
     }

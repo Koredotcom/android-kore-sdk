@@ -2,7 +2,9 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -26,28 +30,10 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
  */
 public class TextMediaLayout extends MediaLayout {
 
-    TextView botContentTextView;
-
-    public static final int TEXTVIEW_ID = 1980081;
-    public static final int LIST_ID = 1980045;
-    public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
-    public static final int CAROUSEL_VIEW_ID = 1980053;
-    public static final int BUTTON_VIEW_ID = 1980098;
-    public static final int PIECHART_VIEW_ID = 19800123;
-    public static final int TABLE_VIEW_ID = 19800345;
-    public static final int LINECHART_VIEW_ID = 19800335;
-    public static final int BARCHART_VIEW_ID = 19800355;
-    public static final int STACK_BARCHAT_VIEW_ID = 19800375;
-    public static final int MINI_TABLE_VIEW_ID = 19800365;
+    private TextView botContentTextView;
 
     private float restrictedLayoutWidth;
-
-    public static int GRAVITY_LEFT = 0;
-    public static int GRAVITY_RIGHT = 1;
     public int gravity = 0;
-
-    public static int MATCH_PARENT = 0;
-    public static int WRAP_CONTENT = 1;
     public int widthStyle = 0;
 
     float dp1;
@@ -55,6 +41,7 @@ public class TextMediaLayout extends MediaLayout {
     final String TEXT_COLOR = "#000000";
     private int linkTextColor;
     private Typeface medium, regular;
+    private GradientDrawable rightDrawable;
 
 
     public TextMediaLayout(Context context) {
@@ -80,6 +67,11 @@ public class TextMediaLayout extends MediaLayout {
         //Add a textView
         botContentTextView = new LinkifyTextView(getContext());
 
+        //Transparency 15%
+        int transparency = 0x26000000;
+        rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
+        rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -89,7 +81,7 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
         botContentTextView.setAutoLinkMask(Linkify.ALL);
-        botContentTextView.setId(TEXTVIEW_ID);
+        botContentTextView.setId(BubbleConstants.TEXTVIEW_ID);
         botContentTextView.setPadding(0, 0, 0, 0);
         botContentTextView.setLinkTextColor(linkTextColor);
         // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
@@ -107,9 +99,9 @@ public class TextMediaLayout extends MediaLayout {
     public void populateText(String textualContent) {
         if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = unescapeHtml4(textualContent.trim());
-            if(gravity != GRAVITY_LEFT) {
+            /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
                 textualContent = "\"" + textualContent + "\"";
-            }
+            }*/
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
             URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
 
@@ -127,12 +119,13 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     public void setGravityAndTypeFace(){
-        if (gravity == GRAVITY_LEFT) {
+        if (gravity == BubbleConstants.GRAVITY_LEFT) {
             //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
         } else {
             // botContentTextView.setGravity(Gravity.END);
-            botContentTextView.setTypeface(regular,Typeface.ITALIC);
+            botContentTextView.setTypeface(regular);
+            botContentTextView.setBackground(rightDrawable);
          }
     }
 
@@ -179,7 +172,7 @@ public class TextMediaLayout extends MediaLayout {
             int childHeight = 0, childWidth = 0;
 
             switch (child.getId()) {
-                case TEXTVIEW_ID:
+                case BubbleConstants.TEXTVIEW_ID:
                     childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.UNSPECIFIED);
                     MeasureUtils.measure(child, childWidthSpec, wrapSpec);
                     childWidth = child.getMeasuredWidth();
@@ -197,9 +190,9 @@ public class TextMediaLayout extends MediaLayout {
             containerWidth = (containerWidth < child.getMeasuredWidth()) ? child.getMeasuredWidth() : containerWidth;
         }
 
-        if (widthStyle == MATCH_PARENT) {
+        if (widthStyle == BubbleConstants.MATCH_PARENT) {
             containerWidth = parentWidth;
-        } else if (widthStyle == WRAP_CONTENT) {
+        } else if (widthStyle == BubbleConstants.WRAP_CONTENT) {
             containerWidth = containerWidth;
         }
 

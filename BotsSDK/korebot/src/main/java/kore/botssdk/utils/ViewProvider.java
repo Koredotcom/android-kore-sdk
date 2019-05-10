@@ -164,7 +164,7 @@ public class ViewProvider {
 
     public static TextMediaLayout getTextMediaLayout(Context context, int linkColors){
         TextMediaLayout bubbleTextMediaLayout = new TextMediaLayout(context,linkColors);
-        bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
+        bubbleTextMediaLayout.setId(BubbleConstants.TEXT_MEDIA_LAYOUT_ID);
         return bubbleTextMediaLayout;
     }
     public static BotListTemplateView getBotListTempleteView(Context context){

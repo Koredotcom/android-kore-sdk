@@ -31,9 +31,9 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         super(context, attrs, defStyleAttr);
     }
 
-    public KaReceivedBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    /*public KaReceivedBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    }*/
 
     @Override
     protected void onFinishInflate() {

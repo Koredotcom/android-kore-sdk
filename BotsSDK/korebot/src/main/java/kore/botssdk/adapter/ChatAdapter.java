@@ -35,7 +35,7 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
-    public static String LOG_TAG = ChatAdapter.class.getSimpleName();
+    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
     Context context;
     private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
