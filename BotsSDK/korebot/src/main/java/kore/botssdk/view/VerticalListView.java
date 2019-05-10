@@ -208,11 +208,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         recyclerView.setItemAnimator(null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        if (adapter instanceof AnnouncementAdapter) {
+        /*if (adapter instanceof AnnouncementAdapter) {
             DividerItemDecoration itemDecorator = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             itemDecorator.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.inset_65_divider));
             recyclerView.addItemDecoration(itemDecorator);
-        }
+        }*/
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
         adapter.notifyDataSetChanged();
     }

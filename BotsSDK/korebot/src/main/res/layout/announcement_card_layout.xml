@@ -13,6 +13,10 @@
         <import type="android.view.View" />
     </data>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,7 +123,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
             android:layout_toEndOf="@+id/user_profile_name"
-            android:drawableStart="@drawable/ic_chat"
+            android:drawableStart="@drawable/ic_comments_right"
             android:drawablePadding="7dp"
             android:singleLine="true"
             android:minWidth="80dp"
@@ -144,4 +148,12 @@
             android:textSize="12sp" />
 
     </RelativeLayout>
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/inset_10_divider"/>
+    </LinearLayout>
 </layout>
