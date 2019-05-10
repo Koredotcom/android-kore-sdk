@@ -210,7 +210,7 @@ public class SDKConfiguration {
     }
 
     private static boolean TIME_STAMPS_REQUIRED = true;
-    private static boolean APPLY_FONT_STYLE = false;
+    private static boolean APPLY_FONT_STYLE = true;
 
 
 }
