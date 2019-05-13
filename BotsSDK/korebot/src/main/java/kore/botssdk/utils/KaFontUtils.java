@@ -63,48 +63,48 @@ public class KaFontUtils {
         if (tag instanceof String) {
             if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT)) {
                 if (robotoLight == null) {
-                    robotoLight = ResourcesCompat.getFont(context,R.font.roboto_light);
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
                     //robotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
                 }
                 myview.setTypeface(robotoLight);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT_ITALICS)) {
                 if (robotoLightItalic == null) {
-                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.roboto_lightitalic);
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
                 }
                 myview.setTypeface(robotoLightItalic);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR)) {
                 if (robotoRegular == null) {
-                    robotoRegular = ResourcesCompat.getFont(context,R.font.roboto_regular);
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 myview.setTypeface(robotoRegular);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR_ITALICS)) {
                 if (robotoRegularItalic == null) {
-                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.roboto_italic);
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
                 }
                 myview.setTypeface(robotoRegularItalic);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM)) {
                 if (robotoMedium == null) {
-                    robotoMedium = ResourcesCompat.getFont(context,R.font.roboto_medium);
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
                 }
                 myview.setTypeface(robotoMedium);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM_ITALICS)) {
                 if (robotoMediumItalic == null) {
-                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.roboto_mediumitalic);
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
                 }
                 myview.setTypeface(robotoMediumItalic);
             }  else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD)) {
                 if (robotoBold == null) {
-                    robotoBold = ResourcesCompat.getFont(context,R.font.roboto_bold);
+                    robotoBold = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 myview.setTypeface(robotoBold);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD_ITALICS)) {
                 if (robotoBoldItalic == null) {
-                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.roboto_bolditalic);
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
                 }
                 myview.setTypeface(robotoBoldItalic);
             }else if(((String) tag).equalsIgnoreCase(ROBOTO_EXTRA_BOLD)){
                 if (robotoExtraBold == null) {
-                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.roboto_bold);
+                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 myview.setTypeface(robotoExtraBold);
             }
@@ -123,52 +123,52 @@ public class KaFontUtils {
         switch (tag) {
             case ROBOTO_LIGHT:
                 if (robotoLight == null) {
-                    robotoLight = ResourcesCompat.getFont(context,R.font.roboto_light);
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
                 }
                 return robotoLight;
             case ROBOTO_LIGHT_ITALICS:
                 if (robotoLightItalic == null) {
-                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.roboto_lightitalic);
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
                 }
                 return robotoLightItalic;
             case ROBOTO_REGULAR:
                 if (robotoRegular == null) {
-                    robotoRegular = ResourcesCompat.getFont(context,R.font.roboto_regular);
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoRegular;
             case ROBOTO_REGULAR_ITALICS:
                 if (robotoRegularItalic == null) {
-                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.roboto_italic);
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
                 }
                 return robotoRegularItalic;
             case ROBOTO_MEDIUM:
                 if (robotoMedium == null) {
-                    robotoMedium = ResourcesCompat.getFont(context,R.font.roboto_medium);
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
                 }
                 return robotoMedium;
             case ROBOTO_MEDIUM_ITALICS:
                 if (robotoMediumItalic == null) {
-                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.roboto_mediumitalic);
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
                 }
                 return robotoMediumItalic;
             case ROBOTO_BOLD:
                 if (robotoBold == null) {
-                    robotoBold = ResourcesCompat.getFont(context,R.font.roboto_bold);
+                    robotoBold = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 return robotoBold;
             case ROBOTO_BOLD_ITALICS:
                 if (robotoBoldItalic == null) {
-                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.roboto_bolditalic);
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
                 }
                 return robotoBoldItalic;
             case ROBOTO_EXTRA_BOLD:
                 if (robotoExtraBold == null) {
-                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.roboto_bold);
+                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 return robotoExtraBold;
             default:
                 if (robotoRegular == null) {
-                    robotoRegular = ResourcesCompat.getFont(context,R.font.roboto_regular);
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoRegular;
         }

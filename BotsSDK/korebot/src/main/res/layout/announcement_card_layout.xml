@@ -31,7 +31,7 @@
             android:id="@+id/user_profile_name"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:fontFamily="@font/roboto_medium_style"
+            android:fontFamily="@font/latomedium"
             android:gravity="center"
             android:tag="medium"
             android:textColor="@color/white"

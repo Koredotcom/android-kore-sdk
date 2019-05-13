@@ -19,6 +19,7 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -58,8 +59,8 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     private void init() {
-        medium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
-        regular = Typeface.create("sans-serif", Typeface.NORMAL);
+        medium = KaFontUtils.getCustomTypeface("medium",mContext);
+        regular = KaFontUtils.getCustomTypeface("regular-italic",mContext);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
