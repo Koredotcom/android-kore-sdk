@@ -101,6 +101,6 @@
             android:layout_below="@+id/body"
             android:layout_alignStart="@+id/title"
             android:layout_marginTop="15dp"
-            android:background="@drawable/inset_65_divider" />
+            android:background="@drawable/inset_10_divider" />
     </RelativeLayout>
 </layout>

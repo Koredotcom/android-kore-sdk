@@ -82,8 +82,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/last_edited"
-            android:layout_alignStart="@+id/title"
+            android:layout_alignStart="@+id/image"
             android:layout_marginTop="15dp"
-            android:background="@drawable/inset_65_divider" />
+            android:background="@drawable/inset_file_divider" />
     </RelativeLayout>
 </layout>

@@ -115,7 +115,7 @@
             android:layout_below="@+id/assignee_view"
             android:layout_alignStart="@+id/title_view"
             android:layout_marginTop="@dimen/dimen_14dp"
-            android:background="@drawable/inset_65_divider" />
+            android:background="@drawable/inset_10_divider" />
 
     </RelativeLayout>
 </layout>

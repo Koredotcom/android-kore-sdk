@@ -127,7 +127,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private Drawable selectedCheck;
     private Drawable unSelectedCheck;
 
-    private Drawable insetDivider,normalDivider;
+    private Drawable insetDivider/*,normalDivider*/;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
@@ -144,8 +144,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
 
-        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_65_divider);
-        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_divider_meetings);
+        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
+//        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
     }
@@ -245,7 +245,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
             if(position < getItemCount() -1){
-                holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : normalDivider);
+                holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : insetDivider);
             }
 
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {

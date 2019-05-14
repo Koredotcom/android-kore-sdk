@@ -26,8 +26,7 @@
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#e7e7ea"
-
+        android:background="@drawable/inset_10_divider"
         android:visibility="visible" />
 
     <LinearLayout
@@ -130,5 +129,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:id="@+id/divider"
-        android:background="@drawable/inset_65_divider" />
+        android:background="@drawable/inset_10_divider" />
 </LinearLayout>
