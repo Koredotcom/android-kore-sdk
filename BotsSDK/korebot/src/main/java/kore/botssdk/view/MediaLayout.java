@@ -21,7 +21,7 @@ public abstract class MediaLayout extends ViewGroup {
         super(context, attrs, defStyleAttr);
     }
 
-    public MediaLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    /*public MediaLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    }*/
 }

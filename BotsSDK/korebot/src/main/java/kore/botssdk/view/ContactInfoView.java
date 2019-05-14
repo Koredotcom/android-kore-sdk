@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,12 @@ import androidx.databinding.DataBindingUtil;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.ContactInfoViewBinding;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.ContactInfoModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -67,11 +71,32 @@ public class ContactInfoView extends ViewGroup {
 
     private void init() {
         contactInfoViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.contact_info_view, this, true);
+        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()) + BundleConstants.TRANSPERANCY_50_PERCENT);
+        contactInfoViewBinding.getRoot().setBackground(shape);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         splashColor = getContext().getResources().getColor(R.color.splash_color);
         contactInfoViewBinding.setViewBase(this);
     }
 
+    public void onEvent(ProfileColorUpdateEvent event){
+        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        contactInfoViewBinding.getRoot().setBackground(shape);
+    }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        KoreEventCenter.register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        KoreEventCenter.unregister(this);
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

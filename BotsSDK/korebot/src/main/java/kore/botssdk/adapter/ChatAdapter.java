@@ -66,6 +66,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
 
 
+    public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
+        return baseBotMessageArrayList;
+    }
+
     private ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
     private static final int BUBBLE_LEFT_LAYOUT = 0;

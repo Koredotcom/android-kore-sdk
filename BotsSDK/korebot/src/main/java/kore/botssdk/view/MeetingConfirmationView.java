@@ -1,7 +1,10 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,10 +18,14 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.models.MeetingSlotModel;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -78,6 +85,10 @@ public class MeetingConfirmationView extends ViewGroup {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
         locationView = (TextView) view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
+        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        slotLayout.setBackground(shape);
         titleView = (TextView) view.findViewById(R.id.title_view);
         tv_users = (TextView) view.findViewById(R.id.tv_users);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
@@ -85,6 +96,23 @@ public class MeetingConfirmationView extends ViewGroup {
         slots = view.findViewById(R.id.time_slots);
     }
 
+    public void onEvent(ProfileColorUpdateEvent event){
+        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        slotLayout.setBackground(shape);
+    }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        KoreEventCenter.register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        KoreEventCenter.unregister(this);
+    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -168,6 +196,7 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
     }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {

@@ -44,4 +44,5 @@ public class BundleConstants {
     public static final String OPEN_EMAIL = "OPEN_EMAIL";
     public static final String VIEW_CONTACT = "VIEW_CONTACT";
     public static final String MEETING_CHANGE_SLOTS = "MEETING_CHANGE_SLOTS";
+    public static final int TRANSPERANCY_50_PERCENT = 0xE6000000;
 }

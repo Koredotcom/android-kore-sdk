@@ -17,6 +17,8 @@ import android.widget.TextView;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
@@ -43,6 +45,7 @@ public class TextMediaLayout extends MediaLayout {
     private int linkTextColor;
     private Typeface medium, regular;
     private GradientDrawable rightDrawable;
+    private int transparency;
 
 
     public TextMediaLayout(Context context) {
@@ -60,7 +63,7 @@ public class TextMediaLayout extends MediaLayout {
 
     private void init() {
         medium = KaFontUtils.getCustomTypeface("medium",mContext);
-        regular = KaFontUtils.getCustomTypeface("regular-italic",mContext);
+        regular = KaFontUtils.getCustomTypeface("regular",mContext);
         if (!isInEditMode()) {
             dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         }
@@ -69,7 +72,7 @@ public class TextMediaLayout extends MediaLayout {
         botContentTextView = new LinkifyTextView(getContext());
 
         //Transparency 15%
-        int transparency = 0x26000000;
+        transparency = 0x26000000;
         rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
         rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
         rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
@@ -92,7 +95,21 @@ public class TextMediaLayout extends MediaLayout {
         addView(botContentTextView);
 
     }
+    public void onEvent(ProfileColorUpdateEvent event){
+        rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+    }
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        KoreEventCenter.register(this);
+    }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        KoreEventCenter.unregister(this);
+    }
     public void startup(String messageBody, int... dimens) {
         populateText(messageBody);
     }
@@ -123,6 +140,7 @@ public class TextMediaLayout extends MediaLayout {
         if (gravity == BubbleConstants.GRAVITY_LEFT) {
             //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
+            botContentTextView.setBackground(null);
         } else {
             // botContentTextView.setGravity(Gravity.END);
             botContentTextView.setTypeface(regular);
