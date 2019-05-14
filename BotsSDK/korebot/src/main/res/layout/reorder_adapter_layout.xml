@@ -7,7 +7,7 @@
     android:paddingEnd="12dp"
     android:focusable="true"
     android:layout_height="wrap_content"
-    android:background="@drawable/task_view_background"
+
     android:minHeight="50dp">
 
 

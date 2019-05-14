@@ -3,7 +3,9 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:titleTextColor="@color/color_161620"
     android:background="@color/white"
+
     android:fitsSystemWindows="true"
     android:elevation="4dp"
 
