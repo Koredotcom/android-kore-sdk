@@ -12,6 +12,7 @@ import java.util.UUID;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
@@ -70,6 +71,21 @@ public class BotClient {
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
         SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
     }
+
+    /**
+     * Connection for anonymous user
+     *
+     * @param socketConnectionListener
+     */
+    public void connectAsAnonymousUserWithOptions(String jwtToken, String chatBotName,
+                                                  String taskBotId, SocketConnectionListener socketConnectionListener, BotSocketOptions options) {
+
+        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
+    }
+
+
 
     public String generateJWT(String email,String secret,String clientId, boolean isAnonymousUser){
         long curTime = System.currentTimeMillis();

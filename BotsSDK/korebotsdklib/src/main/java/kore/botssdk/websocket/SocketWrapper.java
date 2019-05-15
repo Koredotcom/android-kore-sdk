@@ -21,6 +21,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.BaseSpiceManager;
 import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
@@ -52,7 +53,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
     private boolean mIsReconnectionAttemptNeeded = true;
 
-    private String url;
+//    private String url;
 //    private URI uri;
 //    private boolean mTLSEnabled = false;
 
@@ -64,6 +65,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private String auth;
     private String botUserId;
     private BotInfoModel botInfoModel;
+    private BotSocketOptions options;
 
     private Context mContext;
     /**
@@ -184,6 +186,64 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.JWTToken = sJwtGrant;
         this.uuId = uuId;
         this.botInfoModel = botInfoModel;
+        this.options = null;
+        //If spiceManager is not started then start it
+        if (!isConnected()) {
+            start(mContext);
+        }
+        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
+            @Override
+            public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
+                setPriority(PRIORITY_HIGH);
+                HashMap<String, Object> hsh = new HashMap<>();
+                hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
+                hsh.put(Constants.BOT_INFO, botInfoModel);
+
+
+                RestResponse.BotAuthorization jwtGrant = getService().jwtGrant(hsh);
+
+                HashMap<String, Object> hsh1 = new HashMap<>();
+                hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                botUserId = jwtGrant.getUserInfo().getUserId();
+                this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                auth = jwtGrant.getAuthorization().getAccessToken();
+
+                RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
+                return rtmUrl;
+            }
+        };
+
+        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
+            @Override
+            public void onRequestFailure(SpiceException e) {
+                Log.e(LOG_TAG, e.getMessage());
+            }
+
+            @Override
+            public void onRequestSuccess(RestResponse.RTMUrl response) {
+                try {
+                    connectToSocket(response.getUrl(),false);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * Method to invoke connection for anonymous
+     *
+     * These keys are generated from bot admin console
+     */
+    public void connectAnonymousWithOptions(final String sJwtGrant, final BotInfoModel botInfoModel, final String uuId,
+                                            SocketConnectionListener socketConnectionListener, BotSocketOptions options) {
+        this.socketConnectionListener = socketConnectionListener;
+        this.accessToken = null;
+        this.JWTToken = sJwtGrant;
+        this.uuId = uuId;
+        this.botInfoModel = botInfoModel;
+        this.options = options;
         //If spiceManager is not started then start it
         if (!isConnected()) {
             start(mContext);
@@ -236,7 +296,10 @@ public final class SocketWrapper extends BaseSpiceManager {
      */
     private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
         if (url != null) {
-            this.url = url;
+            if(options != null){
+                url = options.replaceOptions(url,options);
+            }
+//            this.url = url;
 //            this.uri = new URI(url);
             WebSocketOptions connectOptions = new WebSocketOptions();
             connectOptions.setReconnectInterval(2000);
