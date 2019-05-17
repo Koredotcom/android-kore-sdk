@@ -52,6 +52,11 @@ public class AnnoucementResModel implements Serializable {
     @SerializedName("createdOn")
     @Expose
     private Long createdOn;
+
+    @SerializedName("sharedOn")
+    @Expose
+    private Long sharedOn;
+
     @SerializedName("lastMod")
     @Expose
     private Long lastMod;
@@ -232,7 +237,13 @@ public class AnnoucementResModel implements Serializable {
         this.lastMod = lastMod;
     }
 
+    public Long getSharedOn() {
+        return sharedOn;
+    }
 
+    public void setSharedOn(Long sharedOn) {
+        this.sharedOn = sharedOn;
+    }
     public class MyActions implements Serializable {
 
         @SerializedName("follow")

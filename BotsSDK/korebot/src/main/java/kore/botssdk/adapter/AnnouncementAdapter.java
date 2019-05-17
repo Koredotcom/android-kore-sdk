@@ -76,7 +76,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
             AnnoucementResModel annoucementResModel = data.get(position);
             ((AnnouncementViewHolder) holder).binding.setAnnoucement(annoucementResModel);
 
-            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getCreatedOn()));
+            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getSharedOn()));
             ((AnnouncementViewHolder) holder).binding.userProfileName.setCircle(true);
             if (annoucementResModel.getOwner() != null && annoucementResModel.getOwner().getFullName() != null) {
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
@@ -118,7 +118,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     public long getItemId(int position) {
         if(data != null && data.size()>0) {
             AnnoucementResModel model = data.get(position);
-            return model.getCreatedOn() + position;
+            return model.getSharedOn() + position;
         }else return position;
     }
 
