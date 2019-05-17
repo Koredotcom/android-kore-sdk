@@ -82,7 +82,7 @@ public class BotClient {
 
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
+        SocketWrapper.getInstance(mContext).connectAnonymousWithOptions(jwtToken, botInfoModel, uuid, socketConnectionListener,options);
     }
 
 
