@@ -147,7 +147,8 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
             holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
             holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
 
-
+            if(position == models.size()-1 && models.size()<3)
+                holder.taskViewLayoutBinding.divider.setVisibility(View.GONE);
             holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

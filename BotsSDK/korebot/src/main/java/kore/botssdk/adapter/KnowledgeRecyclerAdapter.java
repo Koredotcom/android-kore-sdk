@@ -70,7 +70,6 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         if (holderdata instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) holderdata;
 
-
             //holder.followers_count.setText(knowledgeDetailModels.get(position).getnFollows()+"");
             holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
             holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -82,6 +81,8 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
                         verticalListViewActionHelper.knowledgeItemClicked(extras,true);
                 }
             });
+            if(position == knowledgeDetailModels.size()-1 && knowledgeDetailModels.size() <3)
+                holder.knowledgeItemViewBinding.divider.setVisibility(View.GONE);
         } else {
 
             EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;

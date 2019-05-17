@@ -74,7 +74,7 @@
                 android:paddingStart="@dimen/dimen_12dp"
                 android:orientation="vertical">
 
-                <include layout="@layout/widget_task_view_layout"
+                <include layout="@layout/widget_task_view_layout_element"
                     app:widgetTask="@{task_data}"/>
 
             </LinearLayout>
