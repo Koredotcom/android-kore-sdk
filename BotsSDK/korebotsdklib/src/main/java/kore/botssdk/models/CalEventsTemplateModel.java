@@ -11,10 +11,21 @@ public class CalEventsTemplateModel {
     private Duration duration;
     private String title;
     private String where;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     private String color;
     private String htmlLink;
     private String eventId;
     boolean showDate;
+
     private List<Attendee> attendees = null;
 
     public List<Action> getActions() {
@@ -114,6 +125,15 @@ public class CalEventsTemplateModel {
 
     public class Attendee {
 
+        private boolean optional;
+
+        public boolean isOptional() {
+            return optional;
+        }
+
+        public void setOptional(boolean optional) {
+            this.optional = optional;
+        }
 
         private String email;
 

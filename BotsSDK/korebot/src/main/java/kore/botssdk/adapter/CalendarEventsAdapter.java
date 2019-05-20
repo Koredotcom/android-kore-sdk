@@ -244,8 +244,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             }
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
-            if(position < getItemCount() -1){
-                holder.divider.setBackground(getItem(position+1).isShowDate() ? insetDivider : insetDivider);
+            if (position < getItemCount() - 1) {
+                holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : insetDivider);
             }
 
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -289,10 +289,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
-                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null,false);
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null, false);
 
                             dialogActivity.show();
-
 
 
                             dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
@@ -312,7 +311,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         }
                     } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
                         try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+                            String data = new Gson().toJson(model);
+                            verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS, data);
+                            //Intent intentObj=new Intent(mContext,ViewMeetingDetailsActivity)
+
+                        /*    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                 if (AppPermissionsHelper.hasPermission(mContext, Manifest.permission.READ_CALENDAR)) {
                                     launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
                                 } else {
@@ -322,7 +327,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             } else {
 
                                 launchNativeView(model.getTitle(), (long) model.getDuration().getStart());
-                            }
+                            }*/
 
                         } catch (Exception e) {
 
@@ -520,9 +525,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
             } else {
                 int remaining = userDetailModels.size() - 1;
-                if(remaining > 1)
+                if (remaining > 1)
                     return String.format("%1$s and %2$d others",
-                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
                 else
                     return String.format("%1$s and %2$d other",
                             userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);

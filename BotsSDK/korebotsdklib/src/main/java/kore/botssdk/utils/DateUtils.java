@@ -48,6 +48,7 @@ public class DateUtils {
     public static final SimpleDateFormat dateWeekDayTime2 = new SimpleDateFormat("MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime3 = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime4 = new SimpleDateFormat("dd MMM, yyyy, hh:mm a", Locale.ENGLISH);
+    public static final Format calendar_list_format2 = new SimpleDateFormat("EEE, MMM d, ", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
@@ -199,7 +200,9 @@ public class DateUtils {
     public static String getDate(long lastModified) {
         return dateWeekMsg.format(new Date(lastModified));
     }
-
+    public static String getDateEEEMMD(double startdate,double enddate) {
+        return calendar_list_format2.format(startdate)+calendar_list_format_2.format(startdate).toLowerCase()+" to "+calendar_list_format_2.format(enddate).toLowerCase();
+    }
     public static String getDateWithTime(long lastModified) {
 
         String date = dateWeekMsgTime.format(lastModified);

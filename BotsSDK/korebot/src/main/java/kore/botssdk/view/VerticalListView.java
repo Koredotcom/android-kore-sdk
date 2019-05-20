@@ -298,6 +298,13 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     @Override
+    public void calendarItemClicked(String type, String data) {
+        Bundle bundle=new Bundle();
+        bundle.putString("data",data);
+        composeFooterInterface.launchActivityWithBundle(type,bundle);
+    }
+
+    @Override
     public void tasksSelectedOrDeselected(boolean selecetd) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTranslationZ(500 * dp1);
