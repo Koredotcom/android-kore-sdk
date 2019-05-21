@@ -14,7 +14,8 @@ public class CalEventsTemplateModel {
     private String description;
 
     public String getDescription() {
-        return description;
+
+        return description!=null?description:"";
     }
 
     public void setDescription(String description) {
@@ -127,6 +128,15 @@ public class CalEventsTemplateModel {
 
         private boolean optional;
 
+        public boolean isOrganizer() {
+            return organizer;
+        }
+
+        public void setOrganizer(boolean organizer) {
+            this.organizer = organizer;
+        }
+
+        private  boolean organizer;
         public boolean isOptional() {
             return optional;
         }
