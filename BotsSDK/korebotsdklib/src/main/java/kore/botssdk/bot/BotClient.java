@@ -72,6 +72,10 @@ public class BotClient {
         SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
     }
 
+
+    public void shouldAttemptToReconnect(boolean value){
+        SocketWrapper.getInstance(mContext).shouldAttemptToReconnect(value);
+    }
     /**
      * Connection for anonymous user
      *

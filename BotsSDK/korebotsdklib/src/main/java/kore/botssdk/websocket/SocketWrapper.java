@@ -47,11 +47,12 @@ public final class SocketWrapper extends BaseSpiceManager {
         return mIsReconnectionAttemptNeeded;
     }
 
-    public void setmIsReconnectionAttemptNeeded(boolean mIsReconnectionAttemptNeeded) {
+    public void shouldAttemptToReconnect(boolean mIsReconnectionAttemptNeeded) {
         this.mIsReconnectionAttemptNeeded = mIsReconnectionAttemptNeeded;
     }
 
     private boolean mIsReconnectionAttemptNeeded = true;
+    private boolean isConnecting = false;
 
 //    private String url;
 //    private URI uri;
@@ -295,6 +296,8 @@ public final class SocketWrapper extends BaseSpiceManager {
      * @throws URISyntaxException
      */
     private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
+        if((isConnecting || isConnected())) return;
+        isConnecting = true;
         if (url != null) {
             if(options != null){
                 url = options.replaceOptions(url,options);
@@ -311,6 +314,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onOpen(isReconnectionAttaempt);
                         }
+                        isConnecting = false;
                         startSendingPong();
                         mReconnectionCount = 1;
                         mReconnectDelay = 1000;
@@ -326,11 +330,11 @@ public final class SocketWrapper extends BaseSpiceManager {
                             timer.cancel();
                             timer = null;
                         }
+                        isConnecting = false;
                         if (isConnected()) {
                             stop();
                         }
-                        if(Utils.isNetworkAvailable(mContext))
-                            reconnectAttempt();
+                        reconnectAttempt();
                     }
 
                     @Override
@@ -358,6 +362,15 @@ public final class SocketWrapper extends BaseSpiceManager {
                     }*/
                 });
             } catch (WebSocketException e) {
+                isConnecting = false;
+                if(e.getMessage() != null && e.getMessage().equals("already connected")){
+                    if (socketConnectionListener != null) {
+                        socketConnectionListener.onOpen(isReconnectionAttaempt);
+                    }
+                    startSendingPong();
+                    mReconnectionCount = 1;
+                    mReconnectDelay = 1000;
+                }
                 e.printStackTrace();
             }
         }
@@ -531,7 +544,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 public void run() {
 
                     Log.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
-                    if (Utils.isNetworkAvailable(mContext) && mIsReconnectionAttemptNeeded && !isConnected()) {
+                    if (mIsReconnectionAttemptNeeded && !isConnected()) {
                         reconnect();
 //                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
                         mReconnectDelay = getReconnectDelay();
@@ -541,9 +554,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 }
             };
-            if(Utils.isNetworkAvailable(mContext)) {
                 _handler.postDelayed(r, mReconnectDelay);
-            }
         } catch (Exception e) {
             Log.d(LOG_TAG, ":: The Exception is " + e.toString());
         }
@@ -557,7 +568,7 @@ public final class SocketWrapper extends BaseSpiceManager {
     private int getReconnectDelay() {
         mReconnectionCount++;
         Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
-        if (mReconnectionCount > 5) mReconnectionCount = 1;
+        if (mReconnectionCount > 6) mReconnectionCount = 1;
         Random rint = new Random();
         return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
     }
