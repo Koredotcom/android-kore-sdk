@@ -15,7 +15,7 @@ public class CalEventsTemplateModel {
 
     public String getDescription() {
 
-        return description!=null?description:"";
+        return description != null ? description : "";
     }
 
     public void setDescription(String description) {
@@ -42,6 +42,7 @@ public class CalEventsTemplateModel {
     }
 
     private List<Action> actions = null;
+
     public Duration getDuration() {
         return duration;
     }
@@ -89,6 +90,7 @@ public class CalEventsTemplateModel {
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
+
     public List<Attendee> getAttendees() {
         return attendees;
     }
@@ -99,10 +101,10 @@ public class CalEventsTemplateModel {
 
     public void setShowDate(boolean flag) {
 
-        showDate=flag;
+        showDate = flag;
     }
 
-    public class Duration{
+    public class Duration {
 
         private double start;
         private double end;
@@ -127,6 +129,34 @@ public class CalEventsTemplateModel {
     public class Attendee {
 
         private boolean optional;
+        private boolean resource;
+        private boolean self;
+
+        public boolean isSelf() {
+            return self;
+        }
+
+        public void setSelf(boolean self) {
+            this.self = self;
+        }
+
+        public String getStatus() {
+            return status != null ? status : "";
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        private String status;
+
+        public boolean isResource() {
+            return resource;
+        }
+
+        public void setResource(boolean resource) {
+            this.resource = resource;
+        }
 
         public boolean isOrganizer() {
             return organizer;
@@ -136,7 +166,8 @@ public class CalEventsTemplateModel {
             this.organizer = organizer;
         }
 
-        private  boolean organizer;
+        private boolean organizer;
+
         public boolean isOptional() {
             return optional;
         }
@@ -166,6 +197,7 @@ public class CalEventsTemplateModel {
         }
 
     }
+
     public class Action {
         private String type;
         private String title;
