@@ -13,6 +13,17 @@ public class CalEventsTemplateModel {
     private String where;
     private String description;
 
+    public MeetJoin getMeetJoin() {
+        return meetJoin;
+    }
+
+    public void setMeetJoin(MeetJoin meetJoin) {
+        this.meetJoin = meetJoin;
+    }
+
+    private MeetJoin meetJoin;
+
+
     public String getDescription() {
 
         return description != null ? description : "";
@@ -141,6 +152,7 @@ public class CalEventsTemplateModel {
         }
 
         public String getStatus() {
+
             return status != null ? status : "";
         }
 
