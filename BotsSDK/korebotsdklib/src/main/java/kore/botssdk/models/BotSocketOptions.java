@@ -45,20 +45,17 @@ public class BotSocketOptions {
 
     public String replaceOptions(String url, BotSocketOptions options){
         try {
-            URL _url = new URL(url);
+            URI _url = new URI(url);
             if(options != null){
-                URI uri = new URI(!isNullOrEmpty(options.getProtocol())?options.getProtocol(): _url.getProtocol(),
+                URI uri = new URI(!isNullOrEmpty(options.getProtocol())?options.getProtocol(): _url.getScheme(),
                         _url.getUserInfo(),
                         !isNullOrEmpty(options.getHost())?options.getHost():_url.getHost(),
-                        options.getPort()!=-1?options.getPort():_url.getPort(), _url.getPath(), _url.getQuery(), _url.getRef());
+                        options.getPort()!=-1?options.getPort():_url.getPort(), _url.getPath(), _url.getQuery(), null);
                 return uri.toString();
             }
 
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return url;
-        }catch (URISyntaxException ex){
-            ex.printStackTrace();
             return url;
         }
         return url;
