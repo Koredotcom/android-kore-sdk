@@ -234,7 +234,7 @@ public class WidgetDialogActivity extends Dialog {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (someHandler != null) {
+        if (someHandler != null&&runnable!=null) {
             someHandler.removeCallbacks(runnable);
         }
     }
