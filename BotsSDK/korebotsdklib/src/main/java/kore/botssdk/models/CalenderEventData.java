@@ -14,7 +14,15 @@ public class CalenderEventData {
     public List<CalEventsTemplateModel.Attendee> getAttendees() {
         return attendees;
     }
+    private String description;
+    public String getDescription() {
 
+        return description != null ? description : "";
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public void setAttendees(List<CalEventsTemplateModel.Attendee> attendees) {
         this.attendees = attendees;
     }
@@ -64,6 +72,14 @@ public class CalenderEventData {
     private String eventId;
 
     private boolean isAllDay;
+    public MeetJoin getMeetJoin() {
+        return meetJoin;
+    }
 
+    public void setMeetJoin(MeetJoin meetJoin) {
+        this.meetJoin = meetJoin;
+    }
+
+    private MeetJoin meetJoin;
 
 }

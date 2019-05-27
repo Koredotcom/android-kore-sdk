@@ -23,7 +23,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
-import kore.botssdk.adapter.WidgetCancelActionsAdapter;
+
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
 import kore.botssdk.databinding.WidgetFilesItemSelectionDialogBinding;
 import kore.botssdk.models.CalEventsTemplateModel;

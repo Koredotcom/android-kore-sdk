@@ -15,7 +15,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
-import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;

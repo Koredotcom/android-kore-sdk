@@ -59,8 +59,10 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.CalenderEventData;
 import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
@@ -289,7 +291,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
-                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null, false);
+
+
+
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null, false,verticalListViewActionHelper);
 
                             dialogActivity.show();
 
@@ -313,8 +318,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         try {
 
 
-                            String data = new Gson().toJson(model);
-                            verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS, data);
+//                            String data = new Gson().toJson(model);
+                            verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS, model);
                             //Intent intentObj=new Intent(mContext,ViewMeetingDetailsActivity)
 
                         /*    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

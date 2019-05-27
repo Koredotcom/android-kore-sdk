@@ -40,6 +40,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AnnoucementResModel;
+import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
@@ -298,8 +299,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     @Override
-    public void calendarItemClicked(String type, String data) {
+    public void calendarItemClicked(String type, BaseCalenderTemplateModel model) {
         Bundle bundle=new Bundle();
+        String data = new Gson().toJson(model);
         bundle.putString("data",data);
         composeFooterInterface.launchActivityWithBundle(type,bundle);
     }
@@ -315,6 +317,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void widgetItemSelected(boolean isSelected, int count) {
+
+    }
+
+    @Override
+    public void navigationToDialAndJoin(String actiontype, String actionLink) {
 
     }
 }

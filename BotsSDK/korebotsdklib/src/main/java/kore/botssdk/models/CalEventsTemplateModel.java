@@ -1,12 +1,14 @@
 package kore.botssdk.models;
 
+import android.provider.CalendarContract;
+
 import java.util.List;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalEventsTemplateModel {
+public class CalEventsTemplateModel extends BaseCalenderTemplateModel{
 
     private Duration duration;
     private String title;
@@ -103,6 +105,7 @@ public class CalEventsTemplateModel {
     }
 
     public List<Attendee> getAttendees() {
+
         return attendees;
     }
 
