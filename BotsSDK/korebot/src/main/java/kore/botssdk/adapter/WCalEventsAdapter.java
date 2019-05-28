@@ -250,7 +250,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (verticalListViewActionHelper != null && isFromWidget()) {
+                    if (verticalListViewActionHelper != null && isFromWidget()&&isFromFullView) {
                         if (selectedIds.contains(model.getData().getEventId())) {
                             selectedIds.remove(model.getData().getEventId());
                             holder.innerlayout.setSelected(false);
