@@ -35,9 +35,10 @@ public class UploadExecutor implements Runnable{
     private Context context;
     private ChunkUploadListener mListener = null;
     private String host;
+    private boolean isAnonymousUser;
 
     public UploadExecutor(Context context, String fileName, String fileToken, String accessToken,String userOrTeamId,byte[] dataToPost,
-                          int chunkNo, ChunkUploadListener listener, String host) {
+                          int chunkNo, ChunkUploadListener listener, String host, boolean isAnonymousUser) {
 
         this.fileName=fileName;
         this.fileToken = fileToken;
@@ -48,6 +49,7 @@ public class UploadExecutor implements Runnable{
         this.mListener = listener;
         this.context = context;
         this.host = host;
+        this.isAnonymousUser = isAnonymousUser;
     }
 
     @Override
@@ -58,12 +60,12 @@ public class UploadExecutor implements Runnable{
 
             Log.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
             String FULL_URL = null;
-//            if(isTeam)
-//                FULL_URL = host + String.format(FileUploadEndPoints.TEAM_CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
-//            else
-                FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
+            if(isAnonymousUser)
+                FULL_URL = host + String.format(FileUploadEndPoints.ANONYMOUS_CHUNK_UPLOAD, userOrTeamId,fileToken);
+            else
+                FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD, userOrTeamId,fileToken);
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
-            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             HttpsURLConnection httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
             httpsURLConnection.setRequestMethod("POST");

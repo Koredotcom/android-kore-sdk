@@ -85,12 +85,13 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 
 	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
     private ProgressDialog pDialog;
+	private boolean isAnonymousUser;
 	
 	
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						String fileExtn,int BUFFER_SIZE, Messenger messenger,
 							String thumbnailFilePath, String messageId,Context context,String componentType,
-						  String host, String orientation){
+						  String host, String orientation, boolean isAnonymousUser){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
 		this.accessToken = accessToken;
@@ -106,6 +107,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this.componentType = componentType;
 		this.host = host;
 		this.orientation = orientation;
+		this.isAnonymousUser = isAnonymousUser;
 		
 
 		userOrTeamId = userId;
@@ -223,7 +225,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					Thread.sleep(10);
 					System.gc();
                     upLoadProgressState(0,true);
-					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
+					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host,isAnonymousUser));
 					chunkNo++;
 					chunkbaos.reset(); /*chunk size doubles in next iteration*/
 				}
@@ -274,7 +276,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
                         System.gc();
 
                         if(failedChunkList.contains(chunkNo+"")) {
-                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
+                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host,isAnonymousUser));
                         }
                         chunkNo++;
                         chunkbaos.reset(); /*chunk size doubles in next iteration*/
@@ -332,7 +334,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	@Override
 	public void initiateFileUpload(FileUploadedListener listener) {
 		this.listener = listener;
-		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId);
+		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId,isAnonymousUser);
 	}
 
 	void setChunkCount(int n){
@@ -357,12 +359,12 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			HttpsURLConnection httpsURLConnection = null;
 			try {
 				KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder;
-//				if(isTeam)
-//					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.TEAM_MERGE_END_POINT, userOrTeamId,fileToken));
-//				else
-					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context,host + String.format(FileUploadEndPoints.MERGE_END_POINT, userOrTeamId,fileToken));
+				if(isAnonymousUser)
+					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.ANONYMOUS_MERGE, userOrTeamId,fileToken));
+				else
+					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context,host + String.format(FileUploadEndPoints.MERGE_FILE, userOrTeamId,fileToken));
 
-				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
 				httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
 				httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
 				httpsURLConnection.setUseCaches(false);

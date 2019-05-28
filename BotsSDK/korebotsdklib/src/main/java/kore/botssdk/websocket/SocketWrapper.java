@@ -61,6 +61,8 @@ public final class SocketWrapper extends BaseSpiceManager {
     private HashMap<String, Object> optParameterBotInfo;
     private String accessToken;
     private String userAccessToken = null;
+
+    private String anonymousUserAccessToken = null;
     private String JWTToken;
     private String uuId;
     private String auth;
@@ -208,6 +210,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 botUserId = jwtGrant.getUserInfo().getUserId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                anonymousUserAccessToken = jwtGrant.getAuthorization().getAccessToken();
                 auth = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
@@ -265,6 +268,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 
                 botUserId = jwtGrant.getUserInfo().getUserId();
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                anonymousUserAccessToken = jwtGrant.getAuthorization().getAccessToken();
                 auth = jwtGrant.getAuthorization().getAccessToken();
 
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
@@ -305,7 +309,7 @@ public final class SocketWrapper extends BaseSpiceManager {
 //            this.url = url;
 //            this.uri = new URI(url);
             WebSocketOptions connectOptions = new WebSocketOptions();
-            connectOptions.setReconnectInterval(2000);
+            connectOptions.setReconnectInterval(0);
             try {
                 mConnection.connect(url, new  WebSocketConnectionHandler() {
                     @Override
@@ -479,6 +483,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
                 this.accessToken = jwtGrant.getAuthorization().getAccessToken();
+                anonymousUserAccessToken = jwtGrant.getAuthorization().getAccessToken();
                 auth = jwtGrant.getAuthorization().getAccessToken();
                 botUserId = jwtGrant.getUserInfo().getUserId();
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(accessToken), hsh1, true);
@@ -591,6 +596,10 @@ public final class SocketWrapper extends BaseSpiceManager {
         if (isConnected()) {
             stop();
         }
+    }
+
+    public String getAnonymousUserAccessToken() {
+        return anonymousUserAccessToken;
     }
 
     /**

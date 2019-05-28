@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kore.korefileuploadsdk.configurations.Constants;
+import com.kore.korefileuploadsdk.configurations.FileUploadEndPoints;
 import com.kore.korefileuploadsdk.listeners.FileTokenListener;
 import com.kore.korefileuploadsdk.ssl.KoreHttpsUrlConnectionBuilder;
 import com.kore.korefileuploadsdk.utils.NetworkUtility;
@@ -25,19 +26,17 @@ public class FileTokenManager{
 	private String _Url;
 	private String _accessToken;
 	private Context _mContext;
-	private String END_POINT = "/api/1.1/users/%s/file/token";
-	private String TEAMS_END_POINT = "/api/1.1/teams/%s/file/token";
 
     public FileTokenManager(String host, FileTokenListener listener,
-                     String accessToken, Context context, String userOrTeamId) {
+                     String accessToken, Context context, String userOrTeamId, boolean isAnonymousUser) {
 
         _accessToken = accessToken;
         _mContext = context;
         _listener = listener;
-//        if (isTeam)
-//            _Url = host + String.format(TEAMS_END_POINT, userOrTeamId);
-//        else
-            _Url = host + String.format(END_POINT, userOrTeamId);
+        if (isAnonymousUser)
+            _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TOKEN);
+        else
+            _Url = host + String.format(FileUploadEndPoints.FILE_TOKEN, userOrTeamId);
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
 
@@ -84,7 +83,7 @@ public class FileTokenManager{
 
             // Send POST data request
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(_mContext, Url);
-            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
+//            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             conn = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             conn.setDoOutput(true);
             if (header != null) conn.addRequestProperty("Authorization", "bearer " + header);
