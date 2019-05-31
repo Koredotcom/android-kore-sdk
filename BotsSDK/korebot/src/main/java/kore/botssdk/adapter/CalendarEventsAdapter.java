@@ -249,7 +249,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             if (position < getItemCount() - 1) {
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : insetDivider);
             }
-
+            if(position == eventList.size()-1 && eventList.size()<=3)
+                holder.divider.setVisibility(View.GONE);
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {

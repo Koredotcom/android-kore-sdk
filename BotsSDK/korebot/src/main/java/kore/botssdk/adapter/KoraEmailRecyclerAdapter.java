@@ -49,6 +49,8 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.emailLookupViewBinding.setEmailModel(emailModels.get(position));
+        if(position == emailModels.size()-1 && emailModels.size()<3)
+            holder.emailLookupViewBinding.divider.setVisibility(View.GONE);
         holder.emailLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

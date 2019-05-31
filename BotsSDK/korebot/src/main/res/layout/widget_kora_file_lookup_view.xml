@@ -80,6 +80,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:id="@+id/divider"
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/last_edited"
             android:layout_alignStart="@+id/image"

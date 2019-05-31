@@ -2,7 +2,6 @@ package com.kore.korefileuploadsdk.core;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,7 +9,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;

@@ -1,27 +1,14 @@
 package com.kore.korefileuploadsdk.ssl;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
-/**
- * Created by naval on 05-05-15.
- */
+
 public class KoreHttpsUrlConnectionBuilder {
 
     private HttpsURLConnection httpsURLConnection;

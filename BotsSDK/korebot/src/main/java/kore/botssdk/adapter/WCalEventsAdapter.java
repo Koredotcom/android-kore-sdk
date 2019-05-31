@@ -120,7 +120,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     private Drawable selectedCheck;
     private Drawable unSelectedCheck;
 
-    private Drawable insetDivider/*, normalDivider*/;
+//    private Drawable insetDivider/*, normalDivider*/;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
@@ -141,7 +141,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
 
-        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
+//        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
 //        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
@@ -243,9 +243,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             }
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getData().getColor()));
-            if (position < getItemCount() - 1) {
+            /*if (position < getItemCount() - 1) {
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : insetDivider);
-            }
+            }*/
 
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -267,6 +267,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                     return false;
                 }
             });
+            if(position == eventList.size()-1 && eventList.size()<3)
+                holder.divider.setVisibility(View.GONE);
             holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

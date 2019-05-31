@@ -87,6 +87,8 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements Re
             holder.koraFileLookupViewBinding.setFileModel(kaFileLookupModels.get(position));
             String type = kaFileLookupModels.get(position).getFileType();
             holder.koraFileLookupViewBinding.image.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(type) ? type.toLowerCase() : ""));
+            if(position == kaFileLookupModels.size()-1 && kaFileLookupModels.size()<=3)
+                holder.koraFileLookupViewBinding.divider.setVisibility(View.GONE);
             holder.koraFileLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

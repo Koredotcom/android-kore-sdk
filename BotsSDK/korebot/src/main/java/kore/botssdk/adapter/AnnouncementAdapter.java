@@ -87,7 +87,8 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(context.getResources().getColor(R.color.splash_background_color));
             }
-
+            if(position == data.size()-1 && data.size()<3)
+                ((AnnouncementViewHolder) holder).binding.divider.setVisibility(View.GONE);
 
             ((AnnouncementViewHolder) holder).binding.viewAction.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -118,7 +119,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     public long getItemId(int position) {
         if(data != null && data.size()>0) {
             AnnoucementResModel model = data.get(position);
-            return model.getSharedOn() + position;
+            if(model != null)
+                return model.getSharedOn() + position;
+            else return position;
         }else return position;
     }
 
