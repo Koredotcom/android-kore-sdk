@@ -7,9 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +50,11 @@ public class Utils {
             return "";
         }
     }
-
+    public static void showToast(Context context, String message) {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        });
+    }
     /**
      * Get the package version
      * @param context
