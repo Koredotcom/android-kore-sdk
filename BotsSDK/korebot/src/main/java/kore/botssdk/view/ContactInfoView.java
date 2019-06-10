@@ -132,12 +132,14 @@ public class ContactInfoView extends ViewGroup {
     public void launchDialer(String number){
         HashMap<String,Object> map = new HashMap<>();
         map.put("phone",number);
-        invokeGenericWebViewInterface.handleUserActions(BundleConstants.OPEN_DIALER,map);
+        if(invokeGenericWebViewInterface != null)
+            invokeGenericWebViewInterface.handleUserActions(BundleConstants.OPEN_DIALER,map);
     }
     public void launchEmail(String email){
         HashMap<String,Object> map = new HashMap<>();
         map.put("email",email);
-        invokeGenericWebViewInterface.handleUserActions(BundleConstants.OPEN_EMAIL,map);
+        if(invokeGenericWebViewInterface != null)
+            invokeGenericWebViewInterface.handleUserActions(BundleConstants.OPEN_EMAIL,map);
     }
     public void openDetails(ContactInfoModel contactInfoModel){
         HashMap<String,Object> map = new HashMap<>();
@@ -145,7 +147,8 @@ public class ContactInfoView extends ViewGroup {
         map.put("phone",contactInfoModel.getPhone());
         map.put("name",contactInfoModel.getName());
         map.put("url",contactInfoModel.getContactUrl());
-        invokeGenericWebViewInterface.handleUserActions(BundleConstants.VIEW_CONTACT,map);
+        if(invokeGenericWebViewInterface != null)
+            invokeGenericWebViewInterface.handleUserActions(BundleConstants.VIEW_CONTACT,map);
     }
 
     @Override
