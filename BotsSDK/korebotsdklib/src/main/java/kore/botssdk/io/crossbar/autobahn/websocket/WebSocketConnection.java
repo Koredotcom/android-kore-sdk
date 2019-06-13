@@ -193,7 +193,8 @@ public class WebSocketConnection implements IWebSocket {
 
     @Override
     public void sendMessage(String payload) {
-        mWriter.forward(new TextMessage(payload));
+        if(mWriter != null)
+            mWriter.forward(new TextMessage(payload));
     }
 
     @Override

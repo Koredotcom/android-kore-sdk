@@ -1,8 +1,5 @@
 package kore.botssdk.view;
 
-/**
- * Created by Surya Prakash on 12/9/2015.
- */
 
 import android.content.Context;
 import android.util.AttributeSet;
