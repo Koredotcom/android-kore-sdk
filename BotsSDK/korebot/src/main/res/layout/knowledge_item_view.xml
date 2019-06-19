@@ -91,6 +91,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:paddingStart="10dp"
+            android:layout_marginBottom="12dp"
             android:paddingEnd="@dimen/dimen_12dp">
 
             <TextView
@@ -166,7 +167,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="12dp"
+
             android:layout_marginEnd="7dp"
             android:background="@drawable/inset_10_divider" />
 
