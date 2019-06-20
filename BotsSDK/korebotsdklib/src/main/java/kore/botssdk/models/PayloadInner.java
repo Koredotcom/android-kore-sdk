@@ -560,6 +560,9 @@ public class PayloadInner {
         private String name;
         private String color;
         private String icon;
+        private boolean isSectionItem;
+        private boolean isCurrentSkill;
+        private String trigger;
 
         public String getId() {
             return id;
@@ -570,5 +573,29 @@ public class PayloadInner {
         }
 
         private String id;
+
+        public boolean isSectionItem() {
+            return isSectionItem;
+        }
+
+        public void setSectionItem(boolean sectionItem) {
+            isSectionItem = sectionItem;
+        }
+
+        public boolean isCurrentSkill() {
+            return isCurrentSkill;
+        }
+
+        public void setCurrentSkill(boolean currentSkill) {
+            isCurrentSkill = currentSkill;
+        }
+
+        public String getTrigger() {
+            return trigger;
+        }
+
+        public void setTrigger(String trigger) {
+            this.trigger = trigger;
+        }
     }
 }
