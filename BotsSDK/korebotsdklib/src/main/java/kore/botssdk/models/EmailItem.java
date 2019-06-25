@@ -2,11 +2,11 @@ package kore.botssdk.models;
 
 public class EmailItem {
     private String type;
-    private String number;
+    private String value;
 
-    public EmailItem(String type,String number){
+    public EmailItem(String type,String value){
         this.type = type;
-        this.number = number;
+        this.value = value;
     }
 
     public String getType() {
@@ -18,10 +18,10 @@ public class EmailItem {
     }
 
     public String getNumber() {
-        return number;
+        return value;
     }
 
     public void setNumber(String number) {
-        this.number = number;
+        this.value = number;
     }
 }

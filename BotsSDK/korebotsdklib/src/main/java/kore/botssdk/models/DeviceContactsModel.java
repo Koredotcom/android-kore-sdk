@@ -3,6 +3,8 @@ package kore.botssdk.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class DeviceContactsModel {
 
         @SerializedName("name")
@@ -11,11 +13,11 @@ public class DeviceContactsModel {
 
         @SerializedName("email")
         @Expose
-        private Email email = null;
+        private List<EmailItem> email = null;
 
         @SerializedName("phone")
         @Expose
-        private Phone phone = null;
+        private List<PhoneItem> phone = null;
 
         public String getName() {
             return name;
@@ -25,20 +27,21 @@ public class DeviceContactsModel {
             this.name = name;
         }
 
-        public Email getEmail() {
+        public List<EmailItem> getEmail() {
             return email;
         }
 
-        public void setEmail(Email email) {
+        public void setEmail(List<EmailItem> email) {
             this.email = email;
         }
 
-        public Phone getPhone() {
+        public List<PhoneItem> getPhone() {
             return phone;
         }
 
-        public void setPhone(Phone phone) {
+        public void setPhone(List<PhoneItem> phone) {
             this.phone = phone;
         }
+
 
 }

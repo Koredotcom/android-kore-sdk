@@ -2,11 +2,11 @@ package kore.botssdk.models;
 
 public class PhoneItem {
     private String type;
-    private String number;
+    private String value;
 
-    public PhoneItem(String type,String number){
+    public PhoneItem(String type,String value){
         this.type = type;
-        this.number = number;
+        this.value = value;
     }
 
     public String getType() {
@@ -17,11 +17,11 @@ public class PhoneItem {
         this.type = type;
     }
 
-    public String getNumber() {
-        return number;
+    public String getValue() {
+        return value;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setValue(String value) {
+        this.value = value;
     }
 }
