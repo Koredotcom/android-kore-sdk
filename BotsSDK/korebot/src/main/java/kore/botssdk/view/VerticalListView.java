@@ -324,4 +324,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     public void navigationToDialAndJoin(String actiontype, String actionLink) {
 
     }
+
+    @Override
+    public void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel) {
+
+    }
+
+
 }

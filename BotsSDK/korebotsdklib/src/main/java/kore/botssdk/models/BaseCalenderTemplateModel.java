@@ -1,4 +1,6 @@
 package kore.botssdk.models;
 
-public class BaseCalenderTemplateModel {
+import java.io.Serializable;
+
+public class BaseCalenderTemplateModel implements Serializable {
 }

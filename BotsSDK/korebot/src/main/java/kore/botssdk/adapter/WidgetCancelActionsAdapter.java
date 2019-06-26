@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,6 +92,12 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
                 }else if(type.equalsIgnoreCase("url") && actionList.get(position).getCustom_type().equalsIgnoreCase("meetingUrl"))
                 {
                     verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", actionList.get(position).getUrl());
+                    (widgetDialogActivity).dismiss();
+
+                }
+                else if(type.equalsIgnoreCase(BotResponse.TAKE_NOTES))
+                {
+                    verticalListViewActionHelper.takeNotesNavigation(model);
                     (widgetDialogActivity).dismiss();
 
                 }

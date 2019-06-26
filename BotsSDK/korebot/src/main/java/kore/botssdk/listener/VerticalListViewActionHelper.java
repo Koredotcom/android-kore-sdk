@@ -15,5 +15,5 @@ public interface VerticalListViewActionHelper {
     void tasksSelectedOrDeselected(boolean selecetd);
     void widgetItemSelected(boolean isSelected,int count);
     void navigationToDialAndJoin(String actiontype,String actionLink);
-
+    void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
 }

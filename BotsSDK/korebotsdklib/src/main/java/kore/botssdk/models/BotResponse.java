@@ -53,6 +53,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TASK_FULLVIEW_WIDGET = "task_list_full_preview_widget";
 
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
+    public static final String TAKE_NOTES = "open_form";
 
     //left widget constants
     public static final String  WIDGET_TYPE="WIDGET_TYPE";

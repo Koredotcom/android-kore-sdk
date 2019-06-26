@@ -1,12 +1,13 @@
 package kore.botssdk.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
 
-public class WCalEventsTemplateModel extends BaseCalenderTemplateModel {
+public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable {
     public String getTemplate_type() {
         return template_type;
     }
@@ -74,7 +75,7 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel {
     private boolean showDate;
 
 
-    public class Action {
+    public class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;

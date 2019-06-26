@@ -1,14 +1,18 @@
 package kore.botssdk.models;
 
 import android.provider.CalendarContract;
+import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalEventsTemplateModel extends BaseCalenderTemplateModel{
+public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable {
 
     private Duration duration;
     private String title;
@@ -118,7 +122,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel{
         showDate = flag;
     }
 
-    public class Duration {
+    public class Duration  implements Serializable{
 
         private double start;
         private double end;
@@ -140,7 +144,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel{
         }
     }
 
-    public class Attendee {
+    public class Attendee implements Serializable{
 
         private boolean optional;
         private boolean resource;
@@ -211,9 +215,14 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel{
             this.name = name;
         }
 
+        @NonNull
+        @Override
+        public String toString() {
+            return name!=null&& !TextUtils.isEmpty(name)?name:email;
+        }
     }
 
-    public class Action {
+    public class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;

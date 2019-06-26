@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class MeetJoin {
+import java.io.Serializable;
+
+public class MeetJoin implements Serializable {
     String meetingUrl;
     String dialIn;
 
