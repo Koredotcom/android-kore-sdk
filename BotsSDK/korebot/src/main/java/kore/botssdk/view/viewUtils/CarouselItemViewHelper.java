@@ -101,7 +101,7 @@ public class CarouselItemViewHelper {
             }
             try {
                 if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
-                    Picasso.with(activityContext).load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
+                    Picasso.get().load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
                     carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
                 }else{
                     carouselViewHolder.carouselItemImage.setVisibility(GONE);

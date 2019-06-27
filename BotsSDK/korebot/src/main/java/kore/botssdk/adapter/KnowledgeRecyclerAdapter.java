@@ -163,8 +163,9 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     public static void loadImage(ImageView imageView, String src){
         //.resize(imageView.getWidth()>0?imageView.getWidth():(40*dp1),imageView.getHeight()>0?imageView.getWidth():(40*dp1))
         if(!StringUtils.isNullOrEmpty(src)) {
-            Picasso.with(imageView.getContext()).load(src).transform(roundedCornersTransform)
-                    .into(imageView, new com.squareup.picasso.Callback() {
+            Picasso.get().load(src)
+                    .transform(roundedCornersTransform)
+                    .into(imageView);/*, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     imageView.setVisibility(View.VISIBLE);
@@ -174,7 +175,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
                 public void onError() {
                     imageView.setVisibility(View.GONE);
                 }
-            });
+            });*/
         } else {
             imageView.setVisibility(View.GONE);
         }

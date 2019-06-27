@@ -56,7 +56,7 @@ public class AvailableBotListAdapter extends BaseAdapter {
 
         MarketStreams marketStreams = getItem(position);
 
-        Picasso.with(context).load(marketStreams.getIcon()).into(viewHolder.availableBotItemsImageView);
+        Picasso.get().load(marketStreams.getIcon()).into(viewHolder.availableBotItemsImageView);
         viewHolder.availableBotItemsText.setText(marketStreams.getName());
 
         return convertView;

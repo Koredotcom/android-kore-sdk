@@ -93,7 +93,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     private void populateVIew(ViewHolder holder, int position) {
         BotListModel botListModel = getItem(position);
 
-        Picasso.with(context).load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+        Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());

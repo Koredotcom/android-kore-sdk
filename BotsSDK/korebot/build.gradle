@@ -49,7 +49,9 @@ dependencies {
         exclude module: 'support-v4'
     }
     compile 'androidx.multidex:multidex:2.0.1'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+//    implementation 'com.squareup.picasso:picasso:2.71828'
+    compile group: 'com.squareup.picasso', name: 'picasso', version: '2.71828'
+
     compile 'com.makeramen:roundedimageview:2.2.0'
 //    compile 'com.google.code.gson:gson:2.6.2'
     compile 'androidx.cardview:cardview:1.0.0'
