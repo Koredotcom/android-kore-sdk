@@ -5,16 +5,29 @@ import com.google.gson.annotations.SerializedName;
 
 public class MeetingDraftResponse {
 
-@SerializedName("status")
-@Expose
-private String status;
+    @SerializedName("status")
+    @Expose
+    private String status;
 
-public String getStatus() {
-return status;
-}
 
-public void setStatus(String status) {
-this.status = status;
-}
+    @SerializedName("kId")
+    @Expose
+    private String kId;
+
+    public String getkId() {
+        return kId;
+    }
+
+    public void setkId(String kId) {
+        this.kId = kId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
 }

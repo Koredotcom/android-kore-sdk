@@ -199,6 +199,15 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         private String name;
 
+        public boolean isCheckState() {
+            return checkState;
+        }
+
+        public void setCheckState(boolean checkState) {
+            this.checkState = checkState;
+        }
+
+        boolean checkState;
         public String getEmail() {
             return email;
         }
@@ -220,6 +229,8 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         public String toString() {
             return name!=null&& !TextUtils.isEmpty(name)?name:email;
         }
+
+
     }
 
     public class Action implements Serializable {

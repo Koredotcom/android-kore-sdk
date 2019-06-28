@@ -20,6 +20,15 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
         return title;
     }
 
+    String meetingId;
+
+    public String getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(String meetingId) {
+        this.meetingId = meetingId;
+    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -34,7 +43,7 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
     }
 
     public String getLocation() {
-        return location!=null?location:"";
+        return location != null ? location : "";
     }
 
     public void setLocation(String location) {
