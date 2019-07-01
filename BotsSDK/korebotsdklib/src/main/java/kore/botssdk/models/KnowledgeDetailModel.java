@@ -29,7 +29,17 @@ public class KnowledgeDetailModel {
     private String lMod;
     private String imageUrl;
     private String title;
+    private String mId;
     private ContactInfoModel owner;
+
+    public String getmId() {
+        return mId;
+    }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+
     private String url;
     private int nLikes;
 
