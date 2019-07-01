@@ -148,6 +148,7 @@
                 android:onClick="@{()->viewBase.openDetails(contactInfo)}"
                 android:text="Details"
                 android:textColor="@color/splash_color"
+                android:visibility="@{viewBase.getVisibility(contactInfo)}"
                 android:textSize="15sp" />
         </RelativeLayout>
     </LinearLayout>

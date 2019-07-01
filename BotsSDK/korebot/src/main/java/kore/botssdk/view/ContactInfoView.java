@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.HashMap;
 
 import androidx.databinding.DataBindingUtil;
@@ -149,6 +147,14 @@ public class ContactInfoView extends ViewGroup {
         map.put("url",contactInfoModel.getContactUrl());
         if(invokeGenericWebViewInterface != null)
             invokeGenericWebViewInterface.handleUserActions(BundleConstants.VIEW_CONTACT,map);
+    }
+
+    public int getVisibility(ContactInfoModel contactInfoModel){
+        if(contactInfoModel != null && !StringUtils.isNullOrEmpty(contactInfoModel.getContactUrl())){
+            return View.VISIBLE;
+        }else{
+            return View.GONE;
+        }
     }
 
     @Override
