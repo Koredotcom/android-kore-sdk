@@ -2,8 +2,6 @@ package kore.botssdk.utils;
 
 import android.content.Context;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
@@ -48,7 +46,7 @@ public class DateUtils {
     public static final SimpleDateFormat dateWeekDayTime2 = new SimpleDateFormat("MMM dd yyyy 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime3 = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime4 = new SimpleDateFormat("dd MMM, yyyy, hh:mm a", Locale.ENGLISH);
-    public static final SimpleDateFormat dateWeekDayTime5 = new SimpleDateFormat("MMM dd, yyyy, ", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekDayTime5 = new SimpleDateFormat("EEE, MMM dd, yyyy, ", Locale.ENGLISH);
     public static final Format calendar_list_format2 = new SimpleDateFormat("EEE, MMM d, ", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
