@@ -4,7 +4,6 @@ import com.squareup.okhttp.ResponseBody;
 
 import java.util.HashMap;
 
-import io.reactivex.Observable;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
@@ -71,7 +70,7 @@ public interface RestAPI {
     Call<ResponseBody> unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
-    Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
+    Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("direction") int forward);
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
     Call<BotHistory> getInitHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
