@@ -1,12 +1,11 @@
 package kore.botssdk.models;
 
-import android.provider.CalendarContract;
 import android.text.TextUtils;
-
-import androidx.annotation.NonNull;
 
 import java.io.Serializable;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
@@ -207,6 +206,8 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         private String name;
 
+        private String id;
+
         public boolean isCheckState() {
             return checkState;
         }
@@ -239,6 +240,13 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         }
 
 
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 
     public class Action implements Serializable {
