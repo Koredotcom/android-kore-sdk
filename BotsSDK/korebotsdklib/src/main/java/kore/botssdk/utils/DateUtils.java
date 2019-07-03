@@ -1,6 +1,7 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
+import android.text.format.Time;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -223,14 +224,30 @@ public class DateUtils {
     public static String getDay(long mdate) {
         String date = DateUtils.calendar_event_list_format1.format(mdate);
 
-        if (android.text.format.DateUtils.isToday(mdate)) {
+        if (isTodayOrBefore(mdate)) {
             date = "Today";
-        } else if (isYesterday(mdate)) {
+        } /*else if (isYesterday(mdate)) {
             date = "Yesterday";
-        } else if (isTomorrow(mdate)) {
+        }*/ else if (isTomorrow(mdate)) {
             date = "Tomorrow";
         }
         return date;
+    }
+
+    /**
+     * @return true if the supplied when is today else false
+     */
+    public static boolean isTodayOrBefore(long when) {
+        if(android.text.format.DateUtils.isToday(when)){
+            return true;
+        }else{
+            Date current = new Date();
+            Date other = new Date(when);
+            if(other.before(current))
+                return true;
+            else
+                return false;
+        }
     }
 
     public static String getFilesDateSturcture(String lastModified) {

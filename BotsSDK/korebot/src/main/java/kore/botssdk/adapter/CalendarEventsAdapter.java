@@ -410,17 +410,18 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             }
         });
         for (CalEventsTemplateModel data : eventList) {
-            String date = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
-            ArrayList<CalEventsTemplateModel> sortmap = list.get(date);
+            String key = DateUtils.getDay((long)data.getDuration().getStart());
+//            String date = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
+            ArrayList<CalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
                 ArrayList<CalEventsTemplateModel> temp = new ArrayList<>();
                 data.setShowDate(true);
                 temp.add(data);
-                list.put(date, temp);
+                list.put(key, temp);
 
             } else {
                 sortmap.add(data);
-                list.put(date, sortmap);
+                list.put(key, sortmap);
             }
         }
         Set<String> keys = list.keySet();

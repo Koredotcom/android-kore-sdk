@@ -408,17 +408,18 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             }
         });
         for (WCalEventsTemplateModel data : eventList) {
-            String date = DateUtils.calendar_event_list_format1.format(data.getData().getDuration().getStart()).toUpperCase();
-            ArrayList<WCalEventsTemplateModel> sortmap = list.get(date);
+//            String date = DateUtils.calendar_event_list_format1.format(data.getData().getDuration().getStart()).toUpperCase();
+            String key = DateUtils.getDay((long)data.getData().getDuration().getStart());
+            ArrayList<WCalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
                 ArrayList<WCalEventsTemplateModel> temp = new ArrayList<>();
                 data.setShowDate(true);
                 temp.add(data);
-                list.put(date, temp);
+                list.put(key, temp);
 
             } else {
                 sortmap.add(data);
-                list.put(date, sortmap);
+                list.put(key, sortmap);
             }
         }
         Set<String> keys = list.keySet();
