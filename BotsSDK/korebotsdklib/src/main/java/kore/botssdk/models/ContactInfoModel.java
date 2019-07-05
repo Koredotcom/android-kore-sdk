@@ -2,16 +2,25 @@ package kore.botssdk.models;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import kore.botssdk.utils.Utils;
 
-public class ContactInfoModel extends UserNameModel {
+public class ContactInfoModel extends UserNameModel implements Serializable {
 
     private String contactUrl;
     private String id;
+private  String emailId;
 
+    public String getEmailId() {
+        return emailId!=null?emailId:"";
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
 
     public String getColor() {
         return color;

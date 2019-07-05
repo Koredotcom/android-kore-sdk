@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,27 @@ import kore.botssdk.utils.StringUtils;
  * Created by Shiva Krishna on 1/30/2018.
  */
 
-public class KnowledgeDetailModel {
+public class KnowledgeDetailModel implements Serializable {
+    public String getTempHeader() {
+        return tempHeader;
+    }
+
+    public void setTempHeader(String tempHeader) {
+        this.tempHeader = tempHeader;
+    }
+
+    public boolean isShowHeader() {
+        return showHeader;
+    }
+
+    public void setShowHeader(boolean showHeader) {
+        this.showHeader = showHeader;
+    }
+
+    private boolean showHeader;
+
+
+    private String tempHeader;
     private String streamId;
     private String creator;
     private String lMod;
@@ -32,6 +53,25 @@ public class KnowledgeDetailModel {
     private String mId;
     private ContactInfoModel owner;
 
+    private MeetingDetails meetingDetails;
+
+    public MeetingDetails getMeetingDetails() {
+        return meetingDetails;
+    }
+
+    public void setMeetingDetails(MeetingDetails meetingDetails) {
+        this.meetingDetails = meetingDetails;
+    }
+
+    public List<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Participant> participants) {
+        this.participants = participants;
+    }
+
+    private List<Participant> participants = null;
     public String getmId() {
         return mId;
     }
@@ -397,7 +437,7 @@ public boolean getDateLabelVisblity()
         this.likes = likes;
     }
 
-    public class SharedList {
+    public class SharedList implements Serializable {
 
 
         private String lN;
@@ -492,7 +532,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class VoteModel {
+    public class VoteModel implements Serializable{
         int vote;
 
         public int getVote() {
@@ -516,7 +556,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class MyActions {
+    public class MyActions implements Serializable {
         boolean like;
         boolean follow;
         int vote;
@@ -556,7 +596,7 @@ public boolean getDateLabelVisblity()
         }
     }
 
-    public class CommentModel {
+    public class CommentModel implements Serializable{
         private long cOn;
         private String id;
         private long lMod;

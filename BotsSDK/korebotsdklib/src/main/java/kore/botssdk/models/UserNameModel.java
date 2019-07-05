@@ -2,9 +2,11 @@ package kore.botssdk.models;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+
 import kore.botssdk.utils.Utils;
 
-public class UserNameModel {
+public class UserNameModel implements Serializable {
     public String getfN() {
         return fN;
     }
