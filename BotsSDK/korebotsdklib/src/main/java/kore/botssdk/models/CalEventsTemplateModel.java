@@ -17,15 +17,16 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private String title;
     private String where;
     private String description;
-    String meetingId;
+    String mId;
 
-    public String getMeetingId() {
-        return meetingId;
+    public String getmId() {
+        return mId;
     }
 
-    public void setMeetingId(String meetingId) {
-        this.meetingId = meetingId;
+    public void setmId(String mId) {
+        this.mId = mId;
     }
+
     public MeetJoin getMeetJoin() {
         return meetJoin;
     }
