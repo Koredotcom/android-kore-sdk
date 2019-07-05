@@ -59,19 +59,27 @@ public class KnowledgeDetailModel implements Serializable {
         return meetingDetails;
     }
 
+    public List<CalEventsTemplateModel.Attendee> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(List<CalEventsTemplateModel.Attendee> attendees) {
+        this.attendees = attendees;
+    }
+
     public void setMeetingDetails(MeetingDetails meetingDetails) {
         this.meetingDetails = meetingDetails;
     }
 
-    public List<Participant> getParticipants() {
+ /*   public List<Participant> getParticipants() {
         return participants;
     }
 
     public void setParticipants(List<Participant> participants) {
         this.participants = participants;
     }
-
-    private List<Participant> participants = null;
+*/
+    private List<CalEventsTemplateModel.Attendee> attendees = null;
     public String getmId() {
         return mId;
     }
