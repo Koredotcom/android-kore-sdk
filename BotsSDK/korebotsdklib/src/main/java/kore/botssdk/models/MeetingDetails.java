@@ -21,6 +21,16 @@ private String otherAttendees;
 @Expose
 private String id;
 
+    public String getcId() {
+        return cId;
+    }
+
+    public void setcId(String cId) {
+        this.cId = cId;
+    }
+
+    private String cId;
+
 public Long getStart() {
 return start;
 }
