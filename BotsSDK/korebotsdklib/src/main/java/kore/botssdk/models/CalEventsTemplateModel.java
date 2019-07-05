@@ -157,6 +157,15 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         private boolean optional;
         private boolean resource;
         private boolean self;
+        private String emailId;
+
+        public String getEmailId() {
+            return emailId;
+        }
+
+        public void setEmailId(String emailId) {
+            this.emailId = emailId;
+        }
 
         public boolean isSelf() {
             return self;
@@ -219,7 +228,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         boolean checkState;
         public String getEmail() {
-            return email;
+            return email!=null?email:emailId;
         }
 
         public void setEmail(String email) {
