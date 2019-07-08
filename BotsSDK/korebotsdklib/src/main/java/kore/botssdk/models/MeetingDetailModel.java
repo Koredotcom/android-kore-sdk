@@ -286,15 +286,8 @@ public boolean getDateLabelVisblity()
     private long createdOn;
     private String description;
 
-    public ArrayList<String> getHashTag() {
-        return hashTag;
-    }
 
-    public void setHashTag(ArrayList<String> hashTag) {
-        this.hashTag = hashTag;
-    }
 
-    private ArrayList<String> hashTag;
 
     private ArrayList<KoreComponentModel> components;
     private ArrayList<LinkPreviewModel> linkPreviews;
