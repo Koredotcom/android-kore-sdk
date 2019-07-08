@@ -77,6 +77,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingBottom="13dp"
 
             android:layout_weight="1"
             android:orientation="vertical">
@@ -112,7 +113,6 @@
                 android:id="@+id/tv_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
                 android:drawableStart="@drawable/vector_person"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
@@ -120,6 +120,28 @@
                 android:singleLine="true"
                 android:textColor="#485260"
                 android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_meeting_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:paddingTop="7dp"
+                android:paddingRight="@dimen/dimen_14dp"
+                android:paddingLeft="7dp"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:drawableStart="@drawable/ic_meeting_notes"
+                android:drawablePadding="7dp"
+                android:ellipsize="end"
+                android:gravity="center|start"
+                android:singleLine="true"
+                android:textColor="#485260"
+                android:text="Meeting Notes"
+                android:background="@drawable/meeting_notes_border"
+                android:visibility="gone"
+                android:textSize="13sp" />
+
+
 
         </LinearLayout>
 

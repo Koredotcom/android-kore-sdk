@@ -1,72 +1,48 @@
 package kore.botssdk.adapter;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.internal.fuseable.HasUpstreamObservableSource;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.CalenderEventData;
-import kore.botssdk.models.MeetingConfirmationModel;
-import kore.botssdk.models.PayloadInner;
-import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
-import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
@@ -229,7 +205,6 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             if (!StringUtils.isNullOrEmptyWithTrim(model.getWhere())) {
                 holder.txtPlace.setText(model.getWhere());
                 holder.txtPlace.setVisibility(VISIBLE);
-
             } else {
                 holder.txtPlace.setVisibility(GONE);
 
@@ -237,6 +212,18 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
 
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
+
+            if(StringUtils.isNullOrEmpty(model.getMeetingNoteId())){
+                holder.tv_meeting_notes.setVisibility(View.GONE);
+            }else{
+                holder.tv_meeting_notes.setVisibility(View.VISIBLE);
+                holder.tv_meeting_notes.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        verticalListViewActionHelper.meetingNotesNavigation(mContext,model.getMeetingNoteId(),model.getEventId());
+                    }
+                });
+            }
             if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
                 holder.txtDateTime.setVisibility(VISIBLE);
@@ -461,6 +448,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         public TextView tvborder, tv_users;
         public ImageView checkbox;
         public View divider;
+        public TextView tv_meeting_notes;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -475,6 +463,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             txtPlace = (TextView) itemView.findViewById(R.id.txtPlace);
             tvborder = (TextView) itemView.findViewById(R.id.tvborder);
             tv_users = (TextView) itemView.findViewById(R.id.tv_users);
+            tv_meeting_notes = (TextView) itemView.findViewById(R.id.tv_meeting_note);
             checkbox = itemView.findViewById(R.id.checkbox);
             divider = itemView.findViewById(R.id.divider);
 

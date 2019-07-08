@@ -19,11 +19,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AnnouncementAdapter;
@@ -47,7 +43,6 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -327,6 +322,12 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel) {
+
+    }
+
+    @Override
+    public void meetingNotesNavigation(Context context, String mId, String eId) {
+        composeFooterInterface.lauchMeetingNotesAction(context,mId,eId);
 
     }
 

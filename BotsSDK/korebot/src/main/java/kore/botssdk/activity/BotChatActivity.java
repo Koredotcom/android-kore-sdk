@@ -1,9 +1,9 @@
 package kore.botssdk.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import androidx.fragment.app.FragmentTransaction;
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -216,6 +217,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
+    @Override
+    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
+
+    }
 
 
     private void updateActionBar() {

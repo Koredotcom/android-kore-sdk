@@ -1,5 +1,6 @@
 package kore.botssdk.listener;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -27,4 +28,6 @@ public interface ComposeFooterInterface {
     void copyMessageToComposer(String text);
     void openFullView(String templateType, String data);
     void updateActionbar(boolean selected,String templateType,ArrayList<BotButtonModel> buttonModels);
+
+    void lauchMeetingNotesAction(Context context,String mid, String eid);
 }

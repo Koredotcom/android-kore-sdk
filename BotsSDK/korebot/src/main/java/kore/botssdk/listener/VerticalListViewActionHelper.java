@@ -1,5 +1,6 @@
 package kore.botssdk.listener;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import java.util.HashMap;
@@ -16,4 +17,5 @@ public interface VerticalListViewActionHelper {
     void widgetItemSelected(boolean isSelected,int count);
     void navigationToDialAndJoin(String actiontype,String actionLink);
     void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
+    void meetingNotesNavigation(Context context,String mId, String eId);
 }

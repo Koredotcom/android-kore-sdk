@@ -50,6 +50,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private String color;
     private String htmlLink;
     private String eventId;
+    private String meetingNoteId;
     boolean showDate;
 
     private List<Attendee> attendees = null;
@@ -128,6 +129,14 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     public void setShowDate(boolean flag) {
 
         showDate = flag;
+    }
+
+    public String getMeetingNoteId() {
+        return meetingNoteId;
+    }
+
+    public void setMeetingNoteId(String meetingNoteId) {
+        this.meetingNoteId = meetingNoteId;
     }
 
     public class Duration  implements Serializable{
