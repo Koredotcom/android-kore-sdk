@@ -138,7 +138,7 @@
                 android:textColor="#485260"
                 android:text="Meeting Notes"
                 android:background="@drawable/meeting_notes_border"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:textSize="13sp" />
 
 

@@ -71,6 +71,15 @@ public final class SocketWrapper{
     private String JWTToken;
     private String auth;
     private String botUserId;
+
+    public BotInfoModel getBotInfoModel() {
+        return botInfoModel;
+    }
+
+    public void setBotInfoModel(BotInfoModel botInfoModel) {
+        this.botInfoModel = botInfoModel;
+    }
+
     private BotInfoModel botInfoModel;
 
     private Context mContext;
