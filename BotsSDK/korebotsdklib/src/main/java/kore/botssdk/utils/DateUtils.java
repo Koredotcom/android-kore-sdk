@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
-import android.text.format.Time;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -233,6 +232,20 @@ public class DateUtils {
         }
         return date;
     }
+
+    public static String getCalDay(long mdate) {
+        String date = DateUtils.calendar_event_list_format1.format(mdate);
+
+        if (android.text.format.DateUtils.isToday(mdate)) {
+            date = "Today";
+        } else if (isYesterday(mdate)) {
+            date = "Yesterday";
+        } else if (isTomorrow(mdate)) {
+            date = "Tomorrow";
+        }
+        return date;
+    }
+
 
     /**
      * @return true if the supplied when is today else false

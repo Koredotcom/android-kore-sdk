@@ -125,8 +125,8 @@
                 android:id="@+id/tv_meeting_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:paddingTop="7dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
                 android:paddingRight="@dimen/dimen_14dp"
                 android:paddingLeft="7dp"
                 android:layout_marginTop="@dimen/dimen_8dp"
@@ -138,7 +138,7 @@
                 android:textColor="#485260"
                 android:text="Meeting Notes"
                 android:background="@drawable/meeting_notes_border"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textSize="13sp" />
 
 
