@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,12 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetDialogActivity;
@@ -130,7 +133,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     int preview_length;
     private boolean isFromFullView;
 
-    public WCalEventsAdapter(Context mContext, String type, boolean isEnabled,boolean isFromFullView) {
+    public WCalEventsAdapter(Context mContext, String type, boolean isEnabled, boolean isFromFullView) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
@@ -177,7 +180,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         } else
-            return new CalendarEventsAdapter.ViewHolder(inflater.inflate(R.layout.calendar_event_list_item, parent, false));
+            return new CalendarEventsAdapter.ViewHolder(inflater.inflate(R.layout.widget_calendar_event_list_item, parent, false));
     }
 
 
@@ -189,6 +192,57 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         return "";
 
 
+    }
+
+    public String getDayFormation(WCalEventsTemplateModel model) {
+
+        try {
+
+            long startDate = (long) model.getData().getDuration().getStart();
+            long endDate = (long) model.getData().getDuration().getEnd();
+            long diffBetweenDates = endDate - startDate;
+            int no_meeting_days = DateUtils.getDays(mContext, diffBetweenDates);
+            if (no_meeting_days < 1) {
+                no_meeting_days = 1;
+            }
+            long currentTime = System.currentTimeMillis();
+            if (model.getData().isAllDay()) {
+                if (no_meeting_days == 1) {
+                    return "All Day";
+                } else if (no_meeting_days > 1) {
+                    int currentDiff = DateUtils.getDays(mContext, currentTime - startDate);
+                    if(currentDiff<1)
+                    {
+                        currentDiff=1;
+                    }
+                    return "All Day\nDay (" + currentDiff + "/" + no_meeting_days + ")";
+                } else {
+                    return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
+                }
+            } else if (no_meeting_days > 1) {
+                long dayDiff = (currentTime - startDate);
+                int day = DateUtils.getDays(mContext, dayDiff);
+                int currentDayOfMeeting = DateUtils.getDays(mContext, dayDiff);
+                if (currentDayOfMeeting < 1) {
+                    currentDayOfMeeting = 1;
+                }
+                if (day == 1) {
+                    //today
+                    return "From\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
+                } else if (day == no_meeting_days) {
+                    //last day
+                    return "Till\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()) + "\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
+                } else {
+                    return "All Day\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
+                    //middle date
+                }
+            } else if (DateUtils.getOneDayMiliseconds(diffBetweenDates) >= 23.98f) {
+                return "All Day";
+            }
+            return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
+        } catch (Exception e) {
+            return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
+        }
     }
 
     @Override
@@ -207,8 +261,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
             boolean isSelected = selectedIds.contains(model.getData().getEventId());
             holder.innerlayout.setSelected(isSelected);
-
-
+            String s = getDayFormation(model);
+            Log.d("Shri", s + "---------");
 
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
@@ -231,8 +285,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 holder.txtPlace.setVisibility(GONE);
 
             }
-            holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()));
+            // holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()));
 
+            holder.tv_time.setText(getDayFormation(model));
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getData().getAttendees()));
             if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
@@ -250,7 +305,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if (verticalListViewActionHelper != null && isFromWidget()&&isFromFullView) {
+                    if (verticalListViewActionHelper != null && isFromWidget() && isFromFullView) {
                         if (selectedIds.contains(model.getData().getEventId())) {
                             selectedIds.remove(model.getData().getEventId());
                             holder.innerlayout.setSelected(false);
@@ -267,7 +322,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                     return false;
                 }
             });
-            if(position == eventList.size()-1 && eventList.size()<3)
+            if (position == eventList.size() - 1 && eventList.size() < 3)
                 holder.divider.setVisibility(View.GONE);
             holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -287,7 +342,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
 
-                        } else /*if(!isFromFullView)*/{
+                        } else /*if(!isFromFullView)*/ {
                             WidgetDialogModel widgetDialogModel = new WidgetDialogModel();
                             widgetDialogModel.setAttendies(checkStringNull(holder.tv_users.getText() != null ? holder.tv_users.getText().toString().trim() : ""));
                             widgetDialogModel.setLocation(checkStringNull(holder.txtPlace.getText() != null ? holder.txtPlace.getText().toString().trim() : ""));
@@ -295,7 +350,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getData().getColor()));
 
-                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model,isFromFullView,verticalListViewActionHelper);
+                            WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, model, isFromFullView, verticalListViewActionHelper);
 
                             dialogActivity.show();
 
@@ -409,7 +464,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         });
         for (WCalEventsTemplateModel data : eventList) {
 //            String date = DateUtils.calendar_event_list_format1.format(data.getData().getDuration().getStart()).toUpperCase();
-            String key = DateUtils.getDay((long)data.getData().getDuration().getStart());
+            String key = DateUtils.getDay((long) data.getData().getDuration().getStart());
             ArrayList<WCalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
                 ArrayList<WCalEventsTemplateModel> temp = new ArrayList<>();
@@ -449,7 +504,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     public void setPreviewLength(int preview_length) {
-        this.preview_length=preview_length;
+        this.preview_length = preview_length;
     }
 
     public interface EventSelectionListener {
@@ -542,9 +597,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
             } else {
                 int remaining = userDetailModels.size() - 1;
-                if(remaining > 1)
+                if (remaining > 1)
                     return String.format("%1$s and %2$d others",
-                        userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
 
                 else
                     return String.format("%1$s and %2$d other",

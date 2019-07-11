@@ -66,6 +66,13 @@ public class DateUtils {
     }
 
 
+    public static double getOneDayMiliseconds(long diffvalue) {
+        double seconds = diffvalue / 1000;
+        double hours = seconds / (60 * 60);
+        return hours;
+
+    }
+
     public static String getTimeStamp(long timeStampMillis) {
         return dateFormat4.format(new Date(timeStampMillis));
     }
@@ -99,6 +106,11 @@ public class DateUtils {
             time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
         }
         return time;
+    }
+
+
+    public static int getDays(Context mContext, long diff) {
+        return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
 
@@ -199,13 +211,15 @@ public class DateUtils {
     public static String getDate(long lastModified) {
         return dateWeekMsg.format(new Date(lastModified));
     }
-    public static String getDateEEEMMD(double startdate,double enddate) {
-        return calendar_list_format2.format(startdate)+calendar_list_format_2.format(startdate).toLowerCase()+" to "+calendar_list_format_2.format(enddate).toLowerCase();
+
+    public static String getDateEEEMMD(double startdate, double enddate) {
+        return calendar_list_format2.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
     }
 
-    public static String getDateMMMDDYYYY(double startdate,double enddate) {
-        return dateWeekDayTime5.format(startdate)+calendar_list_format_2.format(startdate).toLowerCase()+" to "+calendar_list_format_2.format(enddate).toLowerCase();
+    public static String getDateMMMDDYYYY(double startdate, double enddate) {
+        return dateWeekDayTime5.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
     }
+
     public static String getDateWithTime(long lastModified) {
 
         String date = dateWeekMsgTime.format(lastModified);
@@ -251,12 +265,12 @@ public class DateUtils {
      * @return true if the supplied when is today else false
      */
     public static boolean isTodayOrBefore(long when) {
-        if(android.text.format.DateUtils.isToday(when)){
+        if (android.text.format.DateUtils.isToday(when)) {
             return true;
-        }else{
+        } else {
             Date current = new Date();
             Date other = new Date(when);
-            if(other.before(current))
+            if (other.before(current))
                 return true;
             else
                 return false;
@@ -509,16 +523,17 @@ public class DateUtils {
 
 
     public static boolean formattedSentDateV8_InAnnouncement2(long createdOn) {
-     boolean isDateLabelShouldVisble=true;
+        boolean isDateLabelShouldVisble = true;
         if (android.text.format.DateUtils.isToday(createdOn)) {
-            isDateLabelShouldVisble=false;
+            isDateLabelShouldVisble = false;
         } else if (isYesterday(createdOn)) {
-         isDateLabelShouldVisble=false;
+            isDateLabelShouldVisble = false;
         }
 
         return isDateLabelShouldVisble;
 
     }
+
     public static String formattedSentDateV8_InAnnouncement(long createdOn) {
         String time = "";
         if (android.text.format.DateUtils.isToday(createdOn)) {
