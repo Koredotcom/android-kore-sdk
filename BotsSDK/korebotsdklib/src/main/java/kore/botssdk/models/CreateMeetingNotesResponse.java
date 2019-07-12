@@ -1,8 +1,9 @@
 package kore.botssdk.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class CreateMeetingNotesResponse {
 
@@ -24,9 +25,9 @@ private String title;
 @SerializedName("type")
 @Expose
 private String type;
-@SerializedName("version")
+/*@SerializedName("version")
 @Expose
-private Long version;
+private Long version;*/
 @SerializedName("lMUId")
 @Expose
 private String lMUId;
@@ -97,13 +98,13 @@ public void setType(String type) {
 this.type = type;
 }
 
-public Long getVersion() {
+/*public Long getVersion() {
 return version;
-}
+}*/
 
-public void setVersion(Long version) {
+/*public void setVersion(Long version) {
 this.version = version;
-}
+}*/
 
 public String getLMUId() {
 return lMUId;
