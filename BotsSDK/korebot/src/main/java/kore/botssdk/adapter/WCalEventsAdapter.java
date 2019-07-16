@@ -199,6 +199,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     public String getDayFormation(WCalEventsTemplateModel model) {
 
+
+       
+
         //try {
         long startDateServer = (long) model.getData().getDuration().getStart();
         long endDateServer = (long) model.getData().getDuration().getEnd();
@@ -412,8 +415,6 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
             boolean isSelected = selectedIds.contains(model.getData().getEventId());
             holder.innerlayout.setSelected(isSelected);
-            String s = getDayFormation(model);
-            Log.d("Shri", s + "---------");
 
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
             holder.txtDateTime.setText(date);
