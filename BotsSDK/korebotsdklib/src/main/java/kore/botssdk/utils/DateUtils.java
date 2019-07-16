@@ -1,6 +1,7 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -331,6 +332,17 @@ public class DateUtils {
     }
 
 
+    public static Date getDDMMYYYY(long date)
+    {
+         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            return DATE_FORMAT.parse(dateFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public static String getAnnoucementDateDDMMM(long dateformat) {
 
         return dateFormat6.format(dateformat);
