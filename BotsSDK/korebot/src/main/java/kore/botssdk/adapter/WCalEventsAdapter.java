@@ -443,7 +443,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         if(_data.getData().isAllDay()){
                             txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                         }else {
-                            txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                            txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                         }
                         _data.getData().setReqTextToDisp(txt);
 
