@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
 
-public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable {
+public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable, Cloneable {
     public String getTemplate_type() {
         return template_type;
     }
@@ -140,5 +140,15 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
         public void setUtterance(String utterance) {
             this.utterance = utterance;
         }
+    }
+
+    @Override
+    public WCalEventsTemplateModel clone() throws CloneNotSupportedException {
+            WCalEventsTemplateModel obj = (WCalEventsTemplateModel)super.clone();
+            CalenderEventData calEv = obj.getData().clone();
+            calEv.setDuration(calEv.getDuration().clone());
+            obj.setData(calEv);
+
+            return obj;
     }
 }

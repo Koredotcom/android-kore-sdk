@@ -18,4 +18,5 @@ public interface VerticalListViewActionHelper {
     void navigationToDialAndJoin(String actiontype,String actionLink);
     void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
     void meetingNotesNavigation(Context context,String mId, String eId);
+    void meetingWidgetViewMoreVisibility(boolean visible);
 }

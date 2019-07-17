@@ -331,5 +331,10 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     }
 
+    @Override
+    public void meetingWidgetViewMoreVisibility(boolean visible) {
+
+    }
+
 
 }

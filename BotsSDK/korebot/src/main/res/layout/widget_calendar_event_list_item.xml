@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="start|center"
+                android:gravity="end"
 
                 android:text=""
                 android:lineSpacingExtra="2dp"

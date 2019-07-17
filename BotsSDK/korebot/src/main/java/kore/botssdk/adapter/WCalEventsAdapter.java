@@ -12,20 +12,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -33,12 +29,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetDialogActivity;
@@ -54,7 +48,6 @@ import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
-import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
@@ -84,6 +77,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public ArrayList<WCalEventsTemplateModel> getEventList() {
         return eventList;
     }
+
 
     public void setEventList(ArrayList<WCalEventsTemplateModel> eventList) {
         if (eventList != null) {
@@ -197,208 +191,6 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     }
 
-    public String getDayFormation(WCalEventsTemplateModel model) {
-
-
-       
-
-        //try {
-        long startDateServer = (long) model.getData().getDuration().getStart();
-        long endDateServer = (long) model.getData().getDuration().getEnd();
-
-        Calendar calendarObjStart = Calendar.getInstance();
-        calendarObjStart.setTime(DateUtils.getDDMMYYYY(startDateServer));
-        calendarObjStart.set(Calendar.HOUR_OF_DAY, 0);
-        calendarObjStart.set(Calendar.MINUTE, 0);
-        calendarObjStart.set(Calendar.SECOND, 0);
-        calendarObjStart.set(Calendar.MILLISECOND, 0);
-
-
-        Calendar calendarObjEnd = Calendar.getInstance();
-        calendarObjEnd.setTime(DateUtils.getDDMMYYYY(endDateServer));
-        calendarObjEnd.set(Calendar.HOUR_OF_DAY, 0);
-        calendarObjEnd.set(Calendar.MINUTE, 0);
-        calendarObjEnd.set(Calendar.SECOND, 0);
-        calendarObjEnd.set(Calendar.MILLISECOND, 0);
-
-
-        long startDate = calendarObjStart.getTimeInMillis();
-
-
-        long endDate = calendarObjEnd.getTimeInMillis();
-
-
-        long diffInMillis = Math.abs(endDate - startDate);
-        long no_of_days_meeting = (TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS)) + 1;
-
-
-        Calendar time = Calendar.getInstance();
-        time.set(Calendar.HOUR_OF_DAY, 0);
-        time.set(Calendar.MINUTE, 0);
-        time.set(Calendar.SECOND, 0);
-        time.set(Calendar.MILLISECOND, 0);
-
-
-        long day_of_meeting_millis = time.getTimeInMillis() - startDate;
-
-        long day_of_meeting = (TimeUnit.DAYS.convert(day_of_meeting_millis, TimeUnit.MILLISECONDS) + 1);
-
-        if (day_of_meeting <= 0) {
-            day_of_meeting = 1;
-        }
-        if (model.getData().isAllDay()) {
-            if (no_of_days_meeting == 1) {
-                return "All Day";
-            } else {
-                return "All Day\nDay (" + day_of_meeting + "/" + no_of_days_meeting + ")";
-            }
-        } else {
-            if (DateUtils.getDDMMYYYY(startDate).compareTo(DateUtils.getDDMMYYYY(endDate)) == 0) {
-                if (DateUtils.getOneDayMiliseconds(endDateServer - startDateServer) >= 23.98f) {
-                    return "All Day";
-                } else {
-                    return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
-                }
-            } else {
-                //   no_of_days_meeting=no_of_days_meeting+1;
-                if (day_of_meeting == 1) {
-                    //today
-                    return "From\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\nDay (" + day_of_meeting + "/" + no_of_days_meeting + ")";
-                } else if (day_of_meeting == no_of_days_meeting) {
-                    //last day
-                    return "Till\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()) + "\nDay (" + day_of_meeting + "/" + no_of_days_meeting + ")";
-                } else {
-                    return "All Day\nDay (" + day_of_meeting + "/" + no_of_days_meeting + ")";
-                    //middle date
-                }
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*Date firstDate = DateUtils.getDDMMYYYY(startDate);
-        Date secondDate = DateUtils.getDDMMYYYY(endDate);
-
-        long diffInMillis = Math.abs(secondDate.getTime() - firstDate.getTime());
-        long no_of_days = (TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS));
-
-
-        Calendar time = Calendar.getInstance();
-        time.set(Calendar.HOUR_OF_DAY, 0);
-        time.set(Calendar.MINUTE, 0);
-        time.set(Calendar.SECOND, 0);
-        time.set(Calendar.MILLISECOND, 0);
-        Date todayDate = DateUtils.getDDMMYYYY(time.getTime().getTime());
-        long day_of_meeting_millis = (todayDate.getTime() - firstDate.getTime());
-        long day_of_meeting = (TimeUnit.DAYS.convert(day_of_meeting_millis+86400000, TimeUnit.MILLISECONDS));
-
-        if(day_of_meeting<=0)
-        {
-            day_of_meeting=1;
-        }
-
-        if (model.getData().isAllDay()) {
-            if (no_of_days == 1 && firstDate.compareTo(todayDate) == 0) {
-                return "All Day";
-            } else {
-                return "All Day\nDay (" + day_of_meeting + "/" + no_of_days + ")";
-            }
-
-        } else if (no_of_days >= 1) {
-
-
-            if (day_of_meeting == 1) {
-                //today
-                return "From\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\nDay (" + day_of_meeting + "/" + no_of_days + ")";
-            } else if (day_of_meeting == no_of_days) {
-                //last day
-                return "Till\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()) + "\nDay (" + day_of_meeting + "/" + no_of_days + ")";
-            } else {
-                return "All Day\nDay (" + day_of_meeting + "/" + no_of_days + ")";
-                //middle date
-            }
-
-
-
-        }
-*/
-
-
-    }
-
-
-    //  long no_of_days_meeting= ChronoUnit.DAYS.between(dateBefore, dateAfter)
-
-
-    //  long diffBetweenDates = endDate - startDate;
-           /* int no_meeting_days = DateUtils.getDays(mContext, diffBetweenDates);
-            if (no_meeting_days < 1) {
-                no_meeting_days = 1;
-            }
-
-
-            Calendar time  = Calendar.getInstance();
-            time.set(Calendar.HOUR_OF_DAY, 0);
-            time.set(Calendar.MINUTE, 0);
-            time.set(Calendar.SECOND, 0);
-            time.set(Calendar.MILLISECOND, 0);
-            long currentTime  = time.getTime().getTime();
-
-            if (model.getData().isAllDay()) {
-                if (no_meeting_days == 1) {
-                    return "All Day";
-                } else if (no_meeting_days > 1) {
-                    int currentDiff = DateUtils.getDays(mContext, currentTime - startDate);
-                    if(currentDiff<1)
-                    {
-                        currentDiff=1;
-                    }
-                    return "All Day\nDay (" + currentDiff + "/" + no_meeting_days + ")";
-                } else {
-                    return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
-                }
-            } else if (no_meeting_days > 1) {
-                long dayDiff = (currentTime - startDate);
-                int day = DateUtils.getDays(mContext, dayDiff);
-                int currentDayOfMeeting = DateUtils.getDays(mContext, dayDiff);
-                if (currentDayOfMeeting < 1) {
-                    currentDayOfMeeting = 1;
-                }
-                if (day == 1) {
-                    //today
-                    return "From\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
-                } else if (day == no_meeting_days) {
-                    //last day
-                    return "Till\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()) + "\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
-                } else {
-                    return "All Day\nDay (" + currentDayOfMeeting + "/" + no_meeting_days + ")";
-                    //middle date
-                }
-            } else if (DateUtils.getOneDayMiliseconds(diffBetweenDates) >= 23.98f) {
-                return "All Day";
-            }
-            return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
-        } catch (Exception e) {
-            return DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd());
-        }
-    }*/
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if (holderData.getItemViewType() == EMPTY_CARD) {
@@ -439,7 +231,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             }
             // holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()));
 
-            holder.tv_time.setText(getDayFormation(model));
+            if(!StringUtils.isNullOrEmpty(model.getData().getReqTextToDisp()))
+                holder.tv_time.setText(model.getData().getReqTextToDisp());
+            else
+                holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getData().getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getData().getDuration().getEnd()));
+
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getData().getAttendees()));
             if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
@@ -590,10 +386,97 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setCalData(ArrayList<WCalEventsTemplateModel> data) {
         this.eventList = data;
         if (eventList != null) {
+            this.eventList = expandEventList(eventList);
             this.eventList = sortEventList(eventList);
+        }
+        if(eventList != null && eventList.size()>3){
+            if(verticalListViewActionHelper!=null)
+            verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
         }
         notifyDataSetChanged();
 
+    }
+
+    private ArrayList<WCalEventsTemplateModel> expandEventList(ArrayList<WCalEventsTemplateModel> eventList){
+        ArrayList<WCalEventsTemplateModel> reqData = new ArrayList<>();
+        for (WCalEventsTemplateModel data : eventList) {
+            long _start = (long) data.getData().getDuration().getStart();
+            long _end = (long) data.getData().getDuration().getEnd();
+            int _days = DateUtils.getDays(mContext, _end - _start);
+
+            long currentTime = System.currentTimeMillis();
+            Date currentDate = DateUtils.getDDMMYYYY(currentTime);
+            Date eventStartDate = DateUtils.getDDMMYYYY(_start);
+
+            //CHECK FOR MORE THAN A DAY EVENT
+            if(_days>0) {
+                double st = 0;
+                double ed = 0;
+                for (int i = 0; i <= _days; i++) {
+
+                    if(eventStartDate.compareTo(currentDate)<0){
+                        _start += (24*60*60*1000);
+                        eventStartDate = DateUtils.getDDMMYYYY(_start);
+                        continue;
+                    }
+
+                    WCalEventsTemplateModel _data = null;
+                    try {
+                        _data = data.clone();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    String txt = "";
+
+                    if (i == 0) {
+                        if(_data.getData().isAllDay()){
+                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }else {
+                            txt = "From\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }
+                        _data.getData().setReqTextToDisp(txt);
+
+                        st += _start;
+                        ed = _start + (30*60000);
+
+                    } else if (i == _days) {
+                        if(_data.getData().isAllDay()){
+                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }else {
+                            txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }
+                        _data.getData().setReqTextToDisp(txt);
+
+                        st = (_end - 30*60000);
+                        ed = _end;
+                    } else {
+                        txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        _data.getData().setReqTextToDisp(txt);
+
+                        if(st == 0){
+                            st += _start;
+                        }else{
+                            st += 24*60*60*1000;
+                        }
+                        ed = st + (30*60000);
+                    }
+
+                    CalEventsTemplateModel.Duration _duration = _data.getData().getDuration();
+
+                    _duration.setStart(st);
+                    _duration.setEnd(ed);
+                    _data.getData().setDuration(_duration);
+
+                    reqData.add(_data);
+                }
+            }else{
+                if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
+                    data.getData().setReqTextToDisp("All Day");
+
+                reqData.add(data);
+            }
+        }
+        return reqData;
     }
 
     public ArrayList<WCalEventsTemplateModel> sortEventList(ArrayList<WCalEventsTemplateModel> eventList) {
@@ -603,19 +486,15 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         Collections.sort(eventList, new Comparator<WCalEventsTemplateModel>() {
             public int compare(WCalEventsTemplateModel o1, WCalEventsTemplateModel o2) {
 
-//                DateFormat format = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
                 try {
                     return new Double(o1.getData().getDuration().getStart()).compareTo(new Double(o2.getData().getDuration().getStart()));
                 } catch (Exception e) {
                     e.printStackTrace();
                     return 0;
                 }
-
-
             }
         });
         for (WCalEventsTemplateModel data : eventList) {
-//            String date = DateUtils.calendar_event_list_format1.format(data.getData().getDuration().getStart()).toUpperCase();
             String key = DateUtils.getDay((long) data.getData().getDuration().getStart());
             ArrayList<WCalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
@@ -633,6 +512,10 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         for (String k : keys) {
             newSortedData.addAll(list.get(k));
         }
+
+        //For More than a day event make a duplate for next day event
+
+
         return newSortedData;
     }
 

@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;

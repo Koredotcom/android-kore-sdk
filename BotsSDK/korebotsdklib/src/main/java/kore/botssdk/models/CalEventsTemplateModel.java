@@ -139,7 +139,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         this.meetingNoteId = meetingNoteId;
     }
 
-    public class Duration  implements Serializable{
+    public class Duration  implements Serializable,Cloneable{
 
         private double start;
         private double end;
@@ -158,6 +158,11 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         public void setEnd(double end) {
             this.end = end;
+        }
+
+        @Override
+        protected Duration clone() throws CloneNotSupportedException {
+            return (Duration)super.clone();
         }
     }
 

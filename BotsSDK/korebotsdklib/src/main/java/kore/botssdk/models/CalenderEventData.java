@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
 
-public class CalenderEventData implements Serializable {
+public class CalenderEventData implements Serializable, Cloneable {
 
     private List<CalEventsTemplateModel.Attendee> attendees = null;
     private CalEventsTemplateModel.Duration duration;
@@ -71,6 +71,7 @@ public class CalenderEventData implements Serializable {
     private String color;
     private String htmlLink;
     private String eventId;
+    private String reqTextToDisp;
 
     private boolean isAllDay;
     public MeetJoin getMeetJoin() {
@@ -83,4 +84,16 @@ public class CalenderEventData implements Serializable {
 
     private MeetJoin meetJoin;
 
+    public String getReqTextToDisp() {
+        return reqTextToDisp;
+    }
+
+    public void setReqTextToDisp(String reqTextToDisp) {
+        this.reqTextToDisp = reqTextToDisp;
+    }
+
+    @Override
+    protected CalenderEventData clone() throws CloneNotSupportedException {
+        return (CalenderEventData)super.clone();
+    }
 }
