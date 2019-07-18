@@ -402,23 +402,31 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         for (WCalEventsTemplateModel data : eventList) {
             long _start = (long) data.getData().getDuration().getStart();
             long _end = (long) data.getData().getDuration().getEnd();
-            int _days = DateUtils.getDays(mContext, _end - _start);
+
+            //getting the days count, observed different values if we pass the timestamo directly so we are giving the that day early hours 00:00AM
+            int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getData().getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getData().getDuration().getStart()).getTime());
 
             long currentTime = System.currentTimeMillis();
             Date currentDate = DateUtils.getDDMMYYYY(currentTime);
             Date eventStartDate = DateUtils.getDDMMYYYY(_start);
 
+            Date endLimitDate = DateUtils.getDDMMYYYY((long)eventList.get(eventList.size()-1).getData().getDuration().getStart());
+
             //CHECK FOR MORE THAN A DAY EVENT
             if(_days>0) {
                 double st = 0;
                 double ed = 0;
-                for (int i = 0; i <= _days; i++) {
 
+                for (int i = 0; i <= _days; i++) {
                     if(eventStartDate.compareTo(currentDate)<0){
                         _start += (24*60*60*1000);
                         eventStartDate = DateUtils.getDDMMYYYY(_start);
                         continue;
                     }
+
+                    // This is to restrict the looping for recurrent event. taking the recurrent duplicate till the max server event date
+                    if(DateUtils.getDDMMYYYY((long)st).compareTo(endLimitDate) == 0)
+                        break;
 
                     WCalEventsTemplateModel _data = null;
                     try {
@@ -443,11 +451,14 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         if(_data.getData().isAllDay()){
                             txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                         }else {
-                            txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                            if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
+                                txt = "All Day";
+                            else
+                                txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getData().getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                         }
                         _data.getData().setReqTextToDisp(txt);
 
-                        st = (_end - 30*60000);
+                        st = _end;
                         ed = _end;
                     } else {
                         txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
