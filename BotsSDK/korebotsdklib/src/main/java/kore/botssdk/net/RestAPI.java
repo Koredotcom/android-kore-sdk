@@ -1,12 +1,12 @@
 package kore.botssdk.net;
 
-import com.squareup.okhttp.ResponseBody;
 
 import java.util.HashMap;
 
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
