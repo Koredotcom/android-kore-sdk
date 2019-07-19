@@ -71,4 +71,8 @@ public class BotRestBuilder {
             return value;
         }
     }
+
+    public static void clearInstance(){
+        serviceBot = null;
+    }
 }

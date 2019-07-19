@@ -728,6 +728,9 @@ public final class SocketWrapper{
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
+
+        //The bot URL may change
+        BotRestBuilder.clearInstance();
         /*if (isConnected()) {
             stop();
         }*/
