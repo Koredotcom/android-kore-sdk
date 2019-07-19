@@ -202,15 +202,17 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         getJWTTokenService.enqueue(new Callback<JWTTokenResponse>() {
             @Override
             public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
-                jwtKeyResponse = response.body();;
-                botName = jwtKeyResponse.getBotName();
-                streamId = jwtKeyResponse.getStreamId();
-                if (!isRefresh) {
-                    //Last three null objects must be review, that is for Kora
-                    botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(),
-                            jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager,null,null,null);
-                } else {
-                    KoreEventCenter.post(jwtKeyResponse.getJwt());
+                if (response.isSuccessful()) {
+                    jwtKeyResponse = response.body();
+                    botName = jwtKeyResponse.getBotName();
+                    streamId = jwtKeyResponse.getStreamId();
+                    if (!isRefresh) {
+                        //Last three null objects must be review, that is for Kora
+                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(),
+                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager, null, null, null);
+                    } else {
+                        KoreEventCenter.post(jwtKeyResponse.getJwt());
+                    }
                 }
             }
 
@@ -279,7 +281,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     @Override
-    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel) {
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId) {
 
     }
 
