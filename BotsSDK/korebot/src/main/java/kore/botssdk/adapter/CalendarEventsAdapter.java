@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -209,7 +210,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 holder.txtPlace.setVisibility(GONE);
 
             }
-            holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+
+            if(!StringUtils.isNullOrEmpty(model.getReqTextToDisplay()))
+                holder.tv_time.setText(model.getReqTextToDisplay());
+            else
+                holder.tv_time.setText(DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd()));
+
+
 
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
 
@@ -372,10 +379,104 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     public void setData(ArrayList data) {
         this.eventList = data;
         if (eventList != null) {
+            this.eventList = expandEventList(eventList);
             this.eventList = sortEventList(eventList);
         }
         notifyDataSetChanged();
 
+    }
+
+    private ArrayList<CalEventsTemplateModel> expandEventList(ArrayList<CalEventsTemplateModel> eventList){
+        ArrayList<CalEventsTemplateModel> reqData = new ArrayList<>();
+        for (CalEventsTemplateModel data : eventList) {
+            long _start = (long) data.getDuration().getStart();
+            long _end = (long) data.getDuration().getEnd();
+
+            //getting the days count, observed different values if we pass the timestamo directly so we are giving the that day early hours 00:00AM
+            int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
+
+            long currentTime = System.currentTimeMillis();
+            Date currentDate = DateUtils.getDDMMYYYY(currentTime);
+            Date eventStartDate = DateUtils.getDDMMYYYY(_start);
+
+            Date endLimitDate = DateUtils.getDDMMYYYY((long)eventList.get(eventList.size()-1).getDuration().getStart());
+
+            //CHECK FOR MORE THAN A DAY EVENT
+            if(_days>0) {
+                double st = 0;
+                double ed = 0;
+
+                for (int i = 0; i <= _days; i++) {
+                    if(eventStartDate.compareTo(currentDate)<0){
+                        _start += (24*60*60*1000);
+                        eventStartDate = DateUtils.getDDMMYYYY(_start);
+                        continue;
+                    }
+
+                    // This is to restrict the looping for recurrent event. taking the recurrent duplicate till the max server event date
+                    if(DateUtils.getDDMMYYYY((long)st).compareTo(endLimitDate) == 0)
+                        break;
+
+                    CalEventsTemplateModel _data = null;
+                    try {
+                        _data = (CalEventsTemplateModel)data.clone();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    String txt = "";
+
+                    if (i == 0) {
+                        if(_data.isAllDay()){
+                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }else {
+                            txt = "From\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }
+                        _data.setReqTextToDisplay(txt);
+
+                        st += _start;
+                        ed = _start + (30*60000);
+
+                    } else if (i == _days) {
+                        if(_data.isAllDay()){
+                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }else {
+                            if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
+                                txt = "All Day";
+                            else
+                                txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        }
+                        _data.setReqTextToDisplay(txt);
+
+                        st = _end;
+                        ed = _end;
+                    } else {
+                        txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        _data.setReqTextToDisplay(txt);
+
+                        if(st == 0){
+                            st += _start;
+                        }else{
+                            st += 24*60*60*1000;
+                        }
+                        ed = st + (30*60000);
+                    }
+
+                    CalEventsTemplateModel.Duration _duration = _data.getDuration();
+
+                    _duration.setStart(st);
+                    _duration.setEnd(ed);
+                    _data.setDuration(_duration);
+
+                    reqData.add(_data);
+                }
+            }else{
+                if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
+                    data.setReqTextToDisplay("All Day");
+
+                reqData.add(data);
+            }
+        }
+        return reqData;
     }
 
     public ArrayList<CalEventsTemplateModel> sortEventList(ArrayList<CalEventsTemplateModel> eventList) {
@@ -397,8 +498,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             }
         });
         for (CalEventsTemplateModel data : eventList) {
-            String key = DateUtils.getDay((long)data.getDuration().getStart());
-//            String date = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
+//            String key = DateUtils.getDay((long)data.getDuration().getStart());
+            String key = DateUtils.calendar_event_list_format1.format(data.getDuration().getStart()).toUpperCase();
             ArrayList<CalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
                 ArrayList<CalEventsTemplateModel> temp = new ArrayList<>();

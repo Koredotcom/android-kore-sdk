@@ -11,13 +11,15 @@ import androidx.annotation.NonNull;
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable {
+public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable,Cloneable {
 
     private Duration duration;
     private String title;
     private String where;
     private String description;
     String mId;
+    private boolean isAllDay;
+    private String reqTextToDisplay;
 
     public String getmId() {
         return mId;
@@ -139,6 +141,22 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         this.meetingNoteId = meetingNoteId;
     }
 
+    public boolean isAllDay() {
+        return isAllDay;
+    }
+
+    public void setAllDay(boolean allDay) {
+        isAllDay = allDay;
+    }
+
+    public String getReqTextToDisplay() {
+        return reqTextToDisplay;
+    }
+
+    public void setReqTextToDisplay(String reqTextToDisplay) {
+        this.reqTextToDisplay = reqTextToDisplay;
+    }
+
     public class Duration  implements Serializable,Cloneable{
 
         private double start;
@@ -218,6 +236,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         private boolean organizer;
 
+
         public boolean isOptional() {
             return optional;
         }
@@ -271,6 +290,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         public void setId(String id) {
             this.id = id;
         }
+
     }
 
     public class Action implements Serializable {
@@ -301,5 +321,12 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         public void setUtterance(String utterance) {
             this.utterance = utterance;
         }
+    }
+
+    @Override
+    public CalEventsTemplateModel clone() throws CloneNotSupportedException {
+        CalEventsTemplateModel obj = (CalEventsTemplateModel)super.clone();
+        obj.setDuration(obj.getDuration().clone());
+        return obj;
     }
 }
