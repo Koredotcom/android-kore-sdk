@@ -19,6 +19,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.event.RTMConnectionEvent;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
 import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException;
@@ -361,6 +363,7 @@ public final class SocketWrapper{
                         startSendingPong();
                         mReconnectionCount = 1;
                         mReconnectDelay = 1000;
+                        KoreEventCenter.post(new RTMConnectionEvent(true));
                     }
 
                     @Override
