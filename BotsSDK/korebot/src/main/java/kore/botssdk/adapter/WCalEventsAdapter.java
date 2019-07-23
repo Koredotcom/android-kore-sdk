@@ -98,6 +98,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
+    private int MESSAGE=2;
 
     public String getType() {
         return type;
@@ -129,7 +130,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     List<MultiAction> multiActions;
     int preview_length;
     private boolean isFromFullView;
-
+    String msg;
+    Drawable errorIcon;
     public WCalEventsAdapter(Context mContext, String type, boolean isEnabled, boolean isFromFullView) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
@@ -164,6 +166,10 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             return DATA_FOUND;
         }
 
+        if(msg!=null&&!msg.equalsIgnoreCase(""))
+        {
+            return MESSAGE;
+        }
         return EMPTY_CARD;
     }
 
@@ -171,7 +177,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if (viewType == EMPTY_CARD) {
+        if (viewType == EMPTY_CARD||viewType==MESSAGE) {
 
 
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
@@ -193,11 +199,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
-        if (holderData.getItemViewType() == EMPTY_CARD) {
+        if (holderData.getItemViewType() == EMPTY_CARD||holderData.getItemViewType()==MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
-            emptyHolder.tv_disrcription.setText("No Upcoming Meetings");
-            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.no_meeting));
+            emptyHolder.tv_disrcription.setText(holderData.getItemViewType() == EMPTY_CARD?"No Upcoming Meetings":msg);
+            emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD?ContextCompat.getDrawable(mContext, R.drawable.no_meeting):errorIcon);
 
 
         } else {
@@ -551,6 +557,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     public void setPreviewLength(int preview_length) {
         this.preview_length = preview_length;
+    }
+
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg=msg;
+        this.errorIcon=errorIcon;
     }
 
     public interface EventSelectionListener {

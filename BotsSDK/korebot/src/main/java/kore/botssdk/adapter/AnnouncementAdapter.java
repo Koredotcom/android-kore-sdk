@@ -2,18 +2,22 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.R;
 import kore.botssdk.databinding.AnnouncementCardLayoutBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
@@ -28,8 +32,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     private static final int DATA_FOUND = 1;
     private static final int NO_DATA = 0;
+    private static final int MESSAGE = 2;
     Context context;
-
+    String msg;
+    Drawable errorIcon;
 //    public void setData(ArrayList<AnnoucementResModel> data) {
 //        this.data = data;
 //    }
@@ -66,6 +72,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
         if (data != null && data.size() > 0) {
             return DATA_FOUND;
         }
+        if (msg != null && !msg.equalsIgnoreCase("")) {
+            return MESSAGE;
+        }
         return NO_DATA;
     }
 
@@ -87,7 +96,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(context.getResources().getColor(R.color.splash_background_color));
             }
-            if(position == data.size()-1 && data.size()<3)
+            if (position == data.size() - 1 && data.size() < 3)
                 ((AnnouncementViewHolder) holder).binding.divider.setVisibility(View.GONE);
 
             ((AnnouncementViewHolder) holder).binding.viewAction.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +104,15 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
                 public void onClick(View view) {
                     Bundle extras = new Bundle();
                     extras.putString(BundleConstants.KNOWLEDGE_ID, annoucementResModel.getId());
-                    verticalListViewActionHelper.knowledgeItemClicked(extras,false);
+                    verticalListViewActionHelper.knowledgeItemClicked(extras, false);
                 }
             });
 
         } else {
 //            holder = (EmptyAnnocementViewHolder) holder;
-            ((EmptyAnnocementViewHolder) holder).tv_message.setText("No Announcements");
+            ((EmptyAnnocementViewHolder) holder).tv_message.setText(holder.getItemViewType() == NO_DATA ? "No Announcements" : msg);
+            ((EmptyAnnocementViewHolder) holder).img_icon.setImageDrawable(holder.getItemViewType() == NO_DATA ? ContextCompat.getDrawable(context, R.drawable.no_meeting) : errorIcon);
+
 
         }
 
@@ -117,12 +128,12 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     @Override
     public long getItemId(int position) {
-        if(data != null && data.size()>0) {
+        if (data != null && data.size() > 0) {
             AnnoucementResModel model = data.get(position);
-            if(model != null)
+            if (model != null)
                 return model.getSharedOn() + position;
             else return position;
-        }else return position;
+        } else return position;
     }
 
     @Override
@@ -156,6 +167,11 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
         this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg = msg;
+        this.errorIcon = errorIcon;
+    }
+
     public static class AnnouncementViewHolder extends RecyclerView.ViewHolder {
         AnnouncementCardLayoutBinding binding;
 
@@ -169,10 +185,13 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     class EmptyAnnocementViewHolder extends RecyclerView.ViewHolder {
         TextView tv_message;
         RelativeLayout view_action;
+        ImageView img_icon;
+
         public EmptyAnnocementViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_message = itemView.findViewById(R.id.tv_message);
             view_action = itemView.findViewById(R.id.view_action);
+            img_icon = itemView.findViewById(R.id.img_icon);
         }
     }
 }

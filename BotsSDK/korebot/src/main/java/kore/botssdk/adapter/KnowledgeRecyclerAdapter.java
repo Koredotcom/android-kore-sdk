@@ -2,6 +2,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +41,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
     private int EMPTY_CARD_FLAG = 0;
-
+    String msg;
+    Drawable errorIcon;
     private int DATA_CARD_FLAG = 1;
+    private int MESSAGE = 2;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     private static int dp1;
@@ -86,8 +89,8 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         } else {
 
             EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;
-            holder.tv_disrcription.setText("No knowledge articles");
-            holder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
+            holder.tv_disrcription.setText(holder.getItemViewType()==EMPTY_CARD_FLAG?"No knowledge articles":msg);
+            holder.img_icon.setImageDrawable(holder.getItemViewType()==EMPTY_CARD_FLAG?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
 
 
         }
@@ -109,6 +112,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
             return DATA_CARD_FLAG;
 
 
+        if(msg!=null&&!msg.equalsIgnoreCase(""))
+        {
+            return MESSAGE;
+        }
         return EMPTY_CARD_FLAG;
     }
 
@@ -146,7 +153,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     }
 
-
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg=msg;
+        this.errorIcon=errorIcon;
+    }
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

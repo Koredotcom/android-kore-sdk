@@ -18,11 +18,11 @@
         app:srcCompat="@drawable/no_meeting" />
 
     <TextView
+        android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:id="@+id/tv_message"
         android:text=""
         android:textSize="16sp" />
 

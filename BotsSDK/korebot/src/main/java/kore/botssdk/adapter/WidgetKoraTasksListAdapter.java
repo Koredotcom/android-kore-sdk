@@ -36,8 +36,11 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private boolean isFromFullView;
     private int DATA_FOUND = 1;
     private int NO_DATA = 0;
+    private int MESSAGE=2;
     private String nodata_meesage = "";
     private int preview_length;
+    String msg;
+    Drawable errorIcon;
 
     public String getApi() {
         return api;
@@ -94,6 +97,10 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         if (models != null && models.size() > 0) {
             return DATA_FOUND;
         }
+        if(msg!=null&&!msg.equalsIgnoreCase(""))
+        {
+            return MESSAGE;
+        }
         return NO_DATA;
     }
 
@@ -128,7 +135,9 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
         this.multiActions = multiActions;
-        this.models = taskTemplateResponse.getTaskData();
+        if(taskTemplateResponse!=null) {
+            this.models = taskTemplateResponse.getTaskData();
+        }
         selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
         this.isFromFullView = isFromFullView;
@@ -137,7 +146,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == NO_DATA) {
+        if (viewType == NO_DATA||viewType==MESSAGE) {
 
             View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
@@ -219,9 +228,8 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             });
         } else {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) viewHoldermain;
-
-            emptyHolder.tv_disrcription.setText(getNodata_meesage());
-            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
+            emptyHolder.tv_disrcription.setText(viewHoldermain.getItemViewType() == NO_DATA?getNodata_meesage():msg);
+            emptyHolder.img_icon.setImageDrawable(viewHoldermain.getItemViewType() == NO_DATA?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
         }
     }
 
@@ -282,6 +290,11 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     public void setPreviewLength(int preview_length) {
         this.preview_length=preview_length;
+    }
+
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg=msg;
+        this.errorIcon=errorIcon;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

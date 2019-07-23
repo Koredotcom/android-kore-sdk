@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +39,12 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     private boolean from_widget = false;
     private int NO_DATA = 0;
     private int DATA_FOUND = 1;
+    private int MESSAGE=2;
+    Drawable errorIcon;
     public int getPreviewlength() {
         return previewlength;
     }
-
+    public  String msg;
     public void setPreviewlength(int previewlength) {
         this.previewlength = previewlength;
     }
@@ -68,26 +71,32 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
         if (kaFileLookupModels != null && kaFileLookupModels.size() > 0) {
             return DATA_FOUND;
         }
+        if(msg!=null&&!msg.equalsIgnoreCase(""))
+        {
+            return MESSAGE;
+        }
         return NO_DATA;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == NO_DATA) {
+        if (viewType == NO_DATA||viewType==MESSAGE) {
             View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }
+
         return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.widget_kora_file_lookup_view, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermodel, int position) {
-        if (holdermodel.getItemViewType() == NO_DATA) {
+        if (holdermodel.getItemViewType() == NO_DATA||holdermodel.getItemViewType()==MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holdermodel;
-            emptyHolder.tv_disrcription.setText("No Files");
-            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
-        } else {
+            emptyHolder.tv_disrcription.setText(holdermodel.getItemViewType() == NO_DATA?"No Files":msg);
+            emptyHolder.img_icon.setImageDrawable(holdermodel.getItemViewType() == NO_DATA?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
+        }
+        else {
             ViewHolder holder = (ViewHolder) holdermodel;
             holder.koraFileLookupViewBinding.setFileModel(kaFileLookupModels.get(position));
             String type = kaFileLookupModels.get(position).getData().getExt();
@@ -141,6 +150,11 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     }
 
     public void setFrom_widget(boolean b) {
+    }
+
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg=msg;
+        this.errorIcon=errorIcon;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
