@@ -2,9 +2,6 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,8 +38,6 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.TaskTemplateResponse;
-import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -92,10 +87,10 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         recyclerView.setItemAnimator(null);
         viewMore = view.findViewById(R.id.view_more);
         rootLayout = view.findViewById(R.id.rootLayoutvertical);
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+       /* LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
-        rootLayout.setBackground(shape);
+        rootLayout.setBackground(shape);*/
         viewMore.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,10 +107,10 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        /*LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+BundleConstants.TRANSPERANCY_50_PERCENT);
-        rootLayout.setBackground(shape);
+        rootLayout.setBackground(shape);*/
     }
     @Override
     protected void onAttachedToWindow() {
