@@ -6,7 +6,7 @@
     android:id="@+id/rootLayoutvertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shadow_layer_background"
+    android:background="@drawable/skill_drawable"
     android:orientation="vertical"
     android:paddingStart="4dp"
     android:paddingTop="5dp"
