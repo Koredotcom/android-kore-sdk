@@ -8,6 +8,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
+
 /**
  * Created by Ramachandra Pradeep on 12/15/2016.
  */
@@ -268,6 +270,8 @@ public class PayloadInner {
     }
 
     private Object elements = null;
+
+    private Duration cursor = null;
 //    private Object columns = null;
     private String elementsAsString;
     private String color = "#000000";
@@ -530,6 +534,14 @@ public class PayloadInner {
 
     public void setContactInfoModels(ArrayList<ContactInfoModel> contactInfoModels) {
         this.contactInfoModels = contactInfoModels;
+    }
+
+    public Duration getCursor() {
+        return cursor;
+    }
+
+    public void setCursor(Duration cursor) {
+        this.cursor = cursor;
     }
 
     public class Skill{

@@ -72,6 +72,7 @@ public class CalenderEventData implements Serializable, Cloneable {
     private String htmlLink;
     private String eventId;
     private String reqTextToDisp;
+    private String reqTextToDispForDetails;
 
     private boolean isAllDay;
     public MeetJoin getMeetJoin() {
@@ -95,5 +96,13 @@ public class CalenderEventData implements Serializable, Cloneable {
     @Override
     protected CalenderEventData clone() throws CloneNotSupportedException {
         return (CalenderEventData)super.clone();
+    }
+
+    public String getReqTextToDispForDetails() {
+        return reqTextToDispForDetails;
+    }
+
+    public void setReqTextToDispForDetails(String reqTextToDispForDetails) {
+        this.reqTextToDispForDetails = reqTextToDispForDetails;
     }
 }

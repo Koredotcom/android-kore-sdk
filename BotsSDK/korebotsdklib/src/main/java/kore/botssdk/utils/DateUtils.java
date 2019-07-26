@@ -60,6 +60,10 @@ public class DateUtils {
 
     private static final Format dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
+    public static final Format calendar_allday_format = new SimpleDateFormat("EE, MMM dd", Locale.ENGLISH);
+
+    public static final Format calendar_allday_time_format = new SimpleDateFormat("EE, MMM dd, hh:mm a", Locale.ENGLISH);
+
     public static String getTimeStamp(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return "";
         long timeStampMillis = isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
@@ -215,6 +219,18 @@ public class DateUtils {
 
     public static String getDateEEEMMD(double startdate, double enddate) {
         return calendar_list_format2.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
+    }
+
+    public static String getDayDate(double startdate) {
+        return calendar_allday_format.format(startdate);
+    }
+
+    public static String getMorethanDayDate(double startdate, double enddate) {
+        return calendar_allday_format.format(startdate) + " - " + calendar_allday_format.format(enddate);
+    }
+
+    public static String getMorethanDayDateTime(double startdate, double enddate) {
+        return calendar_allday_time_format.format(startdate) + " - " + calendar_allday_time_format.format(enddate);
     }
 
     public static String getReqDateEEEMMDD(double startdate) {

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,8 @@ import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -56,6 +59,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     private View rootLayout;
     private int dp1;
     private TextView viewMore;
+    private Duration _cursor;
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -131,9 +135,13 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private void handleViewMore(String type, RecyclerView.Adapter adapter) {
         if (type.equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_TASK_VIEW) || type.equalsIgnoreCase(BotResponse.TEMPLATE_TASK_FULLVIEW)) {
-            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()));
+            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null);
         } else {
-            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()));
+            Duration _duration = null;
+            if(adapter instanceof CalendarEventsAdapter){
+                _duration = ((CalendarEventsAdapter) adapter).getCursorDuration();
+            }
+            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()),_duration);
         }
     }
 
@@ -216,11 +224,14 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
       //  prepareDataSetAndPopulate(data,templateType);
     }*/
 
+    public void setCursorDuration(Duration cursor){
+        _cursor = cursor;
+    }
     public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
         if (data == null || data.size() == 0) {
             rootLayout.setVisibility(GONE);
         } else {
-            setAdapterByData(data, templateType, isEnabled);
+            setAdapterByData(data, templateType, isEnabled, _cursor);
             viewMore.setVisibility(data.size() > 3 && isEnabled ? VISIBLE : GONE);
             if (data.size() > 3) {
                 viewMore.setText(getContext().getResources().getString(R.string.view_more));
@@ -243,7 +254,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         adapter.notifyDataSetChanged();
     }
 
-    public void setAdapterByData(ArrayList data, String type, boolean isEnabled) {
+    public void setAdapterByData(ArrayList data, String type, boolean isEnabled, Duration _cursor) {
         switch (type) {
             case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                 setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));
@@ -257,6 +268,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             case BotResponse.TEMPLATE_TYPE_CAL_EVENTS:
             case BotResponse.TEMPLATE_TYPE_CANCEL_EVENT:
                 CalendarEventsAdapter calendarEventsAdapter = new CalendarEventsAdapter(getContext(), type, isEnabled);
+                calendarEventsAdapter.setVerticalListViewActionHelper(this);
+                calendarEventsAdapter.setCursorDuration(_cursor);
                 calendarEventsAdapter.setData(data);
                 calendarEventsAdapter.setComposeFooterInterface(composeFooterInterface);
                 setAdapter(calendarEventsAdapter);
@@ -298,6 +311,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         Bundle bundle=new Bundle();
         String data = new Gson().toJson(model);
         bundle.putString("data",data);
+        if(model instanceof CalEventsTemplateModel) {
+            bundle.putString(BundleConstants.REQ_TEXT_TO_DISPLAY, ((CalEventsTemplateModel)model).getReqTextToDisplayForDetails());
+        }
         composeFooterInterface.launchActivityWithBundle(type,bundle);
     }
 
@@ -333,7 +349,9 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void meetingWidgetViewMoreVisibility(boolean visible) {
-
+        Log.d("!@#","VerticalLitView");
+        if(viewMore!=null)
+            viewMore.setVisibility(visible? View.VISIBLE: View.GONE);
     }
 
 

@@ -338,6 +338,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<CalEventsTemplateModel> calList = payInner.getCalEventsTemplateModels();
                     if (calList != null && !calList.isEmpty()) {
                         verticalListView.setVisibility(View.VISIBLE);
+                        verticalListView.setCursorDuration(payInner.getCursor());
                         verticalListView.prepareDataSetAndPopulate(calList, payInner.getTemplate_type(), isLastItem);
                     }
                     bubbleTextMediaLayout.populateText(payInner.getText());

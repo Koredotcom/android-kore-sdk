@@ -42,6 +42,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
@@ -60,6 +61,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
     ArrayList<String> selectedIds = null;
+    private Duration _cursor;
 
     public ArrayList<CalEventsTemplateModel> getEventList() {
         return eventList;
@@ -381,6 +383,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         if (eventList != null) {
             this.eventList = expandEventList(eventList);
             this.eventList = sortEventList(eventList);
+
+            if(eventList.size()>3){
+                if(verticalListViewActionHelper!=null)
+                    verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
+            }
         }
         notifyDataSetChanged();
 
@@ -392,86 +399,101 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             long _start = (long) data.getDuration().getStart();
             long _end = (long) data.getDuration().getEnd();
 
+            long _cursorStart = (long) _cursor.getStart();
+            long _cursorEnd = (long) _cursor.getEnd();
+
             //getting the days count, observed different values if we pass the timestamo directly so we are giving the that day early hours 00:00AM
             int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
 
-            long currentTime = System.currentTimeMillis();
-            Date currentDate = DateUtils.getDDMMYYYY(currentTime);
             Date eventStartDate = DateUtils.getDDMMYYYY(_start);
 
-            Date endLimitDate = DateUtils.getDDMMYYYY((long)eventList.get(eventList.size()-1).getDuration().getStart());
+            Date cursorStartDate = DateUtils.getDDMMYYYY(_cursorStart);
+            Date cursorEndDate = DateUtils.getDDMMYYYY(_cursorEnd);
 
             //CHECK FOR MORE THAN A DAY EVENT
             if(_days>0) {
+
+                long _ostart = _start;
+                long _oend = _end;
+
                 double st = 0;
                 double ed = 0;
 
                 for (int i = 0; i <= _days; i++) {
-                    if(eventStartDate.compareTo(currentDate)<0){
+                    if(eventStartDate.compareTo(cursorStartDate)<0){
                         _start += (24*60*60*1000);
                         eventStartDate = DateUtils.getDDMMYYYY(_start);
                         continue;
                     }
 
-                    // This is to restrict the looping for recurrent event. taking the recurrent duplicate till the max server event date
-                    if(DateUtils.getDDMMYYYY((long)st).compareTo(endLimitDate) == 0)
+                    if(DateUtils.getDDMMYYYY((long)st).compareTo(cursorEndDate) == 0)
                         break;
 
-                    CalEventsTemplateModel _data = null;
-                    try {
-                        _data = (CalEventsTemplateModel)data.clone();
-                    } catch (CloneNotSupportedException e) {
-                        e.printStackTrace();
-                    }
-                    String txt = "";
-
-                    if (i == 0) {
-                        if(_data.isAllDay()){
-                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
-                        }else {
-                            txt = "From\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                        CalEventsTemplateModel _data = null;
+                        try {
+                            _data = (CalEventsTemplateModel) data.clone();
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
                         }
-                        _data.setReqTextToDisplay(txt);
+                        String txt = "";
 
-                        st += _start;
-                        ed = _start + (30*60000);
+                        if (i == 0) {
+                            if (_data.isAllDay()) {
+                                txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart,_oend));
+                            } else {
+                                txt = "From\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getStart()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart,_oend));
+                            }
+                            _data.setReqTextToDisplay(txt);
 
-                    } else if (i == _days) {
-                        if(_data.isAllDay()){
-                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
-                        }else {
-                            if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
-                                txt = "All Day";
-                            else
-                                txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
-                        }
-                        _data.setReqTextToDisplay(txt);
-
-                        st = _end;
-                        ed = _end;
-                    } else {
-                        txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
-                        _data.setReqTextToDisplay(txt);
-
-                        if(st == 0){
                             st += _start;
-                        }else{
-                            st += 24*60*60*1000;
+                            ed = _start + (30 * 60000);
+
+                        } else if (i == _days) {
+                            if (_data.isAllDay()) {
+                                txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart,_oend));
+                            } else {
+                                if (DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
+                                    txt = "All Day";
+                                    _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _oend));
+                                }
+                                else {
+                                    txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                                    _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart,_oend));
+                                }
+                            }
+                            _data.setReqTextToDisplay(txt);
+
+                            st = _end;
+                            ed = _end;
+                        } else {
+                            txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
+                            _data.setReqTextToDisplay(txt);
+                            _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _oend));
+
+                            if (st == 0) {
+                                st += _start;
+                            } else {
+                                st += 24 * 60 * 60 * 1000;
+                            }
+                            ed = st + (30 * 60000);
                         }
-                        ed = st + (30*60000);
-                    }
 
-                    CalEventsTemplateModel.Duration _duration = _data.getDuration();
+                        CalEventsTemplateModel.Duration _duration = _data.getDuration();
 
-                    _duration.setStart(st);
-                    _duration.setEnd(ed);
-                    _data.setDuration(_duration);
+                        _duration.setStart(st);
+                        _duration.setEnd(ed);
+                        _data.setDuration(_duration);
 
-                    reqData.add(_data);
-                }
+                        reqData.add(_data);
+                }//inner for
             }else{
-                if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f)
+                if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
                     data.setReqTextToDisplay("All Day");
+                    data.setReqTextToDisplayForDetails(DateUtils.getDayDate(_start));
+                }
 
                 reqData.add(data);
             }
@@ -529,6 +551,15 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         this.verticalListViewActionHelper = verticalListViewActionHelper;
 
     }
+
+    public void setCursorDuration(Duration cursor) {
+        _cursor = cursor;
+    }
+
+    public Duration getCursorDuration(){
+        return _cursor;
+    }
+
 
     public interface EventSelectionListener {
         void onEventSelected(String url);

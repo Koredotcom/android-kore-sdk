@@ -20,6 +20,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     String mId;
     private boolean isAllDay;
     private String reqTextToDisplay;
+    private String reqTextToDisplayForDetails;
 
     public String getmId() {
         return mId;
@@ -155,6 +156,14 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
     public void setReqTextToDisplay(String reqTextToDisplay) {
         this.reqTextToDisplay = reqTextToDisplay;
+    }
+
+    public String getReqTextToDisplayForDetails() {
+        return reqTextToDisplayForDetails;
+    }
+
+    public void setReqTextToDisplayForDetails(String reqTextToDisplayForDetails) {
+        this.reqTextToDisplayForDetails = reqTextToDisplayForDetails;
     }
 
     public class Duration  implements Serializable,Cloneable{

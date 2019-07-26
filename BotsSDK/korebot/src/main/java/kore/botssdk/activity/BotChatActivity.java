@@ -36,6 +36,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
@@ -281,7 +282,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void openFullView(String templateType, String data) {
+    public void openFullView(String templateType, String data, Duration duration) {
 
     }
 

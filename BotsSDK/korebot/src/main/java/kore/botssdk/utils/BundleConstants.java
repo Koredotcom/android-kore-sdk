@@ -6,7 +6,6 @@ package kore.botssdk.utils;
  */
 public class BundleConstants {
     public static final String REQ_TEXT_TO_DISPLAY = "reqTextTodisplay";
-    public static final String REQ_START_DATE_TO_DISPLAY = "reqStartDateTextTodisplay";
 
     public static final String KNOWLEDGE_ID = "knowledgeId";
     public static final String SHOW_SHARE ="show_share" ;
