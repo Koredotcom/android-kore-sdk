@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -349,7 +348,6 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void meetingWidgetViewMoreVisibility(boolean visible) {
-        Log.d("!@#","VerticalLitView");
         if(viewMore!=null)
             viewMore.setVisibility(visible? View.VISIBLE: View.GONE);
     }

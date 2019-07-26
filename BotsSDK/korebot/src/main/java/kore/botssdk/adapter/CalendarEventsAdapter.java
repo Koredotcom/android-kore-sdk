@@ -422,6 +422,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 for (int i = 0; i <= _days; i++) {
                     if(eventStartDate.compareTo(cursorStartDate)<0){
                         _start += (24*60*60*1000);
+                        _start = DateUtils.getDDMMYYYY(_start).getTime();
                         eventStartDate = DateUtils.getDDMMYYYY(_start);
                         continue;
                     }
@@ -467,6 +468,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             _data.setReqTextToDisplay(txt);
 
                             st = _end;
+                            st = DateUtils.getDDMMYYYY((long)st).getTime();
                             ed = _end;
                         } else {
                             txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
@@ -477,6 +479,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                                 st += _start;
                             } else {
                                 st += 24 * 60 * 60 * 1000;
+                                st = DateUtils.getDDMMYYYY((long)st).getTime();
                             }
                             ed = st + (30 * 60000);
                         }
