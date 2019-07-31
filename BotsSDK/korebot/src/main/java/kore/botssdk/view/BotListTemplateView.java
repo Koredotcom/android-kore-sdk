@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class BotListTemplateView extends ViewGroup {
 
     float dp1, layoutItemHeight = 0;
     AutoExpandListView autoExpandListView;
-    Button botCustomListViewButton;
+    TextView botCustomListViewButton;
     LinearLayout botCustomListRoot;
     float restrictedMaxWidth, restrictedMaxHeight;
     ComposeFooterInterface composeFooterInterface;
@@ -56,7 +56,7 @@ public class BotListTemplateView extends ViewGroup {
         LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list, this, true);
         botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
-        botCustomListViewButton = (Button) findViewById(R.id.botCustomListViewButton);
+        botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
@@ -93,7 +93,7 @@ public class BotListTemplateView extends ViewGroup {
                     }
                 }
             });
-            botCustomListViewButton.setVisibility(VISIBLE);
+            botCustomListViewButton.setVisibility(botListModelArrayList.size()>3?VISIBLE:GONE);
         } else {
             botCustomListRoot.setVisibility(GONE);
             botCustomListViewButton.setVisibility(GONE);
