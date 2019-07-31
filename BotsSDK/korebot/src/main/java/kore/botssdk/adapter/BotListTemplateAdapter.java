@@ -18,12 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 /**
@@ -52,7 +52,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (botListModelArrayList != null) {
-            return botListModelArrayList.size();
+            return botListModelArrayList.size() >3 ? 3 : botListModelArrayList.size();
         } else {
             return 0;
         }
@@ -92,13 +92,18 @@ public class BotListTemplateAdapter extends BaseAdapter {
 
     private void populateVIew(ViewHolder holder, int position) {
         BotListModel botListModel = getItem(position);
-
-        Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+        if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
+            holder.botListItemImage.setVisibility(View.VISIBLE);
+            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+        }
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
-        holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
+            holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+        }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);
         } else {

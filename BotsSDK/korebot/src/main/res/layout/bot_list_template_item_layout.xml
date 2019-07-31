@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_view_height"
     android:background="@android:color/white"
-    android:minHeight="@dimen/list_item_view_height"
     android:padding="5dp"
     android:orientation="vertical">
 
     <!-- Item image -->
     <ImageView
         android:id="@+id/bot_list_item_image"
+        android:visibility="gone"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
@@ -45,6 +45,7 @@
         android:maxLines="2"
         android:paddingBottom="2dp"
         android:paddingTop="2dp"
+        android:visibility="gone"
         android:text="Subtitle"
         android:textColor="@color/footer_color_dark_grey"
         android:textSize="12dp" />
@@ -54,8 +55,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="2dp"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="2dp"
+        android:layout_below="@id/bot_list_item_subtitle"
         android:textColor="@android:color/holo_blue_dark"
         android:background="@drawable/rounded_image_bg_blue"
         android:textSize="12dp" />

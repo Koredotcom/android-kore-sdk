@@ -120,7 +120,9 @@ public class BotMainTableView extends ViewGroup {
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totViewHeight, MeasureSpec.EXACTLY);
 
-        super.onMeasure(parentWidthSpec, parentHeightSpec);
+       // super.onMeasure(parentWidthSpec, parentHeightSpec);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+
     }
 
 
@@ -130,8 +132,8 @@ public class BotMainTableView extends ViewGroup {
         int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
-        int childLeft = this.getPaddingLeft();
-        int childTop = this.getPaddingTop();
+        int childLeft = 0;//this.getPaddingLeft();
+        int childTop = 0;//this.getPaddingTop();
 
         //walk through each child, and arrange it from left to right
         for (int i = 0; i < count; i++) {
