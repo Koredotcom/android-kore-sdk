@@ -461,12 +461,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             } else {
                                 if (DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
                                     txt = "All Day";
-                                    _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _oend));
                                 }
                                 else {
                                     txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
-                                    _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart,_oend));
                                 }
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart,_oend));
                             }
                             _data.setReqTextToDisplay(txt);
 
@@ -476,7 +475,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         } else {
                             txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                             _data.setReqTextToDisplay(txt);
-                            _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _oend));
+                            if(_data.isAllDay()){
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _oend));
+                            }else{
+                                _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart, _oend));
+                            }
 
                             if (st == 0) {
                                 st += _start;
@@ -496,7 +499,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         reqData.add(_data);
                 }//inner for
             }else{
-                if(DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
+                if(StringUtils.isNullOrEmpty(data.getReqTextToDisplay()) && DateUtils.getDDMMYYYY(_start).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
                     data.setReqTextToDisplay("All Day");
                     data.setReqTextToDisplayForDetails(DateUtils.getDayDate(_start));
                 }
