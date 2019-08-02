@@ -43,6 +43,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
@@ -77,6 +78,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public ArrayList<WCalEventsTemplateModel> getEventList() {
         return eventList;
     }
+
+    private Duration _cursor;
 
 
     public void setEventList(ArrayList<WCalEventsTemplateModel> eventList) {
@@ -414,10 +417,13 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getData().getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getData().getDuration().getStart()).getTime());
 
             long currentTime = System.currentTimeMillis();
-            Date currentDate = DateUtils.getDDMMYYYY(currentTime);
+            //Date currentDate = DateUtils.getDDMMYYYY(currentTime);
             Date eventStartDate = DateUtils.getDDMMYYYY(_start);
 
-            Date endLimitDate = DateUtils.getDDMMYYYY((long)eventList.get(eventList.size()-1).getData().getDuration().getStart());
+            //Date endLimitDate = DateUtils.getDDMMYYYY((long)eventList.get(eventList.size()-1).getData().getDuration().getStart());
+            Date cursorStartDate = DateUtils.getDDMMYYYY((long) _cursor.getStart());
+            Date cursorEndDate = DateUtils.getDDMMYYYY((long) _cursor.getEnd());
+
 
             //CHECK FOR MORE THAN A DAY EVENT
             if(_days>0) {
@@ -429,7 +435,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 double ed = 0;
 
                 for (int i = 0; i <= _days; i++) {
-                    if(eventStartDate.compareTo(currentDate)<0){
+                    if(eventStartDate.compareTo(cursorStartDate)<0){
                         _start += (24*60*60*1000);
                         _start = DateUtils.getDDMMYYYY(_start).getTime();
                         eventStartDate = DateUtils.getDDMMYYYY(_start);
@@ -437,7 +443,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                     }
 
                     // This is to restrict the looping for recurrent event. taking the recurrent duplicate till the max server event date
-                    if(DateUtils.getDDMMYYYY((long)st).compareTo(endLimitDate) == 0)
+                    if(DateUtils.getDDMMYYYY((long)st).compareTo(cursorEndDate) == 0)
                         break;
 
                     WCalEventsTemplateModel _data = null;
@@ -585,6 +591,14 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg=msg;
         this.errorIcon=errorIcon;
+    }
+
+    public Duration get_cursor() {
+        return _cursor;
+    }
+
+    public void set_cursor(Duration _cursor) {
+        this._cursor = _cursor;
     }
 
     public interface EventSelectionListener {
