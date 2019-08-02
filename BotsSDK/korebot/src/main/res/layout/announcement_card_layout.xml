@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="java.lang.Long" />
         <import type="kore.botssdk.utils.DateUtils" />
         <variable
             name="annoucement"
