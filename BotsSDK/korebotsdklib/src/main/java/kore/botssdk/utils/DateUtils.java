@@ -71,6 +71,13 @@ public class DateUtils {
     }
 
 
+    public static long getTimeStampLong(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
+
+        long timeStampMillis = isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
+
+        return timeStampMillis;
+    }
+
     public static double getOneDayMiliseconds(long diffvalue) {
         double seconds = diffvalue / 1000;
         double hours = seconds / (60 * 60);
