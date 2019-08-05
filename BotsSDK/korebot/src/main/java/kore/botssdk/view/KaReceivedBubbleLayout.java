@@ -76,7 +76,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
         pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
-        tableHeight = (int) getResources().getDimension(R.dimen.table_layout_height);
+        tableHeight = (int) getResources().getDimension(R.dimen.my_table_height);
         lineHeight = (int) getResources().getDimension(R.dimen.line_layout_height);
         super.setLeftSide(true);
     }
@@ -446,7 +446,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For TableViev
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int) dp1, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(tableView, childWidthSpec, wrapSpec);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(tableView, childWidthSpec, childHeightSpec);
 
         /**
          * for line chart

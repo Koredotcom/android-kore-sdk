@@ -40,5 +40,6 @@
     <dimen name="dimen_12dp">12dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
     <dimen name="dimen_0">0dp</dimen>
+    <dimen name="my_table_height">250dp</dimen>
 
 </resources>
