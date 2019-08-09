@@ -38,4 +38,10 @@
     <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
     <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
     <string name="view_more">View more</string>
+
+    <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
+    <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
+    <string name="icon_e961">&#xe961;</string> <!-- MORE -->
+    <string name="icon_e914">&#xe914;</string> <!-- LESS -->
+    <string name="icon_e92c">&#xe92c;</string> <!-- LOCATION -->
 </resources>
