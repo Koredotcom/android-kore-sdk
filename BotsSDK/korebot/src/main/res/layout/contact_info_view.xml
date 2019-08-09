@@ -22,8 +22,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shadow_layer_background_contact"
-        >
+        android:background="@drawable/shadow_layer_background_contact">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -113,13 +112,6 @@
                     android:visibility="@{contactInfo.getTitle() == null || contactInfo.getTitle().trim().empty ? View.GONE : View.VISIBLE,default = gone}" />
             </RelativeLayout>
 
-            <!--<include
-                layout="@layout/contact_view_list"
-                android:layout_below="@id/contactTop"
-                android:adapter="@{myAdapter}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />-->
-
             <RelativeLayout
                 android:id="@+id/contactViewListRoot"
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -179,73 +171,6 @@
                     android:onClick="@{()->viewBase.expandOrCollapse()}"
                     android:visibility="visible"/>
             </RelativeLayout>
-
-           <!-- <TextView
-                android:id="@+id/phone1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/contactTop"
-                android:layout_marginBottom="13dp"
-                android:drawableEnd="@drawable/ic_phone_icon"
-                android:drawablePadding="15dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:fontFamily="@font/latomedium"
-                android:onClick="@{()->viewBase.launchDialer(contactInfo.getPhoneNoByIndex(0))}"
-                android:text="@{contactInfo.getPhoneNoByIndex(0)}"
-                android:textColor="@color/splash_color"
-                android:textSize="15sp"
-                android:visibility="@{contactInfo.phone != null &amp;&amp; !contactInfo.phone.empty ? View.VISIBLE : View.GONE,default = gone}" />-->
-
-            <!--<TextView
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/contactTop"
-                android:layout_marginBottom="@dimen/dimen_14dp"
-                android:drawableStart="@drawable/ic_mail_drawable"
-                android:drawablePadding="15dp"
-                android:fontFamily="@font/latomedium"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:onClick="@{()->viewBase.launchEmail(contactInfo.getEmail)}"
-                android:text="@{contactInfo.getEmail()}"
-                android:textColor="@color/splash_color"
-                android:background="@color/white"
-                android:textSize="15sp"
-                android:visibility="@{contactInfo.email != null &amp;&amp; !contactInfo.email.empty ? View.VISIBLE : View.GONE,default = gone }" />
-
-            <TextView
-                android:id="@+id/phone2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/phone1"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="@dimen/dimen_14dp"
-                android:fontFamily="@font/latomedium"
-                android:onClick="@{()->viewBase.launchDialer(contactInfo.getPhoneNoByIndex(1))}"
-                android:text="@{contactInfo.getPhoneNoByIndex(1)}"
-                android:textColor="@color/splash_color"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="15sp"
-                android:visibility="@{contactInfo.phone == null || contactInfo.phone.size() &lt; 2 ? View.GONE : View.VISIBLE,default = gone}" />-->
-
-
-       <!--     <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_below="@+id/phone2"
-                android:background="@drawable/button_drawable_stroke"
-                android:fontFamily="@font/latomedium"
-                android:gravity="center"
-                android:onClick="@{()->viewBase.openDetails(contactInfo)}"
-                android:text="Details"
-                android:textColor="@color/splash_color"
-                android:visibility="@{viewBase.getVisibility(contactInfo)}"
-                android:textSize="15sp" />-->
         </RelativeLayout>
     </LinearLayout>
 </layout>

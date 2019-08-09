@@ -23,6 +23,7 @@
         android:background="@drawable/calender_view_background"
         android:layout_height="61dp"
         android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
         >
 
         <TextView
