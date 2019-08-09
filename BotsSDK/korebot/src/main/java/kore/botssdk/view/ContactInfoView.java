@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
     private ContactInfoViewBinding contactInfoViewBinding;
     private ContactViewRecyclerAdapter myRecyclerViewAdapter;
     private TextView showMore, viewMoreIV;
+    private TextView sourceIcon, source;
+    private RecyclerView contactListRecyclerView;
 
 //    private ContactViewListBinding contactViewListBinding;
 
@@ -97,6 +100,10 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         showMore = findViewById(R.id.view_more_contact);
         viewMoreIV = findViewById(R.id.viewMoreIV);
         viewMoreIV.setTypeface(ResourcesCompat.getFont(getContext(), R.font.icomoon));
+        sourceIcon = findViewById(R.id.sourceIcon);
+        source = findViewById(R.id.source);
+        sourceIcon.setTypeface(ResourcesCompat.getFont(getContext(), R.font.icomoon));
+        contactListRecyclerView = ((RecyclerView)findViewById(R.id.contactListView));
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
@@ -166,7 +173,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 //            ArrayList<Email> emails = (ArrayList<Email>) contactInfoModel.getEmails();
 //            for (Email email : emails) {
                 ContactViewListModel cvlmE = new ContactViewListModel();
-            cvlmE.setHeader("email1"/*email.getType()*/);
+            cvlmE.setHeader("email1"/*//*email.getType()*/);
             cvlmE.setValue("e@r.com"/*email.getValue()*/);
             cvlmE.setImage(getResources().getString(R.string.icon_e915));
             cvlmE.setEmail(true);
@@ -201,6 +208,9 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 list.add(cvlmA);
 //            }
 
+            sourceIcon.setText(getResources().getText(R.string.icon_e94e));
+            source.setText("CLOUD");
+
             myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
             myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
@@ -209,8 +219,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             DividerItemDecoration divider = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
             divider.setDrawable(getResources().getDrawable(R.drawable.contact_list_seperator));
             //   ((DefaultItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
-            ((RecyclerView)findViewById(R.id.contactListView)).addItemDecoration(divider);
-            ((RecyclerView)findViewById(R.id.contactListView)).setLayoutManager(new LinearLayoutManager(getContext()));
+            contactListRecyclerView.addItemDecoration(divider);
+            contactListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             contactInfoViewBinding.setMyAdapter(myRecyclerViewAdapter);
             ((GradientDrawable)contactInfoViewBinding.initials.getBackground()).setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
@@ -225,6 +235,13 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             myRecyclerViewAdapter.setExpanded(true);
             showMore.setText("View less");
             viewMoreIV.setText(getResources().getText(R.string.icon_e914));
+            contactListRecyclerView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("anil123", myRecyclerViewAdapter.getItemCount()+"");
+                    contactListRecyclerView.scrollToPosition(myRecyclerViewAdapter.getItemCount());
+                }
+            }, 200);
         }else {
             myRecyclerViewAdapter.setExpanded(false);
             showMore.setText("View more");
@@ -243,6 +260,18 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             }
         }
     }
+
+    public String getSourceIcon(ContactInfoModel model){
+        if(model!=null) {
+            if (model.getSource() != null && model.getSource().toLowerCase().equals("device")) {
+                return String.valueOf(getResources().getText(R.string.icon_e94f));
+            } else {
+                return String.valueOf(getResources().getText(R.string.icon_e94e));
+            }
+        }
+        return String.valueOf(getResources().getText(R.string.icon_e94e));
+    }
+
 
     public void launchDialer(String number){
         HashMap<String,Object> map = new HashMap<>();
@@ -367,6 +396,9 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
     public void meetingWidgetViewMoreVisibility(boolean visible) {
         if(showMore!=null)
             showMore.setVisibility(visible? View.VISIBLE: View.GONE);
+
+        if(viewMoreIV!=null)
+            viewMoreIV.setVisibility(visible? View.VISIBLE: View.GONE);
     }
 
     @Override
