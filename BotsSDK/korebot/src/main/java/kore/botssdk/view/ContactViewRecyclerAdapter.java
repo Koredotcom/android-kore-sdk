@@ -82,6 +82,9 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
         if(this.dataModelList !=null && this.dataModelList.size()>4){
             if(verticalListViewActionHelper!=null)
                 verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
+        }else{
+            if(verticalListViewActionHelper!=null)
+                verticalListViewActionHelper.meetingWidgetViewMoreVisibility(false);
         }
         notifyDataSetChanged();
     }
