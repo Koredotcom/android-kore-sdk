@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_14dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="11dp"
             android:layout_marginEnd="@dimen/dimen_14dp"
             android:layout_marginBottom="18dp">
 
@@ -38,8 +38,32 @@
                 android:id="@+id/contactTop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="17dp"
-                >
+                android:paddingBottom="17dp">
+
+            <TextView
+                android:id="@+id/source"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/latosemibold"
+                android:textAllCaps="true"
+                android:textColor="@color/color_767688"
+                android:layout_alignParentRight="true"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/sourceIcon"
+                android:layout_toLeftOf="@id/source"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:textSize="20sp"
+                android:fontFamily="@font/latosemibold"
+                android:textAllCaps="true"
+                android:textColor="@color/color_767688"
+                android:gravity="right"
+                />
 
             <TextView
                 android:id="@+id/initials"
@@ -47,6 +71,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="15dp"
+                android:layout_below="@id/source"
                 android:background="@drawable/background_circle"
                 android:fontFamily="@font/latobold"
                 android:text="@{contactInfo.getInitials()}"

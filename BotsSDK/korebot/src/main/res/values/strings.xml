@@ -44,4 +44,7 @@
     <string name="icon_e961">&#xe961;</string> <!-- MORE -->
     <string name="icon_e914">&#xe914;</string> <!-- LESS -->
     <string name="icon_e92c">&#xe92c;</string> <!-- LOCATION -->
+    <string name="icon_e94f">&#xe94f;</string> <!-- DEVICE-->
+    <string name="icon_e94e">&#xe94e;</string> <!-- CLOUD -->
+
 </resources>
