@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.models.ContactViewListModel;
 
 public interface VerticalListViewActionHelper {
     void knowledgeItemClicked(Bundle extras,boolean isKnowledge);
@@ -19,4 +20,5 @@ public interface VerticalListViewActionHelper {
     void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
     void meetingNotesNavigation(Context context,String mId, String eId);
     void meetingWidgetViewMoreVisibility(boolean visible);
+    void calendarContactItemClick(ContactViewListModel model);
 }

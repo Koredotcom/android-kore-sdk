@@ -1,18 +1,20 @@
 package kore.botssdk.models;
 
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-
-import kore.botssdk.utils.Utils;
+import java.util.List;
 
 public class ContactInfoModel extends UserNameModel implements Serializable {
 
     private String contactUrl;
     private String id;
-private  String emailId;
+    private String emailId;
+
+    private String manager;
+    private String empId;
+    private String department;
+    private String address;
 
     public String getEmailId() {
         return emailId!=null?emailId:"";
@@ -57,7 +59,12 @@ private  String emailId;
     private String color;
     private String title;
     private String email;
+    private String source;
     private ArrayList<String> phone;
+
+
+    private List<Email> emails = null;
+    private List<Phone> phones = null;
 
     public String getId() {
         return id;
@@ -80,5 +87,61 @@ private  String emailId;
             return phone.get(index);
         }
         return "";
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public List<Phone> getPhones() {
+        return phones;
+    }
+
+    public void setPhones(List<Phone> phones) {
+        this.phones = phones;
+    }
+
+    public List<Email> getEmails() {
+        return emails;
+    }
+
+    public void setEmails(List<Email> emails) {
+        this.emails = emails;
+    }
+
+    public String getManager() {
+        return manager;
+    }
+
+    public void setManager(String manager) {
+        this.manager = manager;
+    }
+
+    public String getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(String empId) {
+        this.empId = empId;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

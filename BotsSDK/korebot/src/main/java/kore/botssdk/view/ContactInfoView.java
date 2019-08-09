@@ -4,14 +4,22 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import androidx.databinding.DataBindingUtil;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.ContactInfoViewBinding;
@@ -19,18 +27,27 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BaseCalenderTemplateModel;
+import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ContactInfoModel;
+import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class ContactInfoView extends ViewGroup {
+public class ContactInfoView extends ViewGroup implements VerticalListViewActionHelper {
 
     float dp1;
     private int splashColor;
     private ContactInfoViewBinding contactInfoViewBinding;
+    private ContactViewRecyclerAdapter myRecyclerViewAdapter;
+    private TextView showMore, viewMoreIV;
+
+//    private ContactViewListBinding contactViewListBinding;
+
     public ContactInfoView(Context context) {
         super(context);
         init();
@@ -76,6 +93,10 @@ public class ContactInfoView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         splashColor = getContext().getResources().getColor(R.color.splash_color);
         contactInfoViewBinding.setViewBase(this);
+
+        showMore = findViewById(R.id.view_more_contact);
+        viewMoreIV = findViewById(R.id.viewMoreIV);
+        viewMoreIV.setTypeface(ResourcesCompat.getFont(getContext(), R.font.icomoon));
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
@@ -120,10 +141,106 @@ public class ContactInfoView extends ViewGroup {
         if (contactInfoModel != null) {
             contactInfoViewBinding.getRoot().setVisibility(VISIBLE);
             contactInfoViewBinding.setContactInfo(contactInfoModel);
+
+            ArrayList<ContactViewListModel> list = new ArrayList<ContactViewListModel>();
+
+//            ArrayList<Phone> phones = (ArrayList<Phone>) contactInfoModel.getPhones();
+//            for (Phone ph : phones) {
+                ContactViewListModel cvlm = new ContactViewListModel();
+                cvlm.setHeader("ph1"/*ph.getType()*/);
+                cvlm.setValue("12122121"/*ph.getValue()*/);
+                cvlm.setImage(getResources().getString(R.string.icon_e91d));
+                cvlm.setPhone(true);
+                list.add(cvlm);
+
+            ContactViewListModel cvlm1 = new ContactViewListModel();
+            cvlm1.setHeader("ph2"/*ph.getType()*/);
+            cvlm1.setValue("12122121"/*ph.getValue()*/);
+            cvlm1.setImage(getResources().getString(R.string.icon_e91d));
+            cvlm1.setPhone(true);
+            list.add(cvlm1);
+
+//            }
+
+
+//            ArrayList<Email> emails = (ArrayList<Email>) contactInfoModel.getEmails();
+//            for (Email email : emails) {
+                ContactViewListModel cvlmE = new ContactViewListModel();
+            cvlmE.setHeader("email1"/*email.getType()*/);
+            cvlmE.setValue("e@r.com"/*email.getValue()*/);
+            cvlmE.setImage(getResources().getString(R.string.icon_e915));
+            cvlmE.setEmail(true);
+                list.add(cvlmE);
+//            }
+
+//            if (!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())) {
+                ContactViewListModel cvlmD = new ContactViewListModel();
+            cvlmD.setHeader("Department");
+            cvlmD.setValue("dept123"/*contactInfoModel.getDepartment()*/);
+                list.add(cvlmD);
+//            }
+
+//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())){
+                ContactViewListModel cvlmM = new ContactViewListModel();
+                cvlmM.setHeader("Manager");
+                cvlmM.setValue("manager1123"/*contactInfoModel.getManager()*/);
+                list.add(cvlmM);
+//            }
+//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getEmailId())){
+                ContactViewListModel cvlmEMP = new ContactViewListModel();
+            cvlmEMP.setHeader("Employee ID");
+            cvlmEMP.setValue("123"/*contactInfoModel.getEmailId()*/);
+                list.add(cvlmEMP);
+//            }
+//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getAddress())){
+                ContactViewListModel cvlmA = new ContactViewListModel();
+            cvlmA.setHeader("Address");
+            cvlmA.setValue("Hyderabad,India"/*contactInfoModel.getAddress()*/);
+            cvlmA.setImage(getResources().getString(R.string.icon_e92c));
+            cvlmA.setAddress(true);
+                list.add(cvlmA);
+//            }
+
+            myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());
+            myRecyclerViewAdapter.setExpanded(false);
+            myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
+            myRecyclerViewAdapter.setData(list);
+
+            DividerItemDecoration divider = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
+            divider.setDrawable(getResources().getDrawable(R.drawable.contact_list_seperator));
+            //   ((DefaultItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+            ((RecyclerView)findViewById(R.id.contactListView)).addItemDecoration(divider);
+            ((RecyclerView)findViewById(R.id.contactListView)).setLayoutManager(new LinearLayoutManager(getContext()));
+
+            contactInfoViewBinding.setMyAdapter(myRecyclerViewAdapter);
             ((GradientDrawable)contactInfoViewBinding.initials.getBackground()).setColor(!StringUtils.isNullOrEmptyWithTrim(contactInfoModel.getColor()) ? Color.parseColor(contactInfoModel.getColor()) : splashColor);
         } else {
             contactInfoViewBinding.getRoot().setVisibility(GONE);
             contactInfoViewBinding.setContactInfo(null);
+        }
+    }
+
+    public void expandOrCollapse(){
+        if (myRecyclerViewAdapter != null && !myRecyclerViewAdapter.isExpanded()) {
+            myRecyclerViewAdapter.setExpanded(true);
+            showMore.setText("View less");
+            viewMoreIV.setText(getResources().getText(R.string.icon_e914));
+        }else {
+            myRecyclerViewAdapter.setExpanded(false);
+            showMore.setText("View more");
+            viewMoreIV.setText(getResources().getText(R.string.icon_e961));
+        }
+    }
+
+    public String getViewMoreLessIcon(){
+        if(myRecyclerViewAdapter == null){
+            return String.valueOf(getResources().getText(R.string.icon_e961));
+        }else {
+            if(!myRecyclerViewAdapter.isExpanded()){
+                return String.valueOf(getResources().getText(R.string.icon_e961));
+            }else{
+                return String.valueOf(getResources().getText(R.string.icon_e914));
+            }
         }
     }
 
@@ -133,6 +250,24 @@ public class ContactInfoView extends ViewGroup {
         if(invokeGenericWebViewInterface != null)
             invokeGenericWebViewInterface.handleUserActions(BundleConstants.OPEN_DIALER,map);
     }
+
+    public void launchMap(String address){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("address",address);
+        if(invokeGenericWebViewInterface != null)
+            invokeGenericWebViewInterface.handleUserActions(BundleConstants.VIEW_LOCATION,map);
+    }
+
+    public void launchAction(ContactViewListModel model){
+        if(model.isPhone()){
+            launchDialer(model.getValue());
+        }else if(model.isEmail()){
+            launchEmail((model.getValue()));
+        }else if(model.isAddress()){
+
+        }
+    }
+
     public void launchEmail(String email){
         HashMap<String,Object> map = new HashMap<>();
         map.put("email",email);
@@ -148,9 +283,16 @@ public class ContactInfoView extends ViewGroup {
         if(invokeGenericWebViewInterface != null)
             invokeGenericWebViewInterface.handleUserActions(BundleConstants.VIEW_CONTACT,map);
     }
-
     public int getVisibility(ContactInfoModel contactInfoModel){
         if(contactInfoModel != null && !StringUtils.isNullOrEmpty(contactInfoModel.getContactUrl())){
+            return View.VISIBLE;
+        }else{
+            return View.GONE;
+        }
+    }
+
+    public int contactListItemImageVisibillity(ContactViewListModel model){
+        if(!StringUtils.isNullOrEmpty(model.getImage())){
             return View.VISIBLE;
         }else{
             return View.GONE;
@@ -173,6 +315,68 @@ public class ContactInfoView extends ViewGroup {
                 LayoutUtils.layoutChild(child, childLeft, childTop);
                 childTop += child.getMeasuredHeight();
             }
+        }
+    }
+
+    @Override
+    public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
+
+    }
+
+    @Override
+    public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {
+
+    }
+
+    @Override
+    public void emailItemClicked(String action, HashMap customData) {
+
+    }
+
+    @Override
+    public void calendarItemClicked(String action, BaseCalenderTemplateModel model) {
+
+    }
+
+    @Override
+    public void tasksSelectedOrDeselected(boolean selecetd) {
+
+    }
+
+    @Override
+    public void widgetItemSelected(boolean isSelected, int count) {
+
+    }
+
+    @Override
+    public void navigationToDialAndJoin(String actiontype, String actionLink) {
+
+    }
+
+    @Override
+    public void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel) {
+
+    }
+
+    @Override
+    public void meetingNotesNavigation(Context context, String mId, String eId) {
+
+    }
+
+    @Override
+    public void meetingWidgetViewMoreVisibility(boolean visible) {
+        if(showMore!=null)
+            showMore.setVisibility(visible? View.VISIBLE: View.GONE);
+    }
+
+    @Override
+    public void calendarContactItemClick(ContactViewListModel model) {
+        if(model.isPhone()){
+            launchDialer(model.getValue());
+        }else if(model.isEmail()){
+            launchEmail((model.getValue()));
+        }else if(model.isAddress()){
+            launchMap(model.getValue());
         }
     }
 }
