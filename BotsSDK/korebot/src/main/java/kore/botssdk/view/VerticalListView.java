@@ -14,13 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AnnouncementAdapter;
 import kore.botssdk.adapter.CalendarEventsAdapter;
@@ -42,6 +43,7 @@ import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
+import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -350,6 +352,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     public void meetingWidgetViewMoreVisibility(boolean visible) {
         if(viewMore!=null)
             viewMore.setVisibility(visible? View.VISIBLE: View.GONE);
+    }
+
+    @Override
+    public void calendarContactItemClick(ContactViewListModel model) {
+
     }
 
 
