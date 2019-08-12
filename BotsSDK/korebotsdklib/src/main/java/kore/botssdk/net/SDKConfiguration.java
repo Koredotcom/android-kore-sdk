@@ -34,7 +34,7 @@ public class SDKConfiguration {
         INIT_MESSAGE = initMessage;
     }
 
-    private static  String INIT_MESSAGE = "Welpro";
+    private static  String INIT_MESSAGE = "";
     public static final String BOT_ICON_URL = "";
 
     public static boolean isApplyFontStyle() {

@@ -381,7 +381,12 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     public void setData(ArrayList data) {
         this.eventList = data;
         if (eventList != null) {
-            this.eventList = expandEventList(eventList);
+            try {
+                this.eventList = expandEventList(eventList);
+            }catch (Exception e)
+            {
+
+            }
             this.eventList = sortEventList(eventList);
 
             if(eventList.size()>3){
