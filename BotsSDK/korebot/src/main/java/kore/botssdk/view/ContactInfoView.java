@@ -202,12 +202,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 cvlmA.setAddress(true);
                 list.add(cvlmA);
             }
-
             sourceIcon.setText(getResources().getText(R.string.icon_e94e));
             source.setText(contactInfoModel.getSource());
-
-            sourceIcon.setText(getResources().getText(R.string.icon_e94e));
-            source.setText("CLOUD");
 
             myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
