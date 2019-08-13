@@ -63,6 +63,12 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
                 }
             });
         }
+        if(position == dataModelList.size() - 1 && dataModelList.size() <=4){
+            holder.itemRowBinding.contactDivider.setVisibility(View.GONE);
+        }else{
+            holder.itemRowBinding.contactDivider.setVisibility(View.VISIBLE);
+        }
+
     }
 
 

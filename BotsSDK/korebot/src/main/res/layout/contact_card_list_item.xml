@@ -60,5 +60,14 @@
             android:textSize="20sp"
             android:visibility="@{viewBase.contactListItemImageVisibillity(contactListInfo)}" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/contact_divider"
+            android:layout_below="@id/contactListItemIV"
+            android:layout_marginTop="10dp"
+            android:background="@color/color_A7A9BE" />
+
     </RelativeLayout>
+
 </layout>

@@ -154,24 +154,28 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             ArrayList<ContactViewListModel> list = new ArrayList<ContactViewListModel>();
 
             ArrayList<Phone> phones = (ArrayList<Phone>) contactInfoModel.getPhones();
-            for (Phone ph : phones) {
-                ContactViewListModel cvlm = new ContactViewListModel();
-                cvlm.setHeader(ph.getType());
-                cvlm.setValue(ph.getValue());
-                cvlm.setImage(getResources().getString(R.string.icon_e91d));
-                cvlm.setPhone(true);
-                list.add(cvlm);
+            if(phones != null && phones.size()>0) {
+                for (Phone ph : phones) {
+                    ContactViewListModel cvlm = new ContactViewListModel();
+                    cvlm.setHeader(ph.getType());
+                    cvlm.setValue(ph.getValue());
+                    cvlm.setImage(getResources().getString(R.string.icon_e91d));
+                    cvlm.setPhone(true);
+                    list.add(cvlm);
+                }
             }
 
 
             ArrayList<Email> emails = (ArrayList<Email>) contactInfoModel.getEmails();
-            for (Email email : emails) {
-                ContactViewListModel cvlmE = new ContactViewListModel();
-                cvlmE.setHeader(email.getType());
-                cvlmE.setValue(email.getValue());
-                cvlmE.setImage(getResources().getString(R.string.icon_e915));
-                cvlmE.setEmail(true);
-                list.add(cvlmE);
+            if(emails !=null && emails.size()>0) {
+                for (Email email : emails) {
+                    ContactViewListModel cvlmE = new ContactViewListModel();
+                    cvlmE.setHeader(email.getType());
+                    cvlmE.setValue(email.getValue());
+                    cvlmE.setImage(getResources().getString(R.string.icon_e915));
+                    cvlmE.setEmail(true);
+                    list.add(cvlmE);
+                }
             }
 
             if (!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())) {

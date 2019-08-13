@@ -138,8 +138,6 @@
                     android:fadeScrollbars="true"
                     android:overScrollMode="never"
                     android:scrollbars="vertical"
-                    android:divider="@color/color_A7A9BE"
-                    android:dividerHeight="1dp"
                     android:visibility="visible"
                     android:layoutAnimation="@anim/layout_animation_fall_down"
                     android:adapter="@{myAdapter}"
