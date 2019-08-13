@@ -215,9 +215,6 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
             myRecyclerViewAdapter.setData(list);
 
-            /*DividerItemDecoration divider = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
-            divider.setDrawable(getResources().getDrawable(R.drawable.contact_list_seperator));
-            contactListRecyclerView.addItemDecoration(divider);*/
             contactListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             contactInfoViewBinding.setMyAdapter(myRecyclerViewAdapter);
