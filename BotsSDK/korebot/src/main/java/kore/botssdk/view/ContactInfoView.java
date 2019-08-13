@@ -33,6 +33,8 @@ import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ContactInfoModel;
 import kore.botssdk.models.ContactViewListModel;
+import kore.botssdk.models.Email;
+import kore.botssdk.models.Phone;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
@@ -151,65 +153,58 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
             ArrayList<ContactViewListModel> list = new ArrayList<ContactViewListModel>();
 
-//            ArrayList<Phone> phones = (ArrayList<Phone>) contactInfoModel.getPhones();
-//            for (Phone ph : phones) {
+            ArrayList<Phone> phones = (ArrayList<Phone>) contactInfoModel.getPhones();
+            for (Phone ph : phones) {
                 ContactViewListModel cvlm = new ContactViewListModel();
-                cvlm.setHeader("ph1"/*ph.getType()*/);
-                cvlm.setValue("12122121"/*ph.getValue()*/);
+                cvlm.setHeader(ph.getType());
+                cvlm.setValue(ph.getValue());
                 cvlm.setImage(getResources().getString(R.string.icon_e91d));
                 cvlm.setPhone(true);
                 list.add(cvlm);
-
-            ContactViewListModel cvlm1 = new ContactViewListModel();
-            cvlm1.setHeader("ph2"/*ph.getType()*/);
-            cvlm1.setValue("12122121"/*ph.getValue()*/);
-            cvlm1.setImage(getResources().getString(R.string.icon_e91d));
-            cvlm1.setPhone(true);
-            list.add(cvlm1);
-
-//            }
+            }
 
 
-//            ArrayList<Email> emails = (ArrayList<Email>) contactInfoModel.getEmails();
-//            for (Email email : emails) {
+            ArrayList<Email> emails = (ArrayList<Email>) contactInfoModel.getEmails();
+            for (Email email : emails) {
                 ContactViewListModel cvlmE = new ContactViewListModel();
-            cvlmE.setHeader("email1"/*//*email.getType()*/);
-            cvlmE.setValue("e@r.com"/*email.getValue()*/);
-            cvlmE.setImage(getResources().getString(R.string.icon_e915));
-            cvlmE.setEmail(true);
+                cvlmE.setHeader(email.getType());
+                cvlmE.setValue(email.getValue());
+                cvlmE.setImage(getResources().getString(R.string.icon_e915));
+                cvlmE.setEmail(true);
                 list.add(cvlmE);
-//            }
+            }
 
-//            if (!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())) {
+            if (!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())) {
                 ContactViewListModel cvlmD = new ContactViewListModel();
-            cvlmD.setHeader("Department");
-            cvlmD.setValue("dept123"/*contactInfoModel.getDepartment()*/);
+                cvlmD.setHeader("Department");
+                cvlmD.setValue(contactInfoModel.getDepartment());
                 list.add(cvlmD);
-//            }
+            }
 
-//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getDepartment())){
+            if(!StringUtils.isNullOrEmpty(contactInfoModel.getManager())){
                 ContactViewListModel cvlmM = new ContactViewListModel();
                 cvlmM.setHeader("Manager");
-                cvlmM.setValue("manager1123"/*contactInfoModel.getManager()*/);
+                cvlmM.setValue(contactInfoModel.getManager());
                 list.add(cvlmM);
-//            }
-//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getEmailId())){
+            }
+
+            if(!StringUtils.isNullOrEmpty(contactInfoModel.getEmailId())){
                 ContactViewListModel cvlmEMP = new ContactViewListModel();
-            cvlmEMP.setHeader("Employee ID");
-            cvlmEMP.setValue("123"/*contactInfoModel.getEmailId()*/);
+                cvlmEMP.setHeader("Employee ID");
+                cvlmEMP.setValue(contactInfoModel.getEmailId());
                 list.add(cvlmEMP);
-//            }
-//            if(!StringUtils.isNullOrEmpty(contactInfoModel.getAddress())){
+            }
+            if(!StringUtils.isNullOrEmpty(contactInfoModel.getAddress())){
                 ContactViewListModel cvlmA = new ContactViewListModel();
-            cvlmA.setHeader("Address");
-            cvlmA.setValue("Hyderabad,India"/*contactInfoModel.getAddress()*/);
-            cvlmA.setImage(getResources().getString(R.string.icon_e92c));
-            cvlmA.setAddress(true);
+                cvlmA.setHeader("Address");
+                cvlmA.setValue(contactInfoModel.getAddress());
+                cvlmA.setImage(getResources().getString(R.string.icon_e92c));
+                cvlmA.setAddress(true);
                 list.add(cvlmA);
-//            }
+            }
 
             sourceIcon.setText(getResources().getText(R.string.icon_e94e));
-            source.setText("CLOUD");
+            source.setText(contactInfoModel.getSource());
 
             myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
@@ -218,7 +213,6 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
             DividerItemDecoration divider = new DividerItemDecoration(getContext(),DividerItemDecoration.VERTICAL);
             divider.setDrawable(getResources().getDrawable(R.drawable.contact_list_seperator));
-            //   ((DefaultItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
             contactListRecyclerView.addItemDecoration(divider);
             contactListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -238,7 +232,6 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             contactListRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("anil123", myRecyclerViewAdapter.getItemCount()+"");
                     contactListRecyclerView.scrollToPosition(myRecyclerViewAdapter.getItemCount());
                 }
             }, 200);
