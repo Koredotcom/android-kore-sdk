@@ -1,7 +1,10 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +24,16 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
+import kore.botssdk.utils.Constants;
+import kore.botssdk.utils.DialogCaller;
+import kore.botssdk.utils.Utility;
 
 import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
@@ -89,35 +96,44 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
                 } else if (type.equalsIgnoreCase("dial") && actionList.get(position).getCustom_type().equalsIgnoreCase("dial")) {
                     verticalListViewActionHelper.navigationToDialAndJoin("dial", actionList.get(position).getDial());
                     (widgetDialogActivity).dismiss();
-                }else if(type.equalsIgnoreCase("url") && actionList.get(position).getCustom_type().equalsIgnoreCase("meetingUrl"))
-                {
+                } else if (type.equalsIgnoreCase("url") && actionList.get(position).getCustom_type().equalsIgnoreCase("meetingUrl")) {
                     verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", actionList.get(position).getUrl());
                     (widgetDialogActivity).dismiss();
 
-                }
-                else if(type.equalsIgnoreCase(BotResponse.TAKE_NOTES))
-                {
+                } else if (type.equalsIgnoreCase(BotResponse.TAKE_NOTES)) {
                     verticalListViewActionHelper.takeNotesNavigation(model);
                     (widgetDialogActivity).dismiss();
 
-                }
+                } else {
+                    if(Utility.checkIsSkillKora()){
+                        postAction(position,false);
+                    } else {
 
-                    else {
-
-                    HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
-                    ArrayList<String> list = new ArrayList<>(1);
-                    list.add(model.getData().getEventId());
-                    hashMap.put("ids", list);
-                    KoreEventCenter.post(new CancelEvent(actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
-                    (widgetDialogActivity).dismiss();
-                    if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
-                        mainContext.finish();
-                    }
+                        DialogCaller.showDialog(mainContext,new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                postAction(position,true);
+                                dialog.dismiss();
+                            }
+                        });
+                                  }
 
                 }
             }
         });
 
+    }
+
+    private void postAction(int position,boolean append_uttrance) {
+        HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
+        ArrayList<String> list = new ArrayList<>(1);
+        list.add(model.getData().getEventId());
+        hashMap.put("ids", list);
+        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
+        (widgetDialogActivity).dismiss();
+        if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
+            mainContext.finish();
+        }
     }
 
     @Override

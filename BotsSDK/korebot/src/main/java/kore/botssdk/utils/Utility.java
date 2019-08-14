@@ -2,7 +2,9 @@ package kore.botssdk.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -47,4 +49,9 @@ public class Utility {
         }
     }
 
+    public static boolean checkIsSkillKora() {
+        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION))
+            return true;
+            return false;
+    }
 }
