@@ -6,6 +6,14 @@ package kore.botssdk.utils;
  */
 public class Constants {
 
+
+    //Skill switch name;
+    public static  String  SKILL_SELECTION="";
+    public static final String SKILL_HOME="Kora";
+    public static final String SKILL_UTTERANCE="Ask Kora - ";
+
+
+
     public static final String PUSH_NOTIF_OS_TYPE_ANDROID = "android";
     public static final String PUSH_NOTIF_DEVICE_ID = "deviceId";
     public static final String PUSH_NOTIF_OS_TYPE = "osType";
@@ -29,4 +37,8 @@ public class Constants {
         return HTTP_AGENT;
     }
     public static final String delim = " \n\r\t,;";
+
+
+
+
 }
