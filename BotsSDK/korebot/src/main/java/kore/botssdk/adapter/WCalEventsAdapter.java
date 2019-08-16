@@ -395,7 +395,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setCalData(ArrayList<WCalEventsTemplateModel> data) {
         this.eventList = data;
         if (eventList != null) {
-            this.eventList = expandEventList(eventList);
+            try {
+                this.eventList = expandEventList(eventList);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             this.eventList = sortEventList(eventList);
 
             if(eventList.size()>3){
