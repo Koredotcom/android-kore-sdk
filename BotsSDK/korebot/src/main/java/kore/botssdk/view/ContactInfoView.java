@@ -159,6 +159,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                     cvlm.setValue(ph.getValue());
                     cvlm.setImage(getResources().getString(R.string.icon_e91d));
                     cvlm.setPhone(true);
+                    cvlm.setEmail(false);
+                    cvlm.setAddress(false);
                     list.add(cvlm);
                 }
             }
@@ -172,6 +174,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                     cvlmE.setValue(email.getValue());
                     cvlmE.setImage(getResources().getString(R.string.icon_e915));
                     cvlmE.setEmail(true);
+                    cvlmE.setPhone(false);
+                    cvlmE.setAddress(false);
                     list.add(cvlmE);
                 }
             }
@@ -180,6 +184,9 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 ContactViewListModel cvlmD = new ContactViewListModel();
                 cvlmD.setHeader("Department");
                 cvlmD.setValue(contactInfoModel.getDepartment());
+                cvlmD.setEmail(false);
+                cvlmD.setPhone(false);
+                cvlmD.setAddress(false);
                 list.add(cvlmD);
             }
 
@@ -187,6 +194,9 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 ContactViewListModel cvlmM = new ContactViewListModel();
                 cvlmM.setHeader("Manager");
                 cvlmM.setValue(contactInfoModel.getManager());
+                cvlmM.setEmail(false);
+                cvlmM.setPhone(false);
+                cvlmM.setAddress(false);
                 list.add(cvlmM);
             }
 
@@ -194,6 +204,9 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 ContactViewListModel cvlmEMP = new ContactViewListModel();
                 cvlmEMP.setHeader("Employee ID");
                 cvlmEMP.setValue(contactInfoModel.getEmailId());
+                cvlmEMP.setEmail(false);
+                cvlmEMP.setPhone(false);
+                cvlmEMP.setAddress(false);
                 list.add(cvlmEMP);
             }
             if(!StringUtils.isNullOrEmpty(contactInfoModel.getAddress())){
@@ -201,10 +214,15 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 cvlmA.setHeader("Address");
                 cvlmA.setValue(contactInfoModel.getAddress());
                 cvlmA.setImage(getResources().getString(R.string.icon_e92c));
+                cvlmA.setEmail(false);
+                cvlmA.setPhone(false);
                 cvlmA.setAddress(true);
                 list.add(cvlmA);
             }
-            sourceIcon.setText(getResources().getText(R.string.icon_e94e));
+            if(contactInfoModel.getSource().toLowerCase().equals("device"))
+                sourceIcon.setText(getResources().getText(R.string.icon_e94f));
+            else
+                sourceIcon.setText(getResources().getText(R.string.icon_e94e));
             source.setText(contactInfoModel.getSource());
 
             myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());

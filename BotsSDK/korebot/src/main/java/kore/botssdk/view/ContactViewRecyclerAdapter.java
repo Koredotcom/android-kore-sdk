@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kore.botssdk.BR;
 import kore.botssdk.R;
@@ -25,7 +24,7 @@ import kore.botssdk.utils.StringUtils;
 
 public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactViewRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
-    private List<ContactViewListModel> dataModelList;
+    private ArrayList<ContactViewListModel> dataModelList;
     private Context context;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
@@ -53,6 +52,8 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
             } catch (Exception e) {
             }
             holder.itemRowBinding.contactListItemIV.setBackground(drawable);
+        }else{
+            holder.itemRowBinding.contactListItemIV.setBackground(null);
         }
 
         if(dataModel.isPhone() || dataModel.isEmail() || dataModel.isAddress()) {
@@ -62,6 +63,8 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
                     verticalListViewActionHelper.calendarContactItemClick(dataModel);
                 }
             });
+        }else{
+            holder.itemRowBinding.contactCardRL.setOnClickListener(null);
         }
         if(position == dataModelList.size() - 1 && dataModelList.size() <=4){
             holder.itemRowBinding.contactDivider.setVisibility(View.GONE);
@@ -84,7 +87,7 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
 
     @Override
     public void setData(ArrayList data) {
-        this.dataModelList = data;
+        this.dataModelList = new ArrayList<>(data);
         if(this.dataModelList !=null && this.dataModelList.size()>4){
             if(verticalListViewActionHelper!=null)
                 verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
