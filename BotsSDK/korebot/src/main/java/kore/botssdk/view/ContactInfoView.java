@@ -93,6 +93,14 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()) + BundleConstants.TRANSPERANCY_50_PERCENT);
         contactInfoViewBinding.getRoot().setBackground(shape);
+
+
+        LayerDrawable shape1 = (LayerDrawable) getResources().getDrawable(R.drawable.contact_card_background_style);
+        contactInfoViewBinding.contactTop.setBackground(shape1);
+
+
+
+
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         splashColor = getContext().getResources().getColor(R.color.splash_color);
         contactInfoViewBinding.setViewBase(this);
@@ -200,10 +208,10 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 list.add(cvlmM);
             }
 
-            if(!StringUtils.isNullOrEmpty(contactInfoModel.getEmailId())){
+            if(!StringUtils.isNullOrEmpty(contactInfoModel.getEmpId())){
                 ContactViewListModel cvlmEMP = new ContactViewListModel();
                 cvlmEMP.setHeader("Employee ID");
-                cvlmEMP.setValue(contactInfoModel.getEmailId());
+                cvlmEMP.setValue(contactInfoModel.getEmpId());
                 cvlmEMP.setEmail(false);
                 cvlmEMP.setPhone(false);
                 cvlmEMP.setAddress(false);

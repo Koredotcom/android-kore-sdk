@@ -21,17 +21,12 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/shadow_layer_background_contact">
-        >
+        android:layout_height="wrap_content">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dimen_14dp"
-            android:layout_marginTop="11dp"
-            android:paddingEnd="@dimen/dimen_14dp"
             android:layout_marginBottom="18dp">
 
             <RelativeLayout
@@ -46,7 +41,8 @@
                 android:layout_height="16dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="3dp"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="12dp"
+                android:paddingEnd="@dimen/dimen_14dp"
                 android:fontFamily="@font/latosemibold"
                 android:textAllCaps="true"
                 android:textColor="@color/color_767688"
@@ -57,6 +53,7 @@
                 android:id="@+id/sourceIcon"
                 android:layout_toLeftOf="@id/source"
                 android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
                 android:layout_height="20dp"
                 android:textSize="20sp"
                 android:fontFamily="@font/latosemibold"
@@ -116,13 +113,13 @@
             <RelativeLayout
                 android:id="@+id/contactViewListRoot"
                 xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:gravity="top"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/contactTop"
-                android:paddingTop="12dp"
+                android:layout_marginStart="1dp"
+                android:paddingLeft="13dp"
+                android:layout_marginEnd="8dp"
                 android:background="@color/white">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -159,16 +156,17 @@
 
                 <TextView
                     android:id="@+id/viewMoreIV"
-                    android:layout_below="@id/contactListView"
-                    android:layout_toRightOf="@id/view_more_contact"
                     android:layout_width="24dp"
                     android:layout_height="44dp"
-                    android:textSize="24sp"
+                    android:layout_below="@id/contactListView"
                     android:layout_alignParentRight="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toRightOf="@id/view_more_contact"
                     android:gravity="right|center_vertical"
-                    android:text="@{viewBase.getViewMoreLessIcon()}"
                     android:onClick="@{()->viewBase.expandOrCollapse()}"
-                    android:visibility="visible"/>
+                    android:text="@{viewBase.getViewMoreLessIcon()}"
+                    android:textSize="24sp"
+                    android:visibility="visible" />
             </RelativeLayout>
             </RelativeLayout>
     </LinearLayout>

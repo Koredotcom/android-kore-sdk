@@ -52,6 +52,7 @@
             android:id="@+id/contactListItemIV"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center"
