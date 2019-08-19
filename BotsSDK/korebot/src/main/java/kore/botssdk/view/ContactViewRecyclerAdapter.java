@@ -77,7 +77,7 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
 
     @Override
     public int getItemCount() {
-        return dataModelList != null && dataModelList.size() > 0 ? (!isExpanded && dataModelList.size() > 4 ? 4 : dataModelList.size()) : 1;
+        return dataModelList != null && dataModelList.size() > 0 ? (!isExpanded && dataModelList.size() > 4 ? 4 : dataModelList.size()) : 0;
     }
 
     @Override

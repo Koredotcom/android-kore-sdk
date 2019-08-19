@@ -227,11 +227,13 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 cvlmA.setAddress(true);
                 list.add(cvlmA);
             }
-            if(contactInfoModel.getSource().toLowerCase().equals("device"))
-                sourceIcon.setText(getResources().getText(R.string.icon_e94f));
-            else
-                sourceIcon.setText(getResources().getText(R.string.icon_e94e));
-            source.setText(contactInfoModel.getSource());
+            if(!StringUtils.isNullOrEmpty(contactInfoModel.getSource())) {
+                if (contactInfoModel.getSource().toLowerCase().equals("device"))
+                    sourceIcon.setText(getResources().getText(R.string.icon_e94f));
+                else
+                    sourceIcon.setText(getResources().getText(R.string.icon_e94e));
+                source.setText(contactInfoModel.getSource());
+            }
 
             myRecyclerViewAdapter = new ContactViewRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
