@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -366,6 +367,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                 } else if (BotResponse.TEMPLATE_TYPE_SESSION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
+                }else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())){
+                   bubbleTextMediaLayout.populateErrorText(payInner.getText(),payInner.getColor());
                 } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {

@@ -130,7 +130,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     public long getItemId(int position) {
         if (data != null && data.size() > 0) {
             AnnoucementResModel model = data.get(position);
-            if (model != null)
+            if (model != null && model.getSharedOn() != null)
                 return model.getSharedOn() + position;
             else return position;
         } else return position;

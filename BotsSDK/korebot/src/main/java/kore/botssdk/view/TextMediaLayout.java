@@ -135,6 +135,28 @@ public class TextMediaLayout extends MediaLayout {
         }
 
     }
+    public void populateErrorText(String textualContent, String color) {
+        if (textualContent != null && !textualContent.isEmpty()) {
+            textualContent = unescapeHtml4(textualContent.trim());
+            /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
+                textualContent = "\"" + textualContent + "\"";
+            }*/
+            SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
+            URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
+
+            for (URLSpan span : urls) {
+                makeLinkClickable(strBuilder, span);
+            }
+            botContentTextView.setTextColor(Color.parseColor(color));
+            botContentTextView.setText(strBuilder);
+            botContentTextView.setMovementMethod(null);
+            botContentTextView.setVisibility(VISIBLE);
+        } else {
+            botContentTextView.setText("");
+            botContentTextView.setVisibility(GONE);
+        }
+
+    }
 
     public void setGravityAndTypeFace(){
         if (gravity == BubbleConstants.GRAVITY_LEFT) {
