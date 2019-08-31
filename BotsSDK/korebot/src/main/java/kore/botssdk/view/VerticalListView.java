@@ -45,6 +45,7 @@ import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.TaskTemplateResponse;
+import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
@@ -356,6 +357,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void calendarContactItemClick(ContactViewListModel model) {
+
+    }
+
+    @Override
+    public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
 
     }
 

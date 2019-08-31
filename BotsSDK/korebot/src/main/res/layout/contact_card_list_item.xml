@@ -13,7 +13,6 @@
             name="viewBase"
             type="kore.botssdk.view.ContactInfoView" />
 
-        <import type="android.view.View" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

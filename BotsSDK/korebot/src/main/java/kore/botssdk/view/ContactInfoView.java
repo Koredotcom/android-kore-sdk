@@ -33,6 +33,7 @@ import kore.botssdk.models.ContactInfoModel;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.Email;
 import kore.botssdk.models.Phone;
+import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
@@ -428,5 +429,10 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         }else if(model.isAddress()){
             launchMap(model.getValue());
         }
+    }
+
+    @Override
+    public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
+
     }
 }

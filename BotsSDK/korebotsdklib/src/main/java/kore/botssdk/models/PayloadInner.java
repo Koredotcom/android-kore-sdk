@@ -151,6 +151,7 @@ public class PayloadInner {
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<FormActionTemplate> form_actions;
     private ArrayList<ContactInfoModel> contactInfoModels;
+    private ArrayList<WelcomeSummaryModel> welcomeSummaryModel;
 
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
@@ -393,7 +394,12 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
                     }.getType();
                     contactInfoModels = gson.fromJson(elementsAsString, listType);
-                } else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
+                }else if (BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<WelcomeSummaryModel>>() {
+                    }.getType();
+                    setWelcomeSummaryModel(gson.fromJson(elementsAsString, listType));
+                }
+                else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
                     Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
                     }.getType();
                     annoucementResModels = gson.fromJson(elementsAsString, listType);
@@ -542,6 +548,14 @@ public class PayloadInner {
 
     public void setCursor(Duration cursor) {
         this.cursor = cursor;
+    }
+
+    public ArrayList<WelcomeSummaryModel> getWelcomeSummaryModel() {
+        return welcomeSummaryModel;
+    }
+
+    public void setWelcomeSummaryModel(ArrayList<WelcomeSummaryModel> welcomeSummaryModel) {
+        this.welcomeSummaryModel = welcomeSummaryModel;
     }
 
     public class Skill{

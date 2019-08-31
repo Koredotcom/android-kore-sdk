@@ -45,6 +45,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String KA_SWITCH_SKILL = "ka_switch_skill";
     public static final String KA_SKILL_RESPONSE = "ka_skill_response";
     public static final String KA_CONTACT_VIEW = "kora_contact_lookup";
+    public static final String WELCOME_SUMMARY_VIEW = "kora_welcome_summary";
 
 
 

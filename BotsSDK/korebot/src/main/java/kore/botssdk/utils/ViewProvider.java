@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AttendeeSlotSelectionView;
@@ -23,11 +22,9 @@ import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotMainTableView;
-
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
-import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
@@ -35,6 +32,8 @@ import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
+import kore.botssdk.view.VerticalListView;
+import kore.botssdk.view.WelcomeSummaryView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
@@ -53,6 +52,7 @@ public class ViewProvider {
     private static final int MEETING_SLOTS_VIEW_ID = 1980089;
     private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
     private static final int CONTACT_VIEW_ID = 19800456;
+    private static final int WELCOME_SUMMARY_VIEW_ID = 19800786;
     private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     private static final int QUICK_RPVIEW = 1988881;
@@ -222,6 +222,13 @@ public class ViewProvider {
         contactInfoView.setId(CONTACT_VIEW_ID);
         return contactInfoView;
     }
+
+    public static WelcomeSummaryView getWelcomeSummaryView(Context context){
+        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context);
+        welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
+        return welcomeSummaryView;
+    }
+
     public static VerticalListView getVerticalListView(Context context){
         VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);

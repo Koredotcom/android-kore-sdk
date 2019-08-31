@@ -112,6 +112,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotMainTableView tableView;
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
+    protected WelcomeSummaryView welcomeSummaryView;
     protected MeetingSlotsView meetingSlotsView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
@@ -276,6 +277,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         addView(contactInfoView);
 
+        welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
+        welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
+        addView(welcomeSummaryView);
+
         meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
         meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
      //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
@@ -369,6 +374,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(contactInfoView != null){
             contactInfoView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if(welcomeSummaryView !=null){
+            welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         }
         if(meetingConfirmationView != null){
             meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
