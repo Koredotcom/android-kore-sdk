@@ -1,12 +1,17 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,11 +47,10 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
         WelcomeChatSummaryModel model = summaryList.get(position);
         holder.bind(model);
 
+        holder.itemRowBinding.icon.setTypeface(getTypeFaceObj(context));
         if(!StringUtils.isNullOrEmpty(model.getIconId()))
             setImage(model, holder);
-        else{
-            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tasks_vector,0,0,0);
-        }
+
 
         holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -54,32 +58,50 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
                 verticalListViewActionHelper.welcomeSummaryItemClick(model);
             }
         });
+    }
 
-        /*if(model.getIconId().equalsIgnoreCase("meeting")){
-            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.icon, 0, 0, 0);
-        }*/
+    private Drawable changeColorOfDrawable(Context context, int colorCode) {
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
+        try {
+            ((GradientDrawable) drawable).setColor(context.getResources().getColor(colorCode));
+            return drawable;
+        } catch (Exception e) {
+            return drawable;
+        }
 
-        /*if(!StringUtils.isNullOrEmpty(model.getSummary())) {
-            holder.itemRowBinding.widgetSummaryTv.setText(summary);//setTypeface(ResourcesCompat.getFont(context, R.font.icomoon));
-        }*/
+    }
+
+    private Typeface getTypeFaceObj(Context context) {
+        return ResourcesCompat.getFont(context, R.font.icomoon);
     }
 
     private void setImage(WelcomeChatSummaryModel mdl, ViewHolder holder){
         switch(mdl.getIconId()){
             case "meeting":
-                holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.widget_calender,0,0,0);//R.drawable.widget_calender;
+                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.widget_calender,0,0,0);//R.drawable.widget_calender;
+                holder.itemRowBinding.icon.setText(R.string.icon_e915);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
             case "form":
-                holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notification_active,0,0,0);
+                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notification_active,0,0,0);
+                holder.itemRowBinding.icon.setText(R.string.icon_e943);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ffab18));
                 break;
             case "overdue":
-                holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_overdue,0,0,0);
+               // holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_overdue,0,0,0);
+                holder.itemRowBinding.icon.setText(R.string.icon_e927);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
                 break;
             case "email":
-                holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_email_summary,0,0,0);
+                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_email_summary,0,0,0);
+                holder.itemRowBinding.icon.setText(R.string.icon_e915);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_2ad082));
                 break;
-            default:
-                holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tasks_vector,0,0,0);
+            case "upcoming_tasks":
+                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tasks_vector,0,0,0);
+                holder.itemRowBinding.icon.setText(R.string.icon_e96c);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
+                break;
         }
     }
 

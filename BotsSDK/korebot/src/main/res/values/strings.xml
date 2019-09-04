@@ -48,4 +48,13 @@
     <string name="icon_e94e">&#xe94e;</string> <!-- CLOUD -->
     <string name="icon_62">&#x62;</string> <!-- COMPANY -->
 
+    <string name="icon_d">&#xd;</string> <!-- calendar icon-->
+    <string name="icon_e96c">&#xe96c;</string> <!-- tasks-->
+    <string name="icon_e927">&#xe927;</string> <!-- due outlined-->
+    <string name="icon_e943">&#xe943;</string> <!-- notif-->
+
+
+
+
+
 </resources>

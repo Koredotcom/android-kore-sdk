@@ -154,4 +154,9 @@
     <color name="color_knowledge">#F98140</color>
     <color name="color_ededef">#1A4e74f0</color>
     <color name="color_161620">#161620</color>
+
+    <color name="color_4e74f0">#4e74f0</color>
+    <color name="color_ff5b6a">#ff5b6a</color> <!-- upcoming tasks-->
+    <color name="color_2ad082">#2ad082</color> <!-- upcoming email-->
+    <color name="color_ffab18">#ffab18</color> <!-- upcoming notif-->
 </resources>

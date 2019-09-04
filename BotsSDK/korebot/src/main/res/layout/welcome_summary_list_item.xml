@@ -14,13 +14,22 @@
 
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/summaryRootLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="25dp"
-        android:layout_alignParentStart="true"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/icon"
+            android:layout_width="29.5dp"
+            android:layout_height="29.5dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="17dp" />
 
         <TextView
             android:id="@+id/widget_summary_tv"
@@ -28,9 +37,11 @@
             android:layout_height="wrap_content"
             android:drawablePadding="18dp"
             android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/icon"
             android:text="@{welcomeSummaryList.summary}"
             android:textColor="@color/color_485260"
             android:visibility="visible"
+            android:layout_centerVertical="true"
             android:textSize="14sp" />
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

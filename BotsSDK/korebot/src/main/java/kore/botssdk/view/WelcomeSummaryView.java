@@ -77,6 +77,9 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
             welcomeChatSummaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
 
+        }else{
+            welcomeChatSummaryViewBinding.getRoot().setVisibility(GONE);
+            welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(null);
         }
     }
 
@@ -202,13 +205,15 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
         switch(mdl.getIconId()){
             case "meeting":
-                return getResources().getDrawable(R.drawable.widget_calender);//R.drawable.widget_calender;
+                return getResources().getDrawable(R.drawable.widget_calender);
             case "form":
                 return getResources().getDrawable(R.drawable.ic_notification_active);
             case "overdue":
                 return getResources().getDrawable(R.drawable.ic_overdue);
             case "email":
                 return getResources().getDrawable(R.drawable.ic_emails);
+            case "upcoming_tasks":
+                return getResources().getDrawable(R.drawable.ic_tasks);
             default:
                 return getResources().getDrawable(R.drawable.ic_tasks);
         }
