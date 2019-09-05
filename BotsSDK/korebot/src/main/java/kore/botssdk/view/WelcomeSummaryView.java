@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +25,7 @@ import kore.botssdk.models.ActionItem;
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ContactViewListModel;
+import kore.botssdk.models.Weather;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.models.WelcomeSummaryModel;
 import kore.botssdk.utils.StringUtils;
@@ -36,6 +39,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     private WelcomeSummaryRecyclerAdapter myRecyclerViewAdapter;
     private float dp1;
     private RecyclerView welcomeChatSummaryList;
+    private boolean isWeatherDesc = true;
 
     public WelcomeSummaryView(Context context) {
         super(context);
@@ -68,6 +72,8 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
                     list.add(mdl);
                 }
             }
+            if(welcomeSummaryModel != null && welcomeSummaryModel.getWeather()!=null)
+            bindWeatherInfo(welcomeSummaryModel.getWeather());
 
             myRecyclerViewAdapter = new WelcomeSummaryRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
@@ -80,6 +86,32 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         }else{
             welcomeChatSummaryViewBinding.getRoot().setVisibility(GONE);
             welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(null);
+        }
+    }
+
+    private void bindWeatherInfo(Weather weather) {
+        try {
+            Picasso.get().load(weather.getIcon()).into(welcomeChatSummaryViewBinding.imgWetherIcon);
+        } catch (Exception e) {
+        }
+
+        welcomeChatSummaryViewBinding.imgWetherIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isWeatherDesc) {
+                    welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getTemp());
+                } else {
+                    welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getDesc());
+
+                }
+                isWeatherDesc = !isWeatherDesc;
+            }
+        });
+
+        if(isWeatherDesc) {
+            welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getDesc());
+        }else{
+            welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getTemp());
         }
     }
 
