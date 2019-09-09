@@ -25,6 +25,7 @@ import kore.botssdk.view.BotMainTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
+import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
@@ -53,6 +54,7 @@ public class ViewProvider {
     private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
     private static final int CONTACT_VIEW_ID = 19800456;
     private static final int WELCOME_SUMMARY_VIEW_ID = 19800786;
+    private static final int KORA_SUMMARY_HELP_VIEW_ID = 19800787;
     private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     private static final int QUICK_RPVIEW = 1988881;
@@ -227,6 +229,12 @@ public class ViewProvider {
         WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context);
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
         return welcomeSummaryView;
+    }
+
+    public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){
+        KoraSummaryHelpView koraSummaryHelpView = new KoraSummaryHelpView(context);
+        koraSummaryHelpView.setId(KORA_SUMMARY_HELP_VIEW_ID);
+        return koraSummaryHelpView;
     }
 
     public static VerticalListView getVerticalListView(Context context){

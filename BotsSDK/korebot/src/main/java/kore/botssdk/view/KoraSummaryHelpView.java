@@ -1,7 +1,6 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,37 +10,34 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.databinding.WelcomeChatSummaryBinding;
+import kore.botssdk.databinding.SummaryHelpLayoutBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.ActionItem;
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.models.ButtonTemplate;
 import kore.botssdk.models.ContactViewListModel;
-import kore.botssdk.models.Weather;
+import kore.botssdk.models.KoraSummaryHelpModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
-import kore.botssdk.models.WelcomeSummaryModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class WelcomeSummaryView extends ViewGroup implements VerticalListViewActionHelper {
+public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewActionHelper {
 
     private ComposeFooterInterface composeFooterInterface;
-    private WelcomeChatSummaryBinding welcomeChatSummaryViewBinding;
-    private WelcomeSummaryRecyclerAdapter myRecyclerViewAdapter;
+    private SummaryHelpLayoutBinding summaryViewBinding;
+    private KoraSummaryHelpRecyclerAdapter myRecyclerViewAdapter;
     private float dp1;
-    private RecyclerView welcomeChatSummaryList;
+    private RecyclerView summaryList;
     private boolean isWeatherDesc = true;
 
-    public WelcomeSummaryView(Context context) {
+    public KoraSummaryHelpView(Context context) {
         super(context);
         init();
     }
@@ -55,73 +51,44 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void populateData(final WelcomeSummaryModel welcomeSummaryModel) {
-        if(welcomeSummaryModel != null){
-            welcomeChatSummaryViewBinding.getRoot().setVisibility(VISIBLE);
-            welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(welcomeSummaryModel);
+    public void populateData(final KoraSummaryHelpModel summaryModel) {
+        if(summaryModel != null){
+            summaryViewBinding.getRoot().setVisibility(VISIBLE);
+            summaryViewBinding.setSummaryInfo(summaryModel);
 
             ArrayList<WelcomeChatSummaryModel> list = new ArrayList<WelcomeChatSummaryModel>();
 
-            if(welcomeSummaryModel!=null && welcomeSummaryModel.getActionItems()!=null && welcomeSummaryModel.getActionItems().size()>0){
-                for(ActionItem actItem : welcomeSummaryModel.getActionItems()){
+            if(summaryModel!=null && summaryModel.getButtons() != null && summaryModel.getButtons().size()>0){
+                for(ButtonTemplate item : summaryModel.getButtons()){
                     WelcomeChatSummaryModel mdl = new WelcomeChatSummaryModel();
-                    mdl.setSummary(actItem.getTitle());
-                    mdl.setType(actItem.getType());
-                    mdl.setIconId(actItem.getIconId());
-                    mdl.setPayload(actItem.getPayload());
+                    mdl.setSummary(item.getTitle());
+                    mdl.setPayload(item.getPayload());
+                    mdl.setType(item.getType());
                     list.add(mdl);
                 }
             }
-            if(welcomeSummaryModel != null && welcomeSummaryModel.getWeather()!=null)
-            bindWeatherInfo(welcomeSummaryModel.getWeather());
 
-            myRecyclerViewAdapter = new WelcomeSummaryRecyclerAdapter(getContext());
+            myRecyclerViewAdapter = new KoraSummaryHelpRecyclerAdapter(getContext());
             myRecyclerViewAdapter.setExpanded(false);
             myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
             myRecyclerViewAdapter.setData(list);
-            welcomeChatSummaryList.setLayoutManager(new LinearLayoutManager(getContext()));
+            summaryList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            welcomeChatSummaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
+            summaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
 
         }else{
-            welcomeChatSummaryViewBinding.getRoot().setVisibility(GONE);
-            welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(null);
-        }
-    }
-
-    private void bindWeatherInfo(Weather weather) {
-        try {
-            Picasso.get().load(weather.getIcon()).into(welcomeChatSummaryViewBinding.imgWetherIcon);
-        } catch (Exception e) {
-        }
-
-        welcomeChatSummaryViewBinding.imgWetherIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isWeatherDesc) {
-                    welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getTemp());
-                } else {
-                    welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getDesc());
-
-                }
-                isWeatherDesc = !isWeatherDesc;
-            }
-        });
-
-        if(isWeatherDesc) {
-            welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getDesc());
-        }else{
-            welcomeChatSummaryViewBinding.tvWetherType.setText(weather.getTemp());
+            summaryViewBinding.getRoot().setVisibility(GONE);
+            summaryViewBinding.setSummaryInfo(null);
         }
     }
 
     private void init() {
-        welcomeChatSummaryViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.welcome_chat_summary, this, true);
+        summaryViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.summary_help_layout, this, true);
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        welcomeChatSummaryViewBinding.setViewBase(this);
+        summaryViewBinding.setViewBase(this);
 
-        welcomeChatSummaryList = ((RecyclerView)findViewById(R.id.weather_chat_LV));
+        summaryList = ((RecyclerView)findViewById(R.id.summary_items_list));
     }
 
 
@@ -146,7 +113,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        View rootView = welcomeChatSummaryViewBinding.getRoot();
+        View rootView = summaryViewBinding.getRoot();
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int totalHeight = getPaddingTop();
         int childWidthSpec;
@@ -218,25 +185,8 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
-            if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
-                composeFooterInterface.onSendClick(model.getPayload(),true);
-            }
-    }
-
-    public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
-        switch(mdl.getIconId()){
-            case "meeting":
-                return getResources().getDrawable(R.drawable.widget_calender);
-            case "form":
-                return getResources().getDrawable(R.drawable.ic_notification_active);
-            case "overdue":
-                return getResources().getDrawable(R.drawable.ic_overdue);
-            case "email":
-                return getResources().getDrawable(R.drawable.ic_emails);
-            case "upcoming_tasks":
-                return getResources().getDrawable(R.drawable.ic_tasks);
-            default:
-                return getResources().getDrawable(R.drawable.ic_tasks);
+        if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
+            composeFooterInterface.onSendClick(model.getPayload(),true);
         }
     }
 }

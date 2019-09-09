@@ -152,7 +152,15 @@ public class PayloadInner {
     private ArrayList<FormActionTemplate> form_actions;
     private ArrayList<ContactInfoModel> contactInfoModels;
     private ArrayList<WelcomeSummaryModel> welcomeSummaryModel;
+    private ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel;
 
+    public ArrayList<KoraSummaryHelpModel> getKoraSummaryHelpModel() {
+        return koraSummaryHelpModel;
+    }
+
+    public void setKoraSummaryHelpModel(ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel) {
+        this.koraSummaryHelpModel = koraSummaryHelpModel;
+    }
 
     public void setCarouselElements(ArrayList<BotCarouselModel> carouselElements) {
         this.carouselElements = carouselElements;
@@ -398,7 +406,12 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<WelcomeSummaryModel>>() {
                     }.getType();
                     setWelcomeSummaryModel(gson.fromJson(elementsAsString, listType));
+                }else if (BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<KoraSummaryHelpModel>>() {
+                    }.getType();
+                    setKoraSummaryHelpModel(gson.fromJson(elementsAsString, listType));
                 }
+
                 else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
                     Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
                     }.getType();

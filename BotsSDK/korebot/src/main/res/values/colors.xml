@@ -94,6 +94,7 @@
     <color name="color_edf1fe">#edf1fe</color>
     <color name="color_fc4a61">#fc4a61</color>
     <color name="color_23d473">#23d473</color>
+    <color name="color_4741fa">#4741fa</color>
     <string-array name="color_set">
         <item>#4E74F0</item>
         <item>#E44929</item>

@@ -47,6 +47,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String KA_CONTACT_VIEW = "kora_contact_lookup";
     public static final String WELCOME_SUMMARY_VIEW = "kora_welcome_summary";
     public static final String TEMPLATE_TYPE_HIDDEN_DIALOG = "hidden_dialog";
+    public static final String KORA_SUMMARY_HELP_VIEW = "kora_summary_help";
 
 
 

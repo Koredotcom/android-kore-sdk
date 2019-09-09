@@ -1,10 +1,13 @@
 package kore.botssdk.models;
 
+
 public class WelcomeChatSummaryModel {
 
     private String summary;
     private String iconId;
     private String payload;
+    private String type;
+
 
     public String getType() {
         return type;
@@ -13,8 +16,6 @@ public class WelcomeChatSummaryModel {
     public void setType(String type) {
         this.type = type;
     }
-
-    private String type;
 
     public String getSummary() {
         return summary;
