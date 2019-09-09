@@ -59,7 +59,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("action", actionList.get(position).getTitle());
         hashMap.put("tIds", model.getId());
-        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
+        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,append_uttrance));
         (widgetDialogActivity).dismiss();
         if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
             mainContext.finish();

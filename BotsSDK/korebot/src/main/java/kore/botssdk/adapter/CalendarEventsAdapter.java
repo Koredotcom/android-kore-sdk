@@ -342,9 +342,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         hashMap.put("meetingId", model.getEventId());
                         String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
                         if (composeFooterInterface != null) {
-                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0);
+                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0,false);
                         } else {
-                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0));
+                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0,false));
                             ((Activity) mContext).finish();
                         }
                     }

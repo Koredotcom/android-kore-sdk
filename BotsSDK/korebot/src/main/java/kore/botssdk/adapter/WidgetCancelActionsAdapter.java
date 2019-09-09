@@ -129,7 +129,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         ArrayList<String> list = new ArrayList<>(1);
         list.add(model.getData().getEventId());
         hashMap.put("ids", list);
-        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0));
+        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,append_uttrance));
         (widgetDialogActivity).dismiss();
         if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
             mainContext.finish();

@@ -134,7 +134,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
                     if (isEnabled && slots.size() > 0) {
                         HashMap<String, ArrayList> payload = new HashMap<>();
                         payload.put("slots", slots);
-                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0);
+                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false);
                     }
 
                 }
@@ -143,7 +143,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
                 @Override
                 public void onClick(View v) {
                     HashMap<String, ArrayList> payload = new HashMap<>();
-                    composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0);
+                    composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0,false);
 
                 }
             });

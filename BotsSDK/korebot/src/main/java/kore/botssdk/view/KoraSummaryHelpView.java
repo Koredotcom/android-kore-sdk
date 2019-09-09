@@ -68,13 +68,9 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
                 }
             }
 
-            myRecyclerViewAdapter = new KoraSummaryHelpRecyclerAdapter(getContext());
-            myRecyclerViewAdapter.setExpanded(false);
-            myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
-            myRecyclerViewAdapter.setData(list);
-            summaryList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            summaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
+            myRecyclerViewAdapter.setData(list);
+
 
         }else{
             summaryViewBinding.getRoot().setVisibility(GONE);
@@ -89,6 +85,12 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
         summaryViewBinding.setViewBase(this);
 
         summaryList = ((RecyclerView)findViewById(R.id.summary_items_list));
+        myRecyclerViewAdapter = new KoraSummaryHelpRecyclerAdapter(getContext());
+        myRecyclerViewAdapter.setExpanded(false);
+        myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
+        summaryList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        summaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
     }
 
 

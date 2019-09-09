@@ -33,10 +33,21 @@ public class CancelEvent {
     private String json;
     private long time;
 
-    public CancelEvent(String message, String json, long time){
+    public boolean isScrollUpNeeded() {
+        return isScrollUpNeeded;
+    }
+
+    public void setScrollUpNeeded(boolean scrollUpNeeded) {
+        isScrollUpNeeded = scrollUpNeeded;
+    }
+
+    private boolean isScrollUpNeeded;
+
+    public CancelEvent(String message, String json, long time, boolean isScrollUpNeeded){
         this.message = message;
         this.json = json;
         this.time = time;
+        this.isScrollUpNeeded = isScrollUpNeeded;
     }
 
 }

@@ -136,7 +136,6 @@
                     android:overScrollMode="never"
                     android:scrollbars="vertical"
                     android:visibility="visible"
-                    android:layoutAnimation="@anim/layout_animation_fall_down"
                     android:adapter="@{myAdapter}"
                     />
 

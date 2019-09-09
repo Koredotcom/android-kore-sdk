@@ -77,7 +77,6 @@
                         android:choiceMode="singleChoice"
                         android:clipToPadding="true"
                         android:fadeScrollbars="true"
-                        android:layoutAnimation="@anim/layout_animation_fall_down"
                         android:listSelector="@color/white"
                         android:orientation="vertical"
                         android:overScrollMode="never"

@@ -272,7 +272,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void sendWithSomeDelay(String message, String payload,long time) {
+    public void sendWithSomeDelay(String message, String payload,long time,boolean isScrollupNeeded) {
 
     }
 

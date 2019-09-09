@@ -108,7 +108,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
                         ArrayList<MeetingSlotModel.Slot> slotModels = new ArrayList<>();
                         slotModels.add(meetingSlotModel);
                         selectedSlot.put("slots",slotModels);
-                        composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0);
+                        composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0,false);
                     }
                 }
             }
