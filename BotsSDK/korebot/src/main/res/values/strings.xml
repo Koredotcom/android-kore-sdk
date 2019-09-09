@@ -41,6 +41,7 @@
 
     <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
     <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
+    <string name="icon_e979">&#xe979;</string> <!-- MEETING -->
     <string name="icon_e961">&#xe961;</string> <!-- MORE -->
     <string name="icon_e914">&#xe914;</string> <!-- LESS -->
     <string name="icon_e92c">&#xe92c;</string> <!-- LOCATION -->
@@ -51,6 +52,7 @@
     <string name="icon_d">&#xd;</string> <!-- calendar icon-->
     <string name="icon_e96c">&#xe96c;</string> <!-- tasks-->
     <string name="icon_e927">&#xe927;</string> <!-- due outlined-->
+    <string name="icon_e926">&#xe926;</string> <!-- due filled-->
     <string name="icon_e943">&#xe943;</string> <!-- notif-->
 
 

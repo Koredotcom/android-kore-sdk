@@ -24,6 +24,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.ActionItem;
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.Weather;
 import kore.botssdk.models.WelcomeChatSummaryModel;
@@ -220,6 +221,8 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
             if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
                 composeFooterInterface.onSendClick(model.getPayload(),true);
+            }else if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("open_form")){
+                composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
             }
     }
 

@@ -79,7 +79,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
         switch(mdl.getIconId()){
             case "meeting":
                 //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.widget_calender,0,0,0);//R.drawable.widget_calender;
-                holder.itemRowBinding.icon.setText(R.string.icon_e915);//
+                holder.itemRowBinding.icon.setText(R.string.icon_e979);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
             case "form":
@@ -89,7 +89,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
                 break;
             case "overdue":
                // holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_overdue,0,0,0);
-                holder.itemRowBinding.icon.setText(R.string.icon_e927);//
+                holder.itemRowBinding.icon.setText(R.string.icon_e926);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
                 break;
             case "email":
