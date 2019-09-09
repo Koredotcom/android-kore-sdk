@@ -156,14 +156,14 @@ public class TimeLineTextView extends ViewGroup {
         try {
             canvas.drawLine(left, centerYCord, leftSectionRightCord, centerYCord, paint);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         paint.setShader(linearGradientRight);
         try {
             canvas.drawLine(rightSectionLeftCord, centerYCord, right, centerYCord, paint);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         super.onDraw(canvas);
     }

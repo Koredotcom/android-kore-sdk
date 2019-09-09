@@ -37,20 +37,20 @@ public class SocketDataTransferModel {
 
     private BotRequest botRequest;
 
-    public boolean isFromUtterance() {
-        return isFromUtterance;
+    public boolean isFromSkillSwitch() {
+        return isFromSkillSwitch;
     }
 
-    public void setFromUtterance(boolean fromUtterance) {
-        isFromUtterance = fromUtterance;
+    public void setFromUtterance(boolean isFromSkillSwitch) {
+        this.isFromSkillSwitch = isFromSkillSwitch;
     }
 
-    private boolean isFromUtterance = false;
+    private boolean isFromSkillSwitch = false;
 
-    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest, boolean isFromUtterance){
+    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest, boolean isFromSkillSwitch){
         this.event_type = event_type;
         this.payLoad = payLoad;
         this.botRequest = botRequest;
-        this.isFromUtterance = isFromUtterance;
+        this.isFromSkillSwitch = isFromSkillSwitch;
     }
 }

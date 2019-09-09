@@ -46,6 +46,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String KA_SKILL_RESPONSE = "ka_skill_response";
     public static final String KA_CONTACT_VIEW = "kora_contact_lookup";
     public static final String WELCOME_SUMMARY_VIEW = "kora_welcome_summary";
+    public static final String TEMPLATE_TYPE_HIDDEN_DIALOG = "hidden_dialog";
 
 
 
@@ -67,6 +68,7 @@ public class BotResponse extends BaseBotMessage {
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";
+
 
 
     private String type;

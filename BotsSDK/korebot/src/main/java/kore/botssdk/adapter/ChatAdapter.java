@@ -31,11 +31,11 @@ import kore.botssdk.view.KaSendBubbleLayout;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
- * Created by Shiva Krishna on 11/17/2017.
+ * edit : Only for bots SDK
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
-    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
+//    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
     Context context;
     private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
