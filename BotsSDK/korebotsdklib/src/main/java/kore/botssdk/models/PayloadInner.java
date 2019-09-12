@@ -34,6 +34,25 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
     private Skill skill;
+    private String composeText;
+    private String handFocus;
+
+
+    public String getComposeText() {
+        return composeText;
+    }
+
+    public void setComposeText(String composeText) {
+        this.composeText = composeText;
+    }
+
+    public String getHandFocus() {
+        return handFocus;
+    }
+
+    public void setHandFocus(String handFocus) {
+        this.handFocus = handFocus;
+    }
     private static Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
         return hideComposeBar;
@@ -153,6 +172,17 @@ public class PayloadInner {
     private ArrayList<ContactInfoModel> contactInfoModels;
     private ArrayList<WelcomeSummaryModel> welcomeSummaryModel;
     private ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel;
+    private ArrayList<NarratorTextModel> narratorTextModel;
+
+
+    public ArrayList<NarratorTextModel> getNarratorTextModel() {
+        return narratorTextModel;
+    }
+
+    public void setNarratorTextModel(ArrayList<NarratorTextModel> narratorTextModel) {
+        this.narratorTextModel = narratorTextModel;
+    }
+
 
     public ArrayList<KoraSummaryHelpModel> getKoraSummaryHelpModel() {
         return koraSummaryHelpModel;
@@ -288,6 +318,16 @@ public class PayloadInner {
     private final String INVALID_JSON = "Invalid JSON";
     private String speech_hint;
 
+    public ChildTemplate getChildTemplate() {
+        return childTemplate;
+    }
+
+    public void setChildTemplate(ChildTemplate childTemplate) {
+        this.childTemplate = childTemplate;
+    }
+
+    private ChildTemplate childTemplate;
+
     public String getTemplate_type() {
         return template_type;
     }
@@ -410,6 +450,10 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<KoraSummaryHelpModel>>() {
                     }.getType();
                     setKoraSummaryHelpModel(gson.fromJson(elementsAsString, listType));
+                }else if (BotResponse.NARRATOR_TEXT.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<NarratorTextModel>>() {
+                    }.getType();
+                    setNarratorTextModel(gson.fromJson(elementsAsString, listType));
                 }
 
                 else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {

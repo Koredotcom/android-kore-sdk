@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.FormActionTemplate;
 
@@ -27,6 +28,7 @@ public interface ComposeFooterInterface {
 
     void sendWithSomeDelay(String message,String payload,long time, boolean isScrollUpNeeded);
     void copyMessageToComposer(String text);
+    void showMentionNarratorContainer(boolean show, String natxt, String cotext, BotResponse res);
     void openFullView(String templateType, String data, Duration duration);
     void updateActionbar(boolean selected,String templateType,ArrayList<BotButtonModel> buttonModels);
 
