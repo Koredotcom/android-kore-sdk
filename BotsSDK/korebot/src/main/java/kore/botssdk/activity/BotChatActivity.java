@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -16,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-import androidx.fragment.app.FragmentTransaction;
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -278,6 +279,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void copyMessageToComposer(String text) {
+
+    }
+
+    @Override
+    public void showMentionNarratorContainer(boolean show, String natxt,String cotext, BotResponse res) {
 
     }
 
