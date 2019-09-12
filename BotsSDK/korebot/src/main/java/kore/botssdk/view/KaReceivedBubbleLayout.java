@@ -234,6 +234,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         resetAll();
         if (compModel != null) {
 
+            //composeFooterInterface.showMentionNarratorContainer(false, "","" ,null);
+
             PayloadOuter payOuter = compModel.getPayload();
             if(payOuter == null) return;
             PayloadInner payInner;
@@ -378,7 +380,24 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 //                    hiddenDialog.setVisibility(View.VISIBLE);
                     timeStampsTextView.setText("");
                     bubbleTextMediaLayout.populateText("");
-                }else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
+//                    bubbleTextMediaLayout.populateText(payInner.getText());
+//                    ArrayList<NarratorTextModel> narratorModels = payInner.getNarratorTextModel();
+//                    if (narratorModels != null){}
+
+                    String narrateText = payInner.getText();
+                    String composeText = payInner.getComposeText();
+                    if(payInner.getChildTemplate()!=null){
+                        ((BotResponse) baseBotMessage).getMessage().get(0).getComponent().getPayload().setPayload(payInner.getChildTemplate().getPayload());
+                        BotResponse botRes = (BotResponse) baseBotMessage;
+
+                        composeFooterInterface.showMentionNarratorContainer(true, narrateText, composeText, botRes);
+                    }else {
+                        composeFooterInterface.showMentionNarratorContainer(true, narrateText,composeText,null);
+                    }
+                }
+
+                else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));
