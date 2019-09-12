@@ -34,7 +34,7 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
     private Skill skill;
-
+    
     public boolean isNewVolley() {
         return isNewVolley;
     }
