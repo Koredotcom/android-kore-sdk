@@ -68,7 +68,6 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
         } catch (Exception e) {
             return drawable;
         }
-
     }
 
     private Typeface getTypeFaceObj(Context context) {
