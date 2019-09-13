@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.text.TextUtils;
@@ -10,10 +9,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -32,7 +29,6 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 import static kore.botssdk.utils.DateUtils.getSlotsDate;
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class MeetingConfirmationView extends ViewGroup {
     private TextView locationView;
@@ -169,7 +165,10 @@ public class MeetingConfirmationView extends ViewGroup {
     private String getSlotsViewText(ArrayList<MeetingSlotModel.Slot> slots) {
         StringBuilder message = new StringBuilder();
         for (MeetingSlotModel.Slot slot : slots) {
-            message.append(getSlotsDate(slot.getStart())).append(", ").append(DateUtils.getTimeInAmPm(slot.getStart())).append(" to ").append(DateUtils.getTimeInAmPm(slot.getEnd())).append("\n");
+            //crashed for sapuser@kore.com account, getting slot null
+            if(slot != null) {
+                message.append(getSlotsDate(slot.getStart())).append(", ").append(DateUtils.getTimeInAmPm(slot.getStart())).append(" to ").append(DateUtils.getTimeInAmPm(slot.getEnd())).append("\n");
+            }
         }
         return message.toString().trim();
     }

@@ -43,7 +43,7 @@ import retrofit2.Response;
  */
 public final class SocketWrapper{
 
-    private final String LOG_TAG = "IKIDO";
+    private final String LOG_TAG = "SocketWrapper";
 
     public static SocketWrapper pKorePresenceInstance;
     private SocketConnectionListener socketConnectionListener = null;

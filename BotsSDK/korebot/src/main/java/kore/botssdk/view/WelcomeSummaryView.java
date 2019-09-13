@@ -76,13 +76,9 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
             if(welcomeSummaryModel != null && welcomeSummaryModel.getWeather()!=null)
             bindWeatherInfo(welcomeSummaryModel.getWeather());
 
-            myRecyclerViewAdapter = new WelcomeSummaryRecyclerAdapter(getContext());
-            myRecyclerViewAdapter.setExpanded(false);
-            myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
-            myRecyclerViewAdapter.setData(list);
-            welcomeChatSummaryList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            welcomeChatSummaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
+            myRecyclerViewAdapter.setData(list);
+
 
         }else{
             welcomeChatSummaryViewBinding.getRoot().setVisibility(GONE);
@@ -123,6 +119,11 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         welcomeChatSummaryViewBinding.setViewBase(this);
 
         welcomeChatSummaryList = ((RecyclerView)findViewById(R.id.weather_chat_LV));
+        myRecyclerViewAdapter = new WelcomeSummaryRecyclerAdapter(getContext());
+        myRecyclerViewAdapter.setExpanded(false);
+        myRecyclerViewAdapter.setVerticalListViewActionHelper(this);
+        welcomeChatSummaryList.setLayoutManager(new LinearLayoutManager(getContext()));
+        welcomeChatSummaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
     }
 
 
