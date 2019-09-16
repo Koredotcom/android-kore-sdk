@@ -221,8 +221,10 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
             if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
+                if(composeFooterInterface != null)
                 composeFooterInterface.onSendClick(model.getPayload(),true);
             }else if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("open_form")){
+                if(composeFooterInterface != null)
                 composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
             }
     }
