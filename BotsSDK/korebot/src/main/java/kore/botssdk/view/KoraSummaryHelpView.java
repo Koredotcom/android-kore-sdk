@@ -38,9 +38,11 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
     private float dp1;
     private RecyclerView summaryList;
     private boolean isWeatherDesc = true;
+    private String data;
 
-    public KoraSummaryHelpView(Context context) {
+    public KoraSummaryHelpView(Context context, String data) {
         super(context);
+        this.data = data;
         init();
     }
 
@@ -93,29 +95,6 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
         summaryList.setLayoutManager(new LinearLayoutManager(getContext()));
         summaryViewBinding.setMyAdapter(myRecyclerViewAdapter);
 
-
-        String data="\n" +
-                "                     { \n" +
-                "                        \"text\":\"HOW CAN I HELP YOU?\",\n" +
-                "                        \"buttons\":[ \n" +
-                "                           { \n" +
-                "                              \"type\":\"postback\",\n" +
-                "                              \"title\":\"Schedule a meeting\",\n" +
-                "                              \"payload\":\"Schedule a meeting\"\n" +
-                "                           },\n" +
-                "                           { \n" +
-                "                              \"type\":\"postback\",\n" +
-                "                              \"title\":\"Set a reminder\",\n" +
-                "                              \"payload\":\"Set a reminder\"\n" +
-                "                           },\n" +
-                "                           { \n" +
-                "                              \"type\":\"postback\",\n" +
-                "                              \"title\":\"Create task\",\n" +
-                "                              \"payload\":\"Create task\"\n" +
-                "                           }\n" +
-                "                        ]\n" +
-                "                     }\n" +
-                "  ";
         KoraSummaryHelpModel summaryHelpModel=new Gson().fromJson(data,KoraSummaryHelpModel.class);
         populateData(summaryHelpModel);
     }
