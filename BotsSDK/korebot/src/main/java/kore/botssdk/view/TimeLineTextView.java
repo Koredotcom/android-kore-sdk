@@ -153,10 +153,18 @@ public class TimeLineTextView extends ViewGroup {
         LinearGradient linearGradientRight = new LinearGradient(rightSectionLeftCord, centerYCord, right, centerYCord, colorRight, positionRight, Shader.TileMode.MIRROR);
 
         paint.setShader(linearGradientLeft);
-        canvas.drawLine(left, centerYCord, leftSectionRightCord, centerYCord, paint);
+        try {
+            canvas.drawLine(left, centerYCord, leftSectionRightCord, centerYCord, paint);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         paint.setShader(linearGradientRight);
-        canvas.drawLine(rightSectionLeftCord, centerYCord, right, centerYCord, paint);
+        try {
+            canvas.drawLine(rightSectionLeftCord, centerYCord, right, centerYCord, paint);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         super.onDraw(canvas);
     }
 
