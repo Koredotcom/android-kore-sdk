@@ -17,9 +17,17 @@ public class TrendingHashTagModel {
         this.count = count;
     }
 
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     private String name;
     private int count;
-
+    private String value;
     public TrendingHashTagModel(){
 
     }

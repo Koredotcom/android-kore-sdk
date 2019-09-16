@@ -96,7 +96,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
 
         String data="\n" +
                 "                     { \n" +
-                "                        \"text\":\"How can I help you?\",\n" +
+                "                        \"text\":\"HOW CAN I HELP YOU?\",\n" +
                 "                        \"buttons\":[ \n" +
                 "                           { \n" +
                 "                              \"type\":\"postback\",\n" +
