@@ -376,11 +376,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if (summaryModels != null)
                         koraSummaryHelpView.populateData(summaryModels.get(0));
 
-                }else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
-//                    bubbleTextMediaLayout.populateText(payInner.getText());
-//                    ArrayList<NarratorTextModel> narratorModels = payInner.getNarratorTextModel();
-//                    if (narratorModels != null){}
-
+                }/*else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
                     String narrateText = payInner.getText();
                     String composeText = payInner.getComposeText();
                     if(payInner.getChildTemplate()!=null){
@@ -391,7 +387,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     }else {
                         composeFooterInterface.showMentionNarratorContainer(true, narrateText,composeText,null);
                     }
-                }
+                }*/
 
                 else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
