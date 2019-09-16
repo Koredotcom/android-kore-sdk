@@ -169,7 +169,11 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             WTaskTemplateModel taskTemplateModel = models.get(position);
             holder.taskViewLayoutBinding.setWidgetTask(taskTemplateModel);
             boolean isSelected = selectedTasks.contains(taskTemplateModel.getId()) && isShowButton();
-            boolean isClosed = "close".equalsIgnoreCase(taskTemplateModel.getData().getStatus());
+            boolean isClosed = false;
+            if(taskTemplateModel.getData() != null){
+                isClosed = "close".equalsIgnoreCase(taskTemplateModel.getData().getStatus());
+            }
+
             holder.taskViewLayoutBinding.getRoot().setSelected(isSelected);
             holder.taskViewLayoutBinding.getRoot().setEnabled(!isClosed && isShowButton());
             holder.taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : holder.taskViewLayoutBinding.titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
@@ -184,7 +188,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                 @Override
                 public void onClick(View v) {
                     if (!isFrom_widget()) {
-                        if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus()) && selectedTasks.size() > 0) {
+                        if (taskTemplateModel.getData() != null && showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus()) && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
                         }
                     } else {
@@ -235,7 +239,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     private void updateThings(WTaskTemplateModel taskTemplateModel) {
         if (verticalListViewActionHelper != null) {
-            if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus())) {
+            if (taskTemplateModel.getData() != null && showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus())) {
                 addOrRemoveSelectedTask(taskTemplateModel.getId());
                 SelectionUtils.setSelectedTasks(selectedTasks);
                 if (verticalListViewActionHelper != null)

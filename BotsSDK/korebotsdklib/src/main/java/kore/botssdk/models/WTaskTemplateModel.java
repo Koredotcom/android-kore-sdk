@@ -56,6 +56,10 @@ public class WTaskTemplateModel {
     private List<CalEventsTemplateModel.Action> actions = null;
 
     public boolean isOverDue(){
-        return  "open".equalsIgnoreCase(getData().getStatus()) && Calendar.getInstance().getTimeInMillis() > getData().getDueDate();
+        if(getData() != null) {
+            return "open".equalsIgnoreCase(getData().getStatus()) && Calendar.getInstance().getTimeInMillis() > getData().getDueDate();
+        }else{
+            return false;
+        }
     }
 }
