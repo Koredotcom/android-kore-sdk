@@ -40,6 +40,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.TaskTemplateResponse;
+import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -346,6 +347,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     public void meetingWidgetViewMoreVisibility(boolean visible) {
         if(viewMore!=null)
             viewMore.setVisibility(visible? View.VISIBLE: View.GONE);
+    }
+
+    @Override
+    public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
+
     }
 
 
