@@ -45,7 +45,17 @@ public class PayloadInner {
 
     private boolean isNewVolley;
     private String composeText;
-    private String handFocus;
+    private String focus;
+
+    private boolean is_end;
+
+    public boolean isIs_end() {
+        return is_end;
+    }
+
+    public void setIs_end(boolean is_end) {
+        this.is_end = is_end;
+    }
 
 
     public String getComposeText() {
@@ -56,12 +66,12 @@ public class PayloadInner {
         this.composeText = composeText;
     }
 
-    public String getHandFocus() {
-        return handFocus;
+    public String getFocus() {
+        return focus;
     }
 
-    public void setHandFocus(String handFocus) {
-        this.handFocus = handFocus;
+    public void setFocus(String focus) {
+        this.focus = focus;
     }
     private static Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
