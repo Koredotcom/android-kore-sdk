@@ -57,8 +57,6 @@ public class PayloadInner {
         this.is_end = is_end;
     }
 
-
-
     public String getComposeText() {
         return composeText;
     }
@@ -73,7 +71,6 @@ public class PayloadInner {
 
     public void setFocus(String focus) {
         this.focus = focus;
-
     }
     private static Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
