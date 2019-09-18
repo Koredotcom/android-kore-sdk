@@ -152,7 +152,8 @@ public class DateUtils {
             } else if (diff >= oneWeek && diff < oneMonth) {
                 return String.format("%d%s", diff / oneWeek, mContext.getResources().getString(R.string.time_stamp_weeks));
             } else if (diff >= oneMonth && diff < oneYear) {
-                return String.format("%d%s", diff / oneMonth, mContext.getResources().getString(R.string.time_stamp_mins_months));
+                //return String.format("%d%s", diff / oneMonth, mContext.getResources().getString(R.string.time_stamp_mins_months));
+                return String.format("%d%s", diff / oneWeek, mContext.getResources().getString(R.string.time_stamp_weeks));
             } else {
                 return String.format("%d%s", diff / oneYear, mContext.getResources().getString(R.string.time_stamp_years));
             }
