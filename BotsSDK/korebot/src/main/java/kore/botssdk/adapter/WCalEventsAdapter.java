@@ -352,9 +352,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         hashMap.put("meetingId", model.getData().getEventId());
                         String message = "Cancel \"" + model.getTitle() + "\" " + getDateinDayFormat((long) model.getData().getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getData().getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getData().getDuration().getEnd());
                         if (composeFooterInterface != null) {
-                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0,false);
+                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0,true);
                         } else {
-                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0,false));
+                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0,true));
                             ((Activity) mContext).finish();
                         }
                     }

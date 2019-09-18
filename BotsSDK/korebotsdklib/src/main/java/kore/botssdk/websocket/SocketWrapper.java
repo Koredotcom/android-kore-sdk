@@ -734,6 +734,8 @@ public final class SocketWrapper{
 
         //The bot URL may change
         BotRestBuilder.clearInstance();
+        auth = null;
+        botUserId = null;
         /*if (isConnected()) {
             stop();
         }*/
