@@ -27,7 +27,7 @@ public interface ComposeFooterInterface {
 
     void sendWithSomeDelay(String message,String payload,long time, boolean isScrollUpNeeded);
     void copyMessageToComposer(String text);
-    void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd);
+    void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd, boolean showOverlay);
     void openFullView(String templateType, String data, Duration duration);
     void updateActionbar(boolean selected,String templateType,ArrayList<BotButtonModel> buttonModels);
 
