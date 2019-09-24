@@ -56,8 +56,16 @@ public class PayloadInner {
         this.composeText = composeText;
     }
 
+    public boolean isNewVolley() {
+        return isNewVolley;
+    }
+
+    public void setNewVolley(boolean newVolley) {
+        isNewVolley = newVolley;
+    }
+
     private boolean isNewVolley;
-    
+
     public String getFocus() {
         return focus;
     }
