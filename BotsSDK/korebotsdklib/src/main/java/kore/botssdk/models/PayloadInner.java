@@ -34,16 +34,6 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
     private Skill skill;
-
-    public boolean isNewVolley() {
-        return isNewVolley;
-    }
-
-    public void setNewVolley(boolean newVolley) {
-        isNewVolley = newVolley;
-    }
-
-    private boolean isNewVolley;
     private String composeText;
     private String focus;
 
@@ -57,6 +47,7 @@ public class PayloadInner {
         this.is_end = is_end;
     }
 
+
     public String getComposeText() {
         return composeText;
     }
@@ -65,6 +56,8 @@ public class PayloadInner {
         this.composeText = composeText;
     }
 
+    private boolean isNewVolley;
+    
     public String getFocus() {
         return focus;
     }

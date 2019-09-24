@@ -205,7 +205,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         if (holderData.getItemViewType() == EMPTY_CARD||holderData.getItemViewType()==MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
-            emptyHolder.tv_disrcription.setText(msg!=null?msg:"No Upcoming Meetings");
+            emptyHolder.tv_disrcription.setText(holderData.getItemViewType() == EMPTY_CARD?"No Upcoming Meetings":msg);
             emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD?ContextCompat.getDrawable(mContext, R.drawable.no_meeting):errorIcon);
 
 

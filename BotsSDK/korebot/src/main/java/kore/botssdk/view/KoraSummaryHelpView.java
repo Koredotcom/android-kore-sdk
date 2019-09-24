@@ -186,8 +186,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
 
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
-        if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())
-                && composeFooterInterface != null){
+        if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
             composeFooterInterface.onSendClick(model.getPayload(),true);
         }
     }

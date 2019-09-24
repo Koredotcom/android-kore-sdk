@@ -9,63 +9,36 @@
         android:id="@+id/toolbar"
         layout="@layout/app_toolbar" />
 
-
+    
     <ImageView
-        android:id="@+id/icon"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:id="@+id/icon"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        app:srcCompat="@drawable/reorder_icon"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/reorder_icon" />
-
-    <LinearLayout
-        android:id="@+id/r_layout"
-        android:layout_width="wrap_content"
+        android:layout_height="160dp" />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
-        android:layout_centerInParent="true"
+        android:gravity="center"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:gravity="center"
-            android:minHeight="20dp"
-
-            android:text="Long tap on "
-            android:textColor="@color/color_167_169_190"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="1dp"
-            app:srcCompat="@drawable/widget_menu" />
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:gravity="center"
-            android:minHeight="20dp"
-            android:text=" and drag to reorder the widget"
-            android:textColor="@color/color_167_169_190"
-            android:textSize="14sp" />
-    </LinearLayout>
+        android:layout_below="@+id/icon"
+        android:text="Long tap on and drag to reorder the widget"
+        android:textColor="@color/color_167_169_190"
+        android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_reorder"
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content"
-        android:layout_below="@+id/r_layout"
+        android:background="@color/white"
+        android:layout_below="@+id/title"
         android:layout_marginTop="16dp"
-        android:background="@color/white">
+      >
 
     </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

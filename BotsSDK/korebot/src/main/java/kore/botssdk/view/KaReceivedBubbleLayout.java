@@ -360,20 +360,20 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     contactInfoView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<ContactInfoModel> contactInfoModels = payInner.getContactInfoModels();
-                    if (contactInfoModels != null && contactInfoModels.size() > 0)
+                    if (contactInfoModels != null)
                         contactInfoView.populateData(contactInfoModels.get(0));
                 }else if(BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     welcomeSummaryView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<WelcomeSummaryModel> welcomeSummaryModels = payInner.getWelcomeSummaryModel();
-                    if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
+                    if (welcomeSummaryModels != null)
                         welcomeSummaryView.populateData(welcomeSummaryModels.get(0));
 
                 }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<KoraSummaryHelpModel> summaryModels = payInner.getKoraSummaryHelpModel();
-                    if (summaryModels != null && summaryModels.size() > 0)
+                    if (summaryModels != null)
                         koraSummaryHelpView.populateData(summaryModels.get(0));
 
                 }else if(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG.equalsIgnoreCase(payInner.getTemplate_type())){
