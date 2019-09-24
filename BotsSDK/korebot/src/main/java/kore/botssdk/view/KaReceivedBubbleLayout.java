@@ -358,24 +358,27 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     contactInfoView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<ContactInfoModel> contactInfoModels = payInner.getContactInfoModels();
-                    if (contactInfoModels != null)
+                    if (contactInfoModels != null && contactInfoModels.size() > 0)
                         contactInfoView.populateData(contactInfoModels.get(0));
                 }else if(BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     welcomeSummaryView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<WelcomeSummaryModel> welcomeSummaryModels = payInner.getWelcomeSummaryModel();
-                    if (welcomeSummaryModels != null)
+                    if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
                         welcomeSummaryView.populateData(welcomeSummaryModels.get(0));
 
                 }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<KoraSummaryHelpModel> summaryModels = payInner.getKoraSummaryHelpModel();
-                    if (summaryModels != null)
+                    if (summaryModels != null && summaryModels.size() > 0)
                         koraSummaryHelpView.populateData(summaryModels.get(0));
 
-                }
-                else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG.equalsIgnoreCase(payInner.getTemplate_type())){
+//                    hiddenDialog.setVisibility(View.VISIBLE);
+                    timeStampsTextView.setText("");
+                    bubbleTextMediaLayout.populateText("");
+                }else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));

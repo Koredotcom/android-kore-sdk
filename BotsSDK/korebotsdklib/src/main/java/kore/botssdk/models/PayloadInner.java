@@ -34,6 +34,16 @@ public class PayloadInner {
     private boolean stacked;
     private String layout;
     private Skill skill;
+
+    public boolean isNewVolley() {
+        return isNewVolley;
+    }
+
+    public void setNewVolley(boolean newVolley) {
+        isNewVolley = newVolley;
+    }
+
+    private boolean isNewVolley;
     private static Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
         return hideComposeBar;
