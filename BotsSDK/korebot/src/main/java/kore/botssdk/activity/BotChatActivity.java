@@ -224,6 +224,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
+    @Override
+    public void showAfterOnboard(boolean isdiscard) {
+
+    }
+
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
