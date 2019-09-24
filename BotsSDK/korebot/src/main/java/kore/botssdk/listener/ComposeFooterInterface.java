@@ -32,4 +32,8 @@ public interface ComposeFooterInterface {
     void updateActionbar(boolean selected,String templateType,ArrayList<BotButtonModel> buttonModels);
 
     void lauchMeetingNotesAction(Context context,String mid, String eid);
+
+    void showAfterOnboard(boolean isDiscardClicked);
+
+
 }
