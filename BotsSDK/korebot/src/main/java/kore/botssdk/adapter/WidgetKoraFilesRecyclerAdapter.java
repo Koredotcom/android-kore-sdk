@@ -8,19 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
-import kore.botssdk.databinding.KoraFileLookupViewBinding;
 import kore.botssdk.databinding.WidgetKoraFileLookupViewBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.models.WFileLookUpModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -93,7 +91,7 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermodel, int position) {
         if (holdermodel.getItemViewType() == NO_DATA||holdermodel.getItemViewType()==MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holdermodel;
-            emptyHolder.tv_disrcription.setText(holdermodel.getItemViewType() == NO_DATA?"No Files":msg);
+            emptyHolder.tv_disrcription.setText(msg!=null?msg:"No Files");
             emptyHolder.img_icon.setImageDrawable(holdermodel.getItemViewType() == NO_DATA?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
         }
         else {
