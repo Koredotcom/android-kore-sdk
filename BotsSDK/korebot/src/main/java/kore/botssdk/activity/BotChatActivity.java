@@ -288,7 +288,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void showMentionNarratorContainer(boolean show, String natxt,String cotext, String res, boolean isEnd, boolean showOverlay) {
+    public void showMentionNarratorContainer(boolean show, String natxt,String cotext, String res, boolean isEnd, boolean showOverlay,String templateType) {
 
     }
 
