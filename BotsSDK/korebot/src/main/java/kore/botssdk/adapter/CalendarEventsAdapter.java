@@ -18,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -29,9 +33,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetDialogActivity;
@@ -108,7 +109,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private Drawable selectedCheck;
     private Drawable unSelectedCheck;
 
-    private Drawable insetDivider/*,normalDivider*/;
+    private Drawable insetDivider,normalDivider;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
@@ -125,8 +126,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
 
-        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
-//        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_10_divider);
+        insetDivider = mContext.getResources().getDrawable(R.drawable.inset_65_divider);
+        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_divider_meetings);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
     }
@@ -243,7 +244,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
             if (position < getItemCount() - 1) {
-                holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : insetDivider);
+                holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }
             if(position == eventList.size()-1 && eventList.size()<=3)
                 holder.divider.setVisibility(View.GONE);
