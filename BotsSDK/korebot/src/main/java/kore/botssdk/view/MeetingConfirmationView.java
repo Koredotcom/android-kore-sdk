@@ -142,8 +142,10 @@ public class MeetingConfirmationView extends ViewGroup {
                 locationView.setVisibility(GONE);
             }
 
-            tv_users.setText(TextUtils.isEmpty(getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())) ? ""
-                    : getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees()));
+            if(TextUtils.isEmpty(getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())))
+                tv_users.setVisibility(View.GONE);
+            else
+                tv_users.setText(getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees()));
 
 
             if (meetingConfirmationModel.getSlots() != null && meetingConfirmationModel.getSlots().size() > 0) {
