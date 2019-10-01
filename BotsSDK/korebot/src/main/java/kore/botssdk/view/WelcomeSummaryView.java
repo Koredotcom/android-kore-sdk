@@ -56,9 +56,11 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void populateData(final WelcomeSummaryModel welcomeSummaryModel) {
+    public void populateData(final WelcomeSummaryModel welcomeSummaryModel, boolean isEnabled) {
         if(welcomeSummaryModel != null){
             welcomeChatSummaryViewBinding.getRoot().setVisibility(VISIBLE);
+            welcomeChatSummaryViewBinding.getRoot().setEnabled(isEnabled);
+            welcomeChatSummaryViewBinding.getRoot().setClickable(isEnabled);
             welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(welcomeSummaryModel);
 
             ArrayList<WelcomeChatSummaryModel> list = new ArrayList<WelcomeChatSummaryModel>();
@@ -78,11 +80,14 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
 
             myRecyclerViewAdapter.setData(list);
+            myRecyclerViewAdapter.setEnabled(isEnabled);
 
 
         }else{
             welcomeChatSummaryViewBinding.getRoot().setVisibility(GONE);
             welcomeChatSummaryViewBinding.setWelcomeSummaryInfo(null);
+            welcomeChatSummaryViewBinding.getRoot().setEnabled(isEnabled);
+            welcomeChatSummaryViewBinding.getRoot().setClickable(isEnabled);
         }
     }
 

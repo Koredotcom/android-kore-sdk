@@ -30,6 +30,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
     private Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
     VerticalListViewActionHelper verticalListViewActionHelper;
+    private boolean isEnabled;
 
     public WelcomeSummaryRecyclerAdapter(Context context) {
         this.context = context;
@@ -55,6 +56,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
         holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(verticalListViewActionHelper != null && isEnabled())
                 verticalListViewActionHelper.welcomeSummaryItemClick(model);
             }
         });
@@ -125,6 +127,14 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
             this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public WelcomeSummaryListItemBinding itemRowBinding;
 
@@ -138,4 +148,5 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
             itemRowBinding.executePendingBindings();
         }
     }
+
 }

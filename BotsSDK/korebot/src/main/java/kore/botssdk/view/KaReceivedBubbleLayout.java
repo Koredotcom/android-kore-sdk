@@ -193,7 +193,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         meetingConfirmationView.setVisibility(GONE);
         contactInfoView.populateData(null);
         contactInfoView.setVisibility(GONE);
-        welcomeSummaryView.populateData(null);
+        welcomeSummaryView.populateData(null, false);
         welcomeSummaryView.setVisibility(GONE);
         koraSummaryHelpView.populateData(null);
         koraSummaryHelpView.setVisibility(GONE);
@@ -367,7 +367,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<WelcomeSummaryModel> welcomeSummaryModels = payInner.getWelcomeSummaryModel();
                     if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
-                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0));
+                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0),isLastItem);
 
                 }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
