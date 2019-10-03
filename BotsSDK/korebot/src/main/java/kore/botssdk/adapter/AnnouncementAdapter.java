@@ -11,19 +11,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.databinding.AnnouncementCardLayoutBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AnnoucementResModel;
-import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
@@ -155,6 +154,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     @Override
     public void setData(ArrayList data) {
         this.data = data;
+    }
+
+    public void addAllItems(ArrayList _data){
+        data.addAll(_data);
     }
 
     @Override
