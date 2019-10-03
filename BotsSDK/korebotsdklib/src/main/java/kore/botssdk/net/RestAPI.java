@@ -54,8 +54,8 @@ public interface RestAPI {
     Call<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
-    @GET("/api/users/{userId}/builder/streams")
-    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
+//    @GET("/api/users/{userId}/builder/streams")
+//    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Subscribe to Push notification
     @POST("/api/users/{userId}/sdknotifications/subscribe")

@@ -3,6 +3,8 @@ package kore.botssdk.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +22,7 @@ import kore.botssdk.models.QuickReplyTemplate;
  * Created by Ramachandra Pradeep on 12/8/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class QuickReplyFragment extends BaseSpiceFragment {
+public class QuickReplyFragment extends Fragment {
 
     private final String LOG_TAG = QuickReplyFragment.class.getSimpleName();
     private LinearLayout quick_reply_container;

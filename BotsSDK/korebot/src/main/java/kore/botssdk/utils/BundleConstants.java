@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 /**
- * Created by Pradeep Mahato on 14/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BundleConstants {

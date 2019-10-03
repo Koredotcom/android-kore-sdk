@@ -3,6 +3,7 @@ package kore.botssdk.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +40,7 @@ import kore.botssdk.views.DotsTextView;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
+public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
 
     RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;

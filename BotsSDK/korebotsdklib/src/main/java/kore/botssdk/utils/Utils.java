@@ -14,10 +14,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -285,4 +289,16 @@ public class Utils {
         paint.getTextBounds(text, 0, text.length(), bounds);
         return  (int) Math.ceil((float) bounds.width() / width);
     }
+
+    public static HashMap<String, Object> jsonToMap(String jsonString){
+        HashMap<String,Object> map = null;
+        try {
+            map = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return map;
+    }
+
 }

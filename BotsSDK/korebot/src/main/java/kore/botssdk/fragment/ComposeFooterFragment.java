@@ -14,6 +14,8 @@ import android.speech.RecognizerIntent;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -56,7 +58,7 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate, SpeechDelegate {
+public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
 
     private static final int REQ_CODE_SPEECH_INPUT = 1;
     String LOG_TAG = ComposeFooterFragment.class.getName();

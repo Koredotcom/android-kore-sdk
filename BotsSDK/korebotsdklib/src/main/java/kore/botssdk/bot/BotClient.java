@@ -13,6 +13,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
 
@@ -162,7 +163,7 @@ public class BotClient {
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
-            botMessage.setParams(payLoad);
+            botMessage.setParams(Utils.jsonToMap(payLoad));
             botPayLoad.setMessage(botMessage);
             botPayLoad.setBotInfo(botInfoModel);
 

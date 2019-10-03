@@ -9,7 +9,6 @@ import retrofit.client.Response;
 
 */
 /**
- * Created by Pradeep Mahato on 30-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  *//*
 
