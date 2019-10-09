@@ -7,20 +7,21 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.ArrayList;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
-import kore.botssdk.databinding.KoraFileLookupViewBinding;
 import kore.botssdk.databinding.WidgetKoraFileLookupViewBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.models.WFileLookUpModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -50,9 +51,16 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     }
 
     int previewlength;
+    int view_type;
 
     public boolean isFrom_widget() {
         return from_widget;
+    }
+
+    public WidgetKoraFilesRecyclerAdapter(ArrayList<WFileLookUpModel> fileLookupModels, Context context, int viewType) {
+        this.kaFileLookupModels = fileLookupModels;
+        this.context = context;
+        this.view_type = viewType;
     }
 
     public WidgetKoraFilesRecyclerAdapter(ArrayList<WFileLookUpModel> fileLookupModels, Context context) {
@@ -99,8 +107,16 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
         else {
             ViewHolder holder = (ViewHolder) holdermodel;
             holder.koraFileLookupViewBinding.setFileModel(kaFileLookupModels.get(position));
+
             String type = kaFileLookupModels.get(position).getData().getExt();
-            holder.koraFileLookupViewBinding.image.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(type) ? type.toLowerCase() : ""));
+
+            if(view_type == 7 && URLUtil.isValidUrl(type)){// 7  is for helix, 1 is for cloud Files
+                Picasso.get().load(type).into(holder.koraFileLookupViewBinding.image);
+            }else{
+                holder.koraFileLookupViewBinding.image.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(type) ? type.toLowerCase() : ""));
+            }
+
+
             if(position == kaFileLookupModels.size()-1 && kaFileLookupModels.size()<=3)
                 holder.koraFileLookupViewBinding.divider.setVisibility(View.GONE);
             holder.koraFileLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
