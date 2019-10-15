@@ -94,7 +94,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         return new ViewHolder(ownLayoutInflater.inflate( i == BUBBLE_RIGHT_LAYOUT ?  R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null),i);
     }
 
-    private boolean isClickable(BaseBotMessage message) {
+    /*private boolean isClickable(BaseBotMessage message) {
         boolean clickable = false;
         if(!message.isSend()){
             BotResponse resp = (BotResponse) message;
@@ -108,7 +108,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
             }
         }
         return clickable;
-    }
+    }*/
 
   /*  private boolean isLastMessage(BaseBotMessage message, int position){
         boolean _isLastMessage = (position == getItemCount() -1);
@@ -136,7 +136,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
-        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 /*isLastMessage(getItem(position), position)*/, getItem(position), true, isClickable(getItem(getItemCount() - 1)),BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
+        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 /*isLastMessage(getItem(position), position)*/, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(getItem(position).getFormattedDate());
 
         if(Collections.isEmpty(headersMap)) {
