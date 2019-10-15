@@ -444,7 +444,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
     public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage,
-                                 boolean constrictLayout,boolean isClickable,int... dimens) {
+                                 boolean constrictLayout,int... dimens) {
 
     //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
         this.dimens = dimens;
@@ -460,7 +460,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         populateBubbleTextMedia(baseBotMessage, componentModel, constrictLayout, dimens);
         timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
-        populateForTemplates(position,isLastItem,componentModel,baseBotMessage, isClickable);
+        populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
 
        // timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.START : Gravity.END);
@@ -507,7 +507,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
     }
 
-    protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage, boolean isClickable) {
+    protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
     }
 
     protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, int... dimens) {
