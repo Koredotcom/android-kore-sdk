@@ -42,7 +42,6 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     private BarChart mChart;
     private Context mContext;
     int dp1;
-    int labelCount = 0;
 
     public BarChartView(Context context) {
         super(context);
@@ -51,7 +50,6 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     }
 
     private void init() {
-        labelCount = 0;
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         mChart = new BarChart(mContext);
         mChart.setTouchEnabled(true);
@@ -109,33 +107,57 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     public void setData(final PayloadInner _payInner) {
 
         if(_payInner != null) {
-            float barWidth = 0.2f;
+            float start = 1f;
+            float barWidth = 0.5f;
             float groupSpace = 0.08f;
             float barSpace = 0.03f; // x4 DataSet
-            int startYear = 1;
-            int groupCount = 4;
-            labelCount = 0;
-//        String[] company = {"Company A","Company B","Company C","Company D"};
-//        int endYear = startYear + groupCount;
+
             ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
-//        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
             BarDataSet dataSet[];
             List<IBarDataSet> barDataSets = new ArrayList<>();
 
             if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
 
+                ArrayList<BarEntry> values = new ArrayList<>();
+                BotBarChartDataModel model = _payInner.getBarChartDataModels().get(0);
+                for (int inner = 0; inner < model.getValues().size(); inner++) {
+                    values.add(new BarEntry(start + inner, model.getValues().get(inner), model.getDisplayValues().get(inner)));
+                }
 
-//            List<ArrayList<BarEntry>> yVals1 = new ArrayList<>();
-                int size = _payInner.getBarChartDataModels().size();
+                BarDataSet set1;
+
+                set1 = new BarDataSet(values, _payInner.getBarChartDataModels().get(0).getTitle());
+                set1.setColor(ColorTemplate.MATERIAL_COLORS[3]);
+
+                ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+                dataSets.add(set1);
+
+                BarData data = new BarData(dataSets);
+                data.setValueTextSize(10f);
+//                data.setValueTypeface(tfLight);
+                data.setBarWidth(barWidth);
+
+                Legend l = mChart.getLegend();
+                l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+                l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                l.setDrawInside(false);
+                l.setForm(Legend.LegendForm.SQUARE);
+                l.setFormSize(9f);
+                l.setTextSize(11f);
+                l.setXEntrySpace(4f);
+
+                mChart.setData(data);
+
+
+                /*int size = _payInner.getBarChartDataModels().size();
 
                 yVals1 = new ArrayList[size];
                 for (int index = 0; index < size; index++) {
                     BotBarChartDataModel model = _payInner.getBarChartDataModels().get(index);
                     yVals1[index] = new ArrayList<>();
 //                BotBarChartDataModel model2 = _payInner.getBarChartDataModels().get(1);
-                    for (int inner = 0; inner < model.getValues().size(); inner++) {
-                        yVals1[index].add(new BarEntry(inner + 1, model.getValues().get(inner), model.getDisplayValues().get(inner)));
-                    }
+
                 }
                 dataSet = new BarDataSet[size];
 
@@ -168,24 +190,6 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
 
                 xAxis.setValueFormatter(xAxisFormatter);
 
-//            IAxisValueFormatter custom = new MyAxisValueFormatter();
-
-            /*YAxis leftAxis = mChart.getAxisLeft();
-            leftAxis.setTypeface(mTfLight);
-            leftAxis.setLabelCount(8, false);
-            leftAxis.setValueFormatter(custom);
-            leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-            leftAxis.setSpaceTop(15f);
-            leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
-
-            YAxis rightAxis = mChart.getAxisRight();
-            rightAxis.setDrawGridLines(false);
-            rightAxis.setTypeface(mTfLight);
-            rightAxis.setLabelCount(8, false);
-            rightAxis.setValueFormatter(custom);
-            rightAxis.setSpaceTop(15f);
-            rightAxis.setAxisMinimum(0f); */// this replaces setStartAtZero(true)
-
                 Legend l = mChart.getLegend();
                 l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
                 l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
@@ -195,14 +199,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
                 l.setFormSize(9f);
                 l.setTextSize(11f);
                 l.setXEntrySpace(4f);
-                // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-                // "def", "ghj", "ikl", "mno" });
-                // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-                // "def", "ghj", "ikl", "mno" });
 
-//            XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
-//            mv.setChartView(mChart); // For bounds control
-//            mChart.setMarker(mv); // Set the marker to the chart
 
                 mChart.setData(data);
 
@@ -214,7 +211,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
 
                 // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
                 mChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-                mChart.groupBars(startYear, groupSpace, barSpace);
+                mChart.groupBars(startYear, groupSpace, barSpace);*/
             }
         }else{
                 //mChart.setVisibility(GONE);
