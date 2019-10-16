@@ -124,7 +124,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
     protected TimeLineTextView timeLineView;
-
+    protected BarChartView barChartView;
+    protected StackedBarChatView stackedBarChatView;
 
 
     public KaBaseBubbleLayout(Context context) {
@@ -314,6 +315,17 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         timeLineView = ViewProvider.getTimeLineView(context);
         addView(timeLineView);
+
+        barChartView = new BarChartView(getContext());
+        barChartView.setVisibility(GONE);
+        barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
+        addView(barChartView);
+
+
+        stackedBarChatView = new StackedBarChatView(getContext());
+        stackedBarChatView.setVisibility(GONE);
+        stackedBarChatView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
+        addView(stackedBarChatView);
 
     }
 

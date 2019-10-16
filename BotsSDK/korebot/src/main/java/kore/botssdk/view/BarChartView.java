@@ -107,64 +107,66 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     }
 
     public void setData(final PayloadInner _payInner) {
-        float barWidth = 0.2f;
-        float groupSpace = 0.08f;
-        float barSpace = 0.03f; // x4 DataSet
-        int startYear = 1;
-        int groupCount = 4;
-        labelCount = 0;
+
+        if(_payInner != null) {
+            float barWidth = 0.2f;
+            float groupSpace = 0.08f;
+            float barSpace = 0.03f; // x4 DataSet
+            int startYear = 1;
+            int groupCount = 4;
+            labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
+            ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-        BarDataSet dataSet[];
-        List<IBarDataSet> barDataSets = new ArrayList<>();
+            BarDataSet dataSet[];
+            List<IBarDataSet> barDataSets = new ArrayList<>();
 
-        if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
+            if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
 
 
 //            List<ArrayList<BarEntry>> yVals1 = new ArrayList<>();
-            int size = _payInner.getBarChartDataModels().size();
+                int size = _payInner.getBarChartDataModels().size();
 
-            yVals1 = new ArrayList[size];
-            for (int index = 0; index < size; index++) {
-                BotBarChartDataModel model = _payInner.getBarChartDataModels().get(index);
-                yVals1[index] = new ArrayList<>();
+                yVals1 = new ArrayList[size];
+                for (int index = 0; index < size; index++) {
+                    BotBarChartDataModel model = _payInner.getBarChartDataModels().get(index);
+                    yVals1[index] = new ArrayList<>();
 //                BotBarChartDataModel model2 = _payInner.getBarChartDataModels().get(1);
-                for (int inner = 0; inner < model.getValues().size(); inner++) {
-                    yVals1[index].add(new BarEntry(inner + 1, model.getValues().get(inner), model.getDisplayValues().get(inner)));
+                    for (int inner = 0; inner < model.getValues().size(); inner++) {
+                        yVals1[index].add(new BarEntry(inner + 1, model.getValues().get(inner), model.getDisplayValues().get(inner)));
+                    }
                 }
-            }
-            dataSet = new BarDataSet[size];
+                dataSet = new BarDataSet[size];
 
-            for (int k = 0; k < size; k++) {
-                dataSet[k] = new BarDataSet(yVals1[k], _payInner.getBarChartDataModels().get(k).getTitle());
-                dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
-                barDataSets.add(dataSet[k]);
-            }
+                for (int k = 0; k < size; k++) {
+                    dataSet[k] = new BarDataSet(yVals1[k], _payInner.getBarChartDataModels().get(k).getTitle());
+                    dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
+                    barDataSets.add(dataSet[k]);
+                }
 
 
-            BarData data = new BarData(barDataSets);
-            data.setValueFormatter(new BarChartDataFormatter());
+                BarData data = new BarData(barDataSets);
+                data.setValueFormatter(new BarChartDataFormatter());
 //        data.setValueTypeface(mTfLight);
 
-            XAxis xAxis = mChart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                XAxis xAxis = mChart.getXAxis();
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //            xAxis.setTypeface(mTfLight);
-            xAxis.setTextSize(8f);
-            xAxis.setDrawGridLines(false);
-            xAxis.setGranularity(0.5f); // only intervals of 1 day
-            xAxis.setLabelCount(4);
-            IAxisValueFormatter xAxisFormatter = new IAxisValueFormatter() {
-                @Override
-                public String getFormattedValue(float v, AxisBase axisBase) {
+                xAxis.setTextSize(8f);
+                xAxis.setDrawGridLines(false);
+                xAxis.setGranularity(0.5f); // only intervals of 1 day
+                xAxis.setLabelCount(4);
+                IAxisValueFormatter xAxisFormatter = new IAxisValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float v, AxisBase axisBase) {
 //                    Log.d("IKIDI", "Hi The Val is "+(int) v % _payInner.getxAxis().size());
 //                    return _payInner.getxAxis().get((int) (v/2) % _payInner.getxAxis().size());
-                    return "";
-                }
-            };
+                        return "";
+                    }
+                };
 
-            xAxis.setValueFormatter(xAxisFormatter);
+                xAxis.setValueFormatter(xAxisFormatter);
 
 //            IAxisValueFormatter custom = new MyAxisValueFormatter();
 
@@ -184,35 +186,38 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
             rightAxis.setSpaceTop(15f);
             rightAxis.setAxisMinimum(0f); */// this replaces setStartAtZero(true)
 
-            Legend l = mChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-            l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-            l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-            l.setDrawInside(false);
-            l.setForm(Legend.LegendForm.SQUARE);
-            l.setFormSize(9f);
-            l.setTextSize(11f);
-            l.setXEntrySpace(4f);
-            // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-            // "def", "ghj", "ikl", "mno" });
-            // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-            // "def", "ghj", "ikl", "mno" });
+                Legend l = mChart.getLegend();
+                l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+                l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                l.setDrawInside(false);
+                l.setForm(Legend.LegendForm.SQUARE);
+                l.setFormSize(9f);
+                l.setTextSize(11f);
+                l.setXEntrySpace(4f);
+                // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
+                // "def", "ghj", "ikl", "mno" });
+                // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
+                // "def", "ghj", "ikl", "mno" });
 
 //            XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
 //            mv.setChartView(mChart); // For bounds control
 //            mChart.setMarker(mv); // Set the marker to the chart
 
-            mChart.setData(data);
+                mChart.setData(data);
 
-            mChart.getBarData().setBarWidth(barWidth);
+                mChart.getBarData().setBarWidth(barWidth);
 
-            // restrict the x-axis range
-            mChart.getXAxis().setAxisMinimum(startYear);
+                // restrict the x-axis range
+                mChart.getXAxis().setAxisMinimum(startYear);
 
 
-            // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-            mChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-            mChart.groupBars(startYear, groupSpace, barSpace);
+                // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
+                mChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
+                mChart.groupBars(startYear, groupSpace, barSpace);
+            }
+        }else{
+                //mChart.setVisibility(GONE);
         }
 
     }

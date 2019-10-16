@@ -29,6 +29,7 @@ public class PayloadInner {
     private String table_design;
     private String pie_type;
     private String Auto_adjust_X_axis;
+    private String auto_adjust_X_axis;
     private List<String> X_axis;
     private String direction;
     private boolean stacked;
@@ -84,15 +85,20 @@ public class PayloadInner {
     }
 
 
-
-
-
     public String getAuto_adjust_X_axis() {
         return Auto_adjust_X_axis;
     }
 
     public void setAuto_adjust_X_axis(String auto_adjust_X_axis) {
         Auto_adjust_X_axis = auto_adjust_X_axis;
+    }
+
+    public String getauto_adjust_X_axis() {
+        return auto_adjust_X_axis;
+    }
+
+    public void setauto_adjust_X_axis(String auto_adjust_X_axis) {
+        auto_adjust_X_axis = auto_adjust_X_axis;
     }
 
 
