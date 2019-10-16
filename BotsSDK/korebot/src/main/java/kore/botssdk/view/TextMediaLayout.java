@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.TypedValue;
@@ -14,11 +17,18 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.events.ProfileColorUpdateEvent;
+import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
@@ -126,8 +136,41 @@ public class TextMediaLayout extends MediaLayout {
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
+
+            String regex = "%%.*?%%";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(textualContent);
+
+            ImageSpan pencilImageSpan;
+            boolean isPencilSpanClick = false;
+            while(matcher.find()) {
+                pencilImageSpan = new ImageSpan(mContext,R.drawable.pencil);
+                isPencilSpanClick = true;
+                int _start = matcher.start();
+                int _end = matcher.end();
+                String reqText = textualContent.substring(_start+2, _end-2);
+                strBuilder.setSpan(pencilImageSpan, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                ClickableSpan clickable = new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+
+                        EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
+
+                        EntityEditEvent  event = new EntityEditEvent();
+                        event.setScrollUpNeeded(false);
+                        event.setMessage(model.getPostback());
+                        KoreEventCenter.post(event);
+                    }
+                };
+                strBuilder.setSpan(clickable, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             botContentTextView.setText(strBuilder);
-            botContentTextView.setMovementMethod(null);
+            if(isPencilSpanClick)
+                botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            else
+                botContentTextView.setMovementMethod(null);
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
