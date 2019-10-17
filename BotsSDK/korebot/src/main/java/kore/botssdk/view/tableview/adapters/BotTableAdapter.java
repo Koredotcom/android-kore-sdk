@@ -26,7 +26,11 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final String  str = getRowData(rowIndex).getElements().get(columnIndex);
+        String  str;
+        if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String)
+            str = getRowData(rowIndex).getElements().get(columnIndex);
+        else
+            str = String.valueOf(getRowData(rowIndex).getElements().get(columnIndex));
         View renderedView = null;
         renderedView = renderString(columnIndex,str);
 
