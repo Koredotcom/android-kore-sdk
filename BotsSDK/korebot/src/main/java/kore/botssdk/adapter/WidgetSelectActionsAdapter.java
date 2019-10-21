@@ -18,6 +18,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
+import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
@@ -30,13 +31,13 @@ import kore.botssdk.utils.Utility;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
-    WidgetDialogActivityTask widgetDialogActivity;
+    WidgetActionSheetFragment widgetDialogActivity;
     List<CalEventsTemplateModel.Action> actionList;
     WTaskTemplateModel model;
     Activity mainContext;
     boolean isFromFullView;
 
-    public WidgetSelectActionsAdapter(Activity mainContext, WidgetDialogActivityTask widgetDialogActivity, WTaskTemplateModel model, boolean isFromFullView) {
+    public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, WTaskTemplateModel model, boolean isFromFullView) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.actionList = model.getActions();
@@ -64,7 +65,16 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
             mainContext.finish();
         }
+        dissmissbaseSheet();
     }
+
+
+    private void dissmissbaseSheet()
+    {
+        KoreEventCenter.post(new DissMissBaseSheet());
+
+    }
+
     @Override
     public void onBindViewHolder(@NonNull WidgetCancelViewHolder holder, int position) {
 

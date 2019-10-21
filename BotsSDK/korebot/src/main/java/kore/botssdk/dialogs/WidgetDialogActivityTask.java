@@ -79,7 +79,7 @@ public class WidgetDialogActivityTask extends Dialog {
         // setContentView(R.layout.widget_files_item_selection_dialog);
         initViews();
         recycler_actions.setVisibility(View.GONE);
-        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) mContext,WidgetDialogActivityTask.this, model,isFromFullView);
+    /*    WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) mContext,WidgetDialogActivityTask.this, model,isFromFullView);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
 
@@ -92,7 +92,7 @@ public class WidgetDialogActivityTask extends Dialog {
         recycler_actions.startAnimation(bottomUp);
         recycler_actions.setVisibility(View.VISIBLE);
 
-        adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();*/
 
     }
 

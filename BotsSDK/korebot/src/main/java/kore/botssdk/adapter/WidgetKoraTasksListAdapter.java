@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
+import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -192,7 +194,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
                         } else /*if(!isFromFullView)*/ {
-                            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel,isFromFullView);
+                   /*         WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel,isFromFullView);
 
                             dialogActivity.show();
 
@@ -209,7 +211,13 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                                     }, 400);
 
                                 }
-                            });
+                            });*/
+
+                            WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                            bottomSheetDialog.setisFromFullView(isFromFullView);
+                            bottomSheetDialog.setData(taskTemplateModel);
+                            bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
+
 
                         }
                     }
