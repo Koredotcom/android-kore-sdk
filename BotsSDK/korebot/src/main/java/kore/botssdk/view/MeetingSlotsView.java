@@ -3,7 +3,6 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
@@ -21,10 +19,8 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
-import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -33,6 +29,7 @@ public class MeetingSlotsView extends ViewGroup {
     private AutoExpandListView autoExpandListView;
     private TextView button1, button2;
     private View meetingLayout;
+    private MeetingSlotsButtonAdapter slotsButtonAdapter;
 
     float dp1;
     Gson gson = new Gson();
@@ -113,13 +110,27 @@ public class MeetingSlotsView extends ViewGroup {
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
+    public void setMeetingLayoutAlpha(boolean isEnabled){
+        meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
+        slotsButtonAdapter.setEnabled(isEnabled);
+
+        button1.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+        button2.setTextColor(getResources().getColor(isEnabled ? R.color.splash_color : R.color.color_a7b0be));
+        ((GradientDrawable) button1.getBackground()).setStroke(2, isEnabled ? getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+        ((GradientDrawable) button2.getBackground()).setStroke(2, isEnabled ? getResources().getColor(R.color.splash_color) : getResources().getColor(R.color.color_a7b0be));
+
+        button1.setEnabled(isEnabled);
+        button2.setEnabled(isEnabled);
+
+
+    }
 
     public void populateData(final MeetingTemplateModel meetingTemplateModel, boolean isEnabled) {
 
         if (meetingTemplateModel != null) {
             meetingLayout.setVisibility(VISIBLE);
             ArrayList<MeetingSlotModel.Slot> slots = meetingTemplateModel.getQuick_slots();
-            MeetingSlotsButtonAdapter slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext());
+            slotsButtonAdapter = new MeetingSlotsButtonAdapter(getContext(), this);
             slotsButtonAdapter.setMeetingsModelArrayList(slots);
             slotsButtonAdapter.setEnabled(isEnabled);
             slotsButtonAdapter.setComposeFooterInterface(composeFooterInterface);

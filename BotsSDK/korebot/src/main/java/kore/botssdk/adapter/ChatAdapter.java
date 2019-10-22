@@ -94,7 +94,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         return new ViewHolder(ownLayoutInflater.inflate( i == BUBBLE_RIGHT_LAYOUT ?  R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null),i);
     }
 
-    /*private boolean isClickable(BaseBotMessage message) {
+    private boolean isClickable(int position, BaseBotMessage message){
         boolean clickable = false;
         if(!message.isSend()){
             BotResponse resp = (BotResponse) message;
@@ -102,29 +102,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
             if (model != null && model.getPayload() != null && model.getPayload().getPayload() != null) {
                 PayloadOuter outer = model.getPayload();
                 PayloadInner inner = outer.getPayload();
-                if (!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.KORA_SUMMARY_HELP_VIEW)) {
-                    clickable = true;
+                if(!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)){
+                    clickable = (position == getItemCount() -2) ;
+                }else{
+                    clickable = (position == getItemCount() -1) ;
                 }
             }
         }
         return clickable;
-    }*/
-
-  /*  private boolean isLastMessage(BaseBotMessage message, int position){
-        boolean _isLastMessage = (position == getItemCount() -1);
-        if(!message.isSend()){
-            BotResponse resp = (BotResponse) message;
-            ComponentModel model = resp.getMessage().get(0).getComponent();
-            if (model != null && model.getPayload() != null && model.getPayload().getPayload() != null) {
-                PayloadOuter outer = model.getPayload();
-                PayloadInner inner = outer.getPayload();
-                if(!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)){
-                    _isLastMessage =  (position == getItemCount() -2);
-                }
-            }
-        }
-        return _isLastMessage;
-    }*/
+    }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -136,7 +122,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
-        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 /*isLastMessage(getItem(position), position)*/, getItem(position), true, BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
+        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position), true,BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(getItem(position).getFormattedDate());
 
         if(Collections.isEmpty(headersMap)) {
