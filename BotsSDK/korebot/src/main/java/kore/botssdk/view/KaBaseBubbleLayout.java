@@ -444,7 +444,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
     public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage,
-                                 boolean constrictLayout,int... dimens) {
+                                 boolean constrictLayout, int... dimens) {
 
     //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
         this.dimens = dimens;
@@ -457,7 +457,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
-        populateBubbleTextMedia(baseBotMessage, componentModel, constrictLayout, dimens);
+        populateBubbleTextMedia(baseBotMessage, componentModel, constrictLayout, isLastItem, dimens);
         timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
@@ -510,7 +510,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
     }
 
-    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, int... dimens) {
+    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, boolean _isclickable, int... dimens) {
 
         String message = null;
         String textColor = "#000000";
@@ -536,6 +536,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                     }
                 }
             }
+        bubbleTextMediaLayout.setClicable(_isclickable);
         bubbleTextMediaLayout.startup(message, dimens);
 
     }

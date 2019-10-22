@@ -16,10 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.MeetingSlotsView;
 
 import static kore.botssdk.utils.DateUtils.getSlotsDate;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
@@ -32,6 +32,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     private ComposeFooterInterface composeFooterInterface;
     private LayoutInflater ownLayoutInflator;
     Context context;
+    MeetingSlotsView meetSlotView;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -44,9 +45,10 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     private boolean isEnabled;
     Gson gson = new Gson();
 
-    public MeetingSlotsButtonAdapter(Context context) {
+    public MeetingSlotsButtonAdapter(Context context, MeetingSlotsView meetingSlotsView) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
+        this.meetSlotView = meetingSlotsView;
     }
 
     @Override
@@ -102,6 +104,8 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 if (composeFooterInterface != null && isEnabled) {
+                    setEnabled(false);
+                    meetSlotView.setMeetingLayoutAlpha(isEnabled());
                     MeetingSlotModel.Slot meetingSlotModel = (MeetingSlotModel.Slot) v.getTag();
                     if (meetingSlotModel != null) {
                         HashMap<String, ArrayList<MeetingSlotModel.Slot>> selectedSlot = new HashMap<>();

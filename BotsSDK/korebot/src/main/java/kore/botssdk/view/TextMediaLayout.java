@@ -57,6 +57,16 @@ public class TextMediaLayout extends MediaLayout {
     private GradientDrawable rightDrawable;
     private int transparency;
 
+    private boolean isClicable;
+    private final String REGEX_CHAR = "%%.*?%%";
+
+    public boolean isClicable() {
+        return isClicable;
+    }
+
+    public void setClicable(boolean clicable) {
+        isClicable = clicable;
+    }
 
     public TextMediaLayout(Context context) {
         super(context);
@@ -124,6 +134,12 @@ public class TextMediaLayout extends MediaLayout {
         populateText(messageBody);
     }
 
+    private String getRemovedEntityEditString(SpannableStringBuilder strBuilder){
+       String str = strBuilder.toString().replaceAll(REGEX_CHAR,"");
+       str = str.replaceAll("\\s{2,}", " ");
+       return str;
+    }
+
     public void populateText(String textualContent) {
         if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = unescapeHtml4(textualContent.trim());
@@ -137,8 +153,7 @@ public class TextMediaLayout extends MediaLayout {
                 makeLinkClickable(strBuilder, span);
             }
 
-            String regex = "%%.*?%%";
-            Pattern pattern = Pattern.compile(regex);
+            Pattern pattern = Pattern.compile(REGEX_CHAR);
             Matcher matcher = pattern.matcher(textualContent);
 
             ImageSpan pencilImageSpan;
@@ -148,6 +163,7 @@ public class TextMediaLayout extends MediaLayout {
                 isPencilSpanClick = true;
                 int _start = matcher.start();
                 int _end = matcher.end();
+
                 String reqText = textualContent.substring(_start+2, _end-2);
                 strBuilder.setSpan(pencilImageSpan, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
@@ -155,18 +171,26 @@ public class TextMediaLayout extends MediaLayout {
                     @Override
                     public void onClick(@NonNull View widget) {
 
-                        EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
+                        if(isClicable()) {
+                            botContentTextView.setText(getRemovedEntityEditString(strBuilder));
+                            EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
 
-                        EntityEditEvent  event = new EntityEditEvent();
-                        event.setScrollUpNeeded(false);
-                        event.setMessage(model.getPostback());
-                        KoreEventCenter.post(event);
+                            EntityEditEvent event = new EntityEditEvent();
+                            event.setScrollUpNeeded(false);
+                            event.setMessage(model.getPostback());
+                            KoreEventCenter.post(event);
+                        }
                     }
                 };
                 strBuilder.setSpan(clickable, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
-            botContentTextView.setText(strBuilder);
+            if(isPencilSpanClick && !isClicable()){
+                botContentTextView.setText(getRemovedEntityEditString(strBuilder));
+            }else{
+                botContentTextView.setText(strBuilder);
+            }
+
             if(isPencilSpanClick)
                 botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             else
