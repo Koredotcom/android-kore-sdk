@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -177,9 +179,35 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             holder.taskViewLayoutBinding.titleView.setPaintFlags(isClosed ? Paint.STRIKE_THRU_TEXT_FLAG : holder.taskViewLayoutBinding.titleView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             holder.taskViewLayoutBinding.checkbox.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
             holder.taskViewLayoutBinding.checkbox.setVisibility(isShowButton() && selectedTasks.size() > 0 ? View.VISIBLE : View.GONE);
+            holder.taskViewLayoutBinding.iconDown.setVisibility(isShowButton() && selectedTasks.size() > 0 ? View.GONE : View.VISIBLE);
             holder.taskViewLayoutBinding.checkbox.setEnabled(!isClosed);
             holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
             holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
+
+          holder.taskViewLayoutBinding.rootLayout.setBackground(isFromFullView?context.getResources().getDrawable(R.drawable.task_view_background):null);
+            holder.taskViewLayoutBinding.iconDown.setTypeface(ResourcesCompat.getFont(context, R.font.icomoon));
+            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
+            try {
+                ((GradientDrawable) drawable).setColor(context.getResources().getColor(R.color.color_d8d8d8));
+
+            } catch (Exception e) {
+
+            }
+            holder.taskViewLayoutBinding.iconDown.setBackground(drawable);
+
+
+
+            holder.taskViewLayoutBinding.iconDown.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                    bottomSheetDialog.setisFromFullView(isFromFullView);
+                    bottomSheetDialog.setData(taskTemplateModel);
+                    bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
+
+
+                }
+            });
 
 
             holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -213,11 +241,11 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                                 }
                             });*/
 
-                            WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                           /* WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                             bottomSheetDialog.setisFromFullView(isFromFullView);
                             bottomSheetDialog.setData(taskTemplateModel);
                             bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
-
+*/
 
                         }
                     }

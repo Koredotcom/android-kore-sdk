@@ -159,5 +159,7 @@
     <color name="color_4e74f0">#4e74f0</color>
     <color name="color_ff5b6a">#ff5b6a</color> <!-- upcoming tasks-->
     <color name="color_2ad082">#2ad082</color> <!-- upcoming email-->
-    <color name="color_ffab18">#ffab18</color> <!-- upcoming notif-->
+    <color name="color_ffab18">#ffab18</color>
+    <color name="color_7a799a">#71799a</color>
+    <color name="color_d8d8d8">#d8d8d8</color> <!-- upcoming notif-->
 </resources>

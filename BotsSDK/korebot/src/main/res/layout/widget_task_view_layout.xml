@@ -29,42 +29,67 @@
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
 
-            android:paddingStart="10dp"
             android:gravity="center_vertical|start"
+            android:paddingStart="10dp"
             android:src="@mipmap/checkbox_off"
             android:tag="@{widgetTask.id}" />
 
-        <TextView
-            android:id="@+id/title_view"
+        <RelativeLayout
+            android:id="@+id/view_p"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:paddingStart="10dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/checkbox"
-            android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
-            android:gravity="start"
-            android:maxLines="1"
-            android:tag="bold"
-            android:text="@{widgetTask.title}"
-            android:textColor="@color/color_1a1a1a"
-            android:textSize="16dp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/latomedium"
+                android:gravity="start"
+                android:maxLines="1"
+              android:layout_toStartOf="@+id/icon_down"
+                android:paddingStart="10dp"
+                android:tag="bold"
+                android:text="@{widgetTask.title}"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="16dp" />
+
+
+            <TextView
+                android:id="@+id/icon_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="24dp"
+                android:minHeight="24dp"
+                android:textColor="@color/color_7a799a"
+                android:textSize="18sp"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:layout_marginTop="14dp"
+                android:layout_alignParentEnd="true"
+                android:text="@string/icon_e961"/>
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/title_view"
-            android:layout_alignStart="@+id/title_view"
+            android:layout_below="@+id/view_p"
+            android:layout_alignStart="@+id/view_p"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
             android:drawableStart="@drawable/ic_baseline_watch_later_24px"
             android:drawablePadding="10dp"
-            android:paddingStart="10dp"
-            android:layout_marginEnd="5dp"
             android:fontFamily="@font/latomedium"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:tag="medium"
             android:text="@{DateUtils.getDateWithTime(widgetTask.data.dueDate)}"
             android:textColor="@{widgetTask.isOverDue ? @color/color_red : @color/color_485260}"
@@ -79,12 +104,12 @@
             android:layout_alignStart="@+id/date_view"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="5dp"
-            android:paddingStart="10dp"
             android:drawableStart="@drawable/ic_baseline_person_24px"
             android:drawableEnd="@drawable/ic_triangle_2"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:singleLine="true"
             android:tag="medium"
             android:text="@{widgetTask.data.owner.nameInFirstNameFormat}"
@@ -113,7 +138,7 @@
 
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/assignee_view"
-            android:layout_alignStart="@+id/title_view"
+            android:layout_alignStart="@+id/view_p"
             android:layout_marginTop="@dimen/dimen_14dp"
             android:background="@drawable/inset_10_divider" />
 
