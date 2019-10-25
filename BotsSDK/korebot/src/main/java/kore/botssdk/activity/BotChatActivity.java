@@ -229,6 +229,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
+    @Override
+    public void onPanelClicked(Object pModel) {
+
+    }
+
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
