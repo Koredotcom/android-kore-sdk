@@ -242,7 +242,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 holder.txtDateTime.setVisibility(GONE);
             }
 
+            if(model.getColor()!=null)
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
+
             if (position < getItemCount() - 1) {
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }

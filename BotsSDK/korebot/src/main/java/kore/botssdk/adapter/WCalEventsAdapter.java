@@ -255,7 +255,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 holder.txtDateTime.setVisibility(GONE);
             }
 
+            if(model.getData() !=null && model.getData().getColor() != null)
             holder.sideBar.setBackgroundColor(Color.parseColor(model.getData().getColor()));
+
             if (position < getItemCount() - 1) {
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }
