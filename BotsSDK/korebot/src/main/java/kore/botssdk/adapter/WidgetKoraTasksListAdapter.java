@@ -202,6 +202,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                 public void onClick(View v) {
                     WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                     bottomSheetDialog.setisFromFullView(isFromFullView);
+                    bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
                     bottomSheetDialog.setData(taskTemplateModel);
                     bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
 

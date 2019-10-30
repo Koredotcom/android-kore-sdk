@@ -86,6 +86,11 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="match_parent"
@@ -93,12 +98,26 @@
                 android:ellipsize="end"
                 android:gravity="start|top"
                 android:singleLine="true"
+                android:layout_toStartOf="@+id/icon_down"
                 android:minHeight="30dp"
                 android:text=""
                 android:textColor="#485260"
                 android:textSize="16sp" />
+            <TextView
+                android:id="@+id/icon_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="24dp"
+                android:minHeight="24dp"
+                android:textColor="@color/color_7a799a"
+                android:textSize="18sp"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
 
-
+                android:layout_alignParentEnd="true"
+                android:text="@string/icon_e961"/>
+            </RelativeLayout>
             <TextView
                 android:id="@+id/txtPlace"
                 android:layout_width="match_parent"

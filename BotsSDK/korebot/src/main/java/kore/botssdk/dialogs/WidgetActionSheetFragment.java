@@ -21,6 +21,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -30,7 +32,8 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
     View view;
     boolean isFromFullView;
     RecyclerView recycler_actions;
-    WTaskTemplateModel model;
+    Object model;
+    VerticalListViewActionHelper verticalListViewActionHelper;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -42,9 +45,11 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         recycler_actions.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler_actions.setHasFixedSize(true);
 
-        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(),this, model,isFromFullView);
 
+        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,  model, isFromFullView,verticalListViewActionHelper);
         recycler_actions.setAdapter(adapter);
+
+
         return view;
 
     }
@@ -61,48 +66,10 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
                 // Right here!
-               BottomSheetBehavior.from(bottomSheet)
+                BottomSheetBehavior.from(bottomSheet)
                         .setState(BottomSheetBehavior.STATE_EXPANDED);
 
 
-
-
-             /*   FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
-                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) (300 * dp1));
-                bottomSheetBehavior.setHideable(true);
-                bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-
-                        // Check Logs to see how bottom sheets behaves
-                        switch (newState) {
-                            case BottomSheetBehavior.STATE_COLLAPSED:
-
-                                break;
-                            case BottomSheetBehavior.STATE_DRAGGING:
-                                break;
-                            case BottomSheetBehavior.STATE_EXPANDED:
-                                break;
-                            case BottomSheetBehavior.STATE_HIDDEN:
-                                dismiss();
-                                break;
-                            case BottomSheetBehavior.STATE_SETTLING:
-                                break;
-                            case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        // React to dragging events
-                    }
-                });
-
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);*/
             }
 
         });
@@ -113,10 +80,14 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
 
     public void setisFromFullView(boolean isFromFullView) {
-        this.isFromFullView=isFromFullView;
+        this.isFromFullView = isFromFullView;
     }
 
-    public void setData(WTaskTemplateModel taskTemplateModel) {
-        model=taskTemplateModel;
+    public void setData(Object taskTemplateModel) {
+        model = taskTemplateModel;
+    }
+
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }

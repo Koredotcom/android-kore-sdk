@@ -17,13 +17,17 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.TaskTemplateModel;
+import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
@@ -32,15 +36,21 @@ import kore.botssdk.utils.Utility;
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
     WidgetActionSheetFragment widgetDialogActivity;
-    List<CalEventsTemplateModel.Action> actionList;
-    WTaskTemplateModel model;
+    Object actionList;
+    Object model;
     Activity mainContext;
     boolean isFromFullView;
+    VerticalListViewActionHelper verticalListViewActionHelper;
 
-    public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, WTaskTemplateModel model, boolean isFromFullView) {
+    public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model, boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
-        this.actionList = model.getActions();
+        if (model instanceof WTaskTemplateModel) {
+            this.actionList = ((WTaskTemplateModel) model).getActions();
+        } else if (model instanceof WCalEventsTemplateModel) {
+            this.actionList = ((WCalEventsTemplateModel) model).getActions();
+        }
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
         this.isFromFullView = isFromFullView;
         notifyDataSetChanged();
@@ -55,12 +65,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     }
 
 
-   public void  startActions(int position,boolean append_uttrance)
-    {
+    public void startActions(int position, boolean append_uttrance) {
         HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("action", actionList.get(position).getTitle());
-        hashMap.put("tIds", model.getId());
-        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,true));
+        hashMap.put("action", ((List<CalEventsTemplateModel.Action>) actionList).get(position).getTitle());
+        hashMap.put("tIds", ((WTaskTemplateModel) model).getId());
+        KoreEventCenter.post(new CancelEvent((append_uttrance ? Constants.SKILL_UTTERANCE : "") + ((List<CalEventsTemplateModel.Action>) actionList).get(position).getUtterance(), new Gson().toJson(hashMap), 0, true));
         (widgetDialogActivity).dismiss();
         if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
             mainContext.finish();
@@ -69,70 +78,112 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     }
 
 
-    private void dissmissbaseSheet()
-    {
+    private void dissmissbaseSheet() {
         KoreEventCenter.post(new DissMissBaseSheet());
-
     }
 
     @Override
     public void onBindViewHolder(@NonNull WidgetCancelViewHolder holder, int position) {
 
-        holder.tv_actions.setText(actionList.get(position).getTitle());
+        if (model instanceof WTaskTemplateModel) {
 
-        holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            //Widget Task
+            holder.tv_actions.setText(((List<CalEventsTemplateModel.Action>) actionList).get(position).getTitle());
 
-                if(Utility.checkIsSkillKora())
-                {
-                    startActions(position,false);
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                }else {
-                    /*AlertDialog.Builder builder = new AlertDialog.Builder(mainContext);
-                    builder.setPositiveButton(mainContext.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                    if (Utility.checkIsSkillKora()) {
+                        startActions(position, false);
 
-                            startActions(position);
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    builder.setNegativeButton(mainContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    builder.setTitle("Kora");
-                    builder.setMessage("You are conversing with " + Constants.SKILL_HOME + " skill now. Clicking on this will end your conversation with " + Constants.SKILL_SELECTION + " skill and move to Kora skill");
-                    builder.setCancelable(false);
-                    builder.show();*/
-                    DialogCaller.showDialog(mainContext,new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActions(position,true);
-                            dialog.dismiss();
-                        }
-                    });
+                    } else {
+                        DialogCaller.showDialog(mainContext, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActions(position, true);
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+
+
                 }
 
+            });
+
+        } else if (model instanceof WCalEventsTemplateModel) {
+
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(position);
+                    String type = ((WCalEventsTemplateModel) model).getActions().get(position).getType();
+                    if (((WCalEventsTemplateModel) model).getActions().get(position).getType().equalsIgnoreCase("view_details")) {
+                        //view meeting
+                        verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
+                        (widgetDialogActivity).dismiss();
+                    } else if (type.equalsIgnoreCase("url") && ((WCalEventsTemplateModel) model).getActions().get(position).getCustom_type().equalsIgnoreCase("url")) {
+                        //join meeting
+                        verticalListViewActionHelper.navigationToDialAndJoin("url", action.getUrl());
+                        (widgetDialogActivity).dismiss();
+
+                    } else if (type.equalsIgnoreCase("dial") && action.getCustom_type().equalsIgnoreCase("dial")) {
+                        verticalListViewActionHelper.navigationToDialAndJoin("dial", action.getDial());
+                        (widgetDialogActivity).dismiss();
+                    } else if (type.equalsIgnoreCase("url") && action.getCustom_type().equalsIgnoreCase("meetingUrl")) {
+                        verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", action.getUrl());
+                        (widgetDialogActivity).dismiss();
+
+                    } else if (type.equalsIgnoreCase(BotResponse.TAKE_NOTES)) {
+                        verticalListViewActionHelper.takeNotesNavigation((WCalEventsTemplateModel) model);
+                        (widgetDialogActivity).dismiss();
+
+                    } else {
+                        if (Utility.checkIsSkillKora()) {
+                            postAction(position, false);
+                        } else {
+
+                            DialogCaller.showDialog(mainContext, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    postAction(position, true);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+
+                    }
+                }
+            });
+            //Widget Meeting
+            holder.tv_actions.setText(((WCalEventsTemplateModel) model).getActions().get(position).getTitle());
 
 
+        }
+    }
 
-
-
-
-
-
-            }
-        });
-
+    private void postAction(int position, boolean append_uttrance) {
+        HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
+        ArrayList<String> list = new ArrayList<>(1);
+        list.add(((WCalEventsTemplateModel) model).getData().getEventId());
+        hashMap.put("ids", list);
+        KoreEventCenter.post(new DissMissBaseSheet());
+        KoreEventCenter.post(new CancelEvent((append_uttrance ? Constants.SKILL_UTTERANCE : "") + ((WCalEventsTemplateModel) model).getActions().get(position).getUtterance(), new Gson().toJson(hashMap), 0, true));
+        (widgetDialogActivity).dismiss();
+        if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
+            mainContext.finish();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return actionList!= null?actionList.size():0;
+        if (model instanceof WTaskTemplateModel) {
+            return actionList != null ? ((List<CalEventsTemplateModel.Action>) actionList).size() : 0;
+        } else if (model instanceof WCalEventsTemplateModel) {
+            return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
+        }
+        return 0;
     }
 
     class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
