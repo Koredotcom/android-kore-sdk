@@ -33,7 +33,7 @@
         android:id="@+id/innerlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/calender_view_background"
+        android:background="@android:color/white"
         android:orientation="horizontal"
         android:paddingStart="10dp"
         android:paddingTop="14dp">
@@ -57,13 +57,13 @@
             <TextView
                 android:id="@+id/tv_time"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
 
-                android:text=""
                 android:lineSpacingExtra="2dp"
                 android:lineSpacingMultiplier="1"
+                android:text=""
                 android:textColor="#485260"
                 android:textSize="12sp" />
 
@@ -81,43 +81,46 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingBottom="13dp"
-
             android:layout_weight="1"
-            android:orientation="vertical">
+
+            android:orientation="vertical"
+            android:paddingBottom="13dp">
 
             <RelativeLayout
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/txtTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="start|top"
-                android:singleLine="true"
-                android:layout_toStartOf="@+id/icon_down"
-                android:minHeight="30dp"
-                android:text=""
-                android:textColor="#485260"
-                android:textSize="16sp" />
-            <TextView
-                android:id="@+id/icon_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:minWidth="24dp"
-                android:minHeight="24dp"
-                android:textColor="@color/color_7a799a"
-                android:textSize="18sp"
-                android:layout_marginEnd="6dp"
-                android:gravity="center"
-                android:layout_centerVertical="true"
+                android:orientation="horizontal">
 
-                android:layout_alignParentEnd="true"
-                android:text="@string/icon_e961"/>
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/icon_down"
+                    android:ellipsize="end"
+                    android:gravity="start|top"
+                    android:minHeight="30dp"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textColor="#485260"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/icon_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="6dp"
+                    android:gravity="center"
+                    android:minWidth="24dp"
+                    android:minHeight="24dp"
+                    android:text="@string/icon_e961"
+
+                    android:textColor="@color/color_7a799a"
+                    android:textSize="18sp" />
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/txtPlace"
                 android:layout_width="match_parent"
@@ -148,31 +151,146 @@
                 android:id="@+id/tv_meeting_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="2dp"
-                android:paddingTop="2dp"
-                android:paddingRight="@dimen/dimen_14dp"
-                android:paddingLeft="7dp"
                 android:layout_marginTop="@dimen/dimen_8dp"
+                android:background="@drawable/meeting_notes_border"
                 android:drawableStart="@drawable/ic_meeting_notes"
                 android:drawablePadding="7dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
+                android:paddingLeft="7dp"
+                android:paddingTop="2dp"
+                android:paddingRight="@dimen/dimen_14dp"
+                android:paddingBottom="2dp"
                 android:singleLine="true"
-                android:textColor="#485260"
                 android:text="Meeting Notes"
-                android:background="@drawable/meeting_notes_border"
-                android:visibility="gone"
-                android:textSize="13sp" />
+                android:textColor="#485260"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
 
 
+                android:minHeight="32dp">
 
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/show_more_background"
+                    android:gravity="center"
+                    android:minHeight="32dp"
+                    android:visibility="gone"
+                    android:id="@+id/dial_layout"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:id="@+id/icon_dial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="@string/icon_e91d"
+                        android:textSize="14sp"
+                        android:textColor="#4741fa" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="DIAL IN"
+                        android:textSize="14sp"
+                        android:letterSpacing="0.1"
+                        android:textColor="#4741fa" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/join_layout"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="18dp"
+                    android:background="@drawable/show_more_background"
+                    android:gravity="center"
+                    android:minHeight="32dp"
+                    android:visibility="gone"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:id="@+id/icon_join"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="@string/icon_e954"
+                        android:textSize="14sp"
+                        android:textColor="#4741fa" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="JOIN"
+                        android:letterSpacing="0.1"
+                        android:textSize="14sp"
+                        android:textColor="#4741fa" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/notes_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/show_more_background"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:minHeight="32dp"
+
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp">
+
+                    <TextView
+                        android:id="@+id/icon_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="@string/icon_e92a"
+                        android:textSize="14sp"
+                        android:textColor="#4741fa" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoextrabold"
+                        android:text="NOTES"
+                        android:textSize="14sp"
+                        android:letterSpacing="0.1"
+                        android:textColor="#4741fa" />
+
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+
 
     </LinearLayout>
 
+
+
+
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:id="@+id/divider"
         android:background="@drawable/inset_10_divider" />
 </LinearLayout>

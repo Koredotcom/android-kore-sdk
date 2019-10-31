@@ -19,8 +19,16 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
     public String getTitle() {
         return title;
     }
-
+    boolean isActive;
     String meetingId;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 
     public String getMeetingId() {
         return meetingId;
