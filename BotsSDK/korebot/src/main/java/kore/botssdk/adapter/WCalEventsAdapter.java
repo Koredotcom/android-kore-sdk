@@ -229,14 +229,13 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             holder.innerlayout.setSelected(isSelected);
 
             long timeStampNow = System.currentTimeMillis();
-
             long startTime = (long) model.getData().getDuration().getStart();
-            long endTime=(long) model.getData().getDuration().getEnd();
+            long endTime = (long) model.getData().getDuration().getEnd();
             final int TIMER_START_MINUTE = 5 * 60;
             long milliseconds = startTime - timeStampNow;
             int seconds = (int) milliseconds / 1000;
-           // (timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) ||
-            if ((timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) ||(timeStampNow >= startTime && timeStampNow <=endTime)) {
+            // (timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) ||
+            if ((timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) || (timeStampNow >= startTime && timeStampNow <= endTime)) {
                 if (model != null && model.getActions() != null) {
                     for (int i = 0; i < model.getActions().size(); i++) {
                         String type = model.getActions().get(i).getType() != null ? model.getActions().get(i).getType() : "";
@@ -260,7 +259,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 public void onClick(View v) {
 
                     //int id=holder.notes_layout.getId();
-                  //  model.getActions().get(id);
+                    //  model.getActions().get(id);
                     verticalListViewActionHelper.takeNotesNavigation(model);
                 }
             });
@@ -268,7 +267,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             holder.dial_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    verticalListViewActionHelper.navigationToDialAndJoin("dial",model.getData().getMeetJoin().getDialIn());
+                    verticalListViewActionHelper.navigationToDialAndJoin("dial", model.getData().getMeetJoin().getDialIn());
 
                 }
             });
@@ -277,11 +276,16 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 @Override
                 public void onClick(View v) {
 
-                    verticalListViewActionHelper.navigationToDialAndJoin("url",model.getData().getMeetJoin().getMeetingUrl());
+                    verticalListViewActionHelper.navigationToDialAndJoin("url", model.getData().getMeetJoin().getMeetingUrl());
                 }
             });
-
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
+            if (model.isOnGoing()) {
+                date = "CURRENT MEETINGS";
+                holder.innerlayout.setBackgroundColor(mContext.getResources().getColor(R.color.color_ededef));
+                holder.icon_dot.setVisibility(VISIBLE);
+            }
+
             holder.txtDateTime.setText(date);
             holder.icon_down.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.round_shape_common);
@@ -323,6 +327,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getData().getAttendees()));
             if (position == 0 || model.isShowDate()) {
                 holder.tvborder.setVisibility(VISIBLE);
+
                 holder.txtDateTime.setVisibility(VISIBLE);
             } else {
                 holder.tvborder.setVisibility(GONE);
@@ -563,7 +568,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         _data.getData().setReqTextToDisp(txt);
 
                         st += _start;
-                      //  ed = _start + (30 * 60000);
+                        //  ed = _start + (30 * 60000);
 
                     } else if (i == _days) {
                         if (_data.getData().isAllDay()) {
@@ -598,7 +603,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             st += 24 * 60 * 60 * 1000;
                             st = DateUtils.getDDMMYYYY((long) st).getTime();
                         }
-                       // ed = st + (30 * 60000);
+                        // ed = st + (30 * 60000);
                     }
 
                     CalEventsTemplateModel.Duration _duration = _data.getData().getDuration();
@@ -638,14 +643,32 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         });
         for (WCalEventsTemplateModel data : eventList) {
             String key = DateUtils.getDay((long) data.getData().getDuration().getStart());
+            boolean isOnGoing = false;
+
+            long timeStampNow = System.currentTimeMillis();
+            long startTime = (long) data.getData().getDuration().getStart();
+            long endTime = (long) data.getData().getDuration().getEnd();
+            final int TIMER_START_MINUTE = 5 * 60;
+            long milliseconds = startTime - timeStampNow;
+            int seconds = (int) milliseconds / 1000;
+            // (timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) ||
+            if ((timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) || (timeStampNow >= startTime && timeStampNow <= endTime)) {
+                key = key + "-TRUE";
+                isOnGoing = true;
+            }
+
+
             ArrayList<WCalEventsTemplateModel> sortmap = list.get(key);
             if (sortmap == null) {
                 ArrayList<WCalEventsTemplateModel> temp = new ArrayList<>();
                 data.setShowDate(true);
+                data.setOnGoing(isOnGoing);
                 temp.add(data);
                 list.put(key, temp);
-
             } else {
+                if (key.contains("-TRUE")) {
+                    data.setOnGoing(true);
+                }
                 sortmap.add(data);
                 list.put(key, sortmap);
             }
@@ -716,15 +739,17 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView tvborder, tv_users;
         public ImageView checkbox;
         public View divider;
-        TextView icon_dial, icon_join, icon_notes;
+        TextView icon_dial, icon_join, icon_notes, time_tostart_text;
         LinearLayout dial_layout, join_layout, notes_layout;
+        View icon_dot;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             dial_layout = itemView.findViewById(R.id.dial_layout);
             join_layout = itemView.findViewById(R.id.join_layout);
             notes_layout = itemView.findViewById(R.id.notes_layout);
-
+            icon_dot = itemView.findViewById(R.id.icon_dot);
+            time_tostart_text = itemView.findViewById(R.id.time_tostart_text);
             txtDateTime = (TextView) itemView.findViewById(R.id.txtDateAndTime);
             layoutDetails = (LinearLayout) itemView.findViewById(R.id.layout_deails);
             innerlayout = (LinearLayout) itemView.findViewById(R.id.innerlayout);

@@ -91,6 +91,16 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
 
     private boolean showDate;
 
+    public boolean isOnGoing() {
+        return isOnGoing;
+    }
+
+    public void setOnGoing(boolean onGoing) {
+        isOnGoing = onGoing;
+    }
+
+    private boolean isOnGoing;
+
 
     public class Action implements Serializable {
         private String type;

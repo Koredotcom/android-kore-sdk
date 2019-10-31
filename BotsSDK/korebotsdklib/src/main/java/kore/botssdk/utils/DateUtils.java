@@ -273,7 +273,8 @@ public class DateUtils {
         String date = DateUtils.calendar_event_list_format1.format(mdate);
 
         if (isTodayOrBefore(mdate)) {
-            date = "Today";
+            //date = "Today";
+            date="Later today";
         } /*else if (isYesterday(mdate)) {
             date = "Yesterday";
         }*/ else if (isTomorrow(mdate)) {

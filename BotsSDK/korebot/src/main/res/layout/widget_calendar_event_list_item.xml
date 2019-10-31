@@ -26,7 +26,7 @@
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/inset_10_divider"
+        android:background="@drawable/inset_widget_divider"
         android:visibility="visible" />
 
     <LinearLayout
@@ -84,9 +84,10 @@
             android:layout_weight="1"
 
             android:orientation="vertical"
-            android:paddingBottom="13dp">
+            android:paddingBottom="10dp">
 
             <RelativeLayout
+                android:id="@+id/h_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -120,6 +121,33 @@
                     android:textColor="@color/color_7a799a"
                     android:textSize="18sp" />
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/timer_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|start"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/icon_dot"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/meeting_dot"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/time_tostart_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="10dp"
+                    android:fontFamily="@font/latomedium"
+                    android:text=""
+                    android:textColor="@color/color_767688"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/txtPlace"
@@ -170,25 +198,21 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-
-
-                android:minHeight="32dp">
+                android:layout_marginEnd="10dp">
 
 
                 <LinearLayout
+                    android:id="@+id/dial_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
                     android:background="@drawable/show_more_background"
                     android:gravity="center"
                     android:minHeight="32dp"
-                    android:visibility="gone"
-                    android:id="@+id/dial_layout"
+                    android:layout_marginTop="10dp"
                     android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:paddingEnd="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/icon_dial"
@@ -197,17 +221,17 @@
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/latoextrabold"
                         android:text="@string/icon_e91d"
-                        android:textSize="14sp"
-                        android:textColor="#4741fa" />
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"
-                        android:text="DIAL IN"
-                        android:textSize="14sp"
                         android:letterSpacing="0.1"
-                        android:textColor="#4741fa" />
+                        android:text="DIAL IN"
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -215,15 +239,16 @@
                 <LinearLayout
                     android:id="@+id/join_layout"
                     android:layout_width="wrap_content"
+                    android:layout_marginTop="10dp"
 
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="18dp"
                     android:background="@drawable/show_more_background"
                     android:gravity="center"
                     android:minHeight="32dp"
-                    android:visibility="gone"
                     android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+                    android:paddingEnd="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/icon_join"
@@ -232,32 +257,34 @@
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/latoextrabold"
                         android:text="@string/icon_e954"
-                        android:textSize="14sp"
-                        android:textColor="#4741fa" />
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"
-                        android:text="JOIN"
                         android:letterSpacing="0.1"
-                        android:textSize="14sp"
-                        android:textColor="#4741fa" />
+                        android:text="JOIN"
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_marginTop="10dp"
+
                     android:id="@+id/notes_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/show_more_background"
                     android:gravity="center"
-                    android:visibility="gone"
                     android:minHeight="32dp"
-
                     android:paddingStart="10dp"
-                    android:paddingEnd="10dp">
+
+                    android:paddingEnd="10dp"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/icon_notes"
@@ -266,17 +293,17 @@
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/latoextrabold"
                         android:text="@string/icon_e92a"
-                        android:textSize="14sp"
-                        android:textColor="#4741fa" />
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"
-                        android:text="NOTES"
-                        android:textSize="14sp"
                         android:letterSpacing="0.1"
-                        android:textColor="#4741fa" />
+                        android:text="NOTES"
+                        android:textColor="#4741fa"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -286,11 +313,9 @@
     </LinearLayout>
 
 
-
-
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/inset_10_divider" />
+        android:background="@drawable/inset_widget_divider" />
 </LinearLayout>
