@@ -100,9 +100,10 @@
                     android:layout_toStartOf="@+id/icon_down"
                     android:ellipsize="end"
                     android:gravity="start|top"
-                    android:minHeight="30dp"
+                    android:minHeight="26dp"
                     android:singleLine="true"
                     android:text=""
+                    android:layout_marginStart="2dp"
                     android:textColor="#485260"
                     android:textSize="16sp" />
 
@@ -127,13 +128,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center|start"
-                android:visibility="gone">
+                android:layout_marginStart="2dp"
+
+                android:layout_marginBottom="5dp"
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/icon_dot"
                     android:layout_width="6dp"
                     android:layout_height="6dp"
-                    android:layout_marginStart="4dp"
                     android:layout_marginEnd="5dp"
                     android:src="@drawable/meeting_dot"
                     android:visibility="gone" />
@@ -142,18 +145,17 @@
                     android:id="@+id/time_tostart_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:fontFamily="@font/latomedium"
+                    android:fontFamily="@font/latoregular"
                     android:text=""
-                    android:textColor="@color/color_767688"
-                    android:textSize="12sp" />
+                    android:textColor="@color/color_626281"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/txtPlace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="2dp"
                 android:drawableStart="@drawable/vector_location_icon"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"

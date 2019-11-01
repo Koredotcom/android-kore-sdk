@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -286,6 +287,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 holder.icon_dot.setVisibility(VISIBLE);
             }
 
+            holder.time_tostart_text.setText(DateUtils.calenderDateFormation(mContext,startTime));
             holder.txtDateTime.setText(date);
             holder.icon_down.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.round_shape_common);

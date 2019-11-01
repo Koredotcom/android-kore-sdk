@@ -1,6 +1,7 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -133,6 +134,39 @@ public class DateUtils {
      * Today, JUN 08
      */
 
+
+    public static String calenderDateFormation(Context mContext, long startDate) {
+        long currentTime = System.currentTimeMillis();
+        long diff = startDate - currentTime;
+
+        if (android.text.format.DateUtils.isToday(startDate)) {
+            if (diff < oneMin) {
+                return "NOW";
+
+            } else {
+                int diffhours = (int) (diff / (60 * 60 * 1000));
+                int diffmin = (int) (diff / (60 * 1000));
+                if (diffhours <= 0 && diffmin <= 0) {
+                    return "Now";
+                } else if (diffhours <= 0) {
+                    return "In " + diffmin + (diffmin > 1 ? " mins " : " min");
+                } else {
+                    diff -= diffhours * (60 * 60 * 1000);
+                    int diffmins = (int) (diff / (60 * 1000));
+                    return "In " + diffhours + (diffhours > 1 ? " hrs " : " hr ") + diffmins + (diffmins > 1 ? " mins" : " min");
+                }
+            }
+        } else if (isTomorrow(startDate)) {
+            return "Tomorrow";
+        } else if (diff >= oneDay && diff < oneYear) {
+            long val = (DateUtils.getDDMMYYYY(startDate).getTime() - DateUtils.getDDMMYYYY(currentTime).getTime());
+            return String.format("%s%d%s", "In ", TimeUnit.MILLISECONDS.toDays(val), " days");
+        } else {
+            return String.format("%s%d%s", "In ", diff / oneYear, mContext.getResources().getString(R.string.time_stamp_years), " years");
+        }
+    }
+
+
     public static String formattedSentDateV2_2(Context mContext, long diff) {
         long timeOffset = 0;
 
@@ -243,6 +277,7 @@ public class DateUtils {
     public static String getDNDDayDateTime(double startdate) {
         return dnd_time_format.format(startdate);
     }
+
     public static String getMorethanDayDateTime(double startdate, double enddate) {
         return calendar_allday_time_format.format(startdate) + " - " + calendar_allday_time_format.format(enddate);
     }
@@ -274,7 +309,7 @@ public class DateUtils {
 
         if (isTodayOrBefore(mdate)) {
             //date = "Today";
-            date="Later today";
+            date = "Later today";
         } /*else if (isYesterday(mdate)) {
             date = "Yesterday";
         }*/ else if (isTomorrow(mdate)) {
@@ -367,9 +402,8 @@ public class DateUtils {
     }
 
 
-    public static Date getDDMMYYYY(long date)
-    {
-         SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+    public static Date getDDMMYYYY(long date) {
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 
         try {
             return DATE_FORMAT.parse(dateFormat.format(date));
@@ -378,6 +412,7 @@ public class DateUtils {
         }
         return null;
     }
+
     public static String getAnnoucementDateDDMMM(long dateformat) {
 
         return dateFormat6.format(dateformat);
