@@ -17,7 +17,7 @@
         android:paddingStart="10dp"
         android:text=""
         android:textColor="#485260"
-        android:textSize="14dp"
+        android:textSize="17sp"
         android:textStyle="bold"
 
         android:visibility="visible" />
@@ -103,6 +103,7 @@
                     android:minHeight="26dp"
                     android:singleLine="true"
                     android:text=""
+                    android:fontFamily="@font/latosemibold"
                     android:layout_marginStart="2dp"
                     android:textColor="#485260"
                     android:textSize="16sp" />

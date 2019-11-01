@@ -280,9 +280,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                     verticalListViewActionHelper.navigationToDialAndJoin("url", model.getData().getMeetJoin().getMeetingUrl());
                 }
             });
-            String date = DateUtils.getDay((long) model.getData().getDuration().getStart()).toUpperCase();
+            String date = DateUtils.getDay((long) model.getData().getDuration().getStart());
             if (model.isOnGoing()) {
-                date = "CURRENT MEETINGS";
+                date = "Next inline...";
                 holder.innerlayout.setBackgroundColor(mContext.getResources().getColor(R.color.color_ededef));
                 holder.icon_dot.setVisibility(VISIBLE);
             }

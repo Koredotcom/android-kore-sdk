@@ -161,5 +161,6 @@
     <color name="color_2ad082">#2ad082</color> <!-- upcoming email-->
     <color name="color_ffab18">#ffab18</color>
     <color name="color_7a799a">#71799a</color>
-    <color name="color_d8d8d8">#d8d8d8</color> <!-- upcoming notif-->
+    <color name="color_d8d8d8">#d8d8d8</color>
+    <color name="color_E4E5EB">#e4e5eb</color> <!-- upcoming notif-->
 </resources>
