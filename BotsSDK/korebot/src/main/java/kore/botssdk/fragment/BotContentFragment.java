@@ -1,8 +1,10 @@
 package kore.botssdk.fragment;
 
+import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,33 +15,50 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import kore.botssdk.BotDb.BotChatDBResponse;
-import kore.botssdk.BotDb.BotChatsDBRequest;
 import kore.botssdk.BotDb.BotMessageDBModel;
+import kore.botssdk.BotDb.DBHelper;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotHistory;
+import kore.botssdk.models.BotHistoryMessage;
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.RestRequest;
+import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.RestResponse.BotResponses;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.net.SDKConfiguration.Client;
+import kore.botssdk.retroresponse.ServerBotMsgResponse;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
+import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -65,6 +84,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private boolean hasMore = true;
     private TextView headerView;
     private Gson gson = new Gson();
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int offset = 0;
 
     @Nullable
     @Override
@@ -81,6 +102,12 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private void findViews(View view) {
         botsBubblesListView = (ListView) view.findViewById(R.id.chatContentListView);
         headerView = view.findViewById(R.id.filesSectionHeader);
+        swipeRefreshLayout = ((SwipeRefreshLayout) view.findViewById(R.id.swipeContainerChat));
+
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void setupAdapter() {
@@ -195,6 +222,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 // but you can call any function here.
                 loadChatHistory(chatAdapter.getCount(),limit);
             }*/
+
             BaseBotMessage baseBotMessage = ((BaseBotMessage) botsChatAdapter.getItem(firstVisibleItem));
             if(baseBotMessage != null) {
                 headerView.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
@@ -207,6 +235,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             }
             this.firstVisibleItem = firstVisibleItem;
         }
+
 
     };
 
@@ -227,45 +256,117 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
             }
         }
     }
-    private void loadChatHistory(final int offset, final int limit){
+
+
+    private void loadChatHistory(final int _offset, final int limit){
         if(fetching)return;
         fetching = true;
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
+        //accessToken, botId, limit, offset, true
+        RestRequest<ServerBotMsgResponse> request = new RestRequest<ServerBotMsgResponse>(ServerBotMsgResponse.class, null,null) {
+            @Override
+            public ServerBotMsgResponse loadDataFromNetwork() throws Exception {
+                ServerBotMsgResponse re = new ServerBotMsgResponse();
+                try {
+                    BotHistory history = getService().getHistory("bearer " + SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken(),
+                            SDKConfiguration.Client.bot_id, limit, _offset, true);
+                    List<BotHistoryMessage> messages = history.getMessages();
+                    ArrayList<BaseBotMessage> msgs = null;
+                    if (messages != null && messages.size() > 0) {
+                        msgs = new ArrayList<>();
+                        for (int index = 0; index < messages.size(); index++) {
+                            BotHistoryMessage msg = messages.get(index);
+                            if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
+                                List<Component> components = msg.getComponents();
+                                String data = components.get(0).getData().getText();
+                                try {
+                                    PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
+                                    BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
+                                    r.setType(msg.getType());
+                                    msgs.add(r);
+                                } catch (com.google.gson.JsonSyntaxException ex) {
+                                    BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
+                                    r.setType(msg.getType());
+                                    msgs.add(r);
+                                }
+                            } else {
+                                try {
+                                    String message = msg.getComponents().get(0).getData().getText();
+                                    RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                    RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+                                    botPayLoad.setMessage(botMessage);
+                                    BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);
+                                    botPayLoad.setBotInfo(botInfo);
+                                    Gson gson = new Gson();
+                                    String jsonPayload = gson.toJson(botPayLoad);
 
-        spiceDBManager.execute(new BotChatsDBRequest(getActivity().getApplicationContext(), null, offset, limit), new RequestListener<BotChatDBResponse>() {
+                                    BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+                                    long cTime = DateUtils.isoFormatter.parse(((BotHistoryMessage) msg).getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                    String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
+                                    botRequest.setCreatedOn(createdTime);
+                                    msgs.add(botRequest);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+
+                        re.setBotMessages(msgs);
+                        re.setOriginalSize(messages!=null?messages.size():0);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return re;
+            }
+        };
+
+        getSpiceManager().execute(request, new RequestListener<ServerBotMsgResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
+                //        dismissProgress();
                 fetching = false;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
-            public void onRequestSuccess(BotChatDBResponse list) {
-                fetching = false;
-                if(list != null && list.size() > 0){
-                    ArrayList<BaseBotMessage> baseBotMessages = new ArrayList<>(list.size());
-                    for(BotMessageDBModel botMessageDBModel : list){
-                        if(botMessageDBModel.isSentMessage()){
-                            botMessageDBModel.dProcessMesssage();
-                            String message = gson.toJson(botMessageDBModel.getMessage().get(0));
-                            BotRequest botRequest = gson.fromJson(message,BotRequest.class);
-                            baseBotMessages.add(botRequest);
-                        }else {
-                            botMessageDBModel.dProcessMesssage();
-                            String message = gson.toJson(botMessageDBModel);
-                            BotResponse botResponse = gson.fromJson(message,BotResponse.class);
-                            baseBotMessages.add(botResponse);
+            public void onRequestSuccess(ServerBotMsgResponse re) {
+                //      dismissProgress();
+                /*if(bResps != null && bResps.size() > 0){
+                    for(BotResponse bResp:bResps){
+                        if(sListener != null){
+                            sListener.onMessage(bResp);
                         }
-
                     }
-                    Collections.reverse(baseBotMessages);
-                    addMessagesToBotChatAdapter(baseBotMessages,offset == 0);
 
+                }*/
+
+                fetching = false;
+
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
                 }
+
+                ArrayList<BaseBotMessage> list = null;
+                if (re != null) {
+                    list = re.getBotMessages();
+                    offset = _offset + re.getOriginalSize();
+                }
+
+                if (list != null && list.size() > 0) {
+                    addMessagesToBotChatAdapter(list, offset == 0);
+                }
+
                 if((list == null || list.size() < limit) && offset != 0){
                     hasMore = false;
                 }
             }
         });
-
 
     }
 }

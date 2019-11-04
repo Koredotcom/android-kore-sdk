@@ -68,5 +68,7 @@ public interface RestAPI {
     Response unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
-    BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
+    //BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
+    BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
+
 }

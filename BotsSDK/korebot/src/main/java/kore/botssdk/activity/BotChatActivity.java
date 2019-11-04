@@ -143,7 +143,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
         @Override
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED){
-                fetchBotMessages();
+                //fetchBotMessages();
             }
             updateTitleBar(state);
         }
@@ -200,8 +200,8 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                 updateActionBar();
                 break;
             case CONNECTED:
-                if(isItFirstConnect)
-                    botClient.sendMessage("welcomedialog");
+                /*if(isItFirstConnect)
+                    botClient.sendMessage("welcomedialog");*/
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
@@ -222,101 +222,6 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
                 updateActionBar();
 
         }
-    }
-
-    private void fetchBotMessages(){
-      //  showProgress("Please wait...",false);
-        RestRequest<RestResponse.BotResponses> request = new RestRequest<RestResponse.BotResponses>(RestResponse.BotResponses.class, null,null) {
-            @Override
-            public RestResponse.BotResponses loadDataFromNetwork() throws Exception {
-                DBHelper dbHelper = new DBHelper(getApplicationContext());
-                RestResponse.BotResponses botMsgs = null;
-                try {
-                    QueryBuilder<BotMessageDBModel, String> builder = dbHelper.getBotMessageDao().queryBuilder();
-                    builder.limit(1L);
-                    builder.where().eq(BotMessageDBModel.BotMessageColumns.IS_SENT_MESSAGE,false);
-                    builder.orderBy("id", false) ; // true for ascending, false for descending
-                    List<BotMessageDBModel> list = dbHelper.getBotMessageDao().query(builder.prepare());
-                    BotMessageDBModel botMessageDBModel = list != null && list.size() > 0 ? list.get(0) : null;
-
-                    if(botMessageDBModel != null){
-                        Log.d("IKIDO","The message id is "+botMessageDBModel.getMessageId());
-                        BotHistory history = getService().getHistory("bearer "+SocketWrapper.getInstance(getApplicationContext()).getAccessToken(),
-                                SDKConfiguration.Client.bot_id,100,botMessageDBModel.getMessageId(),true);
-                        List<BotHistoryMessage> messages = history.getMessages();
-                        Log.d("IKIDO","The Bot history is "+ (history!=null?history.getTotal():"0"));
-                        if(messages != null && messages.size() > 1){
-                            botMsgs = new RestResponse.BotResponses();
-                            for(int index = 0;index < messages.size(); index++){
-                                BotHistoryMessage msg = messages.get(index);
-                                if(msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
-                                    List<Component> components = msg.getComponents();
-                                    String data = components.get(0).getData().getText();
-                                    Log.d("IKIDO","The data is" + data);
-                                    try {
-                                        PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
-                                        BotResponse r = Utils.buildBotMessage(outer,msg.getBotId(),SDKConfiguration.Client.bot_name,msg.getCreatedOn(),msg.getId());
-                                        persistBotMessage(gson.toJson(r),false,null);
-                                        botMsgs.add(r);
-                                    } catch (com.google.gson.JsonSyntaxException ex) {
-                                        Log.d("IKIDO","Yes entered into catch block");
-                                        BotResponse r = Utils.buildBotMessage(data,msg.getBotId(),SDKConfiguration.Client.bot_name,msg.getCreatedOn(),msg.getId());
-                                        persistBotMessage(gson.toJson(r),false,null);
-                                        botMsgs.add(r);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                finally {
-                    dbHelper.close();
-                }
-                return botMsgs;
-            }
-
-        };
-
-        getSpiceManager().execute(request, new RequestListener<RestResponse.BotResponses>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-        //        dismissProgress();
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.BotResponses bResps) {
-          //      dismissProgress();
-                if(bResps != null && bResps.size() > 0){
-                    for(BotResponse bResp:bResps){
-                        if(sListener != null){
-                            sListener.onMessage(bResp);
-                        }
-                    }
-
-                }
-            }
-        });
-    }
-    private void persistBotMessage(final String payload, boolean isSentMessage, BotRequest sentMsg){
-
-        BotDataPersister botDataPersister = new BotDataPersister(getApplicationContext(), null, payload, isSentMessage, sentMsg);
-        getSpiceManager().execute(botDataPersister, new RequestListener<Void>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                Log.d(LOG_TAG, "Persistence fail");
-            }
-
-            @Override
-            public void onRequestSuccess(Void aVoid) {
-                Log.d(LOG_TAG, "Persistence success");
-            }
-        });
-
     }
 
     private void setupTextToSpeech() {

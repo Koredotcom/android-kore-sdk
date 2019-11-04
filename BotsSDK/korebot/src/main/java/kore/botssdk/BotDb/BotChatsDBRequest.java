@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.BotDb;
 
 import android.content.Context;
@@ -30,3 +31,4 @@ public class BotChatsDBRequest extends SpiceRequest<BotChatDBResponse> {
         return botMessageDBModelList;
     }
 }
+*/
