@@ -9,6 +9,7 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.tableview.BotTableView;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -52,6 +53,9 @@ public class BotMainTableView extends ViewGroup {
     public void setData(String template_type, PayloadInner payloadInner){
 //        tableContainer.removeAllViews();
         removeAllViews();
+
+        if(StringUtils.isNullOrEmpty(template_type)) return;
+
         if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type)) {
             for(int index=0; index <payloadInner.getMiniTableDataModels().size(); index++){
                 BotTableView mTable = new BotTableView(mContext);

@@ -172,6 +172,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         botListTemplateView.setVisibility(View.GONE);
         botPieChartView.setVisibility(View.GONE);
         tableView.setVisibility(View.GONE);
+        tableView.setData(null, null);
         lineChartView.setVisibility(GONE);
         calendarEventsView.setVisibility(View.GONE);
         calendarEventsView.populateCalendarEvents(null);
@@ -211,6 +212,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         filesCarousalView.setVisibility(GONE);
         botButtonView.setVisibility(View.GONE);
         tableView.setVisibility(GONE);
+        tableView.setData(null, null);
         lineChartView.setVisibility(GONE);
         botPieChartView.setVisibility(GONE);
         meetingSlotsView.setVisibility(GONE);
@@ -269,12 +271,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         }
                         botPieChartView.populatePieChart("", payInner.getPie_type(), xVal, yVal);
                     }
-                } else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())) {
+                } else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())) {
                     tableView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     tableView.setData(payInner.getTemplate_type(), payInner);
 
-                } else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
                     lineChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     lineChartView.setData(payInner);
@@ -461,7 +464,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For TableViev
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int) dp1, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(tableView, childWidthSpec, wrapSpec);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(tableView, childWidthSpec, childHeightSpec);
 
         /**
          * for line chart
@@ -609,7 +613,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /**
          * For Table view
          */
-        left = cpvSenderImage.getRight() / 2;
+        left = (int) (bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN);//cpvSenderImage.getRight() / 2;
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) (10 * dp1) : minimumTop;
         LayoutUtils.layoutChild(tableView, left, top);
 

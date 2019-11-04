@@ -138,6 +138,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
 
 
+
     protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
