@@ -56,6 +56,7 @@ import kore.botssdk.models.WidgetDialogModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 import static android.view.View.GONE;
@@ -469,8 +470,12 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public int getItemCount() {
-        return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
-        // return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > preview_length ? preview_length : eventList.size()) : 1;
+      //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
+        if(Utility.isIsSingleItemInList())
+        {
+            return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
+        }
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > preview_length ? preview_length : eventList.size()) : 1;
     }
 
 

@@ -21,6 +21,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.WFileLookUpModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.FileUtils;
 
@@ -119,6 +120,10 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
 
     @Override
     public int getItemCount() {
+        if(Utility.isIsSingleItemInList())
+        {
+            return kaFileLookupModels != null && kaFileLookupModels.size() > 0  ?kaFileLookupModels.size() : 1;
+        }
         return kaFileLookupModels != null && kaFileLookupModels.size() > 0 ? (!isExpanded && kaFileLookupModels.size() > previewlength ? previewlength : kaFileLookupModels.size()) : 1;
     }
 

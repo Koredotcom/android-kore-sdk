@@ -26,6 +26,7 @@ import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utility;
 
 public class AnnouncementAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
@@ -137,7 +138,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     @Override
     public int getItemCount() {
-
+        if (Utility.isIsSingleItemInList()) {
+            return data != null && data.size() > 0 ? data.size() : 1;
+        }
         return data != null && data.size() > 0 ? (!isViewMore && data.size() > 3 ? 3 : data.size()) : 1;
 
     }
@@ -156,7 +159,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
         this.data = data;
     }
 
-    public void addAllItems(ArrayList _data){
+    public void addAllItems(ArrayList _data) {
         data.addAll(_data);
     }
 

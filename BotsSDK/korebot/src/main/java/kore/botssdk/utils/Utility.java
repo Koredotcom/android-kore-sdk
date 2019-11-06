@@ -13,6 +13,12 @@ import android.view.inputmethod.InputMethodManager;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class Utility {
+    public static boolean singleItemInList=false;
+
+    public static boolean isIsSingleItemInList()
+    {
+        return singleItemInList;
+    }
 
     public static float convertDpToPixel(Context context, float dp) {
 

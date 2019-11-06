@@ -28,6 +28,7 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
@@ -285,6 +286,10 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public int getItemCount() {
+        if(Utility.isIsSingleItemInList())
+        {
+            return models != null && models.size() > 0 ?models.size():1;
+        }
         return models != null && models.size() > 0 ? (!isExpanded && models.size() > preview_length ? preview_length : models.size()) : 1;
     }
 

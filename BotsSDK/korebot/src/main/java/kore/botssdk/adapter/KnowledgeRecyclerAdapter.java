@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.KnowledgeItemViewBinding;
@@ -45,9 +46,11 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     Drawable errorIcon;
     private int DATA_CARD_FLAG = 1;
     private int MESSAGE = 2;
+    boolean isSingleItem;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     private static int dp1;
+
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
@@ -80,17 +83,17 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
                 public void onClick(View v) {
                     Bundle extras = new Bundle();
                     extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
-                    if(verticalListViewActionHelper != null)
-                        verticalListViewActionHelper.knowledgeItemClicked(extras,true);
+                    if (verticalListViewActionHelper != null)
+                        verticalListViewActionHelper.knowledgeItemClicked(extras, true);
                 }
             });
-            if(position == knowledgeDetailModels.size()-1 && knowledgeDetailModels.size() <3)
+            if (position == knowledgeDetailModels.size() - 1 && knowledgeDetailModels.size() < 3)
                 holder.knowledgeItemViewBinding.divider.setVisibility(View.GONE);
         } else {
 
             EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holderdata;
-            holder.tv_disrcription.setText(holder.getItemViewType()==EMPTY_CARD_FLAG?"No knowledge articles":msg);
-            holder.img_icon.setImageDrawable(holder.getItemViewType()==EMPTY_CARD_FLAG?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
+            holder.tv_disrcription.setText(holder.getItemViewType() == EMPTY_CARD_FLAG ? "No knowledge articles" : msg);
+            holder.img_icon.setImageDrawable(holder.getItemViewType() == EMPTY_CARD_FLAG ? ContextCompat.getDrawable(context, R.drawable.no_meeting) : errorIcon);
 
 
         }
@@ -99,10 +102,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     @Override
     public long getItemId(int position) {
-        if(knowledgeDetailModels != null && knowledgeDetailModels.size()>0) {
+        if (knowledgeDetailModels != null && knowledgeDetailModels.size() > 0) {
             KnowledgeDetailModel product = knowledgeDetailModels.get(position);
             return product.getCreatedOn() + position;
-        }else return position;
+        } else return position;
     }
 
     @Override
@@ -112,8 +115,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
             return DATA_CARD_FLAG;
 
 
-        if(msg!=null&&!msg.equalsIgnoreCase(""))
-        {
+        if (msg != null && !msg.equalsIgnoreCase("")) {
             return MESSAGE;
         }
         return EMPTY_CARD_FLAG;
@@ -126,7 +128,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     @Override
     public int getItemCount() {
-        return knowledgeDetailModels != null &&knowledgeDetailModels.size()>0? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
+        if (isSingleItem) {
+            return knowledgeDetailModels != null && knowledgeDetailModels.size() > 0 ? knowledgeDetailModels.size() : 1;
+        }
+        return knowledgeDetailModels != null && knowledgeDetailModels.size() > 0 ? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
     }
 
     public boolean isExpanded() {
@@ -154,8 +159,12 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     }
 
     public void setMessage(String msg, Drawable errorIcon) {
-        this.msg=msg;
-        this.errorIcon=errorIcon;
+        this.msg = msg;
+        this.errorIcon = errorIcon;
+    }
+
+    public void setIsSingleItem(boolean isSingleItem) {
+        this.isSingleItem = isSingleItem;
     }
 
 
@@ -170,9 +179,9 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     }
 
     @BindingAdapter("loadImage")
-    public static void loadImage(ImageView imageView, String src){
+    public static void loadImage(ImageView imageView, String src) {
         //.resize(imageView.getWidth()>0?imageView.getWidth():(40*dp1),imageView.getHeight()>0?imageView.getWidth():(40*dp1))
-        if(!StringUtils.isNullOrEmpty(src)) {
+        if (!StringUtils.isNullOrEmpty(src)) {
             Picasso.get().load(src)
                     .transform(roundedCornersTransform)
                     .into(imageView);/*, new com.squareup.picasso.Callback() {
