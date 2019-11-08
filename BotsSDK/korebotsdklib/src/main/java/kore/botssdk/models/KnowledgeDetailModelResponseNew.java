@@ -7,6 +7,28 @@ import com.google.gson.annotations.SerializedName;
 
 public class KnowledgeDetailModelResponseNew extends WidgetBaseDataModel{
 
+
+    private Widget.Params params;
+
+    public Widget.Params getParams() {
+        return params;
+    }
+
+    public void setParams(Widget.Params params) {
+        this.params = params;
+    }
+
+    public Widget.Hook getHook() {
+        return hook;
+    }
+
+    public void setHook(Widget.Hook hook) {
+        this.hook = hook;
+    }
+
+    private Widget.Hook hook;
+
+
     @SerializedName("buttons")
     @Expose
     private List<Button> buttons = null;
