@@ -284,7 +284,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart());
             if (model.isOnGoing()) {
                 date = "Next inline...";
-                holder.innerlayout.setBackgroundColor(mContext.getResources().getColor(R.color.color_ededef));
+                holder.innerlayout.setBackgroundColor(mContext.getResources().getColor(R.color.color_f6f6f8));
                 holder.icon_dot.setVisibility(VISIBLE);
             }
 

@@ -87,8 +87,14 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
         if (model instanceof WTaskTemplateModel) {
 
+            CalEventsTemplateModel.Action action = ((List<CalEventsTemplateModel.Action>) actionList).get(position);
+            String text;
+            if(action.getType() != null && action.getType().equals("postback"))
+                text = "\""+action.getTitle()+"\"";
+            else
+                text = action.getTitle();
             //Widget Task
-            holder.tv_actions.setText(((List<CalEventsTemplateModel.Action>) actionList).get(position).getTitle());
+            holder.tv_actions.setText(text);
 
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,7 +163,13 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 }
             });
             //Widget Meeting
-            holder.tv_actions.setText(((WCalEventsTemplateModel) model).getActions().get(position).getTitle());
+            WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(position);
+            String text;
+            if(action.getType() != null && action.getType().equals("postback"))
+                text = "\""+action.getTitle()+"\"";
+            else
+                text = action.getTitle();
+            holder.tv_actions.setText(text);
 
 
         }
