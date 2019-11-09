@@ -15,7 +15,7 @@ public class Filter implements Serializable {
 
     private String id;
     private String title;
-    private String api;
+//    private String api;
     @SerializedName("hook")
     @Expose
     private Widget.Hook hook;
@@ -69,12 +69,12 @@ public class Filter implements Serializable {
         this.title = title;
     }
 
-    public String getApi() {
-        return api;
-    }
-
-    public void setApi(String api) {
-        this.api = api;
-    }
+//    public String getApi() {
+//        return api;
+//    }
+//
+//    public void setApi(String api) {
+//        this.api = api;
+//    }
 
 }
