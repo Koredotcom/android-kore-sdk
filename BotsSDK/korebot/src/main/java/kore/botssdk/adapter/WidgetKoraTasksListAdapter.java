@@ -26,6 +26,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WTaskTemplateModel;
+import kore.botssdk.models.Widget;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.Utility;
@@ -47,15 +48,15 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     String msg;
     Drawable errorIcon;
 
-    public String getApi() {
+    public Widget.Hook getApi() {
         return api;
     }
 
-    public void setApi(String api) {
+    public void setApi(Widget.Hook api) {
         this.api = api;
     }
 
-    private String api;
+    private Widget.Hook api;
     public String getNodata_meesage() {
         return nodata_meesage;
     }
