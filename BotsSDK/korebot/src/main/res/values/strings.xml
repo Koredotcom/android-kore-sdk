@@ -55,6 +55,7 @@
     <string name="icon_e926">&#xe926;</string> <!-- due filled-->
     <string name="icon_e943">&#xe943;</string> <!-- notif-->
     <string name="icon_64">&#xe64;</string> <!-- meetings-->
+    <string name="icon_2d">&#x2d;</string><!-- meetings-->
     <string name="icon_e954">&#xe954;</string> <!-- join-->
     <string name="icon_e92a">&#xe92a;</string> <!-- notes-->
 

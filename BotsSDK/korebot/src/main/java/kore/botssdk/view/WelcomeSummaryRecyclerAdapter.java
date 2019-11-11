@@ -79,7 +79,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
     private void setImage(WelcomeChatSummaryModel mdl, ViewHolder holder){
         switch(mdl.getIconId()){
             case "meeting":
-                holder.itemRowBinding.icon.setText(R.string.icon_e979);//
+                holder.itemRowBinding.icon.setText(R.string.icon_2d);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
             case "form":
