@@ -427,6 +427,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             notifyDataSetChanged();
 
                         }
+                        else {
+                            if(verticalListViewActionHelper!=null) {
+                                verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
+                            }
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(type)) {
                         try {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
