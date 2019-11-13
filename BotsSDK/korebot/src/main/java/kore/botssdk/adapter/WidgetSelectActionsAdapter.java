@@ -1,13 +1,14 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -15,18 +16,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
-import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.utils.Constants;
@@ -104,7 +100,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                         startActions(position, false);
 
                     } else {
-                        DialogCaller.showDialog(mainContext, new DialogInterface.OnClickListener() {
+                        DialogCaller.showDialog(mainContext,null, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 startActions(position, true);
@@ -150,7 +146,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                             postAction(position, false);
                         } else {
 
-                            DialogCaller.showDialog(mainContext, new DialogInterface.OnClickListener() {
+                            DialogCaller.showDialog(mainContext,null, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     postAction(position, true);

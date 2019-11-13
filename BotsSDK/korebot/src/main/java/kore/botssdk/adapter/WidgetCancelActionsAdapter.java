@@ -1,42 +1,31 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-
-import kore.botssdk.R;
-import kore.botssdk.dialogs.WidgetDialogActivity;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import kore.botssdk.R;
+import kore.botssdk.dialogs.WidgetDialogActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.Utility;
-
-import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCancelActionsAdapter.WidgetCancelViewHolder> {
 
@@ -109,7 +98,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
                         postAction(position,false);
                     } else {
 
-                        DialogCaller.showDialog(mainContext,new DialogInterface.OnClickListener() {
+                        DialogCaller.showDialog(mainContext,null,new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 postAction(position,true);

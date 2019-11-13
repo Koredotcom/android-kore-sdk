@@ -7,13 +7,14 @@ import android.text.Html;
 
 public class DialogCaller {
 
-public static void showDialog(Context context,
-                              DialogInterface.OnClickListener onClickListener) {
+public static void showDialog(Context context,String skillName, DialogInterface.OnClickListener onClickListener) {
 
+    String _skillName = StringUtils.isNullOrEmpty(skillName)? Constants.SKILL_HOME:skillName;
     AlertDialog.Builder dialog = new AlertDialog.Builder(context);
     dialog.setCancelable(false);
+
     dialog.setMessage(Html.fromHtml("This action will end your conversation with <b>" + Constants.SKILL_SELECTION +
-            "</b> and move to "+ Constants.SKILL_HOME+". Do you want to continue?"));
+            "</b> and move to <b>"+ _skillName+"</b>. Do you want to continue?"));
 
 
 
