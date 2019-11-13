@@ -83,4 +83,9 @@ public class PanelDataLRUCache {
             end = node.left;
         }
     }
+
+    public void clearAll() {
+        if(hashMap != null)
+            hashMap.clear();
+    }
 }
