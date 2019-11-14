@@ -172,7 +172,7 @@ private Hook hook;
     private String customStyle;
 
     public String getCustomStyle() {
-        return customStyle;
+        return customStyle!=null?customStyle:"default";
     }
 
     public void setCustomStyle(String customStyle) {
