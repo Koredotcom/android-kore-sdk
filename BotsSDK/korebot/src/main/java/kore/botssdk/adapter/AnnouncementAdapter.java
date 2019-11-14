@@ -35,6 +35,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     private static final int MESSAGE = 2;
     Context context;
     String msg;
+    boolean isFromWidget;
     Drawable errorIcon;
 //    public void setData(ArrayList<AnnoucementResModel> data) {
 //        this.data = data;
@@ -138,10 +139,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
     @Override
     public int getItemCount() {
-        if (Utility.isIsSingleItemInList()) {
+        if (isFromWidget&&Utility.isIsSingleItemInList()) {
             return data != null && data.size() > 0 ? data.size() : 1;
         }
-        return data != null && data.size() > 0 ? (!isViewMore && data.size() > 3 ? 3 : data.size()) : 1;
+        return data != null && data.size() > 0 ? (!isFromWidget&&!isViewMore && data.size() > 3 ? 3 : data.size()) : 1;
 
     }
 
@@ -176,6 +177,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg = msg;
         this.errorIcon = errorIcon;
+    }
+
+    public void setFromWidget(boolean isFromWidget) {
+        this.isFromWidget=isFromWidget;
     }
 
     public static class AnnouncementViewHolder extends RecyclerView.ViewHolder {
