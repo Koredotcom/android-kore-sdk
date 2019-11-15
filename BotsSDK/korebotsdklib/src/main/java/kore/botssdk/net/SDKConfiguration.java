@@ -14,6 +14,13 @@ public class SDKConfiguration {
      */
 
     private static boolean TRIGGER_INIT_MESSAGE = false;
+    private static String INIT_MESSAGE = "Welpro";
+    public static final String BOT_ICON_URL = "";
+
+    private static boolean TIME_STAMPS_REQUIRED = true;
+    private static boolean APPLY_FONT_STYLE = true;
+
+
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -31,8 +38,7 @@ public class SDKConfiguration {
         INIT_MESSAGE = initMessage;
     }
 
-    private static String INIT_MESSAGE = "Welpro";
-    public static final String BOT_ICON_URL = "";
+
 
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
@@ -101,15 +107,13 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static String client_id = "cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "sudharani.sanagapalli@kore.com";
-        public static String bot_name = "Chatbot";
-        public static String bot_id = "st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
-
+        public static String client_id = "cs-424ada87-ae9c-5d9a-8415-cb99b90e1d19";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "fpVQvJjDQk6EqFry97xSH/Wn5s0dLfS3rBMAl3/zq+w=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "";
+        public static String bot_name = "Consumer VPA";//"NewTemplates";
+        public static String bot_id = "st-13461901-724a-506e-9678-148a6f19a72a";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
 
     }
-
 
     public static class BubbleColors {
         public static String rightBubbleSelected = "#6168e7";
@@ -198,7 +202,7 @@ public class SDKConfiguration {
             BubbleColors.quickReplyFontColor = quickReplyFontColor;
         }
 
-        public static String quickReplyFontColor = "#ffffff";
+        public static String quickReplyFontColor = "#000000";
 
     }
 
@@ -209,9 +213,6 @@ public class SDKConfiguration {
     public static void setTimeStampsRequired(boolean timeStampsRequired) {
         TIME_STAMPS_REQUIRED = timeStampsRequired;
     }
-
-    private static boolean TIME_STAMPS_REQUIRED = true;
-    private static boolean APPLY_FONT_STYLE = true;
 
     /**
      * don't use relative it is licenced version
