@@ -71,15 +71,41 @@ public class Widget implements Serializable {
     private String theme;
    // private String api;
     private String utterances_header;
+
+    @SerializedName("elements")
+    @Expose
+    private List<Element> elements = null;
+
+
+
+    private List<MultiAction> multi_actions = null;
+
     @SerializedName("actions")
     @Expose
     private List<Action> actions = null;
+
     public List<String> getUtterances() {
         return utterances;
     }
 
     public void setUtterances(List<String> utterances) {
         this.utterances = utterances;
+    }
+
+    public List<Element> getElements() {
+        return elements;
+    }
+
+    public void setElements(List<Element> elements) {
+        this.elements = elements;
+    }
+
+    public List<MultiAction> getMultiActions() {
+        return multi_actions;
+    }
+
+    public void setMultiActions(List<MultiAction> multi_actions) {
+        this.multi_actions = multi_actions;
     }
 
     private List<String> utterances = null;
@@ -156,9 +182,9 @@ public class Widget implements Serializable {
     public void setApi(String api) {
         this.api = api;
     }*/
-@SerializedName("hook")
-@Expose
-private Hook hook;
+    @SerializedName("hook")
+    @Expose
+    private Hook hook;
 
     public Hook getHook() {
         return hook;
@@ -264,6 +290,16 @@ private Hook hook;
         @Expose
         private String limit;
 
+        public String getSkillId() {
+            return skillId;
+        }
+
+        public void setSkillId(String skillId) {
+            this.skillId = skillId;
+        }
+
+        private String skillId;
+
         public String getTz() {
             return tz;
         }
@@ -324,6 +360,7 @@ private Hook hook;
         }
 
     }
+
     public class Body implements Serializable{
 
         @SerializedName("filter")
@@ -350,4 +387,189 @@ private Hook hook;
         }
 
     }
+
+    /*public class Element implements Serializable{
+        @SerializedName("title")
+        @Expose
+        private String title;
+
+        @SerializedName("subTitle")
+        @Expose
+        private String sub_title;
+
+        @SerializedName("icon")
+        @Expose
+        private String icon;
+
+        @SerializedName("filter")
+        @Expose
+        private Button filter;
+
+    }
+
+    public class Button extends MultiAction{
+        private String theme;
+
+        public String getTheme() {
+            return theme;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+    }*/
+
+    public class Element {
+
+        private String title;
+        private String sub_title;
+        private String icon;
+        private List<Button> button = null;
+        private String text;
+
+        private List<Action> actions = null;
+        private DefaultAction default_action;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getSub_title() {
+            return sub_title;
+        }
+
+        public void setSub_title(String sub_title) {
+            this.sub_title = sub_title;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
+
+        public List<Button> getButton() {
+            return button;
+        }
+
+        public void setButton(List<Button> button) {
+            this.button = button;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public List<Action> getActions() {
+            return actions;
+        }
+
+        public void setActions(List<Action> actions) {
+            this.actions = actions;
+        }
+
+        public DefaultAction getDefaultAction() {
+            return default_action;
+        }
+
+        public void setDefaultAction(DefaultAction default_action) {
+            this.default_action = default_action;
+        }
+
+    }
+
+    public class Button {
+
+        private String title;
+        private String theme;
+        private String type;
+        private String utterance;
+        private String url;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getTheme() {
+            return theme;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getUtterance() {
+            return utterance;
+        }
+
+        public void setUtterance(String utterance) {
+            this.utterance = utterance;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+    }
+
+
+    public class DefaultAction {
+
+        private String title;
+        private String type;
+        private String url;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+    }
+
+
 }
