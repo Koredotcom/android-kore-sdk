@@ -1,8 +1,11 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +31,7 @@ import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
@@ -196,8 +200,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             final Element model = (Element) eventList.get(position);
 
             holder.txtTitle.setText(model.getTitle());
-            holder.txtSubTitle.setText("sub title"/*model.getSub_title()*/);
-            holder.txtText.setText("description 123 test test test test test test test test test"/*model.getText()*/);
+            holder.txtSubTitle.setText(StringUtils.isNullOrEmpty(model.getSub_title())?"No title":model.getSub_title());
+            holder.txtText.setText("No description"/*model.getText()*/);
 
             if(model.getIcon()!=null)
             Picasso.get().load(model.getIcon()).transform(new KaRoundedCornersTransform()).into(holder.imageIcon);
@@ -257,26 +261,16 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }*/
 
-           /* holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    if (verticalListViewActionHelper != null && isFromWidget() && isFromFullView) {
-                        if (selectedIds.contains(model.getData().getEventId())) {
-                            selectedIds.remove(model.getData().getEventId());
-                            holder.innerlayout.setSelected(false);
-                        } else {
-                            selectedIds.add(model.getData().getEventId());
-                            holder.innerlayout.setSelected(true);
-
-                        }
-
-                        verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
-                        notifyDataSetChanged();
-                        return true;
+                public void onClick(View view) {
+                    Log.d("IKIDO","HI");
+                    if(model.getDefaultAction().getType().equals("url")) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getDefaultAction().getUrl()));
+                        mContext.startActivity(browserIntent);
                     }
-                    return false;
                 }
-            });*/
+            });
             if (position == eventList.size() - 1 && eventList.size() < 3)
                 holder.divider.setVisibility(View.GONE);
 
@@ -473,6 +467,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtText = (TextView) itemView.findViewById(R.id.txtText);
             imageIcon = (ImageView) itemView.findViewById(R.id.imageIcon);
+            innerlayout = itemView.findViewById(R.id.innerlayout);
 
         }
     }
