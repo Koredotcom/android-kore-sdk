@@ -290,15 +290,15 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
             holder.time_tostart_text.setText(DateUtils.calenderDateFormation(mContext,startTime));
             holder.txtDateTime.setText(date);
-            holder.icon_down.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
-            Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.round_shape_common);
+//            holder.icon_down.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
+            /*Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.round_shape_common);
             try {
                 ((GradientDrawable) drawable).setColor(mContext.getResources().getColor(R.color.color_d8d8d8));
 
             } catch (Exception e) {
 
             }
-            holder.icon_down.setBackground(drawable);
+            holder.icon_down.setBackground(drawable);*/
 
             if (selectedIds.size() > 0) {
                 holder.checkbox.setVisibility(VISIBLE);
@@ -741,7 +741,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView rowIndex, icon_down;
+        public TextView rowIndex;
+        public ImageView icon_down;
         TextView txtDateTime;
         LinearLayout layoutDetails, innerlayout;
         public View sideBar;

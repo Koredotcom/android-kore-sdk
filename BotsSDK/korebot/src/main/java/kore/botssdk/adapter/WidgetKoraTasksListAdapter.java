@@ -187,15 +187,15 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
 
           holder.taskViewLayoutBinding.rootLayout.setBackground(isFromFullView?context.getResources().getDrawable(R.drawable.task_view_background):null);
-            holder.taskViewLayoutBinding.iconDown.setTypeface(ResourcesCompat.getFont(context, R.font.icomoon));
-            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
+//            holder.taskViewLayoutBinding.iconDown.setTypeface(ResourcesCompat.getFont(context, R.font.icomoon));
+            /*Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
             try {
                 ((GradientDrawable) drawable).setColor(context.getResources().getColor(R.color.color_d8d8d8));
 
             } catch (Exception e) {
 
             }
-            holder.taskViewLayoutBinding.iconDown.setBackground(drawable);
+            holder.taskViewLayoutBinding.iconDown.setBackground(drawable);*/
 
 
 
