@@ -20,11 +20,14 @@ import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
+import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
+import kore.botssdk.models.Widget.Action;
+import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.Utility;
@@ -45,6 +48,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((WTaskTemplateModel) model).getActions();
         } else if (model instanceof WCalEventsTemplateModel) {
             this.actionList = ((WCalEventsTemplateModel) model).getActions();
+        }else if(model instanceof Element){
+            this.actionList = ((Element) model).getActions();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -168,6 +173,57 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             holder.tv_actions.setText(text);
 
 
+        }else if (model instanceof Element) {
+            Action act = ((Element) model).getActions().get(position);
+            String text;
+
+            if (act.getType().equalsIgnoreCase("url")) {
+                holder.tv_actions.setText(act.getTitle());
+                holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        verticalListViewActionHelper.navigationToDialAndJoin("url", act.getUrl());
+                        (widgetDialogActivity).dismiss();
+                    }
+                });
+
+            } else {
+
+                if (act.getType() != null && act.getType().equals("postback")) {
+                    text = "\"" + act.getTitle() + "\"";
+                }
+                else {
+                    text = act.getTitle();
+                }
+
+                holder.tv_actions.setText(text);
+
+                holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        (widgetDialogActivity).dismiss();
+
+                        if (Utility.checkIsSkillKora()) {
+                            EntityEditEvent event = new EntityEditEvent();
+                            event.setMessage("" + act.getUtterance());
+                            event.setPayLoad(null);
+                            KoreEventCenter.post(event);
+
+                        } else {
+                            DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    EntityEditEvent event = new EntityEditEvent();
+                                    event.setMessage("" + act.getUtterance());
+                                    event.setPayLoad(null);
+                                    KoreEventCenter.post(event);
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -190,6 +246,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             return actionList != null ? ((List<CalEventsTemplateModel.Action>) actionList).size() : 0;
         } else if (model instanceof WCalEventsTemplateModel) {
             return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
+        }else if(model instanceof Element){
+            return model != null && actionList != null ? ((Element)model).getActions().size() : 0;
         }
         return 0;
     }

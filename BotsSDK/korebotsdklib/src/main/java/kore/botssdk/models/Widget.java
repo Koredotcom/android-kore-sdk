@@ -28,6 +28,17 @@ public class Widget implements Serializable {
         @Expose
         private String utterance;
 
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String url;
+
+
         public String getTitle() {
             return title;
         }
@@ -193,9 +204,12 @@ public class Widget implements Serializable {
     public void setHook(Hook hook) {
         this.hook = hook;
     }
-    @SerializedName("custom_style")
+    @SerializedName("templateType")
     @Expose
     private String customStyle;
+
+
+
 
     public String getCustomStyle() {
         return customStyle!=null?customStyle:"default";
@@ -427,8 +441,38 @@ public class Widget implements Serializable {
         private List<Button> button = null;
         private String text;
 
+        public String getTheme() {
+            return theme;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+
+        private String theme;
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        private String type;
+
         private List<Action> actions = null;
         private DefaultAction default_action;
+
+        public String getModifiedTime() {
+            return modifiedTime;
+        }
+
+        public void setModifiedTime(String modifiedTime) {
+            this.modifiedTime = modifiedTime;
+        }
+
+        private String modifiedTime;
 
         public String getTitle() {
             return title;
@@ -495,6 +539,16 @@ public class Widget implements Serializable {
         private String type;
         private String utterance;
         private String url;
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public void setPayload(String payload) {
+            this.payload = payload;
+        }
+
+        private String payload;
 
         public String getTitle() {
             return title;

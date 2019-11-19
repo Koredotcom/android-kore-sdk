@@ -12,16 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -30,8 +31,10 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
-import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
+import kore.botssdk.view.viewUtils.CircleTransform;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
@@ -111,26 +114,12 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public int getItemViewType(int position) {
-        /*if (eventList != null && eventList.size() > 0) {
-            return DATA_FOUND;
-        }
-
-        if (msg != null && !msg.equalsIgnoreCase("")) {
-            return MESSAGE;
-        }*/
         return DATA_FOUND;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-  /*      if (viewType == EMPTY_CARD || viewType == MESSAGE) {
-
-
-            View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
-            return new EmptyWidgetViewHolder(view);
-        } else*/
             return new DefaultWidgetAdapter.ViewHolder(inflater.inflate(R.layout.default_list_item, parent, false));
     }
 
@@ -147,33 +136,73 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
-        if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
-            EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
-            emptyHolder.tv_disrcription.setText(msg != null ? msg : "No Upcoming Meetings");
-            emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext, R.drawable.no_meeting) : errorIcon);
+        DefaultWidgetAdapter.ViewHolder holder = (DefaultWidgetAdapter.ViewHolder) holderData;
 
+        final Element model = eventList.get(position);
 
-        } else {
+        if(StringUtils.isNullOrEmpty(model.getTitle())){
+            holder.txtTitle.setVisibility(GONE);
+        }else {
+            holder.txtTitle.setText(model.getTitle().trim());
+        }
 
-            DefaultWidgetAdapter.ViewHolder holder = (DefaultWidgetAdapter.ViewHolder) holderData;
+        if(StringUtils.isNullOrEmpty(model.getSub_title())){
+            holder.txtSubTitle.setVisibility(GONE);
+        }else {
+            holder.txtSubTitle.setText(model.getSub_title().trim());
+        }
 
-          /*  holder.icon_notes.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
-            holder.icon_dial.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
-            holder.icon_join.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));*/
-
-
-            final Element model = eventList.get(position);
-
-            holder.txtTitle.setText(model.getTitle());
-            holder.txtSubTitle.setText(StringUtils.isNullOrEmpty(model.getSub_title())?"No title":model.getSub_title());
-            holder.txtText.setText("No description"/*model.getText()*/);
-
-            if(model.getIcon()!=null)
-            Picasso.get().load(model.getIcon()).transform(new KaRoundedCornersTransform()).into(holder.imageIcon);
+        if(StringUtils.isNullOrEmpty(model.getModifiedTime())){
+            holder.txtTextModif.setVisibility(GONE);
+        }else {
+            holder.txtTextModif.setText(model.getModifiedTime().trim());
+        }
 
 
-            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
+        if(StringUtils.isNullOrEmpty(model.getText())){
+            holder.txtText.setVisibility(GONE);
+        }else {
+            holder.txtText.setText(model.getText().trim());
+        }
+
+        if(!StringUtils.isNullOrEmpty(model.getIcon())) {
+            Picasso.get().load(model.getIcon()).transform(new CircleTransform()).into(holder.imageIcon);
+        }else{
+            holder.imageIcon.setVisibility(GONE);
+        }
+
+        if(model.getActions() != null && model.getActions().size()>0){
+            holder.icon_down.setVisibility(VISIBLE);
+            holder.icon_down.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    {
+                        WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                        bottomSheetDialog.setisFromFullView(false);
+                        bottomSheetDialog.setData(model);
+                        bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
+                        bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+                    }
+                }
+            });
+        }else{
+            holder.icon_down.setVisibility(GONE);
+        }
+
+        if(model.getButton() !=null && model.getButton().size()>0) {
+            /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            layoutManager.setJustifyContent(JustifyContent.FLEX_START);*/
+
+            holder.recyclerView.setLayoutManager( new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+            ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton());
+            holder.recyclerView.setAdapter(buttonRecyclerAdapter);
+            buttonRecyclerAdapter.notifyDataSetChanged();
+        }
+
+        holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {
@@ -182,10 +211,9 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                     }
                 }
             });
-            if (position == eventList.size() - 1 && eventList.size() < 3)
+        if (position == eventList.size() - 1 && eventList.size() < 3) {
                 holder.divider.setVisibility(View.GONE);
-
-        }
+            }
     }
 
     @Override
@@ -224,21 +252,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     public void setCalData(List<Element> data) {
         this.eventList = (ArrayList<Element>) data;
-        /*if (eventList != null) {
-            try {
-                this.eventList = expandEventList(eventList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            this.eventList = sortEventList(eventList);
-
-            if (eventList.size() > 3) {
-                if (verticalListViewActionHelper != null)
-                    verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
-            }
-        }*/
         notifyDataSetChanged();
-
     }
 
 
@@ -271,13 +285,6 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         this.errorIcon = errorIcon;
     }
 
-    public Duration get_cursor() {
-        return _cursor;
-    }
-
-    public void set_cursor(Duration _cursor) {
-        this._cursor = _cursor;
-    }
 
     public interface EventSelectionListener {
         void onEventSelected(String url);
@@ -288,16 +295,15 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView icon_down;
         LinearLayout layoutDetails, innerlayout;
-        public View sideBar;
         public TextView txtTitle;
         public TextView txtSubTitle;
-        public TextView txtText;
+        public TextView txtText, txtTextModif;
         public TextView tvborder, tv_users;
         public ImageView imageIcon;
         public View divider;
-        TextView icon_dial, icon_join, icon_notes, time_tostart_text;
+        public ImageView icon_down;
+        public RecyclerView recyclerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -305,11 +311,16 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
             txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
             txtText = (TextView) itemView.findViewById(R.id.txtText);
+            txtTextModif = (TextView) itemView.findViewById(R.id.txtTextModif);
+
+
             imageIcon = (ImageView) itemView.findViewById(R.id.imageIcon);
             innerlayout = itemView.findViewById(R.id.innerlayout);
 
+            recyclerView = itemView.findViewById(R.id.buttonsList);
+
+            icon_down = itemView.findViewById(R.id.icon_down);
+
         }
     }
-
-
 }
