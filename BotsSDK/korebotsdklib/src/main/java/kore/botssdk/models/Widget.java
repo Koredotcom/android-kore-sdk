@@ -442,7 +442,10 @@ public class Widget implements Serializable {
         private String text;
 
         public String getTheme() {
-            return theme;
+            if(theme != null)
+                return theme;
+            else
+                return "#A4A4A4";
         }
 
         public void setTheme(String theme) {

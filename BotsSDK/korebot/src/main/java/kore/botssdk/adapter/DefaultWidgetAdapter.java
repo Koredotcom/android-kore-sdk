@@ -320,6 +320,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             recyclerView = itemView.findViewById(R.id.buttonsList);
 
             icon_down = itemView.findViewById(R.id.icon_down);
+            divider = itemView.findViewById(R.id.divider);
 
         }
     }

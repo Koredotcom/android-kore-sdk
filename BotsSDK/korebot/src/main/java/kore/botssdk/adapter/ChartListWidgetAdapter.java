@@ -113,11 +113,13 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter {
 
             Drawable dr = mContext.getDrawable(R.drawable.selected_video);
 
-            GradientDrawable drawable = (GradientDrawable)dr;
-            drawable.setColor(Color.parseColor(color));
-            drawable.setStroke(10, Utility.getDarkerColor(Color.parseColor(color), 0.7f));
-            drawable.setShape(shape);
-            holder.text.setBackground(drawable);
+            if(!StringUtils.isNullOrEmpty(color)) {
+                GradientDrawable drawable = (GradientDrawable) dr;
+                drawable.setColor(Color.parseColor(color));
+                drawable.setStroke(10, Utility.getDarkerColor(Color.parseColor(color), 0.7f));
+                drawable.setShape(shape);
+                holder.text.setBackground(drawable);
+            }
         }
     }
 
