@@ -65,6 +65,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private CalendarEventsAdapter.EventSelectionListener eventSelectionListener;
     private Context mContext;
 
+    String skillName;
+
 
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
@@ -198,6 +200,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             holder.recyclerView.setLayoutManager( new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
             ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton());
+            buttonRecyclerAdapter.setSkillName(skillName);
             holder.recyclerView.setAdapter(buttonRecyclerAdapter);
             buttonRecyclerAdapter.notifyDataSetChanged();
         }
@@ -323,5 +326,13 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             divider = itemView.findViewById(R.id.divider);
 
         }
+    }
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public void setSkillName(String skillName) {
+        this.skillName = skillName;
     }
 }

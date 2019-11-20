@@ -126,8 +126,11 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter {
     public void setCalData(List<Element> data) {
         this.eventList = (ArrayList<Element>) data;
         notifyDataSetChanged();
-
     }
+    public ArrayList getData(){
+        return (ArrayList) this.eventList;
+    }
+
     @Override
     public long getItemId(int position) {
         return position;

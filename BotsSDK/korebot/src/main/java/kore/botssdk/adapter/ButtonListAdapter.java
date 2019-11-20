@@ -23,10 +23,14 @@ import kore.botssdk.utils.StringUtils;
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private LayoutInflater inflater;
     private List<Widget.Button> buttons;
+    private Context mContext;
+
+    private String skillName;
 
     public ButtonListAdapter(Context context, List<Button> buttons) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
     @NonNull
@@ -40,22 +44,40 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
 
 //        holder.ll.setVisibility(View.VISIBLE);
         Button btn = buttons.get(i);
+
         holder.tv.setText(btn.getTitle());
         holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+
+        String utt = null;
+        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
+            utt = btn.getPayload();
+        }
+        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
+            utt = btn.getUtterance();
+        }
+        final String utterance = utt;
+
         holder.tv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                EntityEditEvent event = new EntityEditEvent();
-                String utt = null;
-                if(!StringUtils.isNullOrEmpty(btn.getPayload())){
-                    utt = btn.getPayload();
-                }
-                if(!StringUtils.isNullOrEmpty(btn.getUtterance())){
-                    utt = btn.getUtterance();
-                }
-                event.setMessage("" + utt);
-                event.setPayLoad(null);
-                KoreEventCenter.post(event);
+
+                buttonAction(utterance);
+
+               /* if (Utility.checkIsSkillKora()) {
+                    buttonAction(utterance);
+                } else {
+                    if(!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
+                        DialogCaller.showDialog(mContext, skillName, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                buttonAction(utterance);
+                                dialog.dismiss();
+                            }
+                        });
+                    }else{
+                        buttonAction(utterance);
+                    }
+                }*/
             }
         });
     }
@@ -80,10 +102,20 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
 
     public void buttonAction(String utterance){
         EntityEditEvent event = new EntityEditEvent();
+
         event.setMessage("" + utterance);
         event.setPayLoad(null);
         KoreEventCenter.post(event);
     }
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public void setSkillName(String skillName) {
+        this.skillName = skillName;
+    }
+
 
 }
 
