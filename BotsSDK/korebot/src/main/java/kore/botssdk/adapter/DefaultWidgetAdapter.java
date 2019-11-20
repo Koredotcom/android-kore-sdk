@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
 import static android.view.View.GONE;
@@ -116,12 +118,23 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public int getItemViewType(int position) {
-        return DATA_FOUND;
+        if (eventList != null && eventList.size() > 0) {
+            return DATA_FOUND;
+        }
+
+        if (msg != null && !msg.equalsIgnoreCase("")) {
+            return MESSAGE;
+        }
+        return EMPTY_CARD;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == EMPTY_CARD || viewType == MESSAGE) {
+            View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
+            return new EmptyWidgetViewHolder(view);
+        }else
             return new DefaultWidgetAdapter.ViewHolder(inflater.inflate(R.layout.default_list_item, parent, false));
     }
 
@@ -138,85 +151,94 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
+        if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
+            EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
-        DefaultWidgetAdapter.ViewHolder holder = (DefaultWidgetAdapter.ViewHolder) holderData;
-
-        final Element model = eventList.get(position);
-
-        if(StringUtils.isNullOrEmpty(model.getTitle())){
-            holder.txtTitle.setVisibility(GONE);
-        }else {
-            holder.txtTitle.setText(model.getTitle().trim());
-        }
-
-        if(StringUtils.isNullOrEmpty(model.getSub_title())){
-            holder.txtSubTitle.setVisibility(GONE);
-        }else {
-            holder.txtSubTitle.setText(model.getSub_title().trim());
-        }
-
-        if(StringUtils.isNullOrEmpty(model.getModifiedTime())){
-            holder.txtTextModif.setVisibility(GONE);
-        }else {
-            holder.txtTextModif.setText(model.getModifiedTime().trim());
-        }
+            emptyHolder.tv_disrcription.setText(msg != null ? msg : "No data");
+            emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext, R.drawable.no_meeting) : errorIcon);
 
 
-        if(StringUtils.isNullOrEmpty(model.getText())){
-            holder.txtText.setVisibility(GONE);
-        }else {
-            holder.txtText.setText(model.getText().trim());
-        }
+        } else {
 
-        if(!StringUtils.isNullOrEmpty(model.getIcon())) {
-            Picasso.get().load(model.getIcon()).transform(new CircleTransform()).into(holder.imageIcon);
-        }else{
-            holder.imageIcon.setVisibility(GONE);
-        }
+            DefaultWidgetAdapter.ViewHolder holder = (DefaultWidgetAdapter.ViewHolder) holderData;
 
-        if(model.getActions() != null && model.getActions().size()>0){
-            holder.icon_down.setVisibility(VISIBLE);
-            holder.icon_down.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    {
-                        WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
-                        bottomSheetDialog.setData(model);
-                        bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
-                        bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+            final Element model = eventList.get(position);
+
+            if (StringUtils.isNullOrEmpty(model.getTitle())) {
+                holder.txtTitle.setVisibility(GONE);
+            } else {
+                holder.txtTitle.setText(model.getTitle().trim());
+            }
+
+            if (StringUtils.isNullOrEmpty(model.getSub_title())) {
+                holder.txtSubTitle.setVisibility(GONE);
+            } else {
+                holder.txtSubTitle.setText(model.getSub_title().trim());
+            }
+
+            if (StringUtils.isNullOrEmpty(model.getModifiedTime())) {
+                holder.txtTextModif.setVisibility(GONE);
+            } else {
+                holder.txtTextModif.setText(model.getModifiedTime().trim());
+            }
+
+
+            if (StringUtils.isNullOrEmpty(model.getText())) {
+                holder.txtText.setVisibility(GONE);
+            } else {
+                holder.txtText.setText(model.getText().trim());
+            }
+
+            if (!StringUtils.isNullOrEmpty(model.getIcon())) {
+                Picasso.get().load(model.getIcon()).transform(new CircleTransform()).into(holder.imageIcon);
+            } else {
+                holder.imageIcon.setVisibility(GONE);
+            }
+
+            if (model.getActions() != null && model.getActions().size() > 0) {
+                holder.icon_down.setVisibility(VISIBLE);
+                holder.icon_down.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        {
+                            WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                            bottomSheetDialog.setisFromFullView(false);
+                            bottomSheetDialog.setData(model);
+                            bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
+                            bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+                        }
                     }
-                }
-            });
-        }else{
-            holder.icon_down.setVisibility(GONE);
-        }
+                });
+            } else {
+                holder.icon_down.setVisibility(GONE);
+            }
 
-        if(model.getButton() !=null && model.getButton().size()>0) {
+            if (model.getButton() != null && model.getButton().size() > 0) {
             /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
             layoutManager.setFlexDirection(FlexDirection.ROW);
             layoutManager.setJustifyContent(JustifyContent.FLEX_START);*/
 
-            holder.recyclerView.setLayoutManager( new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+                holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-            ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton());
-            buttonRecyclerAdapter.setSkillName(skillName);
-            holder.recyclerView.setAdapter(buttonRecyclerAdapter);
-            buttonRecyclerAdapter.notifyDataSetChanged();
-        }
+                ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton());
+                buttonRecyclerAdapter.setSkillName(skillName);
+                holder.recyclerView.setAdapter(buttonRecyclerAdapter);
+                buttonRecyclerAdapter.notifyDataSetChanged();
+            }
 
-        holder.innerlayout.setOnClickListener(new View.OnClickListener() {
+            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {
+                    if (model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getDefaultAction().getUrl()));
                         mContext.startActivity(browserIntent);
                     }
                 }
             });
-        if (position == eventList.size() - 1 && eventList.size() < 3) {
+            if (position == eventList.size() - 1 && eventList.size() < 3) {
                 holder.divider.setVisibility(View.GONE);
             }
+        }
     }
 
     @Override
