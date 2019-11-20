@@ -206,17 +206,17 @@ public class Widget implements Serializable {
     }
     @SerializedName("templateType")
     @Expose
-    private String customStyle;
+    private String templateType;
 
 
 
 
     public String getCustomStyle() {
-        return customStyle!=null?customStyle:"default";
+        return templateType!=null?templateType:"default";
     }
 
-    public void setCustomStyle(String customStyle) {
-        this.customStyle = customStyle;
+    public void setCustomStyle(String templateType) {
+        this.templateType = templateType;
     }
 
     public List<Filter> getFilters() {
