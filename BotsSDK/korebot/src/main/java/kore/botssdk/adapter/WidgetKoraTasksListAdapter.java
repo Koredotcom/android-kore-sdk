@@ -44,7 +44,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private int NO_DATA = 0;
     private int MESSAGE=2;
     private String nodata_meesage = "";
-    private int preview_length;
+    private int previewLength;
     String msg;
     Drawable errorIcon;
 
@@ -291,7 +291,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         {
             return models != null && models.size() > 0 ?models.size():1;
         }
-        return models != null && models.size() > 0 ? (!isExpanded && models.size() > preview_length ? preview_length : models.size()) : 1;
+        return models != null && models.size() > 0 ? (!isExpanded && models.size() > previewLength ? previewLength : models.size()) : 1;
     }
 
 
@@ -331,8 +331,8 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         this.taskTemplateResponse = taskTemplateResponse;
     }
 
-    public void setPreviewLength(int preview_length) {
-        this.preview_length=preview_length;
+    public void setPreviewLength(int previewLength) {
+        this.previewLength=previewLength;
     }
 
     public void setMessage(String msg, Drawable errorIcon) {

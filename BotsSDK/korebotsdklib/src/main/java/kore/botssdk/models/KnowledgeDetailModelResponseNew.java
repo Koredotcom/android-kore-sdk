@@ -47,11 +47,11 @@ public class KnowledgeDetailModelResponseNew extends WidgetBaseDataModel{
     }
 
     public int getPreviewLength() {
-        return preview_length;
+        return previewLength;
     }
 
-    public void setPreviewLength(int preview_length) {
-        this.preview_length = preview_length;
+    public void setPreviewLength(int previewLength) {
+        this.previewLength = previewLength;
     }
 
     public Boolean getHasMore() {

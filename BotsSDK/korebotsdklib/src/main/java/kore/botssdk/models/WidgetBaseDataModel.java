@@ -15,11 +15,11 @@ public abstract class WidgetBaseDataModel {
     }
 
     public int getPreview_length() {
-        return preview_length;
+        return previewLength;
     }
 
-    public void setPreview_length(int preview_length) {
-        this.preview_length = preview_length;
+    public void setPreview_length(int previewLength) {
+        this.previewLength = previewLength;
     }
 
     public boolean isHasMore() {
@@ -40,7 +40,7 @@ public abstract class WidgetBaseDataModel {
 
     protected  int WIDGET_TYPE;
 
-    protected int preview_length;
+    protected int previewLength;
     protected boolean hasMore;
     protected String placeholder;
 

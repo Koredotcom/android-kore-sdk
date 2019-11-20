@@ -133,7 +133,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     List<MultiAction> multiActions;
-    int preview_length;
+    int previewLength;
     private boolean isFromFullView;
     String msg;
     Drawable errorIcon;
@@ -475,7 +475,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
-        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > preview_length ? preview_length : eventList.size()) : 1;
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
     }
 
 
@@ -710,8 +710,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         return multiActions;
     }
 
-    public void setPreviewLength(int preview_length) {
-        this.preview_length = preview_length;
+    public void setPreviewLength(int previewLength) {
+        this.previewLength = previewLength;
     }
 
     public void setMessage(String msg, Drawable errorIcon) {

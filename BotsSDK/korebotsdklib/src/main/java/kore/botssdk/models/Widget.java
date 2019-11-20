@@ -75,8 +75,8 @@ public class Widget implements Serializable {
 
     private String id;
     private String title;
-    private String refresh_interval;
-    private String cache_interval;
+    private String refreshInterval;
+    private String cacheInterval;
     private String summary_placeholder;
     private String type;
     private String theme;
@@ -140,7 +140,7 @@ public class Widget implements Serializable {
     }
 
     public String getRefreshInterval() {
-        return refresh_interval;
+        return refreshInterval;
     }
     public List<Action> getActions() {
         return actions;
@@ -151,15 +151,15 @@ public class Widget implements Serializable {
     }
 
     public void setRefreshInterval(String refresh_interval) {
-        this.refresh_interval = refresh_interval;
+        this.refreshInterval = refresh_interval;
     }
 
     public String getCacheInterval() {
-        return cache_interval;
+        return cacheInterval;
     }
 
-    public void setCacheInterval(String cache_interval) {
-        this.cache_interval = cache_interval;
+    public void setCacheInterval(String cacheInterval) {
+        this.cacheInterval = cacheInterval;
     }
 
     public String getSummaryPlaceholder() {

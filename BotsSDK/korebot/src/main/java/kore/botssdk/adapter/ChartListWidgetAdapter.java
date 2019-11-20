@@ -58,7 +58,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     private ComposeFooterInterface composeFooterInterface;
 
     List<MultiAction> multiActions;
-    int preview_length;
+    int previewLength;
     String msg;
     Drawable errorIcon;
 
@@ -182,7 +182,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
-        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > preview_length ? preview_length : eventList.size()) : 1;
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
     }
 
 
@@ -202,8 +202,8 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         return multiActions;
     }
 
-    public void setPreviewLength(int preview_length) {
-        this.preview_length = preview_length;
+    public void setPreviewLength(int previewLength) {
+        this.previewLength = previewLength;
     }
 
     public void setMessage(String msg, Drawable errorIcon) {
