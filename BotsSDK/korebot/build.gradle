@@ -23,6 +23,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    allprojects {
+        repositories {
+            maven {
+                url "https://jitpack.io"// Google's Maven repository
+            }
+        }
+
+    }
 
     /*productFlavors {
         asana {
@@ -60,7 +68,6 @@ dependencies {
 //    compile 'se.emilsjolander:stickylistheaders:2.7.0'
     // https://mvnrepository.com/artifact/net.gotev/speech
     compile group: 'net.gotev', name: 'speech', version: '1.4.0'
-
 //    compile project(path: ':stickyListHeaders')
 //    compile 'com.j256.ormlite:ormlite-android:4.48'
 //    compile 'com.j256.ormlite:ormlite-core:4.48'

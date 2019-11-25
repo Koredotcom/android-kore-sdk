@@ -190,7 +190,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             }
 
             if (!StringUtils.isNullOrEmpty(model.getIcon())) {
-                Picasso.get().load(model.getIcon()).transform(new CircleTransform()).into(holder.imageIcon);
+                Picasso.get().load(model.getIcon().trim()).transform(new CircleTransform()).into(holder.imageIcon);
             } else {
                 holder.imageIcon.setVisibility(GONE);
             }

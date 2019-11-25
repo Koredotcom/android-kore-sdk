@@ -37,5 +37,7 @@ public interface SpeechListener {
 
     void onEndOfSpeech();
 
+    void onError(int error);
+
 }
 
