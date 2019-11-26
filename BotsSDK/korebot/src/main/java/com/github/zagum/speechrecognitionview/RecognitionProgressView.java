@@ -93,7 +93,8 @@ public class RecognitionProgressView extends View implements RecognitionListener
    */
   public void setSpeechRecognizer(SpeechRecognizer recognizer) {
     speechRecognizer = recognizer;
-    speechRecognizer.setRecognitionListener(this);
+    if(speechRecognizer != null)
+        speechRecognizer.setRecognitionListener(this);
   }
 
   /**
@@ -345,9 +346,10 @@ public class RecognitionProgressView extends View implements RecognitionListener
     if (recognitionListener != null) {
       recognitionListener.onSpeechRmsChanged(rmsdB);
     }
-    if (animator == null || rmsdB < 1f) {
+    if (animator == null || rmsdB < 4.5f) {
       return;
     }
+    Log.d("IKIDO","Hello "+rmsdB);
     if (!(animator instanceof RmsAnimator) && isSpeaking) {
       startRmsInterpolation();
     }
