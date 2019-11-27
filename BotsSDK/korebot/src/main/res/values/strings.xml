@@ -61,6 +61,27 @@
     <string name="icon_e958">&#xe958;</string> <!--Keyboard-->
 
 
+    <string name="icon_e93c">&#xe94f;</string> <!--edit icon-->
+
+
+
+    <string name="border0">
+        <![CDATA[
+        <style>
+        p.dashed {border-style: dashed;}
+        </style>
+        <body>
+        <p class="+"dashed"+">A dashed border.</p>
+        </body>
+        ]]>
+    </string>
+
+    <string name="border1">
+    <![CDATA[
+        <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
+     ]]>
+    </string>
+
 
 
 </resources>
