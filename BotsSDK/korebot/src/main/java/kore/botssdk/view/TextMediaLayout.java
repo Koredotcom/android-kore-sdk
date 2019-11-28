@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +37,7 @@ import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
+import kore.botssdk.utils.CustomTypefaceSpan;
 import kore.botssdk.utils.DashedBorderSpan;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -66,10 +68,11 @@ public class TextMediaLayout extends MediaLayout {
 
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
+    private String PENCIL_ICON_UNI_CODE = "";//
 
     public boolean isClicable() {
         return isClicable;
-    }
+    }//
 
     public void setClicable(boolean clicable) {
         isClicable = clicable;
@@ -89,6 +92,7 @@ public class TextMediaLayout extends MediaLayout {
     }
 
     private void init() {
+        PENCIL_ICON_UNI_CODE = mContext.getResources().getString(R.string.icon_e93c);
         medium = KaFontUtils.getCustomTypeface("medium",mContext);
         regular = KaFontUtils.getCustomTypeface("regular",mContext);
         if (!isInEditMode()) {
@@ -143,9 +147,7 @@ public class TextMediaLayout extends MediaLayout {
 
     private String getRemovedEntityEditString(String _str){
        String str = _str.replaceAll(REGEX_CHAR,"");
-      // if(removeAll) {
-           str = str.replaceAll("\u270E", "");
-     //  }
+       str = str.replaceAll(PENCIL_ICON_UNI_CODE, "");//
        str = str.replaceAll("\\s{2,}", " ");
        return str;
     }
@@ -179,11 +181,11 @@ public class TextMediaLayout extends MediaLayout {
             Log.d("!@#$% getReqText(", _payload);
             _payload = _payload.substring(_payload.indexOf("{"),_payload.length());
             EntityEditModel model = new com.google.gson.Gson().fromJson(_payload, EntityEditModel.class);
-            String addableText = model.getTitle();
+            String addableText = model.getTitle().trim();
 
             boolean isIconNeeded = Boolean.parseBoolean(model.isIcon());
             if(isIconNeeded){
-                addableText+=" "+"\u270E";
+                addableText+=" "+mContext.getResources().getString(R.string.icon_e93c);//PENCIL_ICON_UNI_CODE;
             }
 
             newT = newT.replace(replaceText, addableText+replaceText);
@@ -194,7 +196,8 @@ public class TextMediaLayout extends MediaLayout {
     public void populateText(String textualContent) {
         if (textualContent != null && !textualContent.isEmpty()) {
 
-            textualContent = unescapeHtml4(textualContent.trim());
+
+             textualContent = unescapeHtml4(textualContent.trim());
             /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
                 textualContent = "\"" + textualContent + "\"";
             }*/
@@ -219,8 +222,10 @@ public class TextMediaLayout extends MediaLayout {
             Matcher matcher = pattern.matcher(textualContent);
 
             while(matcher.find()) {
-                botContentTextView.setLineSpacing(1,1.3f);
-                pencilImageSpan = new ImageSpan(mContext,R.drawable.transparant_image);
+                Drawable d = ContextCompat.getDrawable(mContext, R.drawable.transparant_image);
+                d.setBounds(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
+
+                pencilImageSpan = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);//transparant_image
                 isPencilSpanClick = true;
                 int _start = matcher.start();
                 int _end = matcher.end();
@@ -231,7 +236,7 @@ public class TextMediaLayout extends MediaLayout {
                 Log.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
-                String addableText = model.getTitle();
+                String addableText = model.getTitle().trim();
 
                 int addableTextLength = 0;
                 if(!StringUtils.isNullOrEmpty(addableText)) {
@@ -239,11 +244,18 @@ public class TextMediaLayout extends MediaLayout {
                 }
 
                 strBuilder.setSpan(pencilImageSpan, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                int dashStart = _start - addableTextLength - 2;
+                boolean isIconNeeded = Boolean.parseBoolean(model.isIcon());
+                int iconLength = 0, icomoonSpanEdge = 0;
+                if(isIconNeeded){
+                    iconLength = 2;
+                    icomoonSpanEdge = 1;
+                }
+
+
+                int dashStart = _start - addableTextLength - iconLength;
                 int dashEnd = _start;
 
-                strBuilder.setSpan(new DashedBorderSpan(mContext.getResources().getDrawable(R.drawable.test_dash),0),dashStart,dashEnd,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                strBuilder.setSpan(new CustomTypefaceSpan("", ResourcesCompat.getFont(mContext, R.font.icomoon)), _start-icomoonSpanEdge, _start, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 SpannableStringBuilder finalStrBuilder = strBuilder;
                 String finalReqText = reqText;
                 ClickableSpan clickable = new ClickableSpan() {
