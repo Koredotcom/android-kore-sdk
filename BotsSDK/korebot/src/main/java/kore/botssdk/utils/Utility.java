@@ -8,17 +8,25 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by Pradeep Mahato on 30-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class Utility {
+
     public static boolean singleItemInList=false;
+
 
     public static boolean isIsSingleItemInList()
     {
         return singleItemInList;
     }
+
+
+
+    public static RecyclerView recyclerViewTempForOnboard;
 
     public static float convertDpToPixel(Context context, float dp) {
 
