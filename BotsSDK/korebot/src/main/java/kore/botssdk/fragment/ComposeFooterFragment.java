@@ -11,11 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,6 +22,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import net.gotev.speech.GoogleVoiceTypingDisabledException;
 import net.gotev.speech.Speech;
@@ -41,12 +41,9 @@ import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.event.TapToSpeakEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
 
@@ -81,7 +78,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
-    private TapToSpeakFragment tapToSpeakFragment;
+//    private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
     private LinearLayout linearLayoutProgress;
 
@@ -181,10 +178,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(),false);
-            if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
+           /* if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");
-            }
+            }*/
         } else {
             Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
@@ -222,7 +219,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            } else if ((sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment != null && tapToSpeakFragment.getState() != AudioRecorder.State.RECORDING)
+            } else if ((sendButton.getVisibility() != View.VISIBLE )
                     || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
@@ -419,10 +416,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
         }
     }
-    public void onEventMainThread(TapToSpeakEvent.Stop event) {
 
-
-    }
     private void onButtonClick() {
         if (Speech.getInstance().isListening()) {
             Speech.getInstance().stopListening();

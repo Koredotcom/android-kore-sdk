@@ -7,29 +7,22 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetCancelActionsAdapter;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 

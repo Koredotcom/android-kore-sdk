@@ -25,8 +25,15 @@ public class Utility {
     }
 
 
+    public static RecyclerView getRecyclerViewTempForOnboard() {
+        return recyclerViewTempForOnboard;
+    }
 
-    public static RecyclerView recyclerViewTempForOnboard;
+    public static void setRecyclerViewTempForOnboard(RecyclerView recyclerViewTempForOnboard) {
+        Utility.recyclerViewTempForOnboard = recyclerViewTempForOnboard;
+    }
+
+    private static RecyclerView recyclerViewTempForOnboard;
 
     public static float convertDpToPixel(Context context, float dp) {
 

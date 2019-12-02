@@ -1,8 +1,11 @@
+/*
 package kore.botssdk.fragment;
 
+*/
 /**
  * Created by AmitYadav on 1/20/2017.
- */
+ *//*
+
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,14 +73,16 @@ public class TapToSpeakFragment extends Fragment {
         return view;
     }
 
-    /*private Runnable updateVisualizer = new Runnable() {
+    */
+/*private Runnable updateVisualizer = new Runnable() {
 
         @Override
         public void run() {
             rec_audio.animateRipple();
             handler.postDelayed(this, 600);
         }
-    };*/
+    };*//*
+
 
     private void initializeWebSocket() {
         if (!NetworkUtility.isNetworkConnectionAvailable(getActivity())) {
@@ -249,3 +254,4 @@ public class TapToSpeakFragment extends Fragment {
         this.mListener = mListener;
     }
 }
+*/

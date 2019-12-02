@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,12 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.WCalEventsTemplateModel;
-import kore.botssdk.models.WTaskTemplateModel;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 

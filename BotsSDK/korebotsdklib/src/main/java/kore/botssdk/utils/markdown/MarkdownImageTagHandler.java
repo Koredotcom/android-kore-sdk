@@ -15,9 +15,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
- * Created by AmitYadav on 4/21/2017.
- */
+
 
 public class MarkdownImageTagHandler implements Html.ImageGetter {
 

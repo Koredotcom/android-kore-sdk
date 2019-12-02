@@ -1,35 +1,21 @@
 package kore.botssdk.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import kore.botssdk.R;
 
-import kore.botssdk.adapter.WidgetSelectActionsAdapter;
+import kore.botssdk.R;
 import kore.botssdk.databinding.WidgetFilesItemSelectionDialogBinding;
-import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
-import kore.botssdk.models.WidgetDialogModel;
 
 
 public class WidgetDialogActivityTask extends Dialog {

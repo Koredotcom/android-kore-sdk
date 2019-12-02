@@ -52,7 +52,7 @@ android {
 
 dependencies {
 //    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    compile 'androidx.appcompat:appcompat:1.1.0'
     compile(project(':korebotsdklib')) {
         exclude module: 'support-v4'
     }
@@ -63,8 +63,9 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.0'
 //    compile 'com.google.code.gson:gson:2.6.2'
     compile 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
-    compile 'androidx.recyclerview:recyclerview:1.1.0-alpha01'
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 //    compile 'se.emilsjolander:stickylistheaders:2.7.0'
     // https://mvnrepository.com/artifact/net.gotev/speech
     compile group: 'net.gotev', name: 'speech', version: '1.4.0'

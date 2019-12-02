@@ -1,10 +1,13 @@
+/*
 package kore.botssdk.models;
 
 import java.util.HashMap;
 
+*/
 /**
  * Created by Shiva Krishna on 3/20/2018.
- */
+ *//*
+
 
 public class AutoOpenFormTemplate {
    String title;
@@ -55,3 +58,4 @@ public class AutoOpenFormTemplate {
    boolean discardOnExit;
 
 }
+*/

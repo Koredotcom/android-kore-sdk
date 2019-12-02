@@ -29,7 +29,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'androidx.appcompat:appcompat:1.1.0-alpha01'
+    compile 'androidx.appcompat:appcompat:1.1.0'
 //        compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'de.greenrobot:eventbus:2.4.0'
 //        compile files('libs/robospice-1.4.12.jar')
