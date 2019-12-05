@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -29,11 +30,16 @@ public class Utility {
         return recyclerViewTempForOnboard;
     }
 
-    public static void setRecyclerViewTempForOnboard(RecyclerView recyclerViewTempForOnboard) {
-        Utility.recyclerViewTempForOnboard = recyclerViewTempForOnboard;
+    public static void setRecyclerViewTempForOnboard(RecyclerView recyclerViewTempForOnboard, String id) {
+        if(Utility.recyclerViewTempForOnboard==null||(recyclerKey!=null&&recyclerKey.equals(id))) {
+            Utility.recyclerViewTempForOnboard = recyclerViewTempForOnboard;
+            recyclerKey=id;
+       }
     }
 
     private static RecyclerView recyclerViewTempForOnboard;
+    public static RecyclerView rootrecyclerView;
+    private static String recyclerKey;
 
     public static float convertDpToPixel(Context context, float dp) {
 
