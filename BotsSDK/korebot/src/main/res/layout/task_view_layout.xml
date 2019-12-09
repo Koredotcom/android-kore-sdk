@@ -81,13 +81,11 @@
             android:layout_marginEnd="5dp"
             android:paddingStart="10dp"
             android:drawableStart="@drawable/ic_baseline_person_24px"
-            android:drawableEnd="@drawable/ic_triangle_2"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
             android:tag="medium"
-            android:text="@{task.owner.nameInFirstNameFormat}"
             android:textColor="@color/color_485260"
             android:textSize="13dp" />
 
@@ -98,12 +96,13 @@
             android:layout_alignBaseline="@+id/creator_view"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:drawableStart="@drawable/ic_triangle_2"
+            android:drawablePadding="10dp"
             android:layout_toEndOf="@+id/creator_view"
             android:ellipsize="end"
             android:gravity="center|start"
             android:singleLine="true"
             android:tag="medium"
-            android:text="@{task.assignee.nameInFirstNameFormat}"
             android:textColor="@color/color_485260"
             android:textSize="13dp" />
 

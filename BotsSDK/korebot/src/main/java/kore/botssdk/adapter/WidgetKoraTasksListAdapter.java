@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
+import android.service.autofill.UserData;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,11 +49,10 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     private int previewLength;
     String msg;
     Drawable errorIcon;
-
     public Widget.Hook getApi() {
         return api;
     }
-
+    String userId;
     public void setApi(Widget.Hook api) {
         this.api = api;
     }
@@ -185,6 +186,33 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             holder.taskViewLayoutBinding.checkbox.setEnabled(!isClosed);
             holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
             holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
+
+            if(userId!=null&& !TextUtils.isEmpty(userId))
+            {
+                try {
+                    holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                    String tempOwnerUserId = models.get(position).getData().getOwner().get_id();
+                    String tempAssigneeUserId = models.get(position).getData().getAssignee().get_id();
+                    if (userId.equals(tempOwnerUserId) && userId.equals(tempAssigneeUserId)) {
+                        holder.taskViewLayoutBinding.creatorView.setText("You");
+                        holder.taskViewLayoutBinding.assigneeView.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.taskViewLayoutBinding.creatorView.setText(userId.equals(tempOwnerUserId) ? "You" : models.get(position).getData().getOwner().getNameInFirstNameFormat());
+                        holder.taskViewLayoutBinding.assigneeView.setText(userId.equals(tempAssigneeUserId) ? "You" : models.get(position).getData().getAssignee().getNameInFirstNameFormat());
+                    }
+                }catch (Exception e)
+                {
+                    holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                    holder.taskViewLayoutBinding.creatorView.setText(models.get(position).getData().getOwner().getNameInFirstNameFormat());
+                    holder.taskViewLayoutBinding.assigneeView.setText(models.get(position).getData().getAssignee().getNameInFirstNameFormat());
+                }
+            }
+            else {
+                holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                holder.taskViewLayoutBinding.creatorView.setText(models.get(position).getData().getOwner().getNameInFirstNameFormat());
+               holder.taskViewLayoutBinding.assigneeView.setText(models.get(position).getData().getAssignee().getNameInFirstNameFormat());
+            }
+
 
           holder.taskViewLayoutBinding.rootLayout.setBackground(isFromFullView?context.getResources().getDrawable(R.drawable.task_view_background):null);
 //            holder.taskViewLayoutBinding.iconDown.setTypeface(ResourcesCompat.getFont(context, R.font.icomoon));
@@ -338,6 +366,11 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg=msg;
         this.errorIcon=errorIcon;
+    }
+
+    public void setUserId(String userId) {
+
+        this.userId=userId;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

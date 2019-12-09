@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
@@ -32,7 +34,6 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
     private float maxWidth;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
-
     private int DATA_FOUND = 1;
     private int NO_DATA = 0;
     private String nodata_meesage = "";
@@ -147,6 +148,34 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
             holder.taskViewLayoutBinding.checkbox.setAlpha(isClosed ? 0.4f : 1.0f);
             holder.taskViewLayoutBinding.titleView.setTypeface(null, isClosed ? Typeface.NORMAL : Typeface.BOLD);
 
+            if(Utility.userId !=null&& !TextUtils.isEmpty(Utility.userId))
+            {
+                try {
+                    holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                    String tempOwnerUserId = models.get(position).getOwner().get_id();
+                    String tempAssigneeUserId = models.get(position).getAssignee().get_id();
+                    if (Utility.userId.equals(tempOwnerUserId) && Utility.userId.equals(tempAssigneeUserId)) {
+                        holder.taskViewLayoutBinding.creatorView.setText("You");
+                        holder.taskViewLayoutBinding.assigneeView.setVisibility(View.INVISIBLE);
+                    } else {
+                        holder.taskViewLayoutBinding.creatorView.setText(Utility.userId.equals(tempOwnerUserId) ? "You" : models.get(position).getOwner().getNameInFirstNameFormat());
+                        holder.taskViewLayoutBinding.assigneeView.setText(Utility.userId.equals(tempAssigneeUserId) ? "You" : models.get(position).getAssignee().getNameInFirstNameFormat());
+                    }
+                }catch (Exception e)
+                {
+                    holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                    holder.taskViewLayoutBinding.creatorView.setText(models.get(position).getOwner().getNameInFirstNameFormat());
+                    holder.taskViewLayoutBinding.assigneeView.setText(models.get(position).getAssignee().getNameInFirstNameFormat());
+                }
+            }
+            else {
+                holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
+                holder.taskViewLayoutBinding.creatorView.setText(models.get(position).getOwner().getNameInFirstNameFormat());
+                holder.taskViewLayoutBinding.assigneeView.setText(models.get(position).getAssignee().getNameInFirstNameFormat());
+            }
+
+
+
             if(position == models.size()-1 && models.size()<3)
                 holder.taskViewLayoutBinding.divider.setVisibility(View.GONE);
             holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
@@ -257,6 +286,8 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
     public void setTaskTemplateResponse(TaskTemplateResponse taskTemplateResponse) {
         this.taskTemplateResponse = taskTemplateResponse;
     }
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TaskViewLayoutBinding taskViewLayoutBinding;

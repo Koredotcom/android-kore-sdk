@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class Utility {
 
     public static boolean singleItemInList=false;
-
+    public static String userId="";
 
     public static boolean isIsSingleItemInList()
     {
