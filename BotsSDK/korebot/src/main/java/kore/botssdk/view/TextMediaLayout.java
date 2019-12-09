@@ -33,6 +33,7 @@ import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -181,12 +182,12 @@ public class TextMediaLayout extends MediaLayout {
             ImageSpan pencilImageSpan;
             boolean isPencilSpanClick = false;
 
-           /* if(textualContent.indexOf("%%{")>0){
+            if(textualContent.indexOf("%%{")>0){
                 Log.d("!@#$% BEFORE ", textualContent);
                 textualContent = getReqText(textualContent);
                 Log.d("!@#$% AFTER ", textualContent);
                 strBuilder = new SpannableStringBuilder(textualContent);
-            }*/
+            }
             Matcher matcher = pattern.matcher(textualContent);
 
             while(matcher.find()) {
@@ -201,22 +202,22 @@ public class TextMediaLayout extends MediaLayout {
                 Log.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
-                String addableText = model.getTitle()!=null ? model.getTitle().trim() : "";
+                String addableText = model.getTitle().trim();
 
-                /*int addableTextLength = 0;
+                int addableTextLength = 0;
                 if(!StringUtils.isNullOrEmpty(addableText)) {
                     addableTextLength = addableText.length();
-                }*/
+                }
 
-                boolean isIconNeeded = true;//Boolean.parseBoolean(model.isIcon());
+                boolean isIconNeeded = Boolean.parseBoolean(model.isIcon());
                 if(isIconNeeded){
                     strBuilder.setSpan(pencilImageSpan, _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }else{
                     strBuilder.setSpan(new ImageSpan(mContext, R.drawable.transparant_image), _start, _end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
 
-                int dashStart = _start /*- addableTextLength*/ ;
-                int dashEnd = _end/*_start*/;
+                int dashStart = _start - addableTextLength /*- iconLength*/;
+                int dashEnd = _start;
 
                 SpannableStringBuilder finalStrBuilder = strBuilder;
                 String finalReqText = reqText;
