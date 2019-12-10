@@ -37,7 +37,7 @@
 
         <item name="colorPrimary">@color/colorPrimaryKa</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/splash_background_color</item>
     </style>
 
 
