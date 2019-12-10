@@ -284,7 +284,12 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
     @Override
     public void onSendClick(String message, String payload) {
-        BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+        if(payload != null){
+            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+        }else{
+            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+        }
+
         toggleQuickRepliesVisiblity(false);
     }
 

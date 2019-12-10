@@ -14,6 +14,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
 
@@ -163,7 +164,7 @@ public class BotClient {
 
         if (payLoad != null && !payLoad.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botMessage.setParams(payLoad);

@@ -340,7 +340,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
-        botPayLoad.setBotInfo(botClient.getBotInfoModel());
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId,null);
+        botPayLoad.setBotInfo(botInfo);
         Gson gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
