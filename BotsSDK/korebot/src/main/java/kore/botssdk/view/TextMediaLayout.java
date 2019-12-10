@@ -157,7 +157,7 @@ public class TextMediaLayout extends MediaLayout {
             Log.d("!@#$% getReqText(", _payload);
             _payload = _payload.substring(_payload.indexOf("{"),_payload.length());
             EntityEditModel model = new com.google.gson.Gson().fromJson(_payload, EntityEditModel.class);
-            String addableText = model.getTitle().trim();
+            String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
 
             newT = newT.replace(replaceText, addableText+replaceText);
         }
@@ -202,7 +202,7 @@ public class TextMediaLayout extends MediaLayout {
                 Log.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
-                String addableText = model.getTitle().trim();
+                String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
 
                 int addableTextLength = 0;
                 if(!StringUtils.isNullOrEmpty(addableText)) {
