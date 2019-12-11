@@ -26,7 +26,7 @@
             android:textSize="15sp"
             android:padding="13dp"
             android:text="@{summaryList.summary}"
-            android:textColor="@color/color_4741fa"
+            android:textColor="@color/splash_background_color"
             android:background="@drawable/summary_help_item_bg"
             android:layout_marginBottom="@dimen/dimen_14dp"
             />

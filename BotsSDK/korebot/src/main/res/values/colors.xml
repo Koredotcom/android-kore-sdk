@@ -84,9 +84,10 @@
     <color name="color_1a1a1a">#1a1a1a</color>
     <color name="color_4f637d">#4f637d</color>
     <color name="color_a7b0be">#a7b0be</color>
-    <color name="color_3942f6">#3942f6</color>
+    <!--<color name="color_3942f6">#3942f6</color>-->
+    <color name="color_2f91e5">#2f91e5</color>
     <color name="color_efefef">#efefef</color>
-    <color name="splash_color">#3942f6</color>
+    <color name="splash_color">#2f91e5</color>
     <color name="color_eeeef2">#eeeef2</color>
     <color name="color_faf9f8">#faf9f8</color>
     <color name="color_e4e5eb">#e4e5eb</color>
@@ -95,7 +96,7 @@
     <color name="color_edf1fe">#edf1fe</color>
     <color name="color_fc4a61">#fc4a61</color>
     <color name="color_23d473">#23d473</color>
-    <color name="color_4741fa">#4741fa</color>
+    <!--<color name="color_4741fa">#4741fa</color>-->
     <color name="color_f7f7fd">#f7f7fd</color>
     <string-array name="color_set">
         <item>#4E74F0</item>
@@ -149,7 +150,7 @@
     <color name="color_728296">#485260</color>
     <color name="color_626281_widget">#3e3e51</color>
     <color name="color_255255255_widget">#ffffff</color>
-    <color name="color_7165250_widget">#4741fa</color>
+    <color name="color_7165250_widget">@color/splash_background_color</color>
     <color name="color_167_169_190">#a7a9be</color>
     <color name="color_333">#030303</color>
     <color name="background_shimmer">#DDDDDD</color>

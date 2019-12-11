@@ -7,7 +7,7 @@
         android:left="5dp"
         android:top="5dp">
         <shape>
-            <solid android:color="#4741FA" />
+            <solid android:color="@color/splash_background_color" />
             <corners android:radius="15dp" />
         </shape>
     </item>
