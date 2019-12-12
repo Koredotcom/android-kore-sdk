@@ -24,7 +24,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  */
 public class TimeLineTextView extends ViewGroup {
 
-    private static final String LOG_TAG = TimeLineTextView.class.getSimpleName();
+//    private static final String LOG_TAG = TimeLineTextView.class.getSimpleName();
 
     private TextView unreadTimeLineTextView;
 

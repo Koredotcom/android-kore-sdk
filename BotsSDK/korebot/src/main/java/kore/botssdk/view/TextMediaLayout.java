@@ -15,10 +15,13 @@ import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,7 +46,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class TextMediaLayout extends MediaLayout {
+public class TextMediaLayout extends ViewGroup {
 
     private TextView botContentTextView;
 
@@ -53,7 +56,7 @@ public class TextMediaLayout extends MediaLayout {
 
     float dp1;
     private Context mContext;
-    final String TEXT_COLOR = "#000000";
+//    final String TEXT_COLOR = "#000000";
     private int linkTextColor;
     private Typeface medium, regular;
     private GradientDrawable rightDrawable;
@@ -61,6 +64,7 @@ public class TextMediaLayout extends MediaLayout {
 
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
+    private Gson gson = new Gson();
 
     public boolean isClicable() {
         return isClicable;
@@ -156,7 +160,7 @@ public class TextMediaLayout extends MediaLayout {
             String _payload = replaceText.substring(2,replaceText.length()-2);
             Log.d("!@#$% getReqText(", _payload);
             _payload = _payload.substring(_payload.indexOf("{"),_payload.length());
-            EntityEditModel model = new com.google.gson.Gson().fromJson(_payload, EntityEditModel.class);
+            EntityEditModel model = gson.fromJson(_payload, EntityEditModel.class);
             String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
 
             newT = newT.replace(replaceText, addableText+replaceText);
@@ -183,7 +187,7 @@ public class TextMediaLayout extends MediaLayout {
             boolean isPencilSpanClick = false;
 
             if(textualContent.indexOf("%%{")>0){
-                Log.d("!@#$% BEFORE ", textualContent);
+                Log.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
                 textualContent = getReqText(textualContent);
                 Log.d("!@#$% AFTER ", textualContent);
                 strBuilder = new SpannableStringBuilder(textualContent);
@@ -197,11 +201,11 @@ public class TextMediaLayout extends MediaLayout {
                 int _end = matcher.end();
 
                 String reqText = textualContent.substring(_start+2, _end-2);
-                reqText = reqText.substring(reqText.indexOf("{"),reqText.length());
+                reqText = reqText.substring(reqText.indexOf("{"));
 
                 Log.d("!@#$% REQ_TEXT while", reqText);
 
-                EntityEditModel model = new com.google.gson.Gson().fromJson(reqText, EntityEditModel.class);
+                EntityEditModel model = gson.fromJson(reqText, EntityEditModel.class);
                 String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
 
                 int addableTextLength = 0;
@@ -227,8 +231,7 @@ public class TextMediaLayout extends MediaLayout {
 
                         if(isClicable()) {
                             botContentTextView.setText(getRemovedEntityEditString(finalStrBuilder.toString()));
-                            EntityEditModel model = new com.google.gson.Gson().fromJson(finalReqText, EntityEditModel.class);
-
+                            EntityEditModel model = gson.fromJson(finalReqText, EntityEditModel.class);
                             EntityEditEvent event = new EntityEditEvent();
                             event.setScrollUpNeeded(false);
                             event.setMessage(model.getPostback());

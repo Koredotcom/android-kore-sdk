@@ -79,6 +79,7 @@ public class Utility {
     public static boolean checkIsSkillKora() {
         if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION))
             return true;
+
             return false;
     }
 

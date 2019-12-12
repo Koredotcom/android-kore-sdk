@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -27,7 +28,6 @@ import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.StringUtils;
@@ -60,11 +60,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         return eventList;
     }
 
-    private Duration _cursor;
+//    private Duration _cursor;
 
     ArrayList<Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private CalendarEventsAdapter.EventSelectionListener eventSelectionListener;
     private Context mContext;
 
     String skillName;
@@ -95,11 +94,13 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     int previewLength;
     String msg;
     Drawable errorIcon;
+    String trigger;
 
-    public DefaultWidgetAdapter(Context mContext, String type, boolean isEnabled, boolean isFromFullView) {
+    public DefaultWidgetAdapter(Context mContext, String type, String trigger) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
+        this.trigger = trigger;
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
 
@@ -200,13 +201,12 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                 holder.icon_down.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        {
                             WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                             bottomSheetDialog.setisFromFullView(false);
+                            bottomSheetDialog.setSkillName(skillName,trigger);
                             bottomSheetDialog.setData(model);
                             bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
                             bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
-                        }
                     }
                 });
             } else {
@@ -220,7 +220,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
-                ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton());
+                ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton(),trigger);
                 buttonRecyclerAdapter.setSkillName(skillName);
                 holder.recyclerView.setAdapter(buttonRecyclerAdapter);
                 buttonRecyclerAdapter.notifyDataSetChanged();
@@ -231,7 +231,11 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                 public void onClick(View view) {
                     if (model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getDefaultAction().getUrl()));
-                        mContext.startActivity(browserIntent);
+                        try {
+                            mContext.startActivity(browserIntent);
+                        }catch (ActivityNotFoundException ex){
+                            ex.printStackTrace();
+                        }
                     }
                 }
             });
@@ -308,15 +312,6 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg = msg;
         this.errorIcon = errorIcon;
-    }
-
-
-    public interface EventSelectionListener {
-        void onEventSelected(String url);
-    }
-
-    public void setMoreSelectionListener(CalendarEventsAdapter.EventSelectionListener eventSelectionListener) {
-        this.eventSelectionListener = eventSelectionListener;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import kore.botssdk.models.Widget.Action;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
@@ -39,11 +41,18 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     Object model;
     Activity mainContext;
     boolean isFromFullView;
+
+
+    private String skillName;
+    private String trigger;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
-    public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model, boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper) {
+    public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
+                                      boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper, String skillName,String trigger) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
+        this.skillName = skillName;
+        this.trigger = trigger;
         if (model instanceof WTaskTemplateModel) {
             this.actionList = ((WTaskTemplateModel) model).getActions();
         } else if (model instanceof WCalEventsTemplateModel) {
@@ -203,7 +212,13 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     public void onClick(View view) {
                         (widgetDialogActivity).dismiss();
 
-                        if (Utility.checkIsSkillKora()) {
+                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
+                            buttonAction(act.getUtterance(),true);
+                        }else{
+                            buttonAction(act.getUtterance(),false);
+                        }
+                        /*if (Utility.checkIsSkillKora()) {
                             EntityEditEvent event = new EntityEditEvent();
                             event.setMessage("" + act.getUtterance());
                             event.setPayLoad(null);
@@ -220,11 +235,31 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                                     dialog.dismiss();
                                 }
                             });
-                        }
+                        }*/
                     }
                 });
             }
         }
+    }
+
+
+    public void buttonAction(String utterance, boolean appendUtterance){
+        EntityEditEvent event = new EntityEditEvent();
+        StringBuffer msg = new StringBuffer("");
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setMessage(msg.toString());
+        event.setPayLoad(null);
+        KoreEventCenter.post(event);
+    }
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public void setSkillName(String skillName) {
+        this.skillName = skillName;
     }
 
     private void postAction(int position, boolean append_uttrance) {

@@ -1,7 +1,9 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,10 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Button;
+import kore.botssdk.utils.Constants;
+import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utility;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private LayoutInflater inflater;
@@ -26,11 +31,13 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private Context mContext;
 
     private String skillName;
+    private String trigger;
 
-    public ButtonListAdapter(Context context, List<Button> buttons) {
+    public ButtonListAdapter(Context context, List<Button> buttons, String trigger) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
+        this.trigger = trigger;
     }
 
     @NonNull
@@ -61,23 +68,14 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
             @Override
             public void onClick(View v) {
 
-                buttonAction(utterance);
+//                buttonAction(utterance);
 
-               /* if (Utility.checkIsSkillKora()) {
-                    buttonAction(utterance);
-                } else {
-                    if(!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
-                        DialogCaller.showDialog(mContext, skillName, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                buttonAction(utterance);
-                                dialog.dismiss();
-                            }
-                        });
-                    }else{
-                        buttonAction(utterance);
-                    }
-                }*/
+                if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
+                    buttonAction(utterance,true);
+                }else{
+                    buttonAction(utterance,false);
+                }
             }
         });
     }
@@ -100,10 +98,13 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     }
 
 
-    public void buttonAction(String utterance){
+    public void buttonAction(String utterance, boolean appendUtterance){
         EntityEditEvent event = new EntityEditEvent();
-
-        event.setMessage("" + utterance);
+        StringBuffer msg = new StringBuffer("");
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setMessage(msg.toString());
         event.setPayLoad(null);
         KoreEventCenter.post(event);
     }

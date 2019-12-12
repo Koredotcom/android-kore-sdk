@@ -122,7 +122,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
-        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position), true,BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
+        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position), BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.textView.setText(getItem(position).getFormattedDate());
 
         if(Collections.isEmpty(headersMap)) {
