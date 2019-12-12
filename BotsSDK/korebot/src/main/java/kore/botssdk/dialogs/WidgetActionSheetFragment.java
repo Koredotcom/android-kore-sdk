@@ -28,6 +28,18 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
     RecyclerView recycler_actions;
     Object model;
     VerticalListViewActionHelper verticalListViewActionHelper;
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public void setSkillName(String skillName, String trigger) {
+        this.skillName = skillName;
+        this.trigger = trigger;
+    }
+
+    private String skillName;
+    private String trigger;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -40,7 +52,8 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         recycler_actions.setHasFixedSize(true);
 
 
-        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,  model, isFromFullView,verticalListViewActionHelper);
+        WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,
+                model, isFromFullView,verticalListViewActionHelper,skillName,trigger);
         recycler_actions.setAdapter(adapter);
 
 
@@ -63,7 +76,6 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetBehavior.from(bottomSheet)
                         .setState(BottomSheetBehavior.STATE_EXPANDED);
 
-
             }
 
         });
@@ -71,7 +83,6 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         // Do something with your dialog like setContentView() or whatever
         return dialog;
     }
-
 
     public void setisFromFullView(boolean isFromFullView) {
         this.isFromFullView = isFromFullView;
