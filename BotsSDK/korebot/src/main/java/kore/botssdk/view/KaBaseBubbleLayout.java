@@ -30,6 +30,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
+import kore.botssdk.view.tableview.BotMiniTableView;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
@@ -109,11 +110,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
-    protected BotMainTableView tableView;
+    protected BotMiniTableView tableView;
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;
     protected KoraSummaryHelpView koraSummaryHelpView;
+    protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
@@ -311,6 +313,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         lineChartView = ViewProvider.getLineChartView(context);
         addView(lineChartView);
 
+        koraCarouselView = ViewProvider.getKoraCarouselView(context);
+        addView(koraCarouselView);
 
         verticalListView = ViewProvider.getVerticalListView(context);
         addView(verticalListView);

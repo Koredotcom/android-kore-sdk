@@ -21,7 +21,6 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
-import kore.botssdk.view.BotMainTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
@@ -35,6 +34,7 @@ import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
+import kore.botssdk.view.tableview.BotMiniTableView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
@@ -190,8 +190,8 @@ public class ViewProvider {
         botPieChartView.setId(PIECHART_VIEW_ID);
         return botPieChartView;
     }
-    public static BotMainTableView getTableView(Context context){
-        BotMainTableView tableView = new BotMainTableView(context);
+    public static BotMiniTableView getTableView(Context context){
+        BotMiniTableView tableView = new BotMiniTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }

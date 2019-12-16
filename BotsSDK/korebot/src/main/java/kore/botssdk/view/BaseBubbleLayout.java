@@ -104,7 +104,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected BarChartView barChartView;
     protected StackedBarChatView stackedBarChatView;
-    protected BotMainTableView miniTableView;
+    protected KoraCarouselView miniTableView;
 
 
     protected int position;
@@ -264,7 +264,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         stackedBarChatView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
         addView(stackedBarChatView);
 
-        miniTableView = new BotMainTableView(getContext());
+        miniTableView = new KoraCarouselView(getContext());
         miniTableView.setVisibility(GONE);
         miniTableView.setId(BubbleConstants.MINI_TABLE_VIEW_ID);
         addView(miniTableView);

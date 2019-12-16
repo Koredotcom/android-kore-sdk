@@ -21,8 +21,6 @@ import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single
  * column. For this purpose implementations of {@link Comparator} are used. If there is a comparator
@@ -34,24 +32,24 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
  *
  * @author ISchwarz
  */
-public class BotTableView extends TableView<MiniTableModel> {
+public class BotMiniTableView extends TableView<MiniTableModel> {
 
 
     private Context context;
-    public BotTableView(final Context context) {
+    public BotMiniTableView(final Context context) {
         this(context, null);
         this.context = context;
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotTableView(final Context context, final AttributeSet attributes) {
+    public BotMiniTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
+    public BotMiniTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
 //        setBackgroundColor(0xffff0000);
 
@@ -122,7 +120,7 @@ public class BotTableView extends TableView<MiniTableModel> {
 
     }
 
-    /*@Override
+   /* @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)  {
         *//*int mode = MeasureSpec.getMode(heightMeasureSpec);
         // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
@@ -155,27 +153,27 @@ public class BotTableView extends TableView<MiniTableModel> {
         int maxAllowedWidth = parentWidth;
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
-        int totalHeight = 0;
+        int totalHeight = getPaddingTop();
         int totalWidth = getPaddingLeft();
 
         int childWidthSpec;
         int childHeightSpec;
         int contentWidth = 0;
-        int childHeight =0;
+        int childHeight;
 
         *//*
          * For Carousel ViewPager Layout
          *//*
 
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
+        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.UNSPECIFIED);
         // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
         MeasureUtils.measure(tableHeaderView, childWidthSpec, wrapSpec);
 
         totalHeight += tableHeaderView.getMeasuredHeight();
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-//         childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.UNSPECIFIED);
+        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.UNSPECIFIED);
+        // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
         MeasureUtils.measure(tableDataView, childWidthSpec, wrapSpec);
 
         totalHeight += tableDataView.getMeasuredHeight();
