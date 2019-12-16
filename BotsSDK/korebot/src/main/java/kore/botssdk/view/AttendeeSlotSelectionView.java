@@ -19,6 +19,8 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.AttendeeSlotsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.AttendeeSlotSelectionViewBinding;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.SendWithSomeDelay;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -134,7 +136,10 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
                     if (isEnabled && slots.size() > 0) {
                         HashMap<String, ArrayList> payload = new HashMap<>();
                         payload.put("slots", slots);
-                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false);
+                        if(composeFooterInterface != null)
+                            composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false);
+                        else
+                            KoreEventCenter.post(new SendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false));
                     }
 
                 }
@@ -143,7 +148,10 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
                 @Override
                 public void onClick(View v) {
                     HashMap<String, ArrayList> payload = new HashMap<>();
-                    composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0,false);
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0,false);
+                    else
+                        KoreEventCenter.post(new SendWithSomeDelay("Decline", gson.toJson(payload), 0,false));
 
                 }
             });
