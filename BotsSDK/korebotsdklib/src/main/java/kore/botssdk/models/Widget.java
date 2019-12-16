@@ -445,7 +445,7 @@ public class Widget implements Serializable {
             if(theme != null)
                 return theme;
             else
-                return "#0076FF";
+                return "#2f91e5";
         }
 
         public void setTheme(String theme) {
