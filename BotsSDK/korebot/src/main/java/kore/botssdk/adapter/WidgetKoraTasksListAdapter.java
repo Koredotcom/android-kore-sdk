@@ -32,6 +32,7 @@ import kore.botssdk.models.Widget;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
@@ -90,7 +91,10 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
     }
 
     private ArrayList<String> selectedTasks = new ArrayList<>();
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     private void addOrRemoveSelectedTask(String taskId) {
         if (selectedTasks.contains(taskId)) {
             selectedTasks.remove(taskId);
@@ -315,7 +319,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
 
     @Override
     public int getItemCount() {
-        if(Utility.isIsSingleItemInList())
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
             return models != null && models.size() > 0 ?models.size():1;
         }

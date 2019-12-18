@@ -52,6 +52,7 @@ import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 import static android.view.View.GONE;
@@ -74,8 +75,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setSelectedIds(ArrayList<String> selectedIds) {
         this.selectedIds = selectedIds;
     }
-
-    ArrayList<String> selectedIds = null;
+     ArrayList<String> selectedIds = null;
 
     public ArrayList<WCalEventsTemplateModel> getEventList() {
         return eventList;
@@ -133,7 +133,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     List<MultiAction> multiActions;
-    int previewLength;
+  //  int previewLength;
     private boolean isFromFullView;
     String msg;
     Drawable errorIcon;
@@ -471,11 +471,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     @Override
     public int getItemCount() {
       //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
-        if(Utility.isIsSingleItemInList())
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
-        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
+        return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 1;
     }
 
 
@@ -710,9 +710,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         return multiActions;
     }
 
-    public void setPreviewLength(int previewLength) {
+  /*  public void setPreviewLength(int previewLength) {
         this.previewLength = previewLength;
-    }
+    }*/
 
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg = msg;
@@ -725,6 +725,12 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     public void set_cursor(Duration _cursor) {
         this._cursor = _cursor;
+    }
+
+
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
     }
 
     public interface EventSelectionListener {

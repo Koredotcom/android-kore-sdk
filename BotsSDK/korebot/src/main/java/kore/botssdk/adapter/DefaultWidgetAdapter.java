@@ -32,6 +32,7 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
@@ -149,7 +150,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
 
     }
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
@@ -253,8 +257,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     @Override
     public int getItemCount() {
       //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
-        if(Utility.isIsSingleItemInList())
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
+
+
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
         return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;

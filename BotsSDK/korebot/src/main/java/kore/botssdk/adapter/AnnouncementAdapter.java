@@ -27,6 +27,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 
 public class AnnouncementAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
@@ -136,13 +137,16 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
             else return position;
         } else return position;
     }
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     @Override
     public int getItemCount() {
-        if (isFromWidget&&Utility.isIsSingleItemInList()) {
+        if (isFromWidget&&widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW) {
             return data != null && data.size() > 0 ? data.size() : 1;
         }
-        return data != null && data.size() > 0 ? (!isFromWidget&&!isViewMore && data.size() > 3 ? 3 : data.size()) : 1;
+        return data != null && data.size() > 0 ? (!isViewMore && data.size() > 3 ? 3 : data.size()) : 1;
 
     }
 

@@ -26,6 +26,7 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -61,7 +62,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     int previewLength;
     String msg;
     Drawable errorIcon;
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
     public ChartListWidgetAdapter(Context mContext, String type, boolean isEnabled, boolean isFromFullView) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
@@ -86,6 +87,9 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             return MESSAGE;
         }
         return EMPTY_CARD;
+    }
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
     }
 
     @NonNull
@@ -178,7 +182,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
 
     @Override
     public int getItemCount() {
-        if(Utility.isIsSingleItemInList())
+       if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }

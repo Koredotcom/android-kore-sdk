@@ -17,14 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class Utility {
 
-    public static boolean singleItemInList=false;
     public static String userId="";
 
-    public static boolean isIsSingleItemInList()
-    {
-        return singleItemInList;
-    }
 
+    public static boolean  isViewMoreVisible(WidgetViewMoreEnum widgetViewMoreEnum)
+    {
+        if(widgetViewMoreEnum==null)
+        {
+            return true;
+        }
+        return widgetViewMoreEnum==WidgetViewMoreEnum.COLLAPSE_VIEW;
+    }
 
     public static RecyclerView getRecyclerViewTempForOnboard() {
         return recyclerViewTempForOnboard;
