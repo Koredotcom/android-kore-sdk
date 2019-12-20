@@ -75,7 +75,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setSelectedIds(ArrayList<String> selectedIds) {
         this.selectedIds = selectedIds;
     }
-     ArrayList<String> selectedIds = null;
+
+    ArrayList<String> selectedIds = null;
 
     public ArrayList<WCalEventsTemplateModel> getEventList() {
         return eventList;
@@ -133,7 +134,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     List<MultiAction> multiActions;
-  //  int previewLength;
+    //  int previewLength;
     private boolean isFromFullView;
     String msg;
     Drawable errorIcon;
@@ -208,7 +209,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
             emptyHolder.tv_disrcription.setText(msg != null ? msg : "No Upcoming Meetings");
+
             emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext, R.drawable.no_meeting) : errorIcon);
+            if (errorIcon == null) {
+                emptyHolder.img_icon.setVisibility(GONE);
+            }
 
 
         } else {
@@ -283,7 +288,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 holder.icon_dot.setVisibility(VISIBLE);
             }
 
-            holder.time_tostart_text.setText(DateUtils.calenderDateFormation(mContext,startTime));
+            holder.time_tostart_text.setText(DateUtils.calenderDateFormation(mContext, startTime));
             holder.txtDateTime.setText(date);
 //            holder.icon_down.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
             /*Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.round_shape_common);
@@ -421,9 +426,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                             verticalListViewActionHelper.widgetItemSelected(true, selectedIds.size());
                             notifyDataSetChanged();
 
-                        }
-                        else {
-                            if(verticalListViewActionHelper!=null) {
+                        } else {
+                            if (verticalListViewActionHelper != null) {
                                 verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
                             }
                         }
@@ -470,9 +474,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public int getItemCount() {
-      //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
-        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
-        {
+        //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
+        if (widgetViewMoreEnum != null && widgetViewMoreEnum == WidgetViewMoreEnum.EXPAND_VIEW) {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
         return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > 3 ? 3 : eventList.size()) : 1;
@@ -729,8 +732,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
 
     WidgetViewMoreEnum widgetViewMoreEnum;
+
     public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
     }
 
     public interface EventSelectionListener {
