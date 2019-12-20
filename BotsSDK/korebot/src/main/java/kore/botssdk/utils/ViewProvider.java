@@ -28,6 +28,7 @@ import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
+import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
@@ -51,6 +52,7 @@ public class ViewProvider {
     private static final int LINECHART_VIEW_ID = 19800335;
     private static final int KORA_CAROUSEL_VIEW_ID = 1980050;
     private static final int MEETING_SLOTS_VIEW_ID = 1980089;
+    private static final int MULTI_SELECT_VIEW_ID = 1980090;
     private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
     private static final int CONTACT_VIEW_ID = 19800456;
     private static final int WELCOME_SUMMARY_VIEW_ID = 19800786;
@@ -205,6 +207,11 @@ public class ViewProvider {
         MeetingSlotsView meetingSlotsView = new MeetingSlotsView(context);
         meetingSlotsView.setId(MEETING_SLOTS_VIEW_ID);
         return meetingSlotsView;
+    }
+    public static MultiSelectView getMultiSelectView(Context context){
+        MultiSelectView multiSelectView = new MultiSelectView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
     }
     public static MeetingConfirmationView getMeetingConfirmationView(Context context){
         MeetingConfirmationView meetingConfirmationView = new MeetingConfirmationView(context);

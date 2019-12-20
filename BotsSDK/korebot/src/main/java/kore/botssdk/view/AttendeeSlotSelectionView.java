@@ -6,27 +6,24 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import androidx.databinding.DataBindingUtil;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AttendeeSlotsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.AttendeeSlotSelectionViewBinding;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SendWithSomeDelay;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;

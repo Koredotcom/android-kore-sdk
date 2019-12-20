@@ -117,6 +117,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected KoraSummaryHelpView koraSummaryHelpView;
     protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
+    protected MultiSelectView multiSelectView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
@@ -275,6 +276,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
       //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
         addView(meetingSlotsView);
 
+        multiSelectView = ViewProvider.getMultiSelectView(context);
+        multiSelectView.setComposeFooterInterface(composeFooterInterface);
+        addView(multiSelectView);
+
         contactInfoView = ViewProvider.getContactInfoView(context);
         contactInfoView.setComposeFooterInterface(composeFooterInterface);
         contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -380,6 +385,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(meetingSlotsView != null){
             meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if(multiSelectView != null){
+            multiSelectView.setComposeFooterInterface(composeFooterInterface);
         }
         if(contactInfoView != null){
             contactInfoView.setComposeFooterInterface(composeFooterInterface);

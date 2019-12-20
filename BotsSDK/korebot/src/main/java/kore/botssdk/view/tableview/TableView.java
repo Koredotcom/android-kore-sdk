@@ -36,10 +36,10 @@ import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
 public class TableView<T> extends LinearLayout {
 
-    private static final String LOG_TAG = TableView.class.getName();
+    private final String LOG_TAG = TableView.class.getName();
 
-    private static final int DEFAULT_COLUMN_COUNT = 4;
-    private static final int DEFAULT_HEADER_ELEVATION = 1;
+    private final int DEFAULT_COLUMN_COUNT = 4;
+    private final int DEFAULT_HEADER_ELEVATION = 1;
 //    private static final int DEFAULT_HEADER_COLOR = 0xFFCCCCCC;
 
     /*private final Set<TableDataLongClickListener<T>> dataLongClickListeners = new HashSet<>();
@@ -550,20 +550,20 @@ public class TableView<T> extends LinearLayout {
     }
 
     private void setupTableDataView(final AttributeSet attributes, final int styleAttributes) {
-        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.MATCH_PARENT);
+        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.WRAP_CONTENT);
 
-        if (isInEditMode()) {
-            tableDataAdapter = new EditModeTableDataAdapter(getContext());
-        } else {
+//        if (isInEditMode()) {
+//            tableDataAdapter = new EditModeTableDataAdapter(getContext());
+//        } else {
             tableDataAdapter = new DefaultTableDataAdapter(getContext());
-        }
+//        }
         tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
 
         tableDataView = new ListView(getContext(), attributes, styleAttributes);
         tableDataView.setVerticalScrollBarEnabled(false);
 //        tableDataView.setOnItemClickListener(new InternalDataClickListener());
 //        tableDataView.setOnItemLongClickListener(new InternalDataLongClickListener());
-        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         tableDataView.setAdapter(tableDataAdapter);
         tableDataView.setId(R.id.table_data_view);
         addView(tableDataView);
@@ -711,7 +711,7 @@ public class TableView<T> extends LinearLayout {
      */
     private class EditModeTableHeaderAdapter extends TableHeaderAdapter {
 
-        private static final float TEXT_SIZE = 18;
+        private final float TEXT_SIZE = 18;
 
         public EditModeTableHeaderAdapter(final Context context) {
             super(context, columnModel);
@@ -736,7 +736,7 @@ public class TableView<T> extends LinearLayout {
      */
     private class EditModeTableDataAdapter extends TableDataAdapter<T> {
 
-        private static final float TEXT_SIZE = 16;
+        private final float TEXT_SIZE = 16;
 
         public EditModeTableDataAdapter(final Context context) {
             super(context, columnModel, new ArrayList<T>());

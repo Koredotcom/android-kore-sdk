@@ -246,11 +246,14 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     public void buttonAction(String utterance, boolean appendUtterance){
         EntityEditEvent event = new EntityEditEvent();
         StringBuffer msg = new StringBuffer("");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
             msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
-        event.setPayLoad(null);
+        event.setPayLoad(new Gson().toJson(hashMap));
+        event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
     }
 

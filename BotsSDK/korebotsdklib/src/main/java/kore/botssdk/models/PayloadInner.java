@@ -194,6 +194,16 @@ public class PayloadInner {
     private ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel;
     private ArrayList<NarratorTextModel> narratorTextModel;
 
+    public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
+        return multiSelectModels;
+    }
+
+    public void setMultiSelectModels(ArrayList<BotMultiSelectElementModel> multiSelectModels) {
+        this.multiSelectModels = multiSelectModels;
+    }
+
+    private ArrayList<BotMultiSelectElementModel> multiSelectModels;
+
 
     public ArrayList<NarratorTextModel> getNarratorTextModel() {
         return narratorTextModel;
@@ -360,6 +370,10 @@ public class PayloadInner {
         return buttons;
     }
 
+    public void setButtons(ArrayList<BotButtonModel> buttons) {
+        this.buttons = buttons;
+    }
+
     public ArrayList<QuickReplyTemplate> getQuick_replies() {
         return quick_replies;
     }
@@ -474,12 +488,14 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<NarratorTextModel>>() {
                     }.getType();
                     setNarratorTextModel(gson.fromJson(elementsAsString, listType));
-                }
-
-                else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
+                }else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
                     Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
                     }.getType();
                     annoucementResModels = gson.fromJson(elementsAsString, listType);
+                }else if (BotResponse.TEMPLATE_TYPE_MULTI_SELECT.equals(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotMultiSelectElementModel>>() {
+                    }.getType();
+                    multiSelectModels = gson.fromJson(elementsAsString, listType);
                 }
             }
         }catch (Exception e){

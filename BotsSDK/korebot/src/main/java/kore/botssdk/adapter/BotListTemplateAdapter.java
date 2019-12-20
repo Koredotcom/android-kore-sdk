@@ -133,7 +133,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     int position = parentListView.getPositionForView(v);
                     BotListModel _botListModel = getItem(position);
-                    if (_botListModel != null) {
+                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
