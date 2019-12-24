@@ -8,19 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
-import kore.botssdk.databinding.KoraFileLookupViewBinding;
 import kore.botssdk.databinding.WidgetKoraFileLookupViewBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.models.WFileLookUpModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;

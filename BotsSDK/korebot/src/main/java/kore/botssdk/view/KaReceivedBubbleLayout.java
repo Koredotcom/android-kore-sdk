@@ -193,7 +193,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         meetingConfirmationView.setVisibility(GONE);
         contactInfoView.populateData(null);
         contactInfoView.setVisibility(GONE);
-        welcomeSummaryView.populateData(null);
+        welcomeSummaryView.populateData(null, false);
         welcomeSummaryView.setVisibility(GONE);
         koraSummaryHelpView.populateData(null);
         koraSummaryHelpView.setVisibility(GONE);
@@ -234,6 +234,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         resetAll();
         if (compModel != null) {
 
+            //composeFooterInterface.showMentionNarratorContainer(false, "","" ,null);
+
             PayloadOuter payOuter = compModel.getPayload();
             if(payOuter == null) return;
             PayloadInner payInner;
@@ -252,6 +254,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     botButtonView.populateButtonList(payInner.getButtons(),isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    bubbleTextMediaLayout.setClicable(isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     if (StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                         timeStampsTextView.setText("");
@@ -365,7 +368,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<WelcomeSummaryModel> welcomeSummaryModels = payInner.getWelcomeSummaryModel();
                     if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
-                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0));
+                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0),isLastItem);
 
                 }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
@@ -378,7 +381,25 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 //                    hiddenDialog.setVisibility(View.VISIBLE);
                     timeStampsTextView.setText("");
                     bubbleTextMediaLayout.populateText("");
-                }else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
+//                    bubbleTextMediaLayout.populateText(payInner.getText());
+//                    ArrayList<NarratorTextModel> narratorModels = payInner.getNarratorTextModel();
+//                    if (narratorModels != null){}
+
+                }/*else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
+                    String narrateText = payInner.getText();
+                    String composeText = payInner.getComposeText();
+                    if(payInner.getChildTemplate()!=null){
+                        ((BotResponse) baseBotMessage).getMessage().get(0).getComponent().getPayload().setPayload(payInner.getChildTemplate().getPayload());
+                        BotResponse botRes = (BotResponse) baseBotMessage;
+
+                        composeFooterInterface.showMentionNarratorContainer(true, narrateText, composeText, botRes);
+                    }else {
+                        composeFooterInterface.showMentionNarratorContainer(true, narrateText,composeText,null);
+                    }
+                }*/
+
+                else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));
@@ -404,6 +425,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 bubbleTextMediaLayout.populateText(payOuter.getText());
 
             }
+            bubbleTextMediaLayout.setClicable(isLastItem);
         }
     }
 

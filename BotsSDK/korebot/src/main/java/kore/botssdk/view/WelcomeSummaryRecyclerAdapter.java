@@ -30,6 +30,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
     private Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
     VerticalListViewActionHelper verticalListViewActionHelper;
+    private boolean isEnabled;
 
     public WelcomeSummaryRecyclerAdapter(Context context) {
         this.context = context;
@@ -55,6 +56,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
         holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(verticalListViewActionHelper != null && isEnabled())
                 verticalListViewActionHelper.welcomeSummaryItemClick(model);
             }
         });
@@ -77,27 +79,22 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
     private void setImage(WelcomeChatSummaryModel mdl, ViewHolder holder){
         switch(mdl.getIconId()){
             case "meeting":
-                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.widget_calender,0,0,0);//R.drawable.widget_calender;
                 holder.itemRowBinding.icon.setText(R.string.icon_e979);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
             case "form":
-                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notification_active,0,0,0);
                 holder.itemRowBinding.icon.setText(R.string.icon_e943);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ffab18));
                 break;
             case "overdue":
-               // holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_overdue,0,0,0);
                 holder.itemRowBinding.icon.setText(R.string.icon_e926);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
                 break;
             case "email":
-                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_email_summary,0,0,0);
                 holder.itemRowBinding.icon.setText(R.string.icon_e915);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_2ad082));
                 break;
             case "upcoming_tasks":
-                //holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tasks_vector,0,0,0);
                 holder.itemRowBinding.icon.setText(R.string.icon_e96c);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
                 break;
@@ -130,6 +127,14 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
             this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public WelcomeSummaryListItemBinding itemRowBinding;
 
@@ -143,4 +148,5 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
             itemRowBinding.executePendingBindings();
         }
     }
+
 }

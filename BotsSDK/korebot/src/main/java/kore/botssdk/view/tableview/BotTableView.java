@@ -81,7 +81,7 @@ public class BotTableView extends TableView<MiniTableModel> {
         return alignment;
     }
 
-    public void addDataAdapter(String template_type, List<List<String>> additional, String[] alignment){
+    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment){
         if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type) || BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)) {
             List<MiniTableModel> lists = new ArrayList<>();
             for(int j=0; j<additional.size();j++) {
