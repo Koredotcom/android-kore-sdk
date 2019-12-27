@@ -48,7 +48,8 @@
     <string name="icon_e94f">&#xe94f;</string> <!-- DEVICE-->
     <string name="icon_e94e">&#xe94e;</string> <!-- CLOUD -->
     <string name="icon_62">&#x62;</string> <!-- COMPANY -->
-
+    <string name="icon_e959">&#xe959;</string>
+    <string name="icon_33">&#x33;</string>
     <string name="icon_d">&#xd;</string> <!-- calendar icon-->
     <string name="icon_e96c">&#xe96c;</string> <!-- tasks-->
     <string name="icon_e927">&#xe927;</string> <!-- due outlined-->
@@ -59,6 +60,7 @@
     <string name="icon_e954">&#xe954;</string> <!-- join-->
     <string name="icon_e92a">&#xe92a;</string> <!-- notes-->
     <string name="icon_e958">&#xe958;</string> <!--Keyboard-->
+    <string name="icon_e935">&#xe935;</string> <!--HOME-->
 
 
     <string name="icon_e93c">&#xe93c;</string> <!--edit icon-->

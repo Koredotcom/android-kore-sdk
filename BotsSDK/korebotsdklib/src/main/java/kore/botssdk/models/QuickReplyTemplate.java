@@ -7,6 +7,23 @@ public class QuickReplyTemplate {
 
     private String content_type;
     private String title;
+
+    public void setContent_type(String content_type) {
+        this.content_type = content_type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
     private String payload;
     private String image_url;
 
