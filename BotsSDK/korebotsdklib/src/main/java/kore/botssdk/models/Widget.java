@@ -602,6 +602,16 @@ public class Widget implements Serializable {
         private String type;
         private String url;
 
+        public String getPayload() {
+            return payload;
+        }
+
+        public void setPayload(String payload) {
+            this.payload = payload;
+        }
+
+        private String payload;
+
         public String getTitle() {
             return title;
         }

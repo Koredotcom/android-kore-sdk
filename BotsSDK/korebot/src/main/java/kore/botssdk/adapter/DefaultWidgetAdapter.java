@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +19,23 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
@@ -240,6 +246,13 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                         }catch (ActivityNotFoundException ex){
                             ex.printStackTrace();
                         }
+                    }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
+                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
+                            defaultAction(model.getDefaultAction().getPayload(),true);
+                        }else{
+                            defaultAction(model.getDefaultAction().getPayload(),false);
+                        }
                     }
                 }
             });
@@ -249,6 +262,19 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         }
     }
 
+    public void defaultAction(String utterance, boolean appendUtterance){
+        EntityEditEvent event = new EntityEditEvent();
+        StringBuffer msg = new StringBuffer("");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("refresh", Boolean.TRUE);
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setMessage(msg.toString());
+        event.setPayLoad(new Gson().toJson(hashMap));
+        event.setScrollUpNeeded(true);
+        KoreEventCenter.post(event);
+    }
     @Override
     public long getItemId(int position) {
         return position;
@@ -285,7 +311,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     }
 
-    public void setCalData(List<Element> data) {
+    public void setWidgetData(List<Element> data) {
         this.eventList = (ArrayList<Element>) data;
         notifyDataSetChanged();
     }

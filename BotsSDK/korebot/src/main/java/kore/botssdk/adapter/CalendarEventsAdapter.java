@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,6 +47,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.WidgetDialogModel;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -340,15 +343,33 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         }
 
                     } else if (isEnabled) {
-
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("meetingId", model.getEventId());
-                        String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
-                        if (composeFooterInterface != null) {
-                            composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0,false);
-                        } else {
-                            KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0,false));
-                            ((Activity) mContext).finish();
+                        if (model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getDefaultAction().getUrl()));
+                            try {
+                                mContext.startActivity(browserIntent);
+                            }catch (ActivityNotFoundException ex){
+                                ex.printStackTrace();
+                            }
+                        }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
+                            String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                            if (composeFooterInterface != null) {
+                                composeFooterInterface.sendWithSomeDelay(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle())?message:model.getDefaultAction().getTitle(),
+                                        model.getDefaultAction().getPayload(), 0, false);
+                            } else {
+                                KoreEventCenter.post(new CancelEvent(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle())?message:model.getDefaultAction().getTitle(),
+                                        model.getDefaultAction().getPayload(), 0, false));
+                                ((Activity) mContext).finish();
+                            }
+                        }else {
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("meetingId", model.getEventId());
+                            String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
+                            if (composeFooterInterface != null) {
+                                composeFooterInterface.sendWithSomeDelay(message, gson.toJson(hashMap), 0, false);
+                            } else {
+                                KoreEventCenter.post(new CancelEvent(message, gson.toJson(hashMap), 0, false));
+                                ((Activity) mContext).finish();
+                            }
                         }
                     }
                 }

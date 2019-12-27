@@ -22,6 +22,16 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private String reqTextToDisplay;
     private String reqTextToDisplayForDetails;
 
+    public Widget.DefaultAction getDefaultAction() {
+        return default_action;
+    }
+
+    public void setDefault_action(Widget.DefaultAction default_action) {
+        this.default_action = default_action;
+    }
+
+    private Widget.DefaultAction default_action;
+
     public String getmId() {
         return mId;
     }

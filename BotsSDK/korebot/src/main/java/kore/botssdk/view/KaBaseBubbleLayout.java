@@ -121,7 +121,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
-    protected int[] dimens;
+//    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
     protected GradientDrawable leftGradientDrawable,rightGradientDrawable;
@@ -455,10 +455,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         super.onFinishInflate();
     }
 
-    public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage, int... dimens) {
+    public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage) {
 
     //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
-        this.dimens = dimens;
+//        this.dimens = dimens;
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         // Customize BubbleSeparation
         // Customise BubbleTimeLineGrouping Height
@@ -468,7 +468,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
-        populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem, dimens);
+        populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem);
         timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
@@ -521,13 +521,15 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
     }
 
-    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean _isclickable, int... dimens) {
+    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean _isclickable) {
 
         String message = null;
         String textColor = "#000000";
+        bubbleTextMediaLayout.setClicable(_isclickable);
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
             if(((BotRequest) baseBotMessage).getMessage() != null)
                 message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            bubbleTextMediaLayout.populateTextSenders(message);
         } else if (componentModel != null) {
                 String compType = componentModel.getType();
                 PayloadOuter payOuter = componentModel.getPayload();
@@ -546,9 +548,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                         }
                     }
                 }
+            bubbleTextMediaLayout.populateText(message);
             }
-        bubbleTextMediaLayout.setClicable(_isclickable);
-        bubbleTextMediaLayout.startup(message, dimens);
+
+
 
     }
 

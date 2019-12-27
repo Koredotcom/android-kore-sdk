@@ -47,7 +47,7 @@ import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
     CircularProfileView cpvSenderImage;
-    int carouselViewHeight, pieViewHeight, tableHeight, lineHeight;
+    int carouselViewHeight, pieViewHeight, lineHeight;
     ArrayList<Integer> arrayList = new ArrayList<>();
 
     public KaReceivedBubbleLayout(Context context) {
@@ -78,7 +78,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
         pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
-        tableHeight = (int) getResources().getDimension(R.dimen.my_table_height);
+//        tableHeight = (int) getResources().getDimension(R.dimen.my_table_height);
         lineHeight = (int) getResources().getDimension(R.dimen.line_layout_height);
         super.setLeftSide(true);
     }

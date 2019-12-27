@@ -491,6 +491,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         String textColor = "#000000";
         if (baseBotMessage.isSend()) {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            bubbleTextMediaLayout.populateTextSenders(message);
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
             if (componentModel != null) {
@@ -511,9 +512,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
                     }
                 }
             }
+            bubbleTextMediaLayout.populateText(message);
         }
 
-        bubbleTextMediaLayout.startup(message, dimens);
+
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);
