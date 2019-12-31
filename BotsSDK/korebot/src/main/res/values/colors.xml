@@ -15,6 +15,7 @@
     <color name="bubble_white_color">#FFFFFF</color>
 
     <color name="right_bubble_selected">#0268de</color>
+
     <color name="right_bubble_unselected">#0076FF</color>
     <color name="bot_left_bubble_selected">#CCCCCC</color>
     <color name="bot_left_bubble_unselected">#CCCCCC</color>

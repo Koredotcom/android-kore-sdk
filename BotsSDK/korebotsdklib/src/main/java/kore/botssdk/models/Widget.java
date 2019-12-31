@@ -28,6 +28,8 @@ public class Widget implements Serializable {
         @Expose
         private String utterance;
 
+        private String theme;
+
         public String getUrl() {
             return url;
         }
@@ -71,6 +73,14 @@ public class Widget implements Serializable {
             this.utterance = utterance;
         }
 
+        public String getTheme() {
+            return theme;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+
     }
 
     private String id;
@@ -95,11 +105,11 @@ public class Widget implements Serializable {
     @Expose
     private List<Action> actions = null;
 
-    public List<String> getUtterances() {
+    public List<Action> getUtterances() {
         return utterances;
     }
 
-    public void setUtterances(List<String> utterances) {
+    public void setUtterances(List<Action> utterances) {
         this.utterances = utterances;
     }
 
@@ -119,7 +129,7 @@ public class Widget implements Serializable {
         this.multi_actions = multi_actions;
     }
 
-    private List<String> utterances = null;
+    private List<Action> utterances = null;
 
     private List<Filter> filters = null;
 

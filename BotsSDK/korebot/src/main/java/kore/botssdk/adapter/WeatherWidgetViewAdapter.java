@@ -4,17 +4,18 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
 import kore.botssdk.R;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.models.WeatherWidgetModel;
-import kore.botssdk.models.WidgetItemsModel;
+import kore.botssdk.utils.StringUtils;
 
 public class WeatherWidgetViewAdapter extends RecyclerView.Adapter<WeatherWidgetViewAdapter.WeatherViewHolder> {
 
@@ -59,6 +60,19 @@ public class WeatherWidgetViewAdapter extends RecyclerView.Adapter<WeatherWidget
                 break;
         }
 
+        holder.rl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!StringUtils.isNullOrEmpty(itemsList.getElements().get(position).getType()) && itemsList.getElements().get(position).getType().equals("postback") && !StringUtils.isNullOrEmpty(itemsList.getElements().get(position).getPayload())){
+                    EntityEditEvent event = new EntityEditEvent();
+                    event.setMessage(itemsList.getElements().get(position).getPayload());
+                    event.setScrollUpNeeded(true);
+                    KoreEventCenter.post(event);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -73,11 +87,14 @@ public class WeatherWidgetViewAdapter extends RecyclerView.Adapter<WeatherWidget
 
     class WeatherViewHolder extends RecyclerView.ViewHolder {
         TextView tv_icon, tv_item;
+        RelativeLayout rl;
 
         public WeatherViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_icon=itemView.findViewById(R.id.tv_icon);
             tv_item=itemView.findViewById(R.id.tv_item);
+
+            rl=itemView.findViewById(R.id.root_layout);
 
         }
     }
