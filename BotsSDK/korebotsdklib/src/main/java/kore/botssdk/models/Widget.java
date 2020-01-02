@@ -477,6 +477,8 @@ public class Widget implements Serializable {
         private List<Action> actions = null;
         private DefaultAction default_action;
 
+        private DefaultAction defaultAction;
+
         public String getModifiedTime() {
             return modifiedTime;
         }
@@ -536,11 +538,12 @@ public class Widget implements Serializable {
         }
 
         public DefaultAction getDefaultAction() {
-            return default_action;
+            return default_action!= null ? default_action : defaultAction;
         }
 
         public void setDefaultAction(DefaultAction default_action) {
             this.default_action = default_action;
+            this.defaultAction= default_action;
         }
 
     }

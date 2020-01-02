@@ -8,7 +8,9 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
@@ -37,7 +40,6 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.CircleTransform;
@@ -79,6 +81,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
     private int MESSAGE = 2;
+    private int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -102,6 +105,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     String msg;
     Drawable errorIcon;
     String trigger;
+    private boolean isLoginNeeded;
 
     public DefaultWidgetAdapter(Context mContext, String type, String trigger) {
         this.mContext = mContext;
@@ -126,6 +130,9 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public int getItemViewType(int position) {
+        if(isLoginNeeded()){
+            return REPORTS;
+        }
         if (eventList != null && eventList.size() > 0) {
             return DATA_FOUND;
         }
@@ -139,7 +146,11 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == EMPTY_CARD || viewType == MESSAGE) {
+        if(viewType == REPORTS ){
+            View view = inflater.inflate(R.layout.need_login_widget_layout, parent, false);
+            return new ReportsViewHolder(view);
+        }
+        else if (viewType == EMPTY_CARD || viewType == MESSAGE) {
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
@@ -162,7 +173,22 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
-        if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
+        if(holderData.getItemViewType() ==  REPORTS){
+            final Element model = eventList.get(position);
+            ReportsViewHolder holder = (ReportsViewHolder) holderData;
+
+//            holder.txt.setText(model.getText());
+            holder.loginBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                    intent.putExtra("url", model.getDefaultAction().getUrl());
+                    intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+        else if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
             emptyHolder.tv_disrcription.setText(msg != null ? msg : "No data");
@@ -289,6 +315,9 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
+        if(isLoginNeeded()){
+            return 1;
+        }
         return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
     }
 
@@ -383,5 +412,23 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
+    }
+
+    public boolean isLoginNeeded() {
+        return this.isLoginNeeded;
+    }
+
+    public void setLoginNeeded(boolean loginNeeded) {
+        this.isLoginNeeded = loginNeeded;
+    }
+
+    class ReportsViewHolder extends RecyclerView.ViewHolder{
+        Button loginBtn;
+        TextView txt;
+        public ReportsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            loginBtn = itemView.findViewById(R.id.login_button);
+            txt = itemView.findViewById(R.id.tv_message);
+        }
     }
 }

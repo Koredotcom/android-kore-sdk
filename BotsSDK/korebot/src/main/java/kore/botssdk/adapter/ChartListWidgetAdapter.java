@@ -1,13 +1,16 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -46,6 +50,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
     private int MESSAGE = 2;
+    private int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -63,6 +68,9 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     String msg;
     Drawable errorIcon;
     WidgetViewMoreEnum widgetViewMoreEnum;
+
+    private boolean isLoginNeeded;
+
     public ChartListWidgetAdapter(Context mContext, String type, boolean isEnabled, boolean isFromFullView) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
@@ -79,9 +87,14 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
 
     @Override
     public int getItemViewType(int position) {
+        if(isLoginNeeded()){
+            return REPORTS;
+        }
+
         if (eventList != null && eventList.size() > 0) {
             return DATA_FOUND;
         }
+
 
         if (msg != null && !msg.equalsIgnoreCase("")) {
             return MESSAGE;
@@ -95,7 +108,11 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == EMPTY_CARD || viewType == MESSAGE) {
+        if(viewType == REPORTS ){
+            View view = inflater.inflate(R.layout.need_login_widget_layout, parent, false);
+            return new ReportsViewHolder(view);
+        }
+        else if (viewType == EMPTY_CARD || viewType == MESSAGE) {
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
@@ -105,14 +122,31 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     @RequiresApi(api = VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
-        if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
+        if(holderData.getItemViewType() ==  REPORTS){
+            final Element model = eventList.get(position);
+            ReportsViewHolder holder = (ReportsViewHolder) holderData;
+
+            //holder.txt.setText(model.getText());
+            holder.loginBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                    intent.putExtra("url", model.getDefaultAction().getUrl());
+                    intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+        else if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
             emptyHolder.tv_disrcription.setText(msg != null ? msg : "No data");
             emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext, R.drawable.no_meeting) : errorIcon);
 
 
-        } else {
+        }
+
+        else {
 
             ChartListWidgetAdapter.ViewHolder holder = (ChartListWidgetAdapter.ViewHolder) holderData;
             final Element model = eventList.get(position);
@@ -186,6 +220,9 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         {
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
         }
+       if(isLoginNeeded()){
+           return 1;
+       }
         return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
     }
 
@@ -224,5 +261,23 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             text = itemView.findViewById(R.id.txtId);
             title = itemView.findViewById(R.id.titleTV);
         }
+    }
+
+    public boolean isLoginNeeded() {
+        return this.isLoginNeeded;
+    }
+
+    public void setLoginNeeded(boolean loginNeeded) {
+        this.isLoginNeeded = loginNeeded;
+    }
+
+    class ReportsViewHolder extends RecyclerView.ViewHolder{
+        Button loginBtn;
+        TextView txt;
+        public ReportsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            loginBtn = itemView.findViewById(R.id.login_button);
+            txt = itemView.findViewById(R.id.tv_message);
+         }
     }
 }
