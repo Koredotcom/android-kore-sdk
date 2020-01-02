@@ -15,7 +15,6 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.Widget.Action;
 import kore.botssdk.utils.StringUtils;
 
@@ -23,7 +22,7 @@ public class QuickActionWidgetAdapter extends RecyclerView.Adapter<QuickActionWi
 
     Context context;
     List<Action> quickReplyTemplateList;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
+//    private VerticalListViewActionHelper verticalListViewActionHelper;
 
     public QuickActionWidgetAdapter(Context context) {
         this.context = context;
