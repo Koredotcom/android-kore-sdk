@@ -62,10 +62,9 @@
     <string name="icon_e92a">&#xe92a;</string> <!-- notes-->
     <string name="icon_e958">&#xe958;</string> <!--Keyboard-->
     <string name="icon_e935">&#xe935;</string> <!--HOME-->
-
-
+    <string name="icon_e922">&#xe922;</string>
+    <string name="icon_e903">&#xe903;</string>
     <string name="icon_e93c">&#xe93c;</string> <!--edit icon-->
-
 
 
     <string name="border0">
@@ -84,7 +83,6 @@
         <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
      ]]>
     </string>
-
 
 
 </resources>

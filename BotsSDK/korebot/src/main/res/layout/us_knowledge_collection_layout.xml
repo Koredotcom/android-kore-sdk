@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_f6f6f8"
+        android:padding="7dp">
+
+        <TextView
+            android:id="@+id/icon_view"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/root_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toLeftOf="@+id/count_view"
+            android:layout_toEndOf="@+id/icon_view"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center|start"
+            android:letterSpacing="0.4"
+            android:text="KNOWLEDGE COLLECTIONS"
+            android:textAllCaps="true"
+            android:textColor="@color/color_626281"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="3dp"
+            android:drawableEnd="@drawable/right_arrow_iconn"
+            android:drawablePadding="8dp"
+            android:text="7 results"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:gravity="center"
+
+        android:background="@drawable/rounded_rect"
+        android:padding="3dp">
+
+        <TextView
+            android:id="@+id/staricon"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/color_e48015"
+            android:text="@string/icon_e903" />
+
+        <TextView
+            android:id="@+id/star_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/latosemibold"
+            android:gravity="center"
+            android:text="Top Result"
+            android:textColor="@color/color_e48015"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/title_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="10dp"
+        android:fontFamily="@font/latomedium"
+        android:gravity="center|start"
+        android:letterSpacing="0.1"
+        android:text="Knowledge Artssgsgs"
+        android:textColor="@color/color_626281"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/sub_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toLeftOf="@+id/count_view"
+        android:layout_toEndOf="@+id/icon_view"
+        android:fontFamily="@font/latomedium"
+        android:text="A : GoFillYourSelf@123"
+        android:textColor="@color/color_161620"
+        android:textSize="17sp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="15dp">
+
+
+        <TextView
+            android:id="@+id/peopleicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="@string/icon_e922" />
+
+        <TextView
+            android:id="@+id/search_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_toEndOf="@+id/peopleicon"
+            android:drawablePadding="7dp"
+            android:fontFamily="@font/latoregular"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="Your Articles"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/percent_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/latoregular"
+            android:text="100% Match"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+</LinearLayout>
