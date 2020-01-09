@@ -31,7 +31,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
 
     private Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isEnabled;
     String msg;
     Drawable errorIcon;

@@ -39,7 +39,7 @@
             android:drawablePadding="18dp"
             android:layout_toRightOf="@id/icon"
             android:text="@{welcomeSummaryList.summary}"
-            android:textColor="@color/color_485260"
+            android:textColor="@color/color_4741fa"
             android:visibility="visible"
             android:layout_centerVertical="true"
             android:textSize="14sp" />

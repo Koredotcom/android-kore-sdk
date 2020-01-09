@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -28,6 +30,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
@@ -119,6 +122,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             return new ChartListWidgetAdapter.ViewHolder(inflater.inflate(R.layout.chart_list_item, parent, false));
     }
 
+
     @RequiresApi(api = VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
@@ -130,10 +134,14 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             holder.loginBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                    intent.putExtra("url", model.getDefaultAction().getUrl());
-                    intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
-                    mContext.startActivity(intent);
+                    if(mContext instanceof Activity) {
+                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                        intent.putExtra("url", model.getDefaultAction().getUrl());
+                        intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                        ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    }else{
+                        Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }

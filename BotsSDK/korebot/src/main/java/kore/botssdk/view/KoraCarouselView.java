@@ -155,7 +155,7 @@ public class KoraCarouselView extends ViewGroup {
             ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels = new ArrayList<>();
             if(koraSearchResultsModel != null) {
                 ArrayList<EmailModel> emails = koraSearchResultsModel.getEmails();
-                ArrayList<KnowledgeDetailModel> knowledgeDetailModels = koraSearchResultsModel.getKnowledges();
+                ArrayList<KnowledgeDetailModel> knowledgeDetailModels = koraSearchResultsModel.getKnowledge();
                 if (emails != null && emails.size() > 0) {
                     for (EmailModel emailModel : emails) {
                         KoraSearchDataSetModel koraSearchDatasetModel = new KoraSearchDataSetModel();

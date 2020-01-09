@@ -39,6 +39,6 @@ public interface ComposeFooterInterface {
 
     void showAfterOnboard(boolean isDiscardClicked);
 
-    void onPanelClicked(Object pModel);
+    void onPanelClicked(Object pModel, boolean isFirstLaunch);
 
 }

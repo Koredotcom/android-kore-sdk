@@ -321,7 +321,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     verticalListView.prepareDataSetAndPopulate(knowledgeData, payInner.getTemplate_type(), isLastItem);
                 }else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(payInner.getTemplate_type()) ) {
                //announcement carousal
-                    List<AnnoucementResModel> annoucementResModelsData = payInner.getAnnoucementResModels();
+                    List<AnnoucementResModel> annoucementResModelsData = payInner.getAnnouncementResModels();
                     verticalListView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     verticalListView.prepareDataSetAndPopulate((ArrayList) annoucementResModelsData, payInner.getTemplate_type(), isLastItem);
