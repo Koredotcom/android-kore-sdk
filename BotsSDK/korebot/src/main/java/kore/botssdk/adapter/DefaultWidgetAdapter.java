@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -300,6 +301,12 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         event.setPayLoad(new Gson().toJson(hashMap));
         event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
+        if(isFullView)
+        {
+            ((Activity)mContext).finish();
+        }
+
+
     }
     @Override
     public long getItemId(int position) {
@@ -373,6 +380,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg = msg;
         this.errorIcon = errorIcon;
+    }
+    boolean isFullView;
+    public void setFromFullView(boolean isFullView) {
+        this.isFullView=isFullView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
