@@ -114,6 +114,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;
+    protected UniversalSearchView universalSearchView;
     protected KoraSummaryHelpView koraSummaryHelpView;
     protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
@@ -289,6 +290,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         addView(welcomeSummaryView);
 
+
+        universalSearchView = ViewProvider.getUniversalSearchView(context);
+         universalSearchView.setComposeFooterInterface(composeFooterInterface);
+        universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(universalSearchView);
+
         koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
         koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
         addView(koraSummaryHelpView);
@@ -395,6 +402,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(welcomeSummaryView !=null){
             welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if(universalSearchView !=null){
+            universalSearchView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(koraSummaryHelpView !=null){
             koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -423,6 +434,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(contactInfoView != null){
             contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(universalSearchView != null){
+            universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

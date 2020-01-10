@@ -10,12 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import kore.botssdk.R;
-import kore.botssdk.utils.Utility;
+import java.util.ArrayList;
 
-public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeCollectionsAdapter.KnowledgeCollectionViewHolder> {
+import kore.botssdk.R;
+import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.KnowledgeCollectionModel;
+import kore.botssdk.utils.Utility;
+import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
+
+public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeCollectionViewHolder> implements RecyclerViewDataAccessor {
 
     Context context;
+    ArrayList<KnowledgeCollectionModel> modelData;
+    VerticalListViewActionHelper verticalListViewActionHelper;
 
     public KnowledgeCollectionsAdapter(Context context) {
         this.context = context;
@@ -33,40 +41,36 @@ public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeC
     @Override
     public void onBindViewHolder(@NonNull KnowledgeCollectionViewHolder holder, int position) {
 
+        holder.header.setVisibility(View.GONE);
+        KnowledgeCollectionModel model = modelData.get(position);
+        holder.title_view.setText(model.getElements().get(0).getQuestion());
+        holder.sub_view.setText(model.getElements().get(0).getAnswer());
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return modelData!=null?modelData.size():0;
     }
 
-    public class KnowledgeCollectionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView icon_view,staricon,peopleicon, root_title_view, count_view, star_textview, title_view, sub_view, search_view, percent_view;
+    @Override
+    public ArrayList getData() {
+        return modelData;
+    }
 
+    @Override
+    public void setData(ArrayList modelData) {
+        this.modelData = modelData;
+        notifyDataSetChanged();
+    }
 
-        public KnowledgeCollectionViewHolder(@NonNull View itemView) {
-            super(itemView);
+    @Override
+    public void setExpanded(boolean isExpanded) {
 
-            icon_view=itemView.findViewById(R.id.icon_view);
-            icon_view.setTypeface(Utility.getTypeFaceObj(context));
-            icon_view.setBackground(Utility.changeColorOfDrawable(context, Color.parseColor("#f98140")));
+    }
 
-
-            staricon=itemView.findViewById(R.id.staricon);
-            staricon.setTypeface(Utility.getTypeFaceObj(context));
-
-            peopleicon=itemView.findViewById(R.id.peopleicon);
-            peopleicon.setTypeface(Utility.getTypeFaceObj(context));
-
-
-            root_title_view=itemView.findViewById(R.id.root_title_view);
-            count_view=itemView.findViewById(R.id.count_view);
-            star_textview=itemView.findViewById(R.id.star_textview);
-            title_view=itemView.findViewById(R.id.title_view);
-            sub_view=itemView.findViewById(R.id.sub_view);
-            search_view=itemView.findViewById(R.id.search_view);
-            percent_view=itemView.findViewById(R.id.percent_view);
-        }
+    @Override
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 }

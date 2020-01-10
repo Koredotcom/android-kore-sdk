@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="10dp"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_f6f6f8"
@@ -18,9 +20,9 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="@string/icon_e979"
+            android:text="@string/icon_2d"
             android:textColor="#FFFFFF"
-            android:textSize="17sp" />
+            android:textSize="13sp" />
 
         <TextView
             android:id="@+id/root_title_view"
@@ -33,8 +35,7 @@
             android:layout_toEndOf="@+id/icon_view"
             android:fontFamily="@font/latomedium"
             android:gravity="center|start"
-            android:letterSpacing="0.4"
-            android:text="Meeting Notes"
+            android:letterSpacing="0.04"
             android:textAllCaps="true"
             android:textColor="@color/color_626281"
             android:textSize="13sp" />
@@ -49,7 +50,6 @@
             android:layout_marginTop="3dp"
             android:drawableEnd="@drawable/right_arrow_iconn"
             android:drawablePadding="8dp"
-            android:text="7 results"
             android:textSize="13sp" />
     </RelativeLayout>
 
@@ -60,10 +60,11 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/latomedium"
         android:gravity="center|start"
         android:letterSpacing="0.1"
-        android:text="Knowledge Artssgsgs"
+
         android:textColor="@color/color_161620"
         android:textSize="16sp" />
 
@@ -86,7 +87,6 @@
             android:gravity="center"
             android:tag="medium"
             android:textColor="@color/color_626281"
-            android:text="Tue, Sep 8, 2018,  9:00am to 9:30am"
             android:textSize="13sp" />
 
         <TextView
@@ -95,7 +95,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/date_view"
             android:layout_alignStart="@+id/date_view"
-            android:text="Brian, Sophie, and 9 others"
             android:drawableStart="@drawable/ic_baseline_person_24px"
             android:drawablePadding="15dp"
             android:ellipsize="end"
@@ -112,15 +111,17 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/creator_view"
             android:layout_alignStart="@+id/creator_view"
-            android:text="Brian, Sophie, and 9 others"
             android:drawableStart="@drawable/ic_tasknew"
             android:drawablePadding="10dp"
             android:layout_marginTop="6dp"
             android:ellipsize="end"
+            android:visibility="gone"
             android:gravity="center"
             android:singleLine="true"
             android:tag="medium"
             android:textColor="@color/color_626281"
             android:textSize="13dp" />
     </RelativeLayout>
+
+
 </LinearLayout>

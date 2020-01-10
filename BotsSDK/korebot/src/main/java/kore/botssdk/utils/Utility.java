@@ -16,7 +16,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import kore.botssdk.R;
+import kore.botssdk.models.CalEventsTemplateModel;
 
 /**
  * Created by Pradeep Mahato on 30-May-16.
@@ -42,7 +45,24 @@ public class Utility {
         }
 
     }
+    public static String getFormatedAttendiesFromList(List<CalEventsTemplateModel.Attendee> userDetailModels) {
+        String users = "";
+        if (userDetailModels != null && userDetailModels.size() > 0) {
+            if (userDetailModels.size() == 1) {
 
+                return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
+            } else {
+                int remaining = userDetailModels.size() - 1;
+                if (remaining > 1)
+                    return String.format("%1$s and %2$d others",
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+                else
+                    return String.format("%1$s and %2$d other",
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+            }
+        }
+        return "";
+    }
 
     public static boolean  isViewMoreVisible(WidgetViewMoreEnum widgetViewMoreEnum)
     {

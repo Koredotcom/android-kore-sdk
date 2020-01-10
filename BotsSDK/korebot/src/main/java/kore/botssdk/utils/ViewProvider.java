@@ -33,6 +33,7 @@ import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
+import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
 import kore.botssdk.view.tableview.BotMiniTableView;
@@ -61,6 +62,7 @@ public class ViewProvider {
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     private static final int QUICK_RPVIEW = 1988881;
     private static final int TIMELINE_VIEW_ID = 1980094;
+    private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
 
 
@@ -236,6 +238,14 @@ public class ViewProvider {
         WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context);
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
         return welcomeSummaryView;
+    }
+
+
+
+    public static UniversalSearchView getUniversalSearchView(Context context){
+        UniversalSearchView universalSearchView = new UniversalSearchView(context);
+        universalSearchView.setId(UNIVERSAL_SEARCH_VIEW_ID);
+        return universalSearchView;
     }
 
     public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){

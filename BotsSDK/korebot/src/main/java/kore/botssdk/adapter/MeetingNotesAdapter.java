@@ -10,12 +10,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import kore.botssdk.R;
-import kore.botssdk.utils.Utility;
+import java.util.ArrayList;
 
-public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesAdapter.MeetingNotesViewHolder> {
+import kore.botssdk.R;
+import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.Utility;
+import kore.botssdk.view.viewHolder.MeetingNotesViewHolder;
+
+public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesViewHolder> implements RecyclerViewDataAccessor {
 
     Context context;
+    ArrayList<CalEventsTemplateModel> modelData;
+    VerticalListViewActionHelper verticalListViewActionHelper;
 
     public MeetingNotesAdapter(Context context) {
         this.context = context;
@@ -32,30 +41,48 @@ public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesAdapte
     @Override
     public void onBindViewHolder(@NonNull MeetingNotesViewHolder holder, int position) {
 
+
+        CalEventsTemplateModel model = modelData.get(position);
+        holder.header.setVisibility(View.GONE);
+        holder.date_view.setText(DateUtils.getDateMMMDDYYYY(model.getDuration().getStart(), model.getDuration().getEnd()));
+        String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
+        holder.creator_view.setText(text);
+        holder.title_view.setText(model.getTitle());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                verticalListViewActionHelper.meetingNotesNavigation(context,model.getMeetingNoteId(),model.getEventId());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return modelData!=null?modelData.size():0;
     }
 
-    public class MeetingNotesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView icon_view,root_title_view,count_view,title_view,date_view,creator_view,task_view;
-        public MeetingNotesViewHolder(@NonNull View itemView) {
-            super(itemView);
-            icon_view=itemView.findViewById(R.id.icon_view);
+    @Override
+    public ArrayList getData() {
+        return modelData;
+    }
 
-            icon_view=itemView.findViewById(R.id.icon_view);
-            icon_view.setTypeface(Utility.getTypeFaceObj(context));
-            icon_view.setBackground(Utility.changeColorOfDrawable(context, Color.parseColor("#4e74f0")));
+    @Override
+    public void setData(ArrayList modelData) {
 
-            root_title_view=itemView.findViewById(R.id.root_title_view);
-            count_view=itemView.findViewById(R.id.count_view);
-            title_view=itemView.findViewById(R.id.title_view);
-            date_view=itemView.findViewById(R.id.date_view);
-            creator_view=itemView.findViewById(R.id.creator_view);
-            task_view=itemView.findViewById(R.id.task_view);
-        }
+        this.modelData = modelData;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void setExpanded(boolean isExpanded) {
+
+    }
+
+    @Override
+    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 }

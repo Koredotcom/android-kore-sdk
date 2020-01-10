@@ -65,8 +65,9 @@
     <string name="icon_e922">&#xe922;</string>
     <string name="icon_e903">&#xe903;</string>
     <string name="icon_e93c">&#xe93c;</string> <!--edit icon-->
-
-
+    <string name="icon_28">&#x28;</string>
+    <string name="icon_e91a">&#xe91a;</string>
+    <string name="icon_e913">&#xe913;</string>
     <string name="border0">
         <![CDATA[
         <style>
@@ -83,6 +84,7 @@
         <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
      ]]>
     </string>
+
 
 
 </resources>
