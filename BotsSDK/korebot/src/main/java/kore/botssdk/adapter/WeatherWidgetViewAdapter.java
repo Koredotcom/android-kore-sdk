@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.adapter;
 
 import android.content.Context;
@@ -99,3 +100,4 @@ public class WeatherWidgetViewAdapter extends RecyclerView.Adapter<WeatherWidget
         }
     }
 }
+*/

@@ -23,6 +23,7 @@ import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.databinding.WelcomeSummaryListItemBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -68,6 +69,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                     holder.itemRowBinding.icon.setTypeface(getTypeFaceObj(context));
                     if(!StringUtils.isNullOrEmpty(model.getIconId()))
                         setImage(model, holder);
+                    setIntrensic(model,holder);
 
 
                     holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
@@ -108,6 +110,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                 holder.itemRowBinding.icon.setText(R.string.icon_2d);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
+            case "notificationForm":
             case "form":
                 holder.itemRowBinding.icon.setText(R.string.icon_e943);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ffab18));
@@ -124,6 +127,15 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                 holder.itemRowBinding.icon.setText(R.string.icon_e96c);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ff5b6a));
                 break;
+        }
+    }
+    private void setIntrensic(WelcomeChatSummaryModel model, ViewHolder holder) {
+        if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())) {
+            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
+                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
+        } else if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("open_form")) {
+            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
+                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
         }
     }
 

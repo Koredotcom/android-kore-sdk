@@ -235,7 +235,7 @@ public class ViewProvider {
     }
 
     public static WelcomeSummaryView getWelcomeSummaryView(Context context){
-        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context);
+        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context,"");
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
         return welcomeSummaryView;
     }

@@ -4,26 +4,22 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Handler;
-import android.service.autofill.UserData;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
-import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
@@ -31,7 +27,6 @@ import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.Widget;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
 import kore.botssdk.utils.SelectionUtils;
-import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
@@ -204,8 +199,8 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                         holder.taskViewLayoutBinding.creatorView.setText(userId.equals(tempOwnerUserId) ? "You" : models.get(position).getData().getOwner().getNameInFirstNameFormat());
                         holder.taskViewLayoutBinding.assigneeView.setText(userId.equals(tempAssigneeUserId) ? "You" : models.get(position).getData().getAssignee().getNameInFirstNameFormat());
                     }
-                }catch (Exception e)
-                {
+                }catch (Exception e){
+                    e.printStackTrace();
                     holder.taskViewLayoutBinding.assigneeView.setVisibility(View.VISIBLE);
                     holder.taskViewLayoutBinding.creatorView.setText(models.get(position).getData().getOwner().getNameInFirstNameFormat());
                     holder.taskViewLayoutBinding.assigneeView.setText(models.get(position).getData().getAssignee().getNameInFirstNameFormat());

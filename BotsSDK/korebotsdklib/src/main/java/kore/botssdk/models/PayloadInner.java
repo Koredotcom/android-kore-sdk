@@ -346,7 +346,7 @@ public class PayloadInner {
     private String elementsAsString;
     private String color = "#000000";
 
-    private final String INVALID_JSON = "Invalid JSON";
+//    private final String INVALID_JSON = "Invalid JSON";
     private String speech_hint;
 
     public ChildTemplate getChildTemplate() {
@@ -554,7 +554,7 @@ public class PayloadInner {
                         }
                     }
                     if (carouselElements.isEmpty()) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        throw new JsonSyntaxException("Invalid JSON");
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
                     for (int i = 0; i < listElements.size(); i++) {
@@ -565,11 +565,11 @@ public class PayloadInner {
                         }
                     }
                     if (listElements.isEmpty()) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        throw new JsonSyntaxException("Invalid JSON");
                     }
                 }
             } else {
-                throw new JsonSyntaxException(INVALID_JSON);
+                throw new JsonSyntaxException("Invalid JSON");
             }
         }
     }

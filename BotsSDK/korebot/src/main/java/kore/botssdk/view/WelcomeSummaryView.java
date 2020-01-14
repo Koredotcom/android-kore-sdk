@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +30,10 @@ import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.Weather;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.models.WelcomeSummaryModel;
+import kore.botssdk.utils.Constants;
+import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -41,9 +45,13 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     private float dp1;
     private RecyclerView welcomeChatSummaryList;
     private boolean isWeatherDesc = true;
+    private String skillName;
+    private Context context;
 
-    public WelcomeSummaryView(Context context) {
+    public WelcomeSummaryView(Context context, String skillName) {
         super(context);
+        this.context = context;
+        this.skillName = skillName;
         init();
     }
 
@@ -226,15 +234,31 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
             if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
-                if(composeFooterInterface != null)
-                composeFooterInterface.onSendClick(model.getPayload(),true);
+                if (Utility.checkIsSkillKora()) {
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.onSendClick(model.getPayload(),true);
+                } else {
+                        DialogCaller.showDialog(context, null, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(composeFooterInterface != null)
+                                    composeFooterInterface.onSendClick(Constants.SKILL_UTTERANCE+model.getPayload(),true);
+                                dialog.dismiss();
+                            }
+                        });
+
+                }
+
+                /*if(composeFooterInterface != null)
+                    composeFooterInterface.onSendClick(model.getPayload(),true);*/
+
             }else if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("open_form")){
                 if(composeFooterInterface != null)
                 composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
             }
     }
 
-    public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
+   /* public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
         switch(mdl.getIconId()){
             case "meeting":
                 return getResources().getDrawable(R.drawable.widget_calender);
@@ -249,5 +273,5 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
             default:
                 return getResources().getDrawable(R.drawable.ic_tasks);
         }
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
         <variable
             name="welcomeSummaryList"
@@ -9,9 +8,6 @@
         <variable
             name="viewBase"
             type="kore.botssdk.view.WelcomeSummaryView" />
-
-
-
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,14 +30,14 @@
 
         <TextView
             android:id="@+id/widget_summary_tv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawablePadding="18dp"
+            android:drawablePadding="0dp"
+            android:paddingStart="5dp"
             android:layout_toRightOf="@id/icon"
             android:text="@{welcomeSummaryList.summary}"
-            android:textColor="@color/color_4741fa"
+            android:textColor="@color/color_485260"
             android:visibility="visible"
-            android:layout_centerVertical="true"
             android:textSize="14sp" />
     </RelativeLayout>
 </layout>
