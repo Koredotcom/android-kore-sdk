@@ -10,8 +10,14 @@ import java.util.List;
  * Created by Ramachandra Pradeep on 08-Mar-19.
  */
 
-public class Widget implements Serializable {
+public class Widget implements Serializable,Cloneable {
 
+
+    @Override
+    public Widget clone() throws CloneNotSupportedException {
+        Widget widget = (Widget) super.clone();
+        return widget;
+    }
 
     public class Action implements Serializable {
 
