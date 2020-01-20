@@ -34,6 +34,7 @@ public class Widget implements Serializable,Cloneable {
         @Expose
         private String utterance;
 
+
         private String theme;
 
         public String getUrl() {
@@ -98,6 +99,14 @@ public class Widget implements Serializable,Cloneable {
     private String theme;
    // private String api;
     private String utterances_header;
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     @SerializedName("elements")
     @Expose
