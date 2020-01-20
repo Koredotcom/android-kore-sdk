@@ -1,13 +1,17 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,20 +22,26 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
@@ -72,6 +82,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private int DATA_FOUND = 1;
     private int EMPTY_CARD = 0;
     private int MESSAGE = 2;
+    private int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -95,6 +106,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     String msg;
     Drawable errorIcon;
     String trigger;
+    private boolean isLoginNeeded;
 
     public DefaultWidgetAdapter(Context mContext, String type, String trigger) {
         this.mContext = mContext;
@@ -119,6 +131,9 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public int getItemViewType(int position) {
+        if(isLoginNeeded()){
+            return REPORTS;
+        }
         if (eventList != null && eventList.size() > 0) {
             return DATA_FOUND;
         }
@@ -132,7 +147,11 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == EMPTY_CARD || viewType == MESSAGE) {
+        if(viewType == REPORTS ){
+            View view = inflater.inflate(R.layout.need_login_widget_layout, parent, false);
+            return new ReportsViewHolder(view);
+        }
+        else if (viewType == EMPTY_CARD || viewType == MESSAGE) {
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
@@ -149,10 +168,28 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
 
     }
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
-        if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
+        if(holderData.getItemViewType() ==  REPORTS){
+            final Element model = eventList.get(position);
+            ReportsViewHolder holder = (ReportsViewHolder) holderData;
+
+//            holder.txt.setText(model.getText());
+            holder.loginBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                    intent.putExtra("url", model.getDefaultAction().getUrl());
+                    intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+        else if (holderData.getItemViewType() == EMPTY_CARD || holderData.getItemViewType() == MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
             emptyHolder.tv_disrcription.setText(msg != null ? msg : "No data");
@@ -236,6 +273,13 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                         }catch (ActivityNotFoundException ex){
                             ex.printStackTrace();
                         }
+                    }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
+                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
+                            defaultAction(model.getDefaultAction().getPayload(),true);
+                        }else{
+                            defaultAction(model.getDefaultAction().getPayload(),false);
+                        }
                     }
                 }
             });
@@ -245,6 +289,25 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         }
     }
 
+    public void defaultAction(String utterance, boolean appendUtterance){
+        EntityEditEvent event = new EntityEditEvent();
+        StringBuffer msg = new StringBuffer("");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("refresh", Boolean.TRUE);
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setMessage(msg.toString());
+        event.setPayLoad(new Gson().toJson(hashMap));
+        event.setScrollUpNeeded(true);
+        KoreEventCenter.post(event);
+        if(isFullView)
+        {
+            ((Activity)mContext).finish();
+        }
+
+
+    }
     @Override
     public long getItemId(int position) {
         return position;
@@ -253,9 +316,14 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     @Override
     public int getItemCount() {
       //  return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
-        if(Utility.isIsSingleItemInList())
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
+
+
             return eventList != null && eventList.size() > 0 ? eventList.size() : 1;
+        }
+        if(isLoginNeeded()){
+            return 1;
         }
         return eventList != null && eventList.size() > 0 ? (!isExpanded && eventList.size() > previewLength ? previewLength : eventList.size()) : 1;
     }
@@ -279,7 +347,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     }
 
-    public void setCalData(List<Element> data) {
+    public void setWidgetData(List<Element> data) {
         this.eventList = (ArrayList<Element>) data;
         notifyDataSetChanged();
     }
@@ -312,6 +380,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     public void setMessage(String msg, Drawable errorIcon) {
         this.msg = msg;
         this.errorIcon = errorIcon;
+    }
+    boolean isFullView;
+    public void setFromFullView(boolean isFullView) {
+        this.isFullView=isFullView;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -351,5 +423,23 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
+    }
+
+    public boolean isLoginNeeded() {
+        return this.isLoginNeeded;
+    }
+
+    public void setLoginNeeded(boolean loginNeeded) {
+        this.isLoginNeeded = loginNeeded;
+    }
+
+    class ReportsViewHolder extends RecyclerView.ViewHolder{
+        Button loginBtn;
+        TextView txt;
+        public ReportsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            loginBtn = itemView.findViewById(R.id.login_button);
+            txt = itemView.findViewById(R.id.tv_message);
+        }
     }
 }

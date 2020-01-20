@@ -28,6 +28,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
 
@@ -46,7 +47,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     Drawable errorIcon;
     private int DATA_CARD_FLAG = 1;
     private int MESSAGE = 2;
-    boolean isSingleItem;
+
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     private static int dp1;
@@ -125,10 +126,13 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     public long getItemId(int position) {
         return position;
     }*/
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     @Override
     public int getItemCount() {
-        if (isSingleItem) {
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW){
             return knowledgeDetailModels != null && knowledgeDetailModels.size() > 0 ? knowledgeDetailModels.size() : 1;
         }
         return knowledgeDetailModels != null && knowledgeDetailModels.size() > 0 ? (!isExpanded && knowledgeDetailModels.size() > 3 ? 3 : knowledgeDetailModels.size()) : 1;
@@ -163,9 +167,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         this.errorIcon = errorIcon;
     }
 
-    public void setIsSingleItem(boolean isSingleItem) {
-        this.isSingleItem = isSingleItem;
-    }
+
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

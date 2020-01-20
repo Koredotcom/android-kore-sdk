@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
  * Created by Ramachandra Pradeep on 02-Aug-18.
  */
 
-public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Serializable,Cloneable {
+public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Cloneable {
 
     private Duration duration;
     private String title;
@@ -21,6 +21,16 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private boolean isAllDay;
     private String reqTextToDisplay;
     private String reqTextToDisplayForDetails;
+
+    public Widget.DefaultAction getDefaultAction() {
+        return default_action;
+    }
+
+    public void setDefault_action(Widget.DefaultAction default_action) {
+        this.default_action = default_action;
+    }
+
+    private Widget.DefaultAction default_action;
 
     public String getmId() {
         return mId;

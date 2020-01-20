@@ -65,7 +65,7 @@ public class BotListTemplateView extends ViewGroup {
     public void populateListTemplateView(ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList) {
 
 
-        if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+        if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
             BotListTemplateAdapter botListTemplateAdapter;
             if (autoExpandListView.getAdapter() == null) {
                 botListTemplateAdapter = new BotListTemplateAdapter(getContext(), autoExpandListView);
@@ -78,22 +78,24 @@ public class BotListTemplateView extends ViewGroup {
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.notifyDataSetChanged();
             botCustomListRoot.setVisibility(VISIBLE);
-            botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
-            botCustomListViewButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                        BotButtonModel botButtonModel = botButtonModelArrayList.get(0);
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
-                            String message = botButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(message,false);
+            if(botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+                botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
+                botCustomListViewButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                            BotButtonModel botButtonModel = botButtonModelArrayList.get(0);
+                            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
+                                invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
+                            } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
+                                String message = botButtonModel.getPayload();
+                                composeFooterInterface.onSendClick(message, false);
+                            }
                         }
                     }
-                }
-            });
-            botCustomListViewButton.setVisibility(botListModelArrayList.size()>3?VISIBLE:GONE);
+                });
+                botCustomListViewButton.setVisibility(botListModelArrayList.size() > 3 ? VISIBLE : GONE);
+            }
         } else {
             botCustomListRoot.setVisibility(GONE);
             botCustomListViewButton.setVisibility(GONE);

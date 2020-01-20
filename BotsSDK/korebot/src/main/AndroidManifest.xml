@@ -53,6 +53,7 @@
         <activity
             android:name=".activity.GenericWebViewActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <!--<service

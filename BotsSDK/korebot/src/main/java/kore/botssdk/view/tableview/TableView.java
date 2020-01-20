@@ -36,11 +36,11 @@ import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
 public class TableView<T> extends LinearLayout {
 
-    private static final String LOG_TAG = TableView.class.getName();
+    private final String LOG_TAG = TableView.class.getName();
 
-    private static final int DEFAULT_COLUMN_COUNT = 4;
-    private static final int DEFAULT_HEADER_ELEVATION = 1;
-    private static final int DEFAULT_HEADER_COLOR = 0xFFCCCCCC;
+    private final int DEFAULT_COLUMN_COUNT = 4;
+    private final int DEFAULT_HEADER_ELEVATION = 1;
+//    private static final int DEFAULT_HEADER_COLOR = 0xFFCCCCCC;
 
     /*private final Set<TableDataLongClickListener<T>> dataLongClickListeners = new HashSet<>();
     private final Set<TableDataClickListener<T>> dataClickListeners = new HashSet<>();
@@ -50,14 +50,13 @@ public class TableView<T> extends LinearLayout {
     private TableDataRowBackgroundProvider<? super T> dataRowBackgroundProvider =
             TableDataRowBackgroundProviders.similarRowColor(0x00000000);
     private TableColumnModel columnModel;
-    private TableHeaderView tableHeaderView;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ListView tableDataView;
+    protected TableHeaderView tableHeaderView;
+    protected ListView tableDataView;
     private TableDataAdapter<T> tableDataAdapter;
     private TableHeaderAdapter tableHeaderAdapter;
 
     private int headerElevation;
-    private int headerColor;
+//    private int headerColor;
 
 
     /**
@@ -94,7 +93,7 @@ public class TableView<T> extends LinearLayout {
         setAttributes(attributes);
         setupTableHeaderView(attributes);
         setupTableDataView(attributes, styleAttributes);
-
+        setBackground(context.getDrawable(R.drawable.round_rect));
         layoutTransition = new LayoutTransition();
     }
 
@@ -107,7 +106,7 @@ public class TableView<T> extends LinearLayout {
         this.tableHeaderView = headerView;
 
         tableHeaderView.setAdapter(tableHeaderAdapter);
-        tableHeaderView.setBackgroundColor(headerColor);
+        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
         tableHeaderView.setId(R.id.table_header_view);
 
         if (getChildCount() == 2) {
@@ -190,18 +189,18 @@ public class TableView<T> extends LinearLayout {
      *
      * @return Boolean indication whether the swipe to refresh feature shall be enabled or not.
      */
-    public boolean isSwipeToRefreshEnabled() {
+   /* public boolean isSwipeToRefreshEnabled() {
         return swipeRefreshLayout.isEnabled();
-    }
+    }*/
 
     /**
      * Toggles the swipe to refresh feature to the user.
      *
      * @param enabled Whether the swipe to refresh feature shall be enabled or not.
      */
-    public void setSwipeToRefreshEnabled(final boolean enabled) {
+   /* public void setSwipeToRefreshEnabled(final boolean enabled) {
         swipeRefreshLayout.setEnabled(enabled);
-    }
+    }*/
 
     /**
      * Sets the {@link SwipeToRefreshListener} for this table view. If there is already a {@link SwipeToRefreshListener}
@@ -209,7 +208,7 @@ public class TableView<T> extends LinearLayout {
      *
      * @param listener The {@link SwipeToRefreshListener} that is called when the user triggers the refresh action.
      */
-    public void setSwipeToRefreshListener(final SwipeToRefreshListener listener) {
+    /*public void setSwipeToRefreshListener(final SwipeToRefreshListener listener) {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -231,7 +230,7 @@ public class TableView<T> extends LinearLayout {
                 });
             }
         });
-    }
+    }*/
 
     /**
      * Sets the given resource as background of the table header.
@@ -249,7 +248,7 @@ public class TableView<T> extends LinearLayout {
      */
     public void setHeaderBackgroundColor(@ColorInt final int color) {
         tableHeaderView.setBackgroundColor(color);
-        swipeRefreshLayout.setColorSchemeColors(color);
+//        swipeRefreshLayout.setColorSchemeColors(color);
     }
 
     /**
@@ -419,11 +418,16 @@ public class TableView<T> extends LinearLayout {
      * @param dataAdapter The {@link TableDataAdapter} that should be set.
      */
     public void setDataAdapter(final TableDataAdapter<T> dataAdapter) {
-        tableDataAdapter = dataAdapter;
-        tableDataAdapter.setColumnModel(columnModel);
-        tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
-        tableDataView.setAdapter(tableDataAdapter);
-        forceRefresh();
+        if(dataAdapter != null) {
+            tableDataAdapter = dataAdapter;
+            tableDataAdapter.setColumnModel(columnModel);
+            tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
+            tableDataView.setAdapter(tableDataAdapter);
+            forceRefresh();
+        }else{
+            tableDataView.setAdapter(null);
+            tableHeaderView.setAdapter(null);
+        }
     }
 
     /**
@@ -525,7 +529,7 @@ public class TableView<T> extends LinearLayout {
     private void setAttributes(final AttributeSet attributes) {
         final TypedArray styledAttributes = getContext().obtainStyledAttributes(attributes, R.styleable.TableView);
 
-        headerColor = styledAttributes.getInt(R.styleable.TableView_tableView_headerColor, DEFAULT_HEADER_COLOR);
+//        headerColor = styledAttributes.getInt(R.styleable.TableView_tableView_headerColor, DEFAULT_HEADER_COLOR);
         headerElevation = styledAttributes.getInt(R.styleable.TableView_tableView_headerElevation, DEFAULT_HEADER_ELEVATION);
         final int columnCount = styledAttributes.getInt(R.styleable.TableView_tableView_columnCount, DEFAULT_COLUMN_COUNT);
         columnModel = new TableColumnWeightModel(columnCount);
@@ -541,35 +545,37 @@ public class TableView<T> extends LinearLayout {
         }
 
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
-        tableHeaderView.setBackgroundColor(0xFFCCCCCC);
+        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
         setHeaderView(tableHeaderView);
     }
 
     private void setupTableDataView(final AttributeSet attributes, final int styleAttributes) {
-        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.MATCH_PARENT);
+        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.WRAP_CONTENT);
 
-        if (isInEditMode()) {
-            tableDataAdapter = new EditModeTableDataAdapter(getContext());
-        } else {
+//        if (isInEditMode()) {
+//            tableDataAdapter = new EditModeTableDataAdapter(getContext());
+//        } else {
             tableDataAdapter = new DefaultTableDataAdapter(getContext());
-        }
+//        }
         tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
 
         tableDataView = new ListView(getContext(), attributes, styleAttributes);
+        tableDataView.setVerticalScrollBarEnabled(false);
 //        tableDataView.setOnItemClickListener(new InternalDataClickListener());
 //        tableDataView.setOnItemLongClickListener(new InternalDataLongClickListener());
-        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         tableDataView.setAdapter(tableDataAdapter);
         tableDataView.setId(R.id.table_data_view);
+        addView(tableDataView);
 //        tableDataView.setOnScrollListener(new InternalOnScrollListener());
 
-        swipeRefreshLayout = new SwipeRefreshLayout(getContext());
-        swipeRefreshLayout.setLayoutParams(dataViewLayoutParams);
-        swipeRefreshLayout.addView(tableDataView);
-        swipeRefreshLayout.setColorSchemeColors(headerColor);
-        swipeRefreshLayout.setEnabled(false);
-
-        addView(swipeRefreshLayout);
+//        swipeRefreshLayout = new SwipeRefreshLayout(getContext());
+//        swipeRefreshLayout.setLayoutParams(dataViewLayoutParams);
+//        swipeRefreshLayout.addView(tableDataView);
+//        swipeRefreshLayout.setColorSchemeColors(headerColor);
+//        swipeRefreshLayout.setEnabled(false);
+//
+//        addView(swipeRefreshLayout);
     }
 
     private int getWidthAttribute(final AttributeSet attributes) {
@@ -705,7 +711,7 @@ public class TableView<T> extends LinearLayout {
      */
     private class EditModeTableHeaderAdapter extends TableHeaderAdapter {
 
-        private static final float TEXT_SIZE = 18;
+        private final float TEXT_SIZE = 18;
 
         public EditModeTableHeaderAdapter(final Context context) {
             super(context, columnModel);
@@ -730,7 +736,7 @@ public class TableView<T> extends LinearLayout {
      */
     private class EditModeTableDataAdapter extends TableDataAdapter<T> {
 
-        private static final float TEXT_SIZE = 16;
+        private final float TEXT_SIZE = 16;
 
         public EditModeTableDataAdapter(final Context context) {
             super(context, columnModel, new ArrayList<T>());

@@ -25,7 +25,7 @@ public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
     private int paddingTop = 30;
     private int paddingRight = 20;
     private int paddingBottom = 30;
-    private int textSize = 18;
+    private int textSize = 14;
     private int typeface = Typeface.BOLD;
     private int textColor = 0x99000000;
 

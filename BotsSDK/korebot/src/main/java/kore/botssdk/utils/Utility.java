@@ -3,13 +3,23 @@ package kore.botssdk.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import kore.botssdk.R;
+import kore.botssdk.models.CalEventsTemplateModel;
 
 /**
  * Created by Pradeep Mahato on 30-May-16.
@@ -17,14 +27,51 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class Utility {
 
-    public static boolean singleItemInList=false;
     public static String userId="";
 
-    public static boolean isIsSingleItemInList()
-    {
-        return singleItemInList;
+
+
+    public static Typeface getTypeFaceObj(Context context) {
+        return ResourcesCompat.getFont(context, R.font.icomoon);
     }
 
+    public static Drawable changeColorOfDrawable(Context context, int colorCode) {
+        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
+        try {
+            ((GradientDrawable) drawable).setColor(context.getResources().getColor(colorCode));
+            return drawable;
+        } catch (Exception e) {
+            return drawable;
+        }
+
+    }
+    public static String getFormatedAttendiesFromList(List<CalEventsTemplateModel.Attendee> userDetailModels) {
+        String users = "";
+        if (userDetailModels != null && userDetailModels.size() > 0) {
+            if (userDetailModels.size() == 1) {
+
+                return userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail();
+            } else {
+                int remaining = userDetailModels.size() - 1;
+                if (remaining > 1)
+                    return String.format("%1$s and %2$d others",
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+                else
+                    return String.format("%1$s and %2$d other",
+                            userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
+            }
+        }
+        return "";
+    }
+
+    public static boolean  isViewMoreVisible(WidgetViewMoreEnum widgetViewMoreEnum)
+    {
+        if(widgetViewMoreEnum==null)
+        {
+            return true;
+        }
+        return widgetViewMoreEnum==WidgetViewMoreEnum.COLLAPSE_VIEW;
+    }
 
     public static RecyclerView getRecyclerViewTempForOnboard() {
         return recyclerViewTempForOnboard;

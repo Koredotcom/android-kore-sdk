@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -13,9 +14,11 @@ import kore.botssdk.view.tableview.BotTableView;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 13-Apr-18.
- */
+ *//*
+
 
 public class BotMainTableView extends ViewGroup {
 
@@ -52,7 +55,8 @@ public class BotMainTableView extends ViewGroup {
     public void setData(String template_type, PayloadInner payloadInner){
 //        tableContainer.removeAllViews();
         removeAllViews();
-        if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type)) {
+        */
+/*if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type)) {
             for(int index=0; index <payloadInner.getMiniTableDataModels().size(); index++){
                 BotTableView mTable = new BotTableView(mContext);
                 //Set layoutParams
@@ -60,7 +64,9 @@ public class BotMainTableView extends ViewGroup {
                 mTable.addDataAdapter(template_type, payloadInner.getMiniTableDataModels().get(index).getAdditional(),alignment);
 //                tableContainer.addView(mTable, index);
                 addView(mTable);
-                /*if(index > 0){
+                *//*
+*/
+/*if(index > 0){
                     View v = new View(mContext);
                     v.setLayoutParams(new LinearLayout.LayoutParams(
                             LayoutParams.MATCH_PARENT,
@@ -69,9 +75,12 @@ public class BotMainTableView extends ViewGroup {
                     v.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
                     tableContainer.addView(v);
-                }*/
+                }*//*
+*/
+/*
             }
-        }else if(BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)){
+        }else*//*
+ if(BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)){
             BotTableView mTable = new BotTableView(mContext);
             String[] alignment = mTable.addHeaderAdapter(payloadInner.getColumns());
             mTable.addDataAdapterForTable(payloadInner,alignment);
@@ -90,7 +99,8 @@ public class BotMainTableView extends ViewGroup {
 
     }
 
-    /*@Override
+    */
+/*@Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxAllowedWidth = parentWidth;
@@ -123,7 +133,8 @@ public class BotMainTableView extends ViewGroup {
        // super.onMeasure(parentWidthSpec, parentHeightSpec);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
 
-    }*/
+    }*//*
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -138,9 +149,11 @@ public class BotMainTableView extends ViewGroup {
         int childHeightSpec;
         int contentWidth = 0;
 
-        /*
+        */
+/*
          * For Pie View Layout
-         */
+         *//*
+
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) getResources().getDimension(R.dimen.my_table_height), MeasureSpec.EXACTLY);
 
@@ -168,3 +181,4 @@ public class BotMainTableView extends ViewGroup {
         }
     }
 }
+*/

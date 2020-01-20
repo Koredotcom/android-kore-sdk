@@ -47,4 +47,5 @@ public class BundleConstants {
     public static final String VIEW_LOCATION = "VIEW_LOCATION";
     public static final String MEETING_CHANGE_SLOTS = "MEETING_CHANGE_SLOTS";
     public static final int TRANSPERANCY_50_PERCENT = 0xE6000000;
+    public static final int REQ_CODE_REFRESH_CURRENT_PANEL = 5443;
 }

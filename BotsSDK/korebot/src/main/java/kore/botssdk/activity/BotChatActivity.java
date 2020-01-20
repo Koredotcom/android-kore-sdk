@@ -230,7 +230,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onPanelClicked(Object pModel) {
+    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
 
     }
 
@@ -298,7 +298,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void openFullView(String templateType, String data, Duration duration) {
+    public void openFullView(String templateType, String data, Duration duration, int position) {
 
     }
 

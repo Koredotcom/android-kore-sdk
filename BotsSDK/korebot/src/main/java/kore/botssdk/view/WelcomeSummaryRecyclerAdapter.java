@@ -19,48 +19,76 @@ import java.util.ArrayList;
 
 import kore.botssdk.BR;
 import kore.botssdk.R;
+import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.databinding.WelcomeSummaryListItemBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
-public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeSummaryRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
+public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
     private Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isEnabled;
-
+    String msg;
+    Drawable errorIcon;
     public WelcomeSummaryRecyclerAdapter(Context context) {
         this.context = context;
     }
-
+    private int DATA_CARD_FLAG = 1;
+    private int MESSAGE = 2;
+    private int EMPTY_CARD_FLAG = 0;
     @NonNull
     @Override
-    public WelcomeSummaryRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        WelcomeSummaryListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.welcome_summary_list_item, parent, false);
-        return new WelcomeSummaryRecyclerAdapter.ViewHolder(binding);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+
+        if (viewType == DATA_CARD_FLAG) {
+            WelcomeSummaryListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.welcome_summary_list_item, parent, false);
+            return new WelcomeSummaryRecyclerAdapter.ViewHolder(binding);
+        } else {
+            return new EmptyWidgetViewHolder(LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false));
+
+
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WelcomeSummaryRecyclerAdapter.ViewHolder holder, int position) {
-        WelcomeChatSummaryModel model = summaryList.get(position);
-        holder.bind(model);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermain, int position) {
+                if(holdermain instanceof WelcomeSummaryRecyclerAdapter.ViewHolder )
+                {
+                    WelcomeSummaryRecyclerAdapter.ViewHolder  holder=(WelcomeSummaryRecyclerAdapter.ViewHolder)holdermain;
+                    WelcomeChatSummaryModel model = summaryList.get(position);
+                    holder.bind(model);
 
-        holder.itemRowBinding.icon.setTypeface(getTypeFaceObj(context));
-        if(!StringUtils.isNullOrEmpty(model.getIconId()))
-            setImage(model, holder);
+                    holder.itemRowBinding.icon.setTypeface(getTypeFaceObj(context));
+                    if(!StringUtils.isNullOrEmpty(model.getIconId()))
+                        setImage(model, holder);
+                    setIntrensic(model,holder);
 
 
-        holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(verticalListViewActionHelper != null && isEnabled())
-                verticalListViewActionHelper.welcomeSummaryItemClick(model);
-            }
-        });
+                    holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(verticalListViewActionHelper != null && isEnabled())
+                                verticalListViewActionHelper.welcomeSummaryItemClick(model);
+                        }
+                    });
+                }else
+                {
+                    EmptyWidgetViewHolder holder = (EmptyWidgetViewHolder) holdermain;
+                    holder.tv_disrcription.setText(holder.getItemViewType() == EMPTY_CARD_FLAG ? "" : msg);
+                    holder.img_icon.setImageDrawable(holder.getItemViewType() == EMPTY_CARD_FLAG ? null : errorIcon);
+
+                }
     }
+
+
 
     private Drawable changeColorOfDrawable(Context context, int colorCode) {
         Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
@@ -82,6 +110,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
                 holder.itemRowBinding.icon.setText(R.string.icon_2d);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
+            case "notificationForm":
             case "form":
                 holder.itemRowBinding.icon.setText(R.string.icon_e943);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_ffab18));
@@ -100,12 +129,38 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter<WelcomeS
                 break;
         }
     }
+    private void setIntrensic(WelcomeChatSummaryModel model, ViewHolder holder) {
+        if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())) {
+            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
+                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
+        } else if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("open_form")) {
+            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
+                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
+        }
+    }
 
     @Override
     public int getItemCount() {
-        return summaryList != null && summaryList.size() > 0 ? summaryList.size() : 0;
+        return summaryList != null && summaryList.size() > 0 ? summaryList.size() :1;
+    }
+    @Override
+    public int getItemViewType(int position) {
+
+        if (summaryList != null && summaryList.size() > 0)
+            return DATA_CARD_FLAG;
+
+
+        if (msg != null && !msg.equalsIgnoreCase("")) {
+            return MESSAGE;
+        }
+        return EMPTY_CARD_FLAG;
     }
 
+    public void setMessage(String msg, Drawable errorIcon) {
+        this.msg=msg;
+        this.errorIcon=errorIcon;
+        notifyDataSetChanged();
+    }
     @Override
     public ArrayList getData() {
         return null;

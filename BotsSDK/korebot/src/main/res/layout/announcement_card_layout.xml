@@ -137,7 +137,6 @@
             android:layout_below="@+id/tv_description"
             android:layout_marginStart="8dp"
             android:layout_marginTop="7dp"
-            android:layout_toEndOf="@+id/tv_comments"
             android:drawableStart="@drawable/upvote"
             android:drawablePadding="7dp"
             android:singleLine="true"

@@ -50,6 +50,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_HIDDEN_DIALOG = "hidden_dialog";
     public static final String KORA_SUMMARY_HELP_VIEW = "kora_summary_help";
     public static final String NARRATOR_TEXT = "narrator";
+    public static final String TEMPLATE_TYPE_MULTI_SELECT = "multi_select";
+
+    public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
 
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
 
@@ -72,6 +75,15 @@ public class BotResponse extends BaseBotMessage {
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";
+
+
+
+    public static final String US_MEETING_NOTES_TYPE="MeetingNotes";
+    public static final String US_EMAIL_TYPE="Email";
+    public static final String US_KNOWLEDGE_TYPE="Article";
+    public static final String US_FILES_TYPE="Files";
+    public static final String US_KNOWLEDGE_COLLECTION_TYPE="KnowledgeCollection";
+
 
 
 

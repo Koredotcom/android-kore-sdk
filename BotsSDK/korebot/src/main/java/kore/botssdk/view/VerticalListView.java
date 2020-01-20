@@ -137,13 +137,13 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private void handleViewMore(String type, RecyclerView.Adapter adapter) {
         if (type.equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_TASK_VIEW) || type.equalsIgnoreCase(BotResponse.TEMPLATE_TASK_FULLVIEW)) {
-            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null);
+            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null, 0);
         } else {
             Duration _duration = null;
             if(adapter instanceof CalendarEventsAdapter){
                 _duration = ((CalendarEventsAdapter) adapter).getCursorDuration();
             }
-            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()),_duration);
+            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()),_duration, 0);
         }
     }
 

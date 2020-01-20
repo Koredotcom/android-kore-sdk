@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -37,6 +38,9 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
+import kore.botssdk.utils.markdown.MarkdownTagHandler;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -136,9 +140,9 @@ public class TextMediaLayout extends ViewGroup {
         super.onDetachedFromWindow();
         KoreEventCenter.unregister(this);
     }
-    public void startup(String messageBody, int... dimens) {
+    /*public void startup(String messageBody) {
         populateText(messageBody);
-    }
+    }*/
 
     private String getRemovedEntityEditString(String _str){
        String str = _str.replaceAll(REGEX_CHAR,"");
@@ -174,8 +178,12 @@ public class TextMediaLayout extends ViewGroup {
             /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
                 textualContent = "\"" + textualContent + "\"";
             }*/
-            SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
-            URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
+            textualContent = StringUtils.unescapeHtml3(textualContent.trim());
+            textualContent = MarkdownUtil.processMarkDown(textualContent);
+            CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
+            SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+            URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
@@ -252,7 +260,35 @@ public class TextMediaLayout extends ViewGroup {
             if(isPencilSpanClick)
                 botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             else
-                botContentTextView.setMovementMethod(null);
+//                botContentTextView.setMovementMethod(null);
+                botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            botContentTextView.setVisibility(VISIBLE);
+        } else {
+            botContentTextView.setText("");
+            botContentTextView.setVisibility(GONE);
+        }
+
+    }
+
+    public void populateTextSenders(String textualContent) {
+        if (textualContent != null && !textualContent.isEmpty()) {
+            textualContent = unescapeHtml4(textualContent.trim());
+            /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
+                textualContent = "\"" + textualContent + "\"";
+            }*/
+            textualContent = StringUtils.unescapeHtml3(textualContent.trim());
+            CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
+            SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+            URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+
+            for (URLSpan span : urls) {
+                makeLinkClickable(strBuilder, span);
+            }
+
+
+            botContentTextView.setText(strBuilder);
+            botContentTextView.setMovementMethod(null);
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");

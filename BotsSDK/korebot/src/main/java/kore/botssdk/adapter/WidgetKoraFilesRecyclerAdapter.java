@@ -22,6 +22,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.WFileLookUpModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.FileUtils;
 
@@ -58,7 +59,10 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
         this.kaFileLookupModels = fileLookupModels;
         this.context = context;
     }
-
+    WidgetViewMoreEnum widgetViewMoreEnum;
+    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
+        this.widgetViewMoreEnum=widgetViewMoreEnum;
+    }
     @Override
     public long getItemId(int position) {
         return position;
@@ -120,7 +124,7 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
 
     @Override
     public int getItemCount() {
-        if(Utility.isIsSingleItemInList())
+        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
         {
             return kaFileLookupModels != null && kaFileLookupModels.size() > 0  ?kaFileLookupModels.size() : 1;
         }

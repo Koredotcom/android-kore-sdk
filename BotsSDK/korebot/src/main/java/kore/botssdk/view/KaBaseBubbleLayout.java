@@ -30,6 +30,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
+import kore.botssdk.view.tableview.BotMiniTableView;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
@@ -109,16 +110,19 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
-    protected BotMainTableView tableView;
+    protected BotMiniTableView tableView;
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;
+    protected UniversalSearchView universalSearchView;
     protected KoraSummaryHelpView koraSummaryHelpView;
+    protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
+    protected MultiSelectView multiSelectView;
     protected MeetingConfirmationView meetingConfirmationView;
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
-    protected int[] dimens;
+//    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
     protected GradientDrawable leftGradientDrawable,rightGradientDrawable;
@@ -273,6 +277,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
       //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
         addView(meetingSlotsView);
 
+        multiSelectView = ViewProvider.getMultiSelectView(context);
+        multiSelectView.setComposeFooterInterface(composeFooterInterface);
+        addView(multiSelectView);
+
         contactInfoView = ViewProvider.getContactInfoView(context);
         contactInfoView.setComposeFooterInterface(composeFooterInterface);
         contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -281,6 +289,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
         welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         addView(welcomeSummaryView);
+
+
+        universalSearchView = ViewProvider.getUniversalSearchView(context);
+         universalSearchView.setComposeFooterInterface(composeFooterInterface);
+        universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(universalSearchView);
 
         koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
         koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
@@ -311,6 +325,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         lineChartView = ViewProvider.getLineChartView(context);
         addView(lineChartView);
 
+        koraCarouselView = ViewProvider.getKoraCarouselView(context);
+        addView(koraCarouselView);
 
         verticalListView = ViewProvider.getVerticalListView(context);
         addView(verticalListView);
@@ -377,11 +393,18 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(meetingSlotsView != null){
             meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(multiSelectView != null){
+            multiSelectView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(contactInfoView != null){
             contactInfoView.setComposeFooterInterface(composeFooterInterface);
         }
         if(welcomeSummaryView !=null){
             welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if(universalSearchView !=null){
+            universalSearchView.setComposeFooterInterface(composeFooterInterface);
         }
         if(koraSummaryHelpView !=null){
             koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
@@ -411,6 +434,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(contactInfoView != null){
             contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(universalSearchView != null){
+            universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
@@ -443,10 +469,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         super.onFinishInflate();
     }
 
-    public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage, int... dimens) {
+    public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage) {
 
     //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
-        this.dimens = dimens;
+//        this.dimens = dimens;
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         // Customize BubbleSeparation
         // Customise BubbleTimeLineGrouping Height
@@ -456,7 +482,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
-        populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem, dimens);
+        populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem);
         timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
@@ -509,13 +535,15 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
     }
 
-    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean _isclickable, int... dimens) {
+    protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean _isclickable) {
 
         String message = null;
         String textColor = "#000000";
+        bubbleTextMediaLayout.setClicable(_isclickable);
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
             if(((BotRequest) baseBotMessage).getMessage() != null)
                 message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            bubbleTextMediaLayout.populateTextSenders(message);
         } else if (componentModel != null) {
                 String compType = componentModel.getType();
                 PayloadOuter payOuter = componentModel.getPayload();
@@ -534,9 +562,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                         }
                     }
                 }
+            bubbleTextMediaLayout.populateText(message);
             }
-        bubbleTextMediaLayout.setClicable(_isclickable);
-        bubbleTextMediaLayout.startup(message, dimens);
+
+
 
     }
 

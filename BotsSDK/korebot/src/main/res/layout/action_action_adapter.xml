@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="schedue meeting"
+        android:textSize="16sp"
+
+        android:gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:padding="13dp"
+        android:background="@drawable/summary_help_item_bg"
+        />
+</LinearLayout>

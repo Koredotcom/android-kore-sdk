@@ -239,15 +239,17 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         stackedBarChatView.setData(payInner);
                     }
                 }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
-                    miniTableView.setVisibility(View.VISIBLE);
-                    bubbleTextMediaLayout.populateText(payInner.getText());
-                    miniTableView.setData(payInner.getTemplate_type(), payInner);
+                    //TODO handle
+//                    miniTableView.setVisibility(View.VISIBLE);
+//                    bubbleTextMediaLayout.populateText(payInner.getText());
+//                    miniTableView.setData(payInner.getTemplate_type(), payInner);
                 }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())){
-                    miniTableView.setVisibility(View.VISIBLE);
+                    //TODO handle
+                    /*miniTableView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
 //                    for(BotMiniTableModel model:payInner.getMiniTableDataModels()) {
                         miniTableView.setData(payInner.getTemplate_type(), payInner);
-//                    }
+//                    }*/
                 }else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){

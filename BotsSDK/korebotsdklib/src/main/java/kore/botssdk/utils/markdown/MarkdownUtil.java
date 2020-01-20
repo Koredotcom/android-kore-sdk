@@ -1,4 +1,3 @@
-/*
 package kore.botssdk.utils.markdown;
 
 
@@ -7,11 +6,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import kore.botssdk.utils.Utils;
 
 
-*/
 /**
  * Created by AmitYadav on 2/28/2017.
- *//*
-
+ */
 
 public class MarkdownUtil {
 
@@ -33,12 +30,10 @@ public class MarkdownUtil {
         return text;
     }
 
-    */
-/**
+    /**
      * Convert *text* (no spaces accepted btw * and text) to <b>Bold Text</b>
      * Convert ~italic~ (no spaces accepted btw ~ and text) to <i>Italic Text</i>
-     *//*
-
+     */
     private static String markDownBoldAndItalic(String text, char delimiter, String startTag, String endTag) {
 
         int index = -1;
@@ -52,12 +47,10 @@ public class MarkdownUtil {
             }
 
             //get next char
-         */
-/*     char c = text.charAt(index + 1);
+         /*     char c = text.charAt(index + 1);
           if (c == ' ') {
                 continue;
-            }*//*
-
+            }*/
 
             nIndex = text.indexOf(delimiter, index + 1);
             if (nIndex == -1) {
@@ -89,11 +82,9 @@ public class MarkdownUtil {
         return text;
     }
 
-    */
-/**
+    /**
      * Convert [linktext](http://example.com) to <a href="http://google.com">Google!</a>
-     *//*
-
+     */
     private static String markDownLink(String text) {
 
         int indexP1 = -1;
@@ -177,13 +168,13 @@ public class MarkdownUtil {
             //<a href="http://google.com">Google!</a>
             //Go to [Google](http://google.com) and lookup
 
-            if (!link.startsWith("www.") && !link.startsWith("http://")) {
+           /* if (!link.startsWith("www.") && !link.startsWith("http://")) {
                 link = "www." + link;
             }
 
             if (!link.startsWith("http://")) {
                 link = "http://" + link;
-            }
+            }*/
 
             StringBuilder builder = new StringBuilder(text);
             builder.delete(indexP1, indexP4 + 1);
@@ -196,11 +187,9 @@ public class MarkdownUtil {
         return text;
     }
 
-    */
-/**
+    /**
      * Convert ![linktext](http://example.com) to <img src="IMAGE_URL" alttext="linktext"/>
-     *//*
-
+     */
     private static String markDownImage(String text) {
 
         int indexP1 = -1;
@@ -340,12 +329,10 @@ public class MarkdownUtil {
         return text;
     }
 
-    */
-/**
+    /**
      * Convert * space text to <ul><li>...</li></ul>
      * Convert # space text to <ol><li>...</li></ol>
-     *//*
-
+     */
     private static String markDownList(String text, char delimiter, String itemFormat, String itemContainerFormat) {
 
         int indexP1 = -1;
@@ -406,11 +393,9 @@ public class MarkdownUtil {
         return text;
     }
 
-    */
-/**
+    /**
      * Convert #h1 to <h1> and so on till 6
-     *//*
-
+     */
     private static String markDownHeading(String text) {
 
         int index;
@@ -464,4 +449,3 @@ public class MarkdownUtil {
         return text;
     }
 }
-*/

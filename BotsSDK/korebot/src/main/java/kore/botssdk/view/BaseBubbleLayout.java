@@ -104,7 +104,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected BarChartView barChartView;
     protected StackedBarChatView stackedBarChatView;
-    protected BotMainTableView miniTableView;
+    protected KoraCarouselView miniTableView;
 
 
     protected int position;
@@ -264,7 +264,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         stackedBarChatView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
         addView(stackedBarChatView);
 
-        miniTableView = new BotMainTableView(getContext());
+        miniTableView = new KoraCarouselView(getContext());
         miniTableView.setVisibility(GONE);
         miniTableView.setId(BubbleConstants.MINI_TABLE_VIEW_ID);
         addView(miniTableView);
@@ -491,6 +491,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         String textColor = "#000000";
         if (baseBotMessage.isSend()) {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            bubbleTextMediaLayout.populateTextSenders(message);
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
             if (componentModel != null) {
@@ -511,9 +512,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
                     }
                 }
             }
+            bubbleTextMediaLayout.populateText(message);
         }
 
-        bubbleTextMediaLayout.startup(message, dimens);
+
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);

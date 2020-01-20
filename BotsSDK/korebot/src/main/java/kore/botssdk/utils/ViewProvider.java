@@ -21,7 +21,6 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
-import kore.botssdk.view.BotMainTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
@@ -29,12 +28,15 @@ import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
+import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
+import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
+import kore.botssdk.view.tableview.BotMiniTableView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
@@ -51,6 +53,7 @@ public class ViewProvider {
     private static final int LINECHART_VIEW_ID = 19800335;
     private static final int KORA_CAROUSEL_VIEW_ID = 1980050;
     private static final int MEETING_SLOTS_VIEW_ID = 1980089;
+    private static final int MULTI_SELECT_VIEW_ID = 1980090;
     private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
     private static final int CONTACT_VIEW_ID = 19800456;
     private static final int WELCOME_SUMMARY_VIEW_ID = 19800786;
@@ -59,6 +62,7 @@ public class ViewProvider {
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
     private static final int QUICK_RPVIEW = 1988881;
     private static final int TIMELINE_VIEW_ID = 1980094;
+    private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
 
 
@@ -190,8 +194,8 @@ public class ViewProvider {
         botPieChartView.setId(PIECHART_VIEW_ID);
         return botPieChartView;
     }
-    public static BotMainTableView getTableView(Context context){
-        BotMainTableView tableView = new BotMainTableView(context);
+    public static BotMiniTableView getTableView(Context context){
+        BotMiniTableView tableView = new BotMiniTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }
@@ -205,6 +209,11 @@ public class ViewProvider {
         MeetingSlotsView meetingSlotsView = new MeetingSlotsView(context);
         meetingSlotsView.setId(MEETING_SLOTS_VIEW_ID);
         return meetingSlotsView;
+    }
+    public static MultiSelectView getMultiSelectView(Context context){
+        MultiSelectView multiSelectView = new MultiSelectView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
     }
     public static MeetingConfirmationView getMeetingConfirmationView(Context context){
         MeetingConfirmationView meetingConfirmationView = new MeetingConfirmationView(context);
@@ -226,9 +235,17 @@ public class ViewProvider {
     }
 
     public static WelcomeSummaryView getWelcomeSummaryView(Context context){
-        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context);
+        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context,"");
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
         return welcomeSummaryView;
+    }
+
+
+
+    public static UniversalSearchView getUniversalSearchView(Context context){
+        UniversalSearchView universalSearchView = new UniversalSearchView(context);
+        universalSearchView.setId(UNIVERSAL_SEARCH_VIEW_ID);
+        return universalSearchView;
     }
 
     public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){

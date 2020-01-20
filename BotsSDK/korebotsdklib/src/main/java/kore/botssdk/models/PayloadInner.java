@@ -193,6 +193,17 @@ public class PayloadInner {
     private ArrayList<WelcomeSummaryModel> welcomeSummaryModel;
     private ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel;
     private ArrayList<NarratorTextModel> narratorTextModel;
+    private ArrayList<KoraUniversalSearchModel> universalSearchModels;
+
+    public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
+        return multiSelectModels;
+    }
+
+    public void setMultiSelectModels(ArrayList<BotMultiSelectElementModel> multiSelectModels) {
+        this.multiSelectModels = multiSelectModels;
+    }
+
+    private ArrayList<BotMultiSelectElementModel> multiSelectModels;
 
 
     public ArrayList<NarratorTextModel> getNarratorTextModel() {
@@ -221,15 +232,15 @@ public class PayloadInner {
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
 
-    public List<AnnoucementResModel> getAnnoucementResModels() {
-        return annoucementResModels;
+    public List<AnnoucementResModel> getAnnouncementResModels() {
+        return announcementResModels;
     }
 
-    public void setAnnoucementResModels(List<AnnoucementResModel> annoucementResModels) {
-        this.annoucementResModels = annoucementResModels;
+    public void setAnnouncementResModels(List<AnnoucementResModel> annoucementResModels) {
+        this.announcementResModels = annoucementResModels;
     }
 
-    private List<AnnoucementResModel> annoucementResModels;
+    private List<AnnoucementResModel> announcementResModels;
     private ArrayList<String> headers;
     private ArrayList<KoraSearchResultsModel> koraSearchResultsModel;
     private ArrayList<BotBarChartDataModel> barChartDataModels;
@@ -335,7 +346,7 @@ public class PayloadInner {
     private String elementsAsString;
     private String color = "#000000";
 
-    private final String INVALID_JSON = "Invalid JSON";
+//    private final String INVALID_JSON = "Invalid JSON";
     private String speech_hint;
 
     public ChildTemplate getChildTemplate() {
@@ -360,6 +371,10 @@ public class PayloadInner {
         return buttons;
     }
 
+    public void setButtons(ArrayList<BotButtonModel> buttons) {
+        this.buttons = buttons;
+    }
+
     public ArrayList<QuickReplyTemplate> getQuick_replies() {
         return quick_replies;
     }
@@ -370,6 +385,14 @@ public class PayloadInner {
 
     public ArrayList<BotListModel> getListElements() {
         return listElements;
+    }
+
+    public ArrayList<KoraUniversalSearchModel> getUniversalSearchModels() {
+        return universalSearchModels;
+    }
+
+    public void setUniversalSearchModels(ArrayList<KoraUniversalSearchModel> universalSearchModels) {
+        this.universalSearchModels = universalSearchModels;
     }
 
     public String getColor() {
@@ -386,6 +409,7 @@ public class PayloadInner {
         try {
             if (elements != null) {
                 elementsAsString = gson.toJson(elements);
+                if(!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)){
                 if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
                     Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
                     }.getType();
@@ -474,12 +498,42 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<NarratorTextModel>>() {
                     }.getType();
                     setNarratorTextModel(gson.fromJson(elementsAsString, listType));
-                }
-
-                else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
+                }else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(template_type)) {
                     Type listType = new TypeToken<ArrayList<AnnoucementResModel>>() {
                     }.getType();
-                    annoucementResModels = gson.fromJson(elementsAsString, listType);
+                    announcementResModels = gson.fromJson(elementsAsString, listType);
+                }else if (BotResponse.TEMPLATE_TYPE_MULTI_SELECT.equals(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotMultiSelectElementModel>>() {
+                    }.getType();
+                    multiSelectModels = gson.fromJson(elementsAsString, listType);
+                }
+            }else{
+                    //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
+                    Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();
+                    universalSearchModels = gson.fromJson(elementsAsString,listType);
+                    if(universalSearchModels != null && universalSearchModels.size()>0){
+                        for(int index = 0; index < universalSearchModels.size();index++){
+                            if(universalSearchModels.get(index) != null){
+                                String elementStr = gson.toJson(universalSearchModels.get(index).getElements());
+                                if(universalSearchModels.get(index).getType().equalsIgnoreCase("Email")){
+                                    Type subListType = new TypeToken<ArrayList<EmailModel>>() {}.getType();
+                                    universalSearchModels.get(index).setEmails(gson.fromJson(elementStr, subListType));
+                                }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("Article")){
+                                    Type subListType = new TypeToken<ArrayList<KnowledgeDetailModel>>() {}.getType();
+                                    universalSearchModels.get(index).setKnowledge(gson.fromJson(elementStr, subListType));
+                                }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("Files")){
+                                    Type subListType = new TypeToken<ArrayList<KaFileLookupModel>>() {}.getType();
+                                    universalSearchModels.get(index).setFiles(gson.fromJson(elementStr, subListType));
+                                }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("MeetingNotes")){
+                                    Type subListType = new TypeToken<ArrayList<CalEventsTemplateModel>>() {}.getType();
+                                    universalSearchModels.get(index).setMeetingNotes(gson.fromJson(elementStr, subListType));
+                                }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("KnowledgeCollection")){
+                                    Type subListType = new TypeToken<ArrayList<KnowledgeCollectionModel>>() {}.getType();
+                                    universalSearchModels.get(index).setKnowledgeCollection(gson.fromJson(elementStr, subListType));
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }catch (Exception e){
@@ -500,7 +554,7 @@ public class PayloadInner {
                         }
                     }
                     if (carouselElements.isEmpty()) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        throw new JsonSyntaxException("Invalid JSON");
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
                     for (int i = 0; i < listElements.size(); i++) {
@@ -511,11 +565,11 @@ public class PayloadInner {
                         }
                     }
                     if (listElements.isEmpty()) {
-                        throw new JsonSyntaxException(INVALID_JSON);
+                        throw new JsonSyntaxException("Invalid JSON");
                     }
                 }
             } else {
-                throw new JsonSyntaxException(INVALID_JSON);
+                throw new JsonSyntaxException("Invalid JSON");
             }
         }
     }

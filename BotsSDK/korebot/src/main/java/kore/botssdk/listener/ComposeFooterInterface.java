@@ -31,7 +31,7 @@ public interface ComposeFooterInterface {
 
     void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd, boolean showOverlay, String templateType);
 
-    void openFullView(String templateType, String data, Duration duration);
+    void openFullView(String templateType, String data, Duration duration, int position);
 
     void updateActionbar(boolean selected, String templateType, ArrayList<BotButtonModel> buttonModels);
 
@@ -39,6 +39,6 @@ public interface ComposeFooterInterface {
 
     void showAfterOnboard(boolean isDiscardClicked);
 
-    void onPanelClicked(Object pModel);
+    void onPanelClicked(Object pModel, boolean isFirstLaunch);
 
 }

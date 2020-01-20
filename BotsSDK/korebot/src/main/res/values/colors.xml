@@ -15,6 +15,7 @@
     <color name="bubble_white_color">#FFFFFF</color>
 
     <color name="right_bubble_selected">#0268de</color>
+
     <color name="right_bubble_unselected">#0076FF</color>
     <color name="bot_left_bubble_selected">#CCCCCC</color>
     <color name="bot_left_bubble_unselected">#CCCCCC</color>
@@ -176,4 +177,7 @@
     <color name="color3">#eeaa10</color>
     <color name="color4">#3164d7</color>
     <color name="color5">#2e9641</color>
+    <color name="color_e48015">#e48015</color>
+    <color name="color_f98140">#f98140</color>
+    <color name="color_38c9e1">#38c9e1</color>
 </resources>

@@ -10,8 +10,14 @@ import java.util.List;
  * Created by Ramachandra Pradeep on 08-Mar-19.
  */
 
-public class Widget implements Serializable {
+public class Widget implements Serializable,Cloneable {
 
+
+    @Override
+    public Widget clone() throws CloneNotSupportedException {
+        Widget widget = (Widget) super.clone();
+        return widget;
+    }
 
     public class Action implements Serializable {
 
@@ -27,6 +33,9 @@ public class Widget implements Serializable {
         @SerializedName("utterance")
         @Expose
         private String utterance;
+
+
+        private String theme;
 
         public String getUrl() {
             return url;
@@ -71,6 +80,14 @@ public class Widget implements Serializable {
             this.utterance = utterance;
         }
 
+        public String getTheme() {
+            return theme;
+        }
+
+        public void setTheme(String theme) {
+            this.theme = theme;
+        }
+
     }
 
     private String id;
@@ -82,6 +99,14 @@ public class Widget implements Serializable {
     private String theme;
    // private String api;
     private String utterances_header;
+
+    public String getTemplateType() {
+        return templateType;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
 
     @SerializedName("elements")
     @Expose
@@ -95,11 +120,11 @@ public class Widget implements Serializable {
     @Expose
     private List<Action> actions = null;
 
-    public List<String> getUtterances() {
+    public List<Action> getUtterances() {
         return utterances;
     }
 
-    public void setUtterances(List<String> utterances) {
+    public void setUtterances(List<Action> utterances) {
         this.utterances = utterances;
     }
 
@@ -119,7 +144,7 @@ public class Widget implements Serializable {
         this.multi_actions = multi_actions;
     }
 
-    private List<String> utterances = null;
+    private List<Action> utterances = null;
 
     private List<Filter> filters = null;
 
@@ -467,6 +492,8 @@ public class Widget implements Serializable {
         private List<Action> actions = null;
         private DefaultAction default_action;
 
+        private DefaultAction defaultAction;
+
         public String getModifiedTime() {
             return modifiedTime;
         }
@@ -526,11 +553,12 @@ public class Widget implements Serializable {
         }
 
         public DefaultAction getDefaultAction() {
-            return default_action;
+            return default_action!= null ? default_action : defaultAction;
         }
 
         public void setDefaultAction(DefaultAction default_action) {
             this.default_action = default_action;
+            this.defaultAction= default_action;
         }
 
     }
@@ -601,6 +629,16 @@ public class Widget implements Serializable {
         private String title;
         private String type;
         private String url;
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public void setPayload(String payload) {
+            this.payload = payload;
+        }
+
+        private String payload;
 
         public String getTitle() {
             return title;
