@@ -145,7 +145,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                verticalListViewActionHelper.meetingNotesNavigation(context, model.getMeetingNoteId(), model.getEventId());
+                verticalListViewActionHelper.meetingNotesNavigation(context, model.getEventId(), model.getMeetingNoteId());
             }
         });
 
