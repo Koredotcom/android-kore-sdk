@@ -276,6 +276,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
                 ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton(),trigger);
                 buttonRecyclerAdapter.setSkillName(skillName);
+                buttonRecyclerAdapter.setIsFromFullView(isFullView);
                 holder.recyclerView.setAdapter(buttonRecyclerAdapter);
                 buttonRecyclerAdapter.notifyDataSetChanged();
             }

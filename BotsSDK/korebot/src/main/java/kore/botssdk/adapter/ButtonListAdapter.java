@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -88,6 +89,11 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
         return buttons != null ? buttons.size() : 0;
     }
 
+    boolean isFullView;
+    public void setIsFromFullView(boolean isFullView) {
+        this.isFullView=isFullView;
+    }
+
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
         private TextView tv;
 //        private LinearLayout ll;
@@ -113,6 +119,16 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
         event.setPayLoad(new Gson().toJson(hashMap));
         event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
+
+        try {
+
+
+            if (isFullView) {
+                ((Activity) mContext).finish();
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     public String getSkillName() {
