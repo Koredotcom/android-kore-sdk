@@ -635,6 +635,16 @@ public class Widget implements Serializable,Cloneable {
         private String type;
         private String url;
 
+        public String getUtterance() {
+            return utterance;
+        }
+
+        public void setUtterance(String utterance) {
+            this.utterance = utterance;
+        }
+
+        private String utterance;
+
         public String getPayload() {
             return payload;
         }

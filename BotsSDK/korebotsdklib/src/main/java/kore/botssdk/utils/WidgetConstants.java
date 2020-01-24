@@ -21,6 +21,7 @@ public class WidgetConstants {
     public static final byte PIE_CHART_TEMPLATE = 20;
     public static final byte BAR_CHART_TEMPLATE = 21;
     public static final byte LINE_CHART_TEMPLATE = 22;
+    public static final byte LIST_WIDGET_TEMPLATE = 23;
 
 
 
@@ -48,6 +49,7 @@ public class WidgetConstants {
     public final static String PIE_CHART="piechart";
     public final static String BAR_CHART="barchart";
     public final static String LINE_CHART="linechart";
+    public final static String LIST_WIDGET = "List";
 
 
 

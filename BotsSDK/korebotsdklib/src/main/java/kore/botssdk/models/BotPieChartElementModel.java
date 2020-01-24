@@ -41,6 +41,7 @@ public class BotPieChartElementModel {
     private String image_url;
     private double value;
     private String currency;
+    private String displayValue;
 
     public String getDisplayValue() {
         return displayValue;
@@ -50,7 +51,7 @@ public class BotPieChartElementModel {
         this.displayValue = displayValue;
     }
 
-    private String displayValue;
+
 
 
 }
