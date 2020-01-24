@@ -69,7 +69,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                     holder.itemRowBinding.icon.setTypeface(getTypeFaceObj(context));
                     if(!StringUtils.isNullOrEmpty(model.getIconId()))
                         setImage(model, holder);
-                    setIntrensic(model,holder);
+//                    setIntrensic(model,holder);
 
 
                     holder.itemRowBinding.summaryRootLayout.setOnClickListener(new OnClickListener() {

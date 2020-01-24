@@ -28,6 +28,7 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.utils.BundleConstants;
@@ -66,11 +67,21 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     private String type;
     private ComposeFooterInterface composeFooterInterface;
 
-    List<MultiAction> multiActions;
-    int previewLength;
-    String msg;
-    Drawable errorIcon;
-    WidgetViewMoreEnum widgetViewMoreEnum;
+    private List<MultiAction> multiActions;
+    private int previewLength;
+    private String msg;
+    private Drawable errorIcon;
+    private WidgetViewMoreEnum widgetViewMoreEnum;
+
+    public LoginModel getLoginModel() {
+        return loginModel;
+    }
+
+    public void setLoginModel(LoginModel loginModel) {
+        this.loginModel = loginModel;
+    }
+
+    private LoginModel loginModel;
 
     private boolean isLoginNeeded;
 
@@ -127,7 +138,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if(holderData.getItemViewType() ==  REPORTS){
-            final Element model = eventList.get(position);
+//            final Element model = eventList.get(position);
             ReportsViewHolder holder = (ReportsViewHolder) holderData;
 
             //holder.txt.setText(model.getText());
@@ -136,7 +147,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
                 public void onClick(View view) {
                     if(mContext instanceof Activity) {
                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                        intent.putExtra("url", model.getDefaultAction().getUrl());
+                        intent.putExtra("url", loginModel.getUrl());
                         intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
                         ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
                     }else{

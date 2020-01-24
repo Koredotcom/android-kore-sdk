@@ -14,6 +14,16 @@ public class KoraUniversalSearchModel {
     private ArrayList<CalEventsTemplateModel> meetingNotes;
     private ArrayList<KnowledgeCollectionModel> knowledgeCollection;
 
+    public ArrayList<UniversalSearchSkillModel> getSkillModel() {
+        return skillModel;
+    }
+
+    public void setSkillModel(ArrayList<UniversalSearchSkillModel> skillModel) {
+        this.skillModel = skillModel;
+    }
+
+    private ArrayList<UniversalSearchSkillModel> skillModel;
+
     public ArrayList<CalEventsTemplateModel> getMeetingNotes() {
         return meetingNotes;
     }
