@@ -109,6 +109,16 @@ public class BaseChartModel {
     private String pie_type;
     private List<Object> elements = null;
     private List<ContentModel> content = null;
+
+    public List<ContentModel> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<ContentModel> details) {
+        this.details = details;
+    }
+
+    private List<ContentModel> details = null;
     private List<BotButtonModel> buttons = null;
     private String Auto_adjust_X_axis;
     private List<String> X_axis;
