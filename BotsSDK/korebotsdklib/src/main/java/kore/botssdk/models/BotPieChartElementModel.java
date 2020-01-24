@@ -41,6 +41,17 @@ public class BotPieChartElementModel {
     private String image_url;
     private double value;
     private String currency;
+    private String displayValue;
+
+    public String getDisplayValue() {
+        return displayValue;
+    }
+
+    public void setDisplayValue(String displayValue) {
+        this.displayValue = displayValue;
+    }
+
+
 
 
 }

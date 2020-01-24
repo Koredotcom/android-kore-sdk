@@ -60,4 +60,26 @@ public class BotButtonModel implements MultiSelectBase {
     public String getPayload() {
         return payload;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public ImageModel getImage() {
+        return image;
+    }
+
+    public void setImage(ImageModel image) {
+        this.image = image;
+    }
+
+    private ImageModel image;
 }

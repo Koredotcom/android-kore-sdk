@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -37,8 +38,10 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
@@ -76,7 +79,17 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private LayoutInflater inflater = null;
     private Context mContext;
 
-    String skillName;
+    private String skillName;
+
+    public LoginModel getLoginModel() {
+        return loginModel;
+    }
+
+    public void setLoginModel(LoginModel loginModel) {
+        this.loginModel = loginModel;
+    }
+
+    private LoginModel loginModel;
 
 
     private int DATA_FOUND = 1;
@@ -175,17 +188,21 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if(holderData.getItemViewType() ==  REPORTS){
-            final Element model = eventList.get(position);
+//            final Element model = eventList.get(position);
             ReportsViewHolder holder = (ReportsViewHolder) holderData;
 
 //            holder.txt.setText(model.getText());
             holder.loginBtn.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                    intent.putExtra("url", model.getDefaultAction().getUrl());
-                    intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
-                    mContext.startActivity(intent);
+                    if(mContext instanceof Activity) {
+                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                        intent.putExtra("url", loginModel.getUrl());
+                        intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    }else{
+                        Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
+                    }
                 }
             });
         }
@@ -259,6 +276,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
                 ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButton(),trigger);
                 buttonRecyclerAdapter.setSkillName(skillName);
+                buttonRecyclerAdapter.setIsFromFullView(isFullView);
                 holder.recyclerView.setAdapter(buttonRecyclerAdapter);
                 buttonRecyclerAdapter.notifyDataSetChanged();
             }

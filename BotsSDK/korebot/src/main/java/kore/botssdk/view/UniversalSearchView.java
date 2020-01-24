@@ -131,17 +131,53 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         if (adapter == null) {
             adapter = new UniversalSearchViewAdapter(this);
         }
-        if (koraUniversalSearchModel != null) {
+        if (koraUniversalSearchModel != null&&koraUniversalSearchModel.size()>0) {
+            koraUniversalSearchModel=getSortedData(koraUniversalSearchModel);
             root_layout.setVisibility(VISIBLE);
             adapter = new UniversalSearchViewAdapter(this);
             adapter.setVerticalListViewActionHelper(this);
             adapter.setData(koraUniversalSearchModel);
             recycler_view.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         } else {
             root_layout.setVisibility(GONE);
             adapter.setData(null);
             recycler_view.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
+    }
+
+
+    private ArrayList<KoraUniversalSearchModel> getSortedData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel)
+    {
+        ArrayList<KoraUniversalSearchModel> list=new ArrayList<>();
+        for(KoraUniversalSearchModel model:koraUniversalSearchModel)
+        {
+            if(model.getMeetingNotes()!=null&&model.getMeetingNotes().size()>0)
+            {
+                list.add(model);
+
+            }else if(model.getEmails()!=null&&model.getEmails().size()>0)
+            {
+                list.add(model);
+
+            }else if(model.getFiles()!=null&&model.getFiles().size()>0)
+            {
+                list.add(model);
+            }
+            else if(model.getKnowledge()!=null&&model.getKnowledge().size()>0)
+            {
+                list.add(model);
+            }
+            else if(model.getKnowledgeCollection()!=null&&model.getKnowledgeCollection().size()>0)
+            {
+                list.add(model);
+            }
+
+        }
+        return list;
+
+
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {

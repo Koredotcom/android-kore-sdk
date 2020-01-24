@@ -53,9 +53,7 @@ android {
 dependencies {
 //    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'androidx.appcompat:appcompat:1.1.0'
-    compile(project(':korebotsdklib')) {
-        exclude module: 'support-v4'
-    }
+    compile(project(':korebotsdklib'))
     compile 'androidx.multidex:multidex:2.0.1'
 //    implementation 'com.squareup.picasso:picasso:2.71828'
     compile group: 'com.squareup.picasso', name: 'picasso', version: '2.71828'

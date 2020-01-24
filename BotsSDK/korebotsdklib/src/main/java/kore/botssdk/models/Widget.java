@@ -18,6 +18,17 @@ public class Widget implements Serializable,Cloneable {
         Widget widget = (Widget) super.clone();
         return widget;
     }
+    public LoginModel getLogin() {
+        return login;
+    }
+
+    public void setLogin(LoginModel login) {
+        this.login = login;
+    }
+
+    @SerializedName("login")
+    @Expose
+    private LoginModel login;
 
     public class Action implements Serializable {
 
@@ -101,7 +112,7 @@ public class Widget implements Serializable,Cloneable {
     private String utterances_header;
 
     public String getTemplateType() {
-        return templateType;
+        return templateType!=null?templateType:"default";
     }
 
     public void setTemplateType(String templateType) {
@@ -234,15 +245,6 @@ public class Widget implements Serializable,Cloneable {
     private String templateType;
 
 
-
-
-    public String getCustomStyle() {
-        return templateType!=null?templateType:"default";
-    }
-
-    public void setCustomStyle(String templateType) {
-        this.templateType = templateType;
-    }
 
     public List<Filter> getFilters() {
         return filters;
@@ -590,7 +592,10 @@ public class Widget implements Serializable,Cloneable {
         }
 
         public String getTheme() {
-            return theme;
+            if(theme != null)
+                return theme;
+            else
+                return "#2f91e5";
         }
 
         public void setTheme(String theme) {
@@ -629,6 +634,16 @@ public class Widget implements Serializable,Cloneable {
         private String title;
         private String type;
         private String url;
+
+        public String getUtterance() {
+            return utterance;
+        }
+
+        public void setUtterance(String utterance) {
+            this.utterance = utterance;
+        }
+
+        private String utterance;
 
         public String getPayload() {
             return payload;
