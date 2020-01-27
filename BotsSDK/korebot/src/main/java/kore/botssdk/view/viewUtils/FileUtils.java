@@ -200,9 +200,14 @@ public class FileUtils {
     private static final ArrayList<String> systemTypes = new ArrayList<>();
     private static final ArrayList<String> compressedTypes = new ArrayList<>();
     private static final ArrayList<String> devTypes = new ArrayList<>();
+    private static final ArrayList<String> msExcel = new ArrayList<>();
+    private static final ArrayList<String> msPowerpaint = new ArrayList<>();
+    private static final ArrayList<String> msDoc = new ArrayList<>();
+
     private static final String pdf = "pdf";
 
     static {
+        loadMsoffice();
         loadVideoTypes();
         loadAudioTypes();
         loadDocTypes();
@@ -239,6 +244,15 @@ public class FileUtils {
         devTypes.add("vb");
         devTypes.add("vcxproj");
         devTypes.add("xcodeproj");
+    }
+    private static void loadMsoffice()
+    {
+        msExcel.add("xls");
+        msExcel.add("xlsx");
+        msPowerpaint.add("ppt");
+        msPowerpaint.add("pptx");
+        msDoc.add("doc");
+        msDoc.add("docx");
     }
 
     private static void loadCompressedTypes() {
@@ -304,8 +318,7 @@ public class FileUtils {
 
     private static void loadSpreadTypes() {
         spreadTypes.add("xlr");
-        spreadTypes.add("xls");
-        spreadTypes.add("xlsx");
+
         spreadTypes.add("csv");
         spreadTypes.add("gsheet");
         spreadTypes.add("ods");
@@ -343,8 +356,7 @@ public class FileUtils {
     }
 
     private static void loadDocTypes() {
-        docTypes.add("doc");
-        docTypes.add("docx");
+
         docTypes.add("log");
         docTypes.add("msg");
         docTypes.add("odt");
@@ -362,9 +374,7 @@ public class FileUtils {
         presentationTypes.add("ged");
         presentationTypes.add("key");
         presentationTypes.add("pps");
-        presentationTypes.add("ppt");
-        presentationTypes.add("pptx");
-        presentationTypes.add("gslide");
+         presentationTypes.add("gslide");
     }
 
     private static void loadThreeDImgTypes() {
@@ -422,12 +432,25 @@ public class FileUtils {
     public static int getDrawableByExt(String ext){
         if(videoTypes.contains(ext)){
             return R.drawable.ic_video;
-        }else if(audioTypes.contains(ext)){
+        }
+        else if(msDoc.contains(ext))
+        {
+            return R.drawable.ic_document;
+        }
+        else if(msPowerpaint.contains(ext))
+        {
+            return R.drawable.ic_slides;
+        }
+        else if(msExcel.contains(ext))
+        {
+            return R.drawable.ic_sheet;
+        }
+        else if(audioTypes.contains(ext)){
             return R.drawable.ic_music;
         }else if(spreadTypes.contains(ext)){
-            return R.drawable.ic_sheet;
+            return R.drawable.ic_sheet_old;
         }else if(docTypes.contains(ext)){
-            return R.drawable.ic_document;
+            return R.drawable.ic_document_old;
         }else if(threeDImgTypes.contains(ext)){
             return R.drawable.ic_3d_object;
         }else if(rasterImageTypes.contains(ext)){
@@ -445,7 +468,7 @@ public class FileUtils {
         }else if(compressedTypes.contains(ext)){
             return R.drawable.ic_zip;
         }else if(presentationTypes.contains(ext)){
-            return R.drawable.ic_slides;
+            return R.drawable.ic_slides_old;
         }else if(fontTypes.contains(ext)){
             return R.drawable.ic_font;
         }else if(pdf.equals(ext)){
