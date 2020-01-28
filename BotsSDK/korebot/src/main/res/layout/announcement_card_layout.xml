@@ -125,6 +125,19 @@
                 android:layout_toEndOf="@+id/user_profile_name">
 
                 <TextView
+                    android:id="@+id/tv_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="7dp"
+                    android:drawableStart="@drawable/ic_comments_right"
+                    android:drawablePadding="7dp"
+                    android:minWidth="80dp"
+                    android:singleLine="true"
+                    android:text="@{Long.toString(annoucement.NComments)}"
+                    android:textColor="@color/color_626281"
+                    android:textSize="12sp" />
+                <TextView
                     android:id="@+id/tv_upvotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -139,19 +152,6 @@
                     android:textColor="@color/color_626281"
                     android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/tv_comments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="7dp"
-                    android:drawableStart="@drawable/ic_comments_right"
-                    android:drawablePadding="7dp"
-                    android:minWidth="80dp"
-                    android:singleLine="true"
-                    android:text="@{Long.toString(annoucement.NComments)}"
-                    android:textColor="@color/color_626281"
-                    android:textSize="12sp" />
 
 
             </LinearLayout>
