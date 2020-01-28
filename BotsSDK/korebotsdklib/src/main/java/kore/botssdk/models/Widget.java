@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+import kore.botssdk.utils.StringUtils;
+
 /**
  * Created by Ramachandra Pradeep on 08-Mar-19.
  */
@@ -102,6 +104,16 @@ public class Widget implements Serializable,Cloneable {
     }
 
     private String id;
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    private String _id;
     private String title;
     private String refreshInterval;
     private String cacheInterval;
@@ -160,7 +172,10 @@ public class Widget implements Serializable,Cloneable {
     private List<Filter> filters = null;
 
     public String getId() {
-        return id;
+        if(!StringUtils.isNullOrEmpty(id))
+            return id;
+        else
+            return get_id();
     }
 
     public void setId(String id) {
@@ -460,7 +475,7 @@ public class Widget implements Serializable,Cloneable {
         }
     }*/
 
-    public class Element {
+    public class Element implements Serializable{
 
         private String title;
         private String sub_title;
@@ -565,7 +580,7 @@ public class Widget implements Serializable,Cloneable {
 
     }
 
-    public class Button {
+    public class Button implements Serializable{
 
         private String title;
         private String theme;
@@ -629,7 +644,7 @@ public class Widget implements Serializable,Cloneable {
     }
 
 
-    public class DefaultAction {
+    public class DefaultAction implements Serializable{
 
         private String title;
         private String type;
