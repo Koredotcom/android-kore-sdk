@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,9 +24,7 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Button;
 import kore.botssdk.utils.Constants;
-import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private LayoutInflater inflater;
@@ -57,7 +54,11 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
         Button btn = buttons.get(i);
 
         holder.tv.setText(btn.getTitle());
-        holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+        try {
+            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+        }catch(Exception e){
+            holder.tv.setTextColor(Color.parseColor("#2f91e5"));
+        }
 
         String utt = null;
         if(!StringUtils.isNullOrEmpty(btn.getPayload())){
