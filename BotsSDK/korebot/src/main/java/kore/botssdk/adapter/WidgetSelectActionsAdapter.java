@@ -1,14 +1,23 @@
 package kore.botssdk.adapter;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -27,12 +36,16 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
+import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Action;
 import kore.botssdk.models.Widget.Element;
+import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+
+import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
@@ -59,6 +72,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((WCalEventsTemplateModel) model).getActions();
         }else if(model instanceof Element){
             this.actionList = ((Element) model).getActions();
+        }
+        else if(model instanceof WidgetListElementModel){
+
+            WidgetListElementModel elementModel=(WidgetListElementModel)model;
+            this.actionList =elementModel.getButtons();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -239,11 +257,69 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     }
                 });
             }
+        }else if(model instanceof WidgetListElementModel)
+        {
+            WidgetListElementModel elementModel=(WidgetListElementModel)model;
+            holder.tv_actions.setText(elementModel.getButtons().get(position).getTitle());
+
+
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    (widgetDialogActivity).dismiss();
+
+                    if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
+                        buttonAction(elementModel.getButtons().get(position).getUtterance(),true);
+                    }else{
+                        buttonAction(elementModel.getButtons().get(position).getUtterance(),false);
+                    }
+                }
+            });
+        }
+    }
+
+    public static boolean hasPermission(Context context,String... permission) {
+        boolean shouldShowRequestPermissionRationale = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionLength = permission.length;
+            for (int i=0;i<permissionLength;i++) {
+                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return shouldShowRequestPermissionRationale;
+    }
+    @SuppressLint("MissingPermission")
+    public static void launchDialer(Context context, String url) {
+        try {
+            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY
+                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     public void buttonAction(String utterance, boolean appendUtterance){
+
+
+        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+            if(utterance.startsWith("tel:")){
+                launchDialer(mainContext,utterance);
+            }else if(utterance.startsWith("mailto:")){
+                showEmailIntent((Activity) mainContext,utterance.split(":")[1]);
+            }
+            return;
+        }
+
         EntityEditEvent event = new EntityEditEvent();
         StringBuffer msg = new StringBuffer("");
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -286,6 +362,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
         }else if(model instanceof Element){
             return model != null && actionList != null ? ((Element)model).getActions().size() : 0;
+        }
+        else if(model instanceof WidgetListElementModel)
+        {
+            return model!=null&&((WidgetListElementModel) model).getButtons()!=null?((WidgetListElementModel) model).getButtons().size():0;
         }
         return 0;
     }

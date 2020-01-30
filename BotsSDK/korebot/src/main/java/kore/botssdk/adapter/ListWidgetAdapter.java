@@ -294,6 +294,25 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                 }
             }
 
+            holder.imgMenu.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                     if ( model.getButtons()!= null &&  model.getButtons().size() > 0) {
+                //holder.icon_down.setVisibility(VISIBLE);
+
+                            WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                            bottomSheetDialog.setisFromFullView(false);
+                            bottomSheetDialog.setSkillName(skillName,trigger);
+                            bottomSheetDialog.setData(model);
+                            bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
+                            bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+
+            } else {
+               // holder.icon_down.setVisibility(GONE);
+            }
+                }
+            });
+
             if (model.getButtons() != null  && model.getButtons().size() > 0) {
             /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
             layoutManager.setFlexDirection(FlexDirection.ROW);
