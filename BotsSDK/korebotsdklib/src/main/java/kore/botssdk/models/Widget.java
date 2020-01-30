@@ -477,6 +477,61 @@ public class Widget implements Serializable,Cloneable {
 
     public class Element implements Serializable{
 
+        private String paceHolder;
+
+        public String getPaceHolder() {
+            return paceHolder;
+        }
+
+        public void setPaceHolder(String paceHolder) {
+            this.paceHolder = paceHolder;
+        }
+
+        public String getIconId() {
+            return iconId;
+        }
+
+        public void setIconId(String iconId) {
+            this.iconId = iconId;
+        }
+
+        public String getPostback() {
+            return postback;
+        }
+
+        public void setPostback(String postback) {
+            this.postback = postback;
+        }
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
+        }
+
+        public Hook getHook() {
+            return hook;
+        }
+
+        public void setHook(Hook hook) {
+            this.hook = hook;
+        }
+
+        public DefaultAction getDefault_action() {
+            return default_action;
+        }
+
+        public void setDefault_action(DefaultAction default_action) {
+            this.default_action = default_action;
+        }
+
+        private String iconId;
+        private String postback;
+        private String _id;
+        private Hook hook;
+
         private String title;
         private String sub_title;
         private String icon;

@@ -23,6 +23,12 @@ public class WidgetConstants {
     public static final byte LINE_CHART_TEMPLATE = 22;
     public static final byte LIST_WIDGET_TEMPLATE = 23;
 
+    public static final byte SUMMARY_CARD_TEMPLATE=24;
+
+
+    public static final byte HEADLINE_TEMPLATE=25;
+    public static final String HEADLINE_TEMPLATE_SERVER="headlines";
+
 
 
 
@@ -37,7 +43,11 @@ public class WidgetConstants {
     public final static String ANNOUNCEMENTS_TEMPLATE_SERVER = "Announcement";
     public final static String SKILL_WIDGET = "ks-9fb269b9-35da-566a-9c1f-77b480b9c1b9";*/
 
-    public final static String CLOUD_TEMPLATE_SERVER = "summarycard";
+    public final static String SUMMARY_CARD_SUMMARY = "summarycard";
+
+    public final static String CLOUD_TEMPLATE_SERVER = "weathergreeting";
+
+
     public final static String QUICK_ACTION_TEMPLATE_SERVER = "quickAction";
     public final static String SYSTEM_HEALTH_TEMPLATE = "SystemHealth";
 
