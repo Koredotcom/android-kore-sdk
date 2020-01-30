@@ -56,11 +56,11 @@ public class BaseChartModel {
         this.content = content;
     }
 
-    public List<BotButtonModel> getButtons() {
+    public List<Widget.Button> getButtons() {
         return buttons;
     }
 
-    public void setButtons(List<BotButtonModel> buttons) {
+    public void setButtons(List<Widget.Button> buttons) {
         this.buttons = buttons;
     }
 
@@ -119,7 +119,7 @@ public class BaseChartModel {
     }
 
     private List<ContentModel> details = null;
-    private List<BotButtonModel> buttons = null;
+    private List<Widget.Button> buttons = null;
     private String Auto_adjust_X_axis;
     private List<String> X_axis;
     private ArrayList<BotPieChartElementModel> pieChartElements = null;

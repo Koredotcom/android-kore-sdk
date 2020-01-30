@@ -109,7 +109,7 @@ public class BotButtonView extends ViewGroup {
             if (autoExpandListView.getAdapter() != null) {
                 count = autoExpandListView.getAdapter().getCount();
             }
-            viewHeight = (int) (layoutItemHeight * count);
+            viewHeight = (int) (layoutItemHeight * count)+(int)(count*(3*dp1));
         }
         return viewHeight;
     }

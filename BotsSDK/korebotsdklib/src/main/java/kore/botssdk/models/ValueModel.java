@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ValueModel {
     private String type;
     private int text;
-    private ArrayList<BotButtonModel> buttons = null;
+    private ArrayList<Widget.Button> buttons = null;
 
     public String getType() {
         return type;
@@ -23,11 +23,11 @@ public class ValueModel {
         this.text = text;
     }
 
-    public ArrayList<BotButtonModel> getButtons() {
+    public ArrayList<Widget.Button> getButtons() {
         return buttons;
     }
 
-    public void setButtons(ArrayList<BotButtonModel> buttons) {
+    public void setButtons(ArrayList<Widget.Button> buttons) {
         this.buttons = buttons;
     }
 }

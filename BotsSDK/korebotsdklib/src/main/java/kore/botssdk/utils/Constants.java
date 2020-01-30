@@ -9,8 +9,8 @@ public class Constants {
 
     //Skill switch name;
     public static  String  SKILL_SELECTION="";
-    public static final String SKILL_HOME="Kora";
-    public static final String SKILL_UTTERANCE="Ask Kora ";
+    public static final String SKILL_HOME="BMC Helix";
+    public static final String SKILL_UTTERANCE="Ask BMC Helix ";
 
 
 

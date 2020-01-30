@@ -3,12 +3,14 @@ package kore.botssdk.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.ButtonListAdapter.ButtonViewHolder;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
@@ -26,6 +29,8 @@ import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Button;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
+import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
@@ -57,16 +62,20 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
         Button btn = buttons.get(i);
 
         holder.tv.setText(btn.getTitle());
-        holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+        try {
+            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+        }catch(IllegalArgumentException e){
+            holder.tv.setTextColor(Color.parseColor("#2f91e5"));
+        }
 
-        String utt = null;
+       /* String utt = null;
         if(!StringUtils.isNullOrEmpty(btn.getPayload())){
             utt = btn.getPayload();
         }
         if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
             utt = btn.getUtterance();
         }
-        final String utterance = utt;
+        final String utterance = utt;*/
 
         holder.tv.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -76,9 +85,9 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
 
                 if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
                         (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                    buttonAction(utterance,true);
+                    buttonAction(btn,true);
                 }else{
-                    buttonAction(utterance,false);
+                    buttonAction(btn,false);
                 }
             }
         });
@@ -107,27 +116,54 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     }
 
 
-    public void buttonAction(String utterance, boolean appendUtterance){
-        EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
-            msg = msg.append(trigger).append(" ");
-        msg.append(utterance);
-        event.setMessage(msg.toString());
-        event.setPayLoad(new Gson().toJson(hashMap));
-        event.setScrollUpNeeded(true);
-        KoreEventCenter.post(event);
+    public void buttonAction(Button btn, boolean appendUtterance){
+        if(btn != null) {
+            if(btn.getType()!=null  && btn.getType().equals("url")){
+                String url = btn.getUrl();
+                if (url != null && !url.isEmpty()) {
+                    if (!url.startsWith("http")) {
+                        url = "http://" + url.toLowerCase();
+                    }
+                    if (NetworkUtility.isNetworkConnectionAvailable(mContext)) {
+                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                        intent.putExtra("url", url);
+                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
 
-        try {
+                        mContext.startActivity(intent);
+                    } else {
+                        Toast.makeText(mContext, "Check your internet connection and please try again",Toast.LENGTH_LONG).show();
+                    }
+                }
+            }else {
+                 String utterance = null;
+        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
+            utterance = btn.getPayload();
+        }
+        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utterance == null){
+            utterance = btn.getUtterance();
+        }
+                EntityEditEvent event = new EntityEditEvent();
+                StringBuffer msg = new StringBuffer("");
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("refresh", Boolean.TRUE);
+                if (appendUtterance && trigger != null)
+                    msg = msg.append(trigger).append(" ");
+                msg.append(utterance);
+                event.setMessage(msg.toString());
+                event.setPayLoad(new Gson().toJson(hashMap));
+                event.setScrollUpNeeded(true);
+                KoreEventCenter.post(event);
+
+                try {
 
 
-            if (isFullView) {
-                ((Activity) mContext).finish();
+                    if (isFullView) {
+                        ((Activity) mContext).finish();
+                    }
+                } catch (Exception e) {
+
+                }
             }
-        } catch (Exception e) {
-
         }
     }
 

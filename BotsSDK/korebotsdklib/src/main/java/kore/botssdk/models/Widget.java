@@ -120,6 +120,7 @@ public class Widget implements Serializable,Cloneable {
     private String summary_placeholder;
     private String type;
     private String theme;
+
    // private String api;
     private String utterances_header;
 
@@ -278,12 +279,13 @@ public class Widget implements Serializable,Cloneable {
         @SerializedName("api")
         @Expose
         private String api;
+
         @SerializedName("params")
         @Expose
-        private Params params;
+        private Object params;
         @SerializedName("body")
         @Expose
-        private Body body;
+        private Object body;
 
         public String getMethod() {
             return method;
@@ -301,25 +303,25 @@ public class Widget implements Serializable,Cloneable {
             this.api = api;
         }
 
-        public Params getParams() {
+        public Object getParams() {
             return params;
         }
 
-        public void setParams(Params params) {
+        public void setParams(Object params) {
             this.params = params;
         }
 
-        public Body getBody() {
+        public Object getBody() {
             return body;
         }
 
-        public void setBody(Body body) {
+        public void setBody(Object body) {
             this.body = body;
         }
 
     }
 
-    public class Params implements Serializable{
+    /*public class Params implements Serializable{
 
         @SerializedName("q")
         @Expose
@@ -388,7 +390,7 @@ public class Widget implements Serializable,Cloneable {
             this.limit = limit;
         }
 
-    }
+    }*/
 
     public class Tz implements Serializable {
 
@@ -417,7 +419,7 @@ public class Widget implements Serializable,Cloneable {
 
     }
 
-    public class Body implements Serializable{
+   /* public class Body implements Serializable{
 
         @SerializedName("filter")
         @Expose
@@ -442,7 +444,7 @@ public class Widget implements Serializable,Cloneable {
             this.tz = tz;
         }
 
-    }
+    }*/
 
     /*public class Element implements Serializable{
         @SerializedName("title")
@@ -642,6 +644,16 @@ public class Widget implements Serializable,Cloneable {
         private String type;
         private String utterance;
         private String url;
+
+        public ImageModel getImage() {
+            return image;
+        }
+
+        public void setImage(ImageModel image) {
+            this.image = image;
+        }
+
+        private ImageModel image;
 
         public String getPayload() {
             return payload;

@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view.tableview;
 
 import android.content.Context;
@@ -23,6 +24,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+*/
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single
  * column. For this purpose implementations of {@link Comparator} are used. If there is a comparator
@@ -33,7 +35,8 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
  * by the content of this column.
  *
  * @author ISchwarz
- */
+ *//*
+
 public class BotTableView extends TableView<MiniTableModel> {
 
 
@@ -122,9 +125,12 @@ public class BotTableView extends TableView<MiniTableModel> {
 
     }
 
-    /*@Override
+    */
+/*@Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)  {
-        *//*int mode = MeasureSpec.getMode(heightMeasureSpec);
+        *//*
+*/
+/*int mode = MeasureSpec.getMode(heightMeasureSpec);
         // Unspecified means that the ViewPager is in a ScrollView WRAP_CONTENT.
         // At Most means that the ViewPager is not in a ScrollView WRAP_CONTENT.
         if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
@@ -137,19 +143,37 @@ public class BotTableView extends TableView<MiniTableModel> {
                 tableDataView.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
                 height += tableDataView.getMeasuredHeight();
 //            }
-            *//**//*if (height != 0) {
+            *//*
+*/
+/**//*
+*/
+/*if (height != 0) {
                 height = height + (int) (25 * dp1);
-            }*//**//*
+            }*//*
+*/
+/**//*
+*/
+/*
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop()+getPaddingBottom(), MeasureSpec.EXACTLY);
-    *//**//*        for(int i = 0; i < getChildCount(); i++) {
+    *//*
+*/
+/**//*
+*/
+/*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;
                 child.requestLayout();
-            }*//**//*
+            }*//*
+*/
+/**//*
+*/
+/*
         }
 
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);*//*
+*/
+/*
 
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxAllowedWidth = parentWidth;
@@ -164,8 +188,12 @@ public class BotTableView extends TableView<MiniTableModel> {
         int childHeight =0;
 
         *//*
+*/
+/*
          * For Carousel ViewPager Layout
          *//*
+*/
+/*
 
 
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
@@ -181,9 +209,13 @@ public class BotTableView extends TableView<MiniTableModel> {
         totalHeight += tableDataView.getMeasuredHeight();
 
 
-        *//*if(carousalView.getMeasuredHeight() !=0 ){
+        *//*
+*/
+/*if(carousalView.getMeasuredHeight() !=0 ){
             totalHeight+=1*dp1;
         }*//*
+*/
+/*
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, parentHeightSpec);
@@ -205,5 +237,7 @@ public class BotTableView extends TableView<MiniTableModel> {
                 childTop += child.getMeasuredHeight();
             }
         }
-    }*/
+    }*//*
+
 }
+*/

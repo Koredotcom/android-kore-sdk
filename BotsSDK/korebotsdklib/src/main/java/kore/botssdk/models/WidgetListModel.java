@@ -1,19 +1,22 @@
 package kore.botssdk.models;
 
+import java.util.ArrayList;
+
 public class WidgetListModel {
     private String templateType;
     private String heading;
     private String text;
+    private HeaderOptionsModel headerOptions;
 
-    public BotButtonModel getButtons() {
-        return buttons;
+    public HeaderOptionsModel getHeaderOptions() {
+        return headerOptions;
     }
 
-    public void setButtons(BotButtonModel buttons) {
-        this.buttons = buttons;
+    public void setHeaderOptions(HeaderOptionsModel headerOptions) {
+        this.headerOptions = headerOptions;
     }
 
-    private BotButtonModel buttons;
+
 
     public String getTemplateType() {
         return templateType;
@@ -39,13 +42,13 @@ public class WidgetListModel {
         this.text = text;
     }
 
-    public WidgetListElementModel getElements() {
+    public ArrayList<WidgetListElementModel> getElements() {
         return elements;
     }
 
-    public void setElements(WidgetListElementModel elements) {
+    public void setElements(ArrayList<WidgetListElementModel> elements) {
         this.elements = elements;
     }
 
-    private WidgetListElementModel elements;
+    private ArrayList<WidgetListElementModel> elements;
 }

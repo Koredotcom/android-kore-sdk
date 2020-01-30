@@ -4,6 +4,46 @@ public class ImageModel {
 
     private String image_type;
     private String namespace;
+    private String image_src;
+    private int radius;
+    private String size;
+    private String type;
+    private String url;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public String getUtterance() {
+        return utterance;
+    }
+
+    public void setUtterance(String utterance) {
+        this.utterance = utterance;
+    }
+
+    private String payload;
+    private String utterance;
 
     public String getImage_type() {
         return image_type;
@@ -21,8 +61,6 @@ public class ImageModel {
         this.image_src = image_src;
     }
 
-    private String image_src;
-
     public int getRadius() {
         return radius;
     }
@@ -38,9 +76,6 @@ public class ImageModel {
     public void setSize(String size) {
         this.size = size;
     }
-
-    private int radius;
-    private String size;
 
     public String getImageType() {
         return image_type;

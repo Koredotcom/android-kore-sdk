@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_deails"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvborder"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/inset_widget_divider"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/innerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/latobold"
+                    android:gravity="start|top"
+                    android:maxLines="4"
+                    android:minHeight="26dp"
+                    android:text=""
+                    android:textColor="#485260"
+                    android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/latosemibold"
+                android:gravity="center|start"
+                android:text=""
+                android:textColor="#485260"
+                android:textSize="14sp" />
+        </LinearLayout>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+                <ImageView
+                    android:id="@+id/icon_menu_values"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:minWidth="24dp"
+                    android:minHeight="24dp"
+                    android:src="@mipmap/ic_more_vert_black_24dp"
+                    android:textColor="@color/color_7a799a"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/tv_values_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center_vertical"
+                    android:minHeight="32dp"
+                    android:paddingStart="5dp"
+                    android:background="@drawable/list_button_background"
+                    android:paddingEnd="5dp">
+
+                    <TextView
+                        android:id="@+id/tv_values"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoregular"
+                        android:minWidth="75dp"
+                        android:letterSpacing="0.1"
+                        android:textColor="#009dab"
+                        android:ellipsize="end"
+                        android:text=""
+                        android:inputType="textCapWords"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/img_up_down"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="5dp"
+                app:srcCompat="@drawable/ic_arrow_drop_up_24px" />
+            </LinearLayout>
+
+
+
+
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        app:el_duration="400"
+        app:el_expanded="true"
+        app:el_parallax="0.5">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/buttonsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp" />
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/inset_widget_divider" />
+</LinearLayout>

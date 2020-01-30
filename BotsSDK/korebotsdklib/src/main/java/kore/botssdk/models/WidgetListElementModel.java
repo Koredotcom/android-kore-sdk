@@ -52,11 +52,11 @@ public class WidgetListElementModel {
         this.default_action = default_action;
     }
 
-    public ArrayList<BotButtonModel> getButtons() {
+    public ArrayList<Widget.Button> getButtons() {
         return buttons;
     }
 
-    public void setButtons(ArrayList<BotButtonModel> buttons) {
+    public void setButtons(ArrayList<Widget.Button> buttons) {
         this.buttons = buttons;
     }
 
@@ -64,6 +64,35 @@ public class WidgetListElementModel {
     private String title;
     private String subtitle;
     private ValueModel value;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    private String icon;
+    private String theme;
+
+    public boolean isHasMore() {
+        return hasMore;
+    }
+
+    public void setHasMore(boolean hasMore) {
+        this.hasMore = hasMore;
+    }
+
+    private boolean hasMore;
     private ArrayList<ContentModel> content = null;
 
     public ArrayList<ContentModel> getDetails() {
@@ -76,5 +105,5 @@ public class WidgetListElementModel {
 
     private ArrayList<ContentModel> details = null;
     private Widget.DefaultAction default_action;
-    private ArrayList<BotButtonModel> buttons = null;
+    private ArrayList<Widget.Button> buttons = null;
 }

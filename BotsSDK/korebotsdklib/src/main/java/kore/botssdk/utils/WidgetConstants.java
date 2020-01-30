@@ -59,7 +59,7 @@ public class WidgetConstants {
     public final static String PIE_CHART="piechart";
     public final static String BAR_CHART="barchart";
     public final static String LINE_CHART="linechart";
-    public final static String LIST_WIDGET = "List";
+    public final static String LIST_WIDGET = "list";
 
 
 
