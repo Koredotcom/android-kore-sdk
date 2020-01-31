@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
@@ -40,6 +41,7 @@ import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Action;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.models.WidgetListElementModel;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
@@ -61,7 +63,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     VerticalListViewActionHelper verticalListViewActionHelper;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
-                                      boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper, String skillName,String trigger) {
+                                      boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper, String skillName, String trigger) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.skillName = skillName;
@@ -70,13 +72,12 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((WTaskTemplateModel) model).getActions();
         } else if (model instanceof WCalEventsTemplateModel) {
             this.actionList = ((WCalEventsTemplateModel) model).getActions();
-        }else if(model instanceof Element){
+        } else if (model instanceof Element) {
             this.actionList = ((Element) model).getActions();
-        }
-        else if(model instanceof WidgetListElementModel){
+        } else if (model instanceof WidgetListElementModel) {
 
-            WidgetListElementModel elementModel=(WidgetListElementModel)model;
-            this.actionList =elementModel.getButtons();
+            WidgetListElementModel elementModel = (WidgetListElementModel) model;
+            this.actionList = elementModel.getButtons();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -117,8 +118,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
             CalEventsTemplateModel.Action action = ((List<CalEventsTemplateModel.Action>) actionList).get(position);
             String text;
-            if(action.getType() != null && action.getType().equals("postback"))
-                text = "\""+action.getTitle()+"\"";
+            if (action.getType() != null && action.getType().equals("postback"))
+                text = "\"" + action.getTitle() + "\"";
             else
                 text = action.getTitle();
             //Widget Task
@@ -132,7 +133,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                         startActions(position, false);
 
                     } else {
-                        DialogCaller.showDialog(mainContext,null, new DialogInterface.OnClickListener() {
+                        DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 startActions(position, true);
@@ -178,7 +179,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                             postAction(position, false);
                         } else {
 
-                            DialogCaller.showDialog(mainContext,null, new DialogInterface.OnClickListener() {
+                            DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     postAction(position, true);
@@ -193,14 +194,14 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             //Widget Meeting
             WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(position);
             String text;
-            if(action.getType() != null && action.getType().equals("postback"))
-                text = "\""+action.getTitle()+"\"";
+            if (action.getType() != null && action.getType().equals("postback"))
+                text = "\"" + action.getTitle() + "\"";
             else
                 text = action.getTitle();
             holder.tv_actions.setText(text);
 
 
-        }else if (model instanceof Element) {
+        } else if (model instanceof Element) {
             Action act = ((Element) model).getActions().get(position);
             String text;
 
@@ -218,8 +219,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
                 if (act.getType() != null && act.getType().equals("postback")) {
                     text = "\"" + act.getTitle() + "\"";
-                }
-                else {
+                } else {
                     text = act.getTitle();
                 }
 
@@ -230,11 +230,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     public void onClick(View view) {
                         (widgetDialogActivity).dismiss();
 
-                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                            buttonAction(act.getUtterance(),true);
-                        }else{
-                            buttonAction(act.getUtterance(),false);
+                        if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+                            buttonAction(act.getUtterance(), true);
+                        } else {
+                            buttonAction(act.getUtterance(), false);
                         }
                         /*if (Utility.checkIsSkillKora()) {
                             EntityEditEvent event = new EntityEditEvent();
@@ -257,9 +257,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     }
                 });
             }
-        }else if(model instanceof WidgetListElementModel)
-        {
-            WidgetListElementModel elementModel=(WidgetListElementModel)model;
+        } else if (model instanceof WidgetListElementModel) {
+            WidgetListElementModel elementModel = (WidgetListElementModel) model;
             holder.tv_actions.setText(elementModel.getButtons().get(position).getTitle());
 
 
@@ -268,29 +267,32 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 public void onClick(View v) {
 
                     (widgetDialogActivity).dismiss();
+                    Widget.Button button = elementModel.getButtons().get(position);
+                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
 
-                    if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                        buttonAction(elementModel.getButtons().get(position).getUtterance(),true);
-                    }else{
-                        buttonAction(elementModel.getButtons().get(position).getUtterance(),false);
+
+                        buttonClick(button, true) ;
+                    } else {
+                        buttonClick(button, false) ;
                     }
                 }
             });
         }
     }
 
-    public static boolean hasPermission(Context context,String... permission) {
+    public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
         if (Build.VERSION.SDK_INT >= 23) {
             int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
+            for (int i = 0; i < permissionLength; i++) {
                 shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
                         ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
             }
         }
         return shouldShowRequestPermissionRationale;
     }
+
     @SuppressLint("MissingPermission")
     public static void launchDialer(Context context, String url) {
         try {
@@ -307,24 +309,35 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         }
     }
 
+    public void buttonClick(Widget.Button button, boolean appendUtterance) {
+        if (button.getType() != null && button.getType().equalsIgnoreCase("url") && button.getUrl() != null) {
+            Intent intent = new Intent(mainContext, GenericWebViewActivity.class);
+            intent.putExtra("url", button.getUrl());
+            intent.putExtra("header", mainContext.getResources().getString(R.string.app_name));
+            mainContext.startActivity(intent);
 
-    public void buttonAction(String utterance, boolean appendUtterance){
-
-
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
-            if(utterance.startsWith("tel:")){
-                launchDialer(mainContext,utterance);
-            }else if(utterance.startsWith("mailto:")){
-                showEmailIntent((Activity) mainContext,utterance.split(":")[1]);
+        } else {
+            String utterance = button.getUtterance();
+            if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
+                if (utterance.startsWith("tel:")) {
+                    launchDialer(mainContext, utterance);
+                } else if (utterance.startsWith("mailto:")) {
+                    showEmailIntent((Activity) mainContext, utterance.split(":")[1]);
+                }
+                return;
             }
-            return;
+            buttonAction(utterance, appendUtterance);
         }
+    }
+
+    public void buttonAction(String utterance, boolean appendUtterance) {
+
 
         EntityEditEvent event = new EntityEditEvent();
         StringBuffer msg = new StringBuffer("");
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
+        if (appendUtterance && trigger != null)
             msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
@@ -360,12 +373,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             return actionList != null ? ((List<CalEventsTemplateModel.Action>) actionList).size() : 0;
         } else if (model instanceof WCalEventsTemplateModel) {
             return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
-        }else if(model instanceof Element){
-            return model != null && actionList != null ? ((Element)model).getActions().size() : 0;
-        }
-        else if(model instanceof WidgetListElementModel)
-        {
-            return model!=null&&((WidgetListElementModel) model).getButtons()!=null?((WidgetListElementModel) model).getButtons().size():0;
+        } else if (model instanceof Element) {
+            return model != null && actionList != null ? ((Element) model).getActions().size() : 0;
+        } else if (model instanceof WidgetListElementModel) {
+            return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
         }
         return 0;
     }
