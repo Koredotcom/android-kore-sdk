@@ -110,6 +110,16 @@ public class BaseChartModel {
     private List<Object> elements = null;
     private List<ContentModel> content = null;
 
+    public HeaderOptionsModel getHeaderOptions() {
+        return headerOptions;
+    }
+
+    public void setHeaderOptions(HeaderOptionsModel headerOptions) {
+        this.headerOptions = headerOptions;
+    }
+
+    private HeaderOptionsModel headerOptions;
+
     public List<ContentModel> getDetails() {
         return details;
     }
