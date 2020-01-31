@@ -242,9 +242,9 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                 public void onClick(View v) {
                     boolean expanded = holder.buttonLayout.isExpanded();
                     if(!expanded)
-                        holder.img_up_down.setImageDrawable(mContext.getDrawable(R.drawable.ic_arrow_drop_up_24px));
+                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_arrow_drop_up_24px));
                     else
-                        holder.img_up_down.setImageDrawable(mContext.getDrawable(R.drawable.ic_arrow_drop_down_24px));
+                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_arrow_drop_down_24px));
                     holder.buttonLayout.setExpanded(!expanded);
                 }
             });
@@ -282,16 +282,48 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             }*/
 
 
-            if(model.getValue() != null && model.getValue().getButtons() != null){
-                model.setButtons(model.getValue().getButtons());
-                if(model.getValue().getButtons().size()>1){
-                    holder.imgMenu.setVisibility(VISIBLE);
-                    holder.tvValuesParent.setVisibility(GONE);
-                }else if(model.getValue().getButtons().size()>0){
-                    holder.imgMenu.setVisibility(GONE);
-                    holder.tvValuesParent.setVisibility(VISIBLE);
-                    holder.txtValues.setText(model.getValue().getButtons().get(0).getTitle());
+            if(model.getValue() != null && model.getValue().getType() != null) {
+                switch (model.getValue().getType()){
+                    case "button":
+                        holder.imgMenu.setVisibility(GONE);
+                        holder.tvText.setVisibility(GONE);
+                        holder.tvUrl.setVisibility(GONE);
+                        holder.tvButtonParent.setVisibility(VISIBLE);
+                        String btnTitle = "";
+                        if(model.getValue().getButton() != null && model.getValue().getButton().getTitle() != null)
+                            btnTitle = model.getValue().getButton().getTitle();
+                        else
+                            btnTitle = model.getValue().getText();
+                        if(!StringUtils.isNullOrEmpty(btnTitle))
+                            holder.tvButton.setText(btnTitle);
+                        else
+                            holder.tvButtonParent.setVisibility(GONE);
+
+                        break;
+                    case "menu":
+                        holder.imgMenu.setVisibility(VISIBLE);
+                        holder.tvText.setVisibility(GONE);
+                        holder.tvButtonParent.setVisibility(GONE);
+                        holder.tvUrl.setVisibility(GONE);
+                        break;
+                    case "text":
+                        holder.imgMenu.setVisibility(GONE);
+                        holder.tvText.setVisibility(VISIBLE);
+                        holder.tvText.setText(model.getValue().getText());
+                        holder.tvButtonParent.setVisibility(GONE);
+                        holder.tvUrl.setVisibility(GONE);
+                        break;
+                    case "url":
+                        holder.imgMenu.setVisibility(GONE);
+                        holder.tvText.setVisibility(GONE);
+                        holder.tvUrl.setText(model.getValue().getUrl().getTitle()!=null?model.getValue().getUrl().getTitle():model.getValue().getUrl().getLink());
+                        holder.tvButtonParent.setVisibility(GONE);
+                        holder.tvUrl.setVisibility(VISIBLE);
+                        break;
+
+
                 }
+
             }
 
             holder.imgMenu.setOnClickListener(new OnClickListener() {
@@ -462,8 +494,10 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public View divider;
         public RecyclerView recyclerView;
         public ImageView imgMenu;
-        public TextView txtValues;
-        public LinearLayout tvValuesParent;
+        public TextView tvText;
+        public TextView tvUrl;
+        public TextView tvButton;
+        public LinearLayout tvButtonParent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -480,9 +514,11 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             recyclerView = itemView.findViewById(R.id.buttonsList);
 
             divider = itemView.findViewById(R.id.divider);
-            imgMenu = itemView.findViewById(R.id.icon_menu_values);
-            txtValues = itemView.findViewById(R.id.tv_values);
-            tvValuesParent = itemView.findViewById(R.id.tv_values_layout);
+            imgMenu = itemView.findViewById(R.id.icon_image);
+            tvButton = itemView.findViewById(R.id.tv_button);
+            tvText = itemView.findViewById(R.id.tv_text);
+            tvUrl = itemView.findViewById(R.id.tv_url);
+            tvButtonParent = itemView.findViewById(R.id.tv_values_layout);
 
         }
     }

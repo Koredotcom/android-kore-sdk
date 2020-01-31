@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latobold"
                     android:gravity="start|top"
-                    android:maxLines="4"
+                    android:singleLine="false"
                     android:minHeight="26dp"
                     android:text=""
                     android:textColor="#485260"
@@ -75,12 +75,12 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="6dp">
                 <ImageView
-                    android:id="@+id/icon_menu_values"
+                    android:id="@+id/icon_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
                     android:minWidth="24dp"
                     android:minHeight="24dp"
                     android:src="@mipmap/ic_more_vert_black_24dp"
@@ -92,20 +92,19 @@
                     android:id="@+id/tv_values_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="0dp"
                     android:layout_marginStart="8dp"
                     android:gravity="center_vertical"
+                    android:minWidth="100dp"
                     android:minHeight="32dp"
                     android:paddingStart="5dp"
                     android:background="@drawable/list_button_background"
                     android:paddingEnd="5dp">
 
                     <TextView
-                        android:id="@+id/tv_values"
+                        android:id="@+id/tv_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoregular"
-                        android:minWidth="75dp"
                         android:letterSpacing="0.1"
                         android:textColor="#009dab"
                         android:ellipsize="end"
@@ -113,6 +112,30 @@
                         android:inputType="textCapWords"
                         android:textSize="14sp" />
                 </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/latoregular"
+                    android:minWidth="100dp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/black"
+                    android:ellipsize="end"
+                    android:text=""
+                    android:inputType="textCapWords"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/tv_url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/latoregular"
+                    android:minWidth="100dp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/bgBlueSignup"
+                    android:ellipsize="end"
+                    android:text=""
+                    android:inputType="textCapWords"
+                    android:textSize="14sp" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -135,9 +158,6 @@
                 android:layout_marginBottom="5dp"
                 app:srcCompat="@drawable/ic_arrow_drop_up_24px" />
             </LinearLayout>
-
-
-
 
 
     <net.cachapa.expandablelayout.ExpandableLayout

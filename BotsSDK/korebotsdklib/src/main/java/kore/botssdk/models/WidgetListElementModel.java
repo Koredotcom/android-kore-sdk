@@ -28,11 +28,11 @@ public class WidgetListElementModel {
         this.subtitle = subtitle;
     }
 
-    public ValueModel getValue() {
+    public HeaderOptionsModel getValue() {
         return value;
     }
 
-    public void setValue(ValueModel value) {
+    public void setValue(HeaderOptionsModel value) {
         this.value = value;
     }
 
@@ -63,7 +63,7 @@ public class WidgetListElementModel {
     private ImageModel image;
     private String title;
     private String subtitle;
-    private ValueModel value;
+    private HeaderOptionsModel value;
 
     public String getIcon() {
         return icon;
