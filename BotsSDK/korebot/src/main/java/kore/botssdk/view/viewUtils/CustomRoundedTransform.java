@@ -23,9 +23,15 @@ public class CustomRoundedTransform implements Transformation {
     private float r = 0;
     private float width = 0;
     private float height = 0;
+    public CustomRoundedTransform(int r, int width, int height){
+        this.r = r;
+        this.width = width;
+        this.height = height;
+    }
     @Override
     public Bitmap transform(Bitmap source) {
-        if(source == null)return null;
+//        if(source == null)return null;
+        if (source == null) return source;
         try {
             int size = Math.min(source.getWidth(), source.getHeight());
 
@@ -59,6 +65,6 @@ public class CustomRoundedTransform implements Transformation {
 
     @Override
     public String key() {
-        return "rounded_corners";
+        return CustomRoundedTransform.class.getSimpleName() + "." + r;
     }
 }

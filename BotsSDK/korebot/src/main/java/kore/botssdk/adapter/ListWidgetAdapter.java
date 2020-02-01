@@ -43,14 +43,12 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.Widget.Element;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-import kore.botssdk.view.viewUtils.CircleTransform;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 import static android.view.View.GONE;
