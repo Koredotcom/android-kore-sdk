@@ -538,11 +538,11 @@ public class TableView<T> extends LinearLayout {
     }
 
     private void setupTableHeaderView(final AttributeSet attributes) {
-        if (isInEditMode()) {
-            tableHeaderAdapter = new EditModeTableHeaderAdapter(getContext());
-        } else {
+//        if (isInEditMode()) {
+//            tableHeaderAdapter = new EditModeTableHeaderAdapter(getContext());
+//        } else {
             tableHeaderAdapter = new DefaultTableHeaderAdapter(getContext());
-        }
+//        }
 
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
         tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
@@ -709,7 +709,7 @@ public class TableView<T> extends LinearLayout {
      *
      * @author ISchwarz
      */
-    private class EditModeTableHeaderAdapter extends TableHeaderAdapter {
+    /*private class EditModeTableHeaderAdapter extends TableHeaderAdapter {
 
         private final float TEXT_SIZE = 18;
 
@@ -727,7 +727,7 @@ public class TableView<T> extends LinearLayout {
             return textView;
         }
 
-    }
+    }*/
 
     /**
      * The {@link TableDataAdapter} that is used while the view is in edit mode.

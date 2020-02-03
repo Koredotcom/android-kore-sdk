@@ -110,7 +110,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
-    protected BotMiniTableView tableView;
+    protected BotTableView tableView;
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;

@@ -92,6 +92,8 @@
                     android:src="@mipmap/ic_more_vert_black_24dp"
                     android:textColor="@color/color_7a799a"
                     android:textSize="18sp"
+                    android:padding="5dp"
+                    android:clickable="true"
                     android:visibility="gone" />
 
                 <LinearLayout

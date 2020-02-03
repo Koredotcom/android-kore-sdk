@@ -60,13 +60,16 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
     private String skillName;
     private String trigger;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
+    private boolean isFromListMenu = false;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
-                                      boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper, String skillName, String trigger) {
+                                      boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper,
+                                      String skillName, String trigger,boolean isFromListMenu) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.skillName = skillName;
+        this.isFromListMenu = isFromListMenu;
         this.trigger = trigger;
         if (model instanceof WTaskTemplateModel) {
             this.actionList = ((WTaskTemplateModel) model).getActions();
@@ -75,9 +78,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         } else if (model instanceof Element) {
             this.actionList = ((Element) model).getActions();
         } else if (model instanceof WidgetListElementModel) {
-
             WidgetListElementModel elementModel = (WidgetListElementModel) model;
-            this.actionList = elementModel.getButtons();
+            if(isFromListMenu)
+                this.actionList = elementModel.getValue().getMenu();
+            else
+                this.actionList = elementModel.getButtons();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -258,23 +263,27 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 });
             }
         } else if (model instanceof WidgetListElementModel) {
-            WidgetListElementModel elementModel = (WidgetListElementModel) model;
-            holder.tv_actions.setText(elementModel.getButtons().get(position).getTitle());
+            WidgetListElementModel elementModel2 = (WidgetListElementModel) model;
+            Widget.Button button = null;
+            if(isFromListMenu)
+                button = elementModel2.getValue().getMenu().get(position);
+            else
+                button = elementModel2.getButtons().get(position);
+            holder.tv_actions.setText(button.getTitle());
 
 
+            Widget.Button finalButton = button;
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     (widgetDialogActivity).dismiss();
-                    Widget.Button button = elementModel.getButtons().get(position);
                     if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
                             (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
 
 
-                        buttonClick(button, true) ;
+                        buttonClick(finalButton, true) ;
                     } else {
-                        buttonClick(button, false) ;
+                        buttonClick(finalButton, false) ;
                     }
                 }
             });
@@ -376,7 +385,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         } else if (model instanceof Element) {
             return model != null && actionList != null ? ((Element) model).getActions().size() : 0;
         } else if (model instanceof WidgetListElementModel) {
-            return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
+            if(!isFromListMenu)
+                return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
+            else
+                return model != null && ((WidgetListElementModel) model).getValue() != null &&((WidgetListElementModel) model).getValue().getMenu() != null ? ((WidgetListElementModel) model).getValue().getMenu().size() : 0;
         }
         return 0;
     }

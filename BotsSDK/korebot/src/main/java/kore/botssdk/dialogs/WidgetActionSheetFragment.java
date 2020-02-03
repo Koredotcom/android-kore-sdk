@@ -23,11 +23,12 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 
 public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
-    View view;
-    boolean isFromFullView;
-    RecyclerView recycler_actions;
-    Object model;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    private View view;
+    private boolean isFromFullView;
+    private RecyclerView recycler_actions;
+    private Object model;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
+    private boolean isFromListMenu = false;
 
     public String getSkillName() {
         return skillName;
@@ -53,7 +54,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,
-                model, isFromFullView,verticalListViewActionHelper,skillName,trigger);
+                model, isFromFullView,verticalListViewActionHelper,skillName,trigger,isFromListMenu);
         recycler_actions.setAdapter(adapter);
 
 
@@ -90,6 +91,11 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
     public void setData(Object taskTemplateModel) {
         model = taskTemplateModel;
+    }
+
+    public void setData(Object taskTemplateModel, boolean isFromListMenu){
+        model = taskTemplateModel;
+        this.isFromListMenu = isFromListMenu;
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {

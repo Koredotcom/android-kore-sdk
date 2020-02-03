@@ -1,11 +1,15 @@
 package kore.botssdk.adapter;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.LayoutInflater;
@@ -19,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -43,6 +48,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
+import kore.botssdk.models.Widget;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
@@ -199,10 +205,12 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                 @Override
                 public void onClick(View view) {
                     if(mContext instanceof Activity) {
-                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                        intent.putExtra("url", loginModel.getUrl());
-                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                        if(loginModel != null) {
+                            Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                            intent.putExtra("url", loginModel.getUrl());
+                            intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                            ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                        }
                     }else{
                         Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
                     }
@@ -287,6 +295,18 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvText.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
                         holder.tvButtonParent.setVisibility(VISIBLE);
+
+                        holder.tvButton.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+                                    buttonAction(model.getValue().getButton(), true);
+                                } else {
+                                    buttonAction(model.getValue().getButton(), false);
+                                }
+                            }
+                        });
                         String btnTitle = "";
                         if(model.getValue().getButton() != null && model.getValue().getButton().getTitle() != null)
                             btnTitle = model.getValue().getButton().getTitle();
@@ -300,8 +320,26 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         break;
                     case "menu":
                         holder.imgMenu.setVisibility(VISIBLE);
+                        holder.imgMenu.bringToFront();
+                        holder.imgMenu.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if ( model.getValue()!= null &&  model.getValue().getMenu()!= null && model.getValue().getMenu().size() > 0) {
+                                    //holder.icon_down.setVisibility(VISIBLE);
+
+                                    WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                                    bottomSheetDialog.setisFromFullView(false);
+                                    bottomSheetDialog.setSkillName(skillName,trigger);
+                                    bottomSheetDialog.setData(model,true);
+                                    bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
+                                    bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+
+                                }
+                            }
+                        });
                         holder.tvText.setVisibility(GONE);
                         holder.tvButtonParent.setVisibility(GONE);
+                        holder.tvButton.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
                         break;
                     case "text":
@@ -317,6 +355,18 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvUrl.setText(model.getValue().getUrl().getTitle()!=null?model.getValue().getUrl().getTitle():model.getValue().getUrl().getLink());
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(VISIBLE);
+                        holder.tvUrl.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(model.getValue().getUrl().getLink() != null) {
+                                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                                    intent.putExtra("url", model.getValue().getUrl().getLink());
+                                    intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                                    mContext.startActivity(intent);
+                                }
+                            }
+                        });
+
                         break;
 
 
@@ -403,6 +453,82 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         }
 
 
+    }
+
+    public void buttonAction(Widget.Button button, boolean appendUtterance){
+        String utterance = null;
+        if(button != null){
+            utterance = button.getUtterance();
+        }
+        if(utterance == null)return;
+        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+            if(utterance.startsWith("tel:")){
+                launchDialer(mContext,utterance);
+            }else if(utterance.startsWith("mailto:")){
+                showEmailIntent((Activity) mContext,utterance.split(":")[1]);
+            }
+            return;
+        }
+        EntityEditEvent event = new EntityEditEvent();
+        StringBuffer msg = new StringBuffer("");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("refresh", Boolean.TRUE);
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setMessage(msg.toString());
+        event.setPayLoad(new Gson().toJson(hashMap));
+        event.setScrollUpNeeded(true);
+        KoreEventCenter.post(event);
+
+        try {
+
+
+            if (isFullView) {
+                ((Activity) mContext).finish();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public static void showEmailIntent(Activity activity, String recepientEmail) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+
+        try {
+            activity.startActivity(emailIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(activity, "Error while launching email intent!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void launchDialer(Context context, String url) {
+        try {
+            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY
+                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static boolean hasPermission(Context context,String... permission) {
+        boolean shouldShowRequestPermissionRationale = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionLength = permission.length;
+            for (int i=0;i<permissionLength;i++) {
+                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return shouldShowRequestPermissionRationale;
     }
     @Override
     public long getItemId(int position) {

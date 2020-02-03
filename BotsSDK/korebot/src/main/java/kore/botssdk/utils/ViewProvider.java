@@ -21,6 +21,7 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
+import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
@@ -194,8 +195,8 @@ public class ViewProvider {
         botPieChartView.setId(PIECHART_VIEW_ID);
         return botPieChartView;
     }
-    public static BotMiniTableView getTableView(Context context){
-        BotMiniTableView tableView = new BotMiniTableView(context);
+    public static BotTableView getTableView(Context context){
+        BotTableView tableView = new BotTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }

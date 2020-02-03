@@ -2,11 +2,23 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
+import kore.botssdk.utils.StringUtils;
+
 public class WidgetListModel {
     private String templateType;
     private String heading;
     private String text;
     private HeaderOptionsModel headerOptions;
+
+    public LoginModel getLoginModel() {
+        return login;
+    }
+
+    public void setLoginModel(LoginModel loginModel) {
+        this.login = loginModel;
+    }
+
+    private LoginModel login;
 
     public HeaderOptionsModel getHeaderOptions() {
         return headerOptions;
@@ -19,7 +31,10 @@ public class WidgetListModel {
 
 
     public String getTemplateType() {
-        return templateType;
+        if(!StringUtils.isNullOrEmpty(templateType)) {
+            return templateType;
+        }
+        return "";
     }
 
     public void setTemplateType(String templateType) {
