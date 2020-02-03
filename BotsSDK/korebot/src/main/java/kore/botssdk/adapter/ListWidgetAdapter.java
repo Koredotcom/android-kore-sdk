@@ -291,6 +291,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             if(model.getValue() != null && model.getValue().getType() != null) {
                 switch (model.getValue().getType()){
                     case "button":
+                        holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(GONE);
                         holder.tvText.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
@@ -319,6 +320,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
                         break;
                     case "menu":
+                        holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(VISIBLE);
                         holder.imgMenu.bringToFront();
                         holder.imgMenu.setOnClickListener(new View.OnClickListener() {
@@ -343,6 +345,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvUrl.setVisibility(GONE);
                         break;
                     case "text":
+                        holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(GONE);
                         holder.tvText.setVisibility(VISIBLE);
                         holder.tvText.setText(model.getValue().getText());
@@ -350,6 +353,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvUrl.setVisibility(GONE);
                         break;
                     case "url":
+                        holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(GONE);
                         holder.tvText.setVisibility(GONE);
                         holder.tvUrl.setText(model.getValue().getUrl().getTitle()!=null?model.getValue().getUrl().getTitle():model.getValue().getUrl().getLink());
@@ -368,6 +372,33 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         });
 
                         break;
+                    case "image":
+                        holder.icon_image_load.setVisibility(VISIBLE);
+                        holder.imgMenu.setVisibility(GONE);
+                        holder.tvText.setVisibility(GONE);
+                        holder.tvButtonParent.setVisibility(GONE);
+                        holder.tvUrl.setVisibility(GONE);
+                        if(model.getValue().getImage()!=null&&model.getValue().getImage().getImage_src()!=null) {
+                            Picasso.get().load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
+                            holder.icon_image_load.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                 //   defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
+
+                                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+                                        defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
+
+
+                                    } else {
+                                        defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",false);
+
+                                    }
+                                }
+                            });
+                        }
+                        break;
+
 
 
                 }
@@ -617,7 +648,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public ExpandableLayout buttonLayout;
         public View divider;
         public RecyclerView recyclerView;
-        public ImageView imgMenu;
+        public ImageView imgMenu,icon_image_load;
         public TextView tvText;
         public TextView tvUrl;
         public TextView tvButton;
@@ -642,6 +673,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             tvButton = itemView.findViewById(R.id.tv_button);
             tvText = itemView.findViewById(R.id.tv_text);
             tvUrl = itemView.findViewById(R.id.tv_url);
+            icon_image_load=itemView.findViewById(R.id.icon_image_load);
             tvButtonParent = itemView.findViewById(R.id.tv_values_layout);
 
         }
