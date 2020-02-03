@@ -33,6 +33,7 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BaseChartModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.WCalEventsTemplateModel;
@@ -41,6 +42,7 @@ import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Action;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.models.WidgetListElementModel;
+import kore.botssdk.models.WidgetListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
@@ -83,6 +85,16 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 this.actionList = elementModel.getValue().getMenu();
             else
                 this.actionList = elementModel.getButtons();
+        }
+        else if(model instanceof WidgetListModel)
+        {
+            WidgetListModel listModel=(WidgetListModel)model;
+            this.actionList=listModel.getHeaderOptions().getMenu();
+        }
+        else if(model instanceof BaseChartModel)
+        {
+            BaseChartModel baseChartModel=(BaseChartModel)model;
+            this.actionList=baseChartModel.getHeaderOptions().getMenu();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -288,6 +300,48 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 }
             });
         }
+        else if(model instanceof WidgetListModel)
+        {
+            WidgetListModel wL=(WidgetListModel)model;
+          //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            holder.tv_actions.setText(wL.getHeaderOptions().getMenu().get(position).getTitle());
+            Widget.Button finalButton = wL.getHeaderOptions().getMenu().get(position);
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    (widgetDialogActivity).dismiss();
+                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+
+
+                        buttonClick(finalButton, true) ;
+                    } else {
+                        buttonClick(finalButton, false) ;
+                    }
+                }
+            });
+
+        }else if(model instanceof BaseChartModel)
+        {
+            BaseChartModel ba=(BaseChartModel)model;
+            //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
+            Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    (widgetDialogActivity).dismiss();
+                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+
+
+                        buttonClick(finalButton, true) ;
+                    } else {
+                        buttonClick(finalButton, false) ;
+                    }
+                }
+            });
+        }
     }
 
     public static boolean hasPermission(Context context, String... permission) {
@@ -389,6 +443,15 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
             else
                 return model != null && ((WidgetListElementModel) model).getValue() != null &&((WidgetListElementModel) model).getValue().getMenu() != null ? ((WidgetListElementModel) model).getValue().getMenu().size() : 0;
+        }
+        else if(model instanceof BaseChartModel)
+        {
+            BaseChartModel ba=(BaseChartModel)model;
+            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+        }else if(model instanceof WidgetListModel)
+        {
+            WidgetListModel ba=(WidgetListModel)model;
+            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
         }
         return 0;
     }

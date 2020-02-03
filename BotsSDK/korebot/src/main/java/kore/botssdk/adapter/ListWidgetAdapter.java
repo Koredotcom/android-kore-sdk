@@ -374,7 +374,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
             }
 
-            holder.imgMenu.setOnClickListener(new OnClickListener() {
+     /*       holder.imgMenu.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                      if ( model.getButtons()!= null &&  model.getButtons().size() > 0) {
@@ -391,7 +391,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                // holder.icon_down.setVisibility(GONE);
             }
                 }
-            });
+            });*/
 
             if (model.getButtons() != null  && model.getButtons().size() > 0) {
             /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
