@@ -63,9 +63,11 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
 
         holder.tv.setText(btn.getTitle());
         try {
-            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+            //NEED TO REVISIT
+//            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+            holder.tv.setTextColor(Color.parseColor("#4741fa"));
         }catch(IllegalArgumentException e){
-            holder.tv.setTextColor(Color.parseColor("#2f91e5"));
+            holder.tv.setTextColor(Color.parseColor("#4741fa"));
         }
 
        /* String utt = null;

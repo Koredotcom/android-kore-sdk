@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -356,7 +358,9 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(GONE);
                         holder.tvText.setVisibility(GONE);
-                        holder.tvUrl.setText(model.getValue().getUrl().getTitle()!=null?model.getValue().getUrl().getTitle():model.getValue().getUrl().getLink());
+                        SpannableString content = new SpannableString(model.getValue().getUrl().getTitle()!=null?model.getValue().getUrl().getTitle():model.getValue().getUrl().getLink());
+                        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                        holder.tvUrl.setText(content);
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(VISIBLE);
                         holder.tvUrl.setOnClickListener(new OnClickListener() {

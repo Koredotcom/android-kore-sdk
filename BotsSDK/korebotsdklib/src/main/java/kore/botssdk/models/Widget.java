@@ -544,7 +544,7 @@ public class Widget implements Serializable,Cloneable {
             if(theme != null)
                 return theme;
             else
-                return "#2f91e5";
+                return "#4741fa";
         }
 
         public void setTheme(String theme) {
@@ -677,7 +677,7 @@ public class Widget implements Serializable,Cloneable {
             if(theme != null)
                 return theme;
             else
-                return "#2f91e5";
+                return "#4741fa";
         }
 
         public void setTheme(String theme) {

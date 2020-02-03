@@ -128,8 +128,7 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:ellipsize="end"
-                        android:letterSpacing="0.1"
-                        android:textColor="#009dab"
+                        android:textColor="#4741fa"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -143,7 +142,6 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:paddingEnd="5dp"
-                    android:letterSpacing="0.1"
                     android:maxWidth="80dp"
                     android:textColor="@color/black"
                     android:textSize="14sp"
@@ -158,9 +156,8 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:ellipsize="end"
-                    android:letterSpacing="0.1"
                     android:maxWidth="100dp"
-                    android:textColor="@color/bgBlueSignup"
+                    android:textColor="#4741fa"
                     android:textSize="14sp"
                     android:visibility="gone" />
             </RelativeLayout>
