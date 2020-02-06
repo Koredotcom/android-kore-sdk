@@ -8,6 +8,7 @@ import java.util.HashMap;
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ContactViewListModel;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 
 public interface VerticalListViewActionHelper {
@@ -23,4 +24,5 @@ public interface VerticalListViewActionHelper {
     void meetingWidgetViewMoreVisibility(boolean visible);
     void calendarContactItemClick(ContactViewListModel model);
     void welcomeSummaryItemClick(WelcomeChatSummaryModel model);
+    void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id);
 }

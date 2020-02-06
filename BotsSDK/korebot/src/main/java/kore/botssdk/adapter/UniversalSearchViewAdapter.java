@@ -59,7 +59,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
     public UniversalSearchViewAdapter(UniversalSearchView universalSearchView) {
         context = universalSearchView.getContext();
-        universalSearchViewContext=universalSearchView;
+        universalSearchViewContext = universalSearchView;
     }
 
     @NonNull
@@ -91,21 +91,32 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
     private void bindKnowledgeCollection(KnowledgeCollectionViewHolder viewHolder, int position) {
 
-        KnowledgeCollectionModel model = koraUniversalSearchModel.get(position).getKnowledgeCollection().get(0);
+        KnowledgeCollectionModel.DataElements model = koraUniversalSearchModel.get(position).getKnowledgeCollection().getCombinedData().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
-
+        viewHolder.divider.setVisibility(View.GONE);
         viewHolder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         viewHolder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_f98140));
         viewHolder.peopleicon.setTypeface(Utility.getTypeFaceObj(context));
-        viewHolder.staricon.setTypeface(Utility.getTypeFaceObj(context));
+//        viewHolder.staricon.setTypeface(Utility.getTypeFaceObj(context));
         viewHolder.root_title_view.setText(title);
-
+        viewHolder.view_suggest.setVisibility(model.isSuggestive()?View.VISIBLE:View.GONE);
         viewHolder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
         if (count > 0) {
             viewHolder.count_view.setText(count + " more");
         }
 
+
+        viewHolder.view_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(verticalListViewActionHelper!=null)
+                {
+                    verticalListViewActionHelper.knowledgeCollectionItemClick(model,"");
+                }
+            }
+        });
         viewHolder.count_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,20 +124,19 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             }
         });
 
-      viewHolder.title_view.setText(model.getElements().get(0).getQuestion());
-        viewHolder.sub_view.setText(model.getElements().get(0).getAnswer());
+        viewHolder.title_view.setText(model.getQuestion());
+        viewHolder.search_view.setText(model.getName());
+        viewHolder.percent_view.setText(model.getScore() + "% Match");
+        viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
     }
 
 
-    private void bindMeetingNotes(MeetingNotesViewHolder holder,int position) {
-
-
+    private void bindMeetingNotes(MeetingNotesViewHolder holder, int position) {
 
 
         CalEventsTemplateModel model = koraUniversalSearchModel.get(position).getMeetingNotes().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
-
 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
@@ -160,7 +170,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     public void bindEmailData(EmailViewHolder holder, int position) {
 
 
-
         EmailModel model = koraUniversalSearchModel.get(position).getEmails().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
@@ -191,8 +200,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
                 EmailModel emailModel = model;
                 if (emailModel.getButtons() == null || emailModel.getButtons().size() == 0) return;
-                BotCaourselButtonModel botCaourselButtonModel =emailModel.getButtons().get(0);
-                verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
+                BotCaourselButtonModel botCaourselButtonModel = emailModel.getButtons().get(0);
+                verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(), botCaourselButtonModel.getCustomData());
             }
         });
     }
@@ -232,10 +241,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KaFileLookupModel kaFileLookupModel =model;
+                KaFileLookupModel kaFileLookupModel = model;
                 if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
                     verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
-                }else if(kaFileLookupModel.getWebViewLink() != null){
+                } else if (kaFileLookupModel.getWebViewLink() != null) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(kaFileLookupModel.getWebViewLink()));
                     context.startActivity(browserIntent);
                 }
@@ -251,7 +260,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         KnowledgeDetailModel model = koraUniversalSearchModel.get(position).getKnowledge().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
-
 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
@@ -328,7 +336,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
                 break;
 
             case MEETING_NOTES:
-                bindMeetingNotes((MeetingNotesViewHolder) holder,position);
+                bindMeetingNotes((MeetingNotesViewHolder) holder, position);
 
 
                 break;

@@ -12,7 +12,7 @@ public class KoraUniversalSearchModel {
     private ArrayList<EmailModel> emails;
     private ArrayList<KaFileLookupModel> files;
     private ArrayList<CalEventsTemplateModel> meetingNotes;
-    private ArrayList<KnowledgeCollectionModel> knowledgeCollection;
+    private KnowledgeCollectionModel.Elements knowledgeCollection;
 
     public ArrayList<UniversalSearchSkillModel> getSkillModel() {
         return skillModel;
@@ -32,11 +32,11 @@ public class KoraUniversalSearchModel {
         this.meetingNotes = meetingNotes;
     }
 
-    public ArrayList<KnowledgeCollectionModel> getKnowledgeCollection() {
+    public KnowledgeCollectionModel.Elements getKnowledgeCollection() {
         return knowledgeCollection;
     }
 
-    public void setKnowledgeCollection(ArrayList<KnowledgeCollectionModel> knowledgeCollection) {
+    public void setKnowledgeCollection(KnowledgeCollectionModel.Elements knowledgeCollection) {
         this.knowledgeCollection = knowledgeCollection;
     }
 

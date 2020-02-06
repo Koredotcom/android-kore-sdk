@@ -22,7 +22,7 @@ import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeCollectionViewHolder> implements RecyclerViewDataAccessor {
 
     Context context;
-    ArrayList<KnowledgeCollectionModel> modelData;
+    KnowledgeCollectionModel.Elements modelData;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
     public KnowledgeCollectionsAdapter(Context context) {
@@ -42,24 +42,41 @@ public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeC
     public void onBindViewHolder(@NonNull KnowledgeCollectionViewHolder holder, int position) {
 
         holder.header.setVisibility(View.GONE);
-        KnowledgeCollectionModel model = modelData.get(position);
-        holder.title_view.setText(model.getElements().get(0).getQuestion());
-        holder.sub_view.setText(model.getElements().get(0).getAnswer());
+        KnowledgeCollectionModel.DataElements model = modelData.getCombinedData().get(position);
+        holder.view_suggest.setVisibility(model.isSuggestive()?View.VISIBLE:View.GONE);
+        holder.title_view.setText(model.getQuestion());
+        holder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        holder.peopleicon.setTypeface(Utility.getTypeFaceObj(context));
+        holder.search_view.setText(model.getName());
+        holder.percent_view.setText(model.getScore()+"% Match");
+
+        holder.view_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                verticalListViewActionHelper.knowledgeCollectionItemClick(model,"");
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return modelData!=null?modelData.size():0;
+        return modelData!=null&&modelData.getCombinedData()!=null?modelData.getCombinedData().size():0;
     }
 
 
     @Override
     public ArrayList getData() {
-        return modelData;
+        return null;
     }
 
     @Override
-    public void setData(ArrayList modelData) {
+    public void setData(ArrayList data) {
+
+    }
+
+
+    public void setDataObject(KnowledgeCollectionModel.Elements modelData) {
         this.modelData = modelData;
         notifyDataSetChanged();
     }

@@ -40,6 +40,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
@@ -231,6 +232,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
+
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
 
     }
 

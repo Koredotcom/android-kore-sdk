@@ -28,7 +28,7 @@ import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
-import kore.botssdk.models.KaFileLookupModel;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -139,11 +139,14 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             adapter.setData(koraUniversalSearchModel);
             recycler_view.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+            view_more.setVisibility(VISIBLE);
         } else {
             root_layout.setVisibility(GONE);
             adapter.setData(null);
+            adapter.setVerticalListViewActionHelper(this);
             recycler_view.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+            view_more.setVisibility(GONE);
         }
     }
 
@@ -169,7 +172,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             {
                 list.add(model);
             }
-            else if(model.getKnowledgeCollection()!=null&&model.getKnowledgeCollection().size()>0)
+            else if(model.getKnowledgeCollection()!=null&&model.getKnowledgeCollection().getCombinedData()!=null&&model.getKnowledgeCollection().getCombinedData().size()>0)
             {
                 list.add(model);
             }
@@ -246,6 +249,13 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
+
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
+
+        composeFooterInterface.knowledgeCollectionItemClick(elements,id);
 
     }
 }

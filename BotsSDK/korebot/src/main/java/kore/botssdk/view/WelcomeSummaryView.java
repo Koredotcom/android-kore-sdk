@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +26,7 @@ import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.Weather;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.models.WelcomeSummaryModel;
@@ -256,6 +256,11 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
                 if(composeFooterInterface != null)
                 composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
             }
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
+
     }
 
    /* public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
