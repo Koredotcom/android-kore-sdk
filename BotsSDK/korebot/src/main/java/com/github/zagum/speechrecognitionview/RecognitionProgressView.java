@@ -349,7 +349,7 @@ public class RecognitionProgressView extends View implements RecognitionListener
     if (animator == null || rmsdB < 4.5f) {
       return;
     }
-    Log.d("IKIDO","Hello "+rmsdB);
+//    Log.d("IKIDO","Hello "+rmsdB);
     if (!(animator instanceof RmsAnimator) && isSpeaking) {
       startRmsInterpolation();
     }

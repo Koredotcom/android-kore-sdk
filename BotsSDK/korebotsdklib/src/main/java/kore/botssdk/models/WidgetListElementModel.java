@@ -65,15 +65,15 @@ public class WidgetListElementModel {
     private String subtitle;
     private HeaderOptionsModel value;
 
-    public ButtonLayoutModel getButtonsLayout() {
+    public Object getButtonsLayout() {
         return buttonsLayout;
     }
 
-    public void setButtonsLayout(ButtonLayoutModel buttonsLayout) {
+    public void setButtonsLayout(Object buttonsLayout) {
         this.buttonsLayout = buttonsLayout;
     }
 
-    private ButtonLayoutModel buttonsLayout;
+    private Object buttonsLayout;
 
     public String getIcon() {
         return icon;

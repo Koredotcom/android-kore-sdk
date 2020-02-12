@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/latoregular"
             android:letterSpacing="0.1"
-            android:textColor="#009dab"
+            android:textColor="#4741fa"
             android:text=""
             android:inputType="textCapWords"
             android:textSize="14sp" />

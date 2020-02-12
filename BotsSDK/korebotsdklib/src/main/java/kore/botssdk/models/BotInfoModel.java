@@ -9,6 +9,17 @@ import java.util.HashMap;
 public class BotInfoModel {
     public String chatBot;
     public String taskBotId;
+    public String channelClient = "Android";
+
+    public String getChannelClient() {
+        return channelClient;
+    }
+
+    public void setChannelClient(String channelClient) {
+        this.channelClient = channelClient;
+    }
+
+
     public HashMap<Object,Object> customData;
 
 
