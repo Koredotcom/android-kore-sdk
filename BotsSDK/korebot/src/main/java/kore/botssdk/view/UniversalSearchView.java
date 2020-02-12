@@ -57,7 +57,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     UniversalSearchViewAdapter adapter;
     View view_more;
     ComposeFooterInterface composeFooterInterface;
-
+    boolean viewAllVisiblity=false;
     public void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.universal_search_view, this, true);
         recycler_view = view.findViewById(R.id.recycler_view);
@@ -139,7 +139,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             adapter.setData(koraUniversalSearchModel);
             recycler_view.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            view_more.setVisibility(VISIBLE);
+            view_more.setVisibility(viewAllVisiblity&&koraUniversalSearchModel.size()>1?VISIBLE:GONE);
         } else {
             root_layout.setVisibility(GONE);
             adapter.setData(null);
@@ -158,22 +158,42 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         {
             if(model.getMeetingNotes()!=null&&model.getMeetingNotes().size()>0)
             {
+                if(model.getMeetingNotes().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
                 list.add(model);
 
             }else if(model.getEmails()!=null&&model.getEmails().size()>0)
             {
+                if(model.getEmails().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
                 list.add(model);
 
             }else if(model.getFiles()!=null&&model.getFiles().size()>0)
             {
+                if(model.getFiles().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
                 list.add(model);
             }
             else if(model.getKnowledge()!=null&&model.getKnowledge().size()>0)
             {
+                if(model.getKnowledge().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
                 list.add(model);
             }
             else if(model.getKnowledgeCollection()!=null&&model.getKnowledgeCollection().getCombinedData()!=null&&model.getKnowledgeCollection().getCombinedData().size()>0)
             {
+                if(model.getKnowledgeCollection().getCombinedData().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
                 list.add(model);
             }
 

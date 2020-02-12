@@ -57,6 +57,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     Context context;
     UniversalSearchView universalSearchViewContext;
 
+
     public UniversalSearchViewAdapter(UniversalSearchView universalSearchView) {
         context = universalSearchView.getContext();
         universalSearchViewContext = universalSearchView;
@@ -101,9 +102,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 //        viewHolder.staricon.setTypeface(Utility.getTypeFaceObj(context));
         viewHolder.root_title_view.setText(title);
         viewHolder.view_suggest.setVisibility(model.isSuggestive()?View.VISIBLE:View.GONE);
-        viewHolder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            viewHolder.count_view.setText(count + " more");
+        viewHolder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            viewHolder.count_view.setText(count-1 + " more");
         }
 
 
@@ -143,9 +144,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_4e74f0));
         holder.root_title_view.setText(title);
 
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count-1 + " more");
         }
         holder.date_view.setText(DateUtils.getDateMMMDDYYYY(model.getDuration().getStart(), model.getDuration().getEnd()));
         String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
@@ -177,9 +178,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_2ad082));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count-1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getSubject() != null && !TextUtils.isEmpty(model.getSubject()) ? model.getSubject() : "(No Subject)");
@@ -216,9 +217,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_38c9e1));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count-1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getFileName());
@@ -264,9 +265,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_f98140));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count-1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getTitle());

@@ -28,6 +28,7 @@
             <LinearLayout
                 android:id="@+id/view_more"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -46,7 +47,7 @@
                     android:text="See All Results"
                     android:textColor="#737d87"
                     android:textSize="@dimen/dimen_12dp"
-                    android:visibility="visible" />
+                     />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
