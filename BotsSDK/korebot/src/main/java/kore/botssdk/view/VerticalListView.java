@@ -138,13 +138,15 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private void handleViewMore(String type, RecyclerView.Adapter adapter) {
         if (type.equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_TASK_VIEW) || type.equalsIgnoreCase(BotResponse.TEMPLATE_TASK_FULLVIEW)) {
-            composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null, 0);
+            if(composeFooterInterface != null)
+                composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null, 0);
         } else {
             Duration _duration = null;
             if(adapter instanceof CalendarEventsAdapter){
                 _duration = ((CalendarEventsAdapter) adapter).getCursorDuration();
             }
-            composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()),_duration, 0);
+            if(composeFooterInterface != null)
+                composeFooterInterface.openFullView(getTemplateType(adapter), gson.toJson(((RecyclerViewDataAccessor) recyclerView.getAdapter()).getData()),_duration, 0);
         }
     }
 
@@ -294,7 +296,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
-        composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
+        if(composeFooterInterface != null)
+            composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
     }
 
     @Override
@@ -317,7 +320,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         if(model instanceof CalEventsTemplateModel) {
             bundle.putString(BundleConstants.REQ_TEXT_TO_DISPLAY, ((CalEventsTemplateModel)model).getReqTextToDisplayForDetails());
         }
-        composeFooterInterface.launchActivityWithBundle(type,bundle);
+        if(composeFooterInterface != null)
+            composeFooterInterface.launchActivityWithBundle(type,bundle);
     }
 
     @Override
@@ -326,7 +330,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             setTranslationZ(500 * dp1);
         }
         bringToFront();
-        composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
+        if(composeFooterInterface != null)
+            composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
     }
 
     @Override
@@ -346,7 +351,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void meetingNotesNavigation(Context context, String mId, String eId) {
-        composeFooterInterface.lauchMeetingNotesAction(context,mId,eId);
+        if(composeFooterInterface != null)
+            composeFooterInterface.lauchMeetingNotesAction(context,mId,eId);
 
     }
 

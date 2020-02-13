@@ -31,11 +31,11 @@ public class FileLookUpData {
         this.modifiedTime = modifiedTime;
     }
 
-    public List<FileOwner> getOwners() {
+    public Object getOwners() {
         return owners;
     }
 
-    public void setOwners(List<FileOwner> owners) {
+    public void setOwners(Object owners) {
         this.owners = owners;
     }
 
@@ -43,6 +43,7 @@ public class FileLookUpData {
     private String thumbnail;
     private String modifiedTime;
 
-    private List<FileOwner> owners;
+//    private List<FileOwner> owners;
+    private Object owners;
 
 }

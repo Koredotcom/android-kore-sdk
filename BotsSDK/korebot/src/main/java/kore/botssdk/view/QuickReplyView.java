@@ -91,6 +91,11 @@ public class QuickReplyView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
+    public boolean getRecyclerVisibility(){
+        if(recyclerView != null && recyclerView.getAdapter() != null)
+            return false;
+        return true;
+    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 

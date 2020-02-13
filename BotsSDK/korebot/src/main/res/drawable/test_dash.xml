@@ -4,7 +4,7 @@
         />
     <solid android:color="@android:color/transparent" />
     <stroke
-        android:color="@color/color_4741fa"
+        android:color="@color/splash_background_color"
         android:dashWidth="20px"
         android:dashGap="5px"
         android:width="1dp"/>

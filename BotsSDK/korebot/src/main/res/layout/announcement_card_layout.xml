@@ -19,15 +19,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/view_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/task_view_background"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="10dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingStart="10dp"
+        android:id="@+id/view_action"
+        android:background="@drawable/task_view_background"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp">
+
+
 
             <kore.botssdk.view.ProfileTextView
                 android:id="@+id/user_profile_name"
@@ -132,6 +134,7 @@
                     android:layout_marginTop="7dp"
                     android:drawableStart="@drawable/ic_comments_right"
                     android:drawablePadding="7dp"
+                    android:layout_marginStart="8dp"
                     android:minWidth="80dp"
                     android:singleLine="true"
                     android:text="@{Long.toString(annoucement.NComments)}"

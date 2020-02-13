@@ -8,13 +8,13 @@ import com.google.gson.annotations.SerializedName;
 public class KnowledgeDetailModelResponseNew extends WidgetBaseDataModel{
 
 
-    private Widget.Params params;
+    private Object params;
 
-    public Widget.Params getParams() {
+    public Object getParams() {
         return params;
     }
 
-    public void setParams(Widget.Params params) {
+    public void setParams(Object params) {
         this.params = params;
     }
 

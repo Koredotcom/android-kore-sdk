@@ -37,7 +37,7 @@
             android:gravity="center"
             android:minHeight="20dp"
 
-            android:text="Long tap on "
+            android:text="Hold and drag "
             android:textColor="@color/color_167_169_190"
             android:textSize="14sp" />
 
@@ -54,7 +54,7 @@
 
             android:gravity="center"
             android:minHeight="20dp"
-            android:text=" and drag to reorder the widget"
+            android:text=" to reorder the widgets"
             android:textColor="@color/color_167_169_190"
             android:textSize="14sp" />
     </LinearLayout>

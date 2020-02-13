@@ -5,14 +5,12 @@ package kore.botssdk.net;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
-import android.graphics.drawable.Drawable;
-
-import kore.korebotsdklib.R;
-
 /**
  * This class is for defining properties
  */
 public class SDKConfiguration {
+
+    public static String APP_REQ_COLOR = "#2f91e5"; // KORA COLOR "#3942f6"
     /**
      * bot init text  and related settings
      */
@@ -118,7 +116,7 @@ public class SDKConfiguration {
 
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected ="#3942f6";
+        public static  String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -160,15 +158,15 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-        public static  String rightBubbleUnSelected="#3942f6";
+        public static  String rightBubbleUnSelected=APP_REQ_COLOR;
         public static  String leftBubbleSelected="#D3D3D3";
         public static  String leftBubbleUnSelected="#f8f9f8";
         public static  String leftBubbleTextColor="#404051";
         public static  String rightBubbleTextColor="#161628";//"#757587";
         public static  String whiteColor="#FFFFFF";
         public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor="#3942f6";
-        public static  String leftLinkColor = "#3942f6";
+        public static  String rightLinkColor=APP_REQ_COLOR;
+        public static  String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = false;
 
@@ -191,7 +189,7 @@ public class SDKConfiguration {
             BubbleColors.profileColor = profileColor;
         }
 
-        static String profileColor = "#3942f6";
+        static String profileColor = APP_REQ_COLOR;
 
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
