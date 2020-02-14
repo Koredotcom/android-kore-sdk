@@ -20,6 +20,15 @@ public class PayloadInner {
     }
 
     private String template_type;
+    private String featureId;
+
+    public String getFeatureId() {
+        return featureId;
+    }
+
+    public void setFeatureId(String featureId) {
+        this.featureId = featureId;
+    }
 
     public void setText(String text) {
         this.text = text;
