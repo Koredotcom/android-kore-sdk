@@ -156,7 +156,7 @@ public class RestResponse {
         private int clientMessageId = (int)System.currentTimeMillis();
         private Meta meta;
         private int id = clientMessageId;
-        private String client = "sdk";
+        private String client = "Android";
 
         public void setMessage(BotMessage message) {
             this.message = message;

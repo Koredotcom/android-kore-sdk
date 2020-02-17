@@ -533,9 +533,28 @@ public class Widget implements Serializable,Cloneable {
         private String postback;
         private String _id;
         private Hook hook;
+        private String acl;
 
         private String title;
         private String sub_title;
+
+        public String getAcl() {
+            return acl;
+        }
+
+        public void setAcl(String acl) {
+            this.acl = acl;
+        }
+
+        public String getPayload() {
+            return payload;
+        }
+
+        public void setPayload(String payload) {
+            this.payload = payload;
+        }
+
+        private String payload;
         private String icon;
         private List<Button> button = null;
         private String text;
