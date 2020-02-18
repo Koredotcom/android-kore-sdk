@@ -29,7 +29,9 @@ public class JWTGrantRequest extends DemoRestRequest<JWTTokenResponse> {
         hsh.put("aud","https://idproxy.kore.com/authorize");
         hsh.put("isAnonymous",isAnonymous);
 
-        JWTTokenResponse jwt = getService().getJWTToken(hsh);
-        return jwt;
+        /*JWTTokenResponse jwt = getService().getJWTToken(hsh);
+        return jwt;*/
+
+        return null;
     }
 }

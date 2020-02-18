@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.utils.DateUtils;
 
-public class BotDataPersister extends SpiceRequest<Void> {
+public class BotDataPersister /*extends SpiceRequest<Void>*/ {
 
     private Context mContext;
     private static Gson gson = new Gson();
@@ -24,7 +27,7 @@ public class BotDataPersister extends SpiceRequest<Void> {
     private String userId;
 
     public BotDataPersister(Context mContext, String userId, String payload, boolean isSentMessage, BotRequest sentMsg) {
-        super(Void.class);
+//        super(Void.class);
         this.mContext = mContext;
         this.payload = payload;
         this.isSentMessage = isSentMessage;
@@ -32,10 +35,19 @@ public class BotDataPersister extends SpiceRequest<Void> {
         this.sentMsg = sentMsg;
     }
 
-    @Override
-    public Void loadDataFromNetwork() throws Exception {
-        persistChats();
-        return null;
+    public Observable<Boolean> loadDataFromNetwork()  {
+        return Observable.create(new ObservableOnSubscribe() {
+            @Override
+            public void subscribe(ObservableEmitter emitter) throws Exception {
+                try{
+                    persistChats();
+                    emitter.onNext(true);
+                    emitter.onComplete();
+                }catch(Exception e){
+                    emitter.onError(e);
+                }
+            }
+        });
     }
 
 

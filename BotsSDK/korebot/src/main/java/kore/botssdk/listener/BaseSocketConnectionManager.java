@@ -15,7 +15,7 @@ import kore.botssdk.websocket.SocketConnectionListener;
 
 public abstract class BaseSocketConnectionManager implements SocketConnectionListener,TTSUpdate {
 
-    protected SpiceManager botsSpiceManager = new SpiceManager(BotDemoRestService.class);
+    //protected SpiceManager botsSpiceManager = new SpiceManager(BotDemoRestService.class);
     protected Context mContext;
 //    public SocketUpdateListener socketUpdateListener;
 //    public boolean isWithAuth;

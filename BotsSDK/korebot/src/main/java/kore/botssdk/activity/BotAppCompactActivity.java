@@ -20,24 +20,24 @@ public class BotAppCompactActivity extends AppCompatActivity {
     protected final String LOG_TAG = getClass().getSimpleName();
     private ProgressDialog mProgressDialog;
 
-    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+   // SpiceManager spiceManager = new SpiceManager(BotRestService.class);
     public void finish() {
-        if(this.spiceManager.isStarted()) {
+       /* if(this.spiceManager.isStarted()) {
             this.spiceManager.shouldStop();
-        }
+        }*/
         super.finish();
     }
 
     protected void onCreate(Bundle data) {
         super.onCreate(data);
-        if(!this.spiceManager.isStarted()) {
+        /*if(!this.spiceManager.isStarted()) {
             this.spiceManager.start(getApplicationContext());
-        }
+        }*/
     }
 
-    public SpiceManager getSpiceManager() {
+    /*public SpiceManager getSpiceManager() {
         return this.spiceManager;
-    }
+    }*/
 
 
     protected void showProgress(String msg, boolean isCancelable) {

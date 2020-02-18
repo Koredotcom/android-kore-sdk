@@ -12,9 +12,13 @@ import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
-import java.util.UUID;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.BotDb.BotDataPersister;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -23,10 +27,9 @@ import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.JWTTokenResponse;
-import kore.botssdk.net.JWTGrantRequest;
-import kore.botssdk.net.KaJwtRequest;
+import kore.botssdk.net.RestAPIHelper;
+import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -34,6 +37,9 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.CONNECTING;
@@ -147,9 +153,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
-        if(botsSpiceManager != null) {
+        /*if(botsSpiceManager != null) {
             if(!botsSpiceManager.isStarted())botsSpiceManager.start(mContext);
-        }
+        }*/
 
 
         try{
@@ -173,8 +179,31 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
     public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg){
-        BotDataPersister botDataPersister = new BotDataPersister(mContext, userId, payload, isSentMessage, sentMsg);
-        botsSpiceManager.execute(botDataPersister, new RequestListener<Void>() {
+
+        new BotDataPersister(mContext, userId, payload, isSentMessage, sentMsg)
+                .loadDataFromNetwork()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(Boolean isSuccess) {
+                        Log.d(LOG_TAG, "Persistence success");
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(LOG_TAG, "Persistence fail");
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        /*botsSpiceManager.execute(botDataPersister, new RequestListener<Void>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.d(LOG_TAG, "Persistence fail");
@@ -184,10 +213,42 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             public void onRequestSuccess(Void aVoid) {
                 Log.d(LOG_TAG, "Persistence success");
             }
-        });
+        });*/
     }
     private void makeJwtCallWithToken(final boolean isRefresh) {
-        KaJwtRequest request = new KaJwtRequest(accessToken, true);
+        Call<JWTTokenResponse> jwtTokenCall = RestBuilder.getRestAPI().getJWTToken(Utils.accessTokenHeader(accessToken), new HashMap<String, Object>());
+        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<JWTTokenResponse>() {
+            @Override
+            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
+                if(response.isSuccessful()){
+                    jwtKeyResponse = response.body();
+                    botName = jwtKeyResponse.getBotName();
+                    streamId = jwtKeyResponse.getStreamId();
+                    if (!isRefresh) {
+                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
+                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
+                    } else {
+                        KoreEventCenter.post(response.body().getJwt());
+                    }
+                }else{
+//                    Log.d("token refresh", t.getMessage());
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
+                if (t instanceof NoNetworkException) {
+//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("token refresh", t.getMessage());
+                }
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            }
+        });
+
+
+        /*KaJwtRequest request = new KaJwtRequest(accessToken, true);
         botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
             @Override
             public void onRequestFailure(SpiceException e) {
@@ -211,7 +272,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     KoreEventCenter.post(jwt.getJwt());
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -239,8 +300,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
 //            this.socketUpdateListener = socketUpdateListener;
-            if (!botsSpiceManager.isStarted())
-                botsSpiceManager.start(this.mContext);
+           /* if (!botsSpiceManager.isStarted())
+                botsSpiceManager.start(this.mContext);*/
             initiateConnection();
         }
     }
@@ -264,8 +325,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
 //            this.socketUpdateListener = socketUpdateListener;
-            if (!botsSpiceManager.isStarted())
-                botsSpiceManager.start(this.mContext);
+            /*if (!botsSpiceManager.isStarted())
+                botsSpiceManager.start(this.mContext);*/
             initiateConnection();
         }
     }
@@ -381,8 +442,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void shutDownConnection() {
-        if (botsSpiceManager.isStarted())
-            botsSpiceManager.shouldStop();
+      /*  if (botsSpiceManager.isStarted())
+            botsSpiceManager.shouldStop();*/
         botSocketConnectionManager = null;
         if (botClient != null)
             botClient.disconnect();

@@ -2,24 +2,47 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
-import retrofit.client.Response;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 /**
  * Created by Pradeep Mahato on 08-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class RegisterPushNotificationRequest extends RestRequest<Response> {
+public class RegisterPushNotificationRequest  {
 
+    private String userId, token;
     private HashMap<String, Object> request;
 
     public RegisterPushNotificationRequest(String userId, String accessToken, HashMap<String, Object> request) {
-        super(Response.class, userId, accessToken);
         this.request = request;
+        this.userId = userId;
+        this.token = accessToken;
     }
 
-    @Override
-    public Response loadDataFromNetwork() throws Exception {
-        Response response = getService().subscribeForPushNotification(userId, accessTokenHeader(), request);
-        return response;
+    public Observable<ResponseBody> loadDataFromNetwork() {
+        return Observable.create(new ObservableOnSubscribe<ResponseBody>() {
+            @Override
+            public void subscribe(ObservableEmitter<ResponseBody> emitter) throws Exception {
+                try{
+                    Call<ResponseBody> _resp = RestBuilder.getRestAPI().subscribeForPushNotification(userId, token, request);
+                    Response<ResponseBody> rbody = _resp.execute();
+                    ResponseBody resp = rbody.body();
+
+                    emitter.onNext(resp);
+                    emitter.onComplete();
+
+                }catch(Exception e){
+                    emitter.onError(e);
+                }
+            }
+        });
+        //Response response = RestBuilder.getRestAPI().subscribeForPushNotification(userId, accessTokenHeader(), request);
+        //return response;
     }
 }

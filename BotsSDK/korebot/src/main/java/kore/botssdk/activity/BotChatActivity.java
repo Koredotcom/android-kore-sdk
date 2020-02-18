@@ -49,7 +49,6 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.net.RestRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;

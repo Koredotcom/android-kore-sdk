@@ -8,12 +8,21 @@ import android.util.Log;
 import com.octo.android.robospice.persistence.exception.SpiceException;
 import com.octo.android.robospice.request.listener.RequestListener;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
@@ -22,17 +31,23 @@ import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotSocketOptions;
-import kore.botssdk.net.BaseSpiceManager;
-import kore.botssdk.net.RestRequest;
+import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.RestResponse.BotAuthorization;
+import kore.botssdk.net.RestResponse.JWTTokenResponse;
+import kore.botssdk.net.RestResponse.RTMUrl;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.Utils;
+import retrofit2.Call;
+import retrofit2.Response;
+
+import static kore.botssdk.utils.Utils.accessTokenHeader;
 
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public final class SocketWrapper extends BaseSpiceManager {
+public final class SocketWrapper /*extends BaseSpiceManager*/ {
 
     private final String LOG_TAG = SocketWrapper.class.getSimpleName();
 
@@ -85,7 +100,7 @@ public final class SocketWrapper extends BaseSpiceManager {
      * Restricting outside object creation
      */
     private SocketWrapper(Context mContext) {
-        start(mContext);
+        /*start(mContext);*/
         this.mContext = mContext;
         KoreEventCenter.register(this);
     }
@@ -132,10 +147,38 @@ public final class SocketWrapper extends BaseSpiceManager {
         optParameterBotInfo.put(Constants.BOT_INFO, botInfoModel);
 
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
+        }*/
 
+
+        rtmUrlRequest(accessToken, null, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl response) {
+                        try {
+                            connectToSocket(response.getUrl(), false);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+/*
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
@@ -152,9 +195,9 @@ public final class SocketWrapper extends BaseSpiceManager {
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), optParameterBotInfo);
                 return rtmUrl;
             }
-        };
+        };*/
 
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
+        /*getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -166,6 +209,59 @@ public final class SocketWrapper extends BaseSpiceManager {
                     connectToSocket(response.getUrl(), false);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
+                }
+            }
+        });*/
+
+    }
+
+    private Observable<RestResponse.RTMUrl> rtmUrlRequest(final String _accessToken, final String jwtToken, final boolean isReconnect) {
+        return Observable.create(new ObservableOnSubscribe<RTMUrl>() {
+            @Override
+            public void subscribe(ObservableEmitter<RTMUrl> emitter) throws Exception {
+                try{
+                    String access_token = Utils.accessTokenHeader(_accessToken);
+                    HashMap<String, Object> hsh = new HashMap<>();
+                    if(jwtToken == null) {
+                        Call<JWTTokenResponse> _jwtToken = RestBuilder.getRestAPI().getJWTToken(access_token);
+                        Response<JWTTokenResponse> rBody = _jwtToken.execute();
+                        JWTTokenResponse jwtToken = rBody.body();
+                        hsh.put(Constants.KEY_ASSERTION, jwtToken.getJwt());
+                    }else {
+                        hsh.put(Constants.KEY_ASSERTION, jwtToken);
+                    }
+                    hsh.put(Constants.BOT_INFO, botInfoModel);
+
+
+                    HashMap<String, Object> hsh1 = new HashMap<>();
+                    hsh1.put(Constants.BOT_INFO, botInfoModel);
+
+                    Call<BotAuthorization> _jwtGrant = RestBuilder.getRestAPI().jwtGrant(hsh);
+                    Response<BotAuthorization> rBody1 = _jwtGrant.execute();
+                    BotAuthorization jwtGrant = rBody1.body();
+
+
+                    auth = jwtGrant.getAuthorization().getAccessToken();
+                    botUserId = jwtGrant.getUserInfo().getUserId();
+                    accessToken = jwtGrant.getAuthorization().getAccessToken();
+                    anonymousUserAccessToken = jwtGrant.getAuthorization().getAccessToken();
+
+                    Call<RTMUrl> _rtmUrl;
+                    if(isReconnect){
+                        _rtmUrl = RestBuilder.getRestAPI().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1, true);
+                    }else{
+                        _rtmUrl = RestBuilder.getRestAPI().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
+                    }
+
+                    Response<RTMUrl> rBody2 = _rtmUrl.execute();
+                    RTMUrl rtmUrl = rBody2.body();
+
+                    emitter.onNext(rtmUrl);
+                    emitter.onComplete();
+
+
+                }catch(Exception e){
+                    emitter.onError(e);
                 }
             }
         });
@@ -191,10 +287,40 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.botInfoModel = botInfoModel;
         this.options = null;
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
+        }*/
+
+        rtmUrlRequest(accessToken, sJwtGrant, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl response) {
+                        try {
+                            connectToSocket(response.getUrl(), false);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+
+
+       /* RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 setPriority(PRIORITY_HIGH);
@@ -216,9 +342,9 @@ public final class SocketWrapper extends BaseSpiceManager {
                 RestResponse.RTMUrl rtmUrl = getService().getRtmUrl(accessTokenHeader(jwtGrant.getAuthorization().getAccessToken()), hsh1);
                 return rtmUrl;
             }
-        };
+        };*/
 
-        getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
+       /* getSpiceManager().execute(request, new RequestListener<RestResponse.RTMUrl>() {
             @Override
             public void onRequestFailure(SpiceException e) {
                 Log.e(LOG_TAG, e.getMessage());
@@ -232,7 +358,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -249,13 +375,40 @@ public final class SocketWrapper extends BaseSpiceManager {
         this.botInfoModel = botInfoModel;
         this.options = options;
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
+        }*/
+        rtmUrlRequest(accessToken, sJwtGrant, false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl response) {
+                        try {
+                            connectToSocket(response.getUrl(), false);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+        /*
         RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
-                setPriority(PRIORITY_HIGH);
                 HashMap<String, Object> hsh = new HashMap<>();
                 hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
                 hsh.put(Constants.BOT_INFO, botInfoModel);
@@ -290,7 +443,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -336,7 +489,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                         }
                         isConnecting = false;
                         if (isConnected()) {
-                            stop();
+                           // stop();
                         }
                         reconnectAttempt();
                     }
@@ -422,10 +575,38 @@ public final class SocketWrapper extends BaseSpiceManager {
 
         //If spiceManager is not started then start it
         if (!isConnected()) {
-            start(mContext);
+            //start(mContext);
         }
 
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
+        rtmUrlRequest(accessToken, null, true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl response) {
+                        try {
+                            connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+
+       /* RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, accessToken) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
                 RestResponse.JWTTokenResponse jwtToken = getService().getJWTToken(accessTokenHeader());
@@ -452,7 +633,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
     /**
@@ -463,11 +644,38 @@ public final class SocketWrapper extends BaseSpiceManager {
         Log.i(LOG_TAG, "Connection lost. Reconnecting....");
 
         //If spiceManager is not started then start it
-        if (!isConnected()) {
+        /*if (!isConnected()) {
             start(mContext);
-        }
+        }*/
 
-        RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
+        rtmUrlRequest(accessToken, JWTToken, true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RestResponse.RTMUrl>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+                    @Override
+                    public void onNext(RestResponse.RTMUrl response) {
+                        try {
+                            connectToSocket(response.getUrl().concat("&isReconnect=true"),true);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage());
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+
+      /*  RestRequest<RestResponse.RTMUrl> request = new RestRequest<RestResponse.RTMUrl>(RestResponse.RTMUrl.class, null, null) {
             @Override
             public RestResponse.RTMUrl loadDataFromNetwork() throws Exception {
 
@@ -506,7 +714,7 @@ public final class SocketWrapper extends BaseSpiceManager {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
     }
 
     public void onEvent(String token){
@@ -593,9 +801,9 @@ public final class SocketWrapper extends BaseSpiceManager {
         } else {
             Log.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
-        if (isConnected()) {
+        /*if (isConnected()) {
             stop();
-        }
+        }*/
     }
 
     public String getAnonymousUserAccessToken() {

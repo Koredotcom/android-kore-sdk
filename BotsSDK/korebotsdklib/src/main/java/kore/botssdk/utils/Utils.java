@@ -263,4 +263,11 @@ public class Utils {
         return isoFormatter.parse(timeStamp).getTime();
 
     }
+
+    public static String accessTokenHeader(String accessToken){
+        if (accessToken != null && accessToken.startsWith("bearer "))
+            return accessToken;
+        else
+            return "bearer " + accessToken ;
+    }
 }

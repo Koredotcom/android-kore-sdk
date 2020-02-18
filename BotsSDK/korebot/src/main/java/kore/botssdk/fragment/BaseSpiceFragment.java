@@ -14,32 +14,32 @@ import kore.botssdk.net.BotRestService;
  */
 public class BaseSpiceFragment extends Fragment{
 
-    SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    //SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
-    public SpiceManager getSpiceDBManager() {
+    /*public SpiceManager getSpiceDBManager() {
         return spiceDBManager;
     }
 
-    SpiceManager spiceDBManager = new SpiceManager(BotLocalService.class);
+    SpiceManager spiceDBManager = new SpiceManager(BotLocalService.class);*/
     @Override
     public void onAttach(Context context) {
-        if(!spiceManager.isStarted())
-            spiceManager.start(getActivity().getApplicationContext());
-        if(!spiceDBManager.isStarted())
-            spiceDBManager.start(getActivity().getApplicationContext());
+//        if(!spiceManager.isStarted())
+//            spiceManager.start(getActivity().getApplicationContext());
+//        if(!spiceDBManager.isStarted())
+//            spiceDBManager.start(getActivity().getApplicationContext());
         super.onAttach(context);
     }
 
     @Override
     public void onDetach() {
-        if(spiceManager.isStarted())
-            spiceManager.shouldStop();
-        if(spiceDBManager.isStarted())
-            spiceDBManager.shouldStop();
+//        if(spiceManager.isStarted())
+//            spiceManager.shouldStop();
+//        if(spiceDBManager.isStarted())
+//            spiceDBManager.shouldStop();
         super.onDetach();
     }
 
-    public SpiceManager getSpiceManager() {
+    /*public SpiceManager getSpiceManager() {
         return spiceManager;
-    }
+    }*/
 }

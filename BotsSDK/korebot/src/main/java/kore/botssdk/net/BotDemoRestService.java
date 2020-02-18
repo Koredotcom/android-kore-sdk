@@ -14,17 +14,14 @@ import java.lang.reflect.Type;
 
 import kore.botssdk.services.KoreAuthErrorHandler;
 import kore.botssdk.utils.Utils;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.converter.Converter;
-import retrofit.converter.GsonConverter;
+import retrofit2.Converter;
 
 /**
  * Created by Ramachandra Pradeep on 15-Mar-17.
  */
-public class BotDemoRestService extends RetrofitGsonSpiceService {
+public class BotDemoRestService /*extends RetrofitGsonSpiceService*/ {
 
-    @Override
+   /* @Override
     public void onCreate() {
         super.onCreate();
         addRetrofitInterface(BotDemoRestAPI.class);
@@ -72,5 +69,5 @@ public class BotDemoRestService extends RetrofitGsonSpiceService {
             }
             return value;
         }
-    }
+    }*/
 }

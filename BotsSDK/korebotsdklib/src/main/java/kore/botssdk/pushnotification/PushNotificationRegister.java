@@ -1,24 +1,25 @@
 package kore.botssdk.pushnotification;
 
 import android.content.Context;
-import android.provider.Settings;
 
-import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.HashMap;
 
-import kore.botssdk.net.BaseSpiceManager;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.net.RegisterPushNotificationRequest;
-import kore.botssdk.net.UnSubscribePushNotificationRequest;
 import kore.botssdk.utils.Constants;
-import retrofit.client.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 /**
  * Created by Pradeep Mahato on 08-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class PushNotificationRegister extends BaseSpiceManager {
+public class PushNotificationRegister  {
 
     RequestListener<Response> requestListener;
 
@@ -43,10 +44,31 @@ public class PushNotificationRegister extends BaseSpiceManager {
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_OS_TYPE, Constants.PUSH_NOTIF_OS_TYPE_ANDROID);
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_DEVICE_ID, deviceId);
 
-        RegisterPushNotificationRequest registerPushNotificationRequest = new RegisterPushNotificationRequest(userId, accessToken, pushNotificationRequestMap);
+        new RegisterPushNotificationRequest(userId, accessToken, pushNotificationRequestMap)
+                .loadDataFromNetwork()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResponseBody>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        if (!isConnected()) start(context);
-        getSpiceManager().execute(registerPushNotificationRequest, requestListener);
+                    }
+                    @Override
+                    public void onNext(ResponseBody response) {
+
+                    }
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+       // if (!isConnected()) start(context);
+        //getSpiceManager().execute(registerPushNotificationRequest, requestListener);
 
     }
 
@@ -62,11 +84,11 @@ public class PushNotificationRegister extends BaseSpiceManager {
         HashMap<String, Object> pushNotificationRequestMap = new HashMap<>();
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_DEVICE_ID, deviceId);
 
-        UnSubscribePushNotificationRequest unSubscribePushNotificationRequest = new UnSubscribePushNotificationRequest(accessToken, pushNotificationRequestMap);
+      /*  new UnSubscribePushNotificationRequest(Utils.accessTokenHeader(accessToken), pushNotificationRequestMap);
 
         if (!isConnected()) start(context);
 
-        getSpiceManager().execute(unSubscribePushNotificationRequest, requestListener);
+        getSpiceManager().execute(unSubscribePushNotificationRequest, requestListener);*/
 
     }
 
