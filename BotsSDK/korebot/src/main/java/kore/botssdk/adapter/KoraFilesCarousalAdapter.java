@@ -1,9 +1,9 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.CardView;
-import android.util.Log;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.cardview.widget.CardView;
+
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;

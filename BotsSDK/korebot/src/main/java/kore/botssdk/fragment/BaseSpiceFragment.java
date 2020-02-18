@@ -1,12 +1,7 @@
 package kore.botssdk.fragment;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-
-import com.octo.android.robospice.SpiceManager;
-
-import kore.botssdk.net.BotLocalService;
-import kore.botssdk.net.BotRestService;
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.

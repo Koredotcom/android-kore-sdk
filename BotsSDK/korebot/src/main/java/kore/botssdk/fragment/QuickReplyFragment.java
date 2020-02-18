@@ -2,7 +2,7 @@ package kore.botssdk.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;

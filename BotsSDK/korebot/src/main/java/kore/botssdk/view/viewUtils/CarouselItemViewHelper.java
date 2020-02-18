@@ -1,7 +1,7 @@
 package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
+import androidx.cardview.widget.CardView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;

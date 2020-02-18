@@ -2,14 +2,11 @@ package kore.botssdk.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-import com.octo.android.robospice.SpiceManager;
-
 import kore.botssdk.R;
-import kore.botssdk.net.BotRestService;
 
 /**
  * Created by Ramachandra Pradeep on 27-Mar-18.

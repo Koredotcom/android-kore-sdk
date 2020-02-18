@@ -3,7 +3,7 @@ package kore.botssdk.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,18 +11,10 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
-import kore.botssdk.BotDb.BotDataPersister;
-import kore.botssdk.BotDb.BotMessageDBModel;
-import kore.botssdk.BotDb.DBHelper;
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
@@ -38,26 +30,18 @@ import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.models.BotHistory;
-import kore.botssdk.models.BotHistoryMessage;
-import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
-import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.CustomToast;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.TTSSynthesizer;
-import kore.botssdk.utils.Utils;
-import kore.botssdk.websocket.SocketWrapper;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
