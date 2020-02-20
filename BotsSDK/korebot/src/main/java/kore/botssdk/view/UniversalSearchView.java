@@ -153,6 +153,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
     private ArrayList<KoraUniversalSearchModel> getSortedData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel)
     {
+        viewAllVisiblity = false;
         ArrayList<KoraUniversalSearchModel> list=new ArrayList<>();
         for(KoraUniversalSearchModel model:koraUniversalSearchModel)
         {
