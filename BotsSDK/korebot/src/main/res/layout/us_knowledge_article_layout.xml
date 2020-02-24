@@ -60,6 +60,7 @@
         android:paddingTop="@dimen/dimen_12dp">
 
         <RelativeLayout
+            android:id="@+id/click_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="10dp"

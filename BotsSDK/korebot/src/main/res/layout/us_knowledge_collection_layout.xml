@@ -122,7 +122,7 @@
             android:textColor="@color/color_161620"
             android:textSize="17sp" />
 
-    </LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -170,7 +170,7 @@
             android:textSize="12sp" />
 
     </RelativeLayout>
-
+    </LinearLayout>
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
