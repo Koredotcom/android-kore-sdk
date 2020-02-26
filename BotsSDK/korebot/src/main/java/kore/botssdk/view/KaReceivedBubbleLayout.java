@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -182,8 +183,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     }
 
     @Override
-    protected void preCosmeticChanges() {
-        super.preCosmeticChanges();
+    protected void preCosmeticChanges(boolean isLastItem) {
+        super.preCosmeticChanges(isLastItem);
         resetAll();
 
     }
@@ -226,13 +227,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     }
 
     @Override
-    protected void cosmeticChanges(BaseBotMessage baseBotMessage) {
-        super.cosmeticChanges(baseBotMessage);
-        cosmetiseForProfilePic(baseBotMessage);
+    protected void cosmeticChanges(BaseBotMessage baseBotMessage, boolean isLastItem) {
+        super.cosmeticChanges(baseBotMessage,isLastItem);
+        cosmetiseForProfilePic(baseBotMessage,isLastItem);
     }
 
 
-    protected void cosmetiseForProfilePic(BaseBotMessage baseBotMessage) {
+    protected void cosmetiseForProfilePic(BaseBotMessage baseBotMessage, boolean isLastItem) {
 /*        if (isGroupMessage) {
             String icon = ((BotResponse) baseBotMessage).getIcon();
             cpvSenderImage.setVisibility(VISIBLE);
@@ -240,13 +241,19 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         } else {
             cpvSenderImage.setVisibility(GONE);
         }*/
-        String icon = ((BotResponse) baseBotMessage).getIcon();
-        if(SDKConfiguration.BubbleColors.showIcon) {
-            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
-            cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
-        }else{
-            cpvSenderImage.setVisibility(GONE);
-        }
+//        String icon = ((BotResponse) baseBotMessage).getIcon();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(SDKConfiguration.BubbleColors.showIcon && isLastItem) {
+                    cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+                    cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
+                }else{
+                    cpvSenderImage.setVisibility(GONE);
+                }
+            }
+        },500);
+
     }
 
     protected void populateForTemplates(int position, boolean isLastItem, ComponentModel compModel, BaseBotMessage baseBotMessage) {
