@@ -10,7 +10,7 @@ package kore.botssdk.net;
  */
 public class SDKConfiguration {
 
-    public static String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
+    public static String APP_REQ_COLOR = "#2f91e5"; // KORA COLOR "#3942f6" // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
     /**
      * bot init text  and related settings
      */
