@@ -32,6 +32,7 @@ import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ContactInfoModel;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.Email;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.Phone;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
@@ -433,6 +434,11 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
+
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
 
     }
 }

@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Text;
 
@@ -57,9 +59,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     Context context;
     UniversalSearchView universalSearchViewContext;
 
+
     public UniversalSearchViewAdapter(UniversalSearchView universalSearchView) {
         context = universalSearchView.getContext();
-        universalSearchViewContext=universalSearchView;
+        universalSearchViewContext = universalSearchView;
     }
 
     @NonNull
@@ -91,21 +94,31 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
     private void bindKnowledgeCollection(KnowledgeCollectionViewHolder viewHolder, int position) {
 
-        KnowledgeCollectionModel model = koraUniversalSearchModel.get(position).getKnowledgeCollection().get(0);
+        KnowledgeCollectionModel.DataElements model = koraUniversalSearchModel.get(position).getKnowledgeCollection().getCombinedData().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
-
+        viewHolder.divider.setVisibility(View.GONE);
         viewHolder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         viewHolder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_f98140));
         viewHolder.peopleicon.setTypeface(Utility.getTypeFaceObj(context));
-        viewHolder.staricon.setTypeface(Utility.getTypeFaceObj(context));
+//        viewHolder.staricon.setTypeface(Utility.getTypeFaceObj(context));
         viewHolder.root_title_view.setText(title);
-
-        viewHolder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            viewHolder.count_view.setText(count + " more");
+        viewHolder.view_suggest.setVisibility(model.isSuggestive() ? View.VISIBLE : View.GONE);
+        viewHolder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            viewHolder.count_view.setText(count - 1 + " more");
         }
 
+
+        viewHolder.view_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (verticalListViewActionHelper != null) {
+                    verticalListViewActionHelper.knowledgeCollectionItemClick(model, "");
+                }
+            }
+        });
         viewHolder.count_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,14 +126,14 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             }
         });
 
-      viewHolder.title_view.setText(model.getElements().get(0).getQuestion());
-        viewHolder.sub_view.setText(model.getElements().get(0).getAnswer());
+        viewHolder.title_view.setText(model.getQuestion());
+        viewHolder.search_view.setText(model.getName());
+        viewHolder.percent_view.setText(model.getScore() + "% Match");
+        viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
     }
 
 
-    private void bindMeetingNotes(MeetingNotesViewHolder holder,int position) {
-
-
+    private void bindMeetingNotes(MeetingNotesViewHolder holder, int position) {
 
 
         CalEventsTemplateModel model = koraUniversalSearchModel.get(position).getMeetingNotes().get(0);
@@ -128,21 +141,20 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         int count = koraUniversalSearchModel.get(position).getCount();
 
 
-
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_4e74f0));
         holder.root_title_view.setText(title);
 
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count - 1 + " more");
         }
         holder.date_view.setText(DateUtils.getDateMMMDDYYYY(model.getDuration().getStart(), model.getDuration().getEnd()));
         String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
         holder.creator_view.setText(text);
         holder.title_view.setText(model.getTitle());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.click_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 verticalListViewActionHelper.meetingNotesNavigation(context, model.getEventId(), model.getMeetingNoteId());
@@ -160,7 +172,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     public void bindEmailData(EmailViewHolder holder, int position) {
 
 
-
         EmailModel model = koraUniversalSearchModel.get(position).getEmails().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
@@ -168,9 +179,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_2ad082));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count - 1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getSubject() != null && !TextUtils.isEmpty(model.getSubject()) ? model.getSubject() : "(No Subject)");
@@ -185,14 +196,14 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             }
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.click_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 EmailModel emailModel = model;
                 if (emailModel.getButtons() == null || emailModel.getButtons().size() == 0) return;
-                BotCaourselButtonModel botCaourselButtonModel =emailModel.getButtons().get(0);
-                verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
+                BotCaourselButtonModel botCaourselButtonModel = emailModel.getButtons().get(0);
+                verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(), botCaourselButtonModel.getCustomData());
             }
         });
     }
@@ -207,9 +218,9 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_38c9e1));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count - 1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getFileName());
@@ -229,13 +240,13 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             }
         });
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.click_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KaFileLookupModel kaFileLookupModel =model;
+                KaFileLookupModel kaFileLookupModel = model;
                 if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
                     verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
-                }else if(kaFileLookupModel.getWebViewLink() != null){
+                } else if (kaFileLookupModel.getWebViewLink() != null) {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(kaFileLookupModel.getWebViewLink()));
                     context.startActivity(browserIntent);
                 }
@@ -253,12 +264,19 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         int count = koraUniversalSearchModel.get(position).getCount();
 
 
-
         holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_f98140));
-        holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
-        if (count > 0) {
-            holder.count_view.setText(count + " more");
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+
+        if (model!=null&&model.getImageUrl() != null && !model.getImageUrl().isEmpty()) {
+            holder.link_image.setVisibility(View.VISIBLE);
+            Picasso.get().load(model.getImageUrl()).into(holder.link_image);
+        } else {
+            holder.link_image.setVisibility(View.GONE);
+        }
+
+        if (count > 1) {
+            holder.count_view.setText(count - 1 + " more");
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getTitle());
@@ -300,7 +318,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         }
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.click_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle extras = new Bundle();
@@ -328,7 +346,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
                 break;
 
             case MEETING_NOTES:
-                bindMeetingNotes((MeetingNotesViewHolder) holder,position);
+                bindMeetingNotes((MeetingNotesViewHolder) holder, position);
 
 
                 break;
@@ -403,10 +421,12 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         TextView title, date_view, from, body, icon_view, root_title_view, count_view;
         ImageView image;
+        View click_view;
 
         public EmailViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            click_view=itemView.findViewById(R.id.click_view);
             title = itemView.findViewById(R.id.title);
             date_view = itemView.findViewById(R.id.date_view);
             from = itemView.findViewById(R.id.from);
@@ -423,9 +443,11 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         TextView icon_view, root_title_view, count_view, title, sharedBy, last_edited;
         ImageView image;
+        View click_view;
 
         public FilesViewHolder(@NonNull View itemView) {
             super(itemView);
+            click_view=itemView.findViewById(R.id.click_view);
             icon_view = itemView.findViewById(R.id.icon_view);
             root_title_view = itemView.findViewById(R.id.root_title_view);
             count_view = itemView.findViewById(R.id.count_view);
@@ -441,9 +463,13 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     public class KnowledgeViewHolder extends RecyclerView.ViewHolder {
 
         TextView icon_view, root_title_view, count_view, title, time, description, eye_count, chat_count, like_count, downvote_count;
+        ImageView link_image;
+        View click_view;
 
         public KnowledgeViewHolder(@NonNull View itemView) {
             super(itemView);
+            click_view=itemView.findViewById(R.id.click_view);
+            link_image = itemView.findViewById(R.id.link_image);
             icon_view = itemView.findViewById(R.id.icon_view);
             root_title_view = itemView.findViewById(R.id.root_title_view);
             count_view = itemView.findViewById(R.id.count_view);

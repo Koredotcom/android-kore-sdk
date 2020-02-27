@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.FormActionTemplate;
+import kore.botssdk.models.KnowledgeCollectionModel;
 
 public interface ComposeFooterInterface {
     /**
@@ -41,4 +42,5 @@ public interface ComposeFooterInterface {
 
     void onPanelClicked(Object pModel, boolean isFirstLaunch);
 
+    void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id);
 }

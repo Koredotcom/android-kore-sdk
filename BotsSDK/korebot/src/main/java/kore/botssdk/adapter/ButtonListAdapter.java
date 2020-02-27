@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -28,11 +27,8 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.models.Widget;
 import kore.botssdk.models.Widget.Button;
 import kore.botssdk.utils.Constants;
-import kore.botssdk.utils.DialogCaller;
-import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private LayoutInflater inflater;
@@ -63,11 +59,9 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
 
         holder.tv.setText(btn.getTitle());
         try {
-            //NEED TO REVISIT
-//            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
-            holder.tv.setTextColor(Color.parseColor("#4741fa"));
-        }catch(IllegalArgumentException e){
-            holder.tv.setTextColor(Color.parseColor("#4741fa"));
+            holder.tv.setTextColor(Color.parseColor(btn.getTheme()));
+        }catch(Exception e){
+            holder.tv.setTextColor(Color.parseColor("#3942f6"));
         }
 
        /* String utt = null;

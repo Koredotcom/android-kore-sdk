@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -15,7 +17,17 @@ public class BaseChartModel {
     private boolean hasMore;
     private String placeholder;
 
+    public LoginModel getLogin() {
+        return login;
+    }
 
+    public void setLogin(LoginModel login) {
+        this.login = login;
+    }
+
+    @SerializedName("login")
+    @Expose
+    private LoginModel login;
     public String getTemplateType() {
         return templateType;
     }

@@ -254,6 +254,10 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         }
                     }
                 }
+            }else{
+                holder.notes_layout.setVisibility(GONE);
+                holder.join_layout.setVisibility(GONE);
+                holder.dial_layout.setVisibility(GONE);
             }
 
             holder.notes_layout.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +290,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 date = "Next inline...";
                 holder.innerlayout.setBackgroundColor(mContext.getResources().getColor(R.color.color_f6f6f8));
                 holder.icon_dot.setVisibility(VISIBLE);
+            }else{
+                holder.icon_dot.setVisibility(GONE);
             }
 
             holder.time_tostart_text.setText(DateUtils.calenderDateFormation(mContext, startTime));

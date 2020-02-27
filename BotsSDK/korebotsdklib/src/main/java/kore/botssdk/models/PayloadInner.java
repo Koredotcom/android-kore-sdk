@@ -20,6 +20,15 @@ public class PayloadInner {
     }
 
     private String template_type;
+    private String featureId;
+
+    public String getFeatureId() {
+        return featureId;
+    }
+
+    public void setFeatureId(String featureId) {
+        this.featureId = featureId;
+    }
 
     public void setText(String text) {
         this.text = text;
@@ -528,7 +537,7 @@ public class PayloadInner {
                                     Type subListType = new TypeToken<ArrayList<CalEventsTemplateModel>>() {}.getType();
                                     universalSearchModels.get(index).setMeetingNotes(gson.fromJson(elementStr, subListType));
                                 }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("KnowledgeCollection")){
-                                    Type subListType = new TypeToken<ArrayList<KnowledgeCollectionModel>>() {}.getType();
+                                    Type subListType = new TypeToken<KnowledgeCollectionModel.Elements>() {}.getType();
                                     universalSearchModels.get(index).setKnowledgeCollection(gson.fromJson(elementStr, subListType));
                                 }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("Skill")){
                                     Type subListType = new TypeToken<ArrayList<UniversalSearchSkillModel>>() {}.getType();

@@ -42,7 +42,7 @@
     <color name="bubble_right_unselected_url">#a5d6a7</color>
     <color name="color_767688">#767688</color>
     <!--<color name="splash_background_color">#3942f6</color> KORA COLOR-->
-    <color name="splash_background_color">#2f91e5</color>
+    <color name="splash_background_color">#3942f6</color>
     <!-- Bubble (Hackathon changes) -->
     <color name="readReceiptGreen">#6cc249</color>
     <color name="readReceiptYellow">#fad05e</color>
@@ -88,7 +88,7 @@
     <!--<color name="color_3942f6">#3942f6</color>-->
     <color name="color_2f91e5">#2f91e5</color>
     <color name="color_efefef">#efefef</color>
-    <color name="splash_color">#2f91e5</color>
+    <color name="splash_color">#3942f6</color>
     <color name="color_eeeef2">#eeeef2</color>
     <color name="color_faf9f8">#faf9f8</color>
     <color name="color_e4e5eb">#e4e5eb</color>
@@ -180,4 +180,5 @@
     <color name="color_e48015">#e48015</color>
     <color name="color_f98140">#f98140</color>
     <color name="color_38c9e1">#38c9e1</color>
+    <color name="color_3E3E51">#3e3e51</color>
 </resources>

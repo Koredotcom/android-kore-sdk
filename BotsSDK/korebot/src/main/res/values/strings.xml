@@ -68,6 +68,11 @@
     <string name="icon_28">&#x28;</string>
     <string name="icon_e91a">&#xe91a;</string>
     <string name="icon_e913">&#xe913;</string>
+
+    <string name="icon_e995">&#xe995;</string> <!-- threads-->
+    <string name="icon_e996">&#xe996;</string> <!-- teams-->
+
+
     <string name="border0">
         <![CDATA[
         <style>

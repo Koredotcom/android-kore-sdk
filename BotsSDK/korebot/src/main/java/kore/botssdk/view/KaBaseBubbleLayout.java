@@ -478,7 +478,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         // Customise BubbleTimeLineGrouping Height
         BUBBLE_GROUPING_TIMELINE = 0;
 
-        preCosmeticChanges();
+        preCosmeticChanges(isLastItem);
 
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
@@ -489,7 +489,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
        // timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.START : Gravity.END);
-        cosmeticChanges(baseBotMessage);
+        cosmeticChanges(baseBotMessage,isLastItem);
 
 
     }
@@ -502,7 +502,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         return compModel;
     }
 
-    protected void preCosmeticChanges() {
+    protected void preCosmeticChanges(boolean isLastItem) {
         setDoDrawBubbleBackground(false);
         determineTextColor();
         textViewCosmeticChanges();
@@ -512,7 +512,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     /**
      * UI changes
      */
-    protected void cosmeticChanges(BaseBotMessage baseBotMessage) {
+    protected void cosmeticChanges(BaseBotMessage baseBotMessage, boolean isLastItem) {
         bubbleTextMediaLayout.setGravityAndTypeFace();
     }
 

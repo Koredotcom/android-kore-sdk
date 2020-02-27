@@ -22,6 +22,7 @@ import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.ButtonTemplate;
 import kore.botssdk.models.ContactViewListModel;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraSummaryHelpModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
@@ -190,5 +191,10 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
                 && composeFooterInterface != null){
             composeFooterInterface.onSendClick(model.getPayload(),true);
         }
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
+
     }
 }
