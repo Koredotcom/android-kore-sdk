@@ -1,7 +1,10 @@
 package kore.botssdk.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Handler;
+import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -242,19 +245,58 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }*/
 //        String icon = ((BotResponse) baseBotMessage).getIcon();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+//        TransitionManager.beginDelayedTransition(KaReceivedBubbleLayout.this);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
                 if(SDKConfiguration.BubbleColors.showIcon && isLastItem) {
                     cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
-                    cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
-                }else{
-                    cpvSenderImage.setVisibility(GONE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            cpvSenderImage.setAlpha(0f);
+                            cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
+
+                            // Animate the content view to 100% opacity, and clear any animation
+                            // listener set on the view.
+                            cpvSenderImage.animate()
+                                    .alpha(1f)
+                                    .setDuration(300)
+                                    .setListener(null);
+                        }
+                    },700);
+
+                    /*cpvSenderImage.animate()
+                            .alpha(1f)
+                            .setDuration(300)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
+                                }
+                            });*/
+
+                }else if(cpvSenderImage.getVisibility() == View.VISIBLE){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            cpvSenderImage.animate()
+                                    .alpha(0f)
+                                    .setDuration(300)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            cpvSenderImage.setVisibility(View.GONE);
+                                        }
+                                    });
+                        }
+                    },300);
+
                 }
             }
-        },500);
-
-    }
+//        },500);
+//
+//    }
 
     protected void populateForTemplates(int position, boolean isLastItem, ComponentModel compModel, BaseBotMessage baseBotMessage) {
         resetAll();
