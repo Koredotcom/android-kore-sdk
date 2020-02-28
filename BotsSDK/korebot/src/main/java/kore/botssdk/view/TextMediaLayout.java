@@ -324,7 +324,7 @@ public class TextMediaLayout extends ViewGroup {
         if (gravity == BubbleConstants.GRAVITY_LEFT) {
             //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
-            botContentTextView.setBackground(null);
+            botContentTextView.setBackground(getResources().getDrawable(R.drawable.rounded_rectangle_right_bubble));
         } else {
             // botContentTextView.setGravity(Gravity.END);
             botContentTextView.setTypeface(regular);
