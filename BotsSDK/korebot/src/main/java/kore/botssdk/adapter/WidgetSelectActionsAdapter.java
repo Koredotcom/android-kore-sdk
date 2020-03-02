@@ -373,7 +373,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     }
 
     public void buttonClick(Widget.Button button, boolean appendUtterance) {
-        if (button.getType() != null && button.getType().equalsIgnoreCase("url") && button.getUrl() != null) {
+        if (button.getType() != null && button.getType().equalsIgnoreCase("url") && button.getUrl() != null
+                && !button.getUrl().startsWith("tel:") && !button.getUrl().startsWith("mailto:")) {
             Intent intent = new Intent(mainContext, GenericWebViewActivity.class);
             intent.putExtra("url", button.getUrl());
             intent.putExtra("header", mainContext.getResources().getString(R.string.app_name));
