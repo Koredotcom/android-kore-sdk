@@ -249,22 +249,36 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 //        new Handler().postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
-                if(SDKConfiguration.BubbleColors.showIcon && isLastItem) {
-                    cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            cpvSenderImage.setAlpha(0f);
-                            cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
+        if (SDKConfiguration.BubbleColors.showIcon && isLastItem) {
+            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+                    /*if(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText())) {
+                        visibility= View.GONE;
+                        delayTime=700;
+                        dur=300;
+                    }*/
+            //  final int viewVisibility= View.VISIBLE;
+            // final int duration = 320;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    cpvSenderImage.setAlpha(0f);
 
-                            // Animate the content view to 100% opacity, and clear any animation
-                            // listener set on the view.
-                            cpvSenderImage.animate()
-                                    .alpha(1f)
-                                    .setDuration(300)
-                                    .setListener(null);
-                        }
-                    },700);
+                    cpvSenderImage.setVisibility(View.INVISIBLE);
+
+                    // Animate the content view to 100% opacity, and clear any animation
+                    // listener set on the view.
+                    cpvSenderImage.animate()
+                            .alpha(1f)
+                            .setDuration(320)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    cpvSenderImage.setVisibility(View.VISIBLE);
+                                }
+                            });
+                }
+            }, 300);
 
                     /*cpvSenderImage.animate()
                             .alpha(1f)
@@ -276,27 +290,23 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                                 }
                             });*/
 
-                }else if(cpvSenderImage.getVisibility() == View.VISIBLE){
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            cpvSenderImage.animate()
-                                    .alpha(0f)
-                                    .setDuration(300)
-                                    .setListener(new AnimatorListenerAdapter() {
-                                        @Override
-                                        public void onAnimationEnd(Animator animation) {
-                                            cpvSenderImage.setVisibility(View.GONE);
-                                        }
-                                    });
-                        }
-                    },300);
+        } else if (cpvSenderImage.getVisibility() == View.VISIBLE) {
 
-                }
-            }
-//        },500);
-//
-//    }
+            cpvSenderImage.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            cpvSenderImage.setVisibility(View.GONE);
+
+                        }
+                    });
+
+        }
+    }
+
 
     protected void populateForTemplates(int position, boolean isLastItem, ComponentModel compModel, BaseBotMessage baseBotMessage) {
         resetAll();

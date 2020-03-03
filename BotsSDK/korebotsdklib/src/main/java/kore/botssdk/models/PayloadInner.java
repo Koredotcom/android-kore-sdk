@@ -677,6 +677,10 @@ public class PayloadInner {
         return skill;
     }
 
+    public void setSkill(Skill skill) {
+        this.skill = skill;
+    }
+
     public ArrayList<ContactInfoModel> getContactInfoModels() {
         return contactInfoModels;
     }
