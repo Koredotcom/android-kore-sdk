@@ -415,15 +415,25 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                                 public void onClick(View v) {
                                     //   defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
 
-                                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                        defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", true);
+                                    if (model.getValue().getImage() != null && model.getValue().getImage().getType() != null && model.getValue().getImage().getType().equals("url")) {
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getValue().getImage().getUrl()));
+                                        try {
+                                            mContext.startActivity(browserIntent);
+                                        } catch (ActivityNotFoundException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    } else if (model.getValue().getImage() != null && model.getValue().getImage().getType() != null && model.getValue().getImage().getType().equals("postback")) {
+                                        if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+                                            defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", true);
 
+                                        } else {
+                                            defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", false);
 
-                                    } else {
-                                        defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", false);
-
+                                        }
                                     }
+
+
                                 }
                             });
                         }
