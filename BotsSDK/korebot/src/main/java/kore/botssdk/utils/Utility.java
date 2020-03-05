@@ -123,6 +123,14 @@ public class Utility {
         }
     }
 
+    public static boolean checkIsSkillInCurrent(String skill) {
+        if(Constants.SKILL_SELECTION.equalsIgnoreCase(skill)||TextUtils.isEmpty(Constants.SKILL_SELECTION)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean checkIsSkillKora() {
         if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION))
             return true;
