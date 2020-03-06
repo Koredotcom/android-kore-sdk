@@ -223,7 +223,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         tableView.setData(null);
         tableView.setVisibility(View.GONE);
         lineChartView.setVisibility(GONE);
-        koraCarouselView.populateMiniTable(null,null);
+        koraCarouselView.populateMiniTable(null);
         koraCarouselView.setVisibility(View.GONE);
         timeLineView.setVisibility(GONE);
         timeLineView.setText("");
@@ -367,7 +367,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraCarouselView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    koraCarouselView.populateMiniTable(payInner.getTemplate_type(), payInner);
+                    koraCarouselView.populateMiniTable(payInner);
 
                 } else if(BotResponse.TEMPLATE_TYPE_MULTI_SELECT.equalsIgnoreCase(payInner.getTemplate_type())){
                     multiSelectView.setVisibility(View.VISIBLE);
