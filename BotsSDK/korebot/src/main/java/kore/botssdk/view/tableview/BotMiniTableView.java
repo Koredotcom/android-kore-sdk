@@ -7,24 +7,19 @@ import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.google.gson.internal.LinkedTreeMap;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.tableview.adapters.BotTableAdapter;
+import kore.botssdk.application.AppControl;
+import kore.botssdk.models.BotMiniTableModel;
+import kore.botssdk.view.tableview.adapters.MiniBotTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single
@@ -41,21 +36,25 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
 
 
     private Context context;
+    private int dp1;
     public BotMiniTableView(final Context context) {
         this(context, null);
         this.context = context;
+        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
 
     public BotMiniTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
+        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
 
     public BotMiniTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
+        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
@@ -88,7 +87,7 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         return alignment;
     }
 
-    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment){
+    /*public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment){
         if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type) || BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)) {
             List<MiniTableModel> lists = new ArrayList<>();
             for(int j=0; j<additional.size();j++) {
@@ -100,30 +99,31 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
             setDataAdapter(tableAdapter);
         }
 
-    }
+    }*/
 
-    public void setData(PayloadInner payloadInner){
-        if(payloadInner != null) {
-            String[] alignment = addHeaderAdapter(payloadInner.getColumns());
-            addDataAdapterForTable(payloadInner, alignment);
+
+
+    public void setData(BotMiniTableModel model){
+        if(model != null) {
+            addHeaderAdapter(model.getPrimary());
+            addDataAdapterForTable(model.getAdditional());
         }else{
             setDataAdapter(null);
         }
     }
 
-    public void addDataAdapterForTable(PayloadInner data, String[] alignment) {
+    public void addDataAdapterForTable(List<List<Object>> additional) {
 
         List<MiniTableModel> lists = new ArrayList<>();
-        int size = ((ArrayList) data.getElements()).size();
-        for (int j = 0; j < size; j++) {
+        for(int j=0; j<additional.size();j++) {
             MiniTableModel model = new MiniTableModel();
-            model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
+            model.setElements(additional.get(j));
             lists.add(model);
         }
-        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment);
+        MiniBotTableAdapter tableAdapter = new MiniBotTableAdapter(context,lists);
         setDataAdapter(tableAdapter);
-
     }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -156,11 +156,11 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
             height = getListViewHeightBasedOnChildren(tableDataView);
             height += tableHeaderView.getMeasuredHeight();
 
-            if (height != 0 ) {
+            /*if (height != 0 ) {
                 height = height + (int) (25 * dp1);
-            }
+            }*/
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
-            Log.d("IKIDO","On measure called for botminitab , The total height is "+ height);
+//            Log.d("IKIDO","On measure called for botminitab , The total height is "+ height);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;
@@ -180,14 +180,14 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         }
 
         int totalHeight = 0;
-        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(),
-                MeasureSpec.AT_MOST);
+        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(),MeasureSpec.AT_MOST);
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            int measuredHeight = listItem.getMeasuredHeight();
-            Log.d("IKIDO","On measure called for listview , The total height of individual view is "+ measuredHeight);
-            totalHeight += listItem.getMeasuredHeight();
+            listItem.measure(desiredWidth, dp1*40);
+
+            int measuredHeight = dp1*40;
+//            Log.d("IKIDO","On measure called for listview , The total height of individual view is "+ measuredHeight);
+            totalHeight += measuredHeight;
         }
         return totalHeight;
 

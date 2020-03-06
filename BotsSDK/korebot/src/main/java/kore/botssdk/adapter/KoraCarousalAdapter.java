@@ -76,9 +76,6 @@ public class KoraCarousalAdapter extends PagerAdapter {
     }
 
 
-
-
-
     public void setBotCarouselModels(ArrayList<KoraSearchDataSetModel> data) {
         this.data = data;
     }

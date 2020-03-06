@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -188,11 +189,11 @@ public class KoraCarouselView extends ViewGroup {
         }
     }
 
-    public void populateMiniTable(String template_type, PayloadInner payloadInner) {
+    public void populateMiniTable(PayloadInner payloadInner) {
 //        this.template_type = template_type;
-        if(payloadInner != null) {
+        if(payloadInner != null && payloadInner.getMiniTableDataModels() != null) {
             carousalView.setOffscreenPageLimit(4);
-            koraMiniTableAdapter = new KoraMiniTableAdapter(payloadInner.getMiniTableDataModels(), mContext, template_type);
+            koraMiniTableAdapter = new KoraMiniTableAdapter(payloadInner.getMiniTableDataModels(), mContext);
             carousalView.setAdapter(koraMiniTableAdapter);
             koraMiniTableAdapter.notifyDataSetChanged();
             carousalView.setSwipeLocked(payloadInner.getMiniTableDataModels().size() == 1);
@@ -202,8 +203,5 @@ public class KoraCarouselView extends ViewGroup {
         }
 
     }
-
-
-
 
 }

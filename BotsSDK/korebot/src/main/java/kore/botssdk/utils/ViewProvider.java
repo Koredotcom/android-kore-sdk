@@ -37,7 +37,6 @@ import kore.botssdk.view.TimeLineTextView;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
-import kore.botssdk.view.tableview.BotMiniTableView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.

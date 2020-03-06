@@ -24,16 +24,14 @@ public class KoraMiniTableAdapter extends PagerAdapter {
     ArrayList<BotMiniTableModel> data;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
-    private String template_type;
-    public KoraMiniTableAdapter(ArrayList<BotMiniTableModel> miniTableModels, Context mContext, String template_type){
+    public KoraMiniTableAdapter(ArrayList<BotMiniTableModel> data, Context mContext){
         super();
-        this.data = miniTableModels;
+        this.data = data;
         this.mContext = mContext;
         ownLayoutInflater = LayoutInflater.from(mContext);
         TypedValue typedValue = new TypedValue();
         mContext.getResources().getValue(R.dimen.carousel_item_width_factor, typedValue, true);
         pageWidth = typedValue.getFloat();
-        this.template_type = template_type;
     }
     @Override
     public int getCount() {
@@ -52,9 +50,10 @@ public class KoraMiniTableAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, final int position) {
 
         BotMiniTableView mTable = new BotMiniTableView(mContext);
+        mTable.setData(data.get(position));
         //Set layoutParams
-        String[] alignment = mTable.addHeaderAdapter(data.get(position).getPrimary());
-        mTable.addDataAdapter(template_type, data.get(position).getAdditional(),alignment);
+//        String[] alignment = mTable.addHeaderAdapter(data.get(position).getPrimary());
+//        mTable.addDataAdapter(template_type, data.get(position).getAdditional(),alignment);
 //                tableContainer.addView(mTable, index);
         container.addView(mTable);
         KaFontUtils.applyCustomFont(mContext,mTable);
