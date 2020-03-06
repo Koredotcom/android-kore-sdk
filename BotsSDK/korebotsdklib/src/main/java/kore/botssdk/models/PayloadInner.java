@@ -737,6 +737,16 @@ public class PayloadInner {
         private boolean isCurrentSkill;
         private String trigger;
 
+        public boolean isTypingIndicator() {
+            return typingIndicator;
+        }
+
+        public void setTypingIndicator(boolean typingIndicator) {
+            this.typingIndicator = typingIndicator;
+        }
+
+        private boolean typingIndicator;
+
         public String getId() {
             return id;
         }
