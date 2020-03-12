@@ -9,14 +9,14 @@ import java.util.HashMap;
 public class BotInfoModel {
     public String chatBot;
     public String taskBotId;
-    public String channelClient = "Android";
+    public String client = "Android";
 
     public String getChannelClient() {
-        return channelClient;
+        return client;
     }
 
     public void setChannelClient(String channelClient) {
-        this.channelClient = channelClient;
+        this.client = channelClient;
     }
 
 
