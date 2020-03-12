@@ -269,7 +269,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     // listener set on the view.
                     cpvSenderImage.animate()
                             .alpha(1f)
-                            .setDuration(320)
+                            .translationY(0)
+                            .setDuration(300)
                             .setListener(new AnimatorListenerAdapter() {
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
@@ -278,7 +279,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                                 }
                             });
                 }
-            }, 300);
+            }, 100);
 
                     /*cpvSenderImage.animate()
                             .alpha(1f)
@@ -292,17 +293,23 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         } else if (cpvSenderImage.getVisibility() == View.VISIBLE) {
 
-            cpvSenderImage.animate()
-                    .alpha(0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            cpvSenderImage.setVisibility(View.GONE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    cpvSenderImage.animate()
+                            .alpha(0f).translationY(50)
+                            .setDuration(280)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    cpvSenderImage.setVisibility(View.GONE);
 
-                        }
-                    });
+                                }
+                            });
+                }
+            },10);
+
 
         }
     }

@@ -242,9 +242,9 @@
             android:layout_marginBottom="10dp" />
     </net.cachapa.expandablelayout.ExpandableLayout>
 
-    <View
+    <!--<View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/inset_widget_divider" />
+        android:background="@drawable/inset_widget_divider" />-->
 </LinearLayout>

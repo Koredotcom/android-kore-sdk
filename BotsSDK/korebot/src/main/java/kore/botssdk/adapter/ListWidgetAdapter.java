@@ -500,7 +500,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                 }
             });
             if (position == items.size() - 1 && items.size() < 3) {
-                holder.divider.setVisibility(View.GONE);
+//                holder.divider.setVisibility(View.GONE);
             }
         }
     }
@@ -686,7 +686,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView tvborder, tv_users;
         public ImageView imageIcon, img_up_down;
         public ExpandableLayout buttonLayout;
-        public View divider;
+//        public View divider;
         public RecyclerView recyclerView;
         public ImageView imgMenu, icon_image_load;
         public TextView tvText;
@@ -714,7 +714,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
             recyclerView = itemView.findViewById(R.id.buttonsList);
 
-            divider = itemView.findViewById(R.id.divider);
+//            divider = itemView.findViewById(R.id.divider);
             imgMenu = itemView.findViewById(R.id.icon_image);
             tvButton = itemView.findViewById(R.id.tv_button);
             tvText = itemView.findViewById(R.id.tv_text);
