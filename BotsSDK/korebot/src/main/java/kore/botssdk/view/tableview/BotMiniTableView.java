@@ -19,6 +19,7 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 
 /**
@@ -40,21 +41,21 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
     public BotMiniTableView(final Context context) {
         this(context, null);
         this.context = context;
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
 
     public BotMiniTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
 
     public BotMiniTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 //        setBackgroundColor(0xffff0000);
 
     }

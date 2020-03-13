@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/carouselRecylerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:clipChildren="false"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginBottom="0dp"
+    android:layout_marginStart="0dp"
+    android:paddingBottom="@dimen/carousel_view_padding_bottom"
+    android:paddingLeft="@dimen/carousel_view_padding_left"
+    android:paddingRight="@dimen/carousel_view_padding_right"
+    android:paddingTop="@dimen/carousel_view_padding_top"
+    android:visibility="visible" />
+
+

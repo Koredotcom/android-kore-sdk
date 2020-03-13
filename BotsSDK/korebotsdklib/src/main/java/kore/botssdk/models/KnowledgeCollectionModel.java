@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +82,7 @@ public class KnowledgeCollectionModel {
                 list.addAll(getDefinitive());
             }
             if (getSuggestive() != null) {
-                for(DataElements elements:getSuggestive()) {
+                for (DataElements elements : getSuggestive()) {
                     elements.setIsSuggestive(true);
                     list.add(elements);
                 }
@@ -109,6 +111,7 @@ public class KnowledgeCollectionModel {
         private String name;
 
         boolean isSuggestive;
+
         public String getQuestion() {
             return question;
         }
@@ -118,6 +121,15 @@ public class KnowledgeCollectionModel {
         }
 
         public List<AnswerPayload> getAnswerPayload() {
+            if (answerPayload != null) {
+                for (AnswerPayload payload : answerPayload) {
+                    try {
+                        payload.text = URLDecoder.decode(payload.text, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             return answerPayload;
         }
 
@@ -146,11 +158,11 @@ public class KnowledgeCollectionModel {
         }
 
         public void setIsSuggestive(boolean isSuggestive) {
-            this.isSuggestive=isSuggestive;
+            this.isSuggestive = isSuggestive;
         }
     }
 
-    public class AnswerPayload implements Serializable{
+    public class AnswerPayload implements Serializable {
 
         @SerializedName("text")
         @Expose
