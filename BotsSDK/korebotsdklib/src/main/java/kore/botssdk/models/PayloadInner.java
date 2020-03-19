@@ -541,7 +541,7 @@ public class PayloadInner {
                                     universalSearchModels.get(index).setKnowledgeCollection(gson.fromJson(elementStr, subListType));
                                 }else if(universalSearchModels.get(index).getType().equalsIgnoreCase("Skill")){
                                     Type subListType = new TypeToken<ArrayList<UniversalSearchSkillModel>>() {}.getType();
-                                    universalSearchModels.get(index).setKnowledgeCollection(gson.fromJson(elementStr, subListType));
+                                    universalSearchModels.get(index).setSkillModel(gson.fromJson(elementStr, subListType));
                                 }
                             }
                         }

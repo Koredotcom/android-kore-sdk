@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
@@ -36,6 +37,7 @@ import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
+import kore.botssdk.models.UniversalSearchSkillModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
@@ -43,6 +45,7 @@ import kore.botssdk.utils.Utility;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 import kore.botssdk.view.viewHolder.MeetingNotesViewHolder;
+import kore.botssdk.view.viewHolder.ServiceNowViewHolder;
 import kore.botssdk.view.viewUtils.FileUtils;
 
 public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
@@ -52,6 +55,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     private final int KNOWLEDGE = 2;
     private final int FILES = 3;
     private final int KN_COLLECTION = 4;
+    private final int ServiceNow=5;
 
     VerticalListViewActionHelper verticalListViewActionHelper;
     ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel;
@@ -87,6 +91,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             case MEETING_NOTES:
                 view = LayoutInflater.from(context).inflate(R.layout.us_meeting_layout, parent, false);
                 return new MeetingNotesViewHolder(view);
+
+            case ServiceNow:
+                view = LayoutInflater.from(context).inflate(R.layout.us_servicenow_layout, parent, false);
+                return new ServiceNowViewHolder(view);
         }
 
         return null;
@@ -277,6 +285,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         if (count > 1) {
             holder.count_view.setText(count - 1 + " more");
+
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getTitle());
@@ -355,19 +364,56 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
                 break;
 
             case FILES:
-
                 bindFilesData((FilesViewHolder) holder, position);
                 break;
 
             case KNOWLEDGE:
-
                 bindKnowledgeData((KnowledgeViewHolder) holder, position);
+                break;
 
-
+            case ServiceNow:
+                bindServiceNow((ServiceNowViewHolder) holder, position);
                 break;
         }
 
 
+    }
+
+    private void bindServiceNow(ServiceNowViewHolder holder, int position) {
+
+        UniversalSearchSkillModel model = koraUniversalSearchModel.get(position).getSkillModel().get(0);
+        String title = koraUniversalSearchModel.get(position).getTitle();
+        String descrip=model.getDesc();
+        String skillTitle=model.getTitle();
+        int count = koraUniversalSearchModel.get(position).getCount();
+
+
+        holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
+        holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_0ebd92));
+     //   holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+
+        holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
+        if (count > 1) {
+            holder.count_view.setText(count - 1 + " more");
+        }
+        holder.root_title_view.setText(title);
+        holder.title.setText(skillTitle);
+        holder.body.setText(descrip);
+        holder.service_now_click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, GenericWebViewActivity.class);
+                intent.putExtra("url", model.getDefault_action().getUrl());
+                intent.putExtra("header", context.getResources().getString(kore.botssdk.R.string.app_name));
+                context.startActivity(intent);
+            }
+        });
+        holder.count_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                universalSearchViewContext.itemClickPosition(position);
+            }
+        });
     }
 
     @Override
@@ -391,6 +437,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
                 return KN_COLLECTION;
             case BotResponse.US_MEETING_NOTES_TYPE:
                 return MEETING_NOTES;
+            case BotResponse.US_SERVICE_NOW:
+                return ServiceNow;
         }
 
         return super.getItemViewType(position);
@@ -459,6 +507,11 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         }
     }
+
+
+
+
+
 
     public class KnowledgeViewHolder extends RecyclerView.ViewHolder {
 

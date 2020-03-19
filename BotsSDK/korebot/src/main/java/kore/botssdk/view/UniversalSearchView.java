@@ -128,6 +128,8 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
     public void populateData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel) {
 
+
+
         if (adapter == null) {
             adapter = new UniversalSearchViewAdapter(this);
         }
@@ -196,6 +198,13 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
                     viewAllVisiblity=true;
                 }
                 list.add(model);
+            }else if(model.getSkillModel()!=null&&model.getSkillModel().size()>0)
+            {
+                if(model.getSkillModel().size()>1)
+                {
+                    viewAllVisiblity=true;
+                }
+                list.add(model);
             }
 
         }
@@ -203,6 +212,9 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
 
     }
+
+
+
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
