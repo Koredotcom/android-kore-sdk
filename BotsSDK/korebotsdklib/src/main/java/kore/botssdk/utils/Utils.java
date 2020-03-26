@@ -155,7 +155,7 @@ public class Utils {
 
 
 
-    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"}]}],\"isNewVolley\":true}";
+    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"},{\"type\":\"postback\",\"title\":\"Help me prepare for COVID-19 crisis\",\"payload\":\"Ask covid what is covid-19\"}]}],\"isNewVolley\":true}";
 
     public static String buildHelpMessage(String payload, PayloadInner.Skill skill) {
         BotResponse botResponse = new BotResponse();
