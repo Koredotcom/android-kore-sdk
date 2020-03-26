@@ -83,7 +83,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String US_KNOWLEDGE_TYPE = "Article";
     public static final String US_FILES_TYPE = "Files";
     public static final String US_KNOWLEDGE_COLLECTION_TYPE = "KnowledgeCollection";
-    public static final String US_SKILL_TYPE = "skill";
+    public static final String US_SKILL_TYPE = "Skill";
 
 
 

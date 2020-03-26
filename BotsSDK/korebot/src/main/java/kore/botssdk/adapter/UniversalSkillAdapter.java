@@ -33,7 +33,7 @@ public class UniversalSkillAdapter extends RecyclerView.Adapter<UniversalSkillVi
     @Override
     public UniversalSkillViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.us_servicenow_layout, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.us_servicenow_layout_div, parent, false);
         return new UniversalSkillViewHolder(view);
     }
 
