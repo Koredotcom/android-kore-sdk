@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
 
-public class ServiceNowViewHolder extends RecyclerView.ViewHolder {
+public class UniversalSkillViewHolder extends RecyclerView.ViewHolder {
 
         public TextView icon_view, root_title_view, count_view, title, body;
-        public View header,service_now_click;
+        public View header,skill_now_click;
 
-        public ServiceNowViewHolder(@NonNull View itemView) {
+        public UniversalSkillViewHolder(@NonNull View itemView) {
             super(itemView);
-            service_now_click=itemView.findViewById(R.id.service_now_click);
+            skill_now_click=itemView.findViewById(R.id.service_now_click);
             icon_view = itemView.findViewById(R.id.icon_view);
             root_title_view = itemView.findViewById(R.id.root_title_view);
             count_view = itemView.findViewById(R.id.count_view);

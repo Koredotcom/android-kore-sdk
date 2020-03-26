@@ -8,11 +8,21 @@ public class KoraUniversalSearchModel {
     private String type;
     private String title;
     private int count;
+    private String id;
     private ArrayList<KnowledgeDetailModel> knowledge;
     private ArrayList<EmailModel> emails;
     private ArrayList<KaFileLookupModel> files;
     private ArrayList<CalEventsTemplateModel> meetingNotes;
     private KnowledgeCollectionModel.Elements knowledgeCollection;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public ArrayList<UniversalSearchSkillModel> getSkillModel() {
         return skillModel;

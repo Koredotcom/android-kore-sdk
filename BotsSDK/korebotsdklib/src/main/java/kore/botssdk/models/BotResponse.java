@@ -78,12 +78,12 @@ public class BotResponse extends BaseBotMessage {
 
 
 
-    public static final String US_MEETING_NOTES_TYPE="MeetingNotes";
-    public static final String US_EMAIL_TYPE="Email";
-    public static final String US_KNOWLEDGE_TYPE="Article";
-    public static final String US_FILES_TYPE="Files";
-    public static final String US_KNOWLEDGE_COLLECTION_TYPE="KnowledgeCollection";
-    public static final String US_SERVICE_NOW="Skill";
+    public static final String US_MEETING_NOTES_TYPE = "MeetingNotes";
+    public static final String US_EMAIL_TYPE = "Email";
+    public static final String US_KNOWLEDGE_TYPE = "Article";
+    public static final String US_FILES_TYPE = "Files";
+    public static final String US_KNOWLEDGE_COLLECTION_TYPE = "KnowledgeCollection";
+    public static final String US_SKILL_TYPE = "skill";
 
 
 

@@ -202,8 +202,8 @@ public class Widget implements Serializable,Cloneable {
         this.actions = actions;
     }
 
-    public void setRefreshInterval(String refresh_interval) {
-        this.refreshInterval = refresh_interval;
+    public void setRefreshInterval(String refreshInterval) {
+        this.refreshInterval = refreshInterval;
     }
 
     public String getCacheInterval() {
