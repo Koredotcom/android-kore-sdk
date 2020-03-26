@@ -54,6 +54,26 @@ public class KoraUniversalSearchModel {
         return elements;
     }
 
+    public String getExpiryMsg() {
+        return expiryMsg;
+    }
+
+    public void setExpiryMsg(String expiryMsg) {
+        this.expiryMsg = expiryMsg;
+    }
+
+    public boolean isAuthRequired() {
+        return isAuthRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        isAuthRequired = authRequired;
+    }
+
+    private String expiryMsg;
+    private boolean isAuthRequired;
+
+
     public void setElements(Object elements) {
         this.elements = elements;
     }

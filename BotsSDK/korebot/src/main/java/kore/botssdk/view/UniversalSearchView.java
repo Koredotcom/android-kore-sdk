@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -49,6 +51,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         super(context, attrs, defStyleAttr);
         initView();
     }
+
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     RecyclerView recycler_view;
     LinearLayoutManager layoutManager;
@@ -57,11 +60,18 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     UniversalSearchViewAdapter adapter;
     View view_more;
     ComposeFooterInterface composeFooterInterface;
-    boolean viewAllVisiblity=false;
+    boolean viewAllVisiblity = false;
+    boolean isAuthRequired = false;
+    String authText = "";
+    TextView auth_text;
+    View auth_view;
+
     public void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.universal_search_view, this, true);
         recycler_view = view.findViewById(R.id.recycler_view);
         root_layout = findViewById(R.id.root_layout);
+        auth_view = findViewById(R.id.auth_view);
+        auth_text = findViewById(R.id.auth_text);
         view_more = findViewById(R.id.view_more);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         layoutManager = new LinearLayoutManager(this.getContext());
@@ -70,25 +80,34 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         adapter.setVerticalListViewActionHelper(this);
 
 
+
+        auth_view.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                composeFooterInterface.launchActivityWithBundle(BotResponse.US_SKILL_TYPE,null);
+
+            }
+        });
         view_more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH, new Gson().toJson(adapter.getData()), null,0);
+                composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH, new Gson().toJson(adapter.getData()), null, 0);
 
             }
         });
     }
 
 
-    public void itemClickPosition(int position)
-    {
-        composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH, new Gson().toJson(adapter.getData()), null,position);
+    public void itemClickPosition(int position) {
+        composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH, new Gson().toJson(adapter.getData()), null, position);
 
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int count = getChildCount();
@@ -129,19 +148,25 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     public void populateData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel) {
 
 
-
         if (adapter == null) {
             adapter = new UniversalSearchViewAdapter(this);
         }
-        if (koraUniversalSearchModel != null&&koraUniversalSearchModel.size()>0) {
-            koraUniversalSearchModel=getSortedData(koraUniversalSearchModel);
+        if (koraUniversalSearchModel != null && koraUniversalSearchModel.size() > 0) {
+            koraUniversalSearchModel = getSortedData(koraUniversalSearchModel);
             root_layout.setVisibility(VISIBLE);
             adapter = new UniversalSearchViewAdapter(this);
             adapter.setVerticalListViewActionHelper(this);
             adapter.setData(koraUniversalSearchModel);
             recycler_view.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-            view_more.setVisibility(viewAllVisiblity&&koraUniversalSearchModel.size()>1?VISIBLE:GONE);
+
+            if (isAuthRequired) {
+                auth_view.setVisibility(VISIBLE);
+                auth_text.setText(authText);
+            } else {
+                auth_view.setVisibility(GONE);
+            }
+            view_more.setVisibility(viewAllVisiblity && koraUniversalSearchModel.size() > 1 ? VISIBLE : GONE);
         } else {
             root_layout.setVisibility(GONE);
             adapter.setData(null);
@@ -149,60 +174,51 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             recycler_view.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             view_more.setVisibility(GONE);
+            auth_view.setVisibility(GONE);
         }
     }
 
 
-    private ArrayList<KoraUniversalSearchModel> getSortedData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel)
-    {
+    private ArrayList<KoraUniversalSearchModel> getSortedData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel) {
         viewAllVisiblity = false;
-        ArrayList<KoraUniversalSearchModel> list=new ArrayList<>();
-        for(KoraUniversalSearchModel model:koraUniversalSearchModel)
-        {
-            if(model.getMeetingNotes()!=null&&model.getMeetingNotes().size()>0)
-            {
-                if(model.getMeetingNotes().size()>1)
-                {
-                    viewAllVisiblity=true;
+        isAuthRequired = false;
+        authText = "";
+        ArrayList<KoraUniversalSearchModel> list = new ArrayList<>();
+        for (KoraUniversalSearchModel model : koraUniversalSearchModel) {
+            if (model.isAuthRequired() && !StringUtils.isNullOrEmptyWithTrim(model.getExpiryMsg())) {
+                isAuthRequired = true;
+                authText = model.getExpiryMsg();
+            }
+            if (model.getMeetingNotes() != null && model.getMeetingNotes().size() > 0) {
+                if (model.getMeetingNotes().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
 
-            }else if(model.getEmails()!=null&&model.getEmails().size()>0)
-            {
-                if(model.getEmails().size()>1)
-                {
-                    viewAllVisiblity=true;
+            } else if (model.getEmails() != null && model.getEmails().size() > 0) {
+                if (model.getEmails().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
 
-            }else if(model.getFiles()!=null&&model.getFiles().size()>0)
-            {
-                if(model.getFiles().size()>1)
-                {
-                    viewAllVisiblity=true;
+            } else if (model.getFiles() != null && model.getFiles().size() > 0) {
+                if (model.getFiles().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
-            }
-            else if(model.getKnowledge()!=null&&model.getKnowledge().size()>0)
-            {
-                if(model.getKnowledge().size()>1)
-                {
-                    viewAllVisiblity=true;
+            } else if (model.getKnowledge() != null && model.getKnowledge().size() > 0) {
+                if (model.getKnowledge().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
-            }
-            else if(model.getKnowledgeCollection()!=null&&model.getKnowledgeCollection().getCombinedData()!=null&&model.getKnowledgeCollection().getCombinedData().size()>0)
-            {
-                if(model.getKnowledgeCollection().getCombinedData().size()>1)
-                {
-                    viewAllVisiblity=true;
+            } else if (model.getKnowledgeCollection() != null && model.getKnowledgeCollection().getCombinedData() != null && model.getKnowledgeCollection().getCombinedData().size() > 0) {
+                if (model.getKnowledgeCollection().getCombinedData().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
-            }else if(model.getSkillModel()!=null&&model.getSkillModel().size()>0)
-            {
-                if(model.getSkillModel().size()>1)
-                {
-                    viewAllVisiblity=true;
+            } else if (model.getSkillModel() != null && model.getSkillModel().size() > 0) {
+                if (model.getSkillModel().size() > 1) {
+                    viewAllVisiblity = true;
                 }
                 list.add(model);
             }
@@ -212,8 +228,6 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
 
     }
-
-
 
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -265,9 +279,9 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
 
     @Override
     public void meetingNotesNavigation(Context context, String mId, String eId) {
-        Bundle bundle=new Bundle();
-        bundle.putString("mId",eId);
-        composeFooterInterface.launchActivityWithBundle(BotResponse.US_MEETING_NOTES_TYPE,bundle);
+        Bundle bundle = new Bundle();
+        bundle.putString("mId", eId);
+        composeFooterInterface.launchActivityWithBundle(BotResponse.US_MEETING_NOTES_TYPE, bundle);
     }
 
     @Override
@@ -288,7 +302,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     @Override
     public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
 
-        composeFooterInterface.knowledgeCollectionItemClick(elements,id);
+        composeFooterInterface.knowledgeCollectionItemClick(elements, id);
 
     }
 }

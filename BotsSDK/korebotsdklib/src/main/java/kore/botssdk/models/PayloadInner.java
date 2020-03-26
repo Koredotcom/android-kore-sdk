@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
+import kore.botssdk.utils.StringUtils;
 
 /**
  * Created by Ramachandra Pradeep on 12/15/2016.
@@ -544,6 +545,11 @@ public class PayloadInner {
                                     universalSearchModels.get(index).setSkillModel(gson.fromJson(elementStr, subListType));
                                 }
                             }
+                            if(universalSearchModels!=null&&universalSearchModels.size()>0&& !StringUtils.isNullOrEmptyWithTrim(getExpiryMsg()))
+                            {
+                                universalSearchModels.get(0).setAuthRequired(isAuthRequired());
+                                universalSearchModels.get(0).setExpiryMsg(getExpiryMsg());
+                            }
                         }
                     }
                 }
@@ -780,5 +786,26 @@ public class PayloadInner {
         public void setTrigger(String trigger) {
             this.trigger = trigger;
         }
+
+
+
     }
+    public String getExpiryMsg() {
+        return expiryMsg;
+    }
+
+    public void setExpiryMsg(String expiryMsg) {
+        this.expiryMsg = expiryMsg;
+    }
+
+    public boolean isAuthRequired() {
+        return isAuthRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        isAuthRequired = authRequired;
+    }
+
+    public String expiryMsg;
+    public boolean isAuthRequired;
 }
