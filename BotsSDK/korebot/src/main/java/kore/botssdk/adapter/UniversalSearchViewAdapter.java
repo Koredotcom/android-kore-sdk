@@ -393,7 +393,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         int count = koraUniversalSearchModel.get(position).getCount();
 
 
-        holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
+     //   holder.icon_view.setTypeface(Utility.getTypeFaceObj(context));
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_0ebd92));
      //   holder.count_view.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
 

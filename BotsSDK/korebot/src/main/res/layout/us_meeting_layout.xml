@@ -127,5 +127,13 @@
             android:textSize="13dp" />
     </RelativeLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:id="@+id/divider"
+        android:visibility="gone"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/inset_file_divider" />
 </LinearLayout>
