@@ -32,7 +32,7 @@ public class UniversalSearchSkillModel {
     }
 
 
-    private Widget.DefaultAction default_action;
+    private Widget.DefaultAction defaultAction;
 
     public String getTitle() {
         return title;
@@ -51,11 +51,11 @@ public class UniversalSearchSkillModel {
     }
 
     public Widget.DefaultAction getDefault_action() {
-        return default_action;
+        return defaultAction;
     }
 
-    public void setDefault_action(Widget.DefaultAction default_action) {
-        this.default_action = default_action;
+    public void setDefault_action(Widget.DefaultAction defaultAction) {
+        this.defaultAction = defaultAction;
     }
 
 
