@@ -4,23 +4,23 @@ import java.util.List;
 
 public class KoraSummaryHelpModel {
 
-    private String text;
-    private List<ButtonTemplate> buttons = null;
+    private String title;
+    private List<ButtonTemplate> body = null;
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<ButtonTemplate> getButtons() {
-        return buttons;
+        return body;
     }
 
-    public void setButtons(List<ButtonTemplate> buttons) {
-        this.buttons = buttons;
+    public void setButtons(List<ButtonTemplate> body) {
+        this.body = body;
     }
 
 }

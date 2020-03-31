@@ -34,6 +34,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.HowCanHelpTemplate;
+import kore.botssdk.models.KoraSummaryHelpModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 
@@ -155,9 +156,9 @@ public class Utils {
 
 
 
-    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"},{\"type\":\"postback\",\"title\":\"Help me prepare for COVID-19 crisis\",\"payload\":\"Ask covid what is covid-19\"}]}],\"isNewVolley\":true}";
+    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"title\":\"How can I help you?\",\"body\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"},{\"type\":\"postback\",\"title\":\"Help me prepare for COVID-19 crisis\",\"payload\":\"Ask covid what is covid-19\"}]}],\"isNewVolley\":true}";
 
-    public static String buildHelpMessage(String payload, PayloadInner.Skill skill) {
+    public static String buildHelpMessage(String payload, PayloadInner.Skill skill, KoraSummaryHelpModel element) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
@@ -178,6 +179,11 @@ public class Utils {
         PayloadOuter pOuter = new PayloadOuter();
         pOuter.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
         PayloadInner payloadInner = new Gson().fromJson(payload, PayloadInner.class);
+        if(element != null) {
+            ArrayList list = new ArrayList(1);
+            list.add(element);
+            payloadInner.setElements(list);
+        }
         if(skill!=null)
         {
             payloadInner.setSkill(skill);
