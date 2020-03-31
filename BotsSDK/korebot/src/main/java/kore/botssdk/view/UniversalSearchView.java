@@ -31,6 +31,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -62,14 +63,20 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     ComposeFooterInterface composeFooterInterface;
     boolean viewAllVisiblity = false;
     boolean isAuthRequired = false;
+    boolean isAskRequired = false;
+    PayloadInner.AskExpert askExpert = null;
     String authText = "";
-    TextView auth_text;
-    View auth_view;
+    TextView auth_text, text_ask, text_ask_action;
+    View auth_view, askexpert_layout;
 
     public void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.universal_search_view, this, true);
         recycler_view = view.findViewById(R.id.recycler_view);
         root_layout = findViewById(R.id.root_layout);
+        askexpert_layout = findViewById(R.id.askexpert_layout);
+        text_ask = findViewById(R.id.text_ask);
+        text_ask_action = findViewById(R.id.text_ask_action);
+
         auth_view = findViewById(R.id.auth_view);
         auth_text = findViewById(R.id.auth_text);
         view_more = findViewById(R.id.view_more);
@@ -80,12 +87,11 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         adapter.setVerticalListViewActionHelper(this);
 
 
-
         auth_view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                composeFooterInterface.launchActivityWithBundle(BotResponse.US_SKILL_TYPE,null);
+                composeFooterInterface.launchActivityWithBundle(BotResponse.US_SKILL_TYPE, null);
 
             }
         });
@@ -94,6 +100,15 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             public void onClick(View v) {
                 composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH, new Gson().toJson(adapter.getData()), null, 0);
 
+            }
+        });
+        text_ask_action.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(askExpert.getDefaultAction().getType().equalsIgnoreCase("postback"))
+                {
+                    composeFooterInterface.sendWithSomeDelay(askExpert.getDefaultAction().getPayload(),askExpert.getDefaultAction().getPayload(),100,false);
+                }
             }
         });
     }
@@ -166,6 +181,15 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             } else {
                 auth_view.setVisibility(GONE);
             }
+
+
+            if (isAskRequired && askExpert != null) {
+                askexpert_layout.setVisibility(VISIBLE);
+                text_ask.setText(askExpert.getText());
+                text_ask_action.setText(askExpert.getDefaultAction().getTitle());
+            } else {
+                askexpert_layout.setVisibility(GONE);
+            }
             view_more.setVisibility(viewAllVisiblity && koraUniversalSearchModel.size() > 1 ? VISIBLE : GONE);
         } else {
             root_layout.setVisibility(GONE);
@@ -182,12 +206,18 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     private ArrayList<KoraUniversalSearchModel> getSortedData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel) {
         viewAllVisiblity = false;
         isAuthRequired = false;
+        isAskRequired = false;
         authText = "";
+        askExpert = null;
         ArrayList<KoraUniversalSearchModel> list = new ArrayList<>();
         for (KoraUniversalSearchModel model : koraUniversalSearchModel) {
             if (model.isAuthRequired() && !StringUtils.isNullOrEmptyWithTrim(model.getExpiryMsg())) {
                 isAuthRequired = true;
                 authText = model.getExpiryMsg();
+            }
+            if (model.getAskExpert() != null) {
+                isAskRequired = true;
+                askExpert = model.getAskExpert();
             }
             if (model.getMeetingNotes() != null && model.getMeetingNotes().size() > 0) {
                 if (model.getMeetingNotes().size() > 1) {

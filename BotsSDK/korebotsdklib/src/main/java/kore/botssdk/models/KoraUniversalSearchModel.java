@@ -58,6 +58,17 @@ public class KoraUniversalSearchModel {
         return expiryMsg;
     }
 
+
+    public PayloadInner.AskExpert askExpert;
+
+    public PayloadInner.AskExpert getAskExpert() {
+        return askExpert;
+    }
+
+    public void setAskExpert(PayloadInner.AskExpert askExpert) {
+        this.askExpert = askExpert;
+    }
+
     public void setExpiryMsg(String expiryMsg) {
         this.expiryMsg = expiryMsg;
     }

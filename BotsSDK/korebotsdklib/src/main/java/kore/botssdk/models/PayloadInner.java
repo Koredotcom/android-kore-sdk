@@ -550,6 +550,11 @@ public class PayloadInner {
                                 universalSearchModels.get(0).setAuthRequired(isAuthRequired());
                                 universalSearchModels.get(0).setExpiryMsg(getExpiryMsg());
                             }
+
+                            if(universalSearchModels!=null&&universalSearchModels.size()>0&& getAskExpert()!=null)
+                            {
+                                universalSearchModels.get(0).setAskExpert(getAskExpert());
+                            }
                         }
                     }
                 }
@@ -808,4 +813,36 @@ public class PayloadInner {
 
     public String expiryMsg;
     public boolean isAuthRequired;
+    public AskExpert askExpert;
+
+    public AskExpert getAskExpert() {
+        return askExpert;
+    }
+
+    public void setAskExpert(AskExpert askExpert) {
+        this.askExpert = askExpert;
+    }
+
+    public class AskExpert {
+
+        private String text;
+        private Widget.DefaultAction defaultAction;
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public Widget.DefaultAction getDefaultAction() {
+            return defaultAction;
+        }
+
+        public void setDefaultAction(Widget.DefaultAction defaultAction) {
+            this.defaultAction = defaultAction;
+        }
+
+    }
 }
