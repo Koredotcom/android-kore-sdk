@@ -9,6 +9,9 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.github.mikephil.charting.data.PieEntry;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -264,6 +267,18 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     cpvSenderImage.setAlpha(0f);
 
                     cpvSenderImage.setVisibility(View.INVISIBLE);
+                    try {
+                        if (!baseBotMessage.isSend() && baseBotMessage instanceof BotResponse) {
+                            String url = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent().getPayload().getPayload().getSkill().getIcon();
+                            Picasso.get().load(SDKConfiguration.Server.SERVER_URL + url)
+                                    .transform(getRoundTransformation())
+                                    .resize(50, 50).
+                                    error(getResources().getDrawable(R.mipmap.kora_icon_bubble)).
+                                    into(cpvSenderImage);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
                     // Animate the content view to 100% opacity, and clear any animation
                     // listener set on the view.
@@ -314,6 +329,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         }
     }
 
+    public static Transformation getRoundTransformation() {
+        return new RoundedTransformationBuilder()
+                .oval(true)
+                .build();
+    }
 
     protected void populateForTemplates(int position, boolean isLastItem, ComponentModel compModel, BaseBotMessage baseBotMessage) {
         resetAll();
