@@ -51,6 +51,16 @@ public class KnowledgeDetailModel implements Serializable {
     private String imageUrl;
     private String title;
     private String mId;
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    private String scope;
     private ContactInfoModel owner;
 
     private MeetingDetails meetingDetails;

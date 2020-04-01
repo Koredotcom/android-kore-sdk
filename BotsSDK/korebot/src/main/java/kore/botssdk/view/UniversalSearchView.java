@@ -107,7 +107,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
             public void onClick(View v) {
                 if(askExpert.getDefaultAction().getType().equalsIgnoreCase("postback"))
                 {
-                    composeFooterInterface.sendWithSomeDelay(askExpert.getDefaultAction().getPayload(),askExpert.getDefaultAction().getPayload(),100,false);
+                    composeFooterInterface.sendWithSomeDelay(askExpert.getDefaultAction().getTitle(),askExpert.getDefaultAction().getPayload(),100,false);
                 }
             }
         });
