@@ -96,7 +96,7 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermodel, int position) {
         if (holdermodel.getItemViewType() == NO_DATA||holdermodel.getItemViewType()==MESSAGE) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holdermodel;
-            emptyHolder.tv_disrcription.setText(msg!=null?msg:"No Filesdfs");
+            emptyHolder.tv_disrcription.setText(msg!=null?msg:"No Files");
             emptyHolder.img_icon.setImageDrawable(holdermodel.getItemViewType() == NO_DATA?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
             emptyHolder.img_icon.setVisibility(errorIcon==null?View.GONE:View.VISIBLE);
 
