@@ -119,6 +119,16 @@ public class Widget implements Serializable,Cloneable {
         return pinned;
     }
 
+    public String pname;
+
+    public String getPname() {
+        return pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
+    }
+
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
     }
