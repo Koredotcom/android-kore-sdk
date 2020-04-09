@@ -17,6 +17,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 
 public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeCollectionViewHolder> implements RecyclerViewDataAccessor {
@@ -45,7 +46,12 @@ public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeC
         KnowledgeCollectionModel.DataElements model = modelData.getCombinedData().get(position);
         holder.view_suggest.setVisibility(model.isSuggestive()?View.VISIBLE:View.GONE);
         holder.title_view.setText(model.getQuestion());
-        holder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        try {
+            holder.sub_view.setText(MarkdownUtil.processMarkDown(model.getAnswerPayload().get(0).getText()));
+        }catch (Exception e)
+        {
+            holder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        }
         holder.peopleicon.setTypeface(Utility.getTypeFaceObj(context));
         holder.search_view.setText(model.getName());
         holder.percent_view.setText(model.getScore()+"% Match");

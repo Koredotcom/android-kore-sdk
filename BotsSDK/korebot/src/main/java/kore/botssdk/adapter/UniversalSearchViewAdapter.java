@@ -42,6 +42,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 import kore.botssdk.view.viewHolder.MeetingNotesViewHolder;
@@ -137,7 +138,12 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         viewHolder.title_view.setText(model.getQuestion());
         viewHolder.search_view.setText(model.getName());
         viewHolder.percent_view.setText(model.getScore() + "% Match");
-        viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        try {
+            viewHolder.sub_view.setText(MarkdownUtil.processMarkDown(model.getAnswerPayload().get(0).getText()));
+        }catch (Exception e)
+        {
+            viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        }
     }
 
 

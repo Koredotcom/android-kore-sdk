@@ -114,6 +114,16 @@ public class MarkdownUtil {
                 continue;
             }
 
+            try {
+                if ((String.valueOf(text.charAt(indexP2 + 1)).equalsIgnoreCase(" ")
+                        &&text.indexOf(MarkdownConstant.LINK_P3, indexP2 + 2)!=-1)) {
+                    text = new StringBuilder(text).deleteCharAt(indexP2 + 1).toString();
+                }
+            }catch (Exception e)
+            {
+
+            }
+
             indexP3 = text.indexOf(MarkdownConstant.LINK_P3, indexP2);
             if (indexP3 == -1) {
                 break;
