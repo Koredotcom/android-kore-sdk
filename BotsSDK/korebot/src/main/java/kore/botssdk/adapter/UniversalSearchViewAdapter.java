@@ -38,16 +38,20 @@ import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
 import kore.botssdk.models.UniversalSearchSkillModel;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.markdown.MarkdownUtil;
+import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 import kore.botssdk.view.viewHolder.MeetingNotesViewHolder;
 import kore.botssdk.view.viewHolder.UniversalSkillViewHolder;
+import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.FileUtils;
+import kore.botssdk.view.viewUtils.TextMediaLayoutUniversal;
 
 public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
@@ -64,10 +68,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     Context context;
     UniversalSearchView universalSearchViewContext;
 
-
     public UniversalSearchViewAdapter(UniversalSearchView universalSearchView) {
         context = universalSearchView.getContext();
         universalSearchViewContext = universalSearchView;
+
     }
 
     @NonNull
@@ -138,11 +142,24 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         viewHolder.title_view.setText(model.getQuestion());
         viewHolder.search_view.setText(model.getName());
         viewHolder.percent_view.setText(model.getScore() + "% Match");
-        try {
+       /* try {
             viewHolder.sub_view.setText(MarkdownUtil.processMarkDown(model.getAnswerPayload().get(0).getText()));
         }catch (Exception e)
         {
             viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+        }*/
+        TextMediaLayoutUniversal  textMediaLayout=new TextMediaLayoutUniversal(context,universalSearchViewContext.getResources().getColor(R.color.black),true);
+        textMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
+        textMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
+        try {
+            viewHolder.linear_view.removeAllViews();
+            textMediaLayout.populateText(model.getAnswerPayload().get(0).getText());
+            viewHolder.linear_view.addView(textMediaLayout);
+        }catch (Exception e)
+        {
+            viewHolder.linear_view.removeAllViews();
+            viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
+            viewHolder.linear_view.addView(viewHolder.sub_view);
         }
     }
 

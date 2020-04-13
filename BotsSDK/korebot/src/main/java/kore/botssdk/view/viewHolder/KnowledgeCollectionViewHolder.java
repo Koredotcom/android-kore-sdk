@@ -2,6 +2,7 @@ package kore.botssdk.view.viewHolder;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import kore.botssdk.utils.Utility;
 
 public class KnowledgeCollectionViewHolder extends RecyclerView.ViewHolder {
 
+  public   LinearLayout linear_view;
        public TextView icon_view,peopleicon, root_title_view, count_view, star_textview, title_view, sub_view, search_view, percent_view;
         public View header,divider,view_suggest,view_click;
 
@@ -20,7 +22,7 @@ public class KnowledgeCollectionViewHolder extends RecyclerView.ViewHolder {
 
             icon_view=itemView.findViewById(R.id.icon_view);
 
-
+            linear_view=itemView.findViewById(R.id.linear_view);
 
 
             peopleicon=itemView.findViewById(R.id.peopleicon);
