@@ -121,11 +121,11 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     String trigger;
     private boolean isLoginNeeded;
 
-    public DefaultWidgetAdapter(Context mContext, String type, String trigger) {
+    public DefaultWidgetAdapter(Context mContext, String type) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
-        this.trigger = trigger;
+
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
 
@@ -402,6 +402,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     boolean isFullView;
     public void setFromFullView(boolean isFullView) {
         this.isFullView=isFullView;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger=trigger;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

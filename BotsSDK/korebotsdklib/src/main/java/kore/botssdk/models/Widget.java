@@ -120,6 +120,15 @@ public class Widget implements Serializable,Cloneable {
     }
 
     public String pname;
+public String trigger;
+
+    public String getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
 
     public String getPname() {
         return pname;
