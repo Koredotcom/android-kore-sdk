@@ -111,7 +111,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListener();
         setListenerExplicitly();
         toggleTTSButton();
-        KoreEventCenter.register(this);
+//        KoreEventCenter.register(this);
         return view;
     }
 

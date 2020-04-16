@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.adapter;
 
 import android.content.Context;
@@ -16,9 +17,11 @@ import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.KoraCarousalViewHelper;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 09-Aug-18.
- */
+ *//*
+
 
 public class KoraFilesCarousalAdapter extends PagerAdapter{
 
@@ -83,3 +86,4 @@ public class KoraFilesCarousalAdapter extends PagerAdapter{
     }
 
 }
+*/

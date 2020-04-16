@@ -33,7 +33,6 @@ public class KaFontUtils {
     private static Typeface robotoBoldItalic;
     private static Typeface robotoExtraBold;
 
-
     public static final String ROBOTO_LIGHT = "light";
     public static final String ROBOTO_LIGHT_ITALICS = "light-italic";
     public static final String ROBOTO_REGULAR = "regular";
@@ -41,8 +40,6 @@ public class KaFontUtils {
     public static final String ROBOTO_MEDIUM = "medium";
     public static final String ROBOTO_MEDIUM_ITALICS = "medium-italic";
     public static final String ROBOTO_BOLD = "bold";
-    public static final String ROBOTO_SEMI_BOLD = "semi-bold";
-    public static final String ROBOTO_SEMI_BOLD_ITALICS = "semi-bold-italic";
     public static final String ROBOTO_BOLD_ITALICS = "bold-italic";
     public static final String ROBOTO_EXTRA_BOLD = "extra-bold";
 
@@ -64,8 +61,53 @@ public class KaFontUtils {
     private static void setCustomFont(TextView myview, Context context) {
         Object tag = myview.getTag();
         if (tag instanceof String) {
-            myview.setTypeface(getCustomTypeface((String) tag, context));
-
+            if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT)) {
+                if (robotoLight == null) {
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
+                    //robotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
+                }
+                myview.setTypeface(robotoLight);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT_ITALICS)) {
+                if (robotoLightItalic == null) {
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
+                }
+                myview.setTypeface(robotoLightItalic);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR)) {
+                if (robotoRegular == null) {
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
+                }
+                myview.setTypeface(robotoRegular);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR_ITALICS)) {
+                if (robotoRegularItalic == null) {
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
+                }
+                myview.setTypeface(robotoRegularItalic);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM)) {
+                if (robotoMedium == null) {
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
+                }
+                myview.setTypeface(robotoMedium);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM_ITALICS)) {
+                if (robotoMediumItalic == null) {
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
+                }
+                myview.setTypeface(robotoMediumItalic);
+            }  else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD)) {
+                if (robotoBold == null) {
+                    robotoBold = ResourcesCompat.getFont(context,R.font.latobold);
+                }
+                myview.setTypeface(robotoBold);
+            } else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD_ITALICS)) {
+                if (robotoBoldItalic == null) {
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
+                }
+                myview.setTypeface(robotoBoldItalic);
+            }else if(((String) tag).equalsIgnoreCase(ROBOTO_EXTRA_BOLD)){
+                if (robotoExtraBold == null) {
+                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.latobold);
+                }
+                myview.setTypeface(robotoExtraBold);
+            }
         }
     }
 
@@ -77,84 +119,58 @@ public class KaFontUtils {
     }
 
     public static Typeface getCustomTypeface(String tag, Context context) {
-        if(SDKConfiguration.getFontType().equals(SDKConfiguration.FONT_TYPES.RELATIVE)){
-           if(tag.equalsIgnoreCase(ROBOTO_BOLD)) {
-               if (robotoBold == null) {
-                   robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Relative-Bold.ttf");
-               }
-               return robotoBold;
-           }else {
-               if (robotoRegular == null) {
-                   robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Relative-Normal.ttf");
-               }
-               return robotoRegular;
-           }
 
-        }else {
-
-            switch (tag) {
-                case ROBOTO_LIGHT:
-                    if (robotoLight == null) {
-                        robotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Light.ttf");
-                    }
-                    return robotoLight;
-                case ROBOTO_LIGHT_ITALICS:
-                    if (robotoLightItalic == null) {
-                        robotoLightItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-LightItalic.ttf");
-                    }
-                    return robotoLightItalic;
-                case ROBOTO_REGULAR:
-                    if (robotoRegular == null) {
-                        robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Regular.ttf");
-                    }
-                    return robotoRegular;
-                case ROBOTO_REGULAR_ITALICS:
-                    if (robotoRegularItalic == null) {
-                        robotoRegularItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Italic.ttf");
-                    }
-                    return robotoRegularItalic;
-                case ROBOTO_MEDIUM:
-                    if (robotoMedium == null) {
-                        robotoMedium = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Medium.ttf");
-                    }
-                    return robotoMedium;
-                case ROBOTO_MEDIUM_ITALICS:
-                    if (robotoMediumItalic == null) {
-                        robotoMediumItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-MediumItalic.ttf");
-                    }
-                    return robotoMediumItalic;
-                case ROBOTO_SEMI_BOLD:
-                    if (robotoSemiBold == null) {
-                        robotoSemiBold = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Semibold.ttf");
-                    }
-                    return robotoSemiBold;
-                case ROBOTO_SEMI_BOLD_ITALICS:
-                    if (robotoSemiBoldItalic == null) {
-                        robotoSemiBoldItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-SemiboldItalic.ttf");
-                    }
-                    return robotoSemiBoldItalic;
-                case ROBOTO_BOLD:
-                    if (robotoBold == null) {
-                        robotoBold = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Bold.ttf");
-                    }
-                    return robotoBold;
-                case ROBOTO_BOLD_ITALICS:
-                    if (robotoBoldItalic == null) {
-                        robotoBoldItalic = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-BoldItalic.ttf");
-                    }
-                    return robotoBoldItalic;
-                case ROBOTO_EXTRA_BOLD:
-                    if (robotoExtraBold == null) {
-                        robotoExtraBold = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-ExtraBold.ttf");
-                    }
-                    return robotoExtraBold;
-                default:
-                    if (robotoRegular == null) {
-                        robotoRegular = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Regular.ttf");
-                    }
-                    return robotoRegular;
-            }
-
+        switch (tag) {
+            case ROBOTO_LIGHT:
+                if (robotoLight == null) {
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
+                }
+                return robotoLight;
+            case ROBOTO_LIGHT_ITALICS:
+                if (robotoLightItalic == null) {
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
+                }
+                return robotoLightItalic;
+            case ROBOTO_REGULAR:
+                if (robotoRegular == null) {
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
+                }
+                return robotoRegular;
+            case ROBOTO_REGULAR_ITALICS:
+                if (robotoRegularItalic == null) {
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
+                }
+                return robotoRegularItalic;
+            case ROBOTO_MEDIUM:
+                if (robotoMedium == null) {
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
+                }
+                return robotoMedium;
+            case ROBOTO_MEDIUM_ITALICS:
+                if (robotoMediumItalic == null) {
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
+                }
+                return robotoMediumItalic;
+            case ROBOTO_BOLD:
+                if (robotoBold == null) {
+                    robotoBold = ResourcesCompat.getFont(context,R.font.latobold);
+                }
+                return robotoBold;
+            case ROBOTO_BOLD_ITALICS:
+                if (robotoBoldItalic == null) {
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
+                }
+                return robotoBoldItalic;
+            case ROBOTO_EXTRA_BOLD:
+                if (robotoExtraBold == null) {
+                    robotoExtraBold = ResourcesCompat.getFont(context,R.font.latobold);
+                }
+                return robotoExtraBold;
+            default:
+                if (robotoRegular == null) {
+                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
+                }
+                return robotoRegular;
         }
     }
 
