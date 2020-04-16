@@ -94,7 +94,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
         BotListModel botListModel = getItem(position);
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.with(context).load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
         }
 
         holder.botListItemTitle.setTag(botListModel);

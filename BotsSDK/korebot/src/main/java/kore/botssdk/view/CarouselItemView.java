@@ -115,7 +115,7 @@ public class CarouselItemView extends ViewGroup {
             carouselItemTitle.setText(title);
             carouselItemSubTitle.setText(subtitle);
 
-            Picasso.with(getContext()).load(imageUrl).into(carouselItemImage);
+            Picasso.get().load(imageUrl).into(carouselItemImage);
 
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getContext());
             carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);

@@ -101,7 +101,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
     private void bindWeatherInfo(final Weather weather) {
         try {
-            Picasso.with(context).load(weather.getIcon()).into(welcomeChatSummaryViewBinding.imgWetherIcon);
+            Picasso.get().load(weather.getIcon()).into(welcomeChatSummaryViewBinding.imgWetherIcon);
         } catch (Exception e) {
         }
 

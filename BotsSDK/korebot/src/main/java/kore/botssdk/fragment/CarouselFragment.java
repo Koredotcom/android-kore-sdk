@@ -72,7 +72,7 @@ public class CarouselFragment extends Fragment {
             carouselItemTitle.setText(botCarouselModel.getTitle());
             carouselItemSubTitle.setText(botCarouselModel.getSubtitle());
 
-            Picasso.with(getContext()).load(botCarouselModel.getImage_url()).into(carouselItemImage);
+            Picasso.get().load(botCarouselModel.getImage_url()).into(carouselItemImage);
 
             if(botCarouselModel.getButtons() != null) {
                 BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getActivity());

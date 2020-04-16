@@ -270,7 +270,7 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         if (model!=null&&model.getImageUrl() != null && !model.getImageUrl().isEmpty()) {
             holder.link_image.setVisibility(View.VISIBLE);
-            Picasso.with(context).load(model.getImageUrl()).into(holder.link_image);
+            Picasso.get().load(model.getImageUrl()).into(holder.link_image);
         } else {
             holder.link_image.setVisibility(View.GONE);
         }

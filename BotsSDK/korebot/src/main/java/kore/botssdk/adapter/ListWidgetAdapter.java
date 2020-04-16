@@ -267,7 +267,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             if (model.getImage()!=null && !StringUtils.isNullOrEmpty(model.getImage().getImage_src()) && Patterns.WEB_URL.matcher(model.getImage().getImage_src()).matches()) {
                 String url = model.getImage().getImage_src().trim();
                 url = url.replace("http://","https://");
-                Picasso.with(mContext).load(url).transform(new RoundedCornersTransform()).into(holder.imageIcon);
+                Picasso.get().load(url).transform(new RoundedCornersTransform()).into(holder.imageIcon);
             } else {
                 holder.imageIcon.setVisibility(GONE);
             }
@@ -383,7 +383,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
                         if(model.getValue().getImage()!=null&&model.getValue().getImage().getImage_src()!=null) {
-                            Picasso.with(mContext).load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
+                            Picasso.get().load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
                             holder.icon_image_load.setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

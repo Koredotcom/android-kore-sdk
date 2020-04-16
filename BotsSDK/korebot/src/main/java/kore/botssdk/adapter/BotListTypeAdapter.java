@@ -166,7 +166,7 @@ public class BotListTypeAdapter extends BaseAdapter {
     }
 
     private void downlodImage(String imageUrl, ImageView iv) {
-        Picasso.with(mContext)
+        Picasso.get()
                 .load(imageUrl)
                 .into(iv);
     }

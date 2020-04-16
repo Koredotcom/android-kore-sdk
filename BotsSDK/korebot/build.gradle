@@ -37,6 +37,10 @@ android {
                dimension "asana"
            }
        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 
@@ -62,4 +66,5 @@ dependencies {
     compile project(path: ':korefileuploadsdk')
     implementation 'com.google.android.material:material:1.2.0-alpha05'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

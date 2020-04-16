@@ -64,7 +64,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == DATA_CARD_FLAG) {
-            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
+            return new ViewHolder((KnowledgeItemViewBinding) DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
         } else {
             return new EmptyWidgetViewHolder(LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false));
 
@@ -179,6 +179,18 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
         }
     }
+
+    @BindingAdapter("loadImage")
+    public static void loadImage(ImageView imageView, String src) {
+        if (!StringUtils.isNullOrEmpty(src)) {
+            Picasso.get().load(src)
+                    .transform(roundedCornersTransform)
+                    .into(imageView);
+        } else {
+            imageView.setVisibility(View.GONE);
+        }
+    }
+
 
     /*@BindingAdapter("loadImage")
     public static void loadImage(ImageView imageView, String src) {

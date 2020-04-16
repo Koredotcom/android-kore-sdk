@@ -3,6 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BotsSDK.iml" filepath="$PROJECT_DIR$/BotsSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" group="BotsSDK/korebot" />
+      <module fileurl="file://$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
+      <module fileurl="file://$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
+      <module fileurl="file://$PROJECT_DIR$/Kore_SDK-BotsSDK.iml" filepath="$PROJECT_DIR$/Kore_SDK-BotsSDK.iml" group="BotsSDK" />
       <module fileurl="file://$PROJECT_DIR$/korebot/korebot.iml" filepath="$PROJECT_DIR$/korebot/korebot.iml" />
       <module fileurl="file://$PROJECT_DIR$/korebotsdklib/korebotsdklib.iml" filepath="$PROJECT_DIR$/korebotsdklib/korebotsdklib.iml" />
       <module fileurl="file://$PROJECT_DIR$/korefileuploadsdk/korefileuploadsdk.iml" filepath="$PROJECT_DIR$/korefileuploadsdk/korefileuploadsdk.iml" />
