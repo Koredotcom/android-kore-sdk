@@ -2,7 +2,6 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
@@ -12,9 +11,11 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -23,7 +24,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  */
 public class TimeLineTextView extends ViewGroup {
 
-    private static final String LOG_TAG = TimeLineTextView.class.getSimpleName();
+//    private static final String LOG_TAG = TimeLineTextView.class.getSimpleName();
 
     private TextView unreadTimeLineTextView;
 
@@ -90,6 +91,7 @@ public class TimeLineTextView extends ViewGroup {
     }
 
     public void setText(String text){
+        unreadTimeLineTextView.setVisibility(StringUtils.isNullOrEmpty(text) ? GONE :VISIBLE);
         unreadTimeLineTextView.setText(text);
     }
 
@@ -153,13 +155,16 @@ public class TimeLineTextView extends ViewGroup {
         paint.setShader(linearGradientLeft);
         try {
             canvas.drawLine(left, centerYCord, leftSectionRightCord, centerYCord, paint);
-        }catch (Exception e){}
+        }catch (Exception e){
+//            e.printStackTrace();
+        }
 
         paint.setShader(linearGradientRight);
-
         try {
             canvas.drawLine(rightSectionLeftCord, centerYCord, right, centerYCord, paint);
-        }catch (Exception e){}
+        }catch (Exception e){
+//            e.printStackTrace();
+        }
         super.onDraw(canvas);
     }
 
@@ -184,6 +189,7 @@ public class TimeLineTextView extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if(unreadTimeLineTextView == null) return;
         //Consider the paddings and manupulate them it first..
         l += getPaddingLeft();
         t += getPaddingTop();

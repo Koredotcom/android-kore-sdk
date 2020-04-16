@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="widgetTask"
+            type="kore.botssdk.models.WTaskTemplateModel" />
+
+        <import type="kore.botssdk.utils.DateUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+
+
+        android:layout_height="wrap_content"
+        android:background="@drawable/task_view_background"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+
+            android:gravity="center_vertical|start"
+            android:paddingStart="10dp"
+            android:src="@mipmap/checkbox_off"
+            android:tag="@{widgetTask.id}" />
+
+        <RelativeLayout
+            android:id="@+id/view_p"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/checkbox"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/title_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/latomedium"
+                android:gravity="start"
+                android:maxLines="1"
+              android:layout_toStartOf="@+id/icon_down"
+                android:paddingStart="10dp"
+                android:tag="bold"
+                android:text="@{widgetTask.title}"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="16dp" />
+
+
+            <ImageView
+                android:id="@+id/icon_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="24dp"
+                android:minHeight="24dp"
+                android:layout_marginEnd="6dp"
+                android:gravity="center"
+                android:layout_marginTop="14dp"
+                android:layout_alignParentEnd="true"
+                android:src="@mipmap/ic_more_vert_black_24dp"/>
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/date_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_p"
+            android:layout_alignStart="@+id/view_p"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:tag="medium"
+            android:text="@{DateUtils.getDateWithTime(widgetTask.data.dueDate)}"
+            android:textColor="@{widgetTask.isOverDue ? @color/color_red : @color/color_485260}"
+            android:textSize="13dp" />
+
+
+        <TextView
+            android:id="@+id/creator_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_view"
+            android:layout_alignStart="@+id/date_view"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="5dp"
+            android:drawableStart="@drawable/ic_baseline_person_24px"
+
+            android:drawablePadding="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:singleLine="true"
+            android:tag="medium"
+            android:textColor="@color/color_485260"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/assignee_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/creator_view"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@+id/creator_view"
+            android:ellipsize="end"
+            android:drawableStart="@drawable/ic_triangle_2"
+            android:gravity="center|start"
+            android:singleLine="true"
+
+            android:tag="medium"
+            android:drawablePadding="10dp"
+
+            android:textColor="@color/color_485260"
+            android:textSize="13dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/assignee_view"
+            android:layout_alignStart="@+id/view_p"
+            android:layout_marginTop="@dimen/dimen_14dp"
+            android:background="@drawable/inset_10_divider" />
+
+    </RelativeLayout>
+</layout>

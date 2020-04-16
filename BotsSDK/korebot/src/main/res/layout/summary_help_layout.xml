@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="summaryInfo"
+            type="kore.botssdk.models.KoraSummaryHelpModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.KoraSummaryHelpView" />
+
+
+        <variable
+            name="myAdapter"
+            type="kore.botssdk.view.KoraSummaryHelpRecyclerAdapter" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/summary_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@{summaryInfo.text}"
+                android:textColor="@color/color_161620"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/summary_items_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:adapter="@{myAdapter}"
+                android:layout_below="@id/summary_title"
+                android:choiceMode="singleChoice"
+                android:clipToPadding="true"
+                android:fadeScrollbars="true"
+                android:listSelector="@color/white"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"
+                android:transcriptMode="normal"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </RelativeLayout>
+</layout>

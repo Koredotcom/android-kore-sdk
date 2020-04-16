@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import android.os.Build;
@@ -16,13 +17,18 @@ import kore.botssdk.services.KoreAuthErrorHandler;
 import kore.botssdk.utils.Utils;
 import kore.korebotsdklib.R;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 6/1/2016.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-public class BotRestService /*extends RetrofitGsonSpiceService*/ {
+ *//*
 
-   /* @Override
+public class BotRestService */
+/*extends RetrofitGsonSpiceService*//*
+ {
+
+   */
+/* @Override
     public void onCreate() {
         super.onCreate();
         addRetrofitInterface(RestAPI.class);
@@ -70,5 +76,6 @@ public class BotRestService /*extends RetrofitGsonSpiceService*/ {
             }
             return value;
         }
-    }*/
-}
+    }*//*
+
+}*/

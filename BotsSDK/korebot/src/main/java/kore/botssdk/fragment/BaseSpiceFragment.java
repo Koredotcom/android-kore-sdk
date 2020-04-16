@@ -1,21 +1,26 @@
+/*
 package kore.botssdk.fragment;
 
 import android.content.Context;
 import androidx.fragment.app.Fragment;
 
+*/
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class BaseSpiceFragment extends Fragment{
 
     //SpiceManager spiceManager = new SpiceManager(BotRestService.class);
 
-    /*public SpiceManager getSpiceDBManager() {
+    */
+/*public SpiceManager getSpiceDBManager() {
         return spiceDBManager;
     }
 
-    SpiceManager spiceDBManager = new SpiceManager(BotLocalService.class);*/
+    SpiceManager spiceDBManager = new SpiceManager(BotLocalService.class);*//*
+
     @Override
     public void onAttach(Context context) {
 //        if(!spiceManager.isStarted())
@@ -34,7 +39,10 @@ public class BaseSpiceFragment extends Fragment{
         super.onDetach();
     }
 
-    /*public SpiceManager getSpiceManager() {
+    */
+/*public SpiceManager getSpiceManager() {
         return spiceManager;
-    }*/
+    }*//*
+
 }
+*/

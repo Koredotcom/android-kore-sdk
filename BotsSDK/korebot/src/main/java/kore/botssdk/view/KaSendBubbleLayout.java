@@ -7,9 +7,11 @@ import android.view.View;
 import java.util.Arrays;
 import java.util.Collections;
 
-import kore.botssdk.R;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
+
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
@@ -41,25 +43,25 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     }
 
     private void init() {
-        textMediaLayoutGravity = TextMediaLayout.GRAVITY_RIGHT;
+        textMediaLayoutGravity = BubbleConstants.GRAVITY_RIGHT;
         super.setLeftSide(false);
     }
 
     @Override
     protected void initializeBubbleBorderPass1() {
-        BUBBLE_CONTENT_TOP_MARGIN = (int) (8 * dp1);
-        BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(8 * dp1);
+        BUBBLE_CONTENT_TOP_MARGIN = 0;
+        BUBBLE_CONTENT_BOTTOM_MARGIN = BubbleUI ? (int)(8 * dp1) : (int)(21 * dp1);
         BUBBLE_LEFT_PROFILE_PIC = 0;
-        if (isContinuousMessage && isSeparatedClosely) {
-            BUBBLE_TOP_BORDER = (int) (1 * dp1);
+        if (isContinuousMessage) {
+            BUBBLE_TOP_BORDER = 0;
         } else {
-            BUBBLE_TOP_BORDER = (int) (8 * dp1);
+            BUBBLE_TOP_BORDER = (int) (10 * dp1);
         }
         BUBBLE_LEFT_BORDER = 0;
-        BUBBLE_RIGHT_BORDER = (int) (2 * dp6 + dp6 + 2 * dp1);
+        BUBBLE_RIGHT_BORDER = BubbleUI ? (int) (2 * dp6 + dp6 + 2 * dp1) : 0;
         BUBBLE_DOWN_BORDER = 0;
         BUBBLE_LEFT_ARROW_WIDTH = 0;
-        BUBBLE_RIGHT_ARROW_WIDTH = (int) dp6;
+        BUBBLE_RIGHT_ARROW_WIDTH = BubbleUI ?(int) dp6 : 0;
 
     }
 
@@ -68,7 +70,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_CONTENT_RIGHT_BORDER = 0; //this is always 0...
         BUBBLE_CONTENT_LEFT_BORDER = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
 
-        invalidate();
+      //  invalidate();
     }
 
     @Override
@@ -98,23 +100,16 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
+        int maxAllowedWidth = View.MeasureSpec.getSize(widthMeasureSpec);
         int wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-        int totalHeight = getPaddingTop();
-        int totalWidth = getPaddingLeft();
 
         int childWidthSpec;
-        int childHeightSpec;
-        int contentWidth = 0;
-
         /*
          * For TextMedia Layout
          */
         childWidthSpec = View.MeasureSpec.makeMeasureSpec(maxAllowedWidth, View.MeasureSpec.AT_MOST);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
-        contentWidth = bubbleTextMediaLayout.getMeasuredWidth();
         MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
 
 
@@ -129,16 +124,10 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
-        //Consider the paddings and manupulate them it first..
-        l += getPaddingLeft();
-        t += getPaddingTop();
-        r -= getPaddingRight();
-        b -= getPaddingBottom();
 
-        int bubbleTextMediaLayouMarginLeft = BUBBLE_CONTENT_LEFT_MARGIN;
         int bubbleTextMediaLayouMarginTop = BUBBLE_CONTENT_TOP_MARGIN;
         int bubbleTextMediaLayouMarginRight = BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
-        int bubbleTextMediaLayouMarginBottom = BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER;
+
 
         int top = getPaddingTop()  + BUBBLE_SEPARATION_DISTANCE, left;
         int containerWidth = getMeasuredWidth();
@@ -147,14 +136,15 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For TextMedia Layout
          */
-        left = containerWidth - (bubbleTextMediaLayouMarginRight + bubbleTextMediaLayout.getMeasuredWidth());
+
+        left = (int)(containerWidth - (14 * dp1 + bubbleTextMediaLayout.getMeasuredWidth()));
         top += bubbleTextMediaLayouMarginTop+BUBBLE_TOP_BORDER;
 
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
 
 
         left = containerWidth - (timeStampsTextView.getMeasuredWidth()+bubbleTextMediaLayouMarginRight);
-        top = bubbleTextMediaLayout.getBottom()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
+        top = bubbleTextMediaLayout.getBottom();
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
     }

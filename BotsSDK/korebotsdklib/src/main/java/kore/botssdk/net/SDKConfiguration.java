@@ -9,6 +9,8 @@ package kore.botssdk.net;
  * This class is for defining properties
  */
 public class SDKConfiguration {
+
+    public static String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
     /**
      * bot init text  and related settings
      */
@@ -39,7 +41,6 @@ public class SDKConfiguration {
     }
 
 
-
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
     }
@@ -63,8 +64,8 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        public static String JWT_SERVER_URL = "https://demo.kore.net/users/sts";
 
+        static  String JWT_SERVER_URL = "https://demo.kore.net";
     }
 
     //Server related configurations
@@ -78,11 +79,26 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        public static String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
+        public static void setServerIp(String serverIp){
+            SERVER_IP = serverIp;
+        }
+
+        public static void setServerPort(String serverPort){
+            SERVER_PORT = serverPort;
+        }
+
+        public static void setIsPresenceSsl(boolean isPresenceSsl){
+            IS_PRESENCE_SSL = isPresenceSsl;
+        }
+
+        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = true;
-        public static String SERVER_URL = "https://demo.kore.net/users/sts";
+        public static   String SERVER_URL ="https://demo.kore.net";
+        public static String SERVER_IP = "qa.kore.ai";
+        public static String SERVER_PORT = "443";
+        public static Boolean IS_PRESENCE_SSL = true;
     }
 
     public static class Client {
@@ -116,7 +132,7 @@ public class SDKConfiguration {
     }
 
     public static class BubbleColors {
-        public static String rightBubbleSelected = "#6168e7";
+        public static  String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -158,51 +174,45 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-        public static String rightBubbleUnSelected = "#6168e7";
-        public static String leftBubbleSelected = "#D3D3D3";
-        public static String leftBubbleUnSelected = "#f8f9f8";
-        public static String leftBubbleTextColor = "#444444";
-        public static String rightBubbleTextColor = "#FFFFFF";
-        public static String whiteColor = "#FFFFFF";
-        public static String leftBubbleBorderColor = "#eeeef2";
-        public static String rightLinkColor = "#FFFFFF";
-        public static String leftLinkColor = "#6168e7";
 
-        public static String getTypingStatusDotsColor() {
-            return typingStatusDotsColor;
+        public static  String rightBubbleUnSelected=APP_REQ_COLOR;
+        public static  String leftBubbleSelected="#D3D3D3";
+        public static  String leftBubbleUnSelected="#f8f9f8";
+        public static  String leftBubbleTextColor="#404051";
+        public static  String rightBubbleTextColor="#161628";//"#757587";
+        public static  String whiteColor="#FFFFFF";
+        public static  String leftBubbleBorderColor = "#eeeef2";
+        public static  String rightLinkColor=APP_REQ_COLOR;
+        public static  String leftLinkColor = APP_REQ_COLOR;
+        public static final boolean BubbleUI = false;
+        public static final boolean showIcon = false;
+
+        public static int getIcon() {
+            return icon;
         }
 
-        public static void setTypingStatusDotsColor(String typingStatusDotsColor) {
-            BubbleColors.typingStatusDotsColor = typingStatusDotsColor;
+        public static void setIcon(int icon) {
+            BubbleColors.icon = icon;
         }
 
-        public static String typingStatusDotsColor = "#6168e7";
+        private static int icon = -1;
 
-        public static String getQuickReplyFill() {
-            return quickReplyFill;
+
+        public static String getProfileColor() {
+            return profileColor;
         }
 
-        public static void setQuickReplyFill(String quickReplyFill) {
-            BubbleColors.quickReplyFill = quickReplyFill;
+        public static void setProfileColor(String profileColor) {
+            BubbleColors.profileColor = profileColor;
         }
 
-        public static String quickReplyFill = "#FFFFFF";
+        static String profileColor = APP_REQ_COLOR;
 
         public static void setQuickReplyColor(String quickReplyColor) {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static String quickReplyColor = "#6168e7";
-
-        public static String getQuickReplyFontColor() {
-            return quickReplyFontColor;
-        }
-
-        public static void setQuickReplyFontColor(String quickReplyFontColor) {
-            BubbleColors.quickReplyFontColor = quickReplyFontColor;
-        }
-
-        public static String quickReplyFontColor = "#000000";
+        public static  String quickReplyColor = "#EEEEF0";
 
     }
 

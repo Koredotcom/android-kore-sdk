@@ -6,6 +6,16 @@ public class JWTTokenResponse{
     private String botName;
     private String botsUrl;
 
+    public String getIP() {
+        return IP;
+    }
+
+    public void setIP(String IP) {
+        this.IP = IP;
+    }
+
+    private String IP;
+
     public String getTaskId() {
         return taskId;
     }

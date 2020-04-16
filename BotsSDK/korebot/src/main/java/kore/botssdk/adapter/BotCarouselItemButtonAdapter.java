@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.utils.KaFontUtils;
 
 /**
  * Created by Pradeep Mahato on 14/7/17.
@@ -50,7 +51,7 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = ownLayoutInflater.inflate(R.layout.bot_carousel_item_button_layout, null);
-
+        KaFontUtils.applyCustomFont(context,convertView);
         if (convertView.getTag() == null) {
             initializeViewHolder(convertView);
         }

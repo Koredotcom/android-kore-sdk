@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import android.app.Application;
@@ -29,3 +30,4 @@ public class BotLocalService extends SpiceService {
         };
     }
 }
+*/

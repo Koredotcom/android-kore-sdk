@@ -32,4 +32,13 @@ public class AttendeeSlotTemplateModel {
     public void setSelectedSots(ArrayList<MeetingSlotModel.Slot> selectedSots) {
         this.selectedSots = selectedSots;
     }
+    private MeetingConfirmationModel meetingDetails;
+
+    public MeetingConfirmationModel getMeetingDetails() {
+        return meetingDetails;
+    }
+
+    public void setMeetingDetails(MeetingConfirmationModel meetingDetails) {
+        this.meetingDetails = meetingDetails;
+    }
 }

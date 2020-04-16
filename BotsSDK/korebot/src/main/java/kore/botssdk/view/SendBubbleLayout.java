@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -43,7 +44,7 @@ public class SendBubbleLayout extends BaseBubbleLayout {
     }
 
     private void init() {
-        textMediaLayoutGravity = TextMediaLayout.GRAVITY_RIGHT;
+        textMediaLayoutGravity = BubbleConstants.GRAVITY_RIGHT;
         super.setLeftSide(false);
     }
 

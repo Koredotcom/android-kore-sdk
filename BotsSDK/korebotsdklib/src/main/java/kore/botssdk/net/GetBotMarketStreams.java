@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import android.content.Context;
@@ -12,10 +13,12 @@ import okhttp3.internal.Util;
 import retrofit2.Call;
 import retrofit2.Response;
 
+*/
 /**
  * Created by Pradeep Mahato on 06-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class GetBotMarketStreams {
 
     String userId, accestoken;
@@ -42,7 +45,10 @@ public class GetBotMarketStreams {
             }
         });
 
-        /*MarketStreamList marketStreamList = getService().getMarketStreams(userId, accessTokenHeader());
-        return marketStreamList;*/
+        */
+/*MarketStreamList marketStreamList = getService().getMarketStreams(userId, accessTokenHeader());
+        return marketStreamList;*//*
+
     }
 }
+*/

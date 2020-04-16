@@ -1,0 +1,88 @@
+<layout>
+
+    <data>
+        <import type="kore.botssdk.utils.DateUtils" />
+        <variable
+            name="fileModel"
+            type="kore.botssdk.models.WFileLookUpModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?android:selectableItemBackground"
+        android:paddingTop="15dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="36dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/image"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="1"
+            android:paddingEnd="12dp"
+            android:text="@{fileModel.title}"
+            android:textColor="@color/color_485260"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/sharedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="10dp"
+            android:layout_toEndOf="@+id/image"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="1"
+            android:text="@{fileModel.sub_title}"
+            android:visibility='@{fileModel.sub_title == null || fileModel.sub_title.trim().equals("") ? View.GONE : View.VISIBLE}'
+
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sharedBy"
+            android:layout_alignStart="@+id/sharedBy"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/image"
+            android:fontFamily="@font/latomedium"
+            android:id="@+id/last_edited"
+            android:paddingEnd="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{DateUtils.getFilesDateSturcture(fileModel.data.modifiedTime)}"
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/divider"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/last_edited"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/inset_10_divider" />
+    </RelativeLayout>
+</layout>

@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import android.os.Build;
@@ -16,12 +17,17 @@ import kore.botssdk.services.KoreAuthErrorHandler;
 import kore.botssdk.utils.Utils;
 import retrofit2.Converter;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 15-Mar-17.
- */
-public class BotDemoRestService /*extends RetrofitGsonSpiceService*/ {
+ *//*
 
-   /* @Override
+public class BotDemoRestService */
+/*extends RetrofitGsonSpiceService*//*
+ {
+
+   */
+/* @Override
     public void onCreate() {
         super.onCreate();
         addRetrofitInterface(BotDemoRestAPI.class);
@@ -69,5 +75,6 @@ public class BotDemoRestService /*extends RetrofitGsonSpiceService*/ {
             }
             return value;
         }
-    }*/
-}
+    }*//*
+
+}*/

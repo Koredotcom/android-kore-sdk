@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.adapter;
 
 import android.app.Activity;
@@ -25,10 +26,12 @@ import kore.botssdk.view.SendBubbleContainer;
 import kore.botssdk.view.SendBubbleLayout;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
+*/
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class BotsChatAdapter extends BaseAdapter {
 
     public static String LOG_TAG = BotsChatAdapter.class.getSimpleName();
@@ -139,9 +142,11 @@ public class BotsChatAdapter extends BaseAdapter {
         return convertView;
     }
 
-    /**
+    */
+/**
      * View Holder Initialization
-     */
+     *//*
+
     private View initializeViewHolder(View view, int position) {
 
         ViewHolder holder = new ViewHolder();
@@ -189,3 +194,4 @@ public class BotsChatAdapter extends BaseAdapter {
         this.activityContext = activityContext;
     }
 }
+*/

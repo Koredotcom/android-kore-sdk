@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Created by Pradeep Mahato on 21/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotButtonModel {
+public class BotButtonModel implements MultiSelectBase {
     String type;
     String url;
     String title;
@@ -60,4 +60,26 @@ public class BotButtonModel {
     public String getPayload() {
         return payload;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public ImageModel getImage() {
+        return image;
+    }
+
+    public void setImage(ImageModel image) {
+        this.image = image;
+    }
+
+    private ImageModel image;
 }

@@ -2,7 +2,12 @@ package kore.botssdk.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +35,7 @@ import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BaseBotMessage;
@@ -62,16 +68,16 @@ import retrofit2.Response;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotContentFragment extends BaseSpiceFragment implements BotContentFragmentUpdate {
+public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
 
-    ListView botsBubblesListView;
+    RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     boolean shallShowProfilePic;
     private String mChannelIconURL;
@@ -83,6 +89,8 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     private TextView headerView;
     private Gson gson = new Gson();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private LinearLayoutManager mLayoutManager;
+
     private int offset = 0;
 
     @Nullable
@@ -99,10 +107,11 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     }
 
     private void findViews(View view) {
-        botsBubblesListView = (ListView) view.findViewById(R.id.chatContentListView);
+        botsBubblesListView =  view.findViewById(R.id.chatContentListView);
+        mLayoutManager = (LinearLayoutManager) botsBubblesListView.getLayoutManager();
         headerView = view.findViewById(R.id.filesSectionHeader);
-        swipeRefreshLayout = ((SwipeRefreshLayout) view.findViewById(R.id.swipeContainerChat));
-
+        swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
+        quickReplyView = view.findViewById(R.id.quick_reply_view);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -115,19 +124,18 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
-        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
+//        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
         botsBubblesListView.setOnScrollListener(onScrollListener);
-        quickReplyView = new QuickReplyView(getContext());
+//        quickReplyView = new QuickReplyView(getContext());
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        botsBubblesListView.addFooterView(quickReplyView);
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
         this.ttsUpdate = ttsUpdate;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
@@ -184,7 +192,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
     public void addMessageToBotChatAdapter(BotResponse botResponse) {
         botsChatAdapter.addBaseBotMessage(botResponse);
         botTypingStatusRl.setVisibility(View.GONE);
-        botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getCount());
+        botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getItemCount());
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
@@ -192,51 +200,40 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
         botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
-        typingStatusItemDots.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.typingStatusDotsColor));
+        typingStatusItemDots.setTextColor(Color.BLACK);
     }
 
     private void scrollToBottom() {
-        final int count = botsChatAdapter.getCount();
+        final int count = botsChatAdapter.getItemCount();
         botsBubblesListView.post(new Runnable() {
             @Override
             public void run() {
-                botsBubblesListView.setSelection(count - 1);
+                botsBubblesListView.smoothScrollToPosition(count - 1);
             }
         });
     }
 
 
     private int limit = 30;
-    AbsListView.OnScrollListener onScrollListener = new AbsListView.OnScrollListener() {
-        public int firstVisibleItem = -1;
-
+    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+            if (dy > 0) //check for scroll down
+            {
+                if (!fetching && hasMore) {
+                    if (pastVisiblesItems <= 10) {
+                        fetching = true;
+                        loadChatHistory(botsChatAdapter.getItemCount(), limit);
+                    }
+                }
+            }
         }
-
-        @Override
-        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-   /*         if (!fetching && hasMore && totalItemCount > 0 && (totalItemCount - visibleItemCount) <= (firstVisibleItem + 6)) {
-                // I load the next page of gigs using a background task,
-                // but you can call any function here.
-                loadChatHistory(chatAdapter.getCount(),limit);
-            }*/
-
-            BaseBotMessage baseBotMessage = ((BaseBotMessage) botsChatAdapter.getItem(firstVisibleItem));
-            if (baseBotMessage != null) {
-                headerView.setText(DateUtils.formattedSentDateV6(baseBotMessage.getCreatedInMillis()));
-            }
-            if (this.firstVisibleItem == firstVisibleItem || visibleItemCount == 0 || totalItemCount == 0) {
-                return;
-            }
-            if ((firstVisibleItem <= 10 && this.firstVisibleItem > firstVisibleItem) && !fetching && hasMore) {
-                loadChatHistory(botsChatAdapter.getCount(), limit);
-            }
-            this.firstVisibleItem = firstVisibleItem;
-        }
-
-
     };
+
+
+
 
 
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
@@ -264,7 +261,7 @@ public class BotContentFragment extends BaseSpiceFragment implements BotContentF
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
-                    Call<BotHistory> _resp = RestBuilder.getRestAPI().getHistory("bearer " + SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken(), Client.bot_id, limit, _offset, true);
+                    Call<BotHistory> _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken(), Client.bot_id, limit, _offset, true);
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
 

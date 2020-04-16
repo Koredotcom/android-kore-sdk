@@ -2,10 +2,13 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
@@ -13,8 +16,9 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
  * Created by Shiva Krishna on 2/22/2018.
  */
 
-public class ProfileTextView extends TextView {
+public class ProfileTextView extends AppCompatTextView {
     private Paint paint;
+    private Paint tPaint;
     private int color;
 
     public boolean isCircle() {
@@ -26,6 +30,16 @@ public class ProfileTextView extends TextView {
     }
 
     boolean isCircle = true;
+
+    public boolean isForToken() {
+        return isForToken;
+    }
+
+    public void setForToken(boolean forToken) {
+        isForToken = forToken;
+    }
+
+    boolean isForToken = false;
 
     public ProfileTextView(Context context) {
         super(context);
@@ -42,20 +56,35 @@ public class ProfileTextView extends TextView {
         init();
     }
 
-    public ProfileTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+   /* public ProfileTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
-    }
+    }*/
     void init(){
         paint = new Paint();
+        tPaint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        tPaint.setStyle(Paint.Style.STROKE);
+        tPaint.setStrokeWidth(3);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         paint.setColor(color);
+        if(isForToken){
+            int  h = this.getHeight();
+            int  w = this.getWidth();
 
-        if(isCircle) {
+            int diameter = ((h > w) ? h : w);
+            int radius = diameter/2;
+
+            this.setHeight(diameter);
+            this.setWidth(diameter);
+
+            canvas.drawCircle(diameter / 2 , diameter / 2, radius-2, paint);
+            tPaint.setColor(Color.parseColor("#485260"));
+            canvas.drawCircle(diameter / 2 , diameter / 2, radius-1, tPaint);
+        }else if (isCircle) {
             int  h = this.getHeight();
             int  w = this.getWidth();
 

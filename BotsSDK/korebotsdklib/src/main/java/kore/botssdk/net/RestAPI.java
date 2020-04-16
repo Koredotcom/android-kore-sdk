@@ -1,5 +1,6 @@
 package kore.botssdk.net;
 
+
 import java.util.HashMap;
 
 import kore.botssdk.models.BotHistory;
@@ -9,6 +10,8 @@ import kore.botssdk.net.RestResponse.LoginResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -26,7 +29,7 @@ public interface RestAPI {
 
     /** Login Service **/
     @POST("/api/oAuth/token")
-    Call<LoginResponse> loginUser(@Body HashMap<String, Object> userCredentials);
+    Call<RestResponse.LoginResponse> loginUser(@Body HashMap<String, Object> userCredentials);
 
     @POST("/api/oAuth/token")
     Call<KoreLoginResponse> loginNormalUser(@Body HashMap<String, Object> userCredentials);
@@ -55,8 +58,8 @@ public interface RestAPI {
     Call<RestResponse.RTMUrl> getRtmUrl(@Header("Authorization") String token, @Body HashMap<String, Object> optParameterBotInfo, @Query("isReconnect") boolean isReconnect);
 
     //Get Market Streams
-    @GET("/api/users/{userId}/builder/streams")
-    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
+//    @GET("/api/users/{userId}/builder/streams")
+//    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Subscribe to Push notification
     @POST("/api/users/{userId}/sdknotifications/subscribe")
@@ -70,8 +73,9 @@ public interface RestAPI {
     @POST("/api/users/{userId}/sdknotifications/unsubscribe")
     Call<ResponseBody> unSubscribeForPushNotification(@Path("userId") String userId, @Body HashMap<String, Object> body);
 
-    @GET("/api" + URL_VERSION + "/botmessages/rtm")
-    //BotHistory getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("forward") boolean forward);
-    Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
+//    @GET("/api" + URL_VERSION + "/botmessages/rtm")
+//    Call<BotHistory> getHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("msgId") String msgId, @Query("direction") int forward);
 
+    @GET("/api" + URL_VERSION + "/botmessages/rtm")
+    Call<BotHistory> getBotHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
 }

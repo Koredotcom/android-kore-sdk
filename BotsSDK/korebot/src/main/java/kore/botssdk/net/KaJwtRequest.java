@@ -1,4 +1,4 @@
-package kore.botssdk.net;
+/*package kore.botssdk.net;
 
 import com.octo.android.robospice.request.SpiceRequest;
 

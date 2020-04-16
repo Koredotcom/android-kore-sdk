@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.pushnotification;
 
 import android.content.Context;
@@ -15,29 +16,35 @@ import kore.botssdk.utils.Constants;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
+*/
 /**
  * Created by Pradeep Mahato on 08-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 public class PushNotificationRegister  {
 
     RequestListener<Response> requestListener;
 
-    /**
+    */
+/**
      * @param requestListener : Callback for requests
-     */
+     *//*
+
     public PushNotificationRegister(RequestListener<Response> requestListener) {
         this.requestListener = requestListener;
     }
 
-    /**
+    */
+/**
      * Register for Push notification
      *
      * @param context
      * @param userId : UserId for whom push notification is required
      * @param accessToken : User's access token
      * @param deviceId : Android device ID
-     */
+     *//*
+
     public void registerPushNotification(Context context, String userId, String accessToken, String deviceId) {
 
         HashMap<String, Object> pushNotificationRequestMap = new HashMap<>();
@@ -72,24 +79,29 @@ public class PushNotificationRegister  {
 
     }
 
-    /**
+    */
+/**
      * Unregister Push notification
      *
      * @param context
      * @param accessToken : User's access token for whom the notification has to be unregistered
      * @param deviceId : Android device ID
-     */
+     *//*
+
     public void unsubscribePushNotification(Context context, String accessToken, String deviceId) {
 
         HashMap<String, Object> pushNotificationRequestMap = new HashMap<>();
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_DEVICE_ID, deviceId);
 
-      /*  new UnSubscribePushNotificationRequest(Utils.accessTokenHeader(accessToken), pushNotificationRequestMap);
+      */
+/*  new UnSubscribePushNotificationRequest(Utils.accessTokenHeader(accessToken), pushNotificationRequestMap);
 
         if (!isConnected()) start(context);
 
-        getSpiceManager().execute(unSubscribePushNotificationRequest, requestListener);*/
+        getSpiceManager().execute(unSubscribePushNotificationRequest, requestListener);*//*
+
 
     }
 
 }
+*/

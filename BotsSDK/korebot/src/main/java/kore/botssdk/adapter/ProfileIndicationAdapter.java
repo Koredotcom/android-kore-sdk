@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.MeetingConfirmationModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewHolder.ProfileViewHolder;
@@ -21,7 +22,7 @@ public class ProfileIndicationAdapter extends RecyclerView.Adapter<ProfileViewHo
     LayoutInflater layoutInflater;
     RecyclerView parentRecyclerView;
     int whiteColor,splashColor;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
     public ProfileIndicationAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;

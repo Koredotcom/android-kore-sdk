@@ -2,18 +2,13 @@ package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.nfc.Tag;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.internal.LinkedTreeMap;
 import com.squareup.picasso.Picasso;
@@ -21,15 +16,13 @@ import com.squareup.picasso.Picasso;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumMap;
-import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.EmailModel;
@@ -49,9 +42,9 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 public class KoraCarousalViewHelper {
 
     public static class KoraCarousalViewHolder {
-        public View emailView;
-        public View knowledgeView;
-        public View showMoreView;
+        View emailView;
+        View knowledgeView;
+        View showMoreView;
 
     }
     public static class KoraFilesCarousalViewHolder {
@@ -68,15 +61,15 @@ public class KoraCarousalViewHelper {
         carouselViewHolder.showMoreView = view.findViewById(R.id.show_more_view);
         view.setTag(carouselViewHolder);
     }
-    public static void initializeFileLookupViewHolder(View view) {
+  /*  public static void initializeFileLookupViewHolder(View view) {
         KoraFilesCarousalViewHolder carouselViewHolder = new KoraFilesCarousalViewHolder();
         carouselViewHolder.fileLookupViewRoot = view.findViewById(R.id.file_lookup_view_root);
         view.setTag(carouselViewHolder);
-    }
+    }*/
 
 
     public static void populateStuffs(KoraCarousalViewHolder carouselViewHolder,
-                                      final ComposeFooterFragment.ComposeFooterInterface composeFooterInterface,
+                                      final ComposeFooterInterface composeFooterInterface,
                                       final InvokeGenericWebViewInterface invokeGenericWebViewInterface,
                                       final KoraSearchDataSetModel dataSetModel,
                                       final Context activityContext) {
@@ -141,59 +134,13 @@ public class KoraCarousalViewHelper {
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                             String buttonPayload = botCaourselButtonModel.getPayload();
                             String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
+                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload,false);
                         }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
                                 invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(), botCaourselButtonModel.getCustomData());
                         }
                     }
                 }
             });
-
-        } else if (dataSetModel.getViewType() == KoraSearchDataSetModel.ViewType.KNOWLEDGE_VIEW) {
-            carouselViewHolder.knowledgeView.setVisibility(View.VISIBLE);
-            ImageView imageView = (ImageView) carouselViewHolder.knowledgeView.findViewById(R.id.knowledge_image);
-            TextView title = (TextView) carouselViewHolder.knowledgeView.findViewById(R.id.knowledge_title);
-            TextView desc = (TextView) carouselViewHolder.knowledgeView.findViewById(R.id.knowledge_description);
-            TextView hashTagView = (TextView)carouselViewHolder.knowledgeView.findViewById(R.id.hash_tags_view);
-            TextView createdDate = (TextView)carouselViewHolder.knowledgeView.findViewById(R.id.created_date);
-            TextView knowledgeType = (TextView)carouselViewHolder.knowledgeView.findViewById(R.id.knowledge_type);
-            TextView createrInfo = (TextView)carouselViewHolder.knowledgeView.findViewById(R.id.creator_info);
-            ListView listView = (ListView) carouselViewHolder.knowledgeView.findViewById(R.id.list_view);
-
-            final KnowledgeDetailModel knowledgeDetailModel = (KnowledgeDetailModel) dataSetModel.getPayload();
-            title.setText(knowledgeDetailModel.getTitle());
-            desc.setText(knowledgeDetailModel.getDesc());
-            try {
-                if(knowledgeDetailModel.getImage_url() != null && !knowledgeDetailModel.getImage_url().isEmpty())
-                    Picasso.with(activityContext).load(knowledgeDetailModel.getImage_url()).into(imageView);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            if(knowledgeDetailModel.getButtons() != null) {
-                BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
-                listView.setAdapter(botCarouselItemButtonAdapter);
-                botCarouselItemButtonAdapter.setBotCaourselButtonModels(knowledgeDetailModel.getButtons());
-            }
-
-            hashTagView.setText(StringUtils.join(knowledgeDetailModel.getHashTag(), "#"));
-         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                        BotCaourselButtonModel botCaourselButtonModel = (BotCaourselButtonModel) parent.getAdapter().getItem(position);
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCaourselButtonModel.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botCaourselButtonModel.getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botCaourselButtonModel.getType())) {
-                            String buttonPayload = botCaourselButtonModel.getPayload();
-                            String buttonTitle = botCaourselButtonModel.getTitle();
-                            composeFooterInterface.onSendClick(buttonTitle, buttonPayload);
-                        }else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botCaourselButtonModel.getType())) {
-                            invokeGenericWebViewInterface.handleUserActions(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
-                        }
-                    }
-                }
-            });
-
 
         } else if (dataSetModel.getViewType() == KoraSearchDataSetModel.ViewType.SHOW_MORE_VIEW) {
 
@@ -202,7 +149,7 @@ public class KoraCarousalViewHelper {
 
     }
 
-    public static void populateFileLookUpStuffs(KoraFilesCarousalViewHolder carouselViewHolder, final KaFileLookupModel dataModel, final Context activityContext) {
+/*    public static void populateFileLookUpStuffs(KoraFilesCarousalViewHolder carouselViewHolder, final KaFileLookupModel dataModel, final Context activityContext) {
             carouselViewHolder.fileLookupViewRoot.setVisibility(View.VISIBLE);
             TextView txtFileType = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtFileType);
             TextView txtTitle = (TextView) carouselViewHolder.fileLookupViewRoot.findViewById(R.id.txtTitle);
@@ -241,7 +188,7 @@ public class KoraCarousalViewHelper {
                 }
             });
 
-    }
+    }*/
 
     private static int getButtonHeight(Context context, int itemCount, float dp1) {
         return (int) (context.getResources().getDimension(R.dimen.carousel_view_button_height_individual) * dp1 + 4 * dp1);

@@ -12,6 +12,16 @@ public class BotCaourselButtonModel {
     String payload;
     String action;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    String id;
+
     public String getAction() {
         return action;
     }

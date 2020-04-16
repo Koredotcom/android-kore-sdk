@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="kore.botssdk.models.ContactViewListModel" />
+
+        <variable
+            name="contactListInfo"
+            type="ContactViewListModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.ContactInfoView" />
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/contactCardRL"
+        android:layout_width="match_parent"
+        android:background="@drawable/calender_view_background"
+        android:layout_height="61dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/headerTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:fontFamily="@font/latoregular"
+            android:text="@{contactListInfo.header}"
+            android:textColor="@color/color_767688"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/valueTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/headerTV"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/latomedium"
+            android:text="@{contactListInfo.value}"
+            android:textColor="@color/color_626281"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/contactListItemIV"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@{contactListInfo.image}"
+            android:textColor="@color/color_7165250_widget"
+            android:textSize="20sp"
+            android:visibility="@{viewBase.contactListItemImageVisibillity(contactListInfo)}" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/contact_divider"
+            android:layout_below="@id/contactListItemIV"
+            android:layout_marginTop="10dp"
+            android:background="@color/color_A7A9BE" />
+
+    </RelativeLayout>
+
+</layout>

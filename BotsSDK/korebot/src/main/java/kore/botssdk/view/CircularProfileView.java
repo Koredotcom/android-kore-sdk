@@ -55,6 +55,7 @@ public class CircularProfileView extends RoundedImageView {
     private Drawable tagBadgeDrawable;
     private String initials;
     private int profileColor;
+    private Context mContext;
 
     RectF tagBadgeRect = new RectF();
 
@@ -76,6 +77,7 @@ public class CircularProfileView extends RoundedImageView {
     private void init(AttributeSet attrs, Context context) {
 
         //Essentials
+        this.mContext = context;
         if (!isInEditMode()) {
             dp1 = (int) AppControl.getInstance(getContext()).getDimensionUtil().dp1;
             SDK = android.os.Build.VERSION.SDK_INT;
@@ -166,12 +168,12 @@ public class CircularProfileView extends RoundedImageView {
 
         if (applyRoundTransform) {
             if (url.startsWith(StringConstants.HTTP_SCHEME)) {
-                Picasso.with(getContext())
+                Picasso.with(mContext)
                         .load(url)
                         .transform(getRoundTransformation())
                         .into(viewTarget);
             } else {
-                Picasso.with(getContext())
+                Picasso.with(mContext)
                         .load(new File(url))
                         .transform(getRoundTransformation())
                         .into(viewTarget);
@@ -179,11 +181,11 @@ public class CircularProfileView extends RoundedImageView {
 
         } else {
             if (url.startsWith(StringConstants.HTTP_SCHEME)) {
-                Picasso.with(getContext())
+                Picasso.with(mContext)
                         .load(url)
                         .into(viewTarget);
             } else {
-                Picasso.with(getContext())
+                Picasso.with(mContext)
                         .load(new File(url))
                         .into(viewTarget);
             }
@@ -220,7 +222,7 @@ public class CircularProfileView extends RoundedImageView {
 
         this.profileColor = color;
 
-        Picasso.with(getContext()).cancelRequest(viewTarget);
+        Picasso.with(mContext).cancelRequest(viewTarget);
         if (nameInitials != null) {
             nameInitials = nameInitials.toUpperCase();
         }
@@ -234,12 +236,12 @@ public class CircularProfileView extends RoundedImageView {
 
         if (filePath != null && !filePath.isEmpty()) {
             if (applyRoundTransform) {
-                Picasso.with(context)
+                Picasso.with(mContext)
                         .load(new File(filePath))
                         .transform(getRoundTransformation())
                         .into(viewTarget);
             } else {
-                Picasso.with(context)
+                Picasso.with(mContext)
                         .load(new File(filePath))
                         .into(viewTarget);
             }
@@ -322,8 +324,10 @@ public class CircularProfileView extends RoundedImageView {
             setBackgroundDrawable(null);
         }
 
+
+
         @Override
-        public void onBitmapFailed(Drawable drawable) {
+        public void onBitmapFailed(Drawable errorDrawable) {
             setImageDrawable(null);
             setBackgroundDrawable(null);
             setDefaultBackground(profileColor, initials);

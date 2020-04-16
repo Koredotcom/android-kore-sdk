@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="welcomeSummaryList"
+            type="kore.botssdk.models.WelcomeChatSummaryModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.WelcomeSummaryView" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/summaryRootLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="11dp"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/icon"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:layout_marginEnd="17dp" />
+
+        <TextView
+            android:id="@+id/widget_summary_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="0dp"
+            android:paddingStart="5dp"
+            android:layout_toRightOf="@id/icon"
+            android:text="@{welcomeSummaryList.summary}"
+            android:textColor="@color/color_485260"
+            android:visibility="visible"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</layout>

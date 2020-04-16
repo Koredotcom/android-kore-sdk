@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -12,19 +13,24 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.CalendarEventsAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
- */
+ *//*
+
 
 public class CalendarEventsTemplateView extends ViewGroup {
 
     private AutoExpandListView listView;
     private LinearLayout calCustomListRoot;
-    private float dp1, layoutItemHeight = 0;
+    private float dp1 = 0;
+    private ComposeFooterInterface composeFooterInterface;
 
     public float getRestrictedMaxWidth() {
         return restrictedMaxWidth;
@@ -55,18 +61,26 @@ public class CalendarEventsTemplateView extends ViewGroup {
         LayoutInflater.from(getContext()).inflate(R.layout.calendar_custom_list, this, true);
         calCustomListRoot = (LinearLayout) findViewById(R.id.calCustomListRoot);
         listView = (AutoExpandListView) findViewById(R.id.calCustomListView);
+
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
        // layoutItemHeight = getResources().getDimension(R.dimen.calendar_event_list_row_height);
 
     }
 
-    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList){
-        calCustomListRoot.setVisibility(eventsList == null || eventsList.size() == 0 ? GONE : VISIBLE);
-        CalendarEventsAdapter calAdapter;
-        calAdapter = new CalendarEventsAdapter(getContext());
-        listView.setAdapter(calAdapter);
-        calAdapter.setEventList(eventsList);
-        calAdapter.notifyDataSetChanged();
+    public void populateCalendarEvents(ArrayList<CalEventsTemplateModel> eventsList,String type, final boolean isEnabled){
+        if(eventsList != null && eventsList.size() > 0) {
+            calCustomListRoot.setVisibility(VISIBLE);
+            CalendarEventsAdapter calAdapter;
+            calAdapter = new CalendarEventsAdapter(getContext(), type, isEnabled);
+            calAdapter.setComposeFooterInterface(composeFooterInterface);
+            listView.setAdapter(calAdapter);
+            calAdapter.setEventList(eventsList);
+            calAdapter.notifyDataSetChanged();
+            calCustomListRoot.setAlpha(isEnabled ? 1.0f : 0.5f);
+            calCustomListRoot.setClickable(false);
+        }else{
+            calCustomListRoot.setVisibility(GONE);
+        }
 
     }
 
@@ -80,11 +94,15 @@ public class CalendarEventsTemplateView extends ViewGroup {
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
         MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
-   /*     int  childWidth = calCustomListRoot.getMeasuredWidth();
+
+
+   */
+/*     int  childWidth = calCustomListRoot.getMeasuredWidth();
         if (childWidth > restrictedMaxWidth) {
             childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.AT_MOST);
             MeasureUtils.measure(calCustomListRoot, childWidthSpec, wrapSpec);
-        }*/
+        }*//*
+
         totalHeight += calCustomListRoot.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
         if(calCustomListRoot.getMeasuredHeight() !=0 ){
             totalHeight+=12*dp1;
@@ -94,6 +112,15 @@ public class CalendarEventsTemplateView extends ViewGroup {
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
+
+
+
+
+
+
+
+
+*/
 /*
 
     public int getViewHeight() {
@@ -124,6 +151,8 @@ public class CalendarEventsTemplateView extends ViewGroup {
         }
         return viewHeight;
     }
+*//*
+
 */
 /*
     @Override
@@ -148,7 +177,8 @@ public class CalendarEventsTemplateView extends ViewGroup {
         int parentHeightSpec = childHeightSpec;
 
         super.onMeasure(parentWidthSpec, parentHeightSpec);
-    }*/
+    }*//*
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -170,4 +200,15 @@ public class CalendarEventsTemplateView extends ViewGroup {
             }
         }
     }
+
+    public ComposeFooterInterface getComposeFooterInterface() {
+        return composeFooterInterface;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+
 }
+*/

@@ -35,7 +35,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
-import androidx.annotation.ColorRes;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;

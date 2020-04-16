@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
@@ -125,7 +124,7 @@ public class TTSSynthesizer {
             textToSpeech.stop();
         }
     }
-    SocketConnectionListener sListener = new SocketConnectionListener() {
+    private SocketConnectionListener sListener = new SocketConnectionListener() {
         @Override
         public void onOpen(boolean isReconnection) {
             Log.d(LOG_TAG, "Connection opened");
@@ -163,7 +162,7 @@ public class TTSSynthesizer {
             }
         }
     };
-    public void PlayAudio(String audio){
+    private void PlayAudio(String audio){
         try
         {
             String url = "data:audio/mp3;base64,"+audio;

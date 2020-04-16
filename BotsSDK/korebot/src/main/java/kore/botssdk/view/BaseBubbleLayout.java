@@ -23,7 +23,7 @@ import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
@@ -32,6 +32,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
 /**
@@ -90,7 +91,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     Paint paint;
 
     protected int WHITE_COLOR = 0xffffffff;
-    public static String NON_KORE_COLOR = "#AEBFC4";
+//    public static String NON_KORE_COLOR = "#AEBFC4";
 
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
@@ -103,13 +104,13 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected BarChartView barChartView;
     protected StackedBarChatView stackedBarChatView;
-    protected BotMainTableView miniTableView;
+    protected KoraCarouselView miniTableView;
 
 
     protected int position;
     protected int[] dimens;
     protected int textColor;
-    protected int textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+    protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
 
     LayoutInflater ownLayoutInflater;
 
@@ -214,21 +215,20 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         // Bubble Text Media
         bubbleTextMediaLayout = new TextMediaLayout(context,getLinkTextColor());
-        bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
+        bubbleTextMediaLayout.setId(BubbleConstants.TEXT_MEDIA_LAYOUT_ID);
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-        bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
-        bubbleTextMediaLayout.widthStyle = TextMediaLayout.WRAP_CONTENT;
-        bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
+     //   bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
+        bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
       /*  bubbleTextMediaLayout.setLinkTextColor(getLinkTextColor());*/
         addView(bubbleTextMediaLayout);
 
         botListTemplateView = new BotListTemplateView(getContext());
-        botListTemplateView.setId(TextMediaLayout.LIST_ID);
+        botListTemplateView.setId(BubbleConstants.LIST_ID);
         botListTemplateView.setVisibility(View.GONE);
         addView(botListTemplateView);
 
         botButtonView = new BotButtonView(getContext());
-        botButtonView.setId(TextMediaLayout.BUTTON_VIEW_ID);
+        botButtonView.setId(BubbleConstants.BUTTON_VIEW_ID);
         botButtonView.setVisibility(View.GONE);
         addView(botButtonView);
 
@@ -236,12 +236,12 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         botCarouselView = new BotCarouselView(getContext());
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
         botCarouselView.setVisibility(View.GONE);
-        botCarouselView.setId(TextMediaLayout.CAROUSEL_VIEW_ID);
+        botCarouselView.setId(BubbleConstants.CAROUSEL_VIEW_ID);
         addView(botCarouselView);
 
         botPieChartView = new PieChartView(getContext());
         botPieChartView.setVisibility(View.GONE);
-        botPieChartView.setId(TextMediaLayout.PIECHART_VIEW_ID);
+        botPieChartView.setId(BubbleConstants.PIECHART_VIEW_ID);
         addView(botPieChartView);
 
         /*tableView = new CustomTableView(getContext());
@@ -251,22 +251,22 @@ public abstract class BaseBubbleLayout extends ViewGroup {
 
         lineChartView = new LineChartView(getContext());
         lineChartView.setVisibility(GONE);
-        lineChartView.setId(TextMediaLayout.LINECHART_VIEW_ID);
+        lineChartView.setId(BubbleConstants.LINECHART_VIEW_ID);
         addView(lineChartView);
 
         barChartView = new BarChartView(getContext());
         barChartView.setVisibility(GONE);
-        barChartView.setId(TextMediaLayout.BARCHART_VIEW_ID);
+        barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
         addView(barChartView);
 
         stackedBarChatView = new StackedBarChatView(getContext());
         stackedBarChatView.setVisibility(GONE);
-        stackedBarChatView.setId(TextMediaLayout.STACK_BARCHAT_VIEW_ID);
+        stackedBarChatView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
         addView(stackedBarChatView);
 
-        miniTableView = new BotMainTableView(getContext());
+        miniTableView = new KoraCarouselView(getContext());
         miniTableView.setVisibility(GONE);
-        miniTableView.setId(TextMediaLayout.MINI_TABLE_VIEW_ID);
+        miniTableView.setId(BubbleConstants.MINI_TABLE_VIEW_ID);
         addView(miniTableView);
 
     }
@@ -469,15 +469,15 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected void determineTextColor() {
         if (isLeftSide()) {
             if (isSelected()) {
-                textColor = context.getResources().getColor(R.color.bubble_light_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             } else {
-                textColor = context.getResources().getColor(R.color.bubble_dark_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             }
         } else {
             if (isLeftSide()) {
                 textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             } else if (!isLeftSide()) {
-                textColor = context.getResources().getColor(R.color.right_bubble_text_color);
+                textColor = context.getResources().getColor(R.color.left_bubble_text_color);
             }
         }
     }
@@ -491,6 +491,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         String textColor = "#000000";
         if (baseBotMessage.isSend()) {
             message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            bubbleTextMediaLayout.populateTextSenders(message);
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();
             if (componentModel != null) {
@@ -511,9 +512,10 @@ public abstract class BaseBubbleLayout extends ViewGroup {
                     }
                 }
             }
+            bubbleTextMediaLayout.populateText(message);
         }
 
-        bubbleTextMediaLayout.startup(message, dimens);
+
     }
 
     abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);

@@ -2,20 +2,23 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.databinding.AttendeeSlotItemBinding;
 import kore.botssdk.models.MeetingSlotModel;
-import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.SelectionUtils;
 
 import static kore.botssdk.utils.DateUtils.getSlotsDate;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
@@ -25,7 +28,7 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
  * Created by Shiva Krishna on 6/15/2018.
  */
 
-public class AttendeeSlotsAdapter extends BaseAdapter {
+public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdapter.ViewHolder> {
     public ArrayList<MeetingSlotModel.Slot> getNormalSlots() {
         return normalSlots;
     }
@@ -45,12 +48,13 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
     private ArrayList<MeetingSlotModel.Slot> normalSlots = new ArrayList<>();
     private ArrayList<MeetingSlotModel.Slot> popularSlots = new ArrayList<>();
 
-    private Context mContext;
     private Drawable selectedCheck, unSelectedCheck;
     private int selectedColor, unSelectedColor;
     private LayoutInflater layoutInflater;
     private ArrayList<MeetingSlotModel.Slot> selectedSlots = new ArrayList<>();
-    public void addOrRemoveSelectedSlot(MeetingSlotModel.Slot slot){
+    private SlotSelectionListener slotSelectionListener;
+    private boolean isEnabled = false;
+    private void addOrRemoveSelectedSlot(MeetingSlotModel.Slot slot){
         if(selectedSlots.contains(slot)){
             selectedSlots.remove(slot);
         }else{
@@ -63,41 +67,93 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
 
 
 
-    public AttendeeSlotsAdapter(Context mContext) {
-        this.mContext = mContext;
+    public AttendeeSlotsAdapter(Context mContext,SlotSelectionListener slotSelectionListener) {
         layoutInflater = LayoutInflater.from(mContext);
         selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
         selectedColor = mContext.getResources().getColor(R.color.color_dfdfeb);
-        unSelectedColor = mContext.getResources().getColor(R.color.color_efeffc);
-
+        unSelectedColor = mContext.getResources().getColor(R.color.white);
+        this.slotSelectionListener = slotSelectionListener;
     }
 
     @Override
-    public int getCount() {
-        if (normalSlots.size() > 0 || popularSlots.size() > 0)
-            return normalSlots.size() + popularSlots.size() + 2;
-        else
-            return 0;
+    public int getItemCount() {
+      if(popularSlots.size() > 0 && normalSlots.size() > 0){
+          return popularSlots.size()+ normalSlots.size()+2;
+      }else if(popularSlots.size() > 0){
+          return popularSlots.size()+1;
+      }else if(normalSlots.size() > 0){
+          return normalSlots.size() +1;
+      }else{
+          return 0;
+      }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0 || (position ==  popularSlots.size()+1)) {
+        if(popularSlots.size() > 0 && position == 0){
             return 0;
-        } else {
+        }else if(normalSlots.size() > 0 && position == 0){
             return 1;
+        }else if(popularSlots.size() > 0 && normalSlots.size() > 0 && position == popularSlots.size()+1){
+            return 1;
+        }else{
+            return 2;
         }
     }
 
     @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        if(holder.attendeeSlotItemBinding != null){
+            final MeetingSlotModel.Slot slot = getItem(position);
+            String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
+            String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
+            final String day = getSlotsDate(slot.getStart());
+            boolean isSelected = isSlotSelected(slot);
+            holder.attendeeSlotItemBinding.slotCheck.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
+            holder.attendeeSlotItemBinding.slotCheck.setAlpha(isEnabled ? 1.0f : 0.5f);
+            holder.attendeeSlotItemBinding.getRoot().setBackgroundColor(isSelected ? selectedColor : unSelectedColor);
+            holder.attendeeSlotItemBinding.slotTime.setText(MessageFormat.format("{0}, {1} to {2}", day, startTime, endTime));
+            holder.attendeeSlotItemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isEnabled) {
+                        addOrRemoveSelectedSlot(slot);
+                        SelectionUtils.setSelectedSlots(selectedSlots);
+                        slotSelectionListener.onSlotSelectionChanged();
+                        notifyItemChanged(position);
+                    }
+                }
+            });
+        }
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch (viewType){
+            case 0:
+                return new ViewHolder(layoutInflater.inflate(R.layout.most_poular_header,parent,false));
+            case 1:
+                return new ViewHolder(layoutInflater.inflate(R.layout.separator_text_view,parent,false));
+            case 2:
+                default:
+                return new ViewHolder(DataBindingUtil.inflate(layoutInflater,R.layout.attendee_slot_item,parent,false));
+
+        }
+    }
+
     public MeetingSlotModel.Slot getItem(int position) {
-        if (position == 0 || (position ==  popularSlots.size()+1)) {
+        if(popularSlots.size() > 0 && position == 0){
             return null;
-        } else if (position <= popularSlots.size()) {
-            return popularSlots.get(position - 1);
-        } else if(position > popularSlots.size()){
-            return normalSlots.get(position - 2 - popularSlots.size());
+        }else if(normalSlots.size() > 0 && position == 0){
+            return null;
+        }else if(popularSlots.size() > 0 && normalSlots.size() > 0 && position == popularSlots.size()+1){
+            return null;
+        }else if(popularSlots.size() > 0 && position <= popularSlots.size()){
+            return popularSlots.get(position-1);
+        }else if(normalSlots.size() > 0 && position > popularSlots.size()){
+            return normalSlots.get(position-popularSlots.size()-(popularSlots.size() == 0 ? 1 : 2));
         }else{
             return null;
         }
@@ -108,66 +164,12 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
         return position;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        int itemViewType = getItemViewType(position);
-        if (itemViewType == 0) {
-            // Inflation for Right side
-            if (convertView == null || convertView.getId() != R.id.separator) {
-                convertView = layoutInflater.inflate(R.layout.separator_text_view, null);
-            }
-        } else {
-            // Inflation for Left side
-            if (convertView == null || convertView.getId() == R.id.separator) {
-                convertView = layoutInflater.inflate(R.layout.attendee_slot_item, null);
-            }
-            KaFontUtils.applyCustomFont(mContext, convertView);
-        }
-
-        if (convertView.getTag() == null) {
-            initializeViewHolder(convertView, itemViewType);
-        }
-
-
-        return populateData(convertView, position, itemViewType);
-    }
-
-    private View populateData(View convertView, int position, int type) {
-        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-        if (type == 1) {
-            MeetingSlotModel.Slot slot = getItem(position);
-            String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
-            String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
-            final String day = getSlotsDate(slot.getStart());
-            boolean isSelected = isSlotSelected(slot);
-            viewHolder.slotCheck.setImageDrawable(isSelected ? selectedCheck : unSelectedCheck);
-            ((GradientDrawable) viewHolder.rootView.getBackground()).setColor(isSelected ? selectedColor : unSelectedColor);
-            viewHolder.timeLabel.setText(MessageFormat.format("{0}, {1} to {2}", day, startTime, endTime));
-        } else {
-            viewHolder.slotsSeparator.setText(position == 0 ? "Most Popular Slot" : "Other Mutually Available Slots");
-        }
-        return convertView;
-    }
-
     private boolean isSlotSelected(MeetingSlotModel.Slot slot) {
 
         return selectedSlots != null && selectedSlots.contains(slot);
     }
 
-    public void initializeViewHolder(View convertView, int type) {
 
-        ViewHolder viewHolder = new ViewHolder();
-        if (type == 1) {
-            viewHolder.timeLabel = (TextView) convertView.findViewById(R.id.slot_time);
-            viewHolder.slotCheck = (ImageView) convertView.findViewById(R.id.slot_check);
-            viewHolder.rootView = convertView.findViewById(R.id.root_layout);
-        } else {
-            viewHolder.slotsSeparator = (TextView) convertView.findViewById(R.id.separator);
-            KaFontUtils.setCustomTypeface(viewHolder.slotsSeparator,KaFontUtils.ROBOTO_REGULAR, mContext);
-        }
-        convertView.setTag(viewHolder);
-    }
 
 
     public ArrayList<MeetingSlotModel.Slot> getSelectedSlots() {
@@ -178,12 +180,29 @@ public class AttendeeSlotsAdapter extends BaseAdapter {
         this.selectedSlots = selectedSlots;
     }
 
-    private class ViewHolder {
-        TextView timeLabel;
-        ImageView slotCheck;
-        TextView slotsSeparator;
-        View rootView;
+    public boolean isEnabled() {
+        return isEnabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        AttendeeSlotItemBinding attendeeSlotItemBinding;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((TextView)itemView).setLetterSpacing(0.06f);
+            }
+        }
+        public ViewHolder(@NonNull AttendeeSlotItemBinding slotItemBinding) {
+            super(slotItemBinding.getRoot());
+            this.attendeeSlotItemBinding = slotItemBinding;
+        }
+    }
+
+    public interface SlotSelectionListener {
+        public void onSlotSelectionChanged();
+    }
 }

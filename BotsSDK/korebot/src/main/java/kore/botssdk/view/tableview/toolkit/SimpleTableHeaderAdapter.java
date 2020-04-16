@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import kore.botssdk.view.tableview.TableHeaderAdapter;
 
 
@@ -27,7 +25,7 @@ public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
     private int paddingTop = 30;
     private int paddingRight = 20;
     private int paddingBottom = 30;
-    private int textSize = 18;
+    private int textSize = 14;
     private int typeface = Typeface.BOLD;
     private int textColor = 0x99000000;
 

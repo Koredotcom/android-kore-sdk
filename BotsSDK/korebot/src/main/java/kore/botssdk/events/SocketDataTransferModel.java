@@ -1,7 +1,6 @@
 package kore.botssdk.events;
 
 import kore.botssdk.listener.BaseSocketConnectionManager;
-
 import kore.botssdk.models.BotRequest;
 
 /**
@@ -38,9 +37,20 @@ public class SocketDataTransferModel {
 
     private BotRequest botRequest;
 
-    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest){
+    public boolean isFromSkillSwitch() {
+        return isFromSkillSwitch;
+    }
+
+    public void setFromUtterance(boolean isFromSkillSwitch) {
+        this.isFromSkillSwitch = isFromSkillSwitch;
+    }
+
+    private boolean isFromSkillSwitch = false;
+
+    public SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE event_type, String payLoad, BotRequest botRequest, boolean isFromSkillSwitch){
         this.event_type = event_type;
         this.payLoad = payLoad;
         this.botRequest = botRequest;
+        this.isFromSkillSwitch = isFromSkillSwitch;
     }
 }

@@ -26,6 +26,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import net.gotev.speech.GoogleVoiceTypingDisabledException;
 import net.gotev.speech.Speech;
 import net.gotev.speech.SpeechDelegate;
@@ -39,11 +44,9 @@ import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.event.TapToSpeakEvent;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.speechtotext.AudioRecorder;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
 
@@ -55,7 +58,7 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeFooterUpdate, SpeechDelegate {
+public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
 
     private static final int REQ_CODE_SPEECH_INPUT = 1;
     String LOG_TAG = ComposeFooterFragment.class.getName();
@@ -86,7 +89,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
-    private TapToSpeakFragment tapToSpeakFragment;
+//    private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
     private LinearLayout linearLayoutProgress;
 
@@ -186,11 +189,11 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message.trim());
-            if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
+            composeFooterInterface.onSendClick(message.trim(),false);
+           /* if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");
-            }
+            }*/
         } else {
             Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
@@ -216,24 +219,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
         setListener();
     }
 
-    public interface ComposeFooterInterface {
-        /**
-         * @param message : Title and payload, Both are same
-         */
-        void onSendClick(String message);
 
-        /**
-         * @param message : Title of the button
-         * @param payload : Payload to be send
-         */
-        void onSendClick(String message, String payload);
-
-        void onFormActionButtonClicked(FormActionTemplate fTemplate);
-
-        void launchActivityWithBundle(int type,Bundle payload);
-
-        void sendWithSomeDelay(String message,String payload,long time);
-    }
 
     TextWatcher composeTextWatcher = new TextWatcher() {
         @Override
@@ -245,7 +231,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            } else if ((sendButton.getVisibility() != View.VISIBLE && tapToSpeakFragment != null && tapToSpeakFragment.getState() != AudioRecorder.State.RECORDING)
+            } else if ((sendButton.getVisibility() != View.VISIBLE )
                     || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
@@ -442,10 +428,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         }
     }
-    public void onEventMainThread(TapToSpeakEvent.Stop event) {
 
-
-    }
     private void onButtonClick() {
         if (Speech.getInstance().isListening()) {
             Speech.getInstance().stopListening();
@@ -524,7 +507,7 @@ public class ComposeFooterFragment extends BaseSpiceFragment implements ComposeF
 
         }else{
             if (composeFooterInterface != null) {
-                composeFooterInterface.onSendClick(result);
+                composeFooterInterface.onSendClick(result,false);
                 editTextMessage.setText("");
             } else {
                 Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");

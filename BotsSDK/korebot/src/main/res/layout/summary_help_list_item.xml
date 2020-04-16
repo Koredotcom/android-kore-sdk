@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="summaryList"
+            type="kore.botssdk.models.WelcomeChatSummaryModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.KoraSummaryHelpView" />
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/summaryRootLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/summaryTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:layout_centerVertical="true"
+            android:textSize="15sp"
+            android:padding="13dp"
+            android:text="@{summaryList.summary}"
+            android:textColor="@color/splash_background_color"
+            android:background="@drawable/summary_help_item_bg"
+            android:layout_marginBottom="@dimen/dimen_14dp"
+            />
+    </RelativeLayout>
+</layout>

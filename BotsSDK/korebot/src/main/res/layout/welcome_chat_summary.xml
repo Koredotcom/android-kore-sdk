@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="welcomeSummaryInfo"
+            type="kore.botssdk.models.WelcomeSummaryModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.WelcomeSummaryView" />
+
+
+        <variable
+            name="myAdapter"
+            type="kore.botssdk.view.WelcomeSummaryRecyclerAdapter" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:minHeight="150dp"
+            app:cardCornerRadius="4dp"
+            app:cardUseCompatPadding="true">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_15dp">
+
+                <LinearLayout
+                    android:id="@+id/wether_chat_info_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="25dp"
+                    android:layout_toStartOf="@+id/wether_chat_icon_layout"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_wether_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="13dp"
+                        android:text="@{welcomeSummaryInfo.title}"
+                        android:textColor="@color/color_485260"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+                    <!--"You got a busy day ahead."-->
+                    <TextView
+                        android:id="@+id/tv_wether_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="2dp"
+                        android:text="@{welcomeSummaryInfo.message}"
+                        android:textColor="@color/color_485260"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/weather_chat_LV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:adapter="@{myAdapter}"
+                        android:choiceMode="singleChoice"
+                        android:clipToPadding="true"
+                        android:fadeScrollbars="true"
+                        android:listSelector="@color/white"
+                        android:orientation="vertical"
+                        android:overScrollMode="never"
+                        android:scrollbars="vertical"
+                        android:transcriptMode="normal"
+                        android:visibility="visible"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/wether_chat_icon_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/wether_chat_info_layout"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp">
+
+                    <ImageView
+                        android:id="@+id/img_wether_icon"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/dimen_12dp"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/circle_shimmer" />
+
+                    <TextView
+                        android:id="@+id/tv_wether_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/wetherfont"
+                        android:maxWidth="135dp"
+                        android:textColor="@color/color_485260"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+</layout>

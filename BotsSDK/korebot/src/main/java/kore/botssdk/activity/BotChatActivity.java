@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -26,15 +30,19 @@ import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
+import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
@@ -47,7 +55,7 @@ import kore.botssdk.utils.TTSSynthesizer;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotChatActivity extends BotAppCompactActivity implements  ComposeFooterFragment.ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
+public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface {
 
     String LOG_TAG = BotChatActivity.class.getSimpleName();
 
@@ -234,6 +242,31 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
         processPayload("", botResponse);
     }
 
+    public void updateActionbar(boolean isSelected,String type,ArrayList<BotButtonModel> buttonModels) {
+
+    }
+
+    @Override
+    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
+
+    }
+
+    @Override
+    public void showAfterOnboard(boolean isdiscard) {
+
+    }
+
+    @Override
+    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
+
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
+
+    }
+
+
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
             actionBarTitleUpdateHandler = new Handler();
@@ -261,17 +294,18 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
 
     @Override
-    public void onSendClick(String message) {
+    public void onSendClick(String message,boolean isFromUtterance) {
         BotSocketConnectionManager.getInstance().sendMessage(message, null);
     }
 
     @Override
-    public void onSendClick(String message, String payload) {
+    public void onSendClick(String message, String payload, boolean isFromUtterance) {
         if(payload != null){
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         }else{
             BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         }
+
 
         toggleQuickRepliesVisiblity(false);
     }
@@ -282,14 +316,31 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
     }
 
     @Override
-    public void launchActivityWithBundle(int type, Bundle payload) {
+    public void launchActivityWithBundle(String type, Bundle payload) {
 
     }
 
     @Override
-    public void sendWithSomeDelay(String message, String payload,long time) {
+    public void sendWithSomeDelay(String message, String payload,long time,boolean isScrollupNeeded) {
 
     }
+
+    @Override
+    public void copyMessageToComposer(String text, boolean isForOnboard) {
+
+    }
+
+    @Override
+    public void showMentionNarratorContainer(boolean show, String natxt,String cotext, String res, boolean isEnd, boolean showOverlay,String templateType) {
+
+    }
+
+    @Override
+    public void openFullView(String templateType, String data, Duration duration, int position) {
+
+    }
+
+
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
@@ -302,7 +353,7 @@ public class BotChatActivity extends BotAppCompactActivity implements  ComposeFo
 
     @Override
     public void onQuickReplyItemClicked(String text) {
-        onSendClick(text);
+        onSendClick(text,false);
     }
 
     /**

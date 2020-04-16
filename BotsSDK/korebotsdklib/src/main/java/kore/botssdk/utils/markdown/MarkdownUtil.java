@@ -168,13 +168,13 @@ public class MarkdownUtil {
             //<a href="http://google.com">Google!</a>
             //Go to [Google](http://google.com) and lookup
 
-            if (!link.startsWith("www.") && !link.startsWith("http://")) {
+           /* if (!link.startsWith("www.") && !link.startsWith("http://")) {
                 link = "www." + link;
             }
 
             if (!link.startsWith("http://")) {
                 link = "http://" + link;
-            }
+            }*/
 
             StringBuilder builder = new StringBuilder(text);
             builder.delete(indexP1, indexP4 + 1);

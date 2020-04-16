@@ -16,7 +16,7 @@ import kore.botssdk.view.tableview.listeners.TableHeaderClickListener;
  *
  * @author ISchwarz
  */
-class TableHeaderView extends ListView {
+public class TableHeaderView extends ListView {
 
     private final Set<TableHeaderClickListener> listeners = new HashSet<>();
     private TableHeaderAdapter adapter;

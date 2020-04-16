@@ -2,9 +2,8 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shiva Krishna on 2/8/2018.
- */
+import kore.botssdk.utils.DateUtils;
+
 
 public class EmailModel{
     ArrayList<BotCaourselButtonModel> buttons;
@@ -82,13 +81,13 @@ public class EmailModel{
         this.source = source;
     }
 
-    String from;
-    String[] to;
-    String[] cc;
-    String subject;
-    String desc;
-    String date;
-    String source;
+    private String from;
+    private String[] to;
+    private String[] cc;
+    private String subject;
+    private String desc;
+    private String date;
+    private String source;
 
     public String[] getAttachments() {
         return attachments;
@@ -98,5 +97,8 @@ public class EmailModel{
         this.attachments = attachments;
     }
 
-    String[] attachments;
+    private String[] attachments;
+    public String getDateFormat(){
+     return DateUtils.getDateFromStringByDate(date);
+    }
 }

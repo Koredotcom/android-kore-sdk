@@ -19,6 +19,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
@@ -58,7 +59,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     }
 
     private void init() {
-        textMediaLayoutGravity = TextMediaLayout.GRAVITY_LEFT;
+        textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
         carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
         pieViewHeight = (int) getResources().getDimension(R.dimen.pie_layout_height);
         tableHeight = (int) getResources().getDimension(R.dimen.table_layout_height);
@@ -165,7 +166,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     protected void populateForTemplates(int position, ComponentModel compModel) {
 
         // Default out everything
-        botButtonView.populateButtonList(null);
+        botButtonView.populateButtonList(null,false);
         botListTemplateView.populateListTemplateView(null, null);
 
         botListTemplateView.setVisibility(View.GONE);
@@ -189,7 +190,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botButtonView.setVisibility(View.VISIBLE);
                     botButtonView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN - dp1 + BubbleViewUtil.getBubbleContentWidth() - dp1 + BUBBLE_CONTENT_RIGHT_MARGIN);
-                    botButtonView.populateButtonList(payInner.getButtons());
+                    botButtonView.populateButtonList(payInner.getButtons(),false);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -197,7 +198,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                 } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botCarouselView.setVisibility(View.VISIBLE);
-                    botCarouselView.populateCarouselView(payInner.getCarouselElements());
+                    botCarouselView.populateCarouselView(payInner.getCarouselElements(),payInner.getTemplate_type());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     setDoDrawBubbleBackground(!(payInner.getText() == null || payInner.getText().isEmpty()));
                     if(!isDoDrawBubbleBackground()){
@@ -238,15 +239,17 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                         stackedBarChatView.setData(payInner);
                     }
                 }else if(BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())){
-                    miniTableView.setVisibility(View.VISIBLE);
-                    bubbleTextMediaLayout.populateText(payInner.getText());
-                    miniTableView.setData(payInner.getTemplate_type(), payInner);
+                    //TODO handle
+//                    miniTableView.setVisibility(View.VISIBLE);
+//                    bubbleTextMediaLayout.populateText(payInner.getText());
+//                    miniTableView.setData(payInner.getTemplate_type(), payInner);
                 }else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())){
-                    miniTableView.setVisibility(View.VISIBLE);
+                    //TODO handle
+                    /*miniTableView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
 //                    for(BotMiniTableModel model:payInner.getMiniTableDataModels()) {
                         miniTableView.setData(payInner.getTemplate_type(), payInner);
-//                    }
+//                    }*/
                 }else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getText())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }else if(BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())){

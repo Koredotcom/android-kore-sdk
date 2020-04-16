@@ -18,11 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 /**
@@ -34,7 +35,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
 
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     LayoutInflater ownLayoutInflator;
     Context context;
@@ -51,7 +52,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (botListModelArrayList != null) {
-            return botListModelArrayList.size();
+            return botListModelArrayList.size() >3 ? 3 : botListModelArrayList.size();
         } else {
             return 0;
         }
@@ -91,13 +92,18 @@ public class BotListTemplateAdapter extends BaseAdapter {
 
     private void populateVIew(ViewHolder holder, int position) {
         BotListModel botListModel = getItem(position);
-
-        Picasso.with(context).load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+        if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
+            holder.botListItemImage.setVisibility(View.VISIBLE);
+            Picasso.with(context).load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+        }
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
-        holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
+            holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+        }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);
         } else {
@@ -115,7 +121,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
                             String listElementButtonPayload = botListElementButton.getPayload();
                             String listElementButtonTitle = botListElementButton.getTitle();
-                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload);
+                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload,false);
                         }
                     }
                 }
@@ -127,11 +133,11 @@ public class BotListTemplateAdapter extends BaseAdapter {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     int position = parentListView.getPositionForView(v);
                     BotListModel _botListModel = getItem(position);
-                    if (_botListModel != null) {
+                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload());
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
                         }
                     }
                 }
@@ -144,7 +150,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
         this.botListModelArrayList = botListModelArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

@@ -5,18 +5,22 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="beforeDescendants"
     android:orientation="horizontal"
-    android:paddingLeft="7dp"
-    android:paddingRight="7dp">
+
+    android:paddingStart="0dp"
+    android:paddingEnd="10dp"
+    android:paddingTop="3dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:background="@drawable/quick_reply_textbackground"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
-        android:id="@+id/quick_reply_view"
         android:layout_gravity="center_vertical"
-        android:padding="10dp">
+
+        android:id="@+id/quick_reply_view"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <ImageView
             android:id="@+id/quick_reply_item_image"
@@ -25,16 +29,18 @@
             android:scaleType="centerCrop"
             android:layout_gravity="center_vertical"
             android:background="@drawable/round_rect_image"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginEnd="5dp"/>
 
         <TextView
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
+            android:layout_height="match_parent"
+            android:textColor="@color/color_465360"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="14dp"
+            android:text="Hello"
+            android:singleLine="true"
+            android:gravity="center"
+            android:textSize="14sp"
             android:layout_gravity="center_vertical" />
     </LinearLayout>
 

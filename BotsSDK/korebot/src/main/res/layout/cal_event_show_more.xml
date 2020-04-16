@@ -3,6 +3,7 @@
     android:id="@+id/event_options_more"
     android:layout_width="match_parent"
     android:layout_height="46dp"
+
     android:gravity="center"
     android:layout_gravity="center_horizontal"
     android:orientation="horizontal">
@@ -14,7 +15,7 @@
         android:layout_gravity="center"
         android:ellipsize="end"
         android:gravity="center"
-        android:tag="extra-bold"
+        android:tag="bold"
         android:singleLine="true"
         android:text="SHOW MORE"
         android:textColor="@color/splash_color"

@@ -96,15 +96,15 @@ public class RestResponse {
     public static class BotMessage {
         private String body;
         private BotCustomData customData;
-        public String getParams() {
+        public HashMap<String, Object> getParams() {
             return params;
         }
 
-        public void setParams(String params) {
+        public void setParams(HashMap<String, Object> params) {
             this.params = params;
         }
 
-        private String params;
+        private HashMap<String, Object> params;
         private ArrayList<Objects> attachments = new ArrayList<>();
 
         public BotMessage(String body) {
@@ -156,7 +156,7 @@ public class RestResponse {
         private int clientMessageId = (int)System.currentTimeMillis();
         private Meta meta;
         private int id = clientMessageId;
-        private String client = "sdk";
+        private String client = "Android";
 
         public void setMessage(BotMessage message) {
             this.message = message;

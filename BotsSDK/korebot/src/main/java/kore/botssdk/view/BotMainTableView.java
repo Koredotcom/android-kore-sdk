@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.view;
 
 import android.content.Context;
@@ -14,9 +15,11 @@ import kore.botssdk.view.tableview.BotTableView;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+*/
 /**
  * Created by Ramachandra Pradeep on 13-Apr-18.
- */
+ *//*
+
 
 public class BotMainTableView extends ViewGroup {
 
@@ -54,9 +57,8 @@ public class BotMainTableView extends ViewGroup {
 //        tableContainer.removeAllViews();
         removeAllViews();
 
-        if(StringUtils.isNullOrEmpty(template_type)) return;
-
-        if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type)) {
+        */
+/*if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type)) {
             for(int index=0; index <payloadInner.getMiniTableDataModels().size(); index++){
                 BotTableView mTable = new BotTableView(mContext);
                 //Set layoutParams
@@ -64,7 +66,9 @@ public class BotMainTableView extends ViewGroup {
                 mTable.addDataAdapter(template_type, payloadInner.getMiniTableDataModels().get(index).getAdditional(),alignment);
 //                tableContainer.addView(mTable, index);
                 addView(mTable);
-                /*if(index > 0){
+                *//*
+*/
+/*if(index > 0){
                     View v = new View(mContext);
                     v.setLayoutParams(new LinearLayout.LayoutParams(
                             LayoutParams.MATCH_PARENT,
@@ -73,9 +77,12 @@ public class BotMainTableView extends ViewGroup {
                     v.setBackgroundColor(Color.parseColor("#B3B3B3"));
 
                     tableContainer.addView(v);
-                }*/
+                }*//*
+*/
+/*
             }
-        }else if(BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)){
+        }else*//*
+ if(BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)){
             BotTableView mTable = new BotTableView(mContext);
             String[] alignment = mTable.addHeaderAdapter(payloadInner.getColumns());
             mTable.addDataAdapterForTable(payloadInner,alignment);
@@ -94,7 +101,8 @@ public class BotMainTableView extends ViewGroup {
 
     }
 
-    @Override
+    */
+/*@Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxAllowedWidth = parentWidth;
@@ -102,16 +110,16 @@ public class BotMainTableView extends ViewGroup {
 
 
         int childWidthSpec,childHeightSpec;
-        int viewHeight = 0, totViewHeight = 0;
+        int viewHeight = 0;
 
         //Iterate through every child Tables ie. BotTableView
-        for(int i=0; i < getChildCount(); i++) {
+        for(int i=0; i < Math.min(getChildCount(),1); i++) {
             viewHeight = getViewHeight(i);
             View childView = getChildAt(i);
-            childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);
+            childHeightSpec = MeasureSpec.makeMeasureSpec((int) getResources().getDimension(R.dimen.line_layout_height), MeasureSpec.EXACTLY);
             childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
             MeasureUtils.measure(childView, childWidthSpec, childHeightSpec); // Apply measure height for BotTableView
-            totViewHeight += viewHeight; //Keep adding BotTableView for total height
+//            totViewHeight += viewHeight; //Keep adding BotTableView for total height
         }
 
 //        childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);
@@ -122,9 +130,37 @@ public class BotMainTableView extends ViewGroup {
 //            childHeight += mTable.getMeasuredHeight();
 //        }
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
-        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totViewHeight, MeasureSpec.EXACTLY);
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec((int) getResources().getDimension(R.dimen.line_layout_height), MeasureSpec.EXACTLY);
 
-        super.onMeasure(parentWidthSpec, parentHeightSpec);
+       // super.onMeasure(parentWidthSpec, parentHeightSpec);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+
+    }*//*
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int maxAllowedWidth = parentWidth;
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+        int totalHeight = getPaddingTop();
+        int totalWidth = getPaddingLeft();
+
+        int childWidthSpec;
+        int childHeightSpec;
+        int contentWidth = 0;
+
+        */
+/*
+         * For Pie View Layout
+         *//*
+
+        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) getResources().getDimension(R.dimen.my_table_height), MeasureSpec.EXACTLY);
+
+        MeasureUtils.measure(getChildAt(0), childWidthSpec, childHeightSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
 
@@ -134,8 +170,8 @@ public class BotMainTableView extends ViewGroup {
         int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
-        int childLeft = this.getPaddingLeft();
-        int childTop = this.getPaddingTop();
+        int childLeft = 0;//this.getPaddingLeft();
+        int childTop = 0;//this.getPaddingTop();
 
         //walk through each child, and arrange it from left to right
         for (int i = 0; i < count; i++) {
@@ -147,3 +183,4 @@ public class BotMainTableView extends ViewGroup {
         }
     }
 }
+*/

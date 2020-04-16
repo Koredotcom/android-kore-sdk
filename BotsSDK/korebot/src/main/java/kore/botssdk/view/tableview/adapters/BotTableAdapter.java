@@ -2,7 +2,6 @@ package kore.botssdk.view.tableview.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,15 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        final String  str = getRowData(rowIndex).getElements().get(columnIndex);
+        String  str;
+        if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double){
+            str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
+        }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
+            str = (String) getRowData(rowIndex).getElements().get(columnIndex);
+        }else{
+            str = "";
+        }
+
         View renderedView = null;
         renderedView = renderString(columnIndex,str);
 

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -35,6 +35,7 @@ public class BotCarouselView extends ViewGroup {
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     BotCarouselAdapter botCarouselAdapter;
+
 
     public BotCarouselView(Context context) {
         super(context);
@@ -63,13 +64,17 @@ public class BotCarouselView extends ViewGroup {
         carouselViewpager.setPageMargin(pageMargin);
 
     }
+    public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList){
+        populateCarouselView(botCarouselModelArrayList,null);
+    }
 
-    public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList) {
+    public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList,String type) {
         if (composeFooterInterface != null && activityContext != null) {
 //            if (carouselViewpager.getAdapter() == null) {
                 carouselViewpager.setOffscreenPageLimit(4);
                 botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
                 botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+                botCarouselAdapter.setType(type);
                 carouselViewpager.setAdapter(botCarouselAdapter);
                 botCarouselAdapter.notifyDataSetChanged();
                 carouselViewpager.setSwipeLocked(botCarouselModelArrayList != null && botCarouselModelArrayList.size() ==1);

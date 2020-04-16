@@ -12,13 +12,16 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.KoraCarousalAdapter;
+import kore.botssdk.adapter.KoraMiniTableAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.EmailModel;
 import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.models.KoraSearchResultsModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -29,11 +32,13 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 
 public class KoraCarouselView extends ViewGroup {
-    Context mContext;
-    float dp1;
-    TextView headerView;
-    HeightAdjustableViewPager carousalView;
-    KoraCarousalAdapter koraCarousalAdapter;
+    private Context mContext;
+    private float dp1;
+    private HeightAdjustableViewPager carousalView;
+    private KoraCarousalAdapter koraCarousalAdapter;
+    private KoraMiniTableAdapter koraMiniTableAdapter;
+//    private String template_type;
+
 
     public Activity getActivityContext() {
         return activityContext;
@@ -53,16 +58,16 @@ public class KoraCarouselView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
     public KoraCarouselView(Context mContext){
@@ -85,7 +90,7 @@ public class KoraCarouselView extends ViewGroup {
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
         carousalView = (HeightAdjustableViewPager) view.findViewById(R.id.carouselViewpager);
-        carousalView.setAddExtraHeight(true);
+//        carousalView.setAddExtraHeight(true);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
 
         carousalView.setPageMargin(pageMargin);
@@ -98,7 +103,7 @@ public class KoraCarouselView extends ViewGroup {
         int maxAllowedWidth = parentWidth;
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
-        int totalHeight = getPaddingTop();
+        int totalHeight = 0;//getPaddingTop();
         int totalWidth = getPaddingLeft();
 
         int childWidthSpec;
@@ -115,13 +120,14 @@ public class KoraCarouselView extends ViewGroup {
        // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
         MeasureUtils.measure(carousalView, childWidthSpec, wrapSpec);
 
-        totalHeight += carousalView.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
-        if(carousalView.getMeasuredHeight() !=0 ){
-            totalHeight+=10*dp1;
-        }
+        totalHeight += carousalView.getMeasuredHeight();
+        /*if(carousalView.getMeasuredHeight() !=0 ){
+            totalHeight+=1*dp1;
+        }*/
         int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(childWidthSpec, MeasureSpec.AT_MOST);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
 
-        super.onMeasure(widthMeasureSpec, parentHeightSpec);
     }
 
     @Override
@@ -143,13 +149,13 @@ public class KoraCarouselView extends ViewGroup {
         }
     }
 
-    public void prepareDatasetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
+    public void prepareDataSetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
 
         if (invokeGenericWebViewInterface != null && composeFooterInterface != null) {
             ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels = new ArrayList<>();
             if(koraSearchResultsModel != null) {
                 ArrayList<EmailModel> emails = koraSearchResultsModel.getEmails();
-                ArrayList<KnowledgeDetailModel> knowledgeDetailModels = koraSearchResultsModel.getKnowledges();
+                ArrayList<KnowledgeDetailModel> knowledgeDetailModels = koraSearchResultsModel.getKnowledge();
                 if (emails != null && emails.size() > 0) {
                     for (EmailModel emailModel : emails) {
                         KoraSearchDataSetModel koraSearchDatasetModel = new KoraSearchDataSetModel();
@@ -180,6 +186,21 @@ public class KoraCarouselView extends ViewGroup {
             carousalView.setSwipeLocked(koraSearchDataSetModels.size() == 1);
 
         }
+    }
+
+    public void populateMiniTable(String template_type, PayloadInner payloadInner) {
+//        this.template_type = template_type;
+        if(payloadInner != null) {
+            carousalView.setOffscreenPageLimit(4);
+            koraMiniTableAdapter = new KoraMiniTableAdapter(payloadInner.getMiniTableDataModels(), mContext, template_type);
+            carousalView.setAdapter(koraMiniTableAdapter);
+            koraMiniTableAdapter.notifyDataSetChanged();
+            carousalView.setSwipeLocked(payloadInner.getMiniTableDataModels().size() == 1);
+        }else{
+            carousalView.setAdapter(null);
+            koraMiniTableAdapter = null;
+        }
+
     }
 
 

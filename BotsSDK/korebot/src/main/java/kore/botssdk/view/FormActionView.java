@@ -14,6 +14,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.FormActionsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -24,7 +25,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class FormActionView extends ViewGroup {
     RecyclerView recyclerView;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
     int maxWidth, listViewHeight;
 
@@ -77,7 +78,7 @@ public class FormActionView extends ViewGroup {
         }
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

@@ -23,7 +23,7 @@ public class MeetingRequestModel {
     private List<Object> rU = null;
     private int respondCount;
     private int pendingCount;
-
+    private int declinedCount;
     public String getId() {
         return _id;
     }
@@ -152,4 +152,11 @@ public class MeetingRequestModel {
         this.pendingCount = pendingCount;
     }
 
+    public int getDeclinedCount() {
+        return declinedCount;
+    }
+
+    public void setDeclinedCount(int declinedCount) {
+        this.declinedCount = declinedCount;
+    }
 }

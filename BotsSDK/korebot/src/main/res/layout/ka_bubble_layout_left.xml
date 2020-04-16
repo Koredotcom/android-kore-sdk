@@ -18,8 +18,8 @@
         <!-- Sender Image -->
         <kore.botssdk.view.CircularProfileView
             android:id="@+id/cpvSenderImage"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
             android:layout_alignParentLeft="true" />
 
 

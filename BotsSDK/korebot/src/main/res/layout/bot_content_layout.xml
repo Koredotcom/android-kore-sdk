@@ -4,27 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
-    <include layout="@layout/kora_timestamps_header"
-        android:id="@+id/headerLayout"/>
-
-
+    <include layout="@layout/kora_timestamps_header"/>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainerChat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <ListView
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatContentListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:layout_below="@+id/headerLayout"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         android:divider="@android:color/transparent"
         android:listSelector="@color/white"
         android:layout_marginBottom="2dp"
         android:transcriptMode="normal"
         android:visibility="visible" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <kore.botssdk.view.QuickReplyView
+        android:layout_width="match_parent"
+        android:id="@+id/quick_reply_view"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatContentListView" />
 
 
     <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"

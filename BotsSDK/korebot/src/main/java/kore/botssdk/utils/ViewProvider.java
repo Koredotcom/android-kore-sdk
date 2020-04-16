@@ -13,49 +13,58 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
-import kore.botssdk.view.BotMainTableView;
-import kore.botssdk.view.CalendarEventsTemplateView;
+import kore.botssdk.view.BotTableView;
+import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.KoraCarouselView;
-import kore.botssdk.view.KoraFilesCarousalView;
+import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
+import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
+import kore.botssdk.view.UniversalSearchView;
+import kore.botssdk.view.VerticalListView;
+import kore.botssdk.view.WelcomeSummaryView;
+import kore.botssdk.view.tableview.BotMiniTableView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
  */
 
 public class ViewProvider {
-    public static final int TEXTVIEW_ID = 1980081;
-    public static final int LIST_ID = 1980045;
+    private static final int TEXTVIEW_ID = 1980081;
+    private static final int LIST_ID = 1980045;
     public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
-    public static final int CAROUSEL_VIEW_ID = 1980053;
-    public static final int BUTTON_VIEW_ID = 1980098;
-    public static final int PIECHART_VIEW_ID = 19800123;
-    public static final int TABLE_VIEW_ID = 19800345;
-    public static final int LINECHART_VIEW_ID = 19800335;
-    public static final int KORA_CAROUSEL_VIEW_ID = 1980050;
-    public static final int MEETING_SLOTS_VIEW_ID = 1980089;
-    public static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
-    public static final int CALENDER_EVENTS_VIEW_ID = 19800456;
-    public static final int FILES_CAROUSAL_VIEW_ID = 19800678;
-    public static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
-    public static final int QUICK_RPVIEW = 1988881;
-    public static final int TIMELINE_VIEW_ID = 1980094;
+    private static final int CAROUSEL_VIEW_ID = 1980053;
+    private static final int BUTTON_VIEW_ID = 1980098;
+    private static final int PIECHART_VIEW_ID = 19800123;
+    private static final int TABLE_VIEW_ID = 19800345;
+    private static final int LINECHART_VIEW_ID = 19800335;
+    private static final int KORA_CAROUSEL_VIEW_ID = 1980050;
+    private static final int MEETING_SLOTS_VIEW_ID = 1980089;
+    private static final int MULTI_SELECT_VIEW_ID = 1980090;
+    private static final int MEETING_CONFIRMATION_VIEW_ID = 1980032;
+    private static final int CONTACT_VIEW_ID = 19800456;
+    private static final int WELCOME_SUMMARY_VIEW_ID = 19800786;
+    private static final int KORA_SUMMARY_HELP_VIEW_ID = 19800787;
+    private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
+    private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
+    private static final int QUICK_RPVIEW = 1988881;
+    private static final int TIMELINE_VIEW_ID = 1980094;
+    private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
+    public static final int TASK_VIEW_ID = 1981234;
 
 
     public static Path RoundedRect(
@@ -128,7 +137,7 @@ public class ViewProvider {
     }
 
 
-    public static QuickReplyView getQuickReplyView(Context context, ArrayList<QuickReplyTemplate> data, ComposeFooterFragment.ComposeFooterInterface listener, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public static QuickReplyView getQuickReplyView(Context context, ArrayList<QuickReplyTemplate> data, ComposeFooterInterface listener, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         if (context != null) {
             QuickReplyView quickReplyView = new QuickReplyView(context);
             quickReplyView.setId(QUICK_RPVIEW);
@@ -141,7 +150,7 @@ public class ViewProvider {
         }
     }
 
-    public static FormActionView getFormActionView(Context context, ArrayList<FormActionTemplate> data, ComposeFooterFragment.ComposeFooterInterface listener) {
+    public static FormActionView getFormActionView(Context context, ArrayList<FormActionTemplate> data, ComposeFooterInterface listener) {
         if (context != null) {
             FormActionView formActionView = new FormActionView(context);
             formActionView.setId(QUICK_RPVIEW);
@@ -153,17 +162,16 @@ public class ViewProvider {
         }
     }
 
-    public static BotButtonView getBotButtonView(Context context, ArrayList<BotButtonModel> data, ComposeFooterFragment.ComposeFooterInterface listener) {
+    public static BotButtonView getBotButtonView(Context context, ComposeFooterInterface listener) {
         BotButtonView botButtonView = new BotButtonView(context);
         botButtonView.setId(BUTTON_VIEW_ID);
         botButtonView.setComposeFooterInterface(listener);
-        botButtonView.populateButtonList(data);
         return botButtonView;
     }
 
     public static TextMediaLayout getTextMediaLayout(Context context, int linkColors){
         TextMediaLayout bubbleTextMediaLayout = new TextMediaLayout(context,linkColors);
-        bubbleTextMediaLayout.setId(TextMediaLayout.TEXT_MEDIA_LAYOUT_ID);
+        bubbleTextMediaLayout.setId(BubbleConstants.TEXT_MEDIA_LAYOUT_ID);
         return bubbleTextMediaLayout;
     }
     public static BotListTemplateView getBotListTempleteView(Context context){
@@ -187,8 +195,8 @@ public class ViewProvider {
         botPieChartView.setId(PIECHART_VIEW_ID);
         return botPieChartView;
     }
-    public static BotMainTableView getTableView(Context context){
-        BotMainTableView tableView = new BotMainTableView(context);
+    public static BotTableView getTableView(Context context){
+        BotTableView tableView = new BotTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }
@@ -203,11 +211,17 @@ public class ViewProvider {
         meetingSlotsView.setId(MEETING_SLOTS_VIEW_ID);
         return meetingSlotsView;
     }
+    public static MultiSelectView getMultiSelectView(Context context){
+        MultiSelectView multiSelectView = new MultiSelectView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
+    }
     public static MeetingConfirmationView getMeetingConfirmationView(Context context){
         MeetingConfirmationView meetingConfirmationView = new MeetingConfirmationView(context);
         meetingConfirmationView.setId(MEETING_CONFIRMATION_VIEW_ID);
         return meetingConfirmationView;
     }
+
 
     public static AttendeeSlotSelectionView getAttendeeSlotSelectionView(Context context){
         AttendeeSlotSelectionView attendeeSlotSelectionView = new AttendeeSlotSelectionView(context);
@@ -215,13 +229,34 @@ public class ViewProvider {
         return attendeeSlotSelectionView;
     }
 
-    public static CalendarEventsTemplateView getCalenderTemplateView(Context context){
-        CalendarEventsTemplateView calendarEventsTemplateView = new CalendarEventsTemplateView(context);
-        calendarEventsTemplateView.setId(CALENDER_EVENTS_VIEW_ID);
-        return calendarEventsTemplateView;
+    public static ContactInfoView getContactInfoView(Context context){
+        ContactInfoView contactInfoView = new ContactInfoView(context);
+        contactInfoView.setId(CONTACT_VIEW_ID);
+        return contactInfoView;
     }
-    public static KoraFilesCarousalView getKoraFilesCarouselView(Context context){
-        KoraFilesCarousalView koraCarouselView = new KoraFilesCarousalView(context);
+
+    public static WelcomeSummaryView getWelcomeSummaryView(Context context){
+        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context,"");
+        welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
+        return welcomeSummaryView;
+    }
+
+
+
+    public static UniversalSearchView getUniversalSearchView(Context context){
+        UniversalSearchView universalSearchView = new UniversalSearchView(context);
+        universalSearchView.setId(UNIVERSAL_SEARCH_VIEW_ID);
+        return universalSearchView;
+    }
+
+    public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){
+        KoraSummaryHelpView koraSummaryHelpView = new KoraSummaryHelpView(context);
+        koraSummaryHelpView.setId(KORA_SUMMARY_HELP_VIEW_ID);
+        return koraSummaryHelpView;
+    }
+
+    public static VerticalListView getVerticalListView(Context context){
+        VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);
         return koraCarouselView;
     }

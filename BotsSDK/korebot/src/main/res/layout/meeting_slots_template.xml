@@ -1,28 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/meeting_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="vertical"
-    android:id="@+id/meeting_layout">
+    android:paddingBottom="2dp">
 
     <kore.botssdk.view.AutoExpandListView
         android:id="@+id/slots_list"
         android:layout_width="match_parent"
-        android:visibility="visible"
         android:layout_height="wrap_content"
-        android:divider="@null" />
+        android:layout_alignParentTop="true"
+        android:divider="@null"
+        android:visibility="visible" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="extra-bold"
-        android:id="@+id/show_more_view"
-        android:text="@string/modify_slots"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="true"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/splash_color"
-        android:textSize="15dp" />
-</LinearLayout>
+        android:layout_below="@+id/slots_list"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/button1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/meeting_slot_modify_background"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:tag="bold"
+            android:text="@string/modify_slots"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+        <TextView
+            android:id="@+id/button2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/meeting_slot_modify_background"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:minHeight="40dp"
+            android:tag="bold"
+            android:text="Send Slots"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+    </LinearLayout>
+</RelativeLayout>

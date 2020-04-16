@@ -6,22 +6,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.utils.Utils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 

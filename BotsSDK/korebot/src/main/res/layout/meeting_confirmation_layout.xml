@@ -1,56 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/slot_confirm_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bottom_right_rounded_rectangle"
-    android:orientation="vertical"
-    android:paddingEnd="12dp"
-    android:paddingStart="12dp">
+    android:padding="12dp"
+    android:background="@drawable/shadow_layer_background"
+    app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/title_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="14dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:tag="bold"
-        android:text="Project Kickoff Meeting"
-        android:textColor="@color/color_1a1a1a"
-        android:textSize="18dp" />
+
+        android:layout_marginStart="-5dp"
+        android:layout_marginTop="-5dp"
+        android:padding="5dp"
+        android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/date_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="7dp"
-        android:gravity="center"
-        android:tag="semi-bold"
-        android:text="13,jul 2018"
-        android:textColor="@color/color_485260"
-        android:textSize="13dp" />
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:ellipsize="end"
+            android:gravity="start|top"
+            android:fontFamily="@font/latoregular"
+            android:maxLines="1"
+            android:text=""
+            android:textColor="#485260"
+            android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/location_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:tag="semi-bold"
-        android:text="13"
-        android:textColor="@color/color_485260"
-        android:textSize="13dp" />
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
+            android:drawablePadding="5dp"
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_14dp"
-        android:layout_marginTop="7dp"
-        android:visibility="gone" />
+            android:ellipsize="end"
+            android:gravity="start|top"
+            android:maxLines="1"
+            android:text="Selected Slots"
+            android:textColor="#757587"
+            android:textSize="10sp" />
 
+        <TextView
+            android:id="@+id/time_slots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/latomedium"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/color_404051"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/location_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:drawableStart="@drawable/vector_location_icon"
+            android:drawablePadding="5dp"
+            android:gravity="center|start"
+            android:fontFamily="@font/latomedium"
+            android:textColor="#485260"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/tv_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/vector_person"
+            android:drawablePadding="5dp"
+            android:gravity="center|start"
+            android:textColor="#485260"
+            android:textSize="13sp" />
+    </LinearLayout>
 </LinearLayout>

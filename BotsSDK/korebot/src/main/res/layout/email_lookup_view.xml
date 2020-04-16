@@ -1,0 +1,107 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="emailModel"
+            type="kore.botssdk.models.EmailModel" />
+
+        <import type="android.view.View" />
+
+        <import type="org.apache.commons.lang3.StringEscapeUtils" />
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="15dp">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/date_view"
+            android:ellipsize="end"
+            android:fontFamily="@font/latoregular"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:text='@{emailModel.subject == null || emailModel.subject.empty ? "(No Subject)" : emailModel.subject}'
+            android:textColor="@color/color_485260"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/date_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="14dp"
+            android:fontFamily="@font/latoregular"
+            android:text="@{emailModel.getDateFormat()}"
+            android:textColor="#a3b0be"
+            android:textSize="15sp" />
+
+
+        <TextView
+            android:id="@+id/from"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignBaseline="@+id/image"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="8dp"
+            android:layout_toStartOf="@+id/image"
+            android:layout_toEndOf="@+id/image"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="1"
+            android:text="@{StringEscapeUtils.unescapeHtml4(emailModel.getFrom())}"
+            android:textColor="@color/color_485260"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:layout_marginEnd="14dp"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/icon_attachment_doc"
+            android:visibility="@{emailModel.attachments == null || emailModel.attachments.length == 0 ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/from"
+            android:layout_alignStart="@+id/title"
+            android:layout_alignEnd="@+id/date_view"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/latoregular"
+            android:maxLines="1"
+            android:text='@{emailModel.desc == null || emailModel.desc.empty ? "(No Body)" : emailModel.desc}'
+            android:textColor="#465360"
+            android:textSize="15sp" />
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/body"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/inset_10_divider" />
+    </RelativeLayout>
+</layout>

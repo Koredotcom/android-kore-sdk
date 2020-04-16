@@ -7,12 +7,14 @@ package kore.botssdk.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import androidx.core.content.res.ResourcesCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import kore.botssdk.R;
 import kore.botssdk.net.SDKConfiguration;
 
 public class KaFontUtils {
@@ -38,9 +40,9 @@ public class KaFontUtils {
     public static final String ROBOTO_REGULAR_ITALICS = "regular-italic";
     public static final String ROBOTO_MEDIUM = "medium";
     public static final String ROBOTO_MEDIUM_ITALICS = "medium-italic";
+    public static final String ROBOTO_BOLD = "bold";
     public static final String ROBOTO_SEMI_BOLD = "semi-bold";
     public static final String ROBOTO_SEMI_BOLD_ITALICS = "semi-bold-italic";
-    public static final String ROBOTO_BOLD = "bold";
     public static final String ROBOTO_BOLD_ITALICS = "bold-italic";
     public static final String ROBOTO_EXTRA_BOLD = "extra-bold";
 
@@ -63,6 +65,7 @@ public class KaFontUtils {
         Object tag = myview.getTag();
         if (tag instanceof String) {
             myview.setTypeface(getCustomTypeface((String) tag, context));
+
         }
     }
 
@@ -73,7 +76,7 @@ public class KaFontUtils {
         }
     }
 
-    private static Typeface getCustomTypeface(String tag, Context context) {
+    public static Typeface getCustomTypeface(String tag, Context context) {
         if(SDKConfiguration.getFontType().equals(SDKConfiguration.FONT_TYPES.RELATIVE)){
            if(tag.equalsIgnoreCase(ROBOTO_BOLD)) {
                if (robotoBold == null) {
@@ -151,6 +154,7 @@ public class KaFontUtils {
                     }
                     return robotoRegular;
             }
+
         }
     }
 

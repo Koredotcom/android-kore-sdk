@@ -1,8 +1,11 @@
 package kore.botssdk.activity;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -12,6 +15,7 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import kore.botssdk.R;
 
@@ -21,6 +25,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     String actionbarTitle;
     String url;
     WebView webview;
+    ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         actionbarTitle = receivedBundle.getString("header");
         setUpActionBar();
         webview = (WebView) findViewById(R.id.webView);
+        mProgressBar = findViewById(R.id.mProgress);
         loadUrl();
     }
 
@@ -40,6 +46,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
+       webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         webview.getSettings().setDomStorageEnabled(true);
@@ -51,7 +58,19 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 return super.shouldOverrideUrlLoading(view, url);
             }
 
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                webview.setVisibility(View.INVISIBLE);
+            }
 
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                mProgressBar.setVisibility(ProgressBar.GONE);
+                webview.setVisibility(View.VISIBLE);
+            }
         });
         webview.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -67,6 +86,15 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                         + consoleMessage.sourceId());
                 return super.onConsoleMessage(consoleMessage);
             }
+            /*@Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                setTitle("Loading... " +newProgress +"%");
+//                KaGenericWebViewActivity.this.setProgress(newProgress * 100);
+
+                if(newProgress == 100)
+                    setTitle(R.string.app_name);
+            }*/
+
         });
 
         webview.loadUrl(url);
@@ -98,8 +126,11 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     }
 
     private void setUpActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
         actionBar.setTitle(actionbarTitle);
 
     }

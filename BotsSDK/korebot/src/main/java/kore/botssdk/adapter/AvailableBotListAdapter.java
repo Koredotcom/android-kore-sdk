@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.adapter;
 
 import android.content.Context;
@@ -14,10 +15,12 @@ import kore.botssdk.R;
 import kore.botssdk.models.MarketStreams;
 import kore.botssdk.net.MarketStreamList;
 
+*/
 /**
  * Created by Pradeep Mahato on 06-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+ *//*
+
 @Deprecated
 public class AvailableBotListAdapter extends BaseAdapter {
 
@@ -56,7 +59,7 @@ public class AvailableBotListAdapter extends BaseAdapter {
 
         MarketStreams marketStreams = getItem(position);
 
-        Picasso.with(context).load(marketStreams.getIcon()).into(viewHolder.availableBotItemsImageView);
+        Picasso.get().load(marketStreams.getIcon()).into(viewHolder.availableBotItemsImageView);
         viewHolder.availableBotItemsText.setText(marketStreams.getName());
 
         return convertView;
@@ -81,3 +84,4 @@ public class AvailableBotListAdapter extends BaseAdapter {
     }
 
 }
+*/

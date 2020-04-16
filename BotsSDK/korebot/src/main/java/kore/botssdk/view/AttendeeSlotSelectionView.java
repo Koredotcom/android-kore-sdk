@@ -1,12 +1,13 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 
@@ -16,29 +17,23 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.adapter.AttendeeSlotsAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.databinding.AttendeeSlotSelectionViewBinding;
+import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.events.SendWithSomeDelay;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
-import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class AttendeeSlotSelectionView extends ViewGroup {
-    private AutoExpandListView autoExpandListView;
-    private View meetingLayout;
-    private TextView confirmView,declineView;
+public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlotsAdapter.SlotSelectionListener {
+
+    private AttendeeSlotSelectionViewBinding attendeeSlotSelectionViewBinding;
 
     float dp1;
     Gson gson = new Gson();
-    private float restrictedLayoutWidth;
-    public static HashMap<Integer,ArrayList> dataMap = new HashMap<>();
-
-
-
-    public void setRestrictedLayoutWidth(float restrictedLayoutWidth) {
-        this.restrictedLayoutWidth = restrictedLayoutWidth;
-    }
 
     public AttendeeSlotSelectionView(Context context) {
         super(context);
@@ -64,105 +59,104 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public ComposeFooterFragment.ComposeFooterInterface getComposeFooterInterface() {
+    public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    private ComposeFooterInterface composeFooterInterface;
 
 
     private void init() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.attendee_slot_selection_view, this, true);
-        autoExpandListView = (AutoExpandListView) view.findViewById(R.id.slots_list);
-        confirmView = (TextView) view.findViewById(R.id.confirm);
-        declineView = (TextView) view.findViewById(R.id.decline);
-
-        KaFontUtils.applyCustomFont(getContext(), view);
-        meetingLayout = view.findViewById(R.id.meeting_layout);
+        attendeeSlotSelectionViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.attendee_slot_selection_view, this, true);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        attendeeSlotSelectionViewBinding.slotsList.setItemAnimator(null);
+        ((GradientDrawable)attendeeSlotSelectionViewBinding.confirm.getBackground()).setColor(getContext().getResources().getColor(R.color.splash_color));
+        ((GradientDrawable)attendeeSlotSelectionViewBinding.decline.getBackground()).setColor(getContext().getResources().getColor(R.color.white));
     }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
+        View rootView = attendeeSlotSelectionViewBinding.getRoot();
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.EXACTLY);
-        MeasureUtils.measure(meetingLayout, childWidthSpec, wrapSpec);
-        if(meetingLayout.getMeasuredHeight() !=0) {
-            totalHeight += meetingLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop()+12 * dp1;
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) (parentWidth - 28 * dp1), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(rootView, childWidthSpec, wrapSpec);
+
+        totalHeight += rootView.getMeasuredHeight() + getPaddingBottom();
+
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(meetingLayout.getMeasuredWidth(), MeasureSpec.AT_MOST);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(rootView.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
 
 
-    public void populateData(final int viewPosition,final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
-        final AttendeeSlotsAdapter slotsButtonAdapter;
-            ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel != null ? meetingTemplateModel.getPopularSlots() : new ArrayList<MeetingSlotModel.Slot>();
-            ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel != null ? meetingTemplateModel.getOtherSlots() : new ArrayList<MeetingSlotModel.Slot>();
-            slotsButtonAdapter = new AttendeeSlotsAdapter(getContext());
+    public void populateData(final int viewPosition, final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
+        View rootView = attendeeSlotSelectionViewBinding.getRoot();
+        if (meetingTemplateModel != null) {
+            attendeeSlotSelectionViewBinding.setMeetingModel(meetingTemplateModel.getMeetingDetails());
+            rootView.setVisibility(VISIBLE);
+            final AttendeeSlotsAdapter slotsButtonAdapter;
+            ArrayList<MeetingSlotModel.Slot> popularSlots = meetingTemplateModel.getPopularSlots();
+            ArrayList<MeetingSlotModel.Slot> otherSlots = meetingTemplateModel.getOtherSlots();
+
+            slotsButtonAdapter = new AttendeeSlotsAdapter(getContext(),this);
             slotsButtonAdapter.setNormalSlots(otherSlots);
             slotsButtonAdapter.setPopularSlots(popularSlots);
+            slotsButtonAdapter.setHasStableIds(true);
+            slotsButtonAdapter.setEnabled(isEnabled);
 
-            if (meetingTemplateModel != null && (!isEnabled || dataMap.get(viewPosition) == null)) {
+            if (SelectionUtils.getSelectedSlots() == null || SelectionUtils.getSelectedSlots().size() == 0) {
                 slotsButtonAdapter.addSelectedSlots(popularSlots);
                 slotsButtonAdapter.addSelectedSlots(otherSlots);
-                if (isEnabled && dataMap.get(viewPosition) == null) {
-                    dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
-                }else if(!isEnabled){
-                    dataMap.remove(viewPosition);
-                }
-            } else if (isEnabled && dataMap.get(viewPosition) != null) {
-                slotsButtonAdapter.setSelectedSlots(dataMap.get(viewPosition));
+            } else {
+                slotsButtonAdapter.setSelectedSlots(SelectionUtils.getSelectedSlots());
             }
-            autoExpandListView.setAdapter(slotsButtonAdapter);
+
+            attendeeSlotSelectionViewBinding.slotsList.setAdapter(slotsButtonAdapter);
             slotsButtonAdapter.notifyDataSetChanged();
-            meetingLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
-            confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
-            meetingLayout.setVisibility(meetingTemplateModel != null ? VISIBLE : GONE);
-            autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(isEnabled) {
-                        slotsButtonAdapter.addOrRemoveSelectedSlot(slotsButtonAdapter.getItem(position));
-                        slotsButtonAdapter.notifyDataSetChanged();
-                        dataMap.put(viewPosition, slotsButtonAdapter.getSelectedSlots());
-                        confirmView.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
-                    }
+            attendeeSlotSelectionViewBinding.actions.setAlpha(isEnabled ? 1.0f : 0.5f);
+            attendeeSlotSelectionViewBinding.confirm.setAlpha(slotsButtonAdapter.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
 
-                }
-            });
-
-            confirmView.setOnClickListener(new OnClickListener() {
+            attendeeSlotSelectionViewBinding.confirm.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ArrayList<MeetingSlotModel.Slot> slots = slotsButtonAdapter.getSelectedSlots();
-                    if(isEnabled && slots.size() > 0){
-                        HashMap<String,ArrayList> payload = new HashMap<>();
-                        payload.put("slots",slots);
-                        composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots,slots.size(),slots.size()) ,gson.toJson(payload),0);
+                    if (isEnabled && slots.size() > 0) {
+                        HashMap<String, ArrayList> payload = new HashMap<>();
+                        payload.put("slots", slots);
+                        if(composeFooterInterface != null)
+                            composeFooterInterface.sendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false);
+                        else
+                            KoreEventCenter.post(new SendWithSomeDelay(getContext().getResources().getQuantityString(R.plurals.confirm_slots, slots.size(), slots.size()), gson.toJson(payload), 0,false));
                     }
 
                 }
             });
-            declineView.setOnClickListener(new OnClickListener() {
+            attendeeSlotSelectionViewBinding.decline.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HashMap<String,ArrayList> payload = new HashMap<>();
-                    composeFooterInterface.sendWithSomeDelay("Decline" ,gson.toJson(payload),0);
+                    HashMap<String, ArrayList> payload = new HashMap<>();
+                    if(composeFooterInterface != null)
+                        composeFooterInterface.sendWithSomeDelay("Decline", gson.toJson(payload), 0,false);
+                    else
+                        KoreEventCenter.post(new SendWithSomeDelay("Decline", gson.toJson(payload), 0,false));
 
                 }
             });
+        } else {
+            rootView.setVisibility(GONE);
+            attendeeSlotSelectionViewBinding.setMeetingModel(null);
+            attendeeSlotSelectionViewBinding.slotsList.setAdapter(null);
+        }
     }
 
 
@@ -172,7 +166,7 @@ public class AttendeeSlotSelectionView extends ViewGroup {
         final int count = getChildCount();
         //get the available size of child view
         int childLeft = 0;
-        int childTop = (int) (12 * dp1);
+        int childTop = 0;
 
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
@@ -181,5 +175,10 @@ public class AttendeeSlotSelectionView extends ViewGroup {
                 childTop += child.getMeasuredHeight();
             }
         }
+    }
+
+    @Override
+    public void onSlotSelectionChanged() {
+        attendeeSlotSelectionViewBinding.confirm.setAlpha(SelectionUtils.getSelectedSlots().size() > 0 ? 1.0f : 0.5f);
     }
 }

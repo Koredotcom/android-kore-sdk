@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotButtonTemplateAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment.ComposeFooterInterface;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.utils.BundleConstants;
@@ -68,15 +68,18 @@ public class BotButtonView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void populateButtonList(ArrayList<BotButtonModel> botButtonModels) {
-        BotButtonTemplateAdapter buttonTypeAdapter;
-        if (autoExpandListView.getAdapter() == null) {
+    public void populateButtonList(ArrayList<BotButtonModel> botButtonModels, final boolean enabled) {
+        final BotButtonTemplateAdapter buttonTypeAdapter;
+        if (botButtonModels != null) {
+            autoExpandListView.setVisibility(VISIBLE);
             buttonTypeAdapter = new BotButtonTemplateAdapter(getContext());
+            buttonTypeAdapter.setEnabled(enabled);
             autoExpandListView.setAdapter(buttonTypeAdapter);
             autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null && buttonTypeAdapter.isEnabled()) {
+                        buttonTypeAdapter.setEnabled(false);
                         BotButtonModel botButtonModel = ((BotButtonModel) parent.getItemAtPosition(position));
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
@@ -85,16 +88,18 @@ public class BotButtonView extends ViewGroup {
                         }else{
                             String title = botButtonModel.getTitle();
                             String payload = botButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(title, payload);
+                            composeFooterInterface.onSendClick(title, payload,false);
                         }
                     }
                 }
             });
+            buttonTypeAdapter.setBotButtonModels(botButtonModels);
+            buttonTypeAdapter.notifyDataSetChanged();
         } else {
-            buttonTypeAdapter = (BotButtonTemplateAdapter) autoExpandListView.getAdapter();
+            autoExpandListView.setAdapter(null);
+            autoExpandListView.setVisibility(GONE);
         }
-        buttonTypeAdapter.setBotButtonModels(botButtonModels);
-        buttonTypeAdapter.notifyDataSetChanged();
+
     }
 
     private int getViewHeight() {
@@ -104,17 +109,13 @@ public class BotButtonView extends ViewGroup {
             if (autoExpandListView.getAdapter() != null) {
                 count = autoExpandListView.getAdapter().getCount();
             }
-            viewHeight = (int) (layoutItemHeight * count);
+            viewHeight = (int) (layoutItemHeight * count)+(int)(count*(3*dp1));
         }
         return viewHeight;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
-        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
         int viewHeight = getViewHeight();
         int viewWidth = (viewHeight == 0) ? 0 : (int) restrictedMaxWidth;
         int childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);

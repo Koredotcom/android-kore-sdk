@@ -28,6 +28,15 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 public class BotClient {
     private Context mContext;
+
+    public RestResponse.BotCustomData getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(RestResponse.BotCustomData customData) {
+        this.customData = customData;
+    }
+
     private RestResponse.BotCustomData customData;
 
     public BotInfoModel getBotInfoModel() {
@@ -56,10 +65,11 @@ public class BotClient {
     }
 
 
-    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String clientId, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
-        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
+                                              String url, String botUserId, String auth) {
+//        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, uuid, socketConnectionListener);
+        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, socketConnectionListener,url, botUserId, auth);
     }
     /**
      * Connection for anonymous user
@@ -70,7 +80,7 @@ public class BotClient {
 
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, uuid, socketConnectionListener);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel,  socketConnectionListener,null);
     }
 
 
@@ -87,7 +97,7 @@ public class BotClient {
 
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymousWithOptions(jwtToken, botInfoModel, uuid, socketConnectionListener,options);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener,options);
     }
 
 
@@ -160,6 +170,12 @@ public class BotClient {
 //        sendQueMessages();
     }
 
+    public void updateAuthToken(String accessToken){
+        if(customData != null){
+            customData.put("kmToken",accessToken);
+        }
+    }
+
     public void sendFormData(String payLoad,String message) {
 
         if (payLoad != null && !payLoad.isEmpty()) {
@@ -167,7 +183,7 @@ public class BotClient {
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
-            botMessage.setParams(payLoad);
+            botMessage.setParams(Utils.jsonToMap(payLoad));
             botPayLoad.setMessage(botMessage);
             botPayLoad.setBotInfo(botInfoModel);
 

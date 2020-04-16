@@ -7,9 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.octo.android.robospice.exception.NoNetworkException;
-import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +27,9 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
+import kore.botssdk.models.UserNameModel;
+import kore.botssdk.net.BotJWTRestAPI;
+import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -131,7 +131,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
         persistBotMessage(payload,false,null);
         if(chatListener != null){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null,false));
         }
     }
 
@@ -225,8 +225,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     botName = jwtKeyResponse.getBotName();
                     streamId = jwtKeyResponse.getStreamId();
                     if (!isRefresh) {
-                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
-                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
+//                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
+//                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
                     } else {
                         KoreEventCenter.post(response.body().getJwt());
                     }
@@ -238,41 +238,16 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
             @Override
             public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
-                if (t instanceof NoNetworkException) {
+//                if (t instanceof NoNetworkException) {
 //                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
-                } else {
+//                } else {
                     Log.d("token refresh", t.getMessage());
-                }
+//                }
                 connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             }
         });
 
 
-        /*KaJwtRequest request = new KaJwtRequest(accessToken, true);
-        botsSpiceManager.execute(request, new RequestListener<JWTTokenResponse>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-                if (e instanceof NoNetworkException) {
-//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
-                } else {
-                    Log.d("token refresh", e.getMessage());
-                }
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-            }
-
-            @Override
-            public void onRequestSuccess(JWTTokenResponse jwt) {
-                jwtKeyResponse = jwt;
-                botName = jwtKeyResponse.getBotName();
-                streamId = jwtKeyResponse.getStreamId();
-                if (!isRefresh) {
-                    botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
-                            jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
-                } else {
-                    KoreEventCenter.post(jwt.getJwt());
-                }
-            }
-        });*/
     }
 
     @Override
@@ -300,8 +275,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
 //            this.socketUpdateListener = socketUpdateListener;
-           /* if (!botsSpiceManager.isStarted())
-                botsSpiceManager.start(this.mContext);*/
+
             initiateConnection();
         }
     }
@@ -329,6 +303,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 botsSpiceManager.start(this.mContext);*/
             initiateConnection();
         }
+    }
+
+    @Override
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId) {
+
     }
 
 
@@ -384,7 +363,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
 
     }
@@ -412,7 +391,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
         persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
 
     }
@@ -435,15 +414,13 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
         persistBotMessage(null,true,botRequest);
         if(chatListener != null){
-            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
+            chatListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest,false));
         }
 
     }
 
     @Override
     public void shutDownConnection() {
-      /*  if (botsSpiceManager.isStarted())
-            botsSpiceManager.shouldStop();*/
         botSocketConnectionManager = null;
         if (botClient != null)
             botClient.disconnect();

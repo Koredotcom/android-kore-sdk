@@ -2,8 +2,11 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '29.0.2'
 
+    dataBinding{
+        enabled = true
+    }
     defaultConfig {
            applicationId "kore.botssdk"
         minSdkVersion 19
@@ -11,6 +14,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -56,4 +60,6 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.j256.ormlite:ormlite-core:4.48'
     compile project(path: ':korefileuploadsdk')
+    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 }

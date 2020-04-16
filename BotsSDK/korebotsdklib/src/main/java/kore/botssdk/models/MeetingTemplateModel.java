@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class MeetingTemplateModel {
     private ArrayList<MeetingSlotModel> working_hours;
+    private ArrayList<BotButtonModel> buttons;
 
     public ArrayList<MeetingSlotModel> getWorking_hours() {
         return working_hours;
@@ -30,5 +31,13 @@ public class MeetingTemplateModel {
 
     public void setShowMore(boolean showMore) {
         this.showMore = showMore;
+    }
+
+    public ArrayList<BotButtonModel> getButtons() {
+        return buttons;
+    }
+
+    public void setButtons(ArrayList<BotButtonModel> buttons) {
+        this.buttons = buttons;
     }
 }

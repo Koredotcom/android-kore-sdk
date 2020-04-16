@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="meetingModel"
+            type="kore.botssdk.models.MeetingConfirmationModel" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:singleLine="true"
+            android:text="@{meetingModel.title}"
+            android:textColor="@color/color_404051"
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/location_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/vector_location_icon"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@{meetingModel.where}"
+            android:visibility="@{meetingModel.locVisibility}"
+            android:textColor="@color/color_404051"
+            android:textSize="13dp" />
+
+        <TextView
+            android:id="@+id/persons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/location_view"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="10dp"
+            android:drawableStart="@drawable/vector_person"
+            android:drawablePadding="10dp"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@{meetingModel.getparticipantsAsString()}"
+            android:textColor="@color/color_404051"
+            android:textSize="13dp" />
+    </RelativeLayout>
+</layout>

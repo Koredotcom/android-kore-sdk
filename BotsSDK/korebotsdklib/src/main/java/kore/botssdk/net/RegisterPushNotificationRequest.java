@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.net;
 
 import java.util.HashMap;
@@ -10,11 +11,9 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-/**
- * Created by Pradeep Mahato on 08-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+
 public class RegisterPushNotificationRequest  {
+
 
     private String userId, token;
     private HashMap<String, Object> request;
@@ -46,3 +45,4 @@ public class RegisterPushNotificationRequest  {
         //return response;
     }
 }
+*/

@@ -11,7 +11,7 @@
     <string name="click_hear_to_enter_text">click hear to enter text</string>
     <string name="click_hear_to_speak_something">click hear to speak something</string>
     <string name="tap_to_speak">Tap to speak</string>
-    <string name="repeat">Repeat please</string>
+    <string name="repeat">Please repeat</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
@@ -30,9 +30,66 @@
     <string name="default_cell">Data [%1$d:%2$d]</string>
     <string name="modify_slots">MODIFY SLOTS</string>
     <string name="confirm">Confirm</string>
+    <string name="need_login">You’d need to login to view the content</string>
     <string name="conversation_end">Conversation ended at</string>
     <plurals name="confirm_slots">
         <item quantity="one">Confirm availability for 1 slot</item>
         <item quantity="other">Confirm availability for %d slots</item>
     </plurals>
+    <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
+    <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
+    <string name="view_more">View more</string>
+
+    <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
+    <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
+    <string name="icon_e979">&#xe979;</string> <!-- MEETING -->
+    <string name="icon_e961">&#xe961;</string> <!-- MORE -->
+    <string name="icon_e914">&#xe914;</string> <!-- LESS -->
+    <string name="icon_e92c">&#xe92c;</string> <!-- LOCATION -->
+    <string name="icon_e94f">&#xe94f;</string> <!-- DEVICE-->
+    <string name="icon_e94e">&#xe94e;</string> <!-- CLOUD -->
+    <string name="icon_62">&#x62;</string> <!-- COMPANY -->
+    <string name="icon_e959">&#xe959;</string>
+    <string name="icon_33">&#x33;</string>
+    <string name="icon_d">&#xd;</string> <!-- calendar icon-->
+    <string name="icon_e96c">&#xe96c;</string> <!-- tasks-->
+    <string name="icon_e927">&#xe927;</string> <!-- due outlined-->
+    <string name="icon_e926">&#xe926;</string> <!-- due filled-->
+    <string name="icon_e943">&#xe943;</string> <!-- notif-->
+    <string name="icon_64">&#xe64;</string> <!-- meetings-->
+    <string name="icon_2d">&#x2d;</string><!-- meetings-->
+    <string name="icon_e954">&#xe954;</string> <!-- join-->
+    <string name="icon_e92a">&#xe92a;</string> <!-- notes-->
+    <string name="icon_e958">&#xe958;</string> <!--Keyboard-->
+    <string name="icon_e935">&#xe98a;</string> <!--HOME-->
+    <string name="icon_e922">&#xe922;</string>
+    <string name="icon_e903">&#xe903;</string>
+    <string name="icon_e93c">&#xe93c;</string> <!--edit icon-->
+    <string name="icon_28">&#x28;</string>
+    <string name="icon_e91a">&#xe91a;</string>
+    <string name="icon_e913">&#xe913;</string>
+
+    <string name="icon_e995">&#xe995;</string> <!-- threads-->
+    <string name="icon_e996">&#xe996;</string> <!-- teams-->
+
+
+    <string name="border0">
+        <![CDATA[
+        <style>
+        p.dashed {border-style: dashed;}
+        </style>
+        <body>
+        <p class="+"dashed"+">A dashed border.</p>
+        </body>
+        ]]>
+    </string>
+
+    <string name="border1">
+    <![CDATA[
+        <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
+     ]]>
+    </string>
+
+
+
 </resources>

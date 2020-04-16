@@ -1,28 +1,181 @@
 package kore.botssdk.models;
+
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
+import androidx.databinding.BindingAdapter;
+import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 
 
 /**
  * Created by Shiva Krishna on 1/30/2018.
  */
 
-public class KnowledgeDetailModel extends BotCarouselModel {
-    String streamId;
-    String creator;
-    String lMod;
-    String imageUrl;
-
-    String lMUId;
-
-    public long getViews() {
-        return views;
+public class KnowledgeDetailModel implements Serializable {
+    public String getTempHeader() {
+        return tempHeader;
     }
 
-    public void setViews(long views) {
-        this.views = views;
+    public void setTempHeader(String tempHeader) {
+        this.tempHeader = tempHeader;
     }
 
-    long views;
+    public boolean isShowHeader() {
+        return showHeader;
+    }
+
+    public void setShowHeader(boolean showHeader) {
+        this.showHeader = showHeader;
+    }
+
+    private boolean showHeader;
+
+
+    private String tempHeader;
+    private String streamId;
+    private String creator;
+    private String lMod;
+    private String imageUrl;
+    private String title;
+    private String mId;
+    private ContactInfoModel owner;
+
+    private MeetingDetails meetingDetails;
+
+    public MeetingDetails getMeetingDetails() {
+        return meetingDetails;
+    }
+
+    public List<CalEventsTemplateModel.Attendee> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(List<CalEventsTemplateModel.Attendee> attendees) {
+        this.attendees = attendees;
+    }
+
+    public void setMeetingDetails(MeetingDetails meetingDetails) {
+        this.meetingDetails = meetingDetails;
+    }
+
+ /*   public List<Participant> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<Participant> participants) {
+        this.participants = participants;
+    }
+*/
+    private List<CalEventsTemplateModel.Attendee> attendees = null;
+    public String getmId() {
+        return mId;
+    }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
+
+    private String url;
+    private int nLikes;
+
+
+    private List<SharedList> sharedList = null;
+
+
+    public List<SharedList> getSharedList() {
+
+        return sharedList;
+    }
+
+
+    public String getSharedListWithCommaSeperate() {
+        if (sharedList != null && sharedList.size() > 0) {
+            ArrayList<String> namesList = new ArrayList<>();
+            for (SharedList shared : sharedList) {
+                if (shared != null && shared.getName() != null && !TextUtils.isEmpty(shared.getName().trim())) {
+                    namesList.add(shared.getName().trim());
+                }
+            }
+            if (namesList.size() > 0) {
+                return android.text.TextUtils.join(", ", namesList);
+            }
+        }
+        return "";
+    }
+
+    public void setSharedList(List<SharedList> sharedList) {
+        this.sharedList = sharedList;
+    }
+
+    public long getLastMod() {
+        return lastMod;
+    }
+
+    public void setLastMod(long lastMod) {
+        this.lastMod = lastMod;
+    }
+
+    private long lastMod;
+
+    public String getSharedBy() {
+        return sharedBy;
+    }
+
+    public String getFormattedModifiedDate() {
+        if (formattedModifiedDate == null) {
+            formattedModifiedDate = DateUtils.formattedSentDateV6((Long) lastMod);
+        }
+        return formattedModifiedDate;
+    }
+
+    public String getFormattedHeaderDate() {
+        if (formattedHeaderDate == null) {
+            formattedHeaderDate = DateUtils.formattedSentDateV8((Long) lastMod, false);
+        }
+        return formattedHeaderDate;
+    }
+
+    private String formattedHeaderDate;
+
+    public void setFormattedModifiedDate(String formattedModifiedDate) {
+        this.formattedModifiedDate = formattedModifiedDate;
+    }
+
+    public String getLastModifiedDate() {
+        return "Modified " + DateUtils.formattedSentDateV8(lastMod, true);
+    }
+
+    private String formattedModifiedDate;
+
+
+    public void setSharedBy(String sharedBy) {
+        this.sharedBy = sharedBy;
+    }
+
+    private String sharedBy;
+
+    public long getNViews() {
+        return nViews;
+    }
+
+    public void setNViews(long nViews) {
+        this.nViews = nViews;
+    }
+
+    private long nViews;
 
     public int getCount() {
         return count;
@@ -32,7 +185,7 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.count = count;
     }
 
-    int count;
+    private int count;
 
     public String getStreamId() {
         return streamId;
@@ -66,22 +219,6 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.imageUrl = imageUrl;
     }
 
-    public String getlMUId() {
-        return lMUId;
-    }
-
-    public void setlMUId(String lMUId) {
-        this.lMUId = lMUId;
-    }
-
-    public String getpId() {
-        return pId;
-    }
-
-    public void setpId(String pId) {
-        this.pId = pId;
-    }
-
     public String getId() {
         return id;
     }
@@ -99,13 +236,6 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.type = type;
     }
 
-    public String getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
-    }
 
     public String getDesc() {
         return desc;
@@ -118,6 +248,20 @@ public class KnowledgeDetailModel extends BotCarouselModel {
     public long getCreatedOn() {
         return createdOn;
     }
+
+
+public String getFormatedDate()
+{
+   return DateUtils.formattedSentDateV8_InAnnouncement(createdOn);
+}
+
+
+public boolean getDateLabelVisblity()
+{
+    return DateUtils.formattedSentDateV8_InAnnouncement2(createdOn);
+}
+
+
 
     public void setCreatedOn(long createdOn) {
         this.createdOn = createdOn;
@@ -139,13 +283,14 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.linkPreviews = linkPreviews;
     }
 
-    String pId;
+    private String pId;
     String id;
 
     String type;
-    String orgId;
-    String desc;
-    long createdOn;
+    private String orgId;
+    private String desc;
+    private long createdOn;
+    private String description;
 
     public ArrayList<String> getHashTag() {
         return hashTag;
@@ -155,11 +300,11 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.hashTag = hashTag;
     }
 
-    ArrayList<String> hashTag;
+    private ArrayList<String> hashTag;
 
-    ArrayList<KoreComponentModel> components;
-    ArrayList<LinkPreviewModel> linkPreviews;
-    ArrayList<VoteModel> votes;
+    private ArrayList<KoreComponentModel> components;
+    private ArrayList<LinkPreviewModel> linkPreviews;
+    private ArrayList<String> likes;
 
     public ArrayList<String> getFollowers() {
         return followers;
@@ -169,53 +314,48 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.followers = followers;
     }
 
-    ArrayList<String> followers;
+    private ArrayList<String> followers;
 
-    public ArrayList<VoteModel> getVotes() {
-        return votes;
+    public int getNShares() {
+        return nShares;
     }
 
-    public void setVotes(ArrayList<VoteModel> votes) {
-        this.votes = votes;
+    public void setNShares(int nShares) {
+        this.nShares = nShares;
     }
 
-    public int getSharesCount() {
-        return sharesCount;
+    private int nShares;
+
+    private int nDownVotes;
+
+    public int getNDownVotes() {
+        return nDownVotes;
     }
 
-    public void setSharesCount(int sharesCount) {
-        this.sharesCount = sharesCount;
+    public void setNDownVotes(int nDownVotes) {
+        this.nDownVotes = nDownVotes;
     }
 
-    public int getUpVoteCount() {
-        return upVoteCount;
+    public int getNUpVotes() {
+        return nUpVotes;
     }
 
-    public void setUpVoteCount(int upVoteCount) {
-        this.upVoteCount = upVoteCount;
+    public void setNUpVotes(int nUpVotes) {
+        this.nUpVotes = nUpVotes;
     }
 
-    public int getDownVoteCount() {
-        return downVoteCount;
+    private int nUpVotes;
+
+
+    public int getNComments() {
+        return nComments;
     }
 
-    public void setDownVoteCount(int downVoteCount) {
-        this.downVoteCount = downVoteCount;
+    public void setNComments(int nComments) {
+        this.nComments = nComments;
     }
 
-    int upVoteCount;
-    int downVoteCount;
-    int sharesCount;
-
-    public int getCommentsCount() {
-        return commentsCount;
-    }
-
-    public void setCommentsCount(int commentsCount) {
-        this.commentsCount = commentsCount;
-    }
-
-    int commentsCount;
+    private int nComments;
 
     public ArrayList<CommentModel> getComments() {
         return comments;
@@ -225,17 +365,17 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.comments = comments;
     }
 
-    ArrayList<CommentModel> comments;
+    private ArrayList<CommentModel> comments;
 
-    public int getFollowCount() {
-        return followCount;
+    public int getNFollows() {
+        return nFollows;
     }
 
-    public void setFollowCount(int followCount) {
-        this.followCount = followCount;
+    public void setNFollows(int nFollows) {
+        this.nFollows = nFollows;
     }
 
-    int followCount;
+    private int nFollows;
 
     public MyActions getMyActions() {
         return myActions;
@@ -245,73 +385,226 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         this.myActions = myActions;
     }
 
-    MyActions myActions;
+    private MyActions myActions;
+
+    private ArrayList<VoteModel> votes;
+
+    public ArrayList<VoteModel> getVotes() {
+        return votes;
+    }
+
+    public void setVotes(ArrayList<VoteModel> votes) {
+        this.votes = votes;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public ContactInfoModel getOwner() {
+        return owner;
+    }
+
+    public void setOwner(ContactInfoModel owner) {
+        this.owner = owner;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getNLikes() {
+        return nLikes;
+    }
+
+    public void setNLikes(int nLikes) {
+        this.nLikes = nLikes;
+    }
+
+    public ArrayList<String> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(ArrayList<String> likes) {
+        this.likes = likes;
+    }
+
+    public class SharedList implements Serializable {
 
 
+        private String lN;
 
-   public class VoteModel {
-         int vote;
+        private String role;
 
-       public int getVote() {
-           return vote;
-       }
+        private String color;
 
-       public void setVote(int vote) {
-           this.vote = vote;
-       }
+        private String id;
 
-       public String getBy() {
-           return by;
-       }
+        private String name;
 
-       public void setBy(String by) {
-           this.by = by;
-       }
+        private String fN;
 
-       String by;
-   }
+        private String label;
 
-   public class MyActions{
-       int vote;
-       boolean like;
-       boolean follow;
+        private Boolean isPending;
 
-       public int getPrivilege() {
-           return privilege;
-       }
+        private Long privilege;
 
-       public void setPrivilege(int privilege) {
-           this.privilege = privilege;
-       }
+        public String getLN() {
+            return lN;
+        }
 
-       int privilege;
+        public void setLN(String lN) {
+            this.lN = lN;
+        }
 
-       public int getVote() {
-           return vote;
-       }
+        public String getRole() {
+            return role;
+        }
 
-       public void setVote(int vote) {
-           this.vote = vote;
-       }
+        public void setRole(String role) {
+            this.role = role;
+        }
 
-       public boolean isLike() {
-           return like;
-       }
+        public String getColor() {
+            return color;
+        }
 
-       public void setLike(boolean like) {
-           this.like = like;
-       }
+        public void setColor(String color) {
+            this.color = color;
+        }
 
-       public boolean isFollow() {
-           return follow;
-       }
+        public String getId() {
+            return id;
+        }
 
-       public void setFollow(boolean follow) {
-           this.follow = follow;
-       }
-   }
+        public void setId(String id) {
+            this.id = id;
+        }
 
-    public class CommentModel {
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getFN() {
+            return fN;
+        }
+
+        public void setFN(String fN) {
+            this.fN = fN;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public Boolean getIsPending() {
+            return isPending;
+        }
+
+        public void setIsPending(Boolean isPending) {
+            this.isPending = isPending;
+        }
+
+        public Long getPrivilege() {
+            return privilege;
+        }
+
+        public void setPrivilege(Long privilege) {
+            this.privilege = privilege;
+        }
+
+    }
+
+    public class VoteModel implements Serializable{
+        int vote;
+
+        public int getVote() {
+            return vote;
+        }
+
+        public void setVote(int vote) {
+            this.vote = vote;
+        }
+
+        public String getBy() {
+            return by;
+        }
+
+        public void setBy(String by) {
+            this.by = by;
+        }
+
+        String by;
+
+
+    }
+
+    public class MyActions implements Serializable {
+        boolean like;
+        boolean follow;
+        int vote;
+
+        public int getPrivilege() {
+            return privilege;
+        }
+
+        public void setPrivilege(int privilege) {
+            this.privilege = privilege;
+        }
+
+        int privilege;
+
+        public boolean isLike() {
+            return like;
+        }
+
+        public void setLike(boolean like) {
+            this.like = like;
+        }
+
+        public boolean isFollow() {
+            return follow;
+        }
+
+        public void setFollow(boolean follow) {
+            this.follow = follow;
+        }
+
+        public int getVote() {
+            return vote;
+        }
+
+        public void setVote(int vote) {
+            this.vote = vote;
+        }
+    }
+
+    public class CommentModel implements Serializable{
         private long cOn;
         private String id;
         private long lMod;
@@ -369,4 +662,36 @@ public class KnowledgeDetailModel extends BotCarouselModel {
         private String label;
 
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (obj instanceof KnowledgeDetailModel) {
+            if (this.getId() != null && ((KnowledgeDetailModel) obj).getId() != null) {
+                return this.getId().equals(((KnowledgeDetailModel) obj).getId());
+            }
+        }
+        return false;
+    }
+
+    /**
+     * to avoid same hash code generation if any of fields are equal like in one object email and other object kore id are same and remaining or null
+     * for that we are multiplying with different numbers
+     *
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        int result = id == null ? 0 : 31 * id.hashCode();
+        result = 32 * result + (id == null ? 0 : id.hashCode());
+        result = 33 * result + (creator == null ? 0 : creator.hashCode());
+        return result;
+    }
+
+    public Spanned getSpannedString() {
+
+        return StringUtils.isNullOrEmpty(desc) ? null : Html.fromHtml(StringEscapeUtils.unescapeHtml4(desc.replaceAll("<br>", " ")));
+    }
+
 }

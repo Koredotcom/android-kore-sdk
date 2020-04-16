@@ -1,3 +1,4 @@
+/*
 package kore.botssdk.services;
 
 import android.content.Context;
@@ -5,12 +6,14 @@ import android.content.Context;
 import org.xml.sax.ErrorHandler;
 
 
+*/
 /**
- * Created by Pradeep Mahato on 30-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-public class KoreAuthErrorHandler /*implements ErrorHandler*/ {
-    /*private Context context;
+
+
+
+public class KoreAuthErrorHandler implements ErrorHandler {
+    private Context context;
 
     public KoreAuthErrorHandler(Context context) {
         this.context = context;
@@ -21,5 +24,6 @@ public class KoreAuthErrorHandler /*implements ErrorHandler*/ {
         Response r = retrofitError.getResponse();
 
         return retrofitError;
-    }*/
+    }
 }
+*/

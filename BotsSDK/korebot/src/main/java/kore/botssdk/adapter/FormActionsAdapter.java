@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewHolder.FormActionViewHolder;
@@ -24,7 +25,7 @@ public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolde
     LayoutInflater layoutInflater;
     RecyclerView parentRecyclerView;
 
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
     public FormActionsAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
@@ -76,7 +77,7 @@ public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolde
         this.formActionTemplateArrayList = formActionTemplateArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterFragment.ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

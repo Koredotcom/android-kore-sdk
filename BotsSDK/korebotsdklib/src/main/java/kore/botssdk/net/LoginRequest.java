@@ -1,21 +1,17 @@
+/*
 package kore.botssdk.net;
 
 import android.content.Context;
 
 import java.util.HashMap;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import kore.botssdk.net.RestResponse.LoginResponse;
-import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by Pradeep Mahato on 30-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-public class LoginRequest  {
+ *//*
+
+public class LoginRequest extends RestRequest<RestResponse.LoginResponse> {
 
     protected HashMap<String, Object> userCredentials;
     private Context context;
@@ -43,3 +39,4 @@ public class LoginRequest  {
         });
     }
 }
+*/

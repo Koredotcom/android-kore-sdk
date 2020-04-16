@@ -3,15 +3,27 @@ package kore.botssdk.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -19,6 +31,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
@@ -44,7 +57,14 @@ public class Utils {
             return "";
         }
     }
-
+    public static void showToast(final Context context, final String message) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     /**
      * Get the package version
      * @param context
@@ -75,7 +95,9 @@ public class Utils {
         return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
     }
 
-
+    public static boolean isPhoneNo(String text) {
+        return !isNullOrEmpty(text) && Patterns.PHONE.matcher(text).matches();
+    }
     public static BotResponse buildBotMessage(String msg, String streamId,String botName){
 
         Calendar calendar = Calendar.getInstance();
@@ -122,6 +144,40 @@ public class Utils {
 
 
         return botResponse;
+    }
+
+    private static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"}]}],\"isNewVolley\":true}";
+    public static String buildHelpMessage(){
+        BotResponse botResponse = new BotResponse();
+
+        botResponse.setType("bot_response");
+        botResponse.setFrom("bot");
+
+        botResponse.setMessageId("");
+        botResponse.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+
+        BotInfoModel bInfo = new BotInfoModel("","",null);
+        botResponse.setBotInfo(bInfo);
+
+        BotResponseMessage botResponseMessage = new BotResponseMessage();
+        botResponseMessage.setType(BotResponse.COMPONENT_TYPE_TEXT);
+
+        ComponentModel cModel = new ComponentModel();
+        cModel.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
+
+        PayloadOuter pOuter = new PayloadOuter();
+        pOuter.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
+        PayloadInner payloadInner = new Gson().fromJson(inPayload,PayloadInner.class);
+        pOuter.setPayload(payloadInner);
+
+        cModel.setPayload(pOuter);
+        botResponseMessage.setComponent(cModel);
+        ArrayList<BotResponseMessage> message = new ArrayList<>(1);
+        message.add(botResponseMessage);
+        botResponse.setMessage(message);
+
+
+        return new Gson().toJson(botResponse);
     }
 
     public static BotResponse buildBotMessage(PayloadOuter pOuter, String streamId,String botName, String createdOn, String msgId){
@@ -188,7 +244,58 @@ public class Utils {
         return botResponse;
     }
 
+    public static BotResponse getLastReceivedMsg(ArrayList<BaseBotMessage> list){
+        if(list != null && list.size()>0){
+            int index = list.size()-1;
+            for(;index>=0;index--)
+                if(!list.get(index).isSend()){
+                    return (BotResponse) list.get(index);
+                }
+        }
+        return null;
+    }
 
+    public static boolean shouldShowHelp(BotResponse msg){
+        boolean shouldShowHelp = true;
+        if (msg != null) {
+            ComponentModel components = msg.getMessage().get(0).getComponent();
+            try {
+                PayloadOuter outer = components.getPayload();
+                if(outer != null) {
+                    PayloadInner payloadInner = outer.getPayload();
+                    if (payloadInner != null && !StringUtils.isNullOrEmpty(payloadInner.getTemplate_type())) {
+                        if (payloadInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)) {
+                            shouldShowHelp = true;
+                        }else {
+                            shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
+                        }
+                    }else {
+                        shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
+                    }
+                }else{
+                    shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
+                }
+            } catch (com.google.gson.JsonSyntaxException ex) {
+                ex.printStackTrace();
+                shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
+            }
+        }
+        return shouldShowHelp;
+    }
+
+    private static boolean isGreaterThanFifteenMins(String time){
+        long timeStampMillis = 0;
+        try {
+            timeStampMillis = DateUtils.isoFormatter.parse(time).getTime() + TimeZone.getDefault().getRawOffset();
+            if((System.currentTimeMillis() - timeStampMillis) > (1000*60*15)){
+                return  true;
+            }else
+                return false;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     /**
      * Pass media length in seconds, and get in below format
@@ -263,11 +370,29 @@ public class Utils {
         return isoFormatter.parse(timeStamp).getTime();
 
     }
+    public static String ah(String accessToken){
+        return "bearer "+accessToken;
+    }
+    public static int getMaxLinesOfText(String text,float width,int currentTextSize){
+        Rect bounds = new Rect();
+        Paint paint = new Paint();
+        paint.setTextSize(currentTextSize);
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        return  (int) Math.ceil((float) bounds.width() / width);
+    }
+
+    public static HashMap<String, Object> jsonToMap(String jsonString){
+        HashMap<String,Object> map = null;
+        try {
+            map = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return map;
+    }
 
     public static String accessTokenHeader(String accessToken){
-        if (accessToken != null && accessToken.startsWith("bearer "))
-            return accessToken;
-        else
-            return "bearer " + accessToken ;
+        return "bearer " + accessToken ;
     }
 }

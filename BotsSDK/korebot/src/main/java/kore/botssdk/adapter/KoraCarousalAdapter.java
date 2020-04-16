@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.utils.KaFontUtils;
@@ -25,10 +26,10 @@ public class KoraCarousalAdapter extends PagerAdapter {
     Context mContext;
     ArrayList<KoraSearchDataSetModel> data;
     InvokeGenericWebViewInterface genericWebViewInterface;
-    ComposeFooterFragment.ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
-    public KoraCarousalAdapter(ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels, Context mContext, InvokeGenericWebViewInterface webViewInterface, ComposeFooterFragment.ComposeFooterInterface composeFooterInterface){
+    public KoraCarousalAdapter(ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels, Context mContext, InvokeGenericWebViewInterface webViewInterface, ComposeFooterInterface composeFooterInterface){
         super();
         this.data = koraSearchDataSetModels;
         this.mContext = mContext;

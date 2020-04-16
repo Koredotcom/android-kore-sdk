@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -42,10 +43,10 @@ public class HeaderLayout extends ViewGroup {
         init();
     }
 
-    public HeaderLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    /*public HeaderLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
-    }
+    }*/
 
     private void init() {
 
@@ -69,9 +70,9 @@ public class HeaderLayout extends ViewGroup {
         headerTextView.setId(HEADER_TEXTVIEW_ID);
         float dp5 = dp1 * 5;
         headerTextView.setPadding(0, 0, 0, (int) dp5);
-        if (gravity == TextMediaLayout.GRAVITY_LEFT) {
+        if (gravity == BubbleConstants.GRAVITY_LEFT) {
             headerTextView.setGravity(Gravity.LEFT);
-        } else if (gravity == TextMediaLayout.GRAVITY_RIGHT) {
+        } else if (gravity == BubbleConstants.GRAVITY_RIGHT) {
             headerTextView.setGravity(Gravity.RIGHT);
         }
         headerTextView.setFocusable(false);

@@ -86,7 +86,7 @@
                 android:layout_alignParentRight="true"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="by shiva krishna " />
+                android:text="" />
         </RelativeLayout>
 
         <Space

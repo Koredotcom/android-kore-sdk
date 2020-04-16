@@ -1,21 +1,13 @@
 package kore.botssdk.BotDb;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.octo.android.robospice.request.SpiceRequest;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import kore.botssdk.models.BotRequest;
-import kore.botssdk.utils.DateUtils;
 
 public class BotDataPersister /*extends SpiceRequest<Void>*/ {
 
@@ -52,7 +44,7 @@ public class BotDataPersister /*extends SpiceRequest<Void>*/ {
 
 
     private void persistChats() {
-        Log.d("==========++++========="," The user Id is "+userId+" Hey The Payl load is "+payload);
+        /*Log.d("==========++++========="," The user Id is "+userId+" Hey The Payl load is "+payload);
         BotMessageDBModel botMessageDBModel = null;
         if (gson == null) {
             gson = new Gson();
@@ -101,7 +93,7 @@ public class BotDataPersister /*extends SpiceRequest<Void>*/ {
         DBHelper dbHelper = new DBHelper(mContext);
         BotMessageDao botMessageDAO = dbHelper.getBotMessageDao();
         try {
-            if (botMessageDBModel != null/* && botMessageDBModel.isMessageNeedToPersist()*/ && !botMessageDBModel.getType().equals("ack")) {
+            if (botMessageDBModel != null*//* && botMessageDBModel.isMessageNeedToPersist()*//* && !botMessageDBModel.getType().equals("ack")) {
                 botMessageDBModel.setSentMessage(isSentMessage);
                 botMessageDAO.createOrUpdate(botMessageDBModel);
                 botMessageDAO.refresh(botMessageDBModel);
@@ -112,7 +104,7 @@ public class BotDataPersister /*extends SpiceRequest<Void>*/ {
 
 
        dbHelper.close();
-
+*/
     }
 
 }

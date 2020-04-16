@@ -30,9 +30,9 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
         super(context, attrs, defStyleAttr);
     }
 
-    public KaSendBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    /*public KaSendBubbleContainer(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-    }
+    }*/
 
     @Override
     protected void onFinishInflate() {
@@ -55,7 +55,7 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
 
         int childWidthSpec;
 
-        childWidthSpec = View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY);
+        int childWidthSpec1 = View.MeasureSpec.makeMeasureSpec(parentWidth, View.MeasureSpec.EXACTLY);
 
         totalHeight += dp1;
 
@@ -65,8 +65,7 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
         childWidthSpec = View.MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, View.MeasureSpec.AT_MOST);
         MeasureUtils.measure(sendBubbleLayout, childWidthSpec, wrapSpec);
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec(BUBBLE_CONTENT_LAYOUT_WIDTH, MeasureSpec.AT_MOST);
-        MeasureUtils.measure(headerLayout, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(headerLayout, childWidthSpec1, wrapSpec);
 
         totalHeight += sendBubbleLayout.getMeasuredHeight();
         totalHeight += headerLayout.getMeasuredHeight();
@@ -86,7 +85,8 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
         /*
          * For Received Bubble Layout
          */
-        top += dp1;
+        LayoutUtils.layoutChild(headerLayout,left,top);
+        top = headerLayout.getBottom();
         int viewLeft = (parentWidth - getPaddingRight()) - sendBubbleLayout.getMeasuredWidth();
         LayoutUtils.layoutChild(sendBubbleLayout, viewLeft, top);
     }

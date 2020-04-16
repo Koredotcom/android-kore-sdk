@@ -6,7 +6,7 @@ package kore.botssdk.models;
 
 public class KoraSearchDataSetModel{
     String type;
-    public static enum ViewType{
+    public enum ViewType{
         EMAIL_VIEW,KNOWLEDGE_VIEW,SHOW_MORE_VIEW
     }
 

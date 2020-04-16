@@ -17,15 +17,15 @@ public class KoraSearchResultsModel {
         this.emails = emails;
     }
 
-    public ArrayList<KnowledgeDetailModel> getKnowledges() {
-        return knowledges;
+    public ArrayList<KnowledgeDetailModel> getKnowledge() {
+        return knowledge;
     }
 
-    public void setKnowledges(ArrayList<KnowledgeDetailModel> knowledges) {
-        this.knowledges = knowledges;
+    public void setKnowledge(ArrayList<KnowledgeDetailModel> knowledge) {
+        this.knowledge = knowledge;
     }
 
-    ArrayList<KnowledgeDetailModel> knowledges;
+    ArrayList<KnowledgeDetailModel> knowledge;
 
 
 }

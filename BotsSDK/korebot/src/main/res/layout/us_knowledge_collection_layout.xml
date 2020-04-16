@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_f6f6f8"
+        android:padding="7dp">
+
+        <TextView
+            android:id="@+id/icon_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/icon_e913"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/root_title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toLeftOf="@+id/count_view"
+            android:layout_toEndOf="@+id/icon_view"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center|start"
+            android:letterSpacing="0.04"
+            android:text=""
+            android:textAllCaps="true"
+            android:textColor="@color/color_626281"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="3dp"
+            android:drawableEnd="@drawable/right_arrow_iconn"
+            android:drawablePadding="8dp"
+            android:textSize="13sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/view_suggest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:padding="3dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignParentStart="true"
+            android:textColor="@color/color_e48015"
+            app:srcCompat="@drawable/sugestive_icon" />
+
+        <TextView
+            android:id="@+id/star_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/latosemibold"
+            android:gravity="center"
+            android:text="SUGGESTED"
+            android:textColor="@color/color_e48015"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/view_click"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:gravity="center|start"
+            android:letterSpacing="0.1"
+            android:maxLines="1"
+            android:textColor="@color/color_767688"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/sub_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toLeftOf="@+id/count_view"
+            android:layout_toEndOf="@+id/icon_view"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="3"
+            android:textColor="@color/color_161620"
+            android:textSize="17sp" />
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="5dp"
+        android:visibility="visible">
+
+
+        <TextView
+            android:id="@+id/peopleicon"
+            android:layout_width="18dp"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
+            android:gravity="center|start"
+            android:text="@string/icon_e913"
+            android:textColor="@color/color_767688"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/search_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_toStartOf="@+id/percent_view"
+            android:layout_toEndOf="@+id/peopleicon"
+            android:ellipsize="end"
+            android:fontFamily="@font/latoregular"
+            android:gravity="center|start"
+            android:maxLines="1"
+            android:textColor="@color/color_3E3E51"
+            android:textSize="12sp" />
+
+
+        <TextView
+            android:id="@+id/percent_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/latoregular"
+            android:textColor="@color/color_767688"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/inset_widget_divider" />
+</LinearLayout>
