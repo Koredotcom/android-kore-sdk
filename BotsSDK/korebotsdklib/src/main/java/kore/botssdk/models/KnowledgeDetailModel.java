@@ -464,6 +464,17 @@ public boolean getDateLabelVisblity()
 
         private String color;
 
+
+        private String emailId;
+
+        public String getEmailId() {
+            return emailId;
+        }
+
+        public void setEmailId(String emailId) {
+            this.emailId = emailId;
+        }
+
         private String id;
 
         private String name;
