@@ -4,6 +4,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +70,10 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         LineDataSet dataSet[];
         Description desc = new Description();
 //        desc.setText("Hi This is challa");
-        mChart.setDescription(desc);
 
+
+        mChart.setDescription(desc);
+        mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
 
         ArrayList<BotLineChartDataModel> lineList = _payInner.getLineChartDataModels();
 
