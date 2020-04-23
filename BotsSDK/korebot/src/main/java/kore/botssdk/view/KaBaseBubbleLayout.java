@@ -112,6 +112,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected PieChartView botPieChartView;
     protected BotTableView tableView;
     protected LineChartView lineChartView;
+    protected BarChartView barChartView;
+    protected StackedBarChatView stackedBarChatView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;
     protected UniversalSearchView universalSearchView;
@@ -325,6 +327,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         lineChartView = ViewProvider.getLineChartView(context);
         addView(lineChartView);
+
+        barChartView = ViewProvider.getBarChartView(context);
+        addView(barChartView);
+
+        stackedBarChatView = ViewProvider.getStackedBarChartView(context);
+        addView(stackedBarChatView);
 
         koraCarouselView = ViewProvider.getKoraCarouselView(context);
         addView(koraCarouselView);

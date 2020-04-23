@@ -18,6 +18,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AttendeeSlotSelectionView;
+import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
@@ -32,6 +33,7 @@ import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
+import kore.botssdk.view.StackedBarChatView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
 import kore.botssdk.view.UniversalSearchView;
@@ -204,6 +206,18 @@ public class ViewProvider {
         LineChartView lineChartView = new LineChartView(context);
         lineChartView.setId(LINECHART_VIEW_ID);
         return lineChartView;
+    }
+
+    public static BarChartView getBarChartView(Context context){
+        BarChartView barChartView = new BarChartView(context);
+        barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
+       return  barChartView;
+    }
+
+    public static StackedBarChatView getStackedBarChartView(Context context){
+        StackedBarChatView barChartView = new StackedBarChatView(context);
+        barChartView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
+        return  barChartView;
     }
 
     public static MeetingSlotsView getMeetingSlotsView(Context context){

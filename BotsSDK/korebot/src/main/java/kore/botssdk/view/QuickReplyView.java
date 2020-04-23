@@ -77,9 +77,11 @@ public class QuickReplyView extends ViewGroup {
 
             quickRepliesAdapter.setQuickReplyTemplateArrayList(quickReplyTemplates);
             quickRepliesAdapter.notifyDataSetChanged();
+            listViewHeight = (int) getResources().getDimension(R.dimen.quick_reply_layout_height);
             recyclerView.setVisibility(VISIBLE);
         } else {
             recyclerView.setVisibility(GONE);
+            listViewHeight = 0;
         }
     }
 
