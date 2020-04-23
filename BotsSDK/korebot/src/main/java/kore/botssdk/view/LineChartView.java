@@ -73,7 +73,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
 
 
         mChart.setDescription(desc);
-        mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
+       // mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
 
         ArrayList<BotLineChartDataModel> lineList = _payInner.getLineChartDataModels();
 
@@ -127,7 +127,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         l.setForm(Legend.LegendForm.LINE);
 //        l.setTypeface(mTfLight);
         l.setTextSize(11f);
-        l.setTextColor(Color.WHITE);
+        l.setTextColor(Color.BLACK);
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
