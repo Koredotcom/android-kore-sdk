@@ -74,6 +74,7 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
         mv.setChartView(mChart);
         mChart.setMarker(mv);
         mChart.setOnChartValueSelectedListener(this);
+        mChart.setTouchEnabled(false);
 
         Legend l = mChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
@@ -261,7 +262,7 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
 
     @Override
     public void onValueSelected(Entry e, Highlight highlight) {
-        if (e == null)
+       /* if (e == null)
             return;
 
         RectF bounds = mOnValueSelectedRectF;
@@ -275,7 +276,7 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
                 "low: " + mChart.getLowestVisibleX() + ", high: "
                         + mChart.getHighestVisibleX());
 
-        MPPointF.recycleInstance(position);
+        MPPointF.recycleInstance(position);*/
     }
 
     @Override
