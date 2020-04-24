@@ -85,6 +85,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	FileUploadInfo uploadInfo = new FileUploadInfo();;
 	public static final long FILE_SIZE_20MB = 20 * 1024*1024;
 	public static long MAX_FILE_SIZE = FILE_SIZE_20MB;
+	private boolean isShowToast=false;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
@@ -140,6 +141,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				 fileExtn, BUFFER_SIZE,  messenger,
 				 thumbnailFilePath,  messageId, context, componentType,
 				 host,  orientation,FILE_SIZE_20MB);
+		isShowToast=true;
 	}
 
     private void upLoadProgressState(final int progress ,final boolean show){
@@ -203,7 +205,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			if(fis.getChannel().size() > MAX_FILE_SIZE){
 				sendUploadFailedNotice(false,true);
 				int mbData= (int) ((MAX_FILE_SIZE/1024)/1024);
-				showToastMsg("File size can't be more than "+mbData+" MB!");
+				if(isShowToast) {
+					showToastMsg("File size can't be more than " + mbData + " MB!");
+				}
 				Log.d(LOG_TAG, "File size can't be more than "+mbData+" mb");
 				return;
 			}
