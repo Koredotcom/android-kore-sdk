@@ -79,13 +79,15 @@ public class BotButtonView extends ViewGroup {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (composeFooterInterface != null && invokeGenericWebViewInterface != null && buttonTypeAdapter.isEnabled()) {
-                        buttonTypeAdapter.setEnabled(false);
+
                         BotButtonModel botButtonModel = ((BotButtonModel) parent.getItemAtPosition(position));
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
                         } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botButtonModel.getType())){
+                            buttonTypeAdapter.setEnabled(false);
                             invokeGenericWebViewInterface.handleUserActions(botButtonModel.getAction(),botButtonModel.getCustomData());
                         }else{
+                            buttonTypeAdapter.setEnabled(false);
                             String title = botButtonModel.getTitle();
                             String payload = botButtonModel.getPayload();
                             composeFooterInterface.onSendClick(title, payload,false);
