@@ -2,6 +2,8 @@ package kore.botssdk.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.fragment.app.FragmentTransaction;
@@ -547,4 +549,22 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (isOnline()) {
+            BotSocketConnectionManager.getInstance().killInstance();
+        }
+            finish();
+    }
+
+    protected boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

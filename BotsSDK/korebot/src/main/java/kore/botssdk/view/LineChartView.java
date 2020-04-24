@@ -30,6 +30,7 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotLineChartDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -68,11 +69,14 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
 
 
         LineDataSet dataSet[];
-        Description desc = new Description();
-//        desc.setText("Hi This is challa");
 
 
-        mChart.setDescription(desc);
+
+        if(_payInner!=null&&_payInner.getText()!=null&& !StringUtils.isNullOrEmptyWithTrim(_payInner.getText())) {
+            Description desc = new Description();
+            desc.setText(_payInner.getText());
+            mChart.setDescription(desc);
+        }
        // mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
 
         ArrayList<BotLineChartDataModel> lineList = _payInner.getLineChartDataModels();

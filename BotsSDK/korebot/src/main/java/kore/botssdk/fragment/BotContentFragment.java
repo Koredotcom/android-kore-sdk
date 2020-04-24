@@ -116,6 +116,18 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                  if (botsChatAdapter != null)
+                        loadChatHistory(botsChatAdapter.getItemCount(), limit);
+                    else
+                        loadChatHistory(0, limit);
+                }
+
+        });
     }
 
     private void setupAdapter() {
@@ -125,7 +137,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
 //        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
-        botsBubblesListView.setOnScrollListener(onScrollListener);
+       // botsBubblesListView.setOnScrollListener(onScrollListener);
 //        quickReplyView = new QuickReplyView(getContext());
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -324,7 +336,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
 
     private void loadChatHistory(final int _offset, final int limit) {
-        if (fetching) return;
+        if (fetching){
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            return;
+        }
         fetching = true;
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
@@ -372,7 +389,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
                     @Override
                     public void onComplete() {
-
+                        fetching = false;
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
                     }
                 });
 
