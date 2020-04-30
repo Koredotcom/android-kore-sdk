@@ -255,7 +255,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         if (myRecyclerViewAdapter != null && !myRecyclerViewAdapter.isExpanded()) {
             myRecyclerViewAdapter.setExpanded(true);
             showMore.setText("View less");
-            viewMoreIV.setText(getResources().getText(R.string.icon_e914));
+            viewMoreIV.setText(getResources().getText(R.string.icon_e95b));
             contactListRecyclerView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -276,7 +276,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             if(!myRecyclerViewAdapter.isExpanded()){
                 return String.valueOf(getResources().getText(R.string.icon_e961));
             }else{
-                return String.valueOf(getResources().getText(R.string.icon_e914));
+                return String.valueOf(getResources().getText(R.string.icon_e95b));
             }
         }
     }

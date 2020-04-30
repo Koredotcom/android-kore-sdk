@@ -45,6 +45,7 @@ import kore.botssdk.models.PayloadOuter;
 public class Utils {
 
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+    public static final SimpleDateFormat isoFormatterHelp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     /**
      * Retrieve The version name of this package, as specified by the manifest
@@ -106,12 +107,9 @@ public class Utils {
 
     public static BotResponse buildBotMessage(String msg, String streamId, String botName) {
 
-        Calendar calendar = Calendar.getInstance();
-        long date = System.currentTimeMillis();
-        int offset = TimeZone.getDefault().getOffset(date);
-        calendar.setTimeInMillis(date - offset);
+        isoFormatterHelp.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return buildBotMessage(msg, streamId, botName, BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
+        return buildBotMessage(msg, streamId, botName, isoFormatterHelp.format(new Date()));
 
     }
 
@@ -165,7 +163,8 @@ public class Utils {
         botResponse.setFrom("bot");
 
         botResponse.setMessageId("");
-        botResponse.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        isoFormatterHelp.setTimeZone(TimeZone.getTimeZone("UTC"));
+        botResponse.setCreatedOn(isoFormatterHelp.format(new Date()));
 
         BotInfoModel bInfo = new BotInfoModel("", "", null);
         botResponse.setBotInfo(bInfo);
@@ -230,7 +229,7 @@ public class Utils {
         return botResponse;
     }
 
-    public static BotResponse buildBotMessageForConversationEnd(long time, String botName, String streamId) {
+    /*public static BotResponse buildBotMessageForConversationEnd(long time, String botName, String streamId) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
@@ -263,7 +262,7 @@ public class Utils {
 
 
         return botResponse;
-    }
+    }*/
 
     public static BotResponse getLastReceivedMsg(ArrayList<BaseBotMessage> list) {
         if (list != null && list.size() > 0) {
