@@ -55,7 +55,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
 	public static final String isFileSizeMore_key="isFileSizeMore";
-	public static final String fileSize_key="fileSize";
+	//public static final String fileSize_key="fileSize";
+	public  static final String fileSizeBytes_key="fileSizeBytes";
     private static DecimalFormat df2 = new DecimalFormat("###.##");
 	private String LOG_TAG = getClass().getSimpleName();
 	private String fileName;
@@ -86,6 +87,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	public static final long FILE_SIZE_20MB = 20 * 1024*1024;
 	public static long MAX_FILE_SIZE = FILE_SIZE_20MB;
 	private boolean isShowToast=false;
+	private  long totalFileSize;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
@@ -95,7 +97,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						  String fileExtn,int BUFFER_SIZE, Messenger messenger,
 						  String thumbnailFilePath, String messageId,Context context,String componentType,
-						  String host, String orientation,long FILE_MAX_SIZE){
+						  String host, String orientation,long FILE_MAX_SIZE,long totalFileSize){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
 		this.accessToken = accessToken;
@@ -118,6 +120,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		if(FILE_MAX_SIZE==-1) {
 			this.MAX_FILE_SIZE=FILE_SIZE_20MB;
 		}
+		this.totalFileSize=totalFileSize;
 
 
 		/*if(fileDao == null){
@@ -140,7 +143,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this( fileName, outFilePath,  accessToken,  userId,  fileContext,
 				 fileExtn, BUFFER_SIZE,  messenger,
 				 thumbnailFilePath,  messageId, context, componentType,
-				 host,  orientation,FILE_SIZE_20MB);
+				 host,  orientation,FILE_SIZE_20MB,0);
 		isShowToast=true;
 	}
 
@@ -202,7 +205,8 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			FileInputStream fis =  new FileInputStream(outFilePath);
 //				FileInputStream fisForChunkCount = new FileInputStream(outFilePath);
 
-			if(fis.getChannel().size() > MAX_FILE_SIZE){
+			long totaSize = totalFileSize+fis.getChannel().size();
+			if(totaSize > MAX_FILE_SIZE){
 				sendUploadFailedNotice(false,true);
 				int mbData= (int) ((MAX_FILE_SIZE/1024)/1024);
 				if(isShowToast) {
@@ -335,6 +339,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
 			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 //			uploadDao.update(uploadInfo);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -507,7 +512,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
         				if(fileID != null){
     						uploadInfo.setFileId(fileID);
     					}
-    					
+
     					uploadInfo.setMergeTriggered(true);
     					
         				 Message msg = Message.obtain();
@@ -522,6 +527,9 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 						 data.putString("fileSize", getFileSizeMegaBytes(new File(outFilePath)));
 						 data.putString("thumbnailURL",thumbnailURL);
 						 data.putString("orientation",orientation);
+						 long fileSize= new File(outFilePath).length();
+						data.putLong(fileSizeBytes_key, fileSize);
+						totalFileSize=totalFileSize+fileSize;
 
 
 
@@ -643,7 +651,8 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		data.putString("componentType", componentType);
 		data.putBoolean("success",false);
 		data.putBoolean(isFileSizeMore_key,isFileSizeMore);
-		data.putString(fileSize_key, getFileSizeMegaBytes(new File(outFilePath)));
+		//data.putString(fileSize_key, getFileSizeMegaBytes(new File(outFilePath)));
+		//data.putLong(fileSizeBytes_key, (new File(outFilePath).length()));
 //		if(isTeam)
 //			data.putString(Constants.TEAM_ID,userOrTeamId);
 		msg.setData(data); //put the data here
