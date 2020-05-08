@@ -112,6 +112,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotTableView tableView;
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
+    protected FreemiumView freemiumView;
     protected WelcomeSummaryView welcomeSummaryView;
     protected UniversalSearchView universalSearchView;
     protected KoraSummaryHelpView koraSummaryHelpView;
@@ -285,6 +286,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         addView(contactInfoView);
 
+        freemiumView = ViewProvider.getFreemiumView(context);
+        freemiumView.setComposeFooterInterface(composeFooterInterface);
+        freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(freemiumView);
+
         welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
         welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         addView(welcomeSummaryView);
@@ -398,6 +404,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(contactInfoView != null){
             contactInfoView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(freemiumView!=null){
+            freemiumView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(welcomeSummaryView !=null){
             welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -433,6 +442,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(contactInfoView != null){
             contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(freemiumView!=null) {
+            freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if(universalSearchView != null){
             universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
