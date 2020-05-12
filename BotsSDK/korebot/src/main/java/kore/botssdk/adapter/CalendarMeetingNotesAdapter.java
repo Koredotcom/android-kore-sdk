@@ -57,11 +57,20 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holderOrig instanceof CalendarMeetingNotesViewHolder) {
             CalendarMeetingNotesViewHolder holder=(CalendarMeetingNotesViewHolder)holderOrig;
             CalEventsTemplateModel model = modelData.get(position);
-            holder.date_view.setText(DateUtils.getDateMMMDDYYYY(model.getDuration().getStart(), model.getDuration().getEnd()));
-            String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
+            holder.date_view.setText(DateUtils.getDateMMMDDYYYYNotes(model.getDuration().getStart(), model.getDuration().getEnd()));
+         //   String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
             holder.creator_view.setText(model.getnNotes());
             holder.title_view.setText(model.getTitle());
             holder.divider.setVisibility(View.VISIBLE);
+            if (model.isShowDate())
+            {
+                holder.date_title.setVisibility(View.VISIBLE);
+                String date = DateUtils.formattedSentDateV8_Notes((long) model.getDuration().getStart());
+                holder.date_title.setText(date);
+            }
+            else {
+                holder.date_title.setVisibility(GONE);
+            }
             if(model.getColor()!=null)
                 holder.sidebar.setBackgroundColor(Color.parseColor(model.getColor()));
 

@@ -289,7 +289,10 @@ public class DateUtils {
     public static String getDateMMMDDYYYY(double startdate, double enddate) {
         return dateWeekDayTime5.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
     }
-
+    //Oct 12, 9:30am - 10:00am
+    public static String getDateMMMDDYYYYNotes(double startdate, double enddate) {
+        return dateMonthDay.format(startdate) +", "+ calendar_list_format_2.format(startdate).toLowerCase() + " - " + calendar_list_format_2.format(enddate).toLowerCase();
+    }
     public static String getDateWithTime(long lastModified) {
 
         String date = dateWeekMsgTime.format(lastModified);
@@ -303,8 +306,24 @@ public class DateUtils {
         }
         return date;
     }
+    public static String formattedSentDateV8_Notes(long createdOn) {
+        String time = "";
+        if (android.text.format.DateUtils.isToday(createdOn)) {
+            time = "Today";
+        } else if (isYesterday(createdOn)) {
+            time = "Yesterday";
+        } else {
+            time =  DateUtils.calendar_event_list_format1.format(createdOn);
+        }
 
-    public static String getDay(long mdate) {
+        return time;
+
+    }
+    public static String getNotesDay(long mdate) {
+        String date = DateUtils.calendar_event_list_format1.format(mdate);
+        return date;
+    }
+        public static String getDay(long mdate) {
         String date = DateUtils.calendar_event_list_format1.format(mdate);
 
         if (isTodayOrBefore(mdate)) {
