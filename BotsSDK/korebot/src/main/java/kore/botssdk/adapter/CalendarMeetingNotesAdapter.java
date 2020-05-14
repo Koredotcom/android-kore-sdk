@@ -145,6 +145,14 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
         notifyDataSetChanged();
     }
 
+    public void addData(ArrayList modelData){
+        if(this.modelData != null){
+            int size = this.modelData.size();
+            this.modelData.addAll(modelData);
+            notifyItemInserted(size);
+        }
+
+    }
     @Override
     public void setExpanded(boolean isExpanded) {
 

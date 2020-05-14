@@ -26,7 +26,7 @@
             android:visibility="gone"
             android:textStyle="bold"
             android:layout_marginBottom="10dp"
-            android:letterSpacing="0.1"
+            android:letterSpacing="0.04"
             android:textColor="@color/color_161620"
             android:textSize="17sp" />
         <LinearLayout
@@ -52,7 +52,7 @@
                 android:minHeight="20dp"
                 android:fontFamily="@font/latomedium"
                 android:gravity="top|start"
-                android:letterSpacing="0.1"
+                android:letterSpacing="0.04"
                 android:textColor="@color/color_161620"
                 android:textSize="16sp" />
 
