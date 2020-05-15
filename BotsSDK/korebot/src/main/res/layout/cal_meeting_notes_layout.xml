@@ -50,6 +50,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="10dp"
                 android:minHeight="20dp"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:fontFamily="@font/latomedium"
                 android:gravity="top|start"
                 android:letterSpacing="0.04"

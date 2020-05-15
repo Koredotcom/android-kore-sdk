@@ -289,7 +289,7 @@
                     android:gravity="center"
                     android:minHeight="32dp"
                     android:paddingStart="10dp"
-
+                    android:layout_marginEnd="10dp"
                     android:paddingEnd="10dp"
                     android:visibility="gone">
 
