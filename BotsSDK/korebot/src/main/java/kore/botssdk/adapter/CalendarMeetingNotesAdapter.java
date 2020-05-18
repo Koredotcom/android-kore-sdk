@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +62,9 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
          //   String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
             holder.creator_view.setText(model.getnNotes());
             holder.title_view.setText(model.getTitle());
+            if(TextUtils.isEmpty(model.getTitle())) {
+                holder.title_view.setText(context.getResources().getString(R.string.no_title_lbl));
+            }
             holder.divider.setVisibility(View.VISIBLE);
             if (model.isShowDate())
             {
@@ -144,6 +148,13 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
         this.modelData = modelData;
         notifyDataSetChanged();
     }
+    public void refreshNewData(ArrayList newModelData){
+        if(this.modelData != null && newModelData!=null){
+            modelData.clear();
+            modelData.addAll(newModelData);
+            notifyDataSetChanged();
+        }
+    }
 
     public void addData(ArrayList modelData){
         if(this.modelData != null){
@@ -151,7 +162,6 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
             this.modelData.addAll(modelData);
             notifyItemInserted(size);
         }
-
     }
     @Override
     public void setExpanded(boolean isExpanded) {

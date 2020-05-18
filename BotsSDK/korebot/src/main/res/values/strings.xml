@@ -90,7 +90,7 @@
         <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
      ]]>
     </string>
-
+    <string name="no_title_lbl">(No Title)</string>
 
     <string name="icon_e91c_problem">&#xe91c;</string>
 
