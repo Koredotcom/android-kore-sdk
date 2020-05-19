@@ -64,6 +64,16 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private String htmlLink;
     private String eventId;
     private String meetingNoteId;
+    private int nNotes;
+
+    public String getnNotes() {
+        return "Notes from "+ nNotes +" People";
+    }
+
+    public void setnNotes(int nNotes) {
+        this.nNotes = nNotes;
+    }
+
     boolean showDate;
 
     private List<Attendee> attendees = null;

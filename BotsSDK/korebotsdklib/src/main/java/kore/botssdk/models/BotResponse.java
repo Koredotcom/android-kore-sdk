@@ -55,7 +55,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
 
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
-
+    public static final String TEMPLATE_TYPE_FREEMIUM = "custom_button_template";
 
     //widgets
     public static final String TEMPLATE_TYPE_FILES_LOOKUP_WIDGET = "files_search_carousel_widget";

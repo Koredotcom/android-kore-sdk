@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<!--
+    <data>
+
+        <variable
+            name="contactInfo"
+            type="kore.botssdk.models.ContactInfoModel" />
+
+        <variable
+            name="viewBase"
+            type="kore.botssdk.view.FreemiumView" />
+
+        &lt;!&ndash;<variable
+            name="myAdapter"
+            type="kore.botssdk.view.ContactViewRecyclerAdapter" />&ndash;&gt;
+
+        <import type="android.view.View" />
+    </data>
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:id="@+id/freemium_root"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/normal_image_tv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/icomoon"
+                android:gravity="center"
+                android:text="@string/icon_e91c_problem"
+                android:textColor="#E9334B"
+                android:textSize="30sp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/message_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/latomedium"
+                    android:lineSpacingExtra="0.01dp"
+                    android:textColor="@color/color_161620"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="end"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_left"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/latomedium"
+            android:lineSpacingExtra="0.01dp"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:singleLine="true"
+            android:textColor="#4741FA"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:fontFamily="@font/latomedium"
+            android:lineSpacingExtra="0.01dp"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="#4741FA"
+            android:textSize="13sp" />
+    </LinearLayout>
+    </LinearLayout>
+</layout>

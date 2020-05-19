@@ -27,6 +27,7 @@ public class WidgetConstants {
 
 
     public static final byte HEADLINE_TEMPLATE=25;
+  public static final byte MEETING_NOTES_TEMPLATE=26;
     public static final String HEADLINE_TEMPLATE_SERVER="headlines";
 
 
@@ -61,7 +62,7 @@ public class WidgetConstants {
     public final static String LINE_CHART="linechart";
     public final static String LIST_WIDGET = "list";
 
-
+  public final static String MEETING_NOTES_WIDGET = "meeting_notes";
 
     //public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";
     //public final static String OVER_DUE_TASK_TEMPLATE_SERVER = "overdueTasks";
