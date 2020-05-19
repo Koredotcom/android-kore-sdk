@@ -55,7 +55,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
 	public static final String isFileSizeMore_key="isFileSizeMore";
-	//public static final String fileSize_key="fileSize";
+	public static final String error_msz_key="error_msz_key";
 	public  static final String fileSizeBytes_key="fileSizeBytes";
     private static DecimalFormat df2 = new DecimalFormat("###.##");
 	private String LOG_TAG = getClass().getSimpleName();
@@ -554,7 +554,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 
 //					String serverResponse = EntityUtils.toString(response.getEntity());
 					Log.d(LOG_TAG,"The Resp is "+ serverResponse);
-					sendUploadFailedNotice(true);
+					sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 
 //					throw new Exception("Response code not 200");
 				}
@@ -574,10 +574,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					if(resCode == Constants.UPLOAD_ERROR_CODE_404){
 						handleErr404(httpsURLConnection.getErrorStream(),fileName);
 					}else{
-						sendUploadFailedNotice(true);
+						sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 					}
 				}else{
-					sendUploadFailedNotice(true);
+					sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 				}
 
 				e.printStackTrace();
@@ -598,6 +598,22 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		if(file.length() < (1024*1024)){
 			return df2.format((double) file.length() / (1024)) + "kb";
 		}else	return df2.format((double) file.length() / (1024 * 1024)) + "mb";
+	}
+
+	private String getErrorMessage(InputStream errorStream) {
+		String response="";
+		try {
+
+			String line;
+			BufferedReader br=new BufferedReader(new InputStreamReader(errorStream));
+				while ((line=br.readLine()) != null) {
+					response+=line;
+				}
+
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
@@ -639,7 +655,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			e.printStackTrace();
 		}
 	}
-	private void sendUploadFailedNotice(boolean isFromMergeSignal,boolean isFileSizeMore) {
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,boolean isFileSizeMore,String errorMsg) {
 		uploadInfo.setUploaded(false);
 		Message msg = Message.obtain();
 		Bundle data = new Bundle();
@@ -651,7 +667,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		data.putString("componentType", componentType);
 		data.putBoolean("success",false);
 		data.putBoolean(isFileSizeMore_key,isFileSizeMore);
-		//data.putString(fileSize_key, getFileSizeMegaBytes(new File(outFilePath)));
+		data.putString(error_msz_key, errorMsg);
 		//data.putLong(fileSizeBytes_key, (new File(outFilePath).length()));
 //		if(isTeam)
 //			data.putString(Constants.TEAM_ID,userOrTeamId);
@@ -668,8 +684,14 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		upLoadProgressState(100,false);
 		uploadInfo.setMergeTriggered(isFromMergeSignal);
 	}
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,boolean isFileSizeMore){
+		sendUploadFailedNotice( isFromMergeSignal,isFileSizeMore,"");
+	}
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,String errorMsg){
+		sendUploadFailedNotice(isFromMergeSignal,false,errorMsg);
+	}
 
 	private void sendUploadFailedNotice(boolean isFromMergeSignal){
-		sendUploadFailedNotice( isFromMergeSignal,false);
+		sendUploadFailedNotice(isFromMergeSignal,false);
 	}
 }
