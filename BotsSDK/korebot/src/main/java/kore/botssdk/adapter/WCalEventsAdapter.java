@@ -151,7 +151,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
         unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
 
         insetDivider = mContext.getResources().getDrawable(R.drawable.inset_65_divider);
-        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_divider_meetings);
+        normalDivider = mContext.getResources().getDrawable(R.drawable.inset_full_divider_meetings);
 //        EVENTS_LIST_LIMIT = 3;
 //        title = "SHOW MORE";txtDateAndTime
     }
