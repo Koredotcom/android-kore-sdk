@@ -4,64 +4,55 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ExpandableListView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.tableview.TableView;
-import kore.botssdk.view.tableview.adapters.BotTableAdapter;
+import kore.botssdk.view.tableview.TableExpandView;
+import kore.botssdk.view.tableview.adapters.BotRespExpandTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
-/**
- * Extension of the {@link TableView} that gives the possibility to sort the table by every single
- * column. For this purpose implementations of {@link Comparator} are used. If there is a comparator
- * set for a column the  will automatically display an ImageView at the start
- * of the header indicating to the user, that this column is sortable.
- * If the user clicks this header the given comparator will used to sort the table ascending by the
- * content of this column. If the user clicks this header again, the table is sorted descending
- * by the content of this column.
- *
- * @author ISchwarz
- */
-public class BotTableView extends TableView<MiniTableModel> {
-
+public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel> {
 
     private Context context;
-    public BotTableView(final Context context) {
+    private ExpandableListView expandableListView;
+    private String[]  headers;
+    int dp1;
+
+    public BotResponsiveExpandTableView(final Context context) {
         this(context, null);
         this.context = context;
+        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotTableView(final Context context, final AttributeSet attributes) {
+    public BotResponsiveExpandTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
+    public BotResponsiveExpandTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
 //        setBackgroundColor(0xffff0000);
 
     }
     public String[] addHeaderAdapter( List<List<String>> primary){
-        String[]  headers = new String[primary.size()];
+        headers = new String[primary.size()];
         String[] alignment = new String[primary.size()];
         String defaultAlign = "left";
         for(int i=0; i<primary.size();i++){
@@ -74,6 +65,7 @@ public class BotTableView extends TableView<MiniTableModel> {
         final SimpleTableHeaderAdapter simpleTableHeaderAdapter = new SimpleTableHeaderAdapter(context, headers,alignment);
         simpleTableHeaderAdapter.setTextColor(context.getResources().getColor(R.color.primaryDark));
         setHeaderAdapter(simpleTableHeaderAdapter);
+        setHeaderVisible(false, 100);
 
         final int rowColorEven =context.getResources().getColor(R.color.table_data_row_even);
         //final int rowColorOdd = context.getResources().getColor(R.color.table_data_row_odd);
@@ -89,7 +81,7 @@ public class BotTableView extends TableView<MiniTableModel> {
         return alignment;
     }
 
-    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment){
+    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment, PayloadInner data){
         if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type) || BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)) {
             List<MiniTableModel> lists = new ArrayList<>();
             for(int j=0; j<additional.size();j++) {
@@ -97,8 +89,9 @@ public class BotTableView extends TableView<MiniTableModel> {
                 model.setElements(additional.get(j));
                 lists.add(model);
             }
-            BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment);
-            setDataAdapter(tableAdapter);
+
+            BotRespExpandTableAdapter botRespExpandTableAdapter = new BotRespExpandTableAdapter(context, lists, alignment, headers, data);
+            setDataAdapter(botRespExpandTableAdapter);
         }
 
     }
@@ -121,9 +114,11 @@ public class BotTableView extends TableView<MiniTableModel> {
             model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
             lists.add(model);
         }
-        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment);
-        setDataAdapter(tableAdapter);
 
+        BotRespExpandTableAdapter botRespExpandTableAdapter = new BotRespExpandTableAdapter(context, lists, alignment, headers, data);
+        setDataAdapter(botRespExpandTableAdapter);
+//        BotResponsiveTableAdapter tableAdapter = new BotResponsiveTableAdapter(context, lists,alignment, headers);
+//        setDataAdapter(tableAdapter);
     }
 
     @Override
@@ -157,9 +152,9 @@ public class BotTableView extends TableView<MiniTableModel> {
             height = getListViewHeightBasedOnChildren(tableDataView);
             height += tableHeaderView.getMeasuredHeight();
 
-            if (height != 0 ) {
-                height = height + (int) (25 * dp1);
-            }
+//            if (height != 0 ) {
+//                height = height + (int) (25 * dp1);
+//            }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
@@ -167,27 +162,45 @@ public class BotTableView extends TableView<MiniTableModel> {
                 child.requestLayout();
             }*/
         }
-
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    public int getListViewHeightBasedOnChildren(ListView listView) {
+    public int getListViewHeightBasedOnChildren(ExpandableListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
             return  0;
         }
 
+//        ViewGroup.LayoutParams params = listView.getLayoutParams();
+//        params.height = 6 * 20;
+//        listView.setLayoutParams(params);
+//        listView.requestLayout();
+
         int totalHeight = 0;
-        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(),
-                MeasureSpec.AT_MOST);
+        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.AT_MOST);
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
+            totalHeight += 75 * dp1;
+
+            if(i == listAdapter.getCount()-1)
+                totalHeight += 25 * dp1;
+
+            Log.e("Child Height", listItem.getMeasuredHeight()+"");
         }
+
         return totalHeight;
     }
 
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void showKeypad()
+    {
+        InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+    }
 }

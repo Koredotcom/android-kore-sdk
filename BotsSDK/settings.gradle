@@ -1,1 +1,1 @@
-include ':korebot', ':korebotsdklib', ':korefileuploadsdk'
+include ':korebot', ':korebotsdklib', ':korefileuploadsdk', ':MPAndroidChart-3.1.0'

@@ -6,8 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -25,7 +24,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,17 +35,13 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-/**
- * Created by Ramachandra Pradeep on 11-Apr-18.
- */
-
-public class BarChartView extends ViewGroup implements OnChartValueSelectedListener {
-    private BarChart mChart;
+public class HorizontalBarChartView extends ViewGroup implements OnChartValueSelectedListener {
+    private HorizontalBarChart mChart;
     private Context mContext;
     int dp1;
     int labelCount = 0;
 
-    public BarChartView(Context context) {
+    public HorizontalBarChartView(Context context) {
         super(context);
         this.mContext = context;
         init();
@@ -56,15 +50,19 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     private void init() {
         labelCount = 0;
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        mChart = new BarChart(mContext);
+        mChart = new HorizontalBarChart(mContext);
         mChart.setTouchEnabled(true);
-        mChart.setPinchZoom(true);
+        mChart.setPinchZoom(false);
         mChart.setDrawBarShadow(false);
         mChart.setDrawGridBackground(false);
         mChart.setDrawValueAboveBar(true);
-        mChart.setDragXEnabled(true);
+
         mChart.getDescription().setEnabled(false);
-        mChart.zoom(1f,0f,0,0);
+
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
+
 
         CustomMarkerView mv = new CustomMarkerView(mContext, R.layout.marker_content);
 
@@ -87,12 +85,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         XAxis xAxis = mChart.getXAxis();
         xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(true);
-        xAxis.setValueFormatter(new ValueFormatter() {
-            @Override
-            public String getFormattedValue(float value) {
-                return String.valueOf((int) value);
-            }
-        });
+
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.setValueFormatter(new LargeValueFormatter());
@@ -103,12 +96,6 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         mChart.getAxisRight().setEnabled(false);
 
         addView(mChart);
-
-
-        // if more than 60 entries are displayed in the chart, no values will be
-        // drawn
-        mChart.invalidate();
-        mChart.setMaxVisibleValueCount(3);
 //        setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));
     }
 
@@ -127,18 +114,18 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
         if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
+//            List<ArrayList<BarEntry>> yVals1 = new ArrayList<>();
             int size = _payInner.getBarChartDataModels().size();
 
             yVals1 = new ArrayList[size];
             for (int index = 0; index < size; index++) {
                 BotBarChartDataModel model = _payInner.getBarChartDataModels().get(index);
                 yVals1[index] = new ArrayList<>();
+//                BotBarChartDataModel model2 = _payInner.getBarChartDataModels().get(1);
                 for (int inner = 0; inner < model.getValues().size(); inner++) {
                     yVals1[index].add(new BarEntry(inner + 1, model.getValues().get(inner), model.getDisplayValues().get(inner)));
                 }
-
             }
-
             dataSet = new BarDataSet[size];
 
             for (int k = 0; k < size; k++) {
@@ -150,19 +137,24 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
 
             BarData data = new BarData(barDataSets);
             data.setValueFormatter(new BarChartDataFormatter());
+//        data.setValueTypeface(mTfLight);
+            Log.e("Values", _payInner.getxAxis()+"");
             XAxis xAxis = mChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//            xAxis.setTypeface(mTfLight);
             xAxis.setTextSize(8f);
             xAxis.setDrawGridLines(false);
             xAxis.setGranularity(0.5f); // only intervals of 1 day
             xAxis.setLabelCount(_payInner.getxAxis().size());
+            xAxis.setDrawLabels(true);
+            xAxis.setCenterAxisLabels(true);
             xAxis.setLabelRotationAngle(-60f);
 
             ValueFormatter xAxisFormatter = new ValueFormatter() {
                 @Override
                 public String getFormattedValue(float v) {
-                    if(((int)(v * 2) - 2) >= 0 &&  ((int)(v * 2) - 2) < _payInner.getxAxis().size())
-                        return _payInner.getxAxis().get((int)(v * 2) - 2);
+                    if(((int)(v * _payInner.getBarChartDataModels().size()) - _payInner.getBarChartDataModels().size()) >= 0 &&  ((int)(v * _payInner.getBarChartDataModels().size()) - _payInner.getBarChartDataModels().size()) < _payInner.getxAxis().size())
+                        return _payInner.getxAxis().get((int)(v * _payInner.getBarChartDataModels().size()) - _payInner.getBarChartDataModels().size());
                     else
                         return "";
                 }
@@ -171,7 +163,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
             xAxis.setValueFormatter(xAxisFormatter);
 
             Legend l = mChart.getLegend();
-            l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+            l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
             l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
             l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
             l.setDrawInside(false);
@@ -179,6 +171,14 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
             l.setFormSize(9f);
             l.setTextSize(11f);
             l.setXEntrySpace(4f);
+            // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
+            // "def", "ghj", "ikl", "mno" });
+            // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
+            // "def", "ghj", "ikl", "mno" });
+
+//            XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
+//            mv.setChartView(mChart); // For bounds control
+//            mChart.setMarker(mv); // Set the marker to the chart
 
             mChart.setData(data);
 
@@ -187,10 +187,10 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
             // restrict the x-axis range
             mChart.getXAxis().setAxisMinimum(startYear);
 
+
             // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
             mChart.getXAxis().setAxisMaximum(startYear + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
             mChart.groupBars(startYear, groupSpace, barSpace);
-
         }
 
     }
@@ -240,8 +240,9 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
     protected RectF mOnValueSelectedRectF = new RectF();
 
     @Override
-    public void onValueSelected(Entry e, Highlight highlight) {
-       /* if (e == null)
+    public void onValueSelected(Entry e, Highlight h) {
+
+        if (e == null)
             return;
 
         RectF bounds = mOnValueSelectedRectF;
@@ -255,7 +256,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
                 "low: " + mChart.getLowestVisibleX() + ", high: "
                         + mChart.getHighestVisibleX());
 
-        MPPointF.recycleInstance(position);*/
+        MPPointF.recycleInstance(position);
     }
 
     @Override

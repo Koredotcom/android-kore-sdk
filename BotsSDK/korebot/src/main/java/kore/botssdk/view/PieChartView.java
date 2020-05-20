@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -34,6 +35,7 @@ public class PieChartView extends ViewGroup {
     int dp1;
     private float holeRadius;
     private float transparentCircleRadius;
+    private String pieType;
 
     private final String PIE_TYPE_REGULAR = "regular";
     private final String PIE_TYPE_DONUT = "donut";
@@ -51,9 +53,10 @@ public class PieChartView extends ViewGroup {
         setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));
     }
 
-    public void populatePieChart(String desc, String pieType, ArrayList<String> xVals, ArrayList<PieEntry> yVals){
+    public void populatePieChart(String desc, String pieType, ArrayList<String> xVals, ArrayList<PieEntry> yVals, ArrayList<String> arrLabels){
+        this.pieType = pieType;
         if(pieType != null && pieType.equals(PIE_TYPE_DONUT)){
-            holeRadius = 58f;
+            holeRadius = 56f;
             transparentCircleRadius = 61f;
         }else{
             holeRadius = 0f;
@@ -68,7 +71,7 @@ public class PieChartView extends ViewGroup {
         mChart.setTransparentCircleRadius(transparentCircleRadius);
 
 
-        mChart.setRotationAngle(0);
+        mChart.setRotationAngle(-30);
         mChart.setRotationEnabled(true);
 
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -87,14 +90,36 @@ public class PieChartView extends ViewGroup {
                 Log.i("PieChart", "nothing selected");
             }
         });
+
         addData(xVals,yVals);
 
+        ArrayList<LegendEntry> arrLegendEntries = new ArrayList<>();
+        String[] colorsArray = this.getResources().getStringArray(R.array.color_set);
+        for (int i = 0 ; i < yVals.size(); i++)
+        {
+            LegendEntry legendEntryA = new LegendEntry();
+            legendEntryA.label = arrLabels.get(i);
+            legendEntryA.formColor = Color.parseColor(colorsArray[i]);
+            arrLegendEntries.add(legendEntryA);
+        }
+
         Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
+        l.setCustom(arrLegendEntries);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+//        l.setXEntrySpace(7f);
+//        l.setYEntrySpace(0f);
+//        l.setYOffset(0f);
 
+        CustomMarkerView mv = new CustomMarkerView (getContext(), R.layout.marker_content);
+        mChart.setMarkerView(mv);
 
+        // entry label styling
+        mChart.setEntryLabelColor(Color.WHITE);
+//        chart.setEntryLabelTypeface(tfRegular);
+        mChart.setEntryLabelTextSize(12f);
     }
 
     private void addData(ArrayList<String> xVals, ArrayList<PieEntry> yVals){
@@ -110,8 +135,17 @@ public class PieChartView extends ViewGroup {
 
         dataSet.setColors(colors);
 
+        if(pieType != null && pieType.equals(PIE_TYPE_DONUT)){
+            dataSet.setValueLinePart1OffsetPercentage(80.f);
+            dataSet.setValueLinePart1Length(0.2f);
+            dataSet.setValueLinePart2Length(0.4f);
+
+            dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
+        }
+
+
+
         PieData data = new PieData(dataSet);
-//        data.setDataSet(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);
@@ -119,8 +153,6 @@ public class PieChartView extends ViewGroup {
         mChart.setData(data);
         mChart.highlightValues(null);
         mChart.invalidate();
-
-
 
     }
 

@@ -10,6 +10,7 @@ public class BubbleConstants {
     public static final int TABLE_VIEW_ID = 19800345;
     public static final int LINECHART_VIEW_ID = 19800335;
     public static final int BARCHART_VIEW_ID = 19800355;
+    public static final int HORIZONTAL_BARCHART_VIEW_ID = 19800385;
     public static final int STACK_BARCHAT_VIEW_ID = 19800375;
     public static final int MINI_TABLE_VIEW_ID = 19800365;
     public static final int GRAVITY_LEFT = 0;

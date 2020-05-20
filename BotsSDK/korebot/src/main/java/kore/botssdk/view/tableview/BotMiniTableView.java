@@ -106,9 +106,9 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         if(payloadInner != null) {
             String[] alignment = addHeaderAdapter(payloadInner.getColumns());
             addDataAdapterForTable(payloadInner, alignment);
-        }else{
+        }/*else{
             setDataAdapter(null);
-        }
+        }*/
     }
 
     public void addDataAdapterForTable(PayloadInner data, String[] alignment) {

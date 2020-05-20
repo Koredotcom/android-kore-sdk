@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -89,9 +90,9 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
         XAxis xAxis = mChart.getXAxis();
         xAxis.setGranularity(1f);
         xAxis.setCenterAxisLabels(true);
-        xAxis.setValueFormatter(new IAxisValueFormatter() {
+        xAxis.setValueFormatter(new ValueFormatter() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
+            public String getFormattedValue(float value) {
                 return String.valueOf((int) value);
             }
         });
@@ -168,20 +169,21 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
 //            xAxis.setTypeface(mTfLight);
             xAxis.setTextSize(8f);
             xAxis.setDrawGridLines(false);
-            xAxis.setGranularity(0.5f); // only intervals of 1 day
+            xAxis.setGranularity(1f); // only intervals of 1 day
             xAxis.setLabelCount(4);
-            IAxisValueFormatter xAxisFormatter = new IAxisValueFormatter() {
+            xAxis.setLabelRotationAngle(-60f);
+
+            ValueFormatter xAxisFormatter = new ValueFormatter() {
                 @Override
-                public String getFormattedValue(float v, AxisBase axisBase) {
-//                    Log.d("IKIDI", "Hi The Val is "+(int) v % _payInner.getxAxis().size());
-//                    return _payInner.getxAxis().get((int) (v/2) % _payInner.getxAxis().size());
-                    return "";
+                public String getFormattedValue(float v) {
+                    if(((int)v) < _payInner.getxAxis().size())
+                        return _payInner.getxAxis().get((int)v);
+                    else
+                        return "";
                 }
             };
 
             xAxis.setValueFormatter(xAxisFormatter);
-
-
 
             Legend l = mChart.getLegend();
             l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);

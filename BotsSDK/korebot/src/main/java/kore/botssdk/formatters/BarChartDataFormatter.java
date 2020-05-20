@@ -4,6 +4,7 @@ import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
@@ -12,7 +13,7 @@ import java.text.DecimalFormat;
  * Created by Ramachandra Pradeep on 10-May-18.
  */
 
-public class BarChartDataFormatter implements IValueFormatter, IAxisValueFormatter {
+public class BarChartDataFormatter extends ValueFormatter implements IAxisValueFormatter {
     private static String[] SUFFIX = new String[]{"", "k", "m", "b", "t"};
 //    private static final int MAX_LENGTH = 5;
     private DecimalFormat mFormat;

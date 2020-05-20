@@ -22,9 +22,12 @@ import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
+import kore.botssdk.view.BotResponsiveExpandTableView;
+import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
+import kore.botssdk.view.HorizontalBarChartView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
@@ -39,7 +42,6 @@ import kore.botssdk.view.TimeLineTextView;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
-import kore.botssdk.view.tableview.BotMiniTableView;
 
 /**
  * Created by Shiva Krishna on 11/20/2017.
@@ -67,6 +69,7 @@ public class ViewProvider {
     private static final int TIMELINE_VIEW_ID = 1980094;
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
+    private static final int TABLE_RESPONSIVE_VIEW_ID = 19800350;
 
 
     public static Path RoundedRect(
@@ -202,6 +205,16 @@ public class ViewProvider {
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }
+    public static BotResponsiveExpandTableView getResponsiveExpandTableView(Context context){
+        BotResponsiveExpandTableView tableView = new BotResponsiveExpandTableView(context);
+        tableView.setId(TABLE_RESPONSIVE_VIEW_ID);
+        return tableView;
+    }
+    public static BotResponsiveTableView getResponsiveTableView(Context context){
+        BotResponsiveTableView tableView = new BotResponsiveTableView(context);
+        tableView.setId(TABLE_RESPONSIVE_VIEW_ID);
+        return tableView;
+    }
     public static LineChartView getLineChartView(Context context){
         LineChartView lineChartView = new LineChartView(context);
         lineChartView.setId(LINECHART_VIEW_ID);
@@ -213,6 +226,13 @@ public class ViewProvider {
         barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
        return  barChartView;
     }
+
+    public static HorizontalBarChartView getHorizontalBarChartView(Context context){
+        HorizontalBarChartView horizontalBarChartView = new HorizontalBarChartView(context);
+        horizontalBarChartView.setId(BubbleConstants.HORIZONTAL_BARCHART_VIEW_ID);
+        return  horizontalBarChartView;
+    }
+
 
     public static StackedBarChatView getStackedBarChartView(Context context){
         StackedBarChatView barChartView = new StackedBarChatView(context);

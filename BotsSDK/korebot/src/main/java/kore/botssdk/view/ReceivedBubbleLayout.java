@@ -211,11 +211,14 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
                     if(elementModels != null && !elementModels.isEmpty()) {
                         ArrayList<String > xVal = new ArrayList<>(elementModels.size());
                         ArrayList<PieEntry> yVal = new ArrayList<>(elementModels.size());
+                        ArrayList<String> arrLables = new ArrayList<>(elementModels.size());
+
                         for(int i=0; i < elementModels.size(); i++){
                             xVal.add(elementModels.get(i).getTitle());
                             yVal.add(new PieEntry((float)elementModels.get(i).getValue(),i));
+                            arrLables.add(elementModels.get(i).getTitle()+" "+elementModels.get(i).getValue());
                         }
-                        botPieChartView.populatePieChart("",payInner.getPie_type(), xVal,yVal);
+                        botPieChartView.populatePieChart("",payInner.getPie_type(), xVal,yVal,arrLables);
                     }
                 }else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
                     botListTemplateView.setVisibility(View.VISIBLE);

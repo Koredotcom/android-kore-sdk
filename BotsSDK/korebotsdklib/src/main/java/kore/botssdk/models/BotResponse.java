@@ -51,6 +51,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String KORA_SUMMARY_HELP_VIEW = "kora_summary_help";
     public static final String NARRATOR_TEXT = "narrator";
     public static final String TEMPLATE_TYPE_MULTI_SELECT = "multi_select";
+    public static final String BAR_CHART_DIRECTION_VERTICAL = "vertical";
+    public static final String TABLE_VIEW_RESPONSIVE = "responsive";
 
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
 

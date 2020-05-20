@@ -30,7 +30,6 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
-import kore.botssdk.view.tableview.BotMiniTableView;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
@@ -111,8 +110,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotCarouselView botCarouselView;
     protected PieChartView botPieChartView;
     protected BotTableView tableView;
+    protected BotResponsiveExpandTableView responsiveExpandTableView;
+    protected BotResponsiveTableView responsiveTableView;
     protected LineChartView lineChartView;
     protected BarChartView barChartView;
+    protected HorizontalBarChartView horizontalBarChartView;
     protected StackedBarChatView stackedBarChatView;
     protected ContactInfoView contactInfoView;
     protected WelcomeSummaryView welcomeSummaryView;
@@ -325,11 +327,20 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         tableView = ViewProvider.getTableView(context);
         addView(tableView);
 
+        responsiveExpandTableView = ViewProvider.getResponsiveExpandTableView(context);
+        addView(responsiveExpandTableView);
+
+        responsiveTableView = ViewProvider.getResponsiveTableView(context);
+        addView(responsiveTableView);
+
         lineChartView = ViewProvider.getLineChartView(context);
         addView(lineChartView);
 
         barChartView = ViewProvider.getBarChartView(context);
         addView(barChartView);
+
+        horizontalBarChartView = ViewProvider.getHorizontalBarChartView(context);
+        addView(horizontalBarChartView);
 
         stackedBarChatView = ViewProvider.getStackedBarChartView(context);
         addView(stackedBarChatView);

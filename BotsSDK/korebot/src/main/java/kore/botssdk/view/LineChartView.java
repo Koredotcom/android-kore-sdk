@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
@@ -65,7 +68,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
 //        setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));
     }
 
-    public void setData(PayloadInner _payInner) {
+    public void setData(final PayloadInner _payInner) {
 
 
         LineDataSet dataSet[];
@@ -125,6 +128,17 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         mChart.getAxisRight().setEnabled(false);// disable grid lines for the right YAxis
         // get the legend (only possible after setting data)
         // get the legend (only possible after setting data)
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return _payInner.getxAxis().get((int)value);
+            }
+        });
+        xAxis.setLabelRotationAngle(-60f);
+        xAxis.setLabelCount( _payInner.getxAxis().size(), true);
+
         Legend l = mChart.getLegend();
 
         // modify the legend ...

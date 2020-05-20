@@ -34,14 +34,21 @@
     <dimen name="table_layout_height">100dp</dimen>
     <dimen name="mini_table_layout_height">150dp</dimen>
 
+    <!-- Text Sizes -->
+    <dimen name="text_size_small">12dp</dimen>
+    <dimen name="text_size_normal">14dp</dimen>
+
     <!--Line chart View-->
     <dimen name="line_layout_height">300dp</dimen>
+    <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_14dp">14dp</dimen>
     <dimen name="dimen_15dp">15dp</dimen>
     <dimen name="dimen_12dp">12dp</dimen>
     <dimen name="dimen_10dp">10dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_7dp">7dp</dimen>
     <dimen name="dimen_0">0dp</dimen>
     <dimen name="my_table_height">250dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
 
 </resources>

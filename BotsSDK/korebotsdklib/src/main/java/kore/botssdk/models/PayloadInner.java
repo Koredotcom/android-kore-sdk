@@ -35,7 +35,6 @@ public class PayloadInner {
     }
 
     private String text;
-    private String table_design;
     private String pie_type;
     private String Auto_adjust_X_axis;
     private List<String> X_axis;
@@ -121,8 +120,6 @@ public class PayloadInner {
         this.direction = direction;
     }
 
-
-
     public List<String> getxAxis() {
         return X_axis;
     }
@@ -131,7 +128,15 @@ public class PayloadInner {
         this.X_axis = xAxis;
     }
 
+    public void setTableDesign(String table_design)
+    {
+        this.table_design = table_design;
+    }
 
+    public String getTableDesign()
+    {
+        return table_design;
+    }
 
 
 
@@ -348,6 +353,7 @@ public class PayloadInner {
         this.elements = elements;
     }
 
+    private String table_design ;
     private Object elements = null;
 
     private Duration cursor = null;
