@@ -48,6 +48,8 @@ public class DateUtils {
     public static final SimpleDateFormat dateWeekDayTime3 = new SimpleDateFormat("MMM dd 'at' hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime4 = new SimpleDateFormat("dd MMM, yyyy, hh:mm a", Locale.ENGLISH);
     public static final SimpleDateFormat dateWeekDayTime5 = new SimpleDateFormat("EEE, MMM dd, yyyy, ", Locale.ENGLISH);
+    public static final SimpleDateFormat dateWeekDayTime6 = new SimpleDateFormat("EEE, MMM dd, ", Locale.ENGLISH);
+
     public static final Format calendar_list_format2 = new SimpleDateFormat("EEE, MMM d, ", Locale.ENGLISH);
     public static final Format calendar_list_req_format2 = new SimpleDateFormat("EEE, MMM d ", Locale.ENGLISH);
 
@@ -285,6 +287,21 @@ public class DateUtils {
     public static String getReqDateEEEMMDD(double startdate) {
         return calendar_list_req_format2.format(startdate);
     }
+    public static String getDateToDate(double startdate, double enddate) {
+        if(isSameDay( startdate,  enddate)) {
+            return dateWeekDayTime6.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
+        }
+        return dateWeekDayTime6.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + dateWeekDayTime6.format(enddate) + calendar_list_format_2.format(enddate).toLowerCase();
+    }
+
+    private static boolean isSameDay(double startDate, double endDate) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTimeInMillis((long) startDate);
+        cal2.setTimeInMillis((long) endDate);
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+    }
 
     public static String getDateMMMDDYYYY(double startdate, double enddate) {
         return dateWeekDayTime5.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
@@ -292,6 +309,14 @@ public class DateUtils {
     //Oct 12, 9:30am - 10:00am
     public static String getDateMMMDDYYYYNotes(double startdate, double enddate) {
         return dateMonthDay.format(startdate) +", "+ calendar_list_format_2.format(startdate).toLowerCase() + " - " + calendar_list_format_2.format(enddate).toLowerCase();
+    }
+    public static String getDateMMMDDYYYYNotes_multidate(double startdate, double enddate) {
+        if(isSameDay(startdate,enddate))
+        {
+            return dateWeekDayTime6.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " - " + calendar_list_format_2.format(enddate).toLowerCase();
+
+        }
+        return dateWeekDayTime6.format(startdate)+ calendar_list_format_2.format(startdate).toLowerCase() + " - " + dateWeekDayTime6.format(enddate) + calendar_list_format_2.format(enddate).toLowerCase();
     }
     public static String getDateWithTime(long lastModified) {
 

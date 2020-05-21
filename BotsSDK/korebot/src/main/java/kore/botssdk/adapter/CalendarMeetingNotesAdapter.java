@@ -58,7 +58,7 @@ public class CalendarMeetingNotesAdapter extends RecyclerView.Adapter<RecyclerVi
         if(holderOrig instanceof CalendarMeetingNotesViewHolder) {
             CalendarMeetingNotesViewHolder holder=(CalendarMeetingNotesViewHolder)holderOrig;
             CalEventsTemplateModel model = modelData.get(position);
-            holder.date_view.setText(DateUtils.getDateMMMDDYYYYNotes(model.getDuration().getStart(), model.getDuration().getEnd()));
+            holder.date_view.setText(DateUtils.getDateMMMDDYYYYNotes_multidate(model.getDuration().getStart(), model.getDuration().getEnd()));
          //   String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
             holder.creator_view.setText(model.getnNotes());
             holder.title_view.setText(model.getTitle());
