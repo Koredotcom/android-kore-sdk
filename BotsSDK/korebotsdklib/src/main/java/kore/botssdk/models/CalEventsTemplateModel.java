@@ -67,7 +67,12 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private int nNotes;
 
     public String getnNotes() {
-        return "Notes from "+ nNotes +" People";
+        if(nNotes==1) {
+            return "Notes from "+ nNotes +" Attendee";
+        }
+        return "Notes from "+ nNotes +" Attendees";
+
+
     }
 
     public void setnNotes(int nNotes) {
