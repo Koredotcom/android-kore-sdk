@@ -93,5 +93,7 @@
     <string name="no_title_lbl">(No Title)</string>
 
     <string name="icon_e91c_problem">&#xe91c;</string>
+    <string name="knowledge_empty_title_lbl">Untitled article</string>
+    <string name="knowledge_empty_desc_lbl">No description</string>
 
 </resources>

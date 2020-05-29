@@ -4,6 +4,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,12 +79,23 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
             ViewHolder holder = (ViewHolder) holderdata;
 
             //holder.followers_count.setText(knowledgeDetailModels.get(position).getnFollows()+"");
-            holder.knowledgeItemViewBinding.setKnowledge(knowledgeDetailModels.get(position));
+            KnowledgeDetailModel model= knowledgeDetailModels.get(position);
+            if(model!=null ) {
+                if(TextUtils.isEmpty(model.getTitle())) {
+                    model.setTitle(context.getResources().getString(R.string.knowledge_empty_title_lbl));
+                }
+                if(TextUtils.isEmpty(model.getDesc())) {
+                    model.setDesc(context.getResources().getString(R.string.knowledge_empty_desc_lbl));
+                }
+                //No description
+            }
+
+            holder.knowledgeItemViewBinding.setKnowledge(model);
             holder.knowledgeItemViewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle extras = new Bundle();
-                    extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
+                    extras.putString(BundleConstants.KNOWLEDGE_ID, model.getId());
                     if (verticalListViewActionHelper != null)
                         verticalListViewActionHelper.knowledgeItemClicked(extras, true);
                 }
