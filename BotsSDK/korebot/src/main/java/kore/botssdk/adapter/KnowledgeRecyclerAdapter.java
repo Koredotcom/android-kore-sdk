@@ -2,6 +2,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -83,9 +85,17 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
             if(model!=null ) {
                 if(TextUtils.isEmpty(model.getTitle())) {
                     model.setTitle(context.getResources().getString(R.string.knowledge_empty_title_lbl));
+                    model.setTitleAvailable(false);
+                    holder.knowledgeItemViewBinding.title.setTypeface(ResourcesCompat.getFont(context,R.font.latomedium),Typeface.ITALIC);
+                }else{
+                    holder.knowledgeItemViewBinding.title.setTypeface(ResourcesCompat.getFont(context,R.font.latomedium),Typeface.NORMAL);
                 }
                 if(TextUtils.isEmpty(model.getDesc())) {
                     model.setDesc(context.getResources().getString(R.string.knowledge_empty_desc_lbl));
+                    model.setDescAvailable(false);
+                    holder.knowledgeItemViewBinding.description.setTypeface(ResourcesCompat.getFont(context,R.font.latomedium),Typeface.ITALIC);
+                }else{
+                    holder.knowledgeItemViewBinding.description.setTypeface(ResourcesCompat.getFont(context,R.font.latomedium),Typeface.NORMAL);
                 }
                 //No description
             }

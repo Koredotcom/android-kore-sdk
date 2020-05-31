@@ -50,6 +50,25 @@ public class KnowledgeDetailModel implements Serializable {
     private String lMod;
     private String imageUrl;
     private String title;
+
+    public boolean isTitleAvailable() {
+        return isTitleAvailable;
+    }
+
+    public void setTitleAvailable(boolean titleAvailable) {
+        isTitleAvailable = titleAvailable;
+    }
+
+    public boolean isDescAvailable() {
+        return isDescAvailable;
+    }
+
+    public void setDescAvailable(boolean descAvailable) {
+        isDescAvailable = descAvailable;
+    }
+
+    private boolean isTitleAvailable = true;
+    private boolean isDescAvailable = true;
     private String mId;
 
     public String getScope() {
