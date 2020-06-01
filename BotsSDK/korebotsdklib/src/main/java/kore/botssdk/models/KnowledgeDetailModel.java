@@ -200,6 +200,16 @@ public class KnowledgeDetailModel implements Serializable {
         return nViews;
     }
 
+    public boolean isSeedData() {
+        return isSeedData;
+    }
+
+    public void setSeedData(boolean seedData) {
+        isSeedData = seedData;
+    }
+
+    private boolean isSeedData;
+
     public void setNViews(long nViews) {
         this.nViews = nViews;
     }

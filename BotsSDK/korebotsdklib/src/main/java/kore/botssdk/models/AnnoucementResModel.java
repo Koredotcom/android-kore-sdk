@@ -61,7 +61,15 @@ public class AnnoucementResModel implements Serializable {
     @Expose
     private Long lastMod;
 
+    public boolean isSeedData() {
+        return isSeedData;
+    }
 
+    public void setSeedData(boolean seedData) {
+        isSeedData = seedData;
+    }
+
+    private boolean isSeedData;
 
     public Long getNUpVotes() {
         return nUpVotes;

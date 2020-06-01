@@ -136,6 +136,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:visibility="@{annoucement.seedData? View.GONE :View.VISIBLE}"
 
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_description"
