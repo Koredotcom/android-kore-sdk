@@ -40,6 +40,7 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
+import kore.botssdk.listener.AnalyticsActionHelper;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -66,7 +67,7 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    AnalyticsActionHelper verticalListViewActionHelper;
 
     public ArrayList<String> getSelectedIds() {
         return selectedIds;
@@ -240,16 +241,38 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             if ((timeStampNow <= startTime && seconds <= TIMER_START_MINUTE) || (timeStampNow >= startTime && timeStampNow <= endTime)) {
                 if (model != null && model.getActions() != null) {
                     for (int i = 0; i < model.getActions().size(); i++) {
-                        String type = model.getActions().get(i).getType() != null ? model.getActions().get(i).getType() : "";
-                        String customType = model.getActions().get(i).getCustom_type() != null ? model.getActions().get(i).getCustom_type() : "";
+                        WCalEventsTemplateModel.Action action = model.getActions().get(i);
+
+                        String type = action.getType() != null ? action.getType() : "";
+                        String customType = action.getCustom_type() != null ? action.getCustom_type() : "";
                         //boolean isVisible=model.getActions().get(i).get
                         if (type.equalsIgnoreCase("open_form")) {
                             holder.notes_layout.setVisibility(VISIBLE);
                         } else if (type.equalsIgnoreCase("url") && customType.equalsIgnoreCase("url")) {
                             holder.join_layout.setVisibility(VISIBLE);
+                            holder.join_layout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    verticalListViewActionHelper.navigationToDialAndJoin("url", model.getData().getMeetJoin().getMeetingUrl());
+                                    if(action.isActivityTrack()) {
+                                        verticalListViewActionHelper.userAnalytics(action.getActivityInfo());
+                                    }
+
+                                }
+                            });
 
                         } else if (type.equalsIgnoreCase("dial") && customType.equalsIgnoreCase("dial")) {
                             holder.dial_layout.setVisibility(VISIBLE);
+                            holder.dial_layout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    verticalListViewActionHelper.navigationToDialAndJoin("dial", model.getData().getMeetJoin().getDialIn());
+                                    if(action.isActivityTrack()) {
+                                        verticalListViewActionHelper.userAnalytics(action.getActivityInfo());
+                                    }
+                                }
+                            });
 
                         }
                     }
@@ -270,21 +293,9 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                 }
             });
 
-            holder.dial_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    verticalListViewActionHelper.navigationToDialAndJoin("dial", model.getData().getMeetJoin().getDialIn());
 
-                }
-            });
 
-            holder.join_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    verticalListViewActionHelper.navigationToDialAndJoin("url", model.getData().getMeetJoin().getMeetingUrl());
-                }
-            });
             String date = DateUtils.getDay((long) model.getData().getDuration().getStart());
             if (model.isOnGoing()) {
                 date = "Next inline...";
@@ -707,7 +718,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this.verticalListViewActionHelper = verticalListViewActionHelper;
+        this.verticalListViewActionHelper = (AnalyticsActionHelper) verticalListViewActionHelper;
 
     }
 

@@ -21,6 +21,15 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private boolean isAllDay;
     private String reqTextToDisplay;
     private String reqTextToDisplayForDetails;
+    private List<WCalEventsTemplateModel.Action> wCalActions;
+
+    public List<WCalEventsTemplateModel.Action> getwCalActions() {
+        return wCalActions;
+    }
+
+    public void setwCalActions(List<WCalEventsTemplateModel.Action> wCalActions) {
+        this.wCalActions = wCalActions;
+    }
 
     public Widget.DefaultAction getDefaultAction() {
         return default_action;
