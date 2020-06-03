@@ -189,7 +189,7 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
           }
      */
 
-    public static class AnalyticsModel {
+    public static class AnalyticsModel implements Serializable{
         private String entity;
         private String entityId;
         private String action;
