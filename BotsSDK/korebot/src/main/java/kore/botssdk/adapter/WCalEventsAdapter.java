@@ -40,7 +40,7 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
-import kore.botssdk.listener.AnalyticsActionHelper;
+import kore.botssdk.listener.AnalyticsListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -67,7 +67,8 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
-    AnalyticsActionHelper verticalListViewActionHelper;
+    VerticalListViewActionHelper verticalListViewActionHelper;
+    private AnalyticsListener analyticsListener;
 
     public ArrayList<String> getSelectedIds() {
         return selectedIds;
@@ -255,8 +256,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                                 public void onClick(View v) {
 
                                     verticalListViewActionHelper.navigationToDialAndJoin("url", model.getData().getMeetJoin().getMeetingUrl());
-                                    if(action.isActivityTrack()) {
-                                        verticalListViewActionHelper.userAnalytics(action.getActivityInfo());
+                                    if(analyticsListener!=null &&action.isActivityTrack()) {
+                                        analyticsListener.userAnalytics(action.getActivityInfo());
                                     }
 
                                 }
@@ -268,8 +269,8 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                                 @Override
                                 public void onClick(View v) {
                                     verticalListViewActionHelper.navigationToDialAndJoin("dial", model.getData().getMeetJoin().getDialIn());
-                                    if(action.isActivityTrack()) {
-                                        verticalListViewActionHelper.userAnalytics(action.getActivityInfo());
+                                    if(analyticsListener!=null &&action.isActivityTrack()) {
+                                        analyticsListener.userAnalytics(action.getActivityInfo());
                                     }
                                 }
                             });
@@ -718,8 +719,11 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this.verticalListViewActionHelper = (AnalyticsActionHelper) verticalListViewActionHelper;
+        this.verticalListViewActionHelper =  verticalListViewActionHelper;
 
+    }
+    public void setOnAnalyticsListener(AnalyticsListener analyticsListener) {
+        this.analyticsListener=analyticsListener;
     }
 
     public void setMultiActions(List<MultiAction> multiActions) {
