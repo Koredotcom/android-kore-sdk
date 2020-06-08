@@ -102,7 +102,7 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
     private boolean isOnGoing;
 
 
-    public class Action implements Serializable {
+    public static class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;
