@@ -30,27 +30,30 @@
             android:textColor="#485260"
             android:textSize="16sp" />
 
+        <!--
         <TextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
             android:drawablePadding="5dp"
-
+            android:visibility="gone"
             android:ellipsize="end"
             android:gravity="start|top"
             android:maxLines="1"
             android:text="Selected Slots"
             android:textColor="#757587"
             android:textSize="10sp" />
+            -->
 
         <TextView
             android:id="@+id/time_slots"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
+            android:drawablePadding="5dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginStart="20dp"
             android:fontFamily="@font/latomedium"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/color_404051"
