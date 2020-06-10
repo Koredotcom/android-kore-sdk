@@ -281,7 +281,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                                     into(cpvSenderImage);
                         }
                     }catch (Exception e){
-                        e.printStackTrace();
+//                        e.printStackTrace();
                     }
 
                     // Animate the content view to 100% opacity, and clear any animation
