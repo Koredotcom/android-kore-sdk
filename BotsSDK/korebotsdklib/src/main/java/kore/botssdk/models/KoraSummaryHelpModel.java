@@ -2,25 +2,33 @@ package kore.botssdk.models;
 
 import java.util.List;
 
+import kore.botssdk.utils.StringUtils;
+
 public class KoraSummaryHelpModel {
 
+    private String title;
     private String text;
+    private List<ButtonTemplate> body = null;
     private List<ButtonTemplate> buttons = null;
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        if(!StringUtils.isNullOrEmpty(title))
+        return title;
+        else return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public List<ButtonTemplate> getButtons() {
-        return buttons;
+        if(body != null && body.size()>0)
+        return body;
+        else return buttons;
     }
 
-    public void setButtons(List<ButtonTemplate> buttons) {
-        this.buttons = buttons;
+    public void setButtons(List<ButtonTemplate> body) {
+        this.body = body;
     }
 
 }

@@ -55,7 +55,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
 
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
-
+    public static final String TEMPLATE_TYPE_FREEMIUM = "custom_button_template";
 
     //widgets
     public static final String TEMPLATE_TYPE_FILES_LOOKUP_WIDGET = "files_search_carousel_widget";
@@ -78,11 +78,12 @@ public class BotResponse extends BaseBotMessage {
 
 
 
-    public static final String US_MEETING_NOTES_TYPE="MeetingNotes";
-    public static final String US_EMAIL_TYPE="Email";
-    public static final String US_KNOWLEDGE_TYPE="Article";
-    public static final String US_FILES_TYPE="Files";
-    public static final String US_KNOWLEDGE_COLLECTION_TYPE="KnowledgeCollection";
+    public static final String US_MEETING_NOTES_TYPE = "MeetingNotes";
+    public static final String US_EMAIL_TYPE = "Email";
+    public static final String US_KNOWLEDGE_TYPE = "Article";
+    public static final String US_FILES_TYPE = "Files";
+    public static final String US_KNOWLEDGE_COLLECTION_TYPE = "KnowledgeCollection";
+    public static final String US_SKILL_TYPE = "Skill";
 
 
 

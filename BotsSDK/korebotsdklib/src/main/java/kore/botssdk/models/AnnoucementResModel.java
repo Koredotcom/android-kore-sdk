@@ -61,6 +61,16 @@ public class AnnoucementResModel implements Serializable {
     @Expose
     private Long lastMod;
 
+    public boolean isSeedData() {
+        return isSeedData;
+    }
+
+    public void setSeedData(boolean seedData) {
+        isSeedData = seedData;
+    }
+
+    private boolean isSeedData;
+
     public Long getNUpVotes() {
         return nUpVotes;
     }
@@ -371,8 +381,22 @@ public class AnnoucementResModel implements Serializable {
         @Expose
         private String id;
 
+        @SerializedName("icon")
+        @Expose
+        private String icon;
+
+
+
         public String getLN() {
             return lN;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
         }
 
         public void setLN(String lN) {

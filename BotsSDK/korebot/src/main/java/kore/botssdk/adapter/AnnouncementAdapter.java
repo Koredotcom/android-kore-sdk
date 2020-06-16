@@ -1,9 +1,13 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,8 @@ import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -23,11 +29,17 @@ import kore.botssdk.databinding.AnnouncementCardLayoutBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AnnoucementResModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
+import kore.botssdk.view.CircularProfileView;
+import kore.botssdk.view.viewUtils.CircleTransform;
+
+import static kore.botssdk.net.RestAPI.URL_VERSION;
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class AnnouncementAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
@@ -81,27 +93,44 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof AnnouncementViewHolder) {
-            holder = (AnnouncementViewHolder) holder;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        if (viewHolder instanceof AnnouncementViewHolder) {
+            AnnouncementViewHolder holder = (AnnouncementViewHolder) viewHolder;
             AnnoucementResModel annoucementResModel = data.get(position);
-            ((AnnouncementViewHolder) holder).binding.setAnnoucement(annoucementResModel);
+            holder.binding.setAnnoucement(annoucementResModel);
 
-            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getLastMod()));
-            ((AnnouncementViewHolder) holder).binding.userProfileName.setCircle(true);
-            if (annoucementResModel.getOwner() != null && annoucementResModel.getOwner().getFullName() != null) {
-                ((AnnouncementViewHolder) holder).binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
-            }
-            try {
-                ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(Color.parseColor(annoucementResModel.getOwner().getColor()));
-            } catch (Exception e) {
+            holder.binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getLastMod()));
+            holder.binding.userProfileName.setCircle(true);
 
-                ((AnnouncementViewHolder) holder).binding.userProfileName.setColor(context.getResources().getColor(R.color.splash_background_color));
+            if (!TextUtils.isEmpty(annoucementResModel.getOwner().getIcon()) && annoucementResModel.getOwner().getIcon().equalsIgnoreCase("profile.png"))
+            {
+                holder.binding.imgProfile.setVisibility(View.VISIBLE);
+                holder.binding.userProfileName.setVisibility(View.GONE);
+                String url = SDKConfiguration.Server.SERVER_URL + "/api"+URL_VERSION+"/getMediaStream/profilePictures/" + annoucementResModel.getOwner().getId() + "/profile.jpg";
+                Picasso.get().load(url)
+                        .placeholder(getProfileDrawable(context, annoucementResModel.getOwner().getFullName(), annoucementResModel.getOwner().getColor(),35))
+                        .transform(new CircleTransform())
+                        .noFade()
+                        .resize((int)dp1*35, (int)dp1*35)
+                        .into(holder.binding.imgProfile);
+
+            }else if (annoucementResModel.getOwner() != null && annoucementResModel.getOwner().getFullName() != null) {
+                // holder.binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
+                holder.binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));
+                holder.binding.imgProfile.setVisibility(View.GONE);
+                holder.binding.userProfileName.setVisibility(View.VISIBLE);
+                try {
+                    holder.binding.userProfileName.setColor(Color.parseColor(annoucementResModel.getOwner().getColor()));
+                } catch (Exception e) {
+                    holder.binding.userProfileName.setColor(context.getResources().getColor(R.color.splash_background_color));
+                }
+
             }
+
             if (position == data.size() - 1 && data.size() < 3)
-                ((AnnouncementViewHolder) holder).binding.divider.setVisibility(View.GONE);
+                  holder.binding.divider.setVisibility(View.GONE);
 
-            ((AnnouncementViewHolder) holder).binding.viewAction.setOnClickListener(new View.OnClickListener() {
+              holder.binding.viewAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Bundle extras = new Bundle();
@@ -112,13 +141,45 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
 
         } else {
 //            holder = (EmptyAnnocementViewHolder) holder;
-            ((EmptyAnnocementViewHolder) holder).tv_message.setText(holder.getItemViewType() == NO_DATA ? "No Announcements" : msg);
-            ((EmptyAnnocementViewHolder) holder).img_icon.setImageDrawable(holder.getItemViewType() == NO_DATA ? ContextCompat.getDrawable(context, R.drawable.no_meeting) : errorIcon);
+            ((EmptyAnnocementViewHolder) viewHolder).tv_message.setText(viewHolder.getItemViewType() == NO_DATA ? "No Announcements" : msg);
+            ((EmptyAnnocementViewHolder) viewHolder).img_icon.setImageDrawable(viewHolder.getItemViewType() == NO_DATA ? ContextCompat.getDrawable(context, R.drawable.no_meeting) : errorIcon);
 
 
         }
 
 
+    }
+
+    private  Drawable getProfileDrawable(Context mContext,String fullName,String profileColor,int size) {
+
+        String DEFAULT_GREEN = "#3942f6";
+        int dp35 = (int)dp1*size;
+
+        if (profileColor == null || !profileColor.contains("#")) {
+            profileColor = DEFAULT_GREEN;
+        }
+
+        CircularProfileView circularProfileViewForActionBar = new CircularProfileView(mContext);
+        circularProfileViewForActionBar.setDimens(dp35, dp35);
+        circularProfileViewForActionBar.setDrawingCacheEnabled(true);
+        circularProfileViewForActionBar.setClickable(true);
+
+//        circularProfileViewForActionBar.setOnClickListener(onCircularProfileViewForActionBarClickListner);
+
+        circularProfileViewForActionBar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        circularProfileViewForActionBar.populateLayout(StringUtils.getInitials(fullName),
+                null, null, null, -1, Color.parseColor(profileColor), true, dp35, dp35);//34 * dp1, 34 * dp1);
+
+        Bitmap cb = loadBitmapFromView(circularProfileViewForActionBar, dp35, dp35);
+        return new BitmapDrawable(mContext.getResources(), cb);
+    }
+
+    private  Bitmap loadBitmapFromView(View v, int height, int width) {
+        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        v.layout(0, 0, width, height);
+        v.draw(c);
+        return b;
     }
 
     public void addItem(ArrayList<AnnoucementResModel> model) {

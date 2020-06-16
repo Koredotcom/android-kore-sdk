@@ -231,7 +231,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
+    public void onPanelClicked(Object pModel, boolean isFirstLaunch,boolean isFromPresence) {
 
     }
 

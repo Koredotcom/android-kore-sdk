@@ -21,6 +21,15 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private boolean isAllDay;
     private String reqTextToDisplay;
     private String reqTextToDisplayForDetails;
+    private List<WCalEventsTemplateModel.Action> wCalActions;
+
+    public List<WCalEventsTemplateModel.Action> getwCalActions() {
+        return wCalActions;
+    }
+
+    public void setwCalActions(List<WCalEventsTemplateModel.Action> wCalActions) {
+        this.wCalActions = wCalActions;
+    }
 
     public Widget.DefaultAction getDefaultAction() {
         return default_action;
@@ -64,6 +73,21 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
     private String htmlLink;
     private String eventId;
     private String meetingNoteId;
+    private int nNotes;
+
+    public String getnNotes() {
+        if(nNotes==1) {
+            return "Notes from "+ nNotes +" Attendee";
+        }
+        return "Notes from "+ nNotes +" Attendees";
+
+
+    }
+
+    public void setnNotes(int nNotes) {
+        this.nNotes = nNotes;
+    }
+
     boolean showDate;
 
     private List<Attendee> attendees = null;

@@ -35,7 +35,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private TextView titleView;
     private TextView tv_users;
     private View slotLayout;
-    private TextView label;
+    //private TextView label;
     private TextView slots;
 
     float dp1;
@@ -88,7 +88,7 @@ public class MeetingConfirmationView extends ViewGroup {
         titleView = (TextView) view.findViewById(R.id.title_view);
         tv_users = (TextView) view.findViewById(R.id.tv_users);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        label = view.findViewById(R.id.label);
+        //label = view.findViewById(R.id.label);
         slots = view.findViewById(R.id.time_slots);
     }
 
@@ -151,11 +151,11 @@ public class MeetingConfirmationView extends ViewGroup {
             if (meetingConfirmationModel.getSlots() != null && meetingConfirmationModel.getSlots().size() > 0) {
                 slots.setVisibility(View.VISIBLE);
                 slots.setText(getSlotsViewText(meetingConfirmationModel.getSlots()));
-                label.setVisibility(View.VISIBLE);
-                label.setText(meetingConfirmationModel.getSlots().size() > 1 ? "Selected Slots" : "Selected Slot");
+               // label.setVisibility(View.VISIBLE);
+                //label.setText(meetingConfirmationModel.getSlots().size() > 1 ? "Selected Slots" : "Selected Slot");
             } else {
                 slots.setVisibility(View.GONE);
-                label.setVisibility(View.GONE);
+                //label.setVisibility(View.GONE);
             }
             //GON
         } else {

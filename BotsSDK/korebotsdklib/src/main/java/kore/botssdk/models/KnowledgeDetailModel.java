@@ -50,7 +50,36 @@ public class KnowledgeDetailModel implements Serializable {
     private String lMod;
     private String imageUrl;
     private String title;
+
+    public boolean isTitleAvailable() {
+        return isTitleAvailable;
+    }
+
+    public void setTitleAvailable(boolean titleAvailable) {
+        isTitleAvailable = titleAvailable;
+    }
+
+    public boolean isDescAvailable() {
+        return isDescAvailable;
+    }
+
+    public void setDescAvailable(boolean descAvailable) {
+        isDescAvailable = descAvailable;
+    }
+
+    private boolean isTitleAvailable = true;
+    private boolean isDescAvailable = true;
     private String mId;
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    private String scope;
     private ContactInfoModel owner;
 
     private MeetingDetails meetingDetails;
@@ -170,6 +199,16 @@ public class KnowledgeDetailModel implements Serializable {
     public long getNViews() {
         return nViews;
     }
+
+    public boolean isSeedData() {
+        return isSeedData;
+    }
+
+    public void setSeedData(boolean seedData) {
+        isSeedData = seedData;
+    }
+
+    private boolean isSeedData;
 
     public void setNViews(long nViews) {
         this.nViews = nViews;
@@ -453,6 +492,17 @@ public boolean getDateLabelVisblity()
         private String role;
 
         private String color;
+
+
+        private String emailId;
+
+        public String getEmailId() {
+            return emailId;
+        }
+
+        public void setEmailId(String emailId) {
+            this.emailId = emailId;
+        }
 
         private String id;
 

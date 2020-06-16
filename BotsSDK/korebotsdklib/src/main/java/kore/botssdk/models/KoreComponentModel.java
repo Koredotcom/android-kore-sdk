@@ -72,6 +72,18 @@ public class KoreComponentModel implements Parcelable {
     private boolean showLoader;
     private String fileSize;
 
+    @Expose(serialize = true)
+    @SerializedName("componentSize")
+    private String componentSize;
+
+    public String getComponentSize() {
+        return componentSize;
+    }
+
+    public void setComponentSize(String componentSize) {
+        this.componentSize = componentSize;
+    }
+
     /**
      * @return the mediaType
      */

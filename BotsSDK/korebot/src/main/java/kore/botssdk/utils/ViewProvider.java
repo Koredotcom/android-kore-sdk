@@ -24,6 +24,7 @@ import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
+import kore.botssdk.view.FreemiumView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
@@ -64,6 +65,7 @@ public class ViewProvider {
     private static final int TIMELINE_VIEW_ID = 1980094;
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
+    private static final int FREEMIUM_VIEW_ID = 19800567;
 
 
     public static Path RoundedRect(
@@ -232,6 +234,12 @@ public class ViewProvider {
         ContactInfoView contactInfoView = new ContactInfoView(context);
         contactInfoView.setId(CONTACT_VIEW_ID);
         return contactInfoView;
+    }
+
+    public static FreemiumView getFreemiumView(Context context){
+        FreemiumView freemiumView = new FreemiumView(context);
+        freemiumView.setId(FREEMIUM_VIEW_ID);
+        return freemiumView;
     }
 
     public static WelcomeSummaryView getWelcomeSummaryView(Context context){

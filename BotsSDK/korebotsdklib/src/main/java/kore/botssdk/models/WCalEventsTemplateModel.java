@@ -102,11 +102,31 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
     private boolean isOnGoing;
 
 
-    public class Action implements Serializable {
+    public static class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;
         private String custom_type;
+
+        private boolean activityTrack;
+
+        private AnalyticsModel activityInfo = null;
+
+        public boolean isActivityTrack() {
+            return activityTrack;
+        }
+
+        public void setActivityTrack(boolean activityTrack) {
+            this.activityTrack = activityTrack;
+        }
+
+        public AnalyticsModel getActivityInfo() {
+            return activityInfo;
+        }
+
+        public void setActivityInfo(AnalyticsModel activityInfo) {
+            this.activityInfo = activityInfo;
+        }
 
         public String getCustom_type() {
             return custom_type != null ? custom_type : "";
@@ -159,6 +179,55 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
             this.utterance = utterance;
         }
     }
+
+    /*
+    "activityInfo": {
+            "entity": "Meeting",
+            "action": "DAILIN",
+            "entityId": "701urkb31bj80cuapnr4vpdsro",
+            "from": "widget"
+          }
+     */
+
+    public static class AnalyticsModel implements Serializable{
+        private String entity;
+        private String entityId;
+        private String action;
+        private String from;
+
+        public String getEntity() {
+            return entity;
+        }
+
+        public void setEntity(String entity) {
+            this.entity = entity;
+        }
+
+        public String getEntityId() {
+            return entityId;
+        }
+
+        public void setEntityId(String entityId) {
+            this.entityId = entityId;
+        }
+
+        public String getAction() {
+            return action;
+        }
+
+        public void setAction(String action) {
+            this.action = action;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public void setFrom(String from) {
+            this.from = from;
+        }
+    }
+
 
     @Override
     public WCalEventsTemplateModel clone() throws CloneNotSupportedException {

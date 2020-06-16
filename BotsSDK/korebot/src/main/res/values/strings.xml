@@ -71,8 +71,9 @@
 
     <string name="icon_e995">&#xe995;</string> <!-- threads-->
     <string name="icon_e996">&#xe996;</string> <!-- teams-->
-
-
+    <string name="icon_e95b">&#xe95b;</string>
+    <string name="icon_e96e">&#xe96e;</string>
+    <string name="icon_e929">&#xe929;</string>
     <string name="border0">
         <![CDATA[
         <style>
@@ -89,7 +90,10 @@
         <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
      ]]>
     </string>
+    <string name="no_title_lbl">(No Title)</string>
 
-
+    <string name="icon_e91c_problem">&#xe91c;</string>
+    <string name="knowledge_empty_title_lbl">[Untitled article]</string>
+    <string name="knowledge_empty_desc_lbl">[No description added]</string>
 
 </resources>

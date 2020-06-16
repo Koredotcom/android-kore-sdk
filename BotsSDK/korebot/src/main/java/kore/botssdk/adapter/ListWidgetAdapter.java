@@ -132,11 +132,11 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     String trigger;
     private boolean isLoginNeeded;
 
-    public ListWidgetAdapter(Context mContext, String type, String trigger) {
+    public ListWidgetAdapter(Context mContext, String type) {
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
-        this.trigger = trigger;
+
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
 
@@ -639,8 +639,9 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     }
 
-    public void setWidgetData(ArrayList<WidgetListElementModel> data) {
+    public void setWidgetData(ArrayList<WidgetListElementModel> data,String trigger) {
         this.items = data;
+        this.trigger=trigger;
         notifyDataSetChanged();
     }
 
@@ -678,6 +679,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setFromFullView(boolean isFullView) {
         this.isFullView = isFullView;
     }
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout layoutDetails, innerlayout;

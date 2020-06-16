@@ -204,6 +204,10 @@ public class FileUtils {
     private static final ArrayList<String> msPowerpaint = new ArrayList<>();
     private static final ArrayList<String> msDoc = new ArrayList<>();
 
+    private static final ArrayList<String> googleFormsTypes = new ArrayList<>();
+    private static final ArrayList<String> oneNoteTypes = new ArrayList<>();
+    private static final ArrayList<String> locationTypes = new ArrayList<>();
+
     private static final String pdf = "pdf";
 
     static {
@@ -223,6 +227,33 @@ public class FileUtils {
         loadCompressedTypes();
         loadDeveloperTypes();
 
+        loadGoogleFormsType();
+        loadOneNoteTypes();
+        loadLocationTypes();
+
+
+    }
+    private static void loadGoogleFormsType() {
+        googleFormsTypes.add("gform");
+        googleFormsTypes.add("gdraw");
+    }
+    private static void loadOneNoteTypes() {
+        oneNoteTypes.add("ONE");
+        oneNoteTypes.add("RNT");
+        oneNoteTypes.add("TME");
+        oneNoteTypes.add("B4U");
+
+        oneNoteTypes.add("one");
+        oneNoteTypes.add("rnt");
+        oneNoteTypes.add("tme");
+        oneNoteTypes.add("b4u");
+    }
+    private static void loadLocationTypes() {
+        locationTypes.add("KMZ");
+        locationTypes.add("KML");
+
+        locationTypes.add("kmz");
+        locationTypes.add("kml");
     }
 
     private static void loadDeveloperTypes() {
@@ -473,6 +504,12 @@ public class FileUtils {
             return R.drawable.ic_font;
         }else if(pdf.equals(ext)){
             return R.drawable.ic_pdf;
+        }else if(googleFormsTypes.contains(ext)){
+            return R.drawable.ic_forms; //Google forms
+        }else if(oneNoteTypes.contains(ext)){
+            return R.drawable.ic_one_note; //One Note
+        }else if(locationTypes.contains(ext)){
+            return R.drawable.ic_location; //Google locations
         }else{
             return R.drawable.ic_file_general;
         }

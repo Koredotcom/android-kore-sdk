@@ -98,6 +98,8 @@ public class WidgetKoraFilesRecyclerAdapter extends RecyclerView.Adapter impleme
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holdermodel;
             emptyHolder.tv_disrcription.setText(msg!=null?msg:"No Files");
             emptyHolder.img_icon.setImageDrawable(holdermodel.getItemViewType() == NO_DATA?ContextCompat.getDrawable(context, R.drawable.no_meeting):errorIcon);
+            emptyHolder.img_icon.setVisibility(errorIcon==null?View.GONE:View.VISIBLE);
+
         }
         else {
             ViewHolder holder = (ViewHolder) holdermodel;

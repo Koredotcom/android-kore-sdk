@@ -31,7 +31,7 @@ public abstract class BaseBotMessage {
     protected boolean isSend;
     protected String createdOn;
     private long createdInMillis;
-    public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+    private static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     public abstract boolean isSend();
 

@@ -8,11 +8,21 @@ public class KoraUniversalSearchModel {
     private String type;
     private String title;
     private int count;
+    private String id;
     private ArrayList<KnowledgeDetailModel> knowledge;
     private ArrayList<EmailModel> emails;
     private ArrayList<KaFileLookupModel> files;
     private ArrayList<CalEventsTemplateModel> meetingNotes;
     private KnowledgeCollectionModel.Elements knowledgeCollection;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 
     public ArrayList<UniversalSearchSkillModel> getSkillModel() {
         return skillModel;
@@ -43,6 +53,37 @@ public class KoraUniversalSearchModel {
     public Object getElements() {
         return elements;
     }
+
+    public String getExpiryMsg() {
+        return expiryMsg;
+    }
+
+
+    public PayloadInner.AskExpert askExpert;
+
+    public PayloadInner.AskExpert getAskExpert() {
+        return askExpert;
+    }
+
+    public void setAskExpert(PayloadInner.AskExpert askExpert) {
+        this.askExpert = askExpert;
+    }
+
+    public void setExpiryMsg(String expiryMsg) {
+        this.expiryMsg = expiryMsg;
+    }
+
+    public boolean isAuthRequired() {
+        return isAuthRequired;
+    }
+
+    public void setAuthRequired(boolean authRequired) {
+        isAuthRequired = authRequired;
+    }
+
+    private String expiryMsg;
+    private boolean isAuthRequired;
+
 
     public void setElements(Object elements) {
         this.elements = elements;

@@ -114,7 +114,46 @@ public class Widget implements Serializable,Cloneable {
     }
 
     private String _id;
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public String pname;
+public String trigger;
+
+    public String getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
+    }
+
+    public String getPname() {
+        return pname;
+    }
+
+    public void setPname(String pname) {
+        this.pname = pname;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    private boolean pinned;
     private String title;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
     private String refreshInterval;
     private String cacheInterval;
     private String summary_placeholder;
@@ -202,8 +241,8 @@ public class Widget implements Serializable,Cloneable {
         this.actions = actions;
     }
 
-    public void setRefreshInterval(String refresh_interval) {
-        this.refreshInterval = refresh_interval;
+    public void setRefreshInterval(String refreshInterval) {
+        this.refreshInterval = refreshInterval;
     }
 
     public String getCacheInterval() {

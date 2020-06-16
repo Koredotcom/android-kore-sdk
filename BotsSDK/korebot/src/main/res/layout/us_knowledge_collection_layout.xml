@@ -106,7 +106,7 @@
             android:textColor="@color/color_767688"
             android:textSize="15sp" />
 
-        <TextView
+<!--        <TextView
             android:id="@+id/sub_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -120,7 +120,32 @@
             android:fontFamily="@font/latomedium"
             android:maxLines="3"
             android:textColor="@color/color_161620"
-            android:textSize="17sp" />
+            android:textSize="17sp" />-->
+
+        <LinearLayout
+            android:id="@+id/linear_view"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:layout_toLeftOf="@+id/count_view"
+            android:layout_toEndOf="@+id/icon_view"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/sub_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/latomedium"
+                android:maxLines="3"
+                android:textColor="@color/color_161620"
+                android:textSize="17sp" />
+
+        </LinearLayout>
 
 
 

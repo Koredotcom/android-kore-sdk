@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,17 +47,24 @@ public class KoraMiniTableAdapter extends PagerAdapter {
     public boolean isViewFromObject(View view, Object object) {
         return view == (object);
     }
+    BotMiniTableView mTable;
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
 
-        BotMiniTableView mTable = new BotMiniTableView(mContext);
+        mTable = new BotMiniTableView(mContext);
         mTable.setData(data.get(position));
         //Set layoutParams
 //        String[] alignment = mTable.addHeaderAdapter(data.get(position).getPrimary());
 //        mTable.addDataAdapter(template_type, data.get(position).getAdditional(),alignment);
 //                tableContainer.addView(mTable, index);
         container.addView(mTable);
-        KaFontUtils.applyCustomFont(mContext,mTable);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                KaFontUtils.applyCustomFont(mContext,mTable);
+            }
+        },100);
+
         /*final View carouselItemLayout;
         if(data.get(position).getViewType() == KoraSearchDataSetModel.ViewType.EMAIL_VIEW) {
             carouselItemLayout = ownLayoutInflater.inflate(R.layout.kora_email_view, container, false);

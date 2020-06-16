@@ -34,6 +34,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.HowCanHelpTemplate;
+import kore.botssdk.models.KoraSummaryHelpModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 
@@ -44,6 +45,7 @@ import kore.botssdk.models.PayloadOuter;
 public class Utils {
 
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+    public static final SimpleDateFormat isoFormatterHelp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     /**
      * Retrieve The version name of this package, as specified by the manifest
@@ -105,12 +107,9 @@ public class Utils {
 
     public static BotResponse buildBotMessage(String msg, String streamId, String botName) {
 
-        Calendar calendar = Calendar.getInstance();
-        long date = System.currentTimeMillis();
-        int offset = TimeZone.getDefault().getOffset(date);
-        calendar.setTimeInMillis(date - offset);
+        isoFormatterHelp.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        return buildBotMessage(msg, streamId, botName, BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
+        return buildBotMessage(msg, streamId, botName, isoFormatterHelp.format(new Date()));
 
     }
 
@@ -155,16 +154,17 @@ public class Utils {
 
 
 
-    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"}]}],\"isNewVolley\":true}";
+    public static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"title\":\"How can I help you?\",\"body\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"},{\"type\":\"postback\",\"title\":\"Help me prepare for COVID-19 crisis\",\"payload\":\"Ask covid what is covid-19\"}]}],\"isNewVolley\":true}";
 
-    public static String buildHelpMessage(String payload, PayloadInner.Skill skill) {
+    public static String buildHelpMessage(String payload, PayloadInner.Skill skill, KoraSummaryHelpModel element) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
         botResponse.setFrom("bot");
 
         botResponse.setMessageId("");
-        botResponse.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        isoFormatterHelp.setTimeZone(TimeZone.getTimeZone("UTC"));
+        botResponse.setCreatedOn(isoFormatterHelp.format(new Date()));
 
         BotInfoModel bInfo = new BotInfoModel("", "", null);
         botResponse.setBotInfo(bInfo);
@@ -178,6 +178,11 @@ public class Utils {
         PayloadOuter pOuter = new PayloadOuter();
         pOuter.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
         PayloadInner payloadInner = new Gson().fromJson(payload, PayloadInner.class);
+        if(element != null) {
+            ArrayList list = new ArrayList(1);
+            list.add(element);
+            payloadInner.setElements(list);
+        }
         if(skill!=null)
         {
             payloadInner.setSkill(skill);
@@ -224,7 +229,7 @@ public class Utils {
         return botResponse;
     }
 
-    public static BotResponse buildBotMessageForConversationEnd(long time, String botName, String streamId) {
+    /*public static BotResponse buildBotMessageForConversationEnd(long time, String botName, String streamId) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
@@ -257,7 +262,7 @@ public class Utils {
 
 
         return botResponse;
-    }
+    }*/
 
     public static BotResponse getLastReceivedMsg(ArrayList<BaseBotMessage> list) {
         if (list != null && list.size() > 0) {
@@ -410,4 +415,34 @@ public class Utils {
         return map;
     }
 
+    public static String getSingleDigitNumberName(int digit) {
+        if(digit<0 || digit>9) {
+            return digit+"";
+        }
+        switch (digit)
+        {
+            case 0:
+                return "zero";
+            case 1:
+                return "one";
+            case 2:
+                return "two";
+            case 3:
+                return "three";
+            case 4:
+                return "four";
+            case 5:
+                return "five";
+            case 6:
+                return "six";
+            case 7:
+                return "seven";
+            case 8:
+                return "eight";
+            case 9:
+                return "nine";
+            default:
+                return digit+"";
+        }
+    }
 }

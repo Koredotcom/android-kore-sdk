@@ -54,6 +54,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
+	public static final String isFileSizeMore_key="isFileSizeMore";
+	public static final String error_msz_key="error_msz_key";
+	public  static final String fileSizeBytes_key="fileSizeBytes";
     private static DecimalFormat df2 = new DecimalFormat("###.##");
 	private String LOG_TAG = getClass().getSimpleName();
 	private String fileName;
@@ -82,17 +85,19 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //	KoreBaseDao<FileUploadInfo, String> fileDao;
 	FileUploadInfo uploadInfo = new FileUploadInfo();;
 	public static final long FILE_SIZE_20MB = 20 * 1024*1024;
+	public static long MAX_FILE_SIZE = FILE_SIZE_20MB;
+	private boolean isShowToast=false;
+	private  long totalFileSize;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
 	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
     private ProgressDialog pDialog;
-	
-	
+
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
-						String fileExtn,int BUFFER_SIZE, Messenger messenger,
-							String thumbnailFilePath, String messageId,Context context,String componentType,
-						  String host, String orientation){
+						  String fileExtn,int BUFFER_SIZE, Messenger messenger,
+						  String thumbnailFilePath, String messageId,Context context,String componentType,
+						  String host, String orientation,long FILE_MAX_SIZE,long totalFileSize){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
 		this.accessToken = accessToken;
@@ -108,12 +113,16 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this.componentType = componentType;
 		this.host = host;
 		this.orientation = orientation;
-		
 
 		userOrTeamId = userId;
-		
 		helper = BotDBManager.getInstance();
-		
+		this.MAX_FILE_SIZE=FILE_MAX_SIZE;
+		if(FILE_MAX_SIZE==-1) {
+			this.MAX_FILE_SIZE=FILE_SIZE_20MB;
+		}
+		this.totalFileSize=totalFileSize;
+
+
 		/*if(fileDao == null){
 			try {
 				fileDao = KoreDBManager.getHelperInstance(context, this.userId).getDao(FileUploadInfo.class);
@@ -122,8 +131,20 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				e1.printStackTrace();
 			}
 		}*/
-		
-		
+
+
+	}
+	
+	
+	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
+						String fileExtn,int BUFFER_SIZE, Messenger messenger,
+							String thumbnailFilePath, String messageId,Context context,String componentType,
+						  String host, String orientation){
+		this( fileName, outFilePath,  accessToken,  userId,  fileContext,
+				 fileExtn, BUFFER_SIZE,  messenger,
+				 thumbnailFilePath,  messageId, context, componentType,
+				 host,  orientation,FILE_SIZE_20MB,0);
+		isShowToast=true;
 	}
 
     private void upLoadProgressState(final int progress ,final boolean show){
@@ -183,10 +204,15 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		try {
 			FileInputStream fis =  new FileInputStream(outFilePath);
 //				FileInputStream fisForChunkCount = new FileInputStream(outFilePath);
-			if(fis.getChannel().size() > FILE_SIZE_20MB){
-				sendUploadFailedNotice(false);
-				showToastMsg("File size can't be more than 20 MB!");
-				Log.d(LOG_TAG, "File size can't be more than 20 mb");
+
+			long totaSize = totalFileSize+fis.getChannel().size();
+			if(totaSize > MAX_FILE_SIZE){
+				sendUploadFailedNotice(false,true);
+				int mbData= (int) ((MAX_FILE_SIZE/1024)/1024);
+				if(isShowToast) {
+					showToastMsg("File size can't be more than " + mbData + " MB!");
+				}
+				Log.d(LOG_TAG, "File size can't be more than "+mbData+" mb");
 				return;
 			}
 				if (fis.available() > 0) {
@@ -313,6 +339,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
 			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 //			uploadDao.update(uploadInfo);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -485,7 +512,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
         				if(fileID != null){
     						uploadInfo.setFileId(fileID);
     					}
-    					
+
     					uploadInfo.setMergeTriggered(true);
     					
         				 Message msg = Message.obtain();
@@ -500,6 +527,12 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 						 data.putString("fileSize", getFileSizeMegaBytes(new File(outFilePath)));
 						 data.putString("thumbnailURL",thumbnailURL);
 						 data.putString("orientation",orientation);
+						 long fileSize= new File(outFilePath).length();
+						data.putLong(fileSizeBytes_key, fileSize);
+						totalFileSize=totalFileSize+fileSize;
+
+
+
 //						if(isTeam)
 //							data.putString(Constants.TEAM_ID,userOrTeamId);
     					 msg.setData(data); //put the data here
@@ -521,7 +554,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 
 //					String serverResponse = EntityUtils.toString(response.getEntity());
 					Log.d(LOG_TAG,"The Resp is "+ serverResponse);
-					sendUploadFailedNotice(true);
+					sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 
 //					throw new Exception("Response code not 200");
 				}
@@ -541,10 +574,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					if(resCode == Constants.UPLOAD_ERROR_CODE_404){
 						handleErr404(httpsURLConnection.getErrorStream(),fileName);
 					}else{
-						sendUploadFailedNotice(true);
+						sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 					}
 				}else{
-					sendUploadFailedNotice(true);
+					sendUploadFailedNotice(true,getErrorMessage(httpsURLConnection.getErrorStream()));
 				}
 
 				e.printStackTrace();
@@ -565,6 +598,22 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		if(file.length() < (1024*1024)){
 			return df2.format((double) file.length() / (1024)) + "kb";
 		}else	return df2.format((double) file.length() / (1024 * 1024)) + "mb";
+	}
+
+	private String getErrorMessage(InputStream errorStream) {
+		String response="";
+		try {
+
+			String line;
+			BufferedReader br=new BufferedReader(new InputStreamReader(errorStream));
+				while ((line=br.readLine()) != null) {
+					response+=line;
+				}
+
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return response;
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
@@ -606,8 +655,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			e.printStackTrace();
 		}
 	}
-
-	private void sendUploadFailedNotice(boolean isFromMergeSignal){
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,boolean isFileSizeMore,String errorMsg) {
 		uploadInfo.setUploaded(false);
 		Message msg = Message.obtain();
 		Bundle data = new Bundle();
@@ -617,7 +665,10 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		data.putString("fileName", fileName);
 		data.putString("filePath", outFilePath);
 		data.putString("componentType", componentType);
-        data.putBoolean("success",false);
+		data.putBoolean("success",false);
+		data.putBoolean(isFileSizeMore_key,isFileSizeMore);
+		data.putString(error_msz_key, errorMsg);
+		//data.putLong(fileSizeBytes_key, (new File(outFilePath).length()));
 //		if(isTeam)
 //			data.putString(Constants.TEAM_ID,userOrTeamId);
 		msg.setData(data); //put the data here
@@ -630,7 +681,17 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		if(listener !=null)
 			listener.fileUploaded(/*comp, messageId, fileExtn,messenger*/);
 
-        upLoadProgressState(100,false);
+		upLoadProgressState(100,false);
 		uploadInfo.setMergeTriggered(isFromMergeSignal);
+	}
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,boolean isFileSizeMore){
+		sendUploadFailedNotice( isFromMergeSignal,isFileSizeMore,"");
+	}
+	private void sendUploadFailedNotice(boolean isFromMergeSignal,String errorMsg){
+		sendUploadFailedNotice(isFromMergeSignal,false,errorMsg);
+	}
+
+	private void sendUploadFailedNotice(boolean isFromMergeSignal){
+		sendUploadFailedNotice(isFromMergeSignal,false);
 	}
 }

@@ -40,7 +40,7 @@ public interface ComposeFooterInterface {
 
     void showAfterOnboard(boolean isDiscardClicked);
 
-    void onPanelClicked(Object pModel, boolean isFirstLaunch);
+    void onPanelClicked(Object pModel, boolean isFirstLaunch, boolean isFromPresence);
 
     void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id);
 }

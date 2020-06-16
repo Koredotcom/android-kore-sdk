@@ -48,19 +48,19 @@ public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesViewHo
         String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
         holder.creator_view.setText(text);
         holder.title_view.setText(model.getTitle());
-
+        holder.divider.setVisibility(View.VISIBLE);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                verticalListViewActionHelper.meetingNotesNavigation(context,model.getMeetingNoteId(),model.getEventId());
+                verticalListViewActionHelper.meetingNotesNavigation(context, model.getMeetingNoteId(), model.getEventId());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return modelData!=null?modelData.size():0;
+        return modelData != null ? modelData.size() : 0;
     }
 
 

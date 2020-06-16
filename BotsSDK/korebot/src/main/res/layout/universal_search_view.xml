@@ -22,15 +22,17 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
 
             <LinearLayout
                 android:id="@+id/view_more"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -46,9 +48,81 @@
                     android:paddingStart="7dp"
                     android:text="See All Results"
                     android:textColor="#737d87"
-                    android:textSize="@dimen/dimen_12dp"
-                     />
+                    android:textSize="@dimen/dimen_12dp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/auth_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#e0e1e9" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|start"
+                    android:orientation="horizontal"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="5dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/ic_error_outline_red_24px">
+
+                    </ImageView>
+
+                    <TextView
+                        android:id="@+id/auth_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
+                        android:fontFamily="@font/latomedium"
+                        android:gravity="center_vertical"
+                        android:minHeight="35dp"
+                        android:paddingStart="7dp"
+                        android:textColor="#737d87"
+                        android:textSize="@dimen/dimen_12dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+    <RelativeLayout
+        android:id="@+id/askexpert_layout"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/text_ask"
+            android:layout_alignParentStart="true"
+            android:layout_width="match_parent"
+            android:layout_toStartOf="@+id/text_ask_action"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/text_ask_action"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="15dp"
+            android:textSize="15sp"
+            android:textColor="@color/color_7165250_widget"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
 </LinearLayout>

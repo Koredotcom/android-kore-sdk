@@ -30,17 +30,32 @@
         android:paddingEnd="10dp">
 
 
+<RelativeLayout
+    android:id="@+id/profile_relative"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <kore.botssdk.view.ProfileTextView
+        android:id="@+id/user_profile_name"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:fontFamily="@font/latomedium"
+        android:gravity="center"
+        android:tag="medium"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+    <ImageView
+        android:id="@+id/img_profile"
+        android:visibility="gone"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/circle_shimmer"
+        android:layout_gravity="center"
 
-            <kore.botssdk.view.ProfileTextView
-                android:id="@+id/user_profile_name"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:fontFamily="@font/latomedium"
-                android:gravity="center"
-                android:tag="medium"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+        />
+
+</RelativeLayout>
+
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -48,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_toLeftOf="@+id/tv_time"
-                android:layout_toEndOf="@+id/user_profile_name"
+                android:layout_toEndOf="@+id/profile_relative"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:minWidth="50dp"
@@ -65,7 +80,7 @@
                 android:layout_below="@+id/tv_user_name"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="5dp"
-                android:layout_toEndOf="@+id/user_profile_name"
+                android:layout_toEndOf="@+id/profile_relative"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:minWidth="50dp"
@@ -92,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_shared"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/user_profile_name"
+                android:layout_toEndOf="@+id/profile_relative"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:minWidth="50dp"
@@ -109,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_title"
                 android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/user_profile_name"
+                android:layout_toEndOf="@+id/profile_relative"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:maxLines="2"
@@ -121,10 +136,11 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:visibility="@{annoucement.seedData? View.GONE :View.VISIBLE}"
 
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_description"
-                android:layout_toEndOf="@+id/user_profile_name">
+                android:layout_toEndOf="@+id/profile_relative">
 
                 <TextView
                     android:id="@+id/tv_comments"
