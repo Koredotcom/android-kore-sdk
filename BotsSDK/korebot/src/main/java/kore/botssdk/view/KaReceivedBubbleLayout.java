@@ -277,7 +277,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                             Picasso.get().load(SDKConfiguration.Server.SERVER_URL + url)
                                     .transform(getRoundTransformation())
                                     .resize(50, 50).
-                                    error(getResources().getDrawable(R.mipmap.kora_icon_bubble)).
+                                    error(getResources().getDrawable(R.drawable.ic_app_logo)).
                                     into(cpvSenderImage);
                         }
                     }catch (Exception e){
