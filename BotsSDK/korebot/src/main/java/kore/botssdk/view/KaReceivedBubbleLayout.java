@@ -310,7 +310,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                                 }
                             });*/
 
-        } else if (cpvSenderImage.getVisibility() == View.VISIBLE) {
+        } else /*if (cpvSenderImage.getVisibility() == View.VISIBLE)*/ {
 
             new Handler().postDelayed(new Runnable() {
                 @Override
