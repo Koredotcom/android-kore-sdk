@@ -113,6 +113,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected ContactInfoView contactInfoView;
     protected FreemiumView freemiumView;
+    protected MeetingFollowupView meetingFollowupView;
+
     protected WelcomeSummaryView welcomeSummaryView;
     protected UniversalSearchView universalSearchView;
     protected KoraSummaryHelpView koraSummaryHelpView;
@@ -291,6 +293,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         addView(freemiumView);
 
+        meetingFollowupView = ViewProvider.getFollowUpMeetingView(context);
+        meetingFollowupView.setComposeFooterInterface(composeFooterInterface);
+        meetingFollowupView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(meetingFollowupView);
+
         welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
         welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         addView(welcomeSummaryView);
@@ -407,6 +414,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(freemiumView!=null){
             freemiumView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(meetingFollowupView!=null){
+            meetingFollowupView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(welcomeSummaryView !=null){
             welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -445,6 +455,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(freemiumView!=null) {
             freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(meetingFollowupView!=null) {
+            meetingFollowupView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if(universalSearchView != null){
             universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

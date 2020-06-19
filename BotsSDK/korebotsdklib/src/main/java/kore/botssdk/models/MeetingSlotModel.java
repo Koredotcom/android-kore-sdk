@@ -23,7 +23,7 @@ public class MeetingSlotModel {
 
     private ArrayList<Slot> slots;
 
-    public class Slot{
+   static public class Slot{
         public long getStart() {
             return start;
         }

@@ -204,6 +204,15 @@ public class PayloadInner {
     private ArrayList<KoraSummaryHelpModel> koraSummaryHelpModel;
     private ArrayList<NarratorTextModel> narratorTextModel;
     private ArrayList<KoraUniversalSearchModel> universalSearchModels;
+    private ArrayList<MeetingFollowUpModel> meetingFollowUpModels;
+
+    public ArrayList<MeetingFollowUpModel> getMeetingFollowUpModels() {
+        return meetingFollowUpModels;
+    }
+
+    public void setMeetingFollowUpModels(ArrayList<MeetingFollowUpModel> meetingFollowUpModels) {
+        this.meetingFollowUpModels = meetingFollowUpModels;
+    }
 
     public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
         return multiSelectModels;
@@ -496,6 +505,11 @@ public class PayloadInner {
                     Type listType = new TypeToken<ArrayList<ContactInfoModel>>() {
                     }.getType();
                     contactInfoModels = gson.fromJson(elementsAsString, listType);
+                }
+                else if (BotResponse.FOLLOWUP_MEETTING_PREVIEW.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<MeetingFollowUpModel>>() {
+                    }.getType();
+                    meetingFollowUpModels = gson.fromJson(elementsAsString, listType);
                 }else if (BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(template_type)) {
                     Type listType = new TypeToken<ArrayList<WelcomeSummaryModel>>() {
                     }.getType();

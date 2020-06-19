@@ -54,7 +54,7 @@ public class DateUtils {
     public static final Format calendar_list_req_format2 = new SimpleDateFormat("EEE, MMM d ", Locale.ENGLISH);
 
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
-
+    private static final Format dateMonthDayYear = new SimpleDateFormat("MMM dd, yyyyy", Locale.ENGLISH);
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
     private static final Format dateFormat5 = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH);
     private static final Format dateFormat6 = new SimpleDateFormat("dd/MM", Locale.ENGLISH);
@@ -124,7 +124,28 @@ public class DateUtils {
         }
         return time;
     }
+    public static String getFollowUpSlotsDay(long lastModified) {
+        // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
+        DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
 
+        // OVERRIDE SOME symbols WHILE RETAINING OTHERS
+        symbols.setAmPmStrings(new String[]{"am", "pm"});
+        int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
+        int currentYear = Integer.parseInt(yearFormat.format(new Date()));
+        String time = "";
+
+        if (android.text.format.DateUtils.isToday(lastModified)) {
+            time = "Today";
+        } else if (isYesterday(lastModified)) {
+            time = "Yesterday";
+        } else if (isTomorrow(lastModified)) {
+            time = "Tomorrow";
+        } else {
+
+            time = currentYear == messageYear ? dateMonthDay.format(new Date(lastModified)) : dateMonthDayYear.format(new Date(lastModified));
+        }
+        return time;
+    }
 
     public static int getDays(Context mContext, long diff) {
         return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
