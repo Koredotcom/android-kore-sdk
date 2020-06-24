@@ -28,6 +28,7 @@ import kore.botssdk.models.MeetingFollowUpModel;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -36,7 +37,8 @@ public class MeetingFollowupView extends ViewGroup {
 
     private View meeting_followup_layout;
     private MeetingFollowupAdapter followupAdapter;
-
+    View view_more;
+    TextView tv_viewmore;
     float dp1;
     private float restrictedLayoutWidth;
 
@@ -87,11 +89,46 @@ public class MeetingFollowupView extends ViewGroup {
 
         autoExpandListView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         autoExpandListView.setHasFixedSize(true);
+        view_more = findViewById(R.id.view_more);
+        tv_viewmore=findViewById(R.id.tv_viewmore);
         KaFontUtils.applyCustomFont(getContext(), view);
         meeting_followup_layout = view.findViewById(R.id.meeting_followup_layout);
         followupAdapter=new MeetingFollowupAdapter(this.getContext(),this);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         //populateData(getDummyData(),true);
+
+        tv_viewmore.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view_more.callOnClick();
+            }
+        });
+        view_more.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int count=getCountToSend();
+                incrementalCount=incrementalCount+count;
+                if(incrementalCount==originalCount)
+                {
+                    tv_viewmore.setText("View Less");
+                    //send incrementalCOunt
+                    followupAdapter.setValues(incrementalCount,true);
+                    followupAdapter.notifyDataSetChanged();
+                    incrementalCount=0;
+                    currentCount=originalCount;
+                    tv_viewmore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_drop_up, 0);
+
+                }
+                else {
+                    tv_viewmore.setText("View "+(originalCount-incrementalCount)+ " More");
+                    tv_viewmore.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.arrow_drop_down, 0);
+                    //send incrementalCOunt
+                    followupAdapter.setValues(incrementalCount,true);
+                    followupAdapter.notifyDataSetChanged();
+                }
+
+            }
+        });
     }
 
 
@@ -121,8 +158,26 @@ public class MeetingFollowupView extends ViewGroup {
 
 
     }
+    int currentCount=0;
+    int originalCount;
+    public int getCountToSend()
+    {
+
+        if(currentCount>3)
+        {
+            currentCount=currentCount-3;
+            return 3;
+        }
+        return currentCount;
+
+
+    }
+    int incrementalCount=0;
 
     public void populateData(final ArrayList<MeetingFollowUpModel> meetingTemplateModel, boolean isEnabled) {
+
+
+
 
         if (meetingTemplateModel != null) {
             meeting_followup_layout.setVisibility(VISIBLE);
@@ -130,13 +185,28 @@ public class MeetingFollowupView extends ViewGroup {
             followupAdapter.setMeetingsModelArrayList(meetingTemplateModel);
             followupAdapter.setEnabled(isEnabled);
             followupAdapter.setComposeFooterInterface(composeFooterInterface);
+            if (meetingTemplateModel != null &&meetingTemplateModel.size() > 3) {
+                view_more.setVisibility(View.VISIBLE);
+                incrementalCount=3;
+                originalCount =followupAdapter.getItemCount();
+                currentCount=originalCount;
+                tv_viewmore.setText("View "+(originalCount-incrementalCount)+ " More");
+            }
+            else {
+                view_more.setVisibility(View.GONE);
+            }
+            if(meetingTemplateModel != null &&meetingTemplateModel.size() > 3)
+            {
+                followupAdapter.setValues(getCountToSend(),true);
+            }
             autoExpandListView.setAdapter(followupAdapter);
             followupAdapter.notifyDataSetChanged();
 
-        } else {
-          autoExpandListView.setAdapter(followupAdapter);
-           meeting_followup_layout.setVisibility(GONE);
 
+        } else {
+            autoExpandListView.setAdapter(followupAdapter);
+           meeting_followup_layout.setVisibility(GONE);
+            view_more.setVisibility(View.GONE);
         }
     }
 

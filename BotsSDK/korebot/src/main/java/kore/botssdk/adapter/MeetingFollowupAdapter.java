@@ -87,11 +87,23 @@ public class MeetingFollowupAdapter extends RecyclerView.Adapter<MeetingFollowup
 
     @Override
     public int getItemCount() {
+        if(flag)
+        {
+            return showCount;
+        }
         if (meetingSlotModels != null) {
             return meetingSlotModels.size();
         } else {
             return 0;
         }
+    }
+
+    int showCount;
+    boolean flag;
+    public void setValues(int showCount,boolean flag)
+    {
+        this.showCount=showCount;
+        this.flag=flag;
     }
 
 
@@ -101,11 +113,11 @@ public class MeetingFollowupAdapter extends RecyclerView.Adapter<MeetingFollowup
 
         holder.title.setText(root.getTitle()!=null?root.getTitle():"");
         holder.tvpeople.setText(root.getText()!=null?root.getText():"");
-        try {
+        /*try {
             holder.bar_view.setBackgroundColor(Color.parseColor(root.getColor()));
         }catch (Exception e){
 
-        }
+        }*/
         holder.slots_view.removeAllViews();
         for(MeetingSlotModel.Slot slot:root.getSlots())
         {
