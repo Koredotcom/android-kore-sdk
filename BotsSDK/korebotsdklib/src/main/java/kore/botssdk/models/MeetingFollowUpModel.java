@@ -7,7 +7,17 @@ public class MeetingFollowUpModel {
 
     private String meeting_title;
     private String color;
+    private String mId;
+
     String text;
+
+    public String getmId() {
+        return mId;
+    }
+
+    public void setmId(String mId) {
+        this.mId = mId;
+    }
 
     public String getText() {
         return text;

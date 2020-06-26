@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MeetingFollowUpModel;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
@@ -139,6 +141,11 @@ public class MeetingFollowupAdapter extends RecyclerView.Adapter<MeetingFollowup
        holder.root_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(composeFooterInterface!=null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mId", root.getmId());
+                    composeFooterInterface.launchActivityWithBundle(BotResponse.FOLLOWUP_MEETTING_PREVIEW, bundle);
+                }
                // Toast.makeText(context,"click",Toast.LENGTH_SHORT).show();
   /*     if (composeFooterInterface != null && isEnabled) {
                     setEnabled(false);

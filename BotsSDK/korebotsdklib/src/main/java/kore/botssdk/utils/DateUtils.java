@@ -75,6 +75,10 @@ public class DateUtils {
         return getTimeStamp(timeStampMillis);
     }
 
+    public static String getFollowUpDate(long start,long end)
+    {
+     return  dateWeekMsgTime2.format(start) +" "+calendar_list_format_2.format(end);
+    }
 
     public static long getTimeStampLong(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
 
