@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.Widget;
 import kore.botssdk.models.WidgetTaskTemplateResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -243,15 +245,32 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             holder.taskViewLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+
                     if (!isFrom_widget()) {
                         if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getData().getStatus()) && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
                         }
                     } else {
+                        if(verticalListViewActionHelper!=null) {
+                            Bundle extras = new Bundle();
+                            extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
+                            extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
+                            verticalListViewActionHelper.knowledgeItemClicked(extras, false);
+                        }
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
-                        } else /*if(!isFromFullView)*/ {
+
+                        } else{
+                            if(verticalListViewActionHelper!=null) {
+                                Bundle extras = new Bundle();
+                                extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
+                                extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
+                                verticalListViewActionHelper.knowledgeItemClicked(extras, false);
+                            }
+                        }
+                            /*if(!isFromFullView)*/ //{
                    /*         WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel,isFromFullView);
 
                             dialogActivity.show();
@@ -277,7 +296,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                             bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
 */
 
-                        }
+                        //}
                     }
                 }
             });
@@ -308,7 +327,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                     verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
                 notifyDataSetChanged();
             }
-        }
+         }
     }
 
 

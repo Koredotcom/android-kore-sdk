@@ -325,6 +325,15 @@ public boolean getDateLabelVisblity()
     private String dueDate;
     private String status;
     private String assignTo;
+    private Assignee assignee;
+
+    public Assignee getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(Assignee assignee) {
+        this.assignee = assignee;
+    }
 
     public String getDueDate() {
         return dueDate;

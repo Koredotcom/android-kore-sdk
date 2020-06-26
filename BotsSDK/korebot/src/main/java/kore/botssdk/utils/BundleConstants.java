@@ -7,6 +7,8 @@ public class BundleConstants {
     public static final String REQ_TEXT_TO_DISPLAY = "reqTextTodisplay";
 
     public static final String KNOWLEDGE_ID = "knowledgeId";
+    public static final String TASK_ID = "task_id";
+    public static final String IS_FROM_TASK_LIST = "is_from_task_list";
     public static final String SHOW_SHARE ="show_share" ;
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
