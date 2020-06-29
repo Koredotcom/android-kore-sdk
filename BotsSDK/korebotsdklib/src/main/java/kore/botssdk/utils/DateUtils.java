@@ -168,6 +168,22 @@ public class DateUtils {
         }
     }
 
+    public static String taskDateFormation(Date date, SimpleDateFormat myDateFormat) {
+        long currentTime = System.currentTimeMillis();
+        long startDate= date.getTime();
+        long diff = startDate - currentTime;
+         final SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", java.util.Locale.getDefault());
+
+
+        if (android.text.format.DateUtils.isToday(startDate)) {
+           return  "Today "+timeFormat.format(date);
+        } else if (isTomorrow(startDate)) {
+            return "Tomorrow "+timeFormat.format(date);
+        } else {
+           return myDateFormat.format(date);
+        }
+    }
+
 
     public static String formattedSentDateV2_2(Context mContext, long diff) {
         long timeOffset = 0;
