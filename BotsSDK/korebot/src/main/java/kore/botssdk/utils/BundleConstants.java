@@ -37,6 +37,7 @@ public class BundleConstants {
     public static final String QUESTION_ASKED = "question_asked";
     public static final String INFORMATION_EDITOR = "INFORMATION_EDITOR";
     public static final String ANNOUNCEMENT_EDITOR = "ANNOUNCEMENT_EDITOR";
+    public static final String TASK_EDITOR = "create_task";
     public static final String ARTICLE_OPTIONS = "article_options";
     public static final String MEETING_REQUEST = "MEETING_REQUEST";
     public static final String MEETING_INFO = "MEETING_INFO";
