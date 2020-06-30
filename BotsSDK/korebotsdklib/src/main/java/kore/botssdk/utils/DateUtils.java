@@ -176,9 +176,9 @@ public class DateUtils {
 
 
         if (android.text.format.DateUtils.isToday(startDate)) {
-           return  "Today "+timeFormat.format(date);
+           return  "Today, "+timeFormat.format(date);
         } else if (isTomorrow(startDate)) {
-            return "Tomorrow "+timeFormat.format(date);
+            return "Tomorrow, "+timeFormat.format(date);
         } else {
            return myDateFormat.format(date);
         }
