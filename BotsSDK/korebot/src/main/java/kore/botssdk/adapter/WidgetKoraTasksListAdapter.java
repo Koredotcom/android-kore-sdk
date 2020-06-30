@@ -264,12 +264,12 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                             updateThings(taskTemplateModel);
                         }
                     } else {
-                        if(verticalListViewActionHelper!=null) {
+                        /*if(verticalListViewActionHelper!=null) {
                             Bundle extras = new Bundle();
                             extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
                             extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
                             verticalListViewActionHelper.knowledgeItemClicked(extras, false);
-                        }
+                        }*/
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);

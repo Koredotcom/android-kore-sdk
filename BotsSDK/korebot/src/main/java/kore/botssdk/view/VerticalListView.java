@@ -8,6 +8,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -211,6 +212,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     public void prepareDataToTasks(TaskTemplateResponse data, String templateType, boolean isEnabled) {
         TasksListAdapter tasksListAdapter = new TasksListAdapter(getContext(), data, isEnabled);
+        tasksListAdapter.setVerticalListViewActionHelper(this);
         tasksListAdapter.setHasStableIds(true);
         setAdapter(tasksListAdapter);
         if (SelectionUtils.getSelectedTasks().size() > 0) {
@@ -296,9 +298,16 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
-        if(composeFooterInterface != null)
-            composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
+        boolean isFromTaskList= extras != null && extras.getBoolean(kore.botssdk.utils.BundleConstants.IS_FROM_TASK_LIST, false);
+        if(isFromTaskList){
+            String taskId=extras.getString(kore.botssdk.utils.BundleConstants.TASK_ID);
+            if(!TextUtils.isEmpty(taskId)) {
+                if (composeFooterInterface != null)
+                    composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_TASK_VIEW, extras);
+            }
+        }
     }
+
 
     @Override
     public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {

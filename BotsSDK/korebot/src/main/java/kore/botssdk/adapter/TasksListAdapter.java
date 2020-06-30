@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,6 +25,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.TaskTemplateModel;
 import kore.botssdk.models.TaskTemplateResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -184,12 +187,36 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                     if (!isFrom_widget()) {
                         if (showButton && !"close".equalsIgnoreCase(taskTemplateModel.getStatus()) && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
+                        }else if(verticalListViewActionHelper!=null) {
+                            Calendar calendar= Calendar.getInstance();
+                            if(taskTemplateModel.getDueDate()>=calendar.getTime().getTime()) {
+                                Bundle extras = new Bundle();
+                                extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
+                                extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
+                                verticalListViewActionHelper.knowledgeItemClicked(extras, false);
+                            }
                         }
                     } else {
+                       /* if(verticalListViewActionHelper!=null) {
+                            Bundle extras = new Bundle();
+                            extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
+                            extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
+                            verticalListViewActionHelper.knowledgeItemClicked(extras, false);
+                        }*/
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
-                        } else {
+                        }else{
+                                if(verticalListViewActionHelper!=null) {
+                                    Calendar calendar = Calendar.getInstance();
+                                    if (taskTemplateModel.getDueDate() >= calendar.getTime().getTime()) {
+                                        Bundle extras = new Bundle();
+                                        extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
+                                        extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
+                                        verticalListViewActionHelper.knowledgeItemClicked(extras, false);
+                                    }
+                                }
+                            }
                 /*            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
 
                             dialogActivity.show();
@@ -209,7 +236,6 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                                 }
                             });*/
 
-                        }
                     }
                 }
             });
