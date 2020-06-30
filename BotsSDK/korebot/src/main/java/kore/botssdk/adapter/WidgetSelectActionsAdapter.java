@@ -32,6 +32,7 @@ import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.events.EntityEditEvent;
+import kore.botssdk.listener.TaskDetailsClickListener;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BaseChartModel;
 import kore.botssdk.models.BotResponse;
@@ -64,15 +65,17 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     private String trigger;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
+    private TaskDetailsClickListener taskDetailsClickListener;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
                                       boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper,
-                                      String skillName, String trigger,boolean isFromListMenu) {
+                                      String skillName, String trigger, boolean isFromListMenu, TaskDetailsClickListener taskDetailsClickListener) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.skillName = skillName;
         this.isFromListMenu = isFromListMenu;
         this.trigger = trigger;
+        this.taskDetailsClickListener=taskDetailsClickListener;
         if (model instanceof WTaskTemplateModel) {
             this.actionList = ((WTaskTemplateModel) model).getActions();
         } else if (model instanceof WCalEventsTemplateModel) {
@@ -145,7 +148,12 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    if(model!=null && action!=null && action.getType().equalsIgnoreCase("view_details")) {
+                        if(taskDetailsClickListener!=null) {
+                            taskDetailsClickListener.onTaskClick(((WTaskTemplateModel) model).getId());
+                        }
+                        return;
+                    }
                     if (Utility.checkIsSkillKora()) {
                         startActions(position, false);
 

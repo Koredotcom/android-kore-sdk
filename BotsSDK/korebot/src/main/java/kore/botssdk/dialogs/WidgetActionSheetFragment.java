@@ -19,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
+import kore.botssdk.listener.TaskDetailsClickListener;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 
 public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
@@ -29,6 +30,8 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
     private Object model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
+
+    private TaskDetailsClickListener taskDetailsClickListener;
 
     public String getSkillName() {
         return skillName;
@@ -54,7 +57,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,
-                model, isFromFullView,verticalListViewActionHelper,skillName,trigger,isFromListMenu);
+                model, isFromFullView,verticalListViewActionHelper,skillName,trigger,isFromListMenu,taskDetailsClickListener);
         recycler_actions.setAdapter(adapter);
 
 
@@ -100,5 +103,9 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
         this. verticalListViewActionHelper=verticalListViewActionHelper;
+    }
+
+    public void setOnTaskDetailsClickListener(TaskDetailsClickListener clickListener){
+        this.taskDetailsClickListener=clickListener;
     }
 }

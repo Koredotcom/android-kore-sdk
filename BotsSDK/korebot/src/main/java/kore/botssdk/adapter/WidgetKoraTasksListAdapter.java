@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -22,6 +23,7 @@ import kore.botssdk.R;
 import kore.botssdk.databinding.WidgetTaskViewLayoutBinding;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
+import kore.botssdk.listener.TaskDetailsClickListener;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.WTaskTemplateModel;
@@ -51,6 +53,7 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
         return api;
     }
     String userId;
+    private TaskDetailsClickListener taskDetailsClickListener;
     public void setApi(Widget.Hook api) {
         this.api = api;
     }
@@ -235,6 +238,15 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
                     bottomSheetDialog.setisFromFullView(isFromFullView);
                     bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
                     bottomSheetDialog.setData(taskTemplateModel);
+                    bottomSheetDialog.setOnTaskDetailsClickListener(new TaskDetailsClickListener() {
+                        @Override
+                        public void onTaskClick(String taskId) {
+                            bottomSheetDialog.dismiss();
+                            if(taskDetailsClickListener!=null) {
+                                taskDetailsClickListener.onTaskClick(taskId);
+                            }
+                        }
+                    });
                     bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
 
 
@@ -398,5 +410,9 @@ public class WidgetKoraTasksListAdapter extends RecyclerView.Adapter implements 
             super(binding.getRoot());
             this.taskViewLayoutBinding = binding;
         }
+    }
+
+    public void setOnTaskDetailsClickListener(TaskDetailsClickListener taskDetailsClickListener){
+        this.taskDetailsClickListener=taskDetailsClickListener;
     }
 }
