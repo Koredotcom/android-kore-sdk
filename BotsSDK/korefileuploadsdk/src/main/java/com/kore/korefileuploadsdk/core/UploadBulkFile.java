@@ -410,7 +410,8 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				MultipartEntity reqEntity = new MultipartEntity();
 				
 //				thumbnailFilePath = thumbnailFilePath;
-				if(thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") && fileContext.equalsIgnoreCase("knowledge")){
+				if(thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") &&
+						(fileContext.equalsIgnoreCase("knowledge") || fileContext.equalsIgnoreCase("task"))){
 
 					InputStream fis = null;
 					try {
