@@ -339,11 +339,11 @@ public class DateUtils {
         String date = dateWeekMsgTime.format(lastModified);
 
         if (android.text.format.DateUtils.isToday(lastModified)) {
-            date = "Today " + getTimeInAmPm(lastModified);
+            date = "Today, " + getTimeInAmPm(lastModified);
         } else if (isYesterday(lastModified)) {
-            date = "Yesterday " + getTimeInAmPm(lastModified);
+            date = "Yesterday, " + getTimeInAmPm(lastModified);
         } else if (isTomorrow(lastModified)) {
-            date = "Tomorrow " + getTimeInAmPm(lastModified);
+            date = "Tomorrow, " + getTimeInAmPm(lastModified);
         }
         return date;
     }
