@@ -34,7 +34,7 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.MeetingFollowupView;
 
 import static kore.botssdk.utils.DateUtils.getFollowUpSlotsDay;
-import static kore.botssdk.utils.DateUtils.getSlotsDate;
+
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 
@@ -123,8 +123,8 @@ public class MeetingFollowupAdapter extends RecyclerView.Adapter<MeetingFollowup
         holder.slots_view.removeAllViews();
         for(MeetingSlotModel.Slot slot:root.getSlots())
         {
-            String startTime = getTimeInAmPm(slot.getStart()).toLowerCase();
-            String endTime = getTimeInAmPm(slot.getEnd()).toLowerCase();
+            String startTime = getTimeInAmPm(slot.getStart()).toUpperCase();
+            String endTime = getTimeInAmPm(slot.getEnd()).toUpperCase();
             final String day = getFollowUpSlotsDay(slot.getStart());
 
             TextView textView1 = new TextView(context);
@@ -133,7 +133,7 @@ public class MeetingFollowupAdapter extends RecyclerView.Adapter<MeetingFollowup
             textView1.setTypeface(ResourcesCompat.getFont(context, R.font.latomedium));
             textView1.setTextColor(Color.parseColor("#161620"));
             textView1.setTextSize(TypedValue.COMPLEX_UNIT_PX,context.getResources().getDimension(R.dimen.dimen_12dp));
-            textView1.setText(MessageFormat.format("{0}, {1} - {2}", day, startTime, endTime));
+            textView1.setText(MessageFormat.format("{0} {1} - {2}", day, startTime, endTime));
             textView1.setPadding(10, 10, 10, 10); // in pixels (left, top, right, bottom)
             holder.slots_view.addView(textView1);
         }

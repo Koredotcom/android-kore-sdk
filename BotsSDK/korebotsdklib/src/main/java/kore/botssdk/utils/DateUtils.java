@@ -146,7 +146,7 @@ public class DateUtils {
             time = "Tomorrow";
         } else {
 
-            time = currentYear == messageYear ? dateMonthDay.format(new Date(lastModified)) : dateMonthDayYear.format(new Date(lastModified));
+            time = currentYear == messageYear ? dateWeekDayTime6.format(new Date(lastModified)) : dateWeekDayTime5.format(new Date(lastModified));
         }
         return time;
     }

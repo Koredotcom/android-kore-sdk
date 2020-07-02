@@ -8,7 +8,15 @@ public class Invitee {
     private String id;
     private String name;
     private String emailId;
+    private String icon;
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
     public String getEmailId() {
         return emailId;
     }

@@ -12,6 +12,15 @@ public class Owner {
     private long slot;
     private String lN;
     private String fN;
+    private String icon;
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getColor() {
         return color;
