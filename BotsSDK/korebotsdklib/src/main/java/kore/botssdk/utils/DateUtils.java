@@ -446,7 +446,14 @@ public class DateUtils {
     public static String getDateFromString(String time) {
         if (time == null || time.isEmpty()) return "";
         try {
-            Date date = DateUtils.isoFormatter.parse(time);
+            Date date;
+            try {
+                date = DateUtils.isoFormatter.parse(time);
+            }catch (Exception e)
+            {
+                date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).parse(time);
+            }
+
             return calendar_list_format.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -457,7 +464,14 @@ public class DateUtils {
     public static String getDateFromStringByDate(String time) {
         if (time == null || time.isEmpty()) return "";
         try {
-            long lastModified = new Date(time).getTime();
+            long lastModified=0;
+            try {
+                 lastModified = DateUtils.isoFormatter.parse(time).getTime();
+            }
+           catch (Exception e)
+           {
+               lastModified = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH).parse(time).getTime();
+           }
             if (android.text.format.DateUtils.isToday(lastModified)) {
                 return "Today";
             } else if (isYesterday(lastModified)) {
