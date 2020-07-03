@@ -37,6 +37,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private View slotLayout;
     //private TextView label;
     private TextView slots;
+    View time_slots_view;
 
     float dp1;
 
@@ -90,6 +91,7 @@ public class MeetingConfirmationView extends ViewGroup {
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         //label = view.findViewById(R.id.label);
         slots = view.findViewById(R.id.time_slots);
+        time_slots_view=view.findViewById(R.id.time_slots_view);
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
@@ -149,12 +151,12 @@ public class MeetingConfirmationView extends ViewGroup {
 
 
             if (meetingConfirmationModel.getSlots() != null && meetingConfirmationModel.getSlots().size() > 0) {
-                slots.setVisibility(View.VISIBLE);
+                time_slots_view.setVisibility(View.VISIBLE);
                 slots.setText(getSlotsViewText(meetingConfirmationModel.getSlots()));
                // label.setVisibility(View.VISIBLE);
                 //label.setText(meetingConfirmationModel.getSlots().size() > 1 ? "Selected Slots" : "Selected Slot");
             } else {
-                slots.setVisibility(View.GONE);
+                time_slots_view.setVisibility(View.GONE);
                 //label.setVisibility(View.GONE);
             }
             //GON

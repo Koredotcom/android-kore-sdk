@@ -46,19 +46,31 @@
             android:textSize="10sp" />
             -->
 
+        <LinearLayout
+            android:id="@+id/time_slots_view"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+         <ImageView
+             android:layout_width="18dp"
+             android:layout_height="18dp"
+            android:layout_marginEnd="5dp"
+             android:layout_marginTop="2dp"
+             app:srcCompat="@drawable/ic_baseline_watch_later_24px"/>
         <TextView
             android:id="@+id/time_slots"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
-            android:drawablePadding="5dp"
-            android:layout_marginBottom="10dp"
             android:fontFamily="@font/latomedium"
+
+
             android:lineSpacingExtra="5dp"
             android:textColor="@color/color_404051"
             android:textSize="13sp" />
 
+        </LinearLayout>
         <TextView
             android:id="@+id/location_view"
             android:layout_width="wrap_content"
@@ -67,6 +79,7 @@
             android:drawableStart="@drawable/vector_location_icon"
             android:drawablePadding="5dp"
             android:gravity="center|start"
+
             android:fontFamily="@font/latomedium"
             android:textColor="#485260"
             android:textSize="13sp" />
@@ -80,6 +93,7 @@
             android:drawablePadding="5dp"
             android:gravity="center|start"
             android:textColor="#485260"
+
             android:textSize="13sp" />
     </LinearLayout>
 </LinearLayout>
