@@ -29,6 +29,7 @@ import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
 import kore.botssdk.view.MeetingConfirmationView;
+import kore.botssdk.view.MeetingFollowupView;
 import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PieChartView;
@@ -66,7 +67,7 @@ public class ViewProvider {
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
     private static final int FREEMIUM_VIEW_ID = 19800567;
-
+    private static final int FOLLoWUP_VIEW_ID = 19800999;
 
     public static Path RoundedRect(
             float left, float top, float right, float bottom, float rx, float ry,
@@ -242,6 +243,12 @@ public class ViewProvider {
         return freemiumView;
     }
 
+
+    public static MeetingFollowupView getFollowUpMeetingView(Context context){
+        MeetingFollowupView freemiumView = new MeetingFollowupView(context);
+        freemiumView.setId(FOLLoWUP_VIEW_ID);
+        return freemiumView;
+    }
     public static WelcomeSummaryView getWelcomeSummaryView(Context context){
         WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context,"");
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);

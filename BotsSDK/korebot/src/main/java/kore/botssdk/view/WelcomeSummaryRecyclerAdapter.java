@@ -110,6 +110,11 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                 holder.itemRowBinding.icon.setText(R.string.icon_2d);//
                 holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
                 break;
+            case "meetingReq":
+                holder.itemRowBinding.icon.setText(R.string.icon_e9a8);//
+                holder.itemRowBinding.icon.setBackground(changeColorOfDrawable(context, R.color.color_4e74f0));
+
+                break;
             case "notificationForm":
             case "form":
                 holder.itemRowBinding.icon.setText(R.string.icon_e943);//
