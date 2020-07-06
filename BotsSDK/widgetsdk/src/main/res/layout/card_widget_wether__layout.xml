@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    android:layout_marginRight="3dp"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10_dp"
+        android:layout_marginEnd="@dimen/dimen_10_dp"
+        android:elevation="4dp"
+        android:minHeight="150dp"
+
+        app:cardCornerRadius="4dp"
+        app:cardUseCompatPadding="true">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_15_dp"
+            android:layout_marginRight="@dimen/dimen_15_dp"
+            android:layout_marginTop="@dimen/dimen_15_dp"
+            android:layout_marginBottom="@dimen/dimen_15_dp">
+
+
+            <LinearLayout
+                android:id="@+id/wether_info_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="25dp"
+                android:layout_toStartOf="@+id/wether_icon_layout"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_wether_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="13dp"
+                    android:text="Loading..."
+                    android:textColor="@color/widget_view_color"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <!--"You got a busy day ahead."-->
+                <TextView
+                    android:id="@+id/tv_wether_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Checking..."
+                    android:textColor="@color/widget_view_color"
+                    android:textSize="14sp"
+                    android:visibility="visible" />
+
+
+             <LinearLayout
+                 android:id="@+id/summery_items"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginBottom="-10dp"
+                 android:orientation="vertical">
+                <!--"8 upcoming meetings"-->
+                <RelativeLayout
+                    android:id="@+id/row_first"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/meetingIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_upcoming_meeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/meetingIcon"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="Checking..."
+                        android:textColor="@color/widget_view_color"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <!--"7 tasks due today"-->
+                <RelativeLayout
+                    android:id="@+id/row_second"
+                    android:layout_width="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/taskDueIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_task_due"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/taskDueIcon"
+                        android:paddingLeft="10dp"
+                        android:text="Checking..."
+                        android:textColor="@color/widget_view_color"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <!--"4 overdue."-->
+                <RelativeLayout
+                    android:id="@+id/row_third"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                   android:layout_marginBottom="10dp"
+
+                    >
+
+                    <TextView
+                        android:id="@+id/taskOverDueIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:text=""
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_task_overdue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/taskOverDueIcon"
+                        android:paddingLeft="10dp"
+                        android:text="Checking..."
+                        android:textColor="@color/widget_view_color"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+             </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/wether_icon_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/wether_info_layout"
+                android:layout_alignParentEnd="true"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+                <ImageView
+                    android:id="@+id/img_wether_icon"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/dimen_12_dp"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/circle_shimmer" />
+
+                <TextView
+                    android:id="@+id/tv_wether_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:fontFamily="@font/wetherfont"
+                    android:maxWidth="135dp"
+                    android:textColor="@color/widget_view_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

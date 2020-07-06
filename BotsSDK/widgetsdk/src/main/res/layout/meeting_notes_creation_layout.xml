@@ -1,0 +1,280 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/app_toolbar" />
+
+    <ScrollView
+        android:id="@+id/content_scroller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_container"
+        android:layout_below="@+id/toolbar"
+        android:paddingTop="5dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+          <!--  <TextView
+                android:id="@+id/meeting_title_prepend_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
+                android:fontFamily="@font/latomedium"
+                android:gravity="center_vertical"
+                android:text="Meeting Notes - "
+                android:textColor="@color/color_626281"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="21sp"
+                />-->
+
+            <EditText
+                android:id="@+id/meeting_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="10dp"
+                android:background="@null"
+                android:backgroundTint="@null"
+                android:ellipsize="end"
+                android:fontFamily="@font/latomedium"
+                android:gravity="center_vertical"
+                android:hint="@string/title"
+                android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                android:maxLength="100"
+                android:maxLines="3"
+                android:tag="medium"
+                android:textColor="@color/color_626281"
+                android:textColorHint="@color/color_a7b0be"
+                android:textCursorDrawable="@drawable/cursor_drawable"
+                android:textSize="21sp" />
+
+
+            <TextView
+                android:id="@+id/time_view_label_when"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/meeting_title"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/latomedium"
+                android:letterSpacing="0.01"
+                android:text="When : "
+                android:textColor="@color/color_3e3e51"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/time_view_label_when"
+                android:layout_below="@id/meeting_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="14dp"
+                android:fontFamily="@font/latomedium"
+                android:letterSpacing="0.01"
+                android:textColor="@color/color_3e3e51"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/invitee_view_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/time_view"
+                android:layout_marginTop="10dp"
+
+                android:fontFamily="@font/latomedium"
+                android:letterSpacing="0.01"
+                android:text="Invitees : "
+                android:textColor="@color/color_3e3e51"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/invitee_view_label_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/invitee_view_label"
+                android:layout_below="@id/time_view"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="14dp"
+                android:fontFamily="@font/latomedium"
+                android:letterSpacing="0.01"
+                android:clickable="true"
+                android:textColor="@color/appRequiredColor"
+                android:textSize="14sp" />
+
+
+            <jp.wasabeef.richeditor.TEditor
+                android:id="@+id/teditor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/invitee_view_label_desc"
+                android:background="@color/white"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/markup_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_f7f8f9"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!--            <ImageButton
+                            android:id="@+id/open_action_sheet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@null"
+                            android:contentDescription="@null"
+                            android:padding="@dimen/dimen_15_dp"
+                            android:src="@mipmap/open_action_sheet" />-->
+            <ImageButton
+                android:id="@+id/action_cameraCapture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+
+                app:srcCompat="@drawable/ic_photo_camera_black_24dp" />
+
+            <ImageButton
+                android:id="@+id/action_insert_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                android:rotation="120"
+                app:srcCompat="@drawable/ic_baseline_attachment_24px" />
+
+            <ImageButton
+                android:id="@+id/action_insert_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                android:rotation="120"
+                app:srcCompat="@drawable/ic_insert_link_icon" />
+
+            <ImageButton
+                android:id="@+id/action_italic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_italic_icon" />
+
+            <ImageButton
+                android:id="@+id/action_underline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_underline_icon" />
+
+
+            <ImageButton
+                android:id="@+id/action_insert_numbers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_orderedlist_icon" />
+
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+
+            <ImageButton
+                android:id="@+id/action_bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                app:srcCompat="@drawable/ic_bold_icon" />
+
+            <ImageButton
+                android:id="@+id/action_insert_bullets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:padding="@dimen/dimen_15_dp"
+                app:srcCompat="@drawable/ic_unordered_list_icon" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/kaAdMsgOfflineMode"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/offline_mode_check_bg_color"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_internet_connection"
+            android:textColor="@color/offline_mode_check_text_color"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/closeOfflineModeMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+</RelativeLayout>

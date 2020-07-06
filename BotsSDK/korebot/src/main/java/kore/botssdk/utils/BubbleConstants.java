@@ -17,4 +17,5 @@ public class BubbleConstants {
     public static final int GRAVITY_RIGHT = 1;
     public static final int MATCH_PARENT = 0;
     public static final int WRAP_CONTENT = 1;
+    public static final int FORM_TEMPLATE_ID = 19800395;
 }

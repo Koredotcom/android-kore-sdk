@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.kore.ai.widgetsdk.activities.PanelMainActivity;
+
 import kore.botssdk.R;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;

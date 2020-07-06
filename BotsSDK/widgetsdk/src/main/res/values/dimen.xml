@@ -1,0 +1,73 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="toast_y_offset_default">64dip</dimen>
+    <dimen name="dimen_11_dp">11dp</dimen>
+    <dimen name="dimen_17_dp">17dp</dimen>
+    <dimen name="dimen_18_dp">18dp</dimen>
+    <dimen name="dimen_10_dp">10dp</dimen>
+    <dimen name="dimen_20_dp">20dp</dimen>
+    <dimen name="dimen_15_dp">15dp</dimen>
+    <dimen name="dimen_12_dp">12dp</dimen>
+    <dimen name="dimen_16_dp">16dp</dimen>
+    <dimen name="dimen_recycler_empty">30dp</dimen>
+    <integer name="toast_gravity_default">0x00000051</integer>
+
+    <dimen name="carousel_view_cardCornerRadius">12dp</dimen>
+    <dimen name="carousel_view_button_list_max_height">150dp</dimen>
+    <dimen name="carousel_view_button_height">48dp</dimen>
+    <dimen name="list_item_view_height">120dp</dimen>
+
+
+    <!-- Typing statis CPV -->
+    <dimen name="typing_layout_cpv_height">24dp</dimen>
+    <dimen name="typing_layout_cpv_width">24dp</dimen>
+    <dimen name="typing_layout_height">25dp</dimen>
+    <dimen name="typing_layout_padding_left">10dp</dimen>
+    <dimen name="typing_layout_padding_right">10dp</dimen>
+    <dimen name="dot_view_jumping_height">16dp</dimen>
+    <dimen name="dot_view_margin_bottom">6dp</dimen>
+    <dimen name="typing_layout_margin_left">2dp</dimen>
+    <dimen name="typing_layout_margin_right">2dp</dimen>
+
+    <!-- Carousel View -->
+    <dimen name="carousel_layout_height">300dp</dimen>
+    <item name="carousel_item_width_factor" format="float" type="dimen">0.8</item>
+    <dimen name="carousel_item_page_margin">10dp</dimen>
+    <dimen name="carousel_view_padding_left">10dp</dimen>
+    <dimen name="carousel_view_padding_top">0dp</dimen>
+    <dimen name="carousel_view_padding_right">10dp</dimen>
+    <dimen name="carousel_view_padding_bottom">0dp</dimen>
+    <dimen name="carousel_view_button_height_individual">48dp</dimen>
+
+    <!-- Pie View -->
+    <dimen name="pie_layout_height">375dp</dimen>
+    <dimen name="table_layout_height">375dp</dimen>
+
+    <!--Line chart View-->
+    <dimen name="line_layout_height">300dp</dimen>
+    <dimen name="dimen_68dp">68dp</dimen>
+    <dimen name="dimen_13dp">13dp</dimen>
+    <dimen name="dimen_14dp">14dp</dimen>
+    <dimen name="dimen_8dp">8dp</dimen>
+    <dimen name="dimen_30dp">30dp</dimen>
+    <dimen name="min_width_ends">90dp</dimen>
+    <dimen name="min_width_middle">80dp</dimen>
+    <dimen name="dimen_22dp">22dp</dimen>
+    <dimen name="dimen_44">44dp</dimen>
+
+    <dimen name="dgv_overlap_if_switch_straight_line">16dp</dimen>
+    <dimen name="account_view_16dp">16dp</dimen>
+    <dimen name="dimen_44dp">44dp</dimen>
+    <dimen name="create_topic_10dp">10dp</dimen>
+    <dimen name="teach_image_resol">100dp</dimen>
+    <dimen name="next_button_margin">15dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="expanded_layout_height">390dp</dimen>
+    <dimen name="expanded_panel_height">70dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>

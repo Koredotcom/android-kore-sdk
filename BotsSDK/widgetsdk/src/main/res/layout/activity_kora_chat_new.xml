@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/base_view"
+        android:layout_alignParentTop="true">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/cordinate_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.kore.ai.koreassistant.activities.KoraMainActivity">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/kora_custom_toolbar" />
+
+                <View
+                    android:id="@+id/animator"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/animator_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_alignParentTop="true"
+                    android:visibility="gone" />
+                <!--<Middle layout starts>-->
+                <RelativeLayout
+                    android:id="@+id/root_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/toolbar"
+                    android:background="@color/white"
+                    tools:context=".activities.KoraMainActivity">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/actions_container"
+                        android:layout_alignParentTop="true">
+
+                        <com.kore.ai.widgetsdk.views.viewutils.MainViewPager
+                            android:id="@+id/viewpager"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_above="@+id/actions_container"
+                            android:overScrollMode="always"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                        <LinearLayout
+                            android:id="@+id/quit_kora"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|end"
+                            android:layout_marginTop="30dp"
+                            android:background="@drawable/popup_right"
+                            android:orientation="vertical" />
+                    </FrameLayout>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/actions_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/white"
+                        android:orientation="horizontal"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="@dimen/dimen_12_dp"
+                        android:translationY="500dp"
+                        android:visibility="gone"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+            <!--<Bottom Sheet Layout starts>-->
+            <!--        The idea is try the expanded lay out/ set some padding on expanded-->
+            <LinearLayout
+                android:id="@+id/persistentPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/panel_bg_round_rect"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:behavior_hideable="true"
+                app:behavior_peekHeight="0dp"
+                app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+                tools:context=".activities.KoraMainActivity">
+                <!--<View
+                    android:id="@+id/divider_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#ededef"
+                    android:layout_marginTop="8dp"/>-->
+
+                <!--<include
+                    android:id="@+id/audio_wave_layout"
+                    layout="@layout/audio_wave_panel"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:visibility="gone" />-->
+
+                <LinearLayout
+                    android:id="@+id/panel_sub_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/panel_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/round_rect_panel_head"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/panel_drag"
+                                android:layout_width="64dp"
+                                android:layout_height="5dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="6dp"
+                                android:background="@drawable/round_rect_panel_drag"
+                                android:clickable="false"
+                                android:paddingLeft="@dimen/dimen_20_dp"
+                                android:paddingRight="@dimen/dimen_20_dp"
+                                android:paddingBottom="@dimen/dimen_20_dp"
+                                android:visibility="visible" />
+                            <!-- <pl.droidsonroids.gif.GifImageButton
+                                 android:id="@+id/panel_drag_gif"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_gravity="center_horizontal"
+                                 android:layout_marginTop="6dp"
+                                 android:src="@drawable/pull_down"
+                                 android:background="@null"
+                                 android:paddingLeft="@dimen/dimen_20_dp"
+                                 android:paddingRight="@dimen/dimen_20_dp"/>-->
+
+                            <net.cachapa.expandablelayout.ExpandableLayout
+                                android:id="@+id/panelTitleLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="2dp"
+                                app:el_duration="400"
+                                app:el_expanded="true"
+                                app:el_parallax="0.5">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:id="@+id/header_layout"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="5dp"
+                                            android:clickable="true"
+                                            android:orientation="horizontal"
+                                            android:padding="5dp">
+
+                                            <include
+                                                android:id="@+id/panel_title_icon"
+                                                layout="@layout/pannel_adapter_layout"
+                                                android:layout_width="50dp"
+                                                android:layout_height="32dp" />
+
+                                            <TextView
+                                                android:id="@+id/txtTitle"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:layout_marginStart="14dp"
+                                                android:gravity="center|start"
+                                                android:textColor="#000004"
+                                                android:textSize="19sp"
+                                                android:textStyle="bold" />
+                                        </LinearLayout>
+
+                                        <Space
+                                            android:layout_width="0dp"
+                                            android:layout_height="0dp"
+                                            android:layout_weight="1" />
+
+                                        <TextView
+                                            android:id="@+id/editButton"
+                                            android:layout_width="32dp"
+                                            android:layout_height="32dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginEnd="15dp"
+                                            android:background="?selectableItemBackgroundBorderless"
+                                            android:gravity="center"
+                                            android:text="@string/icon_e95f"
+                                            android:textColor="@color/color_161620"
+                                            android:textSize="24sp"
+                                            android:visibility="gone" />
+
+                                        <TextView
+                                            android:id="@+id/closeBtnPanel"
+                                            android:layout_width="32dp"
+                                            android:layout_height="32dp"
+                                            android:layout_marginTop="5dp"
+                                            android:layout_marginEnd="9dp"
+                                            android:background="?selectableItemBackgroundBorderless"
+                                            android:gravity="center"
+                                            android:text="@string/icon_e94d"
+                                            android:textColor="@color/color_161620"
+                                            android:textSize="24sp" />
+                                    </LinearLayout>
+                                    <!-- <View
+                                         android:id="@+id/divider_view"
+                                         android:layout_width="match_parent"
+                                         android:layout_height="1dp"
+                                         android:background="#ededef"
+                                         android:layout_marginTop="8dp"/>-->
+                                </LinearLayout>
+                            </net.cachapa.expandablelayout.ExpandableLayout>
+                        </LinearLayout>
+
+
+                        <!-- <RelativeLayout
+                             android:id="@+id/kaAdMsgOfflineMode1"
+                             android:layout_width="match_parent"
+                             android:layout_height="30dp"
+
+                             android:background="@color/offline_mode_check_bg_color"
+                             android:visibility="gone">
+
+                             <TextView
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_centerInParent="true"
+                                 android:text="@string/no_internet_connection"
+                                 android:textColor="@color/offline_mode_check_text_color"
+                                 android:textSize="14sp" />
+
+                             <ImageView
+                                 android:id="@+id/closeOfflineModeMsg1"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_alignParentEnd="true"
+                                 android:layout_centerVertical="true"
+                                 android:paddingLeft="20dp"
+                                 android:paddingTop="5dp"
+                                 android:paddingRight="20dp"
+                                 android:paddingBottom="5dp"
+                                 android:src="@drawable/ic_close_black_24dp"
+                                 android:visibility="invisible" />
+                         </RelativeLayout>-->
+
+                        <View
+                            android:id="@+id/view_onboard"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.01dp" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recyclerView_panel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp" />
+
+
+                        <LinearLayout
+                            android:id="@+id/single_item_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+                        <!--</LinearLayout>
+
+
+
+                        <include layout="@layout/new_composebar_panel"
+                            />
+                    </FrameLayout>-->
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/base_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <!-- For the footer -->
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/chatLayoutFooterContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:el_duration="400"
+            app:el_expanded="true"
+            app:el_parallax="0.5" />
+
+    </RelativeLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/audio_coor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+       <!-- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/view_layout_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/panel_bg_round_rect"
+            android:visibility="gone"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="275dp"
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            tools:context=".activities.KoraMainActivity">
+
+            <include
+                android:id="@+id/audio_wave_layout"
+                layout="@layout/audio_wave_panel"
+                android:layout_width="match_parent"
+                android:layout_height="275dp" />
+
+        </LinearLayout>-->
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <RelativeLayout
+        android:id="@+id/kaAdMsgOfflineMode"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/offline_mode_check_bg_color"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_internet_connection"
+            android:textColor="@color/offline_mode_check_text_color"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/closeOfflineModeMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:id="@+id/coordinator_help"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/view_helplayout"
+            android:background="@drawable/help_bg_round_rect"
+            app:behavior_peekHeight="0dp"
+
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</RelativeLayout>
+

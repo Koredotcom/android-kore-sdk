@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:customnamespace="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mute"
+        android:title="Mute"
+        android:visible="false"
+
+        android:icon="@drawable/ic_round_volume_up_24px"
+        customnamespace:showAsAction="always" />
+
+    <item
+        android:id="@+id/bell"
+        android:title="Bell"
+        android:visible="true"
+        android:icon="@drawable/ic_bell_kora"
+        customnamespace:showAsAction="always"/>
+</menu>

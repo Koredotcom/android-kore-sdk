@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/base_card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        android:minHeight="150dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="5dp"
+        app:cardUseCompatPadding="true">
+        <ProgressBar
+            android:id="@+id/weather_progress"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_weight="1"
+            android:layout_below="@+id/root_layout"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+        <LinearLayout
+            android:id="@+id/card_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:paddingStart="10dp"
+            android:orientation="vertical"
+            android:layout_below="@+id/weather_progress">
+            <TextView
+                android:id="@+id/header_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/view_out"
+                android:fontFamily="@font/latosemibold"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="@dimen/dimen_8dp"
+                android:layout_marginBottom="@dimen/dimen_8dp"
+                android:gravity="center|start"
+                android:letterSpacing="0.01"
+                android:textColor="@color/color_161620"
+                android:textSize="17sp"
+                android:text="Title"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/weather_chat_LV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+
+                android:choiceMode="singleChoice"
+                android:clipToPadding="true"
+                android:fadeScrollbars="true"
+                android:listSelector="@color/white"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:scrollbars="vertical"
+                android:transcriptMode="normal"
+                android:visibility="visible"
+                android:layout_marginBottom="@dimen/dimen_10_dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

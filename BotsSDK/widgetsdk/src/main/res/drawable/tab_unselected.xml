@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="translucent">
+    <item
+        android:top="-2dp"
+        android:left="-2dp"
+        android:right="-2dp">
+        <shape android:shape="rectangle">
+            <stroke
+                android:color="@color/bgBlueSignup"
+                android:width="2dp" />
+            <solid android:color="@android:color/white" />
+        </shape>
+    </item>
+</layer-list>

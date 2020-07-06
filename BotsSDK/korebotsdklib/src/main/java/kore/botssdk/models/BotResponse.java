@@ -52,12 +52,14 @@ public class BotResponse extends BaseBotMessage {
     public static final String NARRATOR_TEXT = "narrator";
     public static final String TEMPLATE_TYPE_MULTI_SELECT = "multi_select";
     public static final String BAR_CHART_DIRECTION_VERTICAL = "vertical";
+
+    //Added by Sudheer
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
+    public static final String TEMPLATE_TYPE_FORM = "form_template";
+    public static final String TEMPLATE_TYPE_LIST_VIEW  = "listView";
 
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
-
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
-
 
     //widgets
     public static final String TEMPLATE_TYPE_FILES_LOOKUP_WIDGET = "files_search_carousel_widget";
@@ -70,10 +72,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String  WIDGET_TYPE="WIDGET_TYPE";
     public static final String  WIDGET_DATA="WIDGET_DATA";
 
-
     // When (google/O365)token expires bot returns this template
     public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";
-
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";

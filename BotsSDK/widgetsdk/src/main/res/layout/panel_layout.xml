@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cordinate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <!--<Bottom Sheet Layout starts>-->
+        <!--        The idea is try the expanded lay out/ set some padding on expanded-->
+        <LinearLayout
+            android:id="@+id/persistentPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/panel_bg_round_rect"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="0dp"
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            tools:context="com.kore.ai.widgetsdk.activities.PanelMainActivity">
+
+            <LinearLayout
+                android:id="@+id/panel_sub_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/panel_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/round_rect_panel_head"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/panel_drag"
+                            android:layout_width="64dp"
+                            android:layout_height="5dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="6dp"
+                            android:background="@drawable/round_rect_panel_drag"
+                            android:clickable="false"
+                            android:paddingLeft="@dimen/dimen_20_dp"
+                            android:paddingRight="@dimen/dimen_20_dp"
+                            android:paddingBottom="@dimen/dimen_20_dp"
+                            android:visibility="visible" />
+
+                        <net.cachapa.expandablelayout.ExpandableLayout
+                            android:id="@+id/panelTitleLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="2dp"
+                            app:el_duration="400"
+                            app:el_expanded="true"
+                            app:el_parallax="0.5">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <LinearLayout
+                                        android:id="@+id/header_layout"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="5dp"
+                                        android:clickable="true"
+                                        android:orientation="horizontal"
+                                        android:padding="5dp">
+
+                                        <include
+                                            android:id="@+id/panel_title_icon"
+                                            layout="@layout/pannel_adapter_layout"
+                                            android:layout_width="50dp"
+                                            android:layout_height="32dp" />
+
+                                        <TextView
+                                            android:id="@+id/txtTitle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginStart="14dp"
+                                            android:gravity="center|start"
+                                            android:textColor="#000004"
+                                            android:textSize="19sp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <Space
+                                        android:layout_width="0dp"
+                                        android:layout_height="0dp"
+                                        android:layout_weight="1" />
+
+                                    <TextView
+                                        android:id="@+id/editButton"
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="15dp"
+                                        android:background="?selectableItemBackgroundBorderless"
+                                        android:gravity="center"
+                                        android:text="@string/icon_e95f"
+                                        android:textColor="@color/color_161620"
+                                        android:textSize="24sp"
+                                        android:visibility="gone" />
+
+                                    <TextView
+                                        android:id="@+id/closeBtnPanel"
+                                        android:layout_width="32dp"
+                                        android:layout_height="32dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginEnd="9dp"
+                                        android:background="?selectableItemBackgroundBorderless"
+                                        android:gravity="center"
+                                        android:text="@string/icon_e94d"
+                                        android:textColor="@color/color_161620"
+                                        android:textSize="24sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </net.cachapa.expandablelayout.ExpandableLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/view_onboard"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.01dp" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_panel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="0dp" />
+
+
+                    <LinearLayout
+                        android:id="@+id/single_item_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/audio_coor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/view_layout_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/panel_bg_round_rect"
+            android:visibility="gone"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="275dp"
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            tools:context=".activities.KoraMainActivity">
+
+            <include
+                android:id="@+id/audio_wave_layout"
+                layout="@layout/audio_wave_panel"
+                android:layout_width="match_parent"
+                android:layout_height="275dp" />
+
+        </LinearLayout>-->
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:id="@+id/coordinator_help"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/view_helplayout"
+            android:background="@drawable/help_bg_round_rect"
+            app:behavior_peekHeight="0dp"
+
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/pannel_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_layout"
+        android:animateLayoutChanges="true"
+        android:background="#e0e1e9"
+        android:gravity="start"
+        android:paddingTop="5dp"
+        android:paddingBottom="2dp"
+        android:visibility="visible"
+        app:el_duration="400"
+        app:el_expanded="true"
+        app:el_parallax="0.5">
+
+        <ProgressBar
+            android:id="@+id/progressBarPanel"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="@dimen/dimen_30dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:maxLines="2"
+            android:text="@string/empty_panel_text"
+            android:textColor="#161620"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pannel_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="44dp"
+            android:visibility="visible"></androidx.recyclerview.widget.RecyclerView>
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
+</LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="45dp"
+    android:paddingTop="10dp"
+
+    android:orientation="vertical">
+
+    <com.kore.ai.widgetsdk.view.ProfileTextView
+        android:id="@+id/profile_name"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:fontFamily="@font/latomedium"
+        android:layout_centerVertical="true"
+        android:tag="medium"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/latomedium"
+        android:layout_toStartOf="@+id/check_user"
+        android:layout_toEndOf="@+id/profile_name"
+        android:textColor="@color/color_3e3e51"
+        android:textSize="15sp" />
+
+    <CheckBox
+        android:id="@+id/check_user"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_centerVertical="true"
+    
+        android:button="@drawable/checkbox_drawable"
+       />
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/profile_name"
+        android:layout_marginTop="10dp"
+
+
+        android:background="@drawable/line_divider" />
+</RelativeLayout>

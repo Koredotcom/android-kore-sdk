@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ka_ent_admin_title">Enterprise Admin Notification</string>
+    <string name="ka_ent_admin_msg">Enterprise Admin Message</string>
+    <string name="ka_auth_failed_title">Authorization Failed</string>
+    <string name="ka_change_password">Change password</string>
+    <string name="ka_logout">Logout</string>
+    <string name="ka_admin_cancel">Cancel</string>
+    <string name="ka_licence_code">LICENSE_CHANGED</string>
+    <string name="ka_permissions_code">PERMISSIONS_CHANGED</string>
+    <string name="ka_admin_password_reset_msg">Your password has been reset by the admin. Please check your email to reset your password.</string>
+    <string name="ka_managed_by_enterprise_msg">You have been made as a unmanaged user by the admin. To continue, please sign in again.</string>
+    <string name="ka_licence_changed_msg">Your licence has been changed by the admin. To continue, please sign in again.</string>
+    <string name="ka_permissions_changed_msg">Changes to your account permissions by the administrator require you to re-login. You will be logged out.</string>
+    <string name="ka_admin_sso_enabled_msg">Admin has enabled Single Sign-On authentication for your account. Please enter your enterprise credentials to continue accessing Kore.</string>
+    <string name="ka_admin_sso_disabled_msg">Admin has disabled Single Sign-On authentication for your account. Please create a new password to continue accessing Kore.</string>
+    <string name="ka_admin_killed_session_msg">Admin has ended your session. To continue, please sign in again.</string>
+    <string name="ka_admin_account_suspended_msg">Your account is suspended by your admin. Your session will now end. Please contact your admin.</string>
+    <string name="ka_login_error_for_account_suspended_user">Your account is currently suspended in Kore. Contact your system administrator to unlock the account.</string>
+    <string name="ka_admin_usage_policy_changes_msg">Your session will now end. Please re-login again.</string>
+    <string name="ka_account_deleted">Your account has been deleted by your Admin.Please contact your Admin</string>
+
+
+    <string name="ka_password_policy_changed_msg">The password for this account has expired. To continue, you must change your password.</string>
+    <string name="ka_password_expired_msg">The password for this account has expired. To continue, you must change your password.</string>
+    <string name="ka_password_policy_expire_alert_msg">The password for your account is about to expire %s. To continue, tap on Cancel. To change password, tap on change password</string>
+
+    <string name="ka_default_msg">To continue, please sign in again</string>
+
+    <string name="ka_usage_policy_heading">Supplemental Terms &amp; Conditions</string>
+
+    <string name="ka_no_licences_available_title">No subscriptions available.</string>
+    <string name="ka_no_licences_available_msg">Not enough subscriptions are available to complete this action.</string>
+    <string name="ka_no_licence_ok">OK</string>
+
+    <string name="ka_create_space_not_allowed">Not allowed to create any more Free Teams</string>
+    <string name="ka_send_failed_please_retry">Please retry</string>
+    <string name="ka_space_disabled">Team Disabled</string>
+
+    <string name="ka_session_end_title">Log In Again</string>
+    <string name="ka_session_end_msg">Your session has expired!. You will be logged out. Please re-login to continue.</string>
+    <string name="ka_no_rooms">You do not have any rooms to add people to this team</string>
+
+    <string name="ka_channel_disabled">Your system administrator has disabled logging in via \'Mobile App\' for your account. Please login on an authorized channel.</string>
+
+
+
+
+</resources>

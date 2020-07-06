@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/dimen_18_dp">
+
+    <TextView
+        android:id="@+id/what_can"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/dimen_15_dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/latomedium"
+        android:text="@string/what_can_i_do_for_you"
+        android:textColor="@color/color_404051"
+        android:textSize="21sp" />
+
+    <ImageView
+        android:id="@+id/closeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/dimen_15_dp"
+        app:srcCompat="@drawable/ic_close_black_24dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/what_can"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/dimen_14dp"
+        android:layout_marginEnd="4dp"
+        android:id="@+id/recycler_view"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/help_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recycler_view"
+        android:layout_marginTop="21dp" />
+</RelativeLayout>

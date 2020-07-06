@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/app_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/layout_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="14dp"
+        android:background="@drawable/serach_edittext_background"
+        android:orientation="vertical"
+        android:paddingStart="10dp">
+
+        <EditText
+            android:id="@+id/edt_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@null"
+            android:drawableStart="@drawable/ic_search_help"
+            android:drawablePadding="10dp"
+            android:hint="search invitees"
+
+            android:minHeight="40dp"
+            android:padding="2dp"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/available_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:tag="regular"
+            android:text="Share with all invitees"
+            android:textColor="@color/color_29292B"
+            android:textSize="17sp" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/attendee_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            app:theme="@style/SwitchCompatStyleDefault" />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/profile_name"
+            android:layout_alignParentBottom="true"
+
+            android:background="@drawable/line_divider" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/label_attendee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/latomedium"
+        android:letterSpacing="0.01"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:text="INVITEES"
+        android:textColor="@color/color_767688"
+        android:textSize="13sp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_share"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="14dp"></androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

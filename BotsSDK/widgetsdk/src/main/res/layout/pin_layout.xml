@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_alignParentEnd="true"
+    android:padding="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_centerInParent="true"
+    android:layout_marginEnd="@dimen/dimen_10_dp"
+    android:id="@+id/root_pin_layout"
+    android:background="@drawable/rounded_pin"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/pin_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/icomoon"
+        android:gravity="center"
+        android:text="@string/icon_32"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+</RelativeLayout>

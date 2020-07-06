@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.kore.ai.widgetsdk.utils.ToastUtils;
+
 import kore.botssdk.R;
 
 /**
@@ -56,6 +58,14 @@ public class BotAppCompactActivity extends AppCompatActivity {
         }
         mProgressDialog.dismiss();
         mProgressDialog = null;
+    }
+
+    protected final void showToast(String message){
+        if(message != null && !message.equals("INVALID_ACCESS_TOKEN"))
+            ToastUtils.showToast(this,message);
+    }
+    protected final void showToast(String msg, int length) {
+        ToastUtils.showToast(this, msg, length);
     }
 
 }

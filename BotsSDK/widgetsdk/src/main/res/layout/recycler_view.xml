@@ -1,0 +1,9 @@
+<androidx.recyclerview.widget.RecyclerView android:id="@+id/list_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/dimen_12_dp"
+    android:paddingEnd="@dimen/dimen_12_dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" />

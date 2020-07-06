@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botCustomListRoot"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:orientation="vertical">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/botCustomListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:divider="#ffffff"
+        android:dividerHeight="@dimen/dimen_10dp"
+        android:padding="2dp"
+        android:scrollbars="none" />
+
+    <TextView
+        android:id="@+id/botCustomListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="right|center_vertical"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:text="more"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="visible" />
+</LinearLayout>

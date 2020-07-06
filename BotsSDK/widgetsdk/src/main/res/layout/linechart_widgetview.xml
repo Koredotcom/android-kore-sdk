@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chart_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        android:minHeight="150dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="5dp"
+        app:cardUseCompatPadding="true">
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/root_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+
+            android:minHeight="36dp"
+            android:paddingStart="10dp"
+
+            android:paddingTop="10dp"
+           >
+
+            <TextView
+                android:id="@+id/chart_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:gravity="center|start"
+                android:text=""
+                android:layout_toStartOf="@+id/root_pin_layout"
+                android:textColor="@color/color_161620"
+                android:textSize="17sp"
+                android:letterSpacing="0.01"
+                android:fontFamily="@font/latosemibold"
+                android:textStyle="bold" />
+
+            <include layout="@layout/pin_layout" />
+        </RelativeLayout>
+        <include layout="@layout/panel_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_below="@+id/root_layout"/>
+        <ProgressBar
+            android:id="@+id/chart_progress"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_below="@+id/panel_name_view"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/chart_progress"
+            android:orientation="vertical">
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/mChart"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/dimen_10_dp"
+                android:layout_marginRight="@dimen/dimen_10_dp"
+                android:layout_marginBottom="@dimen/dimen_10_dp"
+                android:layout_height="200dp"/>
+        </LinearLayout>
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:padding="@dimen/dimen_20_dp"
+    android:orientation="horizontal">
+
+    <ProgressBar
+        android:id="@+id/dotLoading1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00555555"
+        android:minWidth="50dp"
+        android:minHeight="50dp" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/latoregular"
+        android:gravity="center_vertical"
+        android:text="Please Wait..."
+        android:textColor="@color/color_485260"
+        android:textSize="@dimen/dimen_15_dp" />
+
+</LinearLayout>

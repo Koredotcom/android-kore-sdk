@@ -57,6 +57,10 @@ dependencies {
     compile(project(':korebotsdklib')){
         exclude module: 'support-v4'
     }
+    compile(project(':widgetsdk')){
+        exclude module: 'support-v4'
+        exclude group: 'org.apache.commons'
+    }
     compile 'androidx.multidex:multidex:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.0'

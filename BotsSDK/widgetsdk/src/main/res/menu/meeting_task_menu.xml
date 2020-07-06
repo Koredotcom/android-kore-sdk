@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:customnamespace="http://schemas.android.com/apk/res-auto">
+
+    <!--<item
+        android:id="@+id/notify"
+        android:title="Notify"
+        android:icon="@drawable/ic_notification"
+        customnamespace:showAsAction="always"/>
+-->
+
+
+    <item
+        android:id="@+id/done"
+        android:title="Done"
+        android:visible="true"
+        customnamespace:showAsAction="always" />
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_icon_share_grey"
+        android:title="Share"
+        android:visible="false"
+        customnamespace:showAsAction="always" />
+    <item
+        android:id="@+id/edit"
+        android:title="Edit"
+        android:visible="false"
+        customnamespace:showAsAction="always" />
+
+
+</menu>

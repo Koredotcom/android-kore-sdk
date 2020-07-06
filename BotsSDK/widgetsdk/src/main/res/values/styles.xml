@@ -1,0 +1,490 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryKa</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/splash_background_color</item>
+
+
+    </style>
+
+    <style name="cursorColor" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:textCursorDrawable">@drawable/cursor_white_drawable</item>
+    </style>
+    <style name="CustomTextAppearanceTab" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textColor">@color/toolbar_title_color</item>
+    </style>
+
+    <style name="Toolbar.SubTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textColor">@color/toolbar_title_color</item>
+    </style>
+
+    <style name="Toolbar.TitleTextBlack" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textColor">@color/txtFontBlack</item>
+    </style>
+
+    <style name="Toolbar.SubTitleTextBlack" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textColor">@color/txtFontBlack</item>
+    </style>
+
+    <style name="KaAppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">false</item>
+    </style>
+    <!-- Modify the text color -->
+    <style name="TabStyle" parent="@style/Widget.AppCompat.Light.ActionBar.TabText.Inverse">
+        <item name="android:textColor">@color/bgBlueSignup</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="CustomActionBarThemeBackground" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="windowActionModeOverlay">false</item>
+        <item name="actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="android:actionBarTabTextStyle">@style/NoCaps</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:buttonStyle">@style/ButtonNoCaps</item>
+        <item name="android:actionBarStyle">@style/MyActionBarBgColorSplash</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+        <item name="android:actionModeBackground">@color/splash_background_color</item>
+        <item name="actionMenuTextColor">@drawable/default_text_color</item>
+        <item name="actionButtonStyle">@style/ActionButtonTheme</item>
+        <item name="android:actionMenuTextAppearance">@style/ActionMenuText</item>
+        <item name="actionMenuTextAppearance">@style/ActionMenuText</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_5258bd</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
+        <!--   <item name="actionModeCloseButtonStyle">@style/CloseButtonWhite</item>-->
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+        <!--<item name="android:icon">@android:color/transparent</item>-->
+        <item name="android:actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
+        <item name="autoCompleteTextViewStyle">@style/cursorColor</item>
+    </style>
+
+    <style name="CloseButtonWhite" parent="@style/Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="android:tint">@color/white</item> <!-- whatever color -->
+    </style>
+
+    <style name="CustomActionBarThemeOnBoard" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="windowActionModeOverlay">false</item>
+            <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_8A9DA6</item>
+    </style>
+
+    <style name="CustomActionBarThemeWhiteSub" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
+        <item name="android:actionBarTabTextStyle">@style/NoCaps</item>
+        <item name="android:buttonStyle">@style/ButtonNoCaps</item>
+        <item name="android:actionBarStyle">@style/MyActionBarBgColor</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="lollipop">@color/black</item>
+        <item name="android:actionMenuTextAppearance">@style/ActionMenuText</item>
+        <item name="actionMenuTextAppearance">@style/ActionMenuText</item>
+        <item name="android:fontFamily">@font/latoregular</item><!--
+        <item name="alertDialogTheme">@style/AlertProgressDialogCustom</item>
+        <item name="android:alertDialogTheme">@style/AlertProgressDialogCustom</item>-->
+        <!--   <item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/statusbar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+        <item name="actionMenuTextColor">@drawable/action_menu_splash</item>
+        <item name="actionButtonStyle">@style/ActionButtonTheme</item>
+        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_back_black_24dp</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_arrow_back_black_24dp</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowActionBarWhite</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowActionBarWhite</item>
+        <item name="textAppearancePopupMenuHeader">@style/MyTextAppearanceMedium</item>
+        <item name="textAppearanceLargePopupMenu">@style/MyTextAppearanceMedium</item>
+        <item name="textAppearanceSmallPopupMenu">@style/MyTextAppearanceSmall</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/MyTextAppearanceMedium</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/MyTextAppearanceSmall</item>
+        <item name="textAppearanceListItem">@style/MyTextAppearanceMedium</item>
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="android:actionModeStyle">@style/ActionModeStyle</item>
+        <item name="colorAccent">@color/appRequiredColor</item>
+    </style>
+
+
+    <style name="AlertProgressDialogCustom" parent="@style/Theme.AppCompat.Light.Dialog.Alert" >
+        <item name="android:textAppearanceSmall">@style/MyTextAppearanceSmall</item>
+        <item name="android:textAppearanceMedium">@style/MyTextAppearanceMedium</item>
+        <item name="android:textAppearanceLarge">@style/MyTextAppearanceLarge</item>
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle_Custom</item>
+
+    </style>
+
+    <style name="SlidingDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/right_to_left</item>
+        <item name="android:windowExitAnimation">@anim/slide_to_right</item>
+    </style>
+
+    <style name="DialogWindowTitle_Custom" parent="@style/Base.DialogWindowTitle.AppCompat">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@style/WindowTitleStyleChild</item>
+        <item name="titleTextAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <style name="TitleText" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="TextAppearance_DialogWindowTitle" parent="@android:style/TextAppearance.Holo.DialogWindowTitle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ChatScreenTheme" parent="@style/CustomActionBarThemeWhiteSub">
+        <item name="android:actionModeCloseDrawable">@drawable/ic_baseline_close_24px</item>
+        <item name="actionModeCloseDrawable">@drawable/ic_baseline_close_24px</item>
+        <item name="android:actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
+        <item name="actionModeStyle">@style/ActionModeStyleWhite</item>
+        <item name="android:actionModeStyle">@style/ActionModeStyleWhite</item>
+        <item name="colorAccent">@color/appRequiredColor</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/color_e7edf4</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
+        <item name="android:tint">@color/black</item>
+    </style>
+
+    <style name="ActionModeStyleWhite" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@android:color/transparent</item>
+        <item name="titleTextStyle">@style/ActionModeTitleTextStyleWhite</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+    <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="ActionModeTitleTextStyleWhite" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="ActionButtonTheme" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="MyActionBarTabs" parent="@style/Widget.AppCompat.Light.ActionBar.TabView">
+
+        <!-- tab indicator -->
+        <item name="android:background">@drawable/actionbar_tab_indicator</item>
+        <item name="android:fontFamily">@font/latobold</item>
+        <item name="background">@drawable/actionbar_tab_indicator</item>
+    </style>
+
+    <style name="NoCaps" parent="@style/Widget.AppCompat.Light.ActionBar.TabText">
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="ButtonNoCaps" parent="@style/Widget.AppCompat.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+
+    <style name="FeedbackAnimation">
+
+        <item name="android:windowEnterAnimation">@anim/anim_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/anim_slide_bottom</item>
+    </style>
+
+    <style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/color_485260</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:fontFamily">@font/latomedium</item>
+    </style>
+
+    <style name="ActionBarTitleTextWhite" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+    </style>
+
+    <style name="NavigationViewTextAppearance">
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontStyle" tools:targetApi="o">normal</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+    </style>
+    <!-- Action Bar color -->
+    <style name="MyActionBarBgColor" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/actionbar_background_color</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@drawable/actionbar_background_color</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleText</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/ActionBarTitleText</item>
+        <item name="android:subtitleTextStyle">@style/ActionBarSubtitleText</item>
+
+        <!-- Support library compatibility -->
+        <item name="subtitleTextStyle">@style/ActionBarSubtitleText</item>
+    </style>
+
+    <style name="MyActionBarBgColorSplash" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/splash_background_color</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/splash_background_color</item>
+        <item name="android:titleTextStyle">@style/ActionBarTitleTextWhite</item>
+
+        <!-- Support library compatibility -->
+        <item name="titleTextStyle">@style/ActionBarTitleTextWhite</item>
+        <item name="android:subtitleTextStyle">@style/ActionBarSubtitleText</item>
+        <item name="android:actionMenuTextAppearance">@style/TextAppearance.AppCompat.Menu</item>
+        <item name="actionMenuTextAppearance">@style/TextAppearance.AppCompat.Menu</item>
+
+        <!-- Support library compatibility -->
+        <item name="subtitleTextStyle">@style/ActionBarSubtitleText</item>
+    </style>
+
+    <!-- ActionBar white subtitle text -->
+    <style name="ActionBarSubtitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/color_485260</item>
+        <item name="android:textSize">12dp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/latomedium</item>
+    </style>
+    <!-- ActionBar white subtitle text -->
+    <style name="ActionMenuText" parent="@style/TextAppearance.AppCompat.Menu">
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
+        <item name="android:minWidth">1dip</item>
+        <item name="android:paddingLeft">8dip</item>
+        <item name="android:paddingRight">8dip</item>
+        <item name="android:fontFamily">@font/latomedium</item>
+    </style>
+
+    <style name="OverflowActionBarSplash" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@mipmap/ic_more_vert_white_24dp</item>
+    </style>
+
+    <style name="OverflowActionBarWhite" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@mipmap/ic_more_vert_black_24dp</item>
+    </style>
+
+    <style name="MyAwesomeTheme" parent="CustomActionBarThemeWhiteSub">
+        <item name="android:fontFamily">@font/latoregular</item>
+    </style>
+
+    <style name="Animation" />
+
+    <!-- the animations must have been defined in your "anim" folder, of course -->
+    <style name="Animation.MyAwesomeAnimation" parent="android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/zoom_in_anim</item>
+    </style>
+
+    <style name="NavigationDrawerStyle">
+        <item name="android:fontFamily">@font/latoregular</item>
+    </style>
+
+    <style name="ActionbarMaterialTheme" parent="ActionbarMaterialTheme.Base" />
+
+    <style name="ActionbarMaterialTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/actionbarColorPrimary</item>
+        <item name="colorPrimaryDark">@color/actionbarColorPrimaryDark</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:actionModeBackground">@color/white</item>
+        <item name="actionModeBackground">@color/white</item>
+    </style>
+
+    <style name="SwitchCompatStyleGreen">
+        <item name="colorControlActivated">@color/readReceiptGreen</item>
+    </style>
+
+    <style name="SwitchCompatStyleDefault">
+        <item name="colorControlActivated">@color/splash_background_color</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBarOverlay">false</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_8A9DA6</item>
+<!--        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>-->
+<!--        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>-->
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="NavigationTheme" parent="AppTheme">
+        <item name="android:textColor">#485260</item>
+        <item name="android:textSize">18sp</item>
+        <item name="textAppearanceListItem">@style/list_item_appearance</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:layout_marginBottom">02dp</item>
+    </style>
+
+    <style name="DrawerMenuLastItem">
+        <item name="android:textColor">#fb5871</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="list_item_appearance">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">latoregular</item>
+    </style>
+
+
+    <style name="MyTextAppearanceSmall" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
+        <item name="android:textSize">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@color/color_485260</item>
+    </style>
+
+    <style name="WindowTitleStyleChild" parent="@style/TextAppearance.AppCompat.Title">
+        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="fontFamily">@font/latomedium</item>
+        <item name="android:textSize">@dimen/dimen_18_dp</item>
+        <item name="android:textColor">@color/color_485260</item>
+    </style>
+
+
+    <style name="MyTextAppearanceMedium" parent="@android:style/TextAppearance.Holo.Medium">
+        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="fontFamily">@font/latomedium</item>
+        <item name="android:textSize">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@color/color_485260</item>
+    </style>
+    <style name="MyTextAppearanceNormal" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="fontFamily">@font/latomedium</item>
+        <item name="fontStyle">normal</item>
+        <item name="android:textSize">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@color/color_485260</item>
+    </style>
+    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottomsheet_background</item>
+    </style>
+
+    <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+    </style>
+    <style name="bottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+
+        <item name="colorControlActivated">@color/appRequiredColor</item>
+        <item name="colorControlHighlight">@color/appRequiredColor</item>
+    </style>
+
+    <style name="MyTextAppearanceLarge" parent="@android:style/TextAppearance.Holo.Large">
+        <item name="android:fontFamily">@font/latobold</item>
+        <item name="fontFamily">@font/latobold</item>
+        <item name="android:textSize">@dimen/dimen_14dp</item>
+        <item name="android:textColor">@color/color_485260</item>
+    </style>
+
+    <style name="TextAppearance.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/appRequiredColor</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Base.Widget.Design.TabLayout1" parent="android:Widget">
+        <item name="tabBackground">@drawable/tab_background</item>
+        <item name="tabIndicatorColor">#FFFFFF</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="Base.Widget.Design.TabLayout2" parent="android:Widget">
+        <item name="tabBackground">@drawable/tab_background_widgets</item>
+        <item name="tabIndicatorColor">#FFFFFF</item>
+        <item name="tabIndicatorHeight">3dp</item>
+    </style>
+
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back_white_24dp</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">normal</item>
+        <item name="navigationIcon">@drawable/ic_arrow_back_black_24dp</item>
+    </style>
+
+</resources>

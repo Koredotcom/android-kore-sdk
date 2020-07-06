@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:paddingBottom="@dimen/dimen_10_dp"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingTop="10dp">
+
+
+    <ImageView
+        android:id="@+id/cancel_action"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="-12dp"
+        android:translationZ="50dp"
+        android:scaleType="centerInside"
+        android:layout_toEndOf="@+id/initials_view"
+        android:src="@mipmap/compose_audio_close" />
+
+    <com.kore.ai.widgetsdk.view.ProfileTextView
+        android:id="@+id/initials_view"
+        android:layout_width="35dp"
+        android:layout_below="@+id/cancel_action"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/name_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:maxWidth="65dp"
+        android:layout_marginBottom="3dp"
+        android:tag="medium"
+        android:layout_above="@+id/user_privilege"
+        android:textColor="@color/color_333d4d"
+        android:textSize="@dimen/dimen_11_dp" />
+
+    <TextView
+        android:id="@+id/user_privilege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom"
+        android:ellipsize="end"
+        android:text="Can View"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:maxWidth="65dp"
+        android:tag="medium"
+        android:textColor="@color/color_a7b0be"
+        android:textSize="@dimen/dimen_10_dp" />
+
+</RelativeLayout>

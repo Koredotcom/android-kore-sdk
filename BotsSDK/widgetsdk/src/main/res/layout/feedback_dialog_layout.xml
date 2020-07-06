@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="120dp"
+        android:id="@+id/view_dialog"
+        android:background="@drawable/rounded_rect_feedback"
+        android:gravity="center|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:minHeight="100dp"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/label_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/latomedium"
+            android:text="How was your experience ?"
+            android:textColor="#000000"
+            android:textSize="13sp">
+
+        </TextView>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/icon_5"
+            android:layout_marginBottom="15dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:id="@+id/close"
+                android:layout_gravity="end"
+                app:srcCompat="@drawable/ic_close" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/icon_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_marginStart="-6dp"
+            app:srcCompat="@drawable/feedback_icon_1">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_toEndOf="@+id/icon_1"
+            app:srcCompat="@drawable/feedback_icon_2">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_toEndOf="@+id/icon_2"
+            app:srcCompat="@drawable/feedback_icon_3">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_toEndOf="@+id/icon_3"
+            app:srcCompat="@drawable/feedback_icon_4">
+
+        </ImageView>
+
+      <ImageView
+            android:id="@+id/icon_5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_toEndOf="@+id/icon_4"
+            app:srcCompat="@drawable/feedback_icon_5">
+
+        </ImageView>
+      <!--  <pl.droidsonroids.gif.GifImageButton
+            android:id="@+id/icon_5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/label_view"
+            android:layout_toEndOf="@+id/icon_4"
+            android:layout_gravity="center_horizontal"
+
+            android:background="@drawable/feedback_icon_5"
+          />-->
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

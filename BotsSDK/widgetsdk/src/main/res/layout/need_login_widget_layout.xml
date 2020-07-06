@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10_dp"
+        android:layout_marginRight="@dimen/dimen_10_dp"
+        android:gravity="center"
+        android:text="@string/need_login"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="140dp"
+        android:id="@+id/img_icon"
+        app:srcCompat="@drawable/need_login" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:tag="medium"
+        android:text="Login"
+        android:background="@drawable/cancel_action_back"
+        android:textColor="#FFFFFF"
+        android:textSize="17sp"
+        android:textStyle="normal"
+        android:layout_marginBottom="20dp"
+        />
+
+
+</LinearLayout>

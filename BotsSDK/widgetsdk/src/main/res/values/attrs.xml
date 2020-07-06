@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProfileView">
+        <attr name="badge_padding" format="dimension" />
+        <attr name="text_size" format="dimension" />
+        <attr name="font_style" format="enum">
+            <enum name="roboto_light" value="0" />
+            <enum name="roboto_light_italics" value="1" />
+            <enum name="roboto_regular" value="2" />
+            <enum name="roboto_regular_italics" value="3" />
+            <enum name="roboto_medium" value="4" />
+            <enum name="roboto_medium_italics" value="5" />
+            <enum name="roboto_bold" value="6" />
+            <enum name="roboto_bold_italics" value="7" />
+        </attr>
+        <attr name="profile_drawable_padding" format="dimension" />
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="has_border" format="boolean" />
+        <attr name="publish_events" format="boolean" />
+    </declare-styleable>
+
+
+
+
+    <declare-styleable name="SwipeButtonStyle">
+        <attr name="stu_label" format="string"/>
+        <attr name="stu_thumbDrawable" format="reference"/>
+        <attr name="stu_background" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="KaProgressWheel">
+        <attr name="text" format="string" />
+        <attr name="ptextColor" format="color" />
+        <attr name="ptextSize" format="dimension" />
+        <attr name="barColor" format="color" />
+        <attr name="rimColor" format="color" />
+        <attr name="rimWidth" format="dimension" />
+        <attr name="spinSpeed" format="dimension" />
+        <attr name="delayMillis" format="integer" />
+        <attr name="circleColor" format="color" />
+        <attr name="radius" format="dimension" />
+        <attr name="barWidth" format="dimension" />
+        <attr name="progressBarLength" format="dimension" />
+        <attr name="contourColor" format="color" />
+        <attr name="contourSize" format="dimension" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+    </declare-styleable>
+
+    <!-- PagerSlidingTabStrip by Andreas Stütz -->
+    <declare-styleable name="KaPagerSlidingTabStrip">
+        <attr name="kaIndicatorColor" format="color" />
+        <attr name="kaUnderlineColor" format="color" />
+        <attr name="kaDividerColor" format="color" />
+        <attr name="kaIndicatorHeight" format="dimension" />
+        <attr name="kaUnderlineHeight" format="dimension" />
+        <attr name="kaDividerPadding" format="dimension" />
+        <attr name="kaTabPaddingLeftRight" format="dimension" />
+        <attr name="kaTabPaddingTop" format="dimension" />
+        <attr name="kaTabPaddingBottom" format="dimension" />
+        <attr name="kaScrollOffset" format="dimension" />
+        <attr name="kaTabBackground" format="reference" />
+        <attr name="kaShouldExpand" format="boolean" />
+        <attr name="kaTextAllCaps" format="boolean" />
+        <attr name="kaTabTextSize" format="dimension" />
+        <attr name="kaTabTextHighlightedColor" format="color" />
+        <attr name="kaTabTextDefaultColor" format="color" />
+        <attr name="kaTabTextFontStyle" format="enum">
+            <enum name="roboto_light" value="0" />
+            <enum name="roboto_light_italics" value="1" />
+            <enum name="roboto_regular" value="2" />
+            <enum name="roboto_regular_italics" value="3" />
+            <enum name="roboto_medium" value="4" />
+            <enum name="roboto_medium_italics" value="5" />
+            <enum name="roboto_bold" value="6" />
+            <enum name="roboto_bold_italics" value="7" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CircularProgressBar">
+        <attr name="cpb_hasShadow" format="boolean" />
+        <attr name="cpb_progressColor" format="string" />
+        <attr name="cpb_backgroundColor" format="string" />
+        <attr name="cpb_title" format="string" />
+        <attr name="cpb_titleColor" format="string" />
+        <attr name="cpb_subtitle" format="string" />
+        <attr name="cpb_subtitleColor" format="string" />
+        <attr name="cpb_strokeWidth" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="BlinkingLoader">
+        <attr name="dot_width" format="dimension" />
+        <attr name="dot_height" format="dimension" />
+        <attr name="dot_margin" format="dimension" />
+        <attr name="dot_animator" format="reference" />
+        <attr name="dot_animator_reverse" format="reference" />
+        <attr name="dot_blinkingColor" format="color" />
+        <attr name="dot_neutralColor" format="color" />
+        <attr name="dot_background" format="reference" />
+        <attr name="dot_num_dots" format="integer" />
+        <attr name="auto_start" format="boolean" />
+        <attr name="dot_orientation" format="enum">
+            <!-- Defines an horizontal widget. -->
+            <enum name="horizontal" value="0" />
+            <!-- Defines a vertical widget. -->
+            <enum name="vertical" value="1" />
+        </attr>
+
+        <attr name="dot_gravity">
+            <!-- Push object to the top of its container, not changing its size. -->
+            <flag name="top" value="0x30" />
+            <!-- Push object to the bottom of its container, not changing its size. -->
+            <flag name="bottom" value="0x50" />
+            <!-- Push object to the left of its container, not changing its size. -->
+            <flag name="left" value="0x03" />
+            <!-- Push object to the right of its container, not changing its size. -->
+            <flag name="right" value="0x05" />
+            <!-- Place object in the vertical center of its container, not changing its size. -->
+            <flag name="center_vertical" value="0x10" />
+            <!-- Grow the vertical size of the object if needed so it completely fills its container. -->
+            <flag name="fill_vertical" value="0x70" />
+            <!-- Place object in the horizontal center of its container, not changing its size. -->
+            <flag name="center_horizontal" value="0x01" />
+            <!-- Grow the horizontal size of the object if needed so it completely fills its container. -->
+            <flag name="fill_horizontal" value="0x07" />
+            <!-- Place the object in the center of its container in both the vertical and horizontal axis, not changing its size. -->
+            <flag name="center" value="0x11" />
+            <!-- Grow the horizontal and vertical size of the object if needed so it completely fills its container. -->
+            <flag name="fill" value="0x77" />
+            <!-- Additional option that can be set to have the top and/or bottom edges of
+            the child clipped to its container's bounds.
+            The clip will be based on the vertical gravity: a top gravity will clip the bottom
+            edge, a bottom gravity will clip the top edge, and neither will clip both edges. -->
+            <flag name="clip_vertical" value="0x80" />
+            <!-- Additional option that can be set to have the left and/or right edges of
+            the child clipped to its container's bounds.
+            The clip will be based on the horizontal gravity: a left gravity will clip the right
+            edge, a right gravity will clip the left edge, and neither will clip both edges. -->
+            <flag name="clip_horizontal" value="0x08" />
+            <!-- Push object to the beginning of its container, not changing its size. -->
+            <flag name="start" value="0x00800003" />
+            <!-- Push object to the end of its container, not changing its size. -->
+            <flag name="end" value="0x00800005" />
+        </attr>
+
+    </declare-styleable>
+
+    <declare-styleable name="DuCircleView">
+        <attr name="du_radius" format="dimension" />
+        <attr name="du_color" format="color" />
+        <attr name="du_filled" format="boolean" />
+    </declare-styleable>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="SiriWaveView">
+        <attr name="waveFrequency" format="float" />
+        <attr name="waveIdleAmplitude" format="float" />
+        <attr name="wavePhaseShift" format="float" />
+        <attr name="waveInitialPhaseOffset" format="float" />
+        <attr name="waveHeight" format="dimension" />
+        <attr name="waveVerticalPosition" format="float" />
+        <attr name="waveColor" format="color" />
+        <attr name="waveAmount" format="integer" />
+    </declare-styleable>
+
+</resources>

@@ -21,7 +21,9 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
+import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
+import kore.botssdk.view.BotListViewTemplateView;
 import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableView;
@@ -227,13 +229,6 @@ public class ViewProvider {
        return  barChartView;
     }
 
-    public static HorizontalBarChartView getHorizontalBarChartView(Context context){
-        HorizontalBarChartView horizontalBarChartView = new HorizontalBarChartView(context);
-        horizontalBarChartView.setId(BubbleConstants.HORIZONTAL_BARCHART_VIEW_ID);
-        return  horizontalBarChartView;
-    }
-
-
     public static StackedBarChatView getStackedBarChartView(Context context){
         StackedBarChatView barChartView = new StackedBarChatView(context);
         barChartView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
@@ -303,7 +298,7 @@ public class ViewProvider {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10);
         textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-        KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
+        KaFontUtils.setCustomTypeface(textView, KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
     }
 
@@ -317,6 +312,26 @@ public class ViewProvider {
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
       //  KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
+    }
+
+    //Added by Sudheer
+
+    public static HorizontalBarChartView getHorizontalBarChartView(Context context){
+        HorizontalBarChartView horizontalBarChartView = new HorizontalBarChartView(context);
+        horizontalBarChartView.setId(BubbleConstants.HORIZONTAL_BARCHART_VIEW_ID);
+        return  horizontalBarChartView;
+    }
+
+    public static BotFormTemplateView getBotFormTemplateView(Context context){
+        BotFormTemplateView botFormTemplateView = new BotFormTemplateView(context);
+        botFormTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  botFormTemplateView;
+    }
+
+    public static BotListViewTemplateView getBotListViewTempleteView(Context context){
+        BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);
+        botListTemplateView.setId(LIST_ID);
+        return botListTemplateView;
     }
 
 }

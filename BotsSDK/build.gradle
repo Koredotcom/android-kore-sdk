@@ -29,6 +29,14 @@ allprojects {
     }
 }
 
+ext {
+    runnerVersion = "1.1.1"
+    rulesVersion = "1.1.1"
+    espressoVersion = "3.0.1"
+    archLifecycleVersion = "1.1.1"
+    archRoomVersion = "1.1.1"
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
