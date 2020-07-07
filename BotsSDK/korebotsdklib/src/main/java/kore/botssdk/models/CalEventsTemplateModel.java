@@ -304,7 +304,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
         boolean checkState;
         public String getEmail() {
-            return email!=null?email:emailId;
+            return email!=null&&!TextUtils.isEmpty(email.trim())?email:emailId;
         }
 
         public void setEmail(String email) {
