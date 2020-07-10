@@ -305,6 +305,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
                 if (composeFooterInterface != null)
                     composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_TASK_VIEW, extras);
             }
+        }else{
+            composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL, extras);
         }
     }
 
