@@ -225,7 +225,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         welcomeSummaryView.populateData(null, false);
         welcomeSummaryView.setVisibility(GONE);
-        universalSearchView.populateData(null);
+        universalSearchView.populateData(null,false);
         universalSearchView.setVisibility(GONE);
         koraSummaryHelpView.populateData(null);
         koraSummaryHelpView.setVisibility(GONE);
@@ -496,7 +496,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 }else if(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equalsIgnoreCase(payInner.getTemplate_type())){
                     universalSearchView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    universalSearchView.populateData(payInner.getUniversalSearchModels());
+                    universalSearchView.populateData(payInner.getUniversalSearchModels(),isLastItem);
                 }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());

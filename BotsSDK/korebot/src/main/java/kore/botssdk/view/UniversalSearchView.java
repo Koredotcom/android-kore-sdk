@@ -160,7 +160,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     }
 
 
-    public void populateData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel) {
+    public void populateData(ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel,boolean enable) {
 
 
         if (adapter == null) {
@@ -182,7 +182,8 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
                 auth_view.setVisibility(GONE);
             }
 
-
+            text_ask_action.setEnabled(enable);
+            text_ask_action.setAlpha(enable ? 1.0f : 0.5f);
             if (isAskRequired && askExpert != null) {
                 askexpert_layout.setVisibility(VISIBLE);
                 text_ask.setText(askExpert.getText());
