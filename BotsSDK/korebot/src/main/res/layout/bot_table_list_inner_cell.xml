@@ -54,7 +54,7 @@
             android:paddingTop="2dp"
             android:text="Subtitle"
             android:textColor="@color/footer_color_dark_grey"
-            android:textSize="12dp" />
+            android:textSize="@dimen/text_size_sub_header" />
 
     </LinearLayout>
 
@@ -67,7 +67,6 @@
         android:ellipsize="end"
         android:textStyle="bold"
         android:maxLines="1"
-        android:layout_marginRight="25dp"
         android:text="Title"
         android:textSize="14dp"
         android:textColor="@color/listview_cost"

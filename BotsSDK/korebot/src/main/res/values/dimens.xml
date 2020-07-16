@@ -37,6 +37,9 @@
     <!-- Text Sizes -->
     <dimen name="text_size_small">12dp</dimen>
     <dimen name="text_size_normal">14dp</dimen>
+    <dimen name="text_size_sub_header">16dp</dimen>
+
+    <dimen name="bottom_options_icon_width">30dp</dimen>
 
     <!--Line chart View-->
     <dimen name="line_layout_height">300dp</dimen>

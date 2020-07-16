@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/carousel_view_button_height"
+    android:layout_margin="@dimen/dimen_5dp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:background="@color/readReceiptLightGrey"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_15dp">
+
+        <TextView
+            android:id="@+id/bot_list_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/left_bubble_text_color"
+            android:textSize="@dimen/text_size_sub_header" />
+
+        <TextView
+            android:id="@+id/bot_list_item_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textColor="@color/left_bubble_text_color"
+            android:textSize="@dimen/text_size_sub_header" />
+
+
+    </LinearLayout>
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/botTableListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#ffffff"
+        android:dividerHeight="10dp"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:padding="2dp"
+        android:scrollbars="none" />
+
+</LinearLayout>

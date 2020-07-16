@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import net.gotev.speech.GoogleVoiceTypingDisabledException;
 import net.gotev.speech.Speech;
@@ -43,10 +44,13 @@ import java.util.List;
 import java.util.Locale;
 
 import kore.botssdk.R;
+import kore.botssdk.dialogs.ListActionSheetFragment;
+import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.Utility;
 
@@ -68,14 +72,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     protected TextView speakerText;
     protected LinearLayout mainContentLayout;
     protected LinearLayout defaultFooterLayout;
-    //    protected RippleView rec_audio;
     protected ImageView rec_audio_img;
     protected ImageView audio_speak_tts;
     protected  ImageView keyboard_img;
+    protected ImageView newMenuLogo;
     private SpeechProgressView progress;
     private TextView text_view_speech;
-    //    private RawAudioRecorder mRecordingThread;
-//    private ProgressBar loadingTasksProgressBar,progressBarAudio;
     private static final int REQUEST_RECORD_AUDIO = 13;
 
     public boolean isDisabled() {
@@ -92,6 +94,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 //    private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
     private LinearLayout linearLayoutProgress;
+    private BotOptionsModel botOptionsModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,7 +136,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         keyboard_img = (ImageView)view.findViewById(R.id.keyboard_image);
         audio_speak_tts = (ImageView) view.findViewById(R.id.audio_speak_tts);
         linearLayoutProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
-
+        newMenuLogo = (ImageView)view.findViewById(R.id.newMenuLogo);
         progress = (SpeechProgressView) view.findViewById(R.id.progress);
         int[] colors = {
                 getContext().getResources().getColor(android.R.color.black),
@@ -176,7 +179,21 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         });
         audio_speak_tts.setOnClickListener(onTTSEnableSwitchClickListener);
         rec_audio_img.setOnClickListener(onVoiceModeActivated);
-
+        newMenuLogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(botOptionsModel != null && botOptionsModel.getTasks() != null && botOptionsModel.getTasks().size() > 0)
+                {
+                    OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
+                    bottomSheetDialog.setisFromFullView(false);
+                    bottomSheetDialog.setSkillName("skillName","trigger");
+                    bottomSheetDialog.setData(botOptionsModel);
+                    bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
+                    bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
+                }
+            }
+        });
     }
 
     private void toggleTTSButton() {
@@ -201,6 +218,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setBottomOptionData(BotOptionsModel botOptionsModel) {
+        this.botOptionsModel = botOptionsModel;
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
@@ -265,7 +286,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         public void onClick(View v) {
 
                 animateLayoutVisible(mainContentLayout);
-
+                animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
                 editTextMessage.requestFocus();
                 Utility.showVirtualKeyboard(getActivity(),editTextMessage);

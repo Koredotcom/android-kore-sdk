@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,6 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 public class BotListViewTemplateAdapter extends BaseAdapter {
 
     String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
-
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -34,18 +34,20 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     Context context;
     RoundedCornersTransform roundedCornersTransform;
     ListView parentListView;
+    int count = 0;
 
-    public BotListViewTemplateAdapter(Context context, ListView parentListView) {
+    public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
+        this.count = count;
     }
 
     @Override
     public int getCount() {
         if (botListModelArrayList != null) {
-            return botListModelArrayList.size() > 4 ? 4 : botListModelArrayList.size();
+            return botListModelArrayList.size() > count ? count : botListModelArrayList.size();
         } else {
             return 0;
         }
@@ -85,6 +87,8 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
     private void populateVIew(ViewHolder holder, int position) {
         BotListModel botListModel = getItem(position);
+        holder.botListItemImage.setVisibility(View.GONE);
+
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
@@ -94,6 +98,10 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.bot_list_item_cost.setText(botListModel.getValue());
+
+        if(botListModel.getColor() != null)
+            holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));
+
         holder.bot_list_item_cost.setTypeface(null, Typeface.BOLD);
 
         if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {

@@ -45,6 +45,9 @@ public class PayloadInner {
     private String composeText;
     private String focus;
     private String heading;
+    private String title;
+    private String endDate;
+    private String format;
 
     private boolean is_end;
 
@@ -101,8 +104,6 @@ public class PayloadInner {
         this.layout = layout;
     }
 
-
-
     public boolean isStacked() {
         return stacked;
     }
@@ -147,6 +148,36 @@ public class PayloadInner {
     public String getHeading()
     {
         return heading;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setEndDate(String endDate)
+    {
+        this.endDate = endDate;
+    }
+
+    public String getEndDate()
+    {
+        return endDate;
+    }
+
+    public void setFormat(String endDate)
+    {
+        this.format = format;
+    }
+
+    public String getFormat()
+    {
+        return format;
     }
 
     public String getAuto_adjust_X_axis() {
@@ -263,6 +294,7 @@ public class PayloadInner {
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
+    private ArrayList<BotTableListModel> tableListElements;
 
     public List<AnnoucementResModel> getAnnouncementResModels() {
         return announcementResModels;
@@ -420,6 +452,10 @@ public class PayloadInner {
         return listElements;
     }
 
+    public ArrayList<BotTableListModel> getTableListElements() {
+        return tableListElements;
+    }
+
     public ArrayList<KoraUniversalSearchModel> getUniversalSearchModels() {
         return universalSearchModels;
     }
@@ -468,6 +504,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<BotListModel>>() {
                         }.getType();
                         listElements = gson.fromJson(elementsAsString, listType);
+                    }else if (BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(template_type)) {
+                        Type listType = new TypeToken<ArrayList<BotTableListModel>>() {
+                        }.getType();
+                        tableListElements = gson.fromJson(elementsAsString, listType);
                     }else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(template_type)) {
                         Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
                         }.getType();

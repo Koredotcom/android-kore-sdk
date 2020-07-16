@@ -26,6 +26,7 @@ import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotListViewTemplateView;
 import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
+import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
@@ -332,6 +333,12 @@ public class ViewProvider {
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);
         botListTemplateView.setId(LIST_ID);
         return botListTemplateView;
+    }
+
+    public static BotTableListTemplateView getBotTableListTempleteView(Context context){
+        BotTableListTemplateView botTableListTemplateView = new BotTableListTemplateView(context);
+        botTableListTemplateView.setId(BubbleConstants.TABLE_LIST_TEMPLATE_ID);
+        return botTableListTemplateView;
     }
 
 }

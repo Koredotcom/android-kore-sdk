@@ -5,10 +5,16 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
 
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -34,6 +47,9 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
+import kore.botssdk.dialogs.CalenderActionSheetFragment;
+import kore.botssdk.dialogs.DateRangeCalendarActionSheetFragment;
+import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -56,6 +72,7 @@ import kore.botssdk.net.SDKConfiguration.Client;
 import kore.botssdk.retroresponse.ServerBotMsgResponse;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
@@ -90,8 +107,16 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private Gson gson = new Gson();
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
-
     private int offset = 0;
+
+    //Date Range
+    private long today;
+    private long nextMonth;
+    private long janThisYear;
+    private long decThisYear;
+    private long oneYearForward;
+    private Pair<Long, Long> todayPair;
+    private Pair<Long, Long> nextMonthPair;
 
     @Nullable
     @Override
@@ -178,6 +203,75 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public void setQuickRepliesIntoFooter(BotResponse botResponse) {
         ArrayList<QuickReplyTemplate> quickReplyTemplates = getQuickReplies(botResponse);
         quickReplyView.populateQuickReplyView(quickReplyTemplates);
+    }
+
+    public void showCalendarIntoFooter(BotResponse botResponse)
+    {
+        if (botResponse != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+            if (compModel != null) {
+                String compType = compModel.getType();
+                if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
+                    PayloadOuter payOuter = compModel.getPayload();
+                    PayloadInner payInner = payOuter.getPayload();
+                    if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                    {
+                        CalenderActionSheetFragment bottomSheetDialog = new CalenderActionSheetFragment();
+                        bottomSheetDialog.setisFromFullView(false);
+                        bottomSheetDialog.setSkillName("skillName","trigger");
+                        bottomSheetDialog.setData(payInner);
+                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
+                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
+
+//                        DateRangeCalendarActionSheetFragment bottomSheetDialog = new DateRangeCalendarActionSheetFragment();
+//                        bottomSheetDialog.setisFromFullView(false);
+//                        bottomSheetDialog.setSkillName("skillName","trigger");
+//                        bottomSheetDialog.setData(payInner);
+//                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
+//                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
+                    }
+                    else if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type()))
+                    {
+                        initSettings();
+
+                        MaterialDatePicker.Builder<Pair<Long, Long>> builder =  MaterialDatePicker.Builder.dateRangePicker();
+                        builder.setTitleText(payInner.getTitle());
+                        builder.setCalendarConstraints(limitRange(payInner.getEndDate(), payInner.getFormat()).build());
+                        try
+                        {
+                            MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
+                            picker.show(getFragmentManager(), picker.toString());
+                            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
+                                @Override public void onPositiveButtonClick(Pair<Long,Long> selection) {
+                                    Long startDate = selection.first;
+                                    Long endDate = selection.second;
+
+                                    Calendar cal = Calendar.getInstance();
+                                    cal.setTimeInMillis(startDate);
+                                    int strYear = cal.get(Calendar.YEAR);
+                                    int strMonth = cal.get(Calendar.MONTH);
+                                    int strDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                                    cal.setTimeInMillis(endDate);
+                                    int endYear = cal.get(Calendar.YEAR);
+                                    int endMonth = cal.get(Calendar.MONTH);
+                                    int endDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                                    String formatedDate = "";
+                                        formatedDate = DateUtils.getMonthName(strMonth)+" "+strDay+DateUtils.getDayOfMonthSuffix(strDay)+", "+strYear;
+                                        formatedDate = formatedDate +" to "+ DateUtils.getMonthName(endMonth)+" "+endDay+DateUtils.getDayOfMonthSuffix(endDay)+", "+endYear;
+
+
+                                    if(!formatedDate.isEmpty())
+                                        composeFooterInterface.onSendClick(formatedDate, false);
+                                }
+                            });
+                        }
+                        catch (IllegalArgumentException e) {}
+                    }
+                }
+            }
+        }
     }
 
     private ArrayList<QuickReplyTemplate> getQuickReplies(BotResponse botResponse) {
@@ -332,6 +426,125 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
             }
         });
+    }
+
+    private void initSettings() {
+        today = MaterialDatePicker.todayInUtcMilliseconds();
+        Calendar calendar = getClearedUtc();
+        calendar.setTimeInMillis(today);
+        calendar.roll(Calendar.MONTH, 1);
+        nextMonth = calendar.getTimeInMillis();
+
+        calendar.setTimeInMillis(today);
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        janThisYear = calendar.getTimeInMillis();
+        calendar.setTimeInMillis(today);
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        decThisYear = calendar.getTimeInMillis();
+
+        calendar.setTimeInMillis(today);
+        calendar.roll(Calendar.YEAR, 1);
+        oneYearForward = calendar.getTimeInMillis();
+
+        todayPair = new Pair<>(today, today);
+        nextMonthPair = new Pair<>(nextMonth, nextMonth);
+    }
+
+    private static Calendar getClearedUtc() {
+        Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        utc.clear();
+        return utc;
+    }
+
+    /*
+      Limit selectable Date range
+    */
+    private CalendarConstraints.Builder limitRange(String date, String format) {
+
+        CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+
+        Calendar calendarStart = Calendar.getInstance();
+        Calendar calendarEnd = Calendar.getInstance();
+
+//        int year = 2020;
+//        int startMonth = 1;
+//        int startDate = 1;
+//
+//        calendarStart.set(year, startMonth - 1, startDate);
+
+        Date endDate = stringToDate(date, format);
+        calendarStart.setTime(endDate);
+
+        long minDate = calendarStart.getTimeInMillis();
+        long maxDate = calendarEnd.getTimeInMillis();
+
+
+        constraintsBuilderRange.setStart(minDate);
+        constraintsBuilderRange.setEnd(maxDate);
+        constraintsBuilderRange.setValidator(new RangeValidator(minDate, maxDate));
+
+        return constraintsBuilderRange;
+    }
+
+    private Date stringToDate(String aDate,String aFormat) {
+
+        SimpleDateFormat format = new SimpleDateFormat("M-DD-YYYY");
+        try
+        {
+            Date date = format.parse(aDate);
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    static class RangeValidator implements CalendarConstraints.DateValidator {
+
+        long minDate, maxDate;
+
+        RangeValidator(long minDate, long maxDate) {
+            this.minDate = minDate;
+            this.maxDate = maxDate;
+        }
+
+        RangeValidator(Parcel parcel) {
+            minDate = parcel.readLong();
+            maxDate = parcel.readLong();
+        }
+
+        @Override
+        public boolean isValid(long date) {
+            return !(minDate > date || maxDate < date);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(minDate);
+            dest.writeLong(maxDate);
+        }
+
+        public static final Parcelable.Creator<RangeValidator> CREATOR = new Parcelable.Creator<RangeValidator>() {
+
+            @Override
+            public RangeValidator createFromParcel(Parcel parcel) {
+                return new RangeValidator(parcel);
+            }
+
+            @Override
+            public RangeValidator[] newArray(int size) {
+                return new RangeValidator[size];
+            }
+        };
+
+
     }
 
 

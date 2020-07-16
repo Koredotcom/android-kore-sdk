@@ -57,6 +57,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
     public static final String TEMPLATE_TYPE_FORM = "form_template";
     public static final String TEMPLATE_TYPE_LIST_VIEW  = "listView";
+    public static final String TEMPLATE_TYPE_DATE = "dateTemplate";
+    public static final String TEMPLATE_TYPE_DATE_RANGE = "daterange";
+    public static final String TEMPLATE_TYPE_TABLE_LIST = "tableList";
 
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";

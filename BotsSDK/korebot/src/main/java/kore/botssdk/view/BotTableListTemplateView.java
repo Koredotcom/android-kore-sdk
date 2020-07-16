@@ -1,34 +1,24 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.text.Html;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListViewTemplateAdapter;
+import kore.botssdk.adapter.BotTableListTemlateAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.dialogs.ListMoreActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
-import kore.botssdk.models.BotListViewMoreDataModel;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
+import kore.botssdk.models.BotTableListModel;
 
-public class BotListViewTemplateView extends LinearLayout {
+public class BotTableListTemplateView extends LinearLayout {
 
     String LOG_TAG = BotListTemplateView.class.getSimpleName();
 
@@ -42,23 +32,23 @@ public class BotListViewTemplateView extends LinearLayout {
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
-    public BotListViewTemplateView(Context context) {
+    public BotTableListTemplateView(Context context) {
         super(context);
         init();
     }
 
-    public BotListViewTemplateView(Context context, AttributeSet attrs) {
+    public BotTableListTemplateView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BotListViewTemplateView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BotTableListTemplateView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list_view_template, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.bot_table_list_template_view, this, true);
         botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
@@ -68,61 +58,21 @@ public class BotListViewTemplateView extends LinearLayout {
 
     }
 
-    public void populateListTemplateView(BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList) {
-
-        if(botListViewMoreDataModel != null)
-            Log.e("More Data", botListViewMoreDataModel.getTab1().toString());
-
+    public void populateListTemplateView(ArrayList<BotTableListModel> botListModelArrayList)
+    {
         if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
-            BotListViewTemplateAdapter botListTemplateAdapter;
+            BotTableListTemlateAdapter botListTemplateAdapter;
             if (autoExpandListView.getAdapter() == null) {
-                botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, 4);
+                botListTemplateAdapter = new BotTableListTemlateAdapter(getContext(), autoExpandListView, 4);
                 autoExpandListView.setAdapter(botListTemplateAdapter);
                 botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
                 botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             } else {
-                botListTemplateAdapter = (BotListViewTemplateAdapter) autoExpandListView.getAdapter();
+                botListTemplateAdapter = (BotTableListTemlateAdapter) autoExpandListView.getAdapter();
             }
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.notifyDataSetChanged();
             botCustomListRoot.setVisibility(VISIBLE);
-            if(botButtonModelArrayList != null && botButtonModelArrayList.size() > 0)
-            {
-                botCustomListViewButton.setText(Html.fromHtml("<u>"+botButtonModelArrayList.get(0).getTitle()+"</u>"));
-                botCustomListViewButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName","trigger");
-                        bottomSheetDialog.setData(botListViewMoreDataModel);
-                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-                        bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
-                    }
-                });
-
-
-                botCustomListViewButton.setVisibility(botListModelArrayList.size() > 4 ? VISIBLE : GONE);
-            }
-            else
-            {
-                workBenchListViewButton.setVisibility(botListModelArrayList.size() > 4 ? VISIBLE : GONE);
-                workBenchListViewButton.setOnClickListener(new OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        ListMoreActionSheetFragment bottomSheetDialog = new ListMoreActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName","trigger");
-                        bottomSheetDialog.setData(botListModelArrayList);
-                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-                        bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
-                    }
-                });
-            }
         }
         else
         {
@@ -214,4 +164,3 @@ public class BotListViewTemplateView extends LinearLayout {
 //        }
 //    }
 }
-

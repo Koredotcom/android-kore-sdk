@@ -131,6 +131,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected HorizontalBarChartView horizontalBarChartView;
     protected BotFormTemplateView botFormTemplateView;
     protected BotListViewTemplateView botListViewTemplateView;
+    protected BotTableListTemplateView botTableListTemplateView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -373,6 +374,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botListViewTemplateView = ViewProvider.getBotListViewTempleteView(context);
         botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botListViewTemplateView);
+
+        botTableListTemplateView = ViewProvider.getBotTableListTempleteView(context);
+        botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(botTableListTemplateView);
     }
 
 
@@ -455,6 +460,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botListViewTemplateView != null) {
             botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if (botTableListTemplateView != null) {
+            botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -481,6 +490,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (botListViewTemplateView != null) {
             botListViewTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botTableListTemplateView != null) {
+            botTableListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
