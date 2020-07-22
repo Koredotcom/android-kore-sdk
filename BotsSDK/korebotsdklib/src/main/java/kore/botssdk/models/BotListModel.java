@@ -1,15 +1,18 @@
 package kore.botssdk.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Pradeep Mahato on 21/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotListModel {
+public class BotListModel implements Serializable {
     String title;
     String image_url;
     String subtitle;
+    String value;
+    String color;
     BotListDefaultModel default_action;
     ArrayList<BotListElementButton> buttons;
 
@@ -31,5 +34,25 @@ public class BotListModel {
 
     public ArrayList<BotListElementButton> getButtons() {
         return buttons;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setColor(String color)
+    {
+        this.color = color;
+    }
+
+    public String getColor()
+    {
+        return color;
     }
 }

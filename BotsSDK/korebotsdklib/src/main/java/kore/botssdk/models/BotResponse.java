@@ -56,6 +56,7 @@ public class BotResponse extends BaseBotMessage {
 
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_TYPE_FREEMIUM = "custom_button_template";
+    public static final String TEMPLATE_TABLE_LIST = "tableList";
 
     public static final String FOLLOWUP_MEETTING_PREVIEW = "followup_meetings_preview_template";
     //widgets

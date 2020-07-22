@@ -82,6 +82,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_SEPARATION_DISTANCE = 0;
     protected int BUBBLE_GROUPING_TIMELINE = 0;
     protected int BUBBLE_READ_RECEIPT = 0;
+    protected int BUBBLE_CONTENT_RIGHT_LIST_MARGIN = 50;
 
     Paint paint;
 
@@ -114,6 +115,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected ContactInfoView contactInfoView;
     protected FreemiumView freemiumView;
     protected MeetingFollowupView meetingFollowupView;
+    protected BotTableListTemplateView tableListTemplateView;
 
     protected WelcomeSummaryView welcomeSummaryView;
     protected UniversalSearchView universalSearchView;
@@ -206,6 +208,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             BUBBLE_CONTENT_LEFT_MARGIN = (int) dp14;
             BUBBLE_CONTENT_TOP_MARGIN = 0;
             BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp14;
+            BUBBLE_CONTENT_RIGHT_LIST_MARGIN = (int) (dp1 * 40);
             BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 21 * dp1);
             senderImageRadius = (int) (dp1 * 17); // Change this value if sender image width and height is changed
             bubbleCornerRadius = (int) dp15;
@@ -292,6 +295,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         freemiumView.setComposeFooterInterface(composeFooterInterface);
         freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         addView(freemiumView);
+
+        tableListTemplateView = ViewProvider.getBotTableListTemplateView(context);
+        tableListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        tableListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        addView(tableListTemplateView);
+
 
         meetingFollowupView = ViewProvider.getFollowUpMeetingView(context);
         meetingFollowupView.setComposeFooterInterface(composeFooterInterface);
@@ -414,6 +423,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(freemiumView!=null){
             freemiumView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if(tableListTemplateView!=null){
+            tableListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
         if(meetingFollowupView!=null){
             meetingFollowupView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -455,6 +468,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(freemiumView!=null) {
             freemiumView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+
+        if(tableListTemplateView!=null) {
+            tableListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if(meetingFollowupView!=null) {
             meetingFollowupView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

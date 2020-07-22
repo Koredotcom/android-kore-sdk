@@ -182,4 +182,8 @@
     <color name="color_f98140">#f98140</color>
     <color name="color_38c9e1">#38c9e1</color>
     <color name="color_3E3E51">#3e3e51</color>
+
+    <color name="date_picker_color">#008577</color>
+    <color name="listview_cost">#008000</color>
+
 </resources>

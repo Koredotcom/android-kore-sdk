@@ -47,6 +47,34 @@ public class PayloadInner {
     private String composeText;
     private String focus;
 
+    private String title;
+    private String endDate;
+    private String format;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
     private boolean is_end;
 
     public boolean isIs_end() {
@@ -250,6 +278,11 @@ public class PayloadInner {
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
+    private ArrayList<BotTableListModel> tableListElements;
+
+    public ArrayList<BotTableListModel> getTableListElements() {
+        return tableListElements;
+    }
 
     public List<AnnoucementResModel> getAnnouncementResModels() {
         return announcementResModels;
@@ -450,6 +483,10 @@ public class PayloadInner {
                     }.getType();
                     lineChartDataModels = gson.fromJson(elementsAsString, listType);
 
+                } else if (BotResponse.TEMPLATE_TABLE_LIST.equalsIgnoreCase(template_type)) {
+                    Type listType = new TypeToken<ArrayList<BotTableListModel>>() {
+                    }.getType();
+                    tableListElements = gson.fromJson(elementsAsString, listType);
                 } else if (BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(template_type)) {
                     Type listType = new TypeToken<ArrayList<BotBarChartDataModel>>() {
                     }.getType();

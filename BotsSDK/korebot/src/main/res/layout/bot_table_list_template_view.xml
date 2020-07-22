@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botCustomListRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_20dp"
+    android:background="@drawable/table_list_bg"
+    android:orientation="vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/botCustomListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/color_dfdfeb"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true"
+        android:padding="2dp"
+        android:scrollbars="none" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/dimen_10dp"
+        android:layout_below="@+id/botCustomListView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="#ffffff" />
+
+    <TextView
+        android:id="@+id/botCustomListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:gravity="right|center_vertical"
+        android:text="more"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/workBenchListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/list_view_template_bg"
+        android:gravity="center"
+        android:text="Show more"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="gone" />
+
+</LinearLayout>

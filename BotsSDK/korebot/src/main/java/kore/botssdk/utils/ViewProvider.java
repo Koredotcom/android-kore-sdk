@@ -21,6 +21,7 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotListTemplateView;
+import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FormActionView;
@@ -68,6 +69,7 @@ public class ViewProvider {
     public static final int TASK_VIEW_ID = 1981234;
     private static final int FREEMIUM_VIEW_ID = 19800567;
     private static final int FOLLoWUP_VIEW_ID = 19800999;
+    private static final int TABLE_LIST_TEMPLATE_VIEW_ID = 19800568;
 
     public static Path RoundedRect(
             float left, float top, float right, float bottom, float rx, float ry,
@@ -241,6 +243,12 @@ public class ViewProvider {
         FreemiumView freemiumView = new FreemiumView(context);
         freemiumView.setId(FREEMIUM_VIEW_ID);
         return freemiumView;
+    }
+
+    public static BotTableListTemplateView getBotTableListTemplateView(Context context){
+        BotTableListTemplateView listTemplateView = new BotTableListTemplateView(context);
+        listTemplateView.setId(TABLE_LIST_TEMPLATE_VIEW_ID);
+        return listTemplateView;
     }
 
 
