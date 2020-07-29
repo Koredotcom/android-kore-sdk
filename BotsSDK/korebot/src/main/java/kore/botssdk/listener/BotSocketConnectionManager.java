@@ -281,7 +281,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     @Override
-    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId) {
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId,String cloudProvider) {
 
     }
 
