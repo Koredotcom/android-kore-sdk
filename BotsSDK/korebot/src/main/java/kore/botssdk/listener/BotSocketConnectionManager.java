@@ -17,6 +17,7 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
 import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
+import kore.botssdk.models.BotData;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
@@ -281,7 +282,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     @Override
-    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId,String cloudProvider) {
+    public void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId, BotData botData) {
 
     }
 

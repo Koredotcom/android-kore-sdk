@@ -3,6 +3,7 @@ package kore.botssdk.listener;
 import android.content.Context;
 
 
+import kore.botssdk.models.BotData;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.UserNameModel;
 import kore.botssdk.net.RestResponse;
@@ -50,5 +51,5 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
     public abstract void subscribe(SocketChatListener listener);
     public abstract void unSubscribe();
     public abstract void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData);
-    public abstract void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId,String cloudProvider);
+    public abstract void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId, BotData botData);
 }
