@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class MeetingConfirmationView extends ViewGroup {
     //private TextView label;
     private TextView slots;
     View time_slots_view;
-
+    ImageView temp_imgloc;
     float dp1;
 
 
@@ -81,6 +82,7 @@ public class MeetingConfirmationView extends ViewGroup {
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
         locationView = (TextView) view.findViewById(R.id.location_view);
+        temp_imgloc=(ImageView)view.findViewById(R.id.temp_imgloc);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
         LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
@@ -140,8 +142,10 @@ public class MeetingConfirmationView extends ViewGroup {
             if (!StringUtils.isNullOrEmptyWithTrim(meetingConfirmationModel.getWhere())) {
                 locationView.setText(meetingConfirmationModel.getWhere());
                 locationView.setVisibility(VISIBLE);
+                temp_imgloc.setVisibility(VISIBLE);
             } else {
                 locationView.setVisibility(GONE);
+                temp_imgloc.setVisibility(GONE);
             }
 
             if(TextUtils.isEmpty(getFormatedAttendiesFromList(meetingConfirmationModel.getAttendees())))
