@@ -89,7 +89,8 @@
             android:id="@+id/location_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:singleLine="true"
+            android:ellipsize="end"
             android:gravity="center|start"
            android:fontFamily="@font/latomedium"
             android:textColor="#485260"
