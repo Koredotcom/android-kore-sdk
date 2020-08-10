@@ -48,7 +48,11 @@ public class PayloadInner {
     private String title;
     private String endDate;
     private String format;
-
+    private String boxShadow;
+    private String seeMore;
+    private int moreCount = 0;
+    private String subtitle;
+    private String image_url;
     private boolean is_end;
 
     public boolean isIs_end() {
@@ -112,7 +116,29 @@ public class PayloadInner {
         this.stacked = stacked;
     }
 
+    public void setMoreCount(int moreCount) {
+        this.moreCount = moreCount;
+    }
 
+    public int getMoreCount() {
+        return moreCount;
+    }
+
+    public String getBoxShadow() {
+        return boxShadow;
+    }
+
+    public void setBoxShadow(String boxShadow) {
+        this.boxShadow = boxShadow;
+    }
+
+    public String getSeeMore() {
+        return seeMore;
+    }
+
+    public void setSeeMore(String seeMore) {
+        this.seeMore = seeMore;
+    }
 
     public String getDirection() {
         return direction;
@@ -158,6 +184,22 @@ public class PayloadInner {
     public String getTitle()
     {
         return title;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
+
+    public String getSubtitle() {
+        return subtitle;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public String getImage_url() {
+        return image_url;
     }
 
     public void setEndDate(String endDate)

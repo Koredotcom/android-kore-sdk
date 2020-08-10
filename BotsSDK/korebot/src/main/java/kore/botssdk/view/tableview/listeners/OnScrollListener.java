@@ -36,7 +36,7 @@ public interface OnScrollListener {
         }
 
         /**
-         * Gives the value known by the {@link android.widget.AbsListView.OnScrollListener} defined in the
+         * Gives the value known by the {@link AbsListView.OnScrollListener} defined in the
          * {@link AbsListView}.
          *
          * @return The {@link AbsListView} scroll state value.

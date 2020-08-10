@@ -6,6 +6,9 @@
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
 
+    <color name="colorPrimary">#008577</color>
+    <color name="colorAccent">#D81B60</color>
+
     <color name="mentionsAndHashTagColor">#6CC24A</color>
 
     <!-- Bubble Update(Sprint7) -->

@@ -60,6 +60,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_DATE = "dateTemplate";
     public static final String TEMPLATE_TYPE_DATE_RANGE = "daterange";
     public static final String TEMPLATE_TYPE_TABLE_LIST = "tableList";
+    public static final String TEMPLATE_TYPE_WELCOME_QUICK_REPLIES = "quick_replies_welcome";
+    public static final String TEMPLATE_TYPE_NOTIFICATIONS = "Notification";
 
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
@@ -81,15 +83,31 @@ public class BotResponse extends BaseBotMessage {
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";
 
-
-
     public static final String US_MEETING_NOTES_TYPE="MeetingNotes";
     public static final String US_EMAIL_TYPE="Email";
     public static final String US_KNOWLEDGE_TYPE="Article";
     public static final String US_FILES_TYPE="Files";
     public static final String US_KNOWLEDGE_COLLECTION_TYPE="KnowledgeCollection";
 
+    //Theme Properties
+    public static final String THEME_NAME = "THEME_NAME";
+    public static final String BUBBLE_LEFT_BG_COLOR = "BUBBLE_LEFT_BG_COLOR";
+    public static final String BUBBLE_RIGHT_BG_COLOR = "BUBBLE_RIGHT_BG_COLOR";
+    public static final String BUBBLE_LEFT_TEXT_COLOR = "BUBBLE_LEFT_TEXT_COLOR";
+    public static final String BUBBLE_RIGHT_TEXT_COLOR = "BUBBLE_RIGHT_TEXT_COLOR";
+    public static final String BUTTON_ACTIVE_BG_COLOR = "BUTTON_ACTIVE_BG_COLOR";
+    public static final String BUTTON_ACTIVE_TXT_COLOR = "BUTTON_ACTIVE_TXT_COLOR";
+    public static final String BUTTON_INACTIVE_BG_COLOR = "BUTTON_INACTIVE_BG_COLOR";
+    public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
 
+    public static final String BOT_CHAT_BUBBLE_BACKGROUND_COLOR="Bot chat bubble background color";
+    public static final String BOT_CHAT_BUBBLE_TEXT_COLOR="Bot chat bubble text color";
+    public static final String USER_CHAT_BUBBLE_BACKGROUND_COLOR="User chat bubble background color";
+    public static final String USER_CHAT_BUBBLE_TEXT_COLOR="User chat bubble text color";
+    public static final String BUTTON_ACTIVE_BACKGROUND_COLOR="Button active background color";
+    public static final String BUTTON_ACTIVE_TEXT_COLOR="Button active text color";
+    public static final String BUTTON_INACTIVE_BACKGROUND_COLOR = "Button inactive background color";
+    public static final String BUTTON_INACTIVE_TEXT_COLOR = "Button inactive text color";
 
 
     private String type;

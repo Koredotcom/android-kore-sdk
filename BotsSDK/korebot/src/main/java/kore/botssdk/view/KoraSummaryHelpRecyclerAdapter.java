@@ -31,13 +31,13 @@ public class KoraSummaryHelpRecyclerAdapter extends RecyclerView.Adapter<KoraSum
 
     @NonNull
     @Override
-    public KoraSummaryHelpRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         SummaryHelpListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.summary_help_list_item, parent, false);
-        return new KoraSummaryHelpRecyclerAdapter.ViewHolder(binding);
+        return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull KoraSummaryHelpRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         WelcomeChatSummaryModel model = summaryList.get(position);
         holder.bind(model);
 

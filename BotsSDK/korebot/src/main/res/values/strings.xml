@@ -89,7 +89,7 @@
         <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
      ]]>
     </string>
-
+    <string name="save">Save</string>
 
 
 </resources>

@@ -97,7 +97,7 @@ public class HeaderLayout extends ViewGroup {
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
 
         int childWidthSpec, childHeightSpec;
-        int wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         int containerWidth = 0;
 
         final int count = getChildCount();
@@ -108,7 +108,7 @@ public class HeaderLayout extends ViewGroup {
 
             switch (child.getId()) {
                 case HEADER_TEXTVIEW_ID:
-                    childWidthSpec = MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+                    childWidthSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
                     MeasureUtils.measure(child, childWidthSpec, wrapSpec);
                     childHeight = child.getMeasuredHeight();
                     break;

@@ -11,6 +11,8 @@ public class BotButtonModel implements MultiSelectBase {
     String url;
     String title;
     String payload;
+    String name;
+    BotOptionPostBackModel botOptionPostBackModel;
 
     public boolean isIs_actionable() {
         return is_actionable;
@@ -82,4 +84,20 @@ public class BotButtonModel implements MultiSelectBase {
     }
 
     private ImageModel image;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BotOptionPostBackModel getBotOptionPostBackModel() {
+        return botOptionPostBackModel;
+    }
+
+    public void setBotOptionPostBackModel(BotOptionPostBackModel botOptionPostBackModel) {
+        this.botOptionPostBackModel = botOptionPostBackModel;
+    }
 }

@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -33,6 +34,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.events.ProfileColorUpdateEvent;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
@@ -53,23 +55,22 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 public class TextMediaLayout extends ViewGroup {
 
     private TextView botContentTextView;
-
     private float restrictedLayoutWidth;
     public int gravity = 0;
     public int widthStyle = 0;
 
     float dp1;
     private Context mContext;
-//    final String TEXT_COLOR = "#000000";
+    //    final String TEXT_COLOR = "#000000";
     private int linkTextColor;
     private Typeface medium, regular;
-    private GradientDrawable rightDrawable;
+    private GradientDrawable rightDrawable, leftDrawable;
     private int transparency;
 
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
     private Gson gson = new Gson();
-
+    private String leftbgColor, leftTextColor, rightbgColor, rightTextColor;
     public boolean isClicable() {
         return isClicable;
     }//
@@ -101,11 +102,21 @@ public class TextMediaLayout extends ViewGroup {
         //Add a textView
         botContentTextView = new LinkifyTextView(getContext());
 
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
+        leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleTextColor);
+        rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, SDKConfiguration.BubbleColors.rightBubbleTextColor);
+        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, SDKConfiguration.BubbleColors.rightBubbleSelected);
+
         //Transparency 15%
         transparency = 0x26000000;
         rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
-        rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+        rightDrawable.setColor(Color.parseColor(rightbgColor));
         rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+
+        leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
+        leftDrawable.setColor(Color.parseColor(leftbgColor));
+        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -145,9 +156,9 @@ public class TextMediaLayout extends ViewGroup {
     }*/
 
     private String getRemovedEntityEditString(String _str){
-       String str = _str.replaceAll(REGEX_CHAR,"");
-       str = str.replaceAll("\\s{2,}", " ");
-       return str;
+        String str = _str.replaceAll(REGEX_CHAR,"");
+        str = str.replaceAll("\\s{2,}", " ");
+        return str;
     }
 
     private String getReqText(String str){
@@ -174,7 +185,7 @@ public class TextMediaLayout extends ViewGroup {
 
     public void populateText(String textualContent) {
         if (textualContent != null && !textualContent.isEmpty()) {
-             textualContent = unescapeHtml4(textualContent.trim());
+            textualContent = unescapeHtml4(textualContent.trim());
             /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
                 textualContent = "\"" + textualContent + "\"";
             }*/
@@ -250,6 +261,9 @@ public class TextMediaLayout extends ViewGroup {
                 strBuilder.setSpan(clickable, dashStart,dashEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
+            if(leftTextColor != null)
+                botContentTextView.setTextColor(Color.parseColor(leftTextColor));
+
             if(isPencilSpanClick && !isClicable()){
                 botContentTextView.setText(getRemovedEntityEditString(strBuilder.toString()));
             }else{
@@ -286,6 +300,8 @@ public class TextMediaLayout extends ViewGroup {
                 makeLinkClickable(strBuilder, span);
             }
 
+            if(rightTextColor != null)
+                botContentTextView.setTextColor(Color.parseColor(rightTextColor));
 
             botContentTextView.setText(strBuilder);
             botContentTextView.setMovementMethod(null);
@@ -324,12 +340,12 @@ public class TextMediaLayout extends ViewGroup {
         if (gravity == BubbleConstants.GRAVITY_LEFT) {
             //   botContentTextView.setGravity(Gravity.START);
             botContentTextView.setTypeface(medium);
-            botContentTextView.setBackground(null);
+            botContentTextView.setBackground(leftDrawable);
         } else {
             // botContentTextView.setGravity(Gravity.END);
             botContentTextView.setTypeface(regular);
             botContentTextView.setBackground(rightDrawable);
-         }
+        }
     }
 
     protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {

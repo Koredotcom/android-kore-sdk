@@ -33,9 +33,9 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
     }
 
     @Override
-    public ContactViewRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
         ContactCardListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.contact_card_list_item, parent, false);
-        return new ContactViewRecyclerAdapter.ViewHolder(binding);
+        return new ViewHolder(binding);
     }
 
     @Override

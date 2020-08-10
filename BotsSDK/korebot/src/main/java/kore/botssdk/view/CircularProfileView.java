@@ -129,7 +129,7 @@ public class CircularProfileView extends RoundedImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int childWidthSpec = MeasureSpec.makeMeasureSpec((int) width, MeasureSpec.EXACTLY);
         int childHeightSpec = MeasureSpec.makeMeasureSpec((int) height, MeasureSpec.EXACTLY);
-        int zeroSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.EXACTLY);
+        int zeroSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY);
         if (getVisibility() == View.VISIBLE || getVisibility() == View.INVISIBLE) {
             super.onMeasure(childWidthSpec, childHeightSpec);
         } else {

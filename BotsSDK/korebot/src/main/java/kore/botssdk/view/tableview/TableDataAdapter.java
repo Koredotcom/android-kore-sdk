@@ -171,7 +171,7 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
             }
 
             final int cellWidth = columnModel.getColumnWidth(columnIndex, tableWidth);
-            final LinearLayout.LayoutParams cellLayoutParams = new LinearLayout.LayoutParams(cellWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
+            final LayoutParams cellLayoutParams = new LayoutParams(cellWidth, LayoutParams.WRAP_CONTENT);
             cellView.setLayoutParams(cellLayoutParams);
             rowView.addView(cellView);
         }
