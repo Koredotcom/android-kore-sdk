@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvBrandingName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10_dp"
+        android:layout_marginTop="@dimen/dimen_10_dp"
+        android:layout_marginRight="@dimen/dimen_10_dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:text="Bot Chat bubble background color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10_dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginRight="@dimen/dimen_10_dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_rect_feedback_edt">
+
+        <EditText
+            android:id="@+id/edtBrandingValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:hint="@string/about"
+            android:padding="@dimen/dimen_5dp"
+            android:textSize="@dimen/text_size_normal" />
+
+        <ImageView
+            android:id="@+id/ivThemeColor"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:background="@drawable/theme_color"/>
+
+    </LinearLayout>
+
+</LinearLayout>

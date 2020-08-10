@@ -1,0 +1,464 @@
+{
+  "brandingwidgetdesktop": {
+    "entities": [
+      {
+        "label": "Bot chat bubble background color",
+        "hint": "",
+        "_id": "5f054f391e3731220858109f",
+        "entity_id": "e16000",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#F4F4F4",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#F4F4F4"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#1372FF"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Bot chat bubble text color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a0",
+        "entity_id": "e16001",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#26344A",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Button active background color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a1",
+        "entity_id": "e16002",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#FFFFFF",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#D3D3D3"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Button active text color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a2",
+        "entity_id": "e16003",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#26344A",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Button inactive background color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a3",
+        "entity_id": "e16004",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#FFFFFF",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#D3D3D3"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Button inactive text color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a4",
+        "entity_id": "e16005",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#26344A",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "User chat bubble background color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a5",
+        "entity_id": "e16006",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#EFF4FF",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#EFF4FF"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#34363B"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "User chat bubble text color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a6",
+        "entity_id": "e16007",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#26344A",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Widget background color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a7",
+        "entity_id": "e16008",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#FFFFFF",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#000000"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Widget text color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a8",
+        "entity_id": "e16009",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#26344A",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#26344A"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#FFFFFF"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Widget border color",
+        "hint": "",
+        "_id": "5f054f391e373122085810a9",
+        "entity_id": "e16010",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#EEEEEE",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#EEEEEE"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#000000"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Widget divider color",
+        "hint": "",
+        "_id": "5f054f391e373122085810aa",
+        "entity_id": "e16011",
+        "version": 1,
+        "type": "TextBox",
+        "def_value": "#E5E8EC",
+        "dependencies": [
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e61"
+              }
+            ],
+            "allowedValues": [
+              "#E5E8EC"
+            ]
+          },
+          {
+            "entities": [
+              {
+                "id": "e1008",
+                "property": "options",
+                "propertyValue": "5f054f391e37312208580e62"
+              }
+            ],
+            "allowedValues": [
+              "#1D1E1F"
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Widget Theme",
+        "hint": "",
+        "_id": "5f054f391e37312208580ae4",
+        "entity_id": "e1008",
+        "version": 1,
+        "type": "Single-Select",
+        "options": [
+          {
+            "id": "5f054f391e37312208580e61",
+            "value": "Default light theme"
+          },
+          {
+            "id": "5f054f391e37312208580e62",
+            "value": "Default dark theme"
+          }
+        ],
+        "def_option_id": "5f054f391e37312208580e61"
+      }
+    ],
+    "values": [
+      {
+        "_id": "5f01dc3ebdb7eb2bf65d9954",
+        "entity_id": "e1008",
+        "value": [
+          "5f00b01da498585d773d99e7"
+        ]
+      },
+      {
+        "_id": "5f054d96a75a731de0d4aeaa",
+        "entity_id": "e16000",
+        "value": [
+          {
+            "themeId": "5f054c93f9f2051fc858e964",
+            "color": "#F4F4F10"
+          }
+        ]
+      }
+    ]
+  }
+}
