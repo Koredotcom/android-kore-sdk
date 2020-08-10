@@ -32,14 +32,14 @@ public class WActionsAdapter extends RecyclerView.Adapter<WActionsAdapter.ViewHo
 
     @NonNull
     @Override
-    public WActionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         WactionItemLayoutBinding actionItemLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.waction_item_layout, parent, false);
         actionItemLayoutBinding.getRoot().setBackground(drawable);
         return new ViewHolder(actionItemLayoutBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WActionsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.actionItemLayoutBinding.setAction(botButtonModels.get(position));
         holder.actionItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override

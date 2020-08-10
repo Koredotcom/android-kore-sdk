@@ -168,7 +168,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
-            return new DefaultWidgetAdapter.ViewHolder(inflater.inflate(R.layout.default_list_item, parent, false));
+            return new ViewHolder(inflater.inflate(R.layout.default_list_item, parent, false));
     }
 
 
@@ -198,7 +198,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                     if(mContext instanceof Activity) {
                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                         intent.putExtra("url", loginModel.getUrl());
-                        intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
                         ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
                     }else{
                         Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
@@ -215,7 +215,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
         } else {
 
-            DefaultWidgetAdapter.ViewHolder holder = (DefaultWidgetAdapter.ViewHolder) holderData;
+            ViewHolder holder = (ViewHolder) holderData;
 
             final Element model = eventList.get(position);
 
@@ -252,7 +252,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
             if (model.getActions() != null && model.getActions().size() > 0) {
                 holder.icon_down.setVisibility(VISIBLE);
-                holder.icon_down.setOnClickListener(new View.OnClickListener() {
+                holder.icon_down.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                             WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
@@ -281,7 +281,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                 buttonRecyclerAdapter.notifyDataSetChanged();
             }
 
-            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
+            holder.innerlayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("url")) {

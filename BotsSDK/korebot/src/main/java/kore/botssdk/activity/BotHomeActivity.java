@@ -2,6 +2,7 @@ package kore.botssdk.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.kore.ai.widgetsdk.activities.PanelMainActivity;
+//import com.kore.ai.widgetsdk.activities.PanelMainActivity;
+
+import java.util.Random;
 
 import kore.botssdk.R;
+import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
@@ -29,6 +33,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        new ThemeColors(this);
         setContentView(R.layout.bot_home_activity_layout);
 
         findViews();
@@ -45,6 +50,13 @@ public class BotHomeActivity extends BotAppCompactActivity {
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
 
+    }
+
+    public void buttonClick(View view){
+        int red= new Random().nextInt(255);
+        int green= new Random().nextInt(255);
+        int blue= new Random().nextInt(255);
+        ThemeColors.setNewThemeColor(BotHomeActivity.this, "F26666");
     }
 
     @Override

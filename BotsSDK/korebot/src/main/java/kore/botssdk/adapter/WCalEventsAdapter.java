@@ -189,7 +189,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         } else
-            return new WCalEventsAdapter.ViewHolder(inflater.inflate(R.layout.widget_calendar_event_list_item, parent, false));
+            return new ViewHolder(inflater.inflate(R.layout.widget_calendar_event_list_item, parent, false));
     }
 
 
@@ -218,7 +218,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
         } else {
 
-            WCalEventsAdapter.ViewHolder holder = (WCalEventsAdapter.ViewHolder) holderData;
+            ViewHolder holder = (ViewHolder) holderData;
 
             holder.icon_notes.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
             holder.icon_dial.setTypeface(ResourcesCompat.getFont(mContext, R.font.icomoon));
@@ -622,7 +622,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
                         // ed = st + (30 * 60000);
                     }
 
-                    CalEventsTemplateModel.Duration _duration = _data.getData().getDuration();
+                    Duration _duration = _data.getData().getDuration();
 
                     _duration.setStart(st);
                     _duration.setEnd(ed);
@@ -900,7 +900,7 @@ public class WCalEventsAdapter extends RecyclerView.Adapter implements RecyclerV
 
 
         Uri eventUri;
-        if (android.os.Build.VERSION.SDK_INT <= 7) {
+        if (Build.VERSION.SDK_INT <= 7) {
             // the old way
 
             eventUri = Uri.parse("content://calendar/events");

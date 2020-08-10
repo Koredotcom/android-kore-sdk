@@ -6,9 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-import com.kore.ai.widgetsdk.utils.ToastUtils;
+//import com.kore.ai.widgetsdk.utils.ToastUtils;
 
 import kore.botssdk.R;
+import kore.botssdk.drawables.ThemeColors;
 
 /**
  * Created by Ramachandra Pradeep on 27-Mar-18.
@@ -61,11 +62,11 @@ public class BotAppCompactActivity extends AppCompatActivity {
     }
 
     protected final void showToast(String message){
-        if(message != null && !message.equals("INVALID_ACCESS_TOKEN"))
-            ToastUtils.showToast(this,message);
+//        if(message != null && !message.equals("INVALID_ACCESS_TOKEN"))
+//            ToastUtils.showToast(this,message);
     }
     protected final void showToast(String msg, int length) {
-        ToastUtils.showToast(this, msg, length);
+//        ToastUtils.showToast(this, msg, length);
     }
 
 }

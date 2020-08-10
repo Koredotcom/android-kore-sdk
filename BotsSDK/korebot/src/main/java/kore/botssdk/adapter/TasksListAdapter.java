@@ -228,7 +228,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) viewHoldermain;
 
             emptyHolder.tv_disrcription.setText(getNodata_meesage());
-            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, kore.botssdk.R.drawable.no_meeting));
+            emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
         }
     }
 

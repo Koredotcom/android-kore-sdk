@@ -130,7 +130,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
-            return new ChartListWidgetAdapter.ViewHolder(inflater.inflate(R.layout.chart_list_item, parent, false));
+            return new ViewHolder(inflater.inflate(R.layout.chart_list_item, parent, false));
     }
 
 
@@ -148,7 +148,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
                     if(mContext instanceof Activity) {
                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                         intent.putExtra("url", loginModel.getUrl());
-                        intent.putExtra("header", mContext.getResources().getString(kore.botssdk.R.string.app_name));
+                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
                         ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
                     }else{
                         Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
@@ -167,7 +167,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
 
         else {
 
-            ChartListWidgetAdapter.ViewHolder holder = (ChartListWidgetAdapter.ViewHolder) holderData;
+            ViewHolder holder = (ViewHolder) holderData;
             final Element model = eventList.get(position);
 
             int dp80 = (int) dp1 * 80;

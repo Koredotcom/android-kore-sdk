@@ -12,15 +12,15 @@ import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 
 public interface VerticalListViewActionHelper {
-    void knowledgeItemClicked(Bundle extras,boolean isKnowledge);
+    void knowledgeItemClicked(Bundle extras, boolean isKnowledge);
     void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel);
     void emailItemClicked(String action, HashMap customData);
     void calendarItemClicked(String action, BaseCalenderTemplateModel model);
     void tasksSelectedOrDeselected(boolean selecetd);
-    void widgetItemSelected(boolean isSelected,int count);
-    void navigationToDialAndJoin(String actiontype,String actionLink);
+    void widgetItemSelected(boolean isSelected, int count);
+    void navigationToDialAndJoin(String actiontype, String actionLink);
     void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
-    void meetingNotesNavigation(Context context,String mId, String eId);
+    void meetingNotesNavigation(Context context, String mId, String eId);
     void meetingWidgetViewMoreVisibility(boolean visible);
     void calendarContactItemClick(ContactViewListModel model);
     void welcomeSummaryItemClick(WelcomeChatSummaryModel model);

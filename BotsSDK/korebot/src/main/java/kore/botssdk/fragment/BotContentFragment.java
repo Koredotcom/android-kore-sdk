@@ -1,8 +1,10 @@
 package kore.botssdk.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
@@ -16,6 +18,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +28,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
+import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
@@ -216,27 +221,58 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     PayloadInner payInner = payOuter.getPayload();
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
                     {
-                        CalenderActionSheetFragment bottomSheetDialog = new CalenderActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName","trigger");
-                        bottomSheetDialog.setData(payInner);
-                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
-
-//                        DateRangeCalendarActionSheetFragment bottomSheetDialog = new DateRangeCalendarActionSheetFragment();
+//                        CalenderActionSheetFragment bottomSheetDialog = new CalenderActionSheetFragment();
 //                        bottomSheetDialog.setisFromFullView(false);
 //                        bottomSheetDialog.setSkillName("skillName","trigger");
 //                        bottomSheetDialog.setData(payInner);
 //                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
 //                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
+
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
+                        int strYear = cal.get(Calendar.YEAR);
+                        int strMonth = cal.get(Calendar.MONTH);
+                        int strDay = cal.get(Calendar.DAY_OF_MONTH);
+                        String minDate = strMonth+"-"+strDay+"-"+strYear;
+
+                        MaterialDatePicker.Builder<Long> builder =  MaterialDatePicker.Builder.datePicker();
+                        builder.setTitleText(payInner.getTitle());
+                        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
+                        builder.setTheme(R.style.MyMaterialCalendarTheme);
+
+                        try
+                        {
+                            MaterialDatePicker<Long> picker = builder.build();
+                            picker.show(getFragmentManager(), picker.toString());
+
+                            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+                                @Override public void onPositiveButtonClick(Long selection) {
+                                    Calendar calendar = Calendar.getInstance();
+                                    calendar.setTimeInMillis(selection);
+                                    int stYear = calendar.get(Calendar.YEAR);
+                                    int stMonth = calendar.get(Calendar.MONTH);
+                                    int stDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                                    String formatedDate = "";
+                                    formatedDate = DateUtils.getMonthName(stMonth)+" "+stDay+DateUtils.getDayOfMonthSuffix(stDay)+", "+stYear;
+
+                                    if(!formatedDate.isEmpty())
+                                        composeFooterInterface.onSendClick(formatedDate, false);
+                                }
+                            });
+                        }
+                        catch (IllegalArgumentException e) {}
                     }
                     else if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type()))
                     {
                         initSettings();
-
                         MaterialDatePicker.Builder<Pair<Long, Long>> builder =  MaterialDatePicker.Builder.dateRangePicker();
                         builder.setTitleText(payInner.getTitle());
+                        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
                         builder.setCalendarConstraints(limitRange(payInner.getEndDate(), payInner.getFormat()).build());
+                        builder.setTheme(R.style.MyMaterialCalendarTheme);
+
                         try
                         {
                             MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
@@ -272,6 +308,14 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
             }
         }
+    }
+
+    private static int resolveOrThrow(Context context, @AttrRes int attributeResId) {
+        TypedValue typedValue = new TypedValue();
+        if (context.getTheme().resolveAttribute(attributeResId, typedValue, true)) {
+            return typedValue.data;
+        }
+        throw new IllegalArgumentException(context.getResources().getResourceName(attributeResId));
     }
 
     private ArrayList<QuickReplyTemplate> getQuickReplies(BotResponse botResponse) {
@@ -486,6 +530,17 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         return constraintsBuilderRange;
     }
 
+    /*
+      Limit selectable Date range
+    */
+    private CalendarConstraints.Builder minRange(String date, String format) {
+
+        CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+        constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
+
+        return constraintsBuilderRange;
+    }
+
     private Date stringToDate(String aDate,String aFormat) {
 
         SimpleDateFormat format = new SimpleDateFormat("M-DD-YYYY");
@@ -531,7 +586,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             dest.writeLong(maxDate);
         }
 
-        public static final Parcelable.Creator<RangeValidator> CREATOR = new Parcelable.Creator<RangeValidator>() {
+        public static final Creator<RangeValidator> CREATOR = new Creator<RangeValidator>() {
 
             @Override
             public RangeValidator createFromParcel(Parcel parcel) {

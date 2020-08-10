@@ -114,6 +114,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListener();
         setListenerExplicitly();
         toggleTTSButton();
+        keyboard_img.performClick();
 //        KoreEventCenter.register(this);
         return view;
     }
@@ -455,7 +456,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             Speech.getInstance().stopListening();
         } else {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 //                editTextMessage.setHint("Start talking...");
                     onRecordAudioPermissionGranted();
 

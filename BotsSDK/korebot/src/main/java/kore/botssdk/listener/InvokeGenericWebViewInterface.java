@@ -8,5 +8,5 @@ import java.util.HashMap;
  */
 public interface InvokeGenericWebViewInterface {
     void invokeGenericWebView(String url);
-    void handleUserActions(String payload,HashMap<String,Object> type);
+    void handleUserActions(String payload, HashMap<String, Object> type);
 }

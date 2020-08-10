@@ -31,14 +31,14 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
 
     @NonNull
     @Override
-    public ActionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ActionItemLayoutBinding actionItemLayoutBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.action_item_layout, parent, false);
         actionItemLayoutBinding.getRoot().setBackground(drawable);
         return new ViewHolder(actionItemLayoutBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActionsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.actionItemLayoutBinding.setAction(botButtonModels.get(position));
         holder.actionItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
