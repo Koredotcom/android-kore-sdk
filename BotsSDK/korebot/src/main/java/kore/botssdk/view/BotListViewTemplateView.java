@@ -25,6 +25,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -41,6 +42,7 @@ public class BotListViewTemplateView extends LinearLayout {
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     VerticalListViewActionHelper verticalListViewActionHelper;
+    String title;
 
     public BotListViewTemplateView(Context context) {
         super(context);
@@ -68,23 +70,41 @@ public class BotListViewTemplateView extends LinearLayout {
 
     }
 
-    public void populateListTemplateView(BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList) {
+    public void populateListTemplateView(String title, BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore) {
 
         if(botListViewMoreDataModel != null)
             Log.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
-        if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
+        if (botListModelArrayList != null && botListModelArrayList.size() > 0)
+        {
             BotListViewTemplateAdapter botListTemplateAdapter;
-            if (autoExpandListView.getAdapter() == null) {
-                botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, 4);
-                autoExpandListView.setAdapter(botListTemplateAdapter);
-                botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-                botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+            if (autoExpandListView.getAdapter() == null)
+            {
+                if(!StringUtils.isNullOrEmpty(seeMore)) {
+                    if(moreCount != 0)
+                    {
+                        botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
+                        autoExpandListView.setAdapter(botListTemplateAdapter);
+                        botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+                        botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+                        botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
+                        botListTemplateAdapter.notifyDataSetChanged();
+                    }
+                }
+                else
+                {
+                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
+                    autoExpandListView.setAdapter(botListTemplateAdapter);
+                    botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+                    botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+                    botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
+                    botListTemplateAdapter.notifyDataSetChanged();
+                }
+
             } else {
                 botListTemplateAdapter = (BotListViewTemplateAdapter) autoExpandListView.getAdapter();
             }
-            botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
-            botListTemplateAdapter.notifyDataSetChanged();
+
             botCustomListRoot.setVisibility(VISIBLE);
             if(botButtonModelArrayList != null && botButtonModelArrayList.size() > 0)
             {
@@ -96,6 +116,7 @@ public class BotListViewTemplateView extends LinearLayout {
                         bottomSheetDialog.setisFromFullView(false);
                         bottomSheetDialog.setSkillName("skillName","trigger");
                         bottomSheetDialog.setData(botListViewMoreDataModel);
+                        bottomSheetDialog.setHeaderVisible(true);
                         bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                         bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                         bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
@@ -103,12 +124,18 @@ public class BotListViewTemplateView extends LinearLayout {
                 });
 
 
-                botCustomListViewButton.setVisibility(botListModelArrayList.size() > 4 ? VISIBLE : GONE);
+                botCustomListViewButton.setVisibility(botListModelArrayList.size() > moreCount ? VISIBLE : GONE);
             }
             else
             {
-                workBenchListViewButton.setVisibility(botListModelArrayList.size() > 4 ? VISIBLE : GONE);
-                workBenchListViewButton.setOnClickListener(new OnClickListener()
+                if(moreCount != 0)
+                {
+                    botCustomListViewButton.setVisibility(botListModelArrayList.size() > moreCount ? VISIBLE : GONE);
+                    botCustomListViewButton.setText(Html.fromHtml("<u>"+getResources().getString(R.string.show_more)+"</u>"));
+                }
+
+
+                botCustomListViewButton.setOnClickListener(new OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
@@ -116,7 +143,7 @@ public class BotListViewTemplateView extends LinearLayout {
                         ListMoreActionSheetFragment bottomSheetDialog = new ListMoreActionSheetFragment();
                         bottomSheetDialog.setisFromFullView(false);
                         bottomSheetDialog.setSkillName("skillName","trigger");
-                        bottomSheetDialog.setData(botListModelArrayList);
+                        bottomSheetDialog.setData(title, botListModelArrayList);
                         bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                         bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                         bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
@@ -130,6 +157,7 @@ public class BotListViewTemplateView extends LinearLayout {
             botCustomListViewButton.setVisibility(GONE);
         }
     }
+
 
     public void setRestrictedMaxHeight(float restrictedMaxHeight) {
         this.restrictedMaxHeight = restrictedMaxHeight;

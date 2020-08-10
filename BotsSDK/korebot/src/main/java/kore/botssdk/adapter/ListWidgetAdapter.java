@@ -179,7 +179,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
-            return new ListWidgetAdapter.ViewHolder(inflater.inflate(R.layout.list_widget_item, parent, false));
+            return new ViewHolder(inflater.inflate(R.layout.list_widget_item, parent, false));
     }
 
 
@@ -228,7 +228,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
         } else {
 
-            final ListWidgetAdapter.ViewHolder holder = (ListWidgetAdapter.ViewHolder) holderData;
+            final ViewHolder holder = (ViewHolder) holderData;
 
             final WidgetListElementModel model = items.get(position);
 
@@ -325,7 +325,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.icon_image_load.setVisibility(GONE);
                         holder.imgMenu.setVisibility(VISIBLE);
                         holder.imgMenu.bringToFront();
-                        holder.imgMenu.setOnClickListener(new View.OnClickListener() {
+                        holder.imgMenu.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if ( model.getValue()!= null &&  model.getValue().getMenu()!= null && model.getValue().getMenu().size() > 0) {
@@ -530,7 +530,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     public static void showEmailIntent(Activity activity, String recepientEmail) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
         emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
 
         try {
             activity.startActivity(emailIntent);

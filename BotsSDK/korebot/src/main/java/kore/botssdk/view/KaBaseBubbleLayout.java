@@ -132,6 +132,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotFormTemplateView botFormTemplateView;
     protected BotListViewTemplateView botListViewTemplateView;
     protected BotTableListTemplateView botTableListTemplateView;
+    protected BotQuickRepliesTemplateView botQuickRepliesTemplateView;
+    protected AgentTransferTemplateView agentTransferTemplateView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -378,6 +380,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botTableListTemplateView = ViewProvider.getBotTableListTempleteView(context);
         botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botTableListTemplateView);
+
+        botQuickRepliesTemplateView = ViewProvider.getBotQuickRepliesTemplateView((context));
+        botQuickRepliesTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(botQuickRepliesTemplateView);
+
+        agentTransferTemplateView = ViewProvider.getAgentTransferTemplateView(context);
+        agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(agentTransferTemplateView);
     }
 
 
@@ -464,6 +474,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botTableListTemplateView != null) {
             botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if (botQuickRepliesTemplateView != null) {
+            botQuickRepliesTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if (agentTransferTemplateView != null) {
+            agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -493,6 +511,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (botTableListTemplateView != null) {
             botTableListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botQuickRepliesTemplateView != null) {
+            botQuickRepliesTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (agentTransferTemplateView != null) {
+            agentTransferTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
@@ -708,7 +732,4 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     public void setDoDrawBubbleBackground(boolean doDrawBubbleBackground) {
         this.doDrawBubbleBackground = doDrawBubbleBackground;
     }
-
-
-
 }

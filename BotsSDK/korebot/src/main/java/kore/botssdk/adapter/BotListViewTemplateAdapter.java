@@ -46,10 +46,10 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (botListModelArrayList != null) {
-            return botListModelArrayList.size() > count ? count : botListModelArrayList.size();
+        if (count > 0) {
+            return count;
         } else {
-            return 0;
+            return botListModelArrayList.size();
         }
     }
 

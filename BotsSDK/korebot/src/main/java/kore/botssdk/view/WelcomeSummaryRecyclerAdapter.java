@@ -49,7 +49,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
 
         if (viewType == DATA_CARD_FLAG) {
             WelcomeSummaryListItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.welcome_summary_list_item, parent, false);
-            return new WelcomeSummaryRecyclerAdapter.ViewHolder(binding);
+            return new ViewHolder(binding);
         } else {
             return new EmptyWidgetViewHolder(LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false));
 
@@ -60,9 +60,9 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermain, int position) {
-                if(holdermain instanceof WelcomeSummaryRecyclerAdapter.ViewHolder )
+                if(holdermain instanceof ViewHolder )
                 {
-                    WelcomeSummaryRecyclerAdapter.ViewHolder  holder=(WelcomeSummaryRecyclerAdapter.ViewHolder)holdermain;
+                    ViewHolder  holder=(ViewHolder)holdermain;
                     WelcomeChatSummaryModel model = summaryList.get(position);
                     holder.bind(model);
 

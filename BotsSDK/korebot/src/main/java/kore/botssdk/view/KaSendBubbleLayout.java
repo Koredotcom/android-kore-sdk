@@ -100,23 +100,23 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int maxAllowedWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-        int wrapSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int maxAllowedWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
 
         int childWidthSpec;
         /*
          * For TextMedia Layout
          */
-        childWidthSpec = View.MeasureSpec.makeMeasureSpec(maxAllowedWidth, View.MeasureSpec.AT_MOST);
+        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
         MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
 
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
-        int parentHeightSpec = View.MeasureSpec.makeMeasureSpec(maxBubbleDimen[1], View.MeasureSpec.EXACTLY);
-        int parentWidthSpec = View.MeasureSpec.makeMeasureSpec(maxBubbleDimen[0], View.MeasureSpec.EXACTLY);
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec(maxBubbleDimen[1], MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(maxBubbleDimen[0], MeasureSpec.EXACTLY);
 
         super.onMeasure(parentWidthSpec, parentHeightSpec);
     }

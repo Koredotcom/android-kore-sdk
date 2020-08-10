@@ -3,12 +3,13 @@ package kore.botssdk.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -18,33 +19,33 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotOptionsModel;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 
-public class ListActionSheetFragment extends BottomSheetDialogFragment {
-
+public class CalenderActionSheetFragment extends BottomSheetDialogFragment
+{
+    String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
     private View view;
     private boolean isFromFullView;
-    private BotListViewMoreDataModel model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private boolean isFromListMenu = false;
-    private ListView lvMoreData;
     private int dp1;
-    private TextView tvTab1, tvTab2;
+    private TextView tvOptionsTitle, tvDateConfirm;
     private LinearLayout llCloseBottomSheet;
+    private DatePicker datePicker;
+    private PayloadInner payInner;
     public String getSkillName() {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
-    private boolean showHeader = false;
-    private LinearLayout llTabHeader;
-
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
         this.trigger = trigger;
@@ -52,60 +53,23 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
     private String skillName;
     private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.list_bottom_sheet, container,false);
-        lvMoreData = view.findViewById(R.id.lvMoreData);
-        tvTab1 = view.findViewById(R.id.tvTab1);
-        tvTab2 = view.findViewById(R.id.tvTab2);
+        view = inflater.inflate(R.layout.calender_bootom_sheet, container,false);
+        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        llTabHeader = view.findViewById(R.id.llTabHeader);
-
+        tvDateConfirm = view.findViewById(R.id.tvDateConfirm);
+        datePicker = view.findViewById(R.id.datePicker1);
+        tvOptionsTitle.setVisibility(View.VISIBLE);
         this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
-        BotListViewTemplateAdapter botListTemplateAdapter;
-        if (lvMoreData.getAdapter() == null) {
-            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, 0);
-            lvMoreData.setAdapter(botListTemplateAdapter);
-            botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        } else {
-            botListTemplateAdapter = (BotListViewTemplateAdapter) lvMoreData.getAdapter();
-        }
-        botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
-        botListTemplateAdapter.notifyDataSetChanged();
+        datePicker.setMinDate(System.currentTimeMillis() - 1000);
 
-        llTabHeader.setVisibility(View.VISIBLE);
-        if(!showHeader)
-            llTabHeader.setVisibility(View.GONE);
-
-        tvTab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab1.setTextColor(getResources().getColor(R.color.white));
-
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab2.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
-
-                botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
-            }
-        });
-
-        tvTab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab2.setTextColor(getResources().getColor(R.color.white));
-
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab1.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
-
-                botListTemplateAdapter.setBotListModelArrayList(model.getTab2());
-            }
-        });
+        if(payInner != null && payInner.getText() != null && !payInner.getText().isEmpty())
+            tvOptionsTitle.setText(payInner.getText());
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,17 +78,31 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
                     bottomSheetDialog.dismiss();
             }
         });
-        return view;
 
+        tvDateConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(bottomSheetDialog != null)
+                    bottomSheetDialog.dismiss();
+
+                sendMessageText(DateUtils.getMonthName(datePicker.getMonth())+" "+datePicker.getDayOfMonth()+DateUtils.getDayOfMonthSuffix(datePicker.getDayOfMonth())+" "+datePicker.getYear());
+            }
+        });
+
+        return view;
+    }
+
+    private void sendMessageText(String message) {
+        if (composeFooterInterface != null) {
+            composeFooterInterface.onSendClick(message.trim(),false);
+        } else {
+            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+        }
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-    }
-
-    public void setHeaderVisible(boolean visible)
-    {
-        this.showHeader = visible;
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -141,11 +119,10 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+                bottomSheet.getLayoutParams().height = ((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight/4)+50) * dp1);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) (500 * dp1));
+                bottomSheetBehavior.setPeekHeight(((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight/4)+50) * dp1));
             }
-
         });
 
         // Do something with your dialog like setContentView() or whatever
@@ -156,17 +133,17 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this.isFromFullView = isFromFullView;
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel) {
-        model = taskTemplateModel;
+    public void setData(PayloadInner payInner) {
+        this.payInner = payInner;
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu){
-        model = taskTemplateModel;
+    public void setData(BotOptionsModel botOptionsModel, boolean isFromListMenu){
+//        model = botOptionsModel;
         this.isFromListMenu = isFromListMenu;
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
         this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
-}
 
+}

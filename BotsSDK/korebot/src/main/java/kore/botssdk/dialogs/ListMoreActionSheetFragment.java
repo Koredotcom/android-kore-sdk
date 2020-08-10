@@ -12,38 +12,47 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListViewTemplateAdapter;
+import kore.botssdk.adapter.ListViewMoreAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.utils.StringUtils;
 
-public class ListActionSheetFragment extends BottomSheetDialogFragment {
+public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
 
     private View view;
     private boolean isFromFullView;
-    private BotListViewMoreDataModel model;
+    private ArrayList<BotListModel> model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private boolean isFromListMenu = false;
     private ListView lvMoreData;
     private int dp1;
-    private TextView tvTab1, tvTab2;
     private LinearLayout llCloseBottomSheet;
     public String getSkillName() {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
-    private boolean showHeader = false;
-    private LinearLayout llTabHeader;
+    private boolean showHeader = true;
+    private int count;
+    private RecyclerView rvViewMore;
+    private TextView tvOptionsTitle;
+    private String title;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -57,55 +66,33 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.list_bottom_sheet, container,false);
+        view = inflater.inflate(R.layout.list_view_more_sheet, container,false);
         lvMoreData = view.findViewById(R.id.lvMoreData);
-        tvTab1 = view.findViewById(R.id.tvTab1);
-        tvTab2 = view.findViewById(R.id.tvTab2);
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        llTabHeader = view.findViewById(R.id.llTabHeader);
-
+        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        rvViewMore = view.findViewById(R.id.rvMoreData);
+        rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        tvOptionsTitle.setVisibility(View.VISIBLE);
+        rvViewMore.setVisibility(View.VISIBLE);
         this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
-            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, 0);
+            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, model.size());
             lvMoreData.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         } else {
             botListTemplateAdapter = (BotListViewTemplateAdapter) lvMoreData.getAdapter();
         }
-        botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
+        botListTemplateAdapter.setBotListModelArrayList(model);
         botListTemplateAdapter.notifyDataSetChanged();
 
-        llTabHeader.setVisibility(View.VISIBLE);
-        if(!showHeader)
-            llTabHeader.setVisibility(View.GONE);
+        if(!StringUtils.isNullOrEmpty(title)) {
+            tvOptionsTitle.setText(title);
+        }
 
-        tvTab1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab1.setTextColor(getResources().getColor(R.color.white));
-
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab2.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
-
-                botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
-            }
-        });
-
-        tvTab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab2.setTextColor(getResources().getColor(R.color.white));
-
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab1.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
-
-                botListTemplateAdapter.setBotListModelArrayList(model.getTab2());
-            }
-        });
+        ListViewMoreAdapter listViewMoreAdapter = new ListViewMoreAdapter(model);
+        rvViewMore.setAdapter(listViewMoreAdapter);
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,15 +109,9 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setHeaderVisible(boolean visible)
-    {
-        this.showHeader = visible;
-    }
-
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -141,9 +122,9 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) (500 * dp1));
+                bottomSheetBehavior.setPeekHeight((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight)));
             }
 
         });
@@ -156,12 +137,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this.isFromFullView = isFromFullView;
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel) {
-        model = taskTemplateModel;
+    public void setData(String title, ArrayList<BotListModel> botListModelArrayList) {
+        this.model = botListModelArrayList;
+        this.title = title;
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu){
-        model = taskTemplateModel;
+    public void setData(ArrayList<BotListModel> botListModelArrayList, boolean isFromListMenu){
+        model = botListModelArrayList;
         this.isFromListMenu = isFromListMenu;
     }
 
@@ -169,4 +151,3 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }
-

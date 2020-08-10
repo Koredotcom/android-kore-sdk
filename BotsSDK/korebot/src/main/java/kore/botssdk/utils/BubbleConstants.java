@@ -19,4 +19,6 @@ public class BubbleConstants {
     public static final int WRAP_CONTENT = 1;
     public static final int FORM_TEMPLATE_ID = 19800395;
     public static final int TABLE_LIST_TEMPLATE_ID = 19800396;
+    public static final int QUICK_REPLY_TEMPLATE_ID = 19800397;
+    public static final int AGENT_TRANSFER_TEMPLATE_ID = 19800398;
 }

@@ -270,7 +270,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     return false;
                 }
             });
-            holder.innerlayout.setOnClickListener(new View.OnClickListener() {
+            holder.innerlayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type) || isFromWidget()) {
@@ -302,7 +302,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             dialogActivity.show();
 
 
-                            dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
+                            dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
 
@@ -513,7 +513,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             ed = st + (30 * 60000);
                         }
 
-                        CalEventsTemplateModel.Duration _duration = _data.getDuration();
+                        Duration _duration = _data.getDuration();
 
                         _duration.setStart(st);
                         _duration.setEnd(ed);

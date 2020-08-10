@@ -172,7 +172,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     public static void showEmailIntent(Activity activity, String recepientEmail) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
         emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
-        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
 
         try {
             activity.startActivity(emailIntent);

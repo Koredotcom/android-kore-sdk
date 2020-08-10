@@ -32,7 +32,7 @@ import kore.botssdk.utils.StringUtils;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private LayoutInflater inflater;
-    private List<Widget.Button> buttons;
+    private List<Button> buttons;
     private Context mContext;
 
     private String skillName;

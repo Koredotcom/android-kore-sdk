@@ -17,6 +17,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
@@ -24,6 +25,7 @@ import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotListViewTemplateView;
+import kore.botssdk.view.BotQuickRepliesTemplateView;
 import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
@@ -339,6 +341,18 @@ public class ViewProvider {
         BotTableListTemplateView botTableListTemplateView = new BotTableListTemplateView(context);
         botTableListTemplateView.setId(BubbleConstants.TABLE_LIST_TEMPLATE_ID);
         return botTableListTemplateView;
+    }
+
+    public static BotQuickRepliesTemplateView getBotQuickRepliesTemplateView(Context context){
+        BotQuickRepliesTemplateView botTableListTemplateView = new BotQuickRepliesTemplateView(context);
+        botTableListTemplateView.setId(BubbleConstants.QUICK_REPLY_TEMPLATE_ID);
+        return botTableListTemplateView;
+    }
+
+    public static AgentTransferTemplateView getAgentTransferTemplateView(Context context){
+        AgentTransferTemplateView agentTransferTemplateView = new AgentTransferTemplateView(context);
+        agentTransferTemplateView.setId(BubbleConstants.AGENT_TRANSFER_TEMPLATE_ID);
+        return agentTransferTemplateView;
     }
 
 }

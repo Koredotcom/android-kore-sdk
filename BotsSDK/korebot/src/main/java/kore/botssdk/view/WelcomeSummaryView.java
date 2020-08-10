@@ -105,7 +105,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         } catch (Exception e) {
         }
 
-        welcomeChatSummaryViewBinding.imgWetherIcon.setOnClickListener(new View.OnClickListener() {
+        welcomeChatSummaryViewBinding.imgWetherIcon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isWeatherDesc) {

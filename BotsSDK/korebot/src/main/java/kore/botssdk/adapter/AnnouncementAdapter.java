@@ -62,10 +62,10 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == DATA_FOUND)
-            return new AnnouncementAdapter.AnnouncementViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.announcement_card_layout, parent, false));
+            return new AnnouncementViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.announcement_card_layout, parent, false));
         else {
             View view = LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false);
-            return new AnnouncementAdapter.EmptyAnnocementViewHolder(view);
+            return new EmptyAnnocementViewHolder(view);
         }
     }
 

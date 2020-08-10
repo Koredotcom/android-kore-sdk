@@ -1,4 +1,4 @@
-/*
+package kore.botssdk.adapter;/*
 package kore.botssdk.adapter;
 
 import android.content.Context;

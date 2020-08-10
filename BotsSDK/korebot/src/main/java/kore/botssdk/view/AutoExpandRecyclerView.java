@@ -1,4 +1,4 @@
-/*
+package kore.botssdk.view;/*
 package kore.botssdk.view;
 
 import android.content.Context;

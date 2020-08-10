@@ -85,15 +85,18 @@ public class BotTableListInnerAdapter extends BaseAdapter
         BotTableListRowItemsModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getImage().getImage_src()))
+        if(botListModel.getTitle() != null && botListModel.getTitle().getImage() != null)
         {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getTitle().getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
-
-            if(botListModel.getTitle().getImage().getRadius() > 0)
+            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getImage().getImage_src()))
             {
-                holder.botListItemImage.getLayoutParams().height = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
-                holder.botListItemImage.getLayoutParams().width = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
+                holder.botListItemImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(botListModel.getTitle().getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
+
+                if(botListModel.getTitle().getImage().getRadius() > 0)
+                {
+                    holder.botListItemImage.getLayoutParams().height = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
+                    holder.botListItemImage.getLayoutParams().width = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
+                }
             }
         }
 
