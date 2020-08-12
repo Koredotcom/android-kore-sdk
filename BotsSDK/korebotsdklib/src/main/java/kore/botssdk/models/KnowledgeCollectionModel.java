@@ -124,6 +124,7 @@ public class KnowledgeCollectionModel {
             if (answerPayload != null) {
                 for (AnswerPayload payload : answerPayload) {
                     try {
+                        payload.text = payload.text.replaceAll("\\+","%2b");
                         payload.text = URLDecoder.decode(payload.text, "UTF-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();

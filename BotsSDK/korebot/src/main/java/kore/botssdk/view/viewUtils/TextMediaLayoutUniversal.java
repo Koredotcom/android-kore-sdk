@@ -1,10 +1,17 @@
 package kore.botssdk.view.viewUtils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.text.Html;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
@@ -21,8 +28,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.google.gson.Gson;
 
@@ -350,14 +359,71 @@ public class TextMediaLayoutUniversal extends ViewGroup {
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
-                intent.putExtra("url", span.getURL());
-                intent.putExtra("header", getResources().getString(R.string.app_name));
-                getContext().startActivity(intent);
+
+                if (span != null && span.getURL() != null
+                        && !span.getURL().startsWith("tel:") && !span.getURL().startsWith("mailto:")) {
+                    Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                    intent.putExtra("url", span.getURL());
+                    intent.putExtra("header", getResources().getString(R.string.app_name));
+                    getContext().startActivity(intent);
+
+                } else {
+                    String url = span.getURL();
+                    if (url != null && (url.startsWith("tel:") || url.startsWith("mailto:"))) {
+                        if (url.startsWith("tel:")) {
+                            launchDialer(getContext(), url);
+                        } else if (url.startsWith("mailto:")) {
+                            showEmailIntent((Activity) getContext(), url.split(":")[1]);
+                        }
+                        return;
+                    }
+
+                }
+
+
+
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void launchDialer(Context context, String url) {
+        try {
+            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY
+                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public static boolean hasPermission(Context context, String... permission) {
+        boolean shouldShowRequestPermissionRationale = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionLength = permission.length;
+            for (int i = 0; i < permissionLength; i++) {
+                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return shouldShowRequestPermissionRationale;
+    }
+    public static void showEmailIntent(Activity activity, String recepientEmail) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+
+        try {
+            activity.startActivity(emailIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(activity, "Error while launching email intent!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public TextView getBotContentTextView() {

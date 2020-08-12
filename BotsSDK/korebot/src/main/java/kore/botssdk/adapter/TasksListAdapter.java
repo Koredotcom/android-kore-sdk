@@ -189,12 +189,12 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                             updateThings(taskTemplateModel);
                         }else if(verticalListViewActionHelper!=null) {
                             Calendar calendar= Calendar.getInstance();
-                            if(taskTemplateModel.getDueDate()>=calendar.getTime().getTime()) {
+//                            if(taskTemplateModel.getDueDate()>=calendar.getTime().getTime()) {
                                 Bundle extras = new Bundle();
                                 extras.putString(BundleConstants.TASK_ID, taskTemplateModel.getId());
                                 extras.putBoolean(BundleConstants.IS_FROM_TASK_LIST, true);
                                 verticalListViewActionHelper.knowledgeItemClicked(extras, false);
-                            }
+//                            }
                         }
                     } else {
                        /* if(verticalListViewActionHelper!=null) {
