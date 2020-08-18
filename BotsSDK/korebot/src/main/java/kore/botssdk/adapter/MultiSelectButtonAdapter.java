@@ -20,6 +20,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotMultiSelectElementModel;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 
 public class MultiSelectButtonAdapter extends BaseAdapter {
 
@@ -130,12 +131,17 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     if(composeFooterInterface!= null && isEnabled && checkedItems.size()>0){
                         StringBuffer sb = new StringBuffer();
+                        StringBuffer sbValue = new StringBuffer();
                         for(MultiSelectBase item:checkedItems){
                             if(!sb.toString().isEmpty())
                                 sb.append(",");
                             sb.append(((BotMultiSelectElementModel)item).getTitle());
+
+                            if(!sbValue.toString().isEmpty())
+                                sbValue.append(",");
+                            sbValue.append(((BotMultiSelectElementModel)item).getValue());
                         }
-                        composeFooterInterface.sendWithSomeDelay(sb.toString(),sb.toString(),0,false);
+                        composeFooterInterface.onSendClick(sb.toString(),sbValue.toString(),false);
                     }
 
                 }

@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +27,12 @@ import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
+import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.StringUtils;
+import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,7 +41,6 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     private LayoutInflater inflater;
     private ArrayList<Widget.Button> buttons;
     private Context mContext;
-
     private String skillName;
     private String trigger;
 
@@ -50,8 +53,9 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 
     @NonNull
     @Override
-    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ButtonViewHolder(inflater.inflate(R.layout.widget_button_list_item, viewGroup, false));
+    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i)
+    {
+        return new ButtonViewHolder(inflater.inflate(R.layout.list_btn_item, parent, false));
     }
 
     @Override
@@ -61,7 +65,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         Widget.Button btn = buttons.get(i);
 
 //        if(i<2)
-        holder.tv.setText(btn.getTitle());
+        holder.tvBtnText.setText(btn.getTitle());
 //        else holder.tv.setText("More...");
 
         String utt = null;
@@ -71,21 +75,38 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
             utt = btn.getUtterance();
         }
+        if(!StringUtils.isNullOrEmpty(btn.getUrl())){
+            utt = btn.getUrl();
+        }
+
+//        holder.ivButtonIcon.setVisibility(View.GONE);
+        if(holder.ivListBtnIcon != null && !StringUtils.isNullOrEmpty(btn.getImage().getImage_src()))
+        {
+            holder.ivListBtnIcon.setVisibility(View.VISIBLE);
+            String url = btn.getImage().getImage_src().trim();
+            url = url.replace("http://","https://");
+            Picasso.get().load(url).transform(new RoundedCornersTransform()).into(holder.ivListBtnIcon);
+        }
+
         final String utterance = utt;
 
-        holder.tv.setOnClickListener(new View.OnClickListener(){
+        holder.tvBtnText.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
 //                buttonAction(utterance);
-                if(!holder.tv.getText().equals("More...")) {
+                if(!holder.tvBtnText.getText().equals("More...")) {
                     if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
                             (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
                         buttonAction(utterance, true);
                     } else {
                         buttonAction(utterance, false);
                     }
-                }else{
+
+//                    if(widgetComposeFooterInterface != null)
+//                        widgetComposeFooterInterface.onPanelSendClick(utterance, "", true);
+                }
+                else{
                     WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                     bottomSheetDialog.setisFromFullView(false);
                     bottomSheetDialog.setSkillName(skillName,trigger);
@@ -114,17 +135,17 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv;
+        public TextView tvBtnText;
+        public ImageView ivListBtnIcon;
 //        private LinearLayout ll;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
-            tv = itemView.findViewById(R.id.buttonTV);
+            tvBtnText = (TextView) itemView.findViewById(R.id.tvBtnText);
+            ivListBtnIcon = (ImageView) itemView.findViewById(R.id.ivListBtnIcon);
 //            ll = itemView.findViewById(R.id.buttonsLayout);
-
         }
     }
-
 
     public void buttonAction(String utterance, boolean appendUtterance){
         if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
@@ -148,8 +169,6 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         KoreEventCenter.post(event);
 
         try {
-
-
             if (isFullView) {
                 ((Activity) mContext).finish();
             }

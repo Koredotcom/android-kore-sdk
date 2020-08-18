@@ -14,6 +14,9 @@ import java.util.HashMap;
  */
 public class StringUtils {
 
+    public static String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+
     public static final String unescapeHtml3(final String input) {
         StringWriter writer = null;
         int len = input.length();
@@ -239,5 +242,12 @@ public class StringUtils {
         return stringBuilder.toString().trim();
     }
 
-
+    public static boolean isValidEmail(String emailId)
+    {
+        if (emailId.toString().trim().matches(emailPattern)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

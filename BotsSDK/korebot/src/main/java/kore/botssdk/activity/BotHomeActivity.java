@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 //import com.kore.ai.widgetsdk.activities.PanelMainActivity;
@@ -19,6 +20,7 @@ import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.StringUtils;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -27,7 +29,7 @@ import kore.botssdk.utils.BundleUtils;
 public class BotHomeActivity extends BotAppCompactActivity {
 
     private Button launchBotBtn;
-
+    private EditText etIdentity;
 
 
     @Override
@@ -44,7 +46,11 @@ public class BotHomeActivity extends BotAppCompactActivity {
     private void findViews() {
 
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
-        launchBotBtn.setText(SDKConfiguration.Client.bot_name);
+        etIdentity = (EditText) findViewById(R.id.etIdentity);
+        launchBotBtn.setText(getResources().getString(R.string.connect));
+        etIdentity.setText(SDKConfiguration.Client.identity);
+        if(etIdentity.getText().toString() != null && etIdentity.getText().toString().length() > 0)
+            etIdentity.setSelection(etIdentity.getText().toString().length());
     }
 
     private void setListeners() {
@@ -78,10 +84,23 @@ public class BotHomeActivity extends BotAppCompactActivity {
     View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (isOnline()) {
-                BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
-                launchBotChatActivity();
-            } else {
+            if (isOnline())
+            {
+                if(!StringUtils.isNullOrEmpty(etIdentity.getText().toString()))
+                {
+                    if(StringUtils.isValidEmail(etIdentity.getText().toString()))
+                    {
+                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
+                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+                        launchBotChatActivity();
+                    }
+                    else
+                        Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
+                }
+                else
+                    Toast.makeText(BotHomeActivity.this, "Please enter your Email.", Toast.LENGTH_SHORT).show();
+            } else
+                {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();
             }
         }

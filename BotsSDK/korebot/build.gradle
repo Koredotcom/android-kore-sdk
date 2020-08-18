@@ -60,6 +60,7 @@ dependencies {
     compile(project(':widgetsdk')){
         exclude module: 'support-v4'
         exclude group: 'org.apache.commons'
+        exclude module: 'com.github.PhilJay'
     }
     compile 'androidx.multidex:multidex:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'

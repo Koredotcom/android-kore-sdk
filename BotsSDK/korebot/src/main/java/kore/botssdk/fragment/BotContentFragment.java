@@ -1,7 +1,9 @@
 package kore.botssdk.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.AttrRes;
@@ -25,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -91,7 +94,7 @@ import retrofit2.Response;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
-
+    RelativeLayout rvChatContent;
     RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
@@ -113,7 +116,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
     private int offset = 0;
-
+    private SharedPreferences sharedPreferences;
+    private String chatBgColor, chatTextColor;
     //Date Range
     private long today;
     private long nextMonth;
@@ -137,11 +141,13 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     private void findViews(View view) {
+        rvChatContent = (RelativeLayout)view.findViewById(R.id.rvChatContent);
         botsBubblesListView =  view.findViewById(R.id.chatContentListView);
         mLayoutManager = (LinearLayoutManager) botsBubblesListView.getLayoutManager();
         headerView = view.findViewById(R.id.filesSectionHeader);
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
+        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -158,6 +164,20 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
 
         });
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        chatBgColor = sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
+        chatTextColor = sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
+        rvChatContent.setBackgroundColor(Color.parseColor(chatBgColor));
+
+        GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
+        gradientDrawable.setColor(Color.parseColor(chatBgColor));
+        headerView.setTextColor(Color.parseColor(chatTextColor));
+
     }
 
     private void setupAdapter() {

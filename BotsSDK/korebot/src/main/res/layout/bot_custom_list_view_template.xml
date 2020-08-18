@@ -12,7 +12,7 @@
         android:id="@+id/botCustomListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="#ffffff"
+        android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"

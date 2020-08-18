@@ -61,6 +61,7 @@
     <color name="right_footer_divider">#5bafd6</color>
     <color name="right_lastsend_footer_divider">#A3DEFB</color>
     <color name="left_footer_divider">#A4A4A4</color>
+    <color name="readReceiptLightGrey">#EBEBEB</color>
 
     <color name="bubble_sender_name">#9d9d9d</color>
     <color name="bubble_expiry_color">#eea800</color>

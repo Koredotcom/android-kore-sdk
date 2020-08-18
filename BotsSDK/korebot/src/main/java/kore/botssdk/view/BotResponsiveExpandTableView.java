@@ -149,7 +149,8 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             int height = 0;
-            height = getListViewHeightBasedOnChildren(tableDataView);
+//            height = getListViewHeightBasedOnChildren(tableDataView);
+            height = 70 * dp1 * tableDataView.getAdapter().getCount();
             height += tableHeaderView.getMeasuredHeight();
 
 //            if (height != 0 ) {
@@ -182,10 +183,10 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            totalHeight += 75 * dp1;
+            totalHeight += 70 * dp1;
 
-            if(i == listAdapter.getCount()-1)
-                totalHeight += 25 * dp1;
+//            if(i == listAdapter.getCount()-1)
+//                totalHeight += 25 * dp1;
 
             Log.e("Child Height", listItem.getMeasuredHeight()+"");
         }

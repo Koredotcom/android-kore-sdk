@@ -263,7 +263,7 @@ public class KaPanelWidgetsBaseAdapter extends RecyclerView.Adapter implements U
 ////            ((WelcomeSummaryViewHolder) holder).getCustomView().setComposeFooterInterface((PanelMainActivity) activityObj);
 //        }
         else if (holder instanceof KaWidgetBaseAdapterNew.ListWidgetViewHolder) {
-//            ((KaWidgetBaseAdapterNew.ListWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().get(position),panelData,widget.getData().get(position).getTrigger());
+            ((KaWidgetBaseAdapterNew.ListWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().get(position), panelData, "", "");
         }
 
 

@@ -99,6 +99,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUTTON_ACTIVE_TXT_COLOR = "BUTTON_ACTIVE_TXT_COLOR";
     public static final String BUTTON_INACTIVE_BG_COLOR = "BUTTON_INACTIVE_BG_COLOR";
     public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
+    public static final String WIDGET_BG_COLOR = "WIDGET_BG_COLOR";
+    public static final String WIDGET_TXT_COLOR = "WIDGET_TXT_COLOR";
 
     public static final String BOT_CHAT_BUBBLE_BACKGROUND_COLOR="Bot chat bubble background color";
     public static final String BOT_CHAT_BUBBLE_TEXT_COLOR="Bot chat bubble text color";
@@ -108,6 +110,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUTTON_ACTIVE_TEXT_COLOR="Button active text color";
     public static final String BUTTON_INACTIVE_BACKGROUND_COLOR = "Button inactive background color";
     public static final String BUTTON_INACTIVE_TEXT_COLOR = "Button inactive text color";
+    public static final String WIDGET_BACKGROUND_COLOR = "Widget background color";
+    public static final String WIDGET_TEXT_COLOR = "Widget text color";
 
 
     private String type;

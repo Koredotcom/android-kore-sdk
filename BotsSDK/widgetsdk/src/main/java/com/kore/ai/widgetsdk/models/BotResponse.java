@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class BotResponse extends BaseBotMessage {
 
     public static final String TEMPLATE_TYPE_BUTTON = "button";
-    public static final String TEMPLATE_TYPE_LIST = "list";
+    public static final String TEMPLATE_TYPE_LIST = "List";
     public static final String TEMPLATE_TYPE_PIECHART = "piechart";
     public static final String TEMPLATE_TYPE_LINECHART = "linechart";
     public static final String TEMPLATE_TYPE_BARCHART = "barchart";

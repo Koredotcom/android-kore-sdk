@@ -2,9 +2,13 @@ package com.kore.ai.widgetsdk.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kore.ai.widgetsdk.net.SDKConfiguration;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
+
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 
 public class WidgetsModel implements Serializable,Cloneable {
 
@@ -319,7 +323,8 @@ public class WidgetsModel implements Serializable,Cloneable {
 
     public class Param implements Serializable
     {
-        private String from = "sri.harsha@kore.com";
+        private String from = identity;
+//        private String from = UUID.randomUUID().toString();
         private Object inputs = new Object();
 
         public String getFrom(){ return from;}

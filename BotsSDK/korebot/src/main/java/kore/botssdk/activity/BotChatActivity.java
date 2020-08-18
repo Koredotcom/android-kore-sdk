@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kore.ai.widgetsdk.adapters.PannelAdapter;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
+import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.JWTTokenResponse;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
@@ -71,54 +72,13 @@ import kore.botssdk.utils.TTSSynthesizer;
 
 import static android.view.View.VISIBLE;
 
-//import com.kore.ai.widgetsdk.activities.PanelMainActivity;
-//import com.kore.ai.widgetsdk.adapters.KaWidgetBaseAdapterNew;
-//import com.kore.ai.widgetsdk.adapters.PannelAdapter;
-//import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
-//import com.kore.ai.widgetsdk.interfaces.PanelInterface;
-//import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
-//import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
-//import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
-//import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
-//import com.kore.ai.widgetsdk.models.ContactViewListModel;
-//import com.kore.ai.widgetsdk.models.JWTTokenResponse;
-//import com.kore.ai.widgetsdk.models.PanelBaseModel;
-//import com.kore.ai.widgetsdk.models.PanelResponseData;
-//import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
-//import com.kore.ai.widgetsdk.models.WidgetsModel;
-//import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-//import com.kore.ai.widgetsdk.net.BotJWTRestBuilder;
-//import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
-//import com.kore.ai.widgetsdk.net.KaRestBuilder;
-//import com.kore.ai.widgetsdk.utils.AppUtils;
-//import com.kore.ai.widgetsdk.utils.KaFontUtils;
-//import com.kore.ai.widgetsdk.utils.KaUtility;
-//import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
-//import com.kore.ai.widgetsdk.utils.StringUtils;
-//import com.kore.ai.widgetsdk.utils.Utility;
-//import com.kore.ai.widgetsdk.utils.Utils;
-//import com.kore.ai.widgetsdk.utils.WidgetConstants;
-//import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
-//import com.kore.ai.widgetsdk.views.widgetviews.ArticlesWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.BarChartWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.ChartListWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
-//import com.kore.ai.widgetsdk.views.widgetviews.DefaultWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.GenericWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.LineChartWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.ListWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.MeetingWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.PieChartWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.SkillWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.TrendingHashTagView;
-
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -206,11 +166,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         setupTextToSpeech();
         KoreEventCenter.register(this);
         BotSocketConnectionManager.getInstance().setChatListener(sListener);
-//        attachFragments();
-//        getJWToken();
+        attachFragments();
        // connectToWebSocketAnonymous();
-
-
     }
 
     SocketChatListener sListener = new SocketChatListener() {
@@ -418,7 +375,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void sendWithSomeDelay(String message, String payload,long time,boolean isScrollupNeeded) {
-
+        Log.e("Message", message);
     }
 
     @Override
@@ -688,138 +645,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         composerFragment.setArguments(getIntent().getExtras());
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-//        composerFragment.setComposeFooterInterface(BotChatActivity.this);
+        composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
 //        composerFragment.setInvokeGenericWebViewInterface(this);
 //        actionsContainer = findViewById(R.id.actions_container);
         // footerContainer = findViewById(R.id.footer_container);
 
 
     }
-
-//    private void findPanelView()
-//    {
-//        pannel_recycler = (RecyclerView)findViewById(R.id.pannel_recycler);
-//        progressBarPanel = (ProgressBar) findViewById(R.id.progressBarPanel);
-//        emptyPanelView = (TextView)findViewById(R.id.emptyView);
-//
-//        perssiatentPanel = findViewById(R.id.persistentPanel);
-//        persistentSubLayout = findViewById(R.id.panel_sub_layout);
-//        img_skill = findViewById(R.id.img_skill);
-//        txtTitle = findViewById(R.id.txtTitle);
-//        editButton = (TextView) findViewById(R.id.editButton);
-//        editButton.setTypeface(KaUtility.getTypeFaceObj(this));
-//
-//        recyclerView_panel = findViewById(R.id.recyclerView_panel);
-//        closeBtnPanel = (TextView) findViewById(R.id.closeBtnPanel);
-//        closeBtnPanel.setTypeface(KaUtility.getTypeFaceObj(this));
-//        single_item_container = findViewById(R.id.single_item_container);
-//
-//        recyclerView_panel.setLayoutManager(new LinearLayoutManager(this));
-//        mBottomSheetBehavior = CustomBottomSheetBehavior.from(perssiatentPanel);
-//
-//        pannel_recycler.setLayoutManager(new LinearLayoutManager(BotChatActivity.this, LinearLayoutManager.HORIZONTAL, false));
-//    }
-
-//    /*
-//    @PanelName : Launch default Panel based on name
-//     */
-//    public void getPanelData(final String panelName, final boolean isFromPresence) {
-//        Call<List<PanelResponseData.Panel>> baseWidgetData = KaRestBuilder.getWidgetKaRestAPI().
-//                getWidgetPannelData(com.kore.ai.widgetsdk.net.SDKConfiguration.Client.bot_id, Utils.ah(jwtToken), com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity);
-//        KaRestAPIHelper.enqueueWithRetry(baseWidgetData, new Callback<List<PanelResponseData.Panel>>() {
-//            @Override
-//            public void onResponse(Call<List<PanelResponseData.Panel>> call, Response<List<PanelResponseData.Panel>> response) {
-//                if (response != null && response.isSuccessful()) {
-//                    progressBarPanel.setVisibility(View.GONE);
-//                    pannel_recycler.setVisibility(View.VISIBLE);
-//                    Log.e("Panel Response", response.body()+"");
-//                    PanelResponseData panelResponseData = new PanelResponseData();
-//                    panelResponseData.setPanels(response.body());
-//                    updatePannelData(panelResponseData, panelName,isFromPresence);
-//                }
-//                else {
-////                    ((KoraMainActivity) getActivity()).dismissMainLoader();
-//                    progressBarPanel.setVisibility(View.GONE);
-//                    if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
-//                        emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
-//                        emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", BotChatActivity.this));
-//                        emptyPanelView.setVisibility(View.VISIBLE);
-//                    } else {
-//                        emptyPanelView.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<PanelResponseData.Panel>> call, Throwable t) {
-//                progressBarPanel.setVisibility(View.GONE);
-//                if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
-//                    emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
-//                    emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", BotChatActivity.this));
-//                    emptyPanelView.setVisibility(View.VISIBLE);
-//                } else {
-//                    emptyPanelView.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-//    }
-
-//    private void updatePannelData(PanelResponseData panelResponseData, String panelName, boolean isFromPresence) {
-//
-//        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
-//            emptyPanelView.setVisibility(View.GONE);
-//            pannelAdapter = new PannelAdapter(BotChatActivity.this, panelResponseData, this);
-//            pannel_recycler.setAdapter(pannelAdapter);
-//            PanelBaseModel model = getHomeModelData(panelResponseData, panelName);
-//
-//            if (model != null) {
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        SharedPreferenceUtils sharedPreferenceUtils = SharedPreferenceUtils.getInstance(BotChatActivity.this);
-//                        if (sharedPreferenceUtils.getKeyValue(com.kore.ai.widgetsdk.utils.BundleConstants.IS_ON_BOARDED, false)) {
-//                        }
-//                    }
-//                }, 700);
-//            }
-//
-//        } else {
-//            emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", BotChatActivity.this));
-//            emptyPanelView.setVisibility(View.VISIBLE);
-//        }
-//    }
-
-//    private void getJWToken() {
-//
-//        HashMap<String, Object> hsh = new HashMap<>();
-//        hsh.put("clientId", client_id);
-//        hsh.put("clientSecret",client_secret);
-//        hsh.put("identity", identity);
-//        hsh.put("aud","https://idproxy.kore.com/authorize");
-//        hsh.put("isAnonymous",1);
-//
-//        Call<JWTTokenResponse> getJWTTokenService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(hsh);
-//        getJWTTokenService.enqueue(new Callback<JWTTokenResponse>() {
-//            @Override
-//            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
-//                if (response.isSuccessful()) {
-//                    jwtKeyResponse = response.body();
-//                    jwtToken = jwtKeyResponse.getJwt();
-//
-//                    if(sharedPreferenceUtils != null)
-//                    {
-//                        sharedPreferenceUtils.putKeyValue("JWToken", jwtToken);
-//                    }
-//
-//                    getPanelData("home",false);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
-//            }
-//        });
-//    }
 
     private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
         PanelBaseModel model = null;
@@ -838,418 +670,21 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return model;
     }
 
-//    @Override
-//    public void onPanelClicked(PanelBaseModel pModel)
-//    {
-//        if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
-//            try {
-//                if (isAppInstalled(getApplicationContext(), packageName))
-//                {
-//                    Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://messages"));
-//                    _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(_intent);
-//                }
-//                else
-//                {
-//                    try {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
-//
-//                    } catch (android.content.ActivityNotFoundException anfe) {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
-//                    }
-//                }
-//            } catch (Exception e) {
-//                if (isAppEnabled(getApplicationContext(), packageName)) {
-//                    Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    getApplicationContext().startActivity(intent);
-//                } else
-//                    Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
-//            }
-//            return;
-//        } else if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
-//            try {
-//                if (isAppInstalled(getApplicationContext(), packageName)) {
-//                    Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://teams"/*"http://threads.com/thread"*/));
-//                    _intent.putExtra("KoreHomeState", "KoreHomeState");
-//                    _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(_intent);
-//                } else {
-//                    try {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
-//                    } catch (android.content.ActivityNotFoundException anfe) {
-//                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
-//                    }
-//                }
-//            } catch (Exception e) {
-//                if (isAppEnabled(getApplicationContext(), packageName)) {
-//                    Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-//                    intent.putExtra("KoreHomeState", "KoreHomeState");
-//                    getApplicationContext().startActivity(intent);
-//                } else
-//                    Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
-//            }
-//            return;
-//        }
-//
-//
-//        if (mBottomSheetBehavior != null) {
-//            if (keyBoardShowing)
-//                AppUtils.showHideVirtualKeyboard(BotChatActivity.this, null, false);
-//            pModels = removeSystemHealth((PanelBaseModel) pModel);
-//            persistentSubLayout.setVisibility(View.VISIBLE);
-//            perssiatentPanel.setVisibility(View.VISIBLE);
-//            handler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    updatePanelData((PanelBaseModel) pModel, false);
-//                }
-//            }, 500);
-//
-//            perssiatentPanel.post(new Runnable() {
-//                @Override
-//                public void run() {
-////                    if(!isFromPresence) {
-//                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-////                    }
-//                }
-//            });
-//        }
-//    }
-//
-//    private static boolean isAppEnabled(Context context, String packageName) {
-//        boolean appStatus = false;
-//        try {
-//            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(packageName, 0);
-//            if (ai != null) {
-//                appStatus = ai.enabled;
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return appStatus;
-//    }
-//
-//    private static boolean isAppInstalled(Context context, String packageName) {
-//        PackageManager pm = context.getPackageManager();
-//        try {
-//            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-//            return true;
-//        } catch (PackageManager.NameNotFoundException ignored) {
-//        }
-//        return false;
-//    }
-//
-//    private PanelBaseModel removeSystemHealth(PanelBaseModel model) {
-//        if (model != null && model.getData() != null && model.getData().getWidgets() != null) {
-//            boolean isHomePanel = model.getData().getName().equalsIgnoreCase("home");
-//            ArrayList<WidgetsModel> newWidgets = new ArrayList<>();
-//            for (int index = 0; index < model.getData().getWidgets().size(); index++) {
-//                if (model.getData().getWidgets().get(index).getTemplateType() != null &&
-//                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.SYSTEM_HEALTH_TEMPLATE)) {
-////                    model.getData().getWidgets().remove(index);
-//                    continue;
-//                }
-//                if (isHomePanel && model.getData().getWidgets().get(index).getTemplateType() != null &&
-//                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.MEETINGS_TEMPLATE_SERVER)) {
-////                    model.getData().getWidgets().remove(index);
-//                    continue;
-//                }
-//                newWidgets.add( model.getData().getWidgets().get(index));
-//            }
-//            model.getData().setWidgets(newWidgets);
-//        }
-//        return model;
-//    }
-//
-//    private void updatePanelData(PanelBaseModel pModels, boolean isFirstLaunch)
-//    {
-//        int size = pModels.getData().getWidgets().size();
-//
-////        if (size == 0) {
-////            showToast("No data to show");
-////            return;
-////        }
-//
-//        LinearLayout img_background = (LinearLayout) findViewById(com.kora.ai.widgetsdk.R.id.panel_title_icon);
-//        img_background.setBackgroundResource(0);
-//
-//        try {
-//            img_skill.setVisibility(VISIBLE);
-//            String imageData;
-//            imageData = pModels.getData().getIcon();
-//            if (imageData.contains(",")) {
-//                imageData = imageData.substring(imageData.indexOf(",") + 1);
-//                byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
-//                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-//                img_skill.setImageBitmap(decodedByte);
-//            } else {
-//                Picasso.get().load(imageData).into(img_skill);
-////                selectedItem.setColor(getResources().getColor(android.R.color.transparent));
-//            }
-//        } catch (Exception e) {
-//            img_skill.setVisibility(GONE);
-//        }
-//
-//
-//        if (size > 1) {
-//            List<WidgetsModel> tempModel = sortData(pModels);
-//            if (tempModel != null && tempModel.size() > 1) {
-//                editButton.setVisibility(View.VISIBLE);
-//            }
-//            else {
-//                editButton.setVisibility(View.GONE);
-//            }
-//
-//            recyclerView_panel.setVisibility(View.VISIBLE);
-//            single_item_container.removeAllViews();
-//            single_item_container.setVisibility(View.GONE);
-//            if (widgetBaseAdapter == null)
-//                widgetBaseAdapter = new KaWidgetBaseAdapterNew(this, size > 1 ? WidgetViewMoreEnum.COLLAPSE_VIEW : WidgetViewMoreEnum.EXPAND_VIEW, isFirstLaunch, (""));
-//            widgetBaseAdapter.setFirstLaunch(isFirstLaunch);
-//            recyclerView_panel.setAdapter(widgetBaseAdapter);
-//            widgetBaseAdapter.setWidget(pModels, jwtToken);
-//            widgetBaseAdapter.notifyDataSetChanged();
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Utility.setRecyclerViewTempForOnboard(recyclerView_panel, pModels.getData().get_id());
-//                }
-//            }, 500);
-//        } else {
-//            editButton.setVisibility(View.GONE);
-//            single_item_container.setVisibility(View.VISIBLE);
-//            recyclerView_panel.setVisibility(View.GONE);
-//            if (widgetBaseAdapter != null) {
-//                recyclerView_panel.setAdapter(null);
-//                widgetBaseAdapter.notifyDataSetChanged();
-//            }
-//            single_item_container.removeAllViews();
-//            single_item_container.addView(getWidgetObject(pModels));
-//        }
-//
-//        txtTitle.setText(pModels.getData().getName());
-//    }
-//
-//    public int getItemViewType(WidgetsModel widget) {
-//
-//
-//        switch (widget.getTemplateType().toLowerCase()) {
-//            case WidgetConstants.MEETINGS_TEMPLATE_SERVER:
-//                return WidgetConstants.MEETINGS_TEMPLATE;
-//            case WidgetConstants.CHART_LIST:
-//                return WidgetConstants.CHART_LIST_TEMPLATE;
-//
-//            case WidgetConstants.TASK_LIST:
-//                if (widget.getTemplateType().toLowerCase().equals("list")) {
-//                    return WidgetConstants.TASKS_SINGLE_TEMPLATE;
-//                } else {
-//                    return WidgetConstants.TASK_LIST_TEMPLATE;
-//                }
-//
-//            case WidgetConstants.FILES_TEMPLATE_SERVER:
-//                if (widget.getTemplateType().toLowerCase().equals("list")) {
-//                    return WidgetConstants.FILES_SINGLE_TEMPLATE;
-//                } else {
-//                    return WidgetConstants.FILES_TEMPLATE;
-//                }
-//
-//            case WidgetConstants.HASH_TAG_TEMPLATE_SERVER:
-//                return WidgetConstants.HASH_TAG_TEMPLATE;
-//
-//            case WidgetConstants.ARTICLES_TEMPLATE_SERVER:
-//                return WidgetConstants.ARTICLES_TEMPLATE;
-//
-//            case WidgetConstants.ANNOUNCEMENTS_TEMPLATE_SERVER:
-//                return WidgetConstants.ANNOUNCEMENTS_TEMPLATE;
-//
-//            case WidgetConstants.SKILL_TEMPLATE_SERVER:
-//                return WidgetConstants.SKILL_TEMPLATE;
-//
-//            case WidgetConstants.CLOUD_TEMPLATE_SERVER:
-//                return WidgetConstants.CLOUD_TEMPLATE;
-//
-//            case WidgetConstants.HEADLINE_TEMPLATE_SERVER:
-//                return WidgetConstants.HEADLINE_TEMPLATE;
-//            case WidgetConstants.PIE_CHART:
-//                return WidgetConstants.PIE_CHART_TEMPLATE;
-//            case WidgetConstants.BAR_CHART:
-//                return WidgetConstants.BAR_CHART_TEMPLATE;
-//            case WidgetConstants.LINE_CHART:
-//                return WidgetConstants.LINE_CHART_TEMPLATE;
-//            case WidgetConstants.LIST_WIDGET:
-//                return WidgetConstants.LIST_WIDGET_TEMPLATE;
-//            default:
-//                return WidgetConstants.DEFAULT_TEMPLATE;
-//
-//        }
-//    }
-//
-//    public View getWidgetObject(PanelBaseModel pModels) {
-//        View view = null;
-//        PanelLevelData panelData = new PanelLevelData();
-//        panelData.set_id("Id");
-//        panelData.setSkillId("Skill Id");
-//        panelData.setName(pModels.getData().getName() != null ? pModels.getData().getName() : "");
-//
-//        switch (getItemViewType(pModels.getData().getWidgets().get(0))) {
-//            case WidgetConstants.MEETINGS_TEMPLATE:
-//                MeetingWidgetView mView = new MeetingWidgetView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                mView.setWidget(pModels.getData().getWidgets().get(0), panelData);
-//                view = mView;
-//                break;
-//            case WidgetConstants.CHART_LIST_TEMPLATE:
-//                ChartListWidgetView chartListWidgetView = new ChartListWidgetView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                chartListWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData);
-//                view = chartListWidgetView;
-//                break;
-//            case WidgetConstants.ARTICLES_TEMPLATE:
-//                ArticlesWidgetView articlesWidgetView = new ArticlesWidgetView(this, WidgetViewMoreEnum.EXPAND_VIEW);
-//                articlesWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), 0, true, panelData);
-//                view = articlesWidgetView;
-//                break;
-////            case WidgetConstants.HASH_TAG_TEMPLATE:
-////                TrendingHashTagView hashTagView = new TrendingHashTagView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-////                view = hashTagView;
-////                break;
-//
-//            case WidgetConstants.SKILL_TEMPLATE:
-//                SkillWidgetView skillWidgetView = new SkillWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-////                skillWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData);
-//                view = skillWidgetView;
-//                break;
-//
-//            case WidgetConstants.FILES_SINGLE_TEMPLATE:
-//            case WidgetConstants.TASKS_SINGLE_TEMPLATE:
-//                GenericWidgetView gwv = new GenericWidgetView(this, 0, this, null,
-//                        pModels.getData().getName(), "180", false, WidgetViewMoreEnum.EXPAND_VIEW);
-//                gwv.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), true, panelData);
-//                view = gwv;
-//                break;
-//            case WidgetConstants.PIE_CHART_TEMPLATE:
-//                PieChartWidgetView pieChartWidgetView = new PieChartWidgetView(this, pModels.getData().getName());
-//                pieChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = pieChartWidgetView;
-//                break;
-//            case WidgetConstants.BAR_CHART_TEMPLATE:
-//                BarChartWidgetView barChartWidgetView = new BarChartWidgetView(this);
-//                barChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = barChartWidgetView;
-//                break;
-//
-//            case WidgetConstants.LINE_CHART_TEMPLATE:
-//                LineChartWidgetView lineChartWidgetView = new LineChartWidgetView(this);
-//                lineChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = lineChartWidgetView;
-//                break;
-//
-//            case WidgetConstants.LIST_WIDGET_TEMPLATE:
-//                ListWidgetView listWidgetView = new ListWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                listWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData,"Ask MyIT", jwtToken);
-//                view = listWidgetView;
-//                break;
-//
-//            case WidgetConstants.DEFAULT_TEMPLATE:
-//                DefaultWidgetView dView = new DefaultWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                dView.setWidget(pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = dView;
-//                break;
-//        }
-//
-//        return view;
-//
-//    }
-//
-//    public List<WidgetsModel> sortData(PanelBaseModel pModels) {
-//        List<WidgetsModel> widgetsList = new ArrayList<>();
-//        if (pModels != null && pModels.getData() != null) {
-//
-//            for (WidgetsModel widget : pModels.getData().getWidgets()) {
-//                if (!StringUtils.isNullOrEmptyWithTrim(widget.getName())) {
-//                    widgetsList.add(widget);
-//                }
-//            }
-//        }
-//        return widgetsList;
-//    }
-//
-//    @Override
-//    public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
-//
-//    }
-//
-//    @Override
-//    public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {
-//
-//    }
-//
-//    @Override
-//    public void emailItemClicked(String action, HashMap customData) {
-//
-//    }
-//
-//    @Override
-//    public void calendarItemClicked(String action, BaseCalenderTemplateModel model) {
-//
-//    }
-//
-//    @Override
-//    public void tasksSelectedOrDeselected(boolean selecetd) {
-//
-//    }
-//
-//    @Override
-//    public void widgetItemSelected(boolean isSelected, int count) {
-//
-//    }
-//
-//    @Override
-//    public void navigationToDialAndJoin(String actiontype, String actionLink) {
-//
-//    }
-//
-//    @Override
-//    public void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel) {
-//
-//    }
-//
-//    @Override
-//    public void meetingNotesNavigation(Context context, String mId, String eId) {
-//
-//    }
-//
-//    @Override
-//    public void meetingWidgetViewMoreVisibility(boolean visible) {
-//
-//    }
-//
-//    @Override
-//    public void calendarContactItemClick(ContactViewListModel model) {
-//
-//    }
-//
-//    @Override
-//    public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
-//
-//    }
-//
-//    @Override
-//    public void knowledgeCollectionItemClick(com.kore.ai.widgetsdk.models.KnowledgeCollectionModel.DataElements elements, String id) {
-//
-//    }
-//
-//    @Override
-//    public void updateItemToRefresh(int pos) {
-//
-//    }
-//
-//    @Override
-//    public void updateWeatherWidgetSummery(int type, String summary) {
-//
-//    }
-//
-//    @Override
-//    public void onWidgetMenuButtonClicked() {
-//
-//    }
+    @Override
+    public void onPanelSendClick(String message, boolean isFromUtterance)
+    {
+        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+    }
+
+    @Override
+    public void onPanelSendClick(String message, String payload, boolean isFromUtterance)
+    {
+        if(payload != null){
+            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+        }else{
+            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+        }
+
+        toggleQuickRepliesVisiblity(false);
+    }
 }

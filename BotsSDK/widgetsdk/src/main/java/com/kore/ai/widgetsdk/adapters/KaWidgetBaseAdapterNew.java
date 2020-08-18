@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
+import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
 import com.kore.ai.widgetsdk.models.ContactViewListModel;
@@ -48,21 +49,15 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     public boolean isFirstLaunch() {
         return isFirstLaunch;
     }
-
     public void setFirstLaunch(boolean firstLaunch) {
         isFirstLaunch = firstLaunch;
     }
-
     private boolean isFirstLaunch;
-
     private String skillName;
     private String jwtToken;
     public PanelBaseModel getWidget() {
         return widget;
     }
-
-//    private final String EDIT_TEMPLATE = "edit_template";
-//    private final int EDIT_TEMPLATE_TEMP = 16;
 
     public void setWidget(PanelBaseModel widget, String jwtToken) {
         this.widget = widget;
@@ -74,26 +69,6 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             this.panelData=panelData;
             this.jwtToken = jwtToken;
         }
-//        this.widgetTemp=this.widget;
-
-       /* if (this.widget != null) {
-            try {
-                widgetTemp = this.widget.clone();
-                PanelResponseData.Panel data = widgetTemp.getData();
-                List<Widget> list = data.getWidgets();
-                Widget widget1 = new Widget();
-                widget1.setCustomStyle(EDIT_TEMPLATE);
-                list.add(widget1);
-                data.setWidgets(list);
-                widgetTemp.setData(data);
-            } catch (Exception e) {
-                e.printStackTrace();
-                widgetTemp = this.widget;
-            }
-
-        } else {
-            widgetTemp = this.widget;
-        }*/
         widgetTemp = this.widget;
         notifyDataSetChanged();
     }

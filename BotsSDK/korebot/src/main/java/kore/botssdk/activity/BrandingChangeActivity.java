@@ -147,6 +147,16 @@ public class BrandingChangeActivity extends BotAppCompactActivity
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
+                                else if(BotResponse.WIDGET_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                {
+//                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
+                                    editor.putString(BotResponse.WIDGET_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
+                                }
+                                else if(BotResponse.WIDGET_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                {
+//                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
+                                    editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
+                                }
 
                                 editor.apply();
                             }

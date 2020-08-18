@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.activities.FullViewActivity;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ListWidgetAdapter;
 import com.kore.ai.widgetsdk.application.AppControl;
@@ -45,6 +46,7 @@ import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
+import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
@@ -89,6 +91,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         return mWidget;
     }
     PanelLevelData panelData;
+
     public void setWidget(WidgetsModel mWidget, PanelLevelData panelData, String trigger, String jwtToken) {
         this.mWidget = mWidget;
         this.panelData=panelData;
@@ -98,7 +101,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 //        pin_view.setText(mWidget.isPinned() ? context.getResources().getString(R.string.icon_31) :context.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
         panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),name));
-
         loadData(false);
     }
 
@@ -168,15 +170,14 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         view_more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                String data = new Gson().toJson(listWidgetAdapter.getData());
-//                Intent intent = new Intent(getContext(), FullViewActivity.class);
-//                intent.putExtra(BundleConstants.TEMPLATE_TYPE, BotResponse.TEMPLATE_TYPE_LIST);
-//                intent.putExtra(BundleConstants.TITLE_NAME,mWidget.getTitle());
-//                intent.putExtra(BundleConstants.TRIGGER,trigger);
-//                intent.putExtra(BundleConstants.FROM_WIDGET, true);
-//                intent.putExtra(BundleConstants.DATA, data);
-//                getContext().startActivity(intent);
+                String data = new Gson().toJson(listWidgetAdapter.getData());
+                Intent intent = new Intent(getContext(), FullViewActivity.class);
+                intent.putExtra(BundleConstants.TEMPLATE_TYPE, BotResponse.TEMPLATE_TYPE_LIST);
+                intent.putExtra(BundleConstants.TITLE_NAME,mWidget.getTitle());
+                intent.putExtra(BundleConstants.TRIGGER,trigger);
+                intent.putExtra(BundleConstants.FROM_WIDGET, true);
+                intent.putExtra(BundleConstants.DATA, data);
+                getContext().startActivity(intent);
             }
         });
         widget_header = view.findViewById(R.id.meeting_header);
@@ -194,7 +195,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         tvButtonParent = view.findViewById(R.id.tv_values_layout);
         getUserData();
     }
-
 
     @Override
     protected void onAttachedToWindow() {
@@ -371,7 +371,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
                     @Override
                     public void onNext(WidgetListDataModel model) {
-//                        PanelDataLRUCache.getInstance().putEntry(name,model);
+//                        WidgetListDataModel botOptionsModel = gson.fromJson(resp, WidgetListDataModel.class);
                         afterDataLoad(model);
                     }
 

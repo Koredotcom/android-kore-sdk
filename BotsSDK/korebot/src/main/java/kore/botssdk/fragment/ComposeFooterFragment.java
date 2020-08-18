@@ -289,7 +289,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 animateLayoutVisible(mainContentLayout);
                 animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
-                editTextMessage.requestFocus();
+//                editTextMessage.requestFocus();
                 Utility.showVirtualKeyboard(getActivity(),editTextMessage);
         }
     };

@@ -22,11 +22,9 @@ public class WidgetConstants {
     public static final byte BAR_CHART_TEMPLATE = 21;
     public static final byte LINE_CHART_TEMPLATE = 22;
     public static final byte LIST_WIDGET_TEMPLATE = 23;
-
     public static final byte SUMMARY_CARD_TEMPLATE=24;
-
-
     public static final byte HEADLINE_TEMPLATE=25;
+    public static final byte TABLE_LIST_TEMPLATE = 26;
     public static final String HEADLINE_TEMPLATE_SERVER="headlines";
 
 
@@ -60,6 +58,7 @@ public class WidgetConstants {
     public final static String BAR_CHART="barchart";
     public final static String LINE_CHART="linechart";
     public final static String LIST_WIDGET = "list";
+  public final static String TABLE_LIST_WIDGET = "tableList";
 
 
 
