@@ -58,8 +58,8 @@ public class WidgetConstants {
     public final static String BAR_CHART="barchart";
     public final static String LINE_CHART="linechart";
     public final static String LIST_WIDGET = "list";
-  public final static String TABLE_LIST_WIDGET = "tableList";
-
+    public final static String TABLE_LIST_WIDGET = "tableList";
+    public final static String STANDARD = "standard";
 
 
     //public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";

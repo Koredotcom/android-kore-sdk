@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.net;
 
 import com.kore.ai.widgetsdk.models.AnnoucementResModel;
 import com.kore.ai.widgetsdk.models.AnnouncementPanelNewResponse;
+import com.kore.ai.widgetsdk.models.BotTableListTemplateModel;
 import com.kore.ai.widgetsdk.models.CalEventsTemplateModel;
 import com.kore.ai.widgetsdk.models.CreateEmailActionRequest;
 import com.kore.ai.widgetsdk.models.CreateEmailActionResponse;
@@ -38,6 +39,7 @@ import com.kore.ai.widgetsdk.models.WUpcomingTasksModel;
 import com.kore.ai.widgetsdk.models.WeatherWidgetModel;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetListDataModel;
+import com.kore.ai.widgetsdk.models.WidgetTableListDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsWidgetModel;
 import com.kore.ai.widgetsdk.room.models.KORestResponse;
@@ -476,6 +478,9 @@ public interface KaRestAPI {
 
     @POST
     Call<WidgetListDataModel> getListWidgetData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param);
+
+    @POST
+    Call<WidgetTableListDataModel> getTableListWidgetData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param);
 
     @POST
     Call<WeatherWidgetModel> getWeatherServiceData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);

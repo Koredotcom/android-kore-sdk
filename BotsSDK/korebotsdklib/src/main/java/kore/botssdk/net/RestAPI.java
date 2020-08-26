@@ -6,6 +6,7 @@ import java.util.HashMap;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
+import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.net.RestResponse.LoginResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,6 +38,10 @@ public interface RestAPI {
     // Get JWT Token
     @POST("/api" + URL_VERSION + "/users/jwttoken")
     Call<JWTTokenResponse> getJWTToken(@Header("Authorization") String token, @Body HashMap<String, Object> body);
+
+    // Get JWT Token
+    @POST("finastraLoginDEMO/token")
+    Call<TokenResponseModel> getTokenJWT(@Body HashMap<String, Object> body);
 
     // Get JWT Token
     @POST("/api/users/sts")

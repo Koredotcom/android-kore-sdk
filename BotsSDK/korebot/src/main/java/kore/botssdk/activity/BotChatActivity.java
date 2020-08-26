@@ -2,6 +2,8 @@ package kore.botssdk.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -53,11 +55,13 @@ import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
@@ -78,7 +82,7 @@ import static android.view.View.VISIBLE;
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -124,6 +128,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     //Fragment Approch
     private FrameLayout composerView;
     private BottomPanelFragment composerFragment;
+    private SharedPreferences sharedPreferences;
+    private String chatBgColor, chatTextColor;
+    private ImageView ivChaseBackground, ivChaseLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,12 +141,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getBundleInfo();
         getDataFromTxt();
 
+        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
+        botContentFragment.setThemeChangeInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
@@ -227,6 +236,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         chatLayoutContentContainer = (FrameLayout) findViewById(R.id.chatLayoutContentContainer);
         chatLayoutPanelContainer   = (FrameLayout) findViewById(R.id.chatLayoutPanelContainer);
         taskProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
+        ivChaseBackground = (ImageView) findViewById(R.id.ivChaseBackground);
+        ivChaseLogo = (ImageView) findViewById(R.id.ivChaseLogo);
+        sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     private void updateTitleBar() {
@@ -288,6 +300,26 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void onEvent(BaseSocketConnectionManager.CONNECTION_STATE states) {
         updateTitleBar(states);
+    }
+
+    public void onEvent(BrandingModel brandingModel)
+    {
+        SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBotchatBgColor());
+        editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingModel.getBotchatTextColor());
+        editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getUserchatBgColor());
+        editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getUserchatTextColor());
+        editor.putString(BotResponse.BUTTON_ACTIVE_BG_COLOR, brandingModel.getButtonActiveBgColor());
+        editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingModel.getButtonActiveTextColor());
+        editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingModel.getButtonInactiveBgColor());
+        editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getButtonInactiveTextColor());
+        editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBgColor());
+        editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingModel.getWidgetTextColor());
+        editor.apply();
+
+        if(botContentFragment != null)
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBgColor(), brandingModel.getWidgetTextColor());
+        Log.e("Saved", brandingModel.getBotchatBgColor());
     }
 
 
@@ -686,5 +718,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
 
         toggleQuickRepliesVisiblity(false);
+    }
+
+    @Override
+    public void onThemeChangeClicked(String message)
+    {
+        if(message.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+        {
+            ivChaseLogo.setVisibility(View.VISIBLE);
+            ivChaseBackground.setVisibility(View.GONE);
+        }
+        else
+        {
+            ivChaseBackground.setVisibility(VISIBLE);
+            ivChaseLogo.setVisibility(View.GONE);
+        }
     }
 }

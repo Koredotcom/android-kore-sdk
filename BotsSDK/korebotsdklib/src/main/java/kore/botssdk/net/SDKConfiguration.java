@@ -103,14 +103,16 @@ public class SDKConfiguration {
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
 
-        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
-        public static   String SERVER_URL ="https://bots.kore.ai";
+//        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
+//        public static   String SERVER_URL ="https://bots.kore.ai";
+        public static   String TOKEN_SERVER_URL ="https://demodpd.kore.ai";
+
 
 //        static  String KORE_BOT_SERVER_URL = "https://staging-bots.korebots.com";//"https://bots.kore.ai";
 //        public static String SERVER_URL ="https://staging-bots.korebots.com";
 
-//        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://pilot-bots.kore.com/";
+        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
+        public static String SERVER_URL ="https://pilot-bots.kore.com/";
     }
 
     public static class Client {
@@ -135,7 +137,15 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-//        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static void setTenant_id(String tenant_id) {
+            Client.tenant_id = tenant_id;
+        }
+
+        public static String getTenant_id() {
+            return tenant_id;
+        }
+
+        //        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
 //        public static String client_secret = "Zf/sPAMUgD4Hl/y6nUELodw6DJu9cuzaytcAyqL5gO8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
 //        public static String identity = "anilkumar.routhu@kore.com";
 //        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
@@ -174,11 +184,11 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-5dc1c13a-a4e8-5ab1-a611-2faf4ceed2d0";
 
         //Work Bench
-        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "sainath.bhima@kore.com";
-        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-4c43bf14-ac30-51e2-80e9-0f69f246b4a9";
+//        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "sainath.bhima@kore.com";
+//        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-4c43bf14-ac30-51e2-80e9-0f69f246b4a9";
 
         //Staging Bot
 //        public static String client_id = "cs-1dae92c7-47b9-51c4-8dcd-d81f711283a0";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
@@ -193,10 +203,18 @@ public class SDKConfiguration {
 //        public static String identity = "subrahmanyam.donepudi@kore.com";
 //        public static String bot_name = "Banking Solution IVR Demo";//"Android test";//"NewTemplates";
 //        public static String bot_id = "st-13202efd-b6fe-593c-882f-78234643eed3";
+
+        //Finstra Login
+        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "sainath.bhima@kore.com";
+        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-9fe63e5b-38b0-5178-9ff3-cfa72f487765";
+        public static String tenant_id = "5f33b99cff636e7ae858df1c";
     }
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected = APP_REQ_COLOR;
+        public static  String rightBubbleSelected = "#0078cd";
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -240,10 +258,10 @@ public class SDKConfiguration {
 
 
         public static  String rightBubbleUnSelected=APP_REQ_COLOR;
-        public static  String leftBubbleSelected="#EBEBEB";
+        public static  String leftBubbleSelected="#ffffff";
         public static  String leftBubbleUnSelected="#f8f9f8";
         public static  String leftBubbleTextColor="#404051";
-        public static  String rightBubbleTextColor="#161628";//"#757587";
+        public static  String rightBubbleTextColor="#FFFFFF";//"#757587";
         public static  String whiteColor="#FFFFFF";
         public static  String leftBubbleBorderColor = "#eeeef2";
         public static  String rightLinkColor=APP_REQ_COLOR;

@@ -1,8 +1,10 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,11 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class BotListViewTemplateAdapter extends BaseAdapter {
 
@@ -34,6 +39,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     Context context;
     RoundedCornersTransform roundedCornersTransform;
     ListView parentListView;
+    private GradientDrawable bgDrawable;
     int count = 0;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
@@ -88,6 +94,26 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private void populateVIew(ViewHolder holder, int position) {
         BotListModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
+
+        GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
+        rightDrawable.setColor(Color.parseColor("#FFFFFF"));
+
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+
+        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+        {
+            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+            holder.botListItemRoot.setBackground(rightDrawable);
+        }
+        else
+        {
+            rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
+            holder.botListItemRoot.setBackground(rightDrawable);
+        }
+
+
 
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);

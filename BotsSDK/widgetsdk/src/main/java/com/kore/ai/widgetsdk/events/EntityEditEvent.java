@@ -4,6 +4,15 @@ public class EntityEditEvent {
     private String message;
     private String body;
     private String payLoad;
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getMessage() {
         return message;

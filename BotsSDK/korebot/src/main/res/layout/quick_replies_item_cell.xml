@@ -12,14 +12,14 @@
     <LinearLayout
         android:id="@+id/quick_reply_view"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_height="35dp"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/dotted_line"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:background="@drawable/theme_1_button_bg"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:paddingLeft="@dimen/dimen_15_dp"
+        android:paddingRight="@dimen/dimen_15_dp">
 
         <ImageView
             android:id="@+id/quick_reply_item_image"
@@ -39,8 +39,9 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="Hello"
-            android:textColor="@color/color_465360"
-            android:textSize="@dimen/text_size_sub_header" />
+            android:textColor="@color/theme_1_button_bg_color"
+            android:textSize="@dimen/text_size_sub_header"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

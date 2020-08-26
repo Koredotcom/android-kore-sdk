@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryKa">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryKa">#0059b2</color>
+    <color name="colorPrimaryDark">#0059b2</color>
     <!--<color name="colorAccent">#2f91e5</color>--><!-- HSBC - #db0012, BMC Helix - #2f91e5 -->
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
@@ -58,6 +58,8 @@
     <color name="bubbleFileBackground">#f8f8f8</color>
     <color name="colorUnselected">#F4F4F4</color>
     <color name="colorSelected">#E0E0E0</color>
+    <color name="pale_grey">#f3f3f5</color>
+
 
     <!-- Bubble Update(Sprint9A) -->
     <color name="footer_color_dark_grey">#A4A4A4</color>
@@ -78,7 +80,7 @@
     <!-- Offline mode check -->
     <color name="offline_mode_check_bg_color">#CC96A5A9</color>
     <color name="offline_mode_check_text_color">#FFFFFF</color>
-
+    <color name="compose_chase_color">#eaeaea</color>
     <color name="bot_option_text_color">#01CDEF</color>
     <color name="connectBotBackground">#F7F7F7</color>
     <color name="footerdivider_color">#CACACA</color>

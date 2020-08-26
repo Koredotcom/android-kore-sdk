@@ -38,7 +38,7 @@
 
     </LinearLayout>
 
-    <com.kore.ai.widgetsdk.view.AutoExpandListView
+    <ListView
         android:id="@+id/botTableListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

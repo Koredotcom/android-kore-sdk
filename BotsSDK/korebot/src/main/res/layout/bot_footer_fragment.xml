@@ -15,7 +15,7 @@
         android:clickable="true"
         android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!-- Bot Message Fragment resides -->
         <FrameLayout
@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
+            android:visibility="gone"
             android:background="@color/footerdivider_color" />
 
         <!--<com.kore.koreapp.views.AudioVisualiserView
@@ -46,20 +47,24 @@
         <RelativeLayout
             android:id="@+id/fl_footer"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
             android:layout_gravity="bottom"
-            android:background="@color/connectBotBackground"
+            android:background="@color/compose_chase_color"
             android:visibility="visible">
 
             <RelativeLayout
                 android:id="@+id/composeFooterRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/connectBotBackground">
+                android:gravity="center_vertical"
+                android:background="@color/compose_chase_color">
 
                 <RelativeLayout
                     android:id="@+id/tasksRl"
                     android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:layout_height="wrap_content">
 
                     <ImageView
@@ -90,7 +95,7 @@
                         android:paddingRight="5dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/widget_menu"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/loadingTasks"
@@ -132,9 +137,10 @@
                 <LinearLayout
                     android:id="@+id/composeFrameLl"
                     android:layout_width="match_parent"
-                    android:layout_height="49dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
+                    android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
@@ -144,7 +150,7 @@
                     android:layout_toLeftOf="@+id/btnsend1"
                     android:layout_toEndOf="@id/tasksRl"
                     android:layout_toRightOf="@id/tasksRl"
-                    android:background="@color/white"
+                    android:background="@drawable/theme1_compose_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -158,14 +164,15 @@
                         android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
                         android:maxHeight="68dp"
                         android:minHeight="26dp"
-                        android:paddingStart="8dp"
+                        android:paddingStart="10dp"
                         android:paddingLeft="8dp"
                         android:paddingEnd="8dp"
                         android:paddingRight="8dp"
                         android:scrollbars="vertical"
                         android:tag="regular"
                         android:textColor="@color/bubble_dark_text_color"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:layout_marginLeft="@dimen/dimen_5dp"/>
 
                 </LinearLayout>
 
@@ -199,7 +206,7 @@
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
                         android:padding="5dp"
-                        android:src="@drawable/ic_mic_black_24dp"
+                        android:src="@drawable/ic_mic"
                         android:visibility="visible" />
 
                     <ImageView
@@ -247,7 +254,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="1.0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_view_speech"

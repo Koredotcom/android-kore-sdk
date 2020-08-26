@@ -66,11 +66,11 @@ public class TextMediaLayout extends ViewGroup {
     private Typeface medium, regular;
     private GradientDrawable rightDrawable, leftDrawable;
     private int transparency;
-
+    private SharedPreferences sharedPreferences;
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
     private Gson gson = new Gson();
-    private String leftbgColor, leftTextColor, rightbgColor, rightTextColor;
+    private String leftbgColor, leftTextColor, rightbgColor, rightTextColor, themeName;
     public boolean isClicable() {
         return isClicable;
     }//
@@ -102,21 +102,22 @@ public class TextMediaLayout extends ViewGroup {
         //Add a textView
         botContentTextView = new LinkifyTextView(getContext());
 
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
-        leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleTextColor);
-        rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, SDKConfiguration.BubbleColors.rightBubbleTextColor);
-        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, SDKConfiguration.BubbleColors.rightBubbleSelected);
+        sharedPreferences = getSharedPreferences();
+        leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
+        rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
+        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
+        themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
 
         //Transparency 15%
         transparency = 0x26000000;
-        rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
+        rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_right_bubble_bg);
         rightDrawable.setColor(Color.parseColor(rightbgColor));
-        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+        leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
 
-        leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
-        leftDrawable.setColor(Color.parseColor(leftbgColor));
-        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
+            leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -136,9 +137,16 @@ public class TextMediaLayout extends ViewGroup {
         addView(botContentTextView);
 
     }
+
+    private SharedPreferences getSharedPreferences()
+    {
+        sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences;
+    }
+
     public void onEvent(ProfileColorUpdateEvent event){
-        rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
-        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+//        rightDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
+//        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+transparency);
     }
     @Override
     protected void onAttachedToWindow() {
@@ -262,7 +270,16 @@ public class TextMediaLayout extends ViewGroup {
             }
 
             if(leftTextColor != null)
+            {
                 botContentTextView.setTextColor(Color.parseColor(leftTextColor));
+                themeName = getSharedPreferences().getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+                leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
+                Log.e("Theme Name", themeName);
+                if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
+                    leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
+
+                botContentTextView.setBackground(leftDrawable);
+            }
 
             if(isPencilSpanClick && !isClicable()){
                 botContentTextView.setText(getRemovedEntityEditString(strBuilder.toString()));
@@ -281,7 +298,6 @@ public class TextMediaLayout extends ViewGroup {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
         }
-
     }
 
     public void populateTextSenders(String textualContent) {

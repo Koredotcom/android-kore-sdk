@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"BankAssist.ai"</string>
+    <string name="app_name">"Chase"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>
@@ -39,7 +39,7 @@
     <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
     <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
     <string name="view_more">View more</string>
-
+    <string name="chase_digital_assistantSM"><![CDATA[Chase Digital Assistant<sup><small>SM</small></sup>]]></string>
     <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
     <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
     <string name="icon_e979">&#xe979;</string> <!-- MEETING -->
@@ -91,6 +91,7 @@
     </string>
     <string name="save">Save</string>
     <string name="connect">Connect</string>
+
 
 
 </resources>

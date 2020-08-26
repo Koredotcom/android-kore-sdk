@@ -16,6 +16,7 @@ import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.InvokeGenericWebViewInterface;
+import com.kore.ai.widgetsdk.models.BotTableListElementsItemsModel;
 import com.kore.ai.widgetsdk.models.BotTableListRowItemsModel;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class BotTableListInnerAdapter extends BaseAdapter
 {
     private Context context;
-    private ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels;
+    private ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels;
     String LOG_TAG = BotTableListInnerAdapter.class.getSimpleName();
     LayoutInflater ownLayoutInflator;
     ListView parentListView;
@@ -35,7 +36,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int dp1;
 
-    protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels)
+    protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels)
     {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
@@ -51,7 +52,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
     }
 
     @Override
-    public BotTableListRowItemsModel getItem(int position)
+    public BotTableListElementsItemsModel getItem(int position)
     {
         return botTableListRowItemsModels.get(position);
     }
@@ -81,55 +82,56 @@ public class BotTableListInnerAdapter extends BaseAdapter
     }
 
     private void populateVIew(ViewHolder holder, int position) {
-        BotTableListRowItemsModel botListModel = getItem(position);
+        BotTableListElementsItemsModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if(botListModel.getTitle() != null && botListModel.getTitle().getImage() != null)
+        if(botListModel.getImage() != null)
         {
-            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getImage().getImage_src()))
+            if(!StringUtils.isNullOrEmpty(botListModel.getImage().getImage_src()))
             {
                 holder.botListItemImage.setVisibility(View.VISIBLE);
-                Picasso.get().load(botListModel.getTitle().getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
+                Picasso.get().load(botListModel.getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
 
-                if(botListModel.getTitle().getImage().getRadius() > 0)
+                if(botListModel.getImage().getRadius() > 0)
                 {
-                    holder.botListItemImage.getLayoutParams().height = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
-                    holder.botListItemImage.getLayoutParams().width = botListModel.getTitle().getImage().getRadius() * 2 * dp1;
+                    holder.botListItemImage.getLayoutParams().height = botListModel.getImage().getRadius() * 2 * dp1;
+                    holder.botListItemImage.getLayoutParams().width = botListModel.getImage().getRadius() * 2 * dp1;
                 }
             }
         }
 
         holder.botListItemTitle.setTag(botListModel);
 
-        if(botListModel.getTitle().getText() != null)
+        if(botListModel.getTitle() != null)
         {
-            holder.botListItemTitle.setText(botListModel.getTitle().getText().getTitle());
+            holder.botListItemTitle.setText(botListModel.getTitle());
             holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
 
-            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getText().getSubtitle())) {
+            if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
                 holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-                holder.botListItemSubtitle.setText(botListModel.getTitle().getText().getSubtitle());
+                holder.botListItemSubtitle.setText(botListModel.getSubtitle());
             }
         }
-        else if(botListModel.getTitle().getUrl() != null)
-        {
-            holder.botListItemTitle.setText(botListModel.getTitle().getUrl().getTitle());
-            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
-
-            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getUrl().getSubtitle())) {
-                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-                holder.botListItemSubtitle.setText(botListModel.getTitle().getUrl().getSubtitle());
-            }
-        }
+//        else
+//            if(botListModel.getTitle().getUrl() != null)
+//        {
+//            holder.botListItemTitle.setText(botListModel.getTitle().getUrl().getTitle());
+//            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
+//
+//            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getUrl().getSubtitle())) {
+//                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+//                holder.botListItemSubtitle.setText(botListModel.getTitle().getUrl().getSubtitle());
+//            }
+//        }
 
         holder.bot_list_item_cost.setTextColor(context.getResources().getColor(R.color.txtFontBlack));
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getRowColor()))
-        {
-            holder.botListItemTitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-            holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-            holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-        }
+//        if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getRowColor()))
+//        {
+//            holder.botListItemTitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
+//            holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
+//            holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
+//        }
 
         if(botListModel.getValue().getType().equalsIgnoreCase("text"))
         {
@@ -137,7 +139,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
                 holder.bot_list_item_cost.setVisibility(View.VISIBLE);
                 holder.bot_list_item_cost.setText(botListModel.getValue().getText());
 
-                if(!StringUtils.isNullOrEmpty(botListModel.getValue().getLayout().getColor()))
+                if(botListModel.getValue().getLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getValue().getLayout().getColor()))
                 {
                     holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getValue().getLayout().getColor()));
                 }

@@ -1,6 +1,7 @@
 package kore.botssdk.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -18,15 +19,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +41,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
+import com.j256.ormlite.stmt.query.In;
 
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -53,7 +59,9 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import io.socket.client.On;
 import kore.botssdk.R;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.dialogs.CalenderActionSheetFragment;
 import kore.botssdk.dialogs.DateRangeCalendarActionSheetFragment;
@@ -62,6 +70,7 @@ import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.BotHistoryMessage;
@@ -104,6 +113,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private DotsTextView typingStatusItemDots;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    ThemeChangeListener themeChangeListener;
     boolean shallShowProfilePic;
     private String mChannelIconURL;
     private String mBotNameInitials;
@@ -111,7 +121,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private int mBotIconId;
     private boolean fetching = false;
     private boolean hasMore = true;
-    private TextView headerView;
+    private TextView headerView, tvTheme1, tvTheme2;
     private Gson gson = new Gson();
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
@@ -126,13 +136,24 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private long oneYearForward;
     private Pair<Long, Long> todayPair;
     private Pair<Long, Long> nextMonthPair;
+    private ImageView ivThemeSwitcher, ivChaseLogo;
+    private PopupWindow popupWindow;
+    private View popUpView;
+    private TextView tvChaseTitle;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true;
+        popUpView = inflater.inflate(R.layout.theme_change_layout, null);
+        popupWindow = new PopupWindow(popUpView, width, height, focusable);
         findViews(view);
+        findThemeViews(popUpView);
         getBundleInfo();
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
@@ -147,11 +168,17 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         headerView = view.findViewById(R.id.filesSectionHeader);
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
+        ivThemeSwitcher = view.findViewById(R.id.ivThemeSwitcher);
+        ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
+        tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
+        headerView.setVisibility(View.GONE);
+        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.chase_digital_assistantSM)));
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -164,20 +191,76 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
 
         });
+
+        ivThemeSwitcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.showAtLocation(ivThemeSwitcher, Gravity.TOP|Gravity.RIGHT, 80, 220);
+            }
+        });
+
+    }
+
+    public void findThemeViews(View view)
+    {
+        tvTheme1 = view.findViewById(R.id.tvTheme1);
+        tvTheme2 = view.findViewById(R.id.tvTheme2);
+
+        tvTheme1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.dismiss();
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+                editor.apply();
+
+                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_1);
+            }
+        });
+
+        tvTheme2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
+                editor.apply();
+
+                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_2);
+            }
+        });
+    }
+
+    public void changeThemeAndLaunch()
+    {
+        Intent intent = new Intent(getActivity(), BotChatActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        chatBgColor = sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
-        chatTextColor = sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
-        rvChatContent.setBackgroundColor(Color.parseColor(chatBgColor));
+//        chatBgColor = sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#f3f3f5");
+//        chatTextColor = sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
+//        rvChatContent.setBackgroundColor(Color.parseColor(chatBgColor));
+//
+//        GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
+//        gradientDrawable.setColor(Color.parseColor(chatBgColor));
+//        headerView.setTextColor(Color.parseColor(chatTextColor));
+
+    }
+
+    public void changeThemeBackGround(String bgColor, String textColor)
+    {
+        rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
 
         GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-        gradientDrawable.setColor(Color.parseColor(chatBgColor));
-        headerView.setTextColor(Color.parseColor(chatTextColor));
-
+        gradientDrawable.setColor(Color.parseColor(bgColor));
+        headerView.setTextColor(Color.parseColor(textColor));
     }
 
     private void setupAdapter() {
@@ -203,6 +286,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public void setThemeChangeInterface(ThemeChangeListener themeChangeListener) {
+        this.themeChangeListener = themeChangeListener;
     }
 
     private void getBundleInfo() {

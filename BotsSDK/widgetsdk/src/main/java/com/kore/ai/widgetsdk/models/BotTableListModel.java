@@ -3,15 +3,24 @@ package com.kore.ai.widgetsdk.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BotTableListModel implements Serializable
+public class BotTableListModel
 {
     private String sectionHeader;
     private String sectionHeaderDesc;
     private ArrayList<BotTableListRowItemsModel> rowItems;
+//    private ArrayList<BotTableListRowItemsModel> elements;
+//
+//    public ArrayList<BotTableListRowItemsModel> getElements() {
+//        return elements;
+//    }
+//
+//    public void setElements(ArrayList<BotTableListRowItemsModel> elements) {
+//        this.elements = elements;
+//    }
 
     public ArrayList<BotTableListRowItemsModel> getRowItems() {
-        return rowItems;
-    }
+    return rowItems;
+}
 
     public void setRowItems(ArrayList<BotTableListRowItemsModel> rowItems) {
         this.rowItems = rowItems;

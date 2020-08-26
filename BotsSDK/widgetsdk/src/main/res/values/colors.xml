@@ -43,6 +43,8 @@
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="color_161620">#161620</color>
     <color name="color_A7A9BE">#A7A9BE</color>
+    <color name="theme_1_button_bg_color">#0078cd</color>
+
     <!--bubble colors-->
     <!-- Bubble Update(Sprint7) -->
     <color name="left_bubble_selected">#f3f3f3</color>

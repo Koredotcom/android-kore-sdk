@@ -25,6 +25,7 @@ import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
+import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.models.UserNameModel;
@@ -153,11 +154,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     private void makeJwtCallWithConfig(final boolean isRefresh) {
-        /*if(botsSpiceManager != null) {
-            if(!botsSpiceManager.isStarted())botsSpiceManager.start(mContext);
-        }*/
-
-
         try{
             String jwt = botClient.generateJWT(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
             botName = SDKConfiguration.Client.bot_name;
@@ -250,6 +246,51 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+    private void makeTokenCallForJwt(final boolean isRefresh) {
+
+        if(botCustomData == null) {
+            botCustomData = new RestResponse.BotCustomData();
+        }
+//        botCustomData.put("botId", SDKConfiguration.Client.bot_id);
+        botCustomData.put("tenantId", SDKConfiguration.Client.tenant_id);
+
+        Call<TokenResponseModel> jwtTokenCall = RestBuilder.getTokenRestAPI().getTokenJWT(botCustomData);
+        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<TokenResponseModel>() {
+            @Override
+            public void onResponse(Call<TokenResponseModel> call, Response<TokenResponseModel> response) {
+                if(response.isSuccessful()){
+                    tokenResponseModel = response.body();
+                    botName = tokenResponseModel.getBotInfo().getName();
+                    streamId = tokenResponseModel.getBotInfo().get_id();
+                    SDKConfiguration.Server.setServerUrl(tokenResponseModel.getKoreAPIUrl());
+                    SDKConfiguration.Server.setKoreBotServerUrl(tokenResponseModel.getKoreAPIUrl());
+                    KoreEventCenter.post(tokenResponseModel.getBranding());
+
+                    if (!isRefresh) {
+                        botClient.connectAsAnonymousUser(tokenResponseModel.getJwt(), botName, streamId, botSocketConnectionManager);
+                    } else {
+                        KoreEventCenter.post(tokenResponseModel.getJwt());
+                    }
+                }else{
+//                    Log.d("token refresh", t.getMessage());
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenResponseModel> call, Throwable t) {
+//                if (t instanceof NoNetworkException) {
+//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+//                } else {
+                Log.d("token refresh", t.getMessage());
+//                }
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            }
+        });
+
+
+    }
+
     @Override
     public void onRawTextMessage(byte[] payload) {
     }
@@ -321,10 +362,15 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             }
             return;
         }
-        if (isWithAuth) {
+
+        if (isWithAuth)
+        {
             makeJwtCallWithToken(false);
-        } else {
-            makeJwtCallWithConfig(false);
+        }
+        else
+        {
+//            makeJwtCallWithConfig(false);
+            makeTokenCallForJwt(false);
         }
     }
 

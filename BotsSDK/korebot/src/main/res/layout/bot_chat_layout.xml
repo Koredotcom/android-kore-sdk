@@ -3,7 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/pale_grey">
+
+    <ImageView
+        android:id="@+id/ivChaseBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/background"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/ivChaseLogo"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:background="@mipmap/chase_logo"
+        android:visibility="visible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

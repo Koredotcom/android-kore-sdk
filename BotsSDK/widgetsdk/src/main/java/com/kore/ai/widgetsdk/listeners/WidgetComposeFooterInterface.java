@@ -12,4 +12,5 @@ public interface WidgetComposeFooterInterface
      * @param payload : Payload to be send
      */
     void onPanelSendClick(String message, String payload, boolean isFromUtterance);
+
 }

@@ -88,12 +88,14 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
                 if(bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
 
-                if(!botListModel.getTitle().equalsIgnoreCase("Branding Change"))
-                    sendMessageText(model.get(position).getPostback().getTitle(), model.get(position).getPostback().getValue());
-                else
+                if(botListModel.getTitle().equalsIgnoreCase("Branding Change"))
                 {
                     Intent intent = new Intent(context, BrandingChangeActivity.class);
                     context.startActivity(intent);
+                }
+                else
+                {
+                    sendMessageText(model.get(position).getPostback().getTitle(), model.get(position).getPostback().getValue());
                 }
             }
         });

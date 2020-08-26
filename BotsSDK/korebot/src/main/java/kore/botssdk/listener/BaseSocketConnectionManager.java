@@ -4,6 +4,7 @@ import android.content.Context;
 
 
 import kore.botssdk.models.JWTTokenResponse;
+import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.models.UserNameModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.websocket.SocketConnectionListener;
@@ -23,10 +24,19 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
         return jwtKeyResponse;
     }
 
+    public TokenResponseModel getTokenResponseModel() {
+        return tokenResponseModel;
+    }
+
+    public void setTokenResponseModel(TokenResponseModel tokenResponseModel) {
+        this.tokenResponseModel = tokenResponseModel;
+    }
+
     public void setJwtKeyResponse(JWTTokenResponse jwtKeyResponse) {
         this.jwtKeyResponse = jwtKeyResponse;
     }
 
+    public TokenResponseModel tokenResponseModel;
     protected JWTTokenResponse jwtKeyResponse;
     protected boolean isSubscribed;
 

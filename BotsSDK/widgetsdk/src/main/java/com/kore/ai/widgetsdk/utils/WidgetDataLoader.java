@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.utils;
 
 import android.location.Location;
 
+import com.kore.ai.widgetsdk.models.BotTableListTemplateModel;
 import com.kore.ai.widgetsdk.models.Header;
 import com.kore.ai.widgetsdk.models.SummaryViewResponseModel;
 import com.kore.ai.widgetsdk.models.WUpcomingFilesModel;
@@ -9,6 +10,7 @@ import com.kore.ai.widgetsdk.models.WUpcomingMeetingModel;
 import com.kore.ai.widgetsdk.models.WUpcomingTasksModel;
 import com.kore.ai.widgetsdk.models.WeatherWidgetModel;
 import com.kore.ai.widgetsdk.models.WidgetListDataModel;
+import com.kore.ai.widgetsdk.models.WidgetTableListDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsWidgetModel;
 import com.kore.ai.widgetsdk.net.KaRestBuilder;
@@ -126,6 +128,7 @@ public class WidgetDataLoader {
             }
         });
     }
+
     public static Observable<WidgetListDataModel> loadListWidgetServiceData(final String url, final String accessToken, final Map<String,Object> hm) {
         return Observable.create(new ObservableOnSubscribe<WidgetListDataModel>() {
             @Override
@@ -149,8 +152,28 @@ public class WidgetDataLoader {
         });
     }
 
+    public static Observable<WidgetTableListDataModel> loadTableListWidgetServiceData(final String url, final String accessToken, final Map<String,Object> hm) {
+        return Observable.create(new ObservableOnSubscribe<WidgetTableListDataModel>() {
+            @Override
+            public void subscribe(ObservableEmitter<WidgetTableListDataModel> observableEmitter) throws Exception {
+                try {
+                    Call<WidgetTableListDataModel> resp = KaRestBuilder.getKaRestAPI().getTableListWidgetData(url,accessToken, hm);
+                    Response<WidgetTableListDataModel> model = resp.execute();
+                    if(model.isSuccessful()) {
 
-
+                        observableEmitter.onNext(model.body());
+                        observableEmitter.onComplete();
+                    }
+                    else
+                    {
+                        observableEmitter.onError(new Exception(model.code()+""));
+                    }
+                } catch (Exception e) {
+                    observableEmitter.onError(e);
+                }
+            }
+        });
+    }
 
     public static Observable<WeatherWidgetModel> loadForWeatherServiceData(final String url, final String accessToken, final Map<String,Object> hm, final Object body) {
         return Observable.create(new ObservableOnSubscribe<WeatherWidgetModel>() {

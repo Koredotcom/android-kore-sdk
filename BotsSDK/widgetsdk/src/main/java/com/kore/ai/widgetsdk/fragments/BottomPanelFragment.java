@@ -77,6 +77,7 @@ import com.kore.ai.widgetsdk.views.widgetviews.ListWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.MeetingWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.PieChartWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.SkillWidgetView;
+import com.kore.ai.widgetsdk.views.widgetviews.TableListWidgetView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -533,6 +534,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
     public int getItemViewType(WidgetsModel widget) {
 
+//        if(widget.getName().equalsIgnoreCase("Table List"))
+//            widget.setTemplateType("tableList");
 
         switch (widget.getTemplateType().toLowerCase()) {
             case WidgetConstants.MEETINGS_TEMPLATE_SERVER:
@@ -579,6 +582,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 return WidgetConstants.LINE_CHART_TEMPLATE;
             case WidgetConstants.LIST_WIDGET:
                 return WidgetConstants.LIST_WIDGET_TEMPLATE;
+            case WidgetConstants.STANDARD:
+                return WidgetConstants.TABLE_LIST_TEMPLATE;
             default:
                 return WidgetConstants.DEFAULT_TEMPLATE;
 
@@ -647,6 +652,12 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 ListWidgetView listWidgetView = new ListWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 listWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData, "Ask MyIT", jwtToken);
                 view = listWidgetView;
+                break;
+
+            case WidgetConstants.TABLE_LIST_TEMPLATE:
+                TableListWidgetView tableListWidgetView = new TableListWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
+                tableListWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData,  "Ask MyIT", jwtToken);
+                view = tableListWidgetView;
                 break;
 
 //            case WidgetConstants.TABLE_LIST_TEMPLATE:

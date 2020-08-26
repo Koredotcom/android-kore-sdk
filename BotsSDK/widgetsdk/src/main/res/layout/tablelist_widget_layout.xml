@@ -186,8 +186,8 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
-                <com.kore.ai.widgetsdk.view.AutoExpandListView
-                    android:id="@+id/botCustomListView"
+                <ListView
+                    android:id="@+id/upcoming_meeting_root_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@color/color_dfdfeb"
@@ -200,7 +200,7 @@
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="@dimen/dimen_10_dp"
-                    android:layout_below="@+id/botCustomListView"
+                    android:layout_below="@+id/upcoming_meeting_root_recycler"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
                     android:background="#ffffff" />

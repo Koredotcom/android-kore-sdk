@@ -35,6 +35,7 @@ import com.kore.ai.widgetsdk.views.widgetviews.ListWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.MeetingWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.PieChartWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.SkillWidgetView;
+import com.kore.ai.widgetsdk.views.widgetviews.TableListWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.TrendingHashTagView;
 
 import java.util.HashMap;
@@ -159,6 +160,9 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             case WidgetConstants.LIST_WIDGET_TEMPLATE:
                 ListWidgetView listWidgetView = new ListWidgetView(parent.getContext(),widget.getData().getName(), widgetViewMoreEnum);
                 return new ListWidgetViewHolder(listWidgetView);
+            case WidgetConstants.TABLE_LIST_TEMPLATE:
+                TableListWidgetView tableListWidgetView = new TableListWidgetView(parent.getContext(),widget.getData().getName(), widgetViewMoreEnum);
+                return new TableListWidgetViewHolder(tableListWidgetView);
 
             /*case EDIT_TEMPLATE_TEMP:
                 view = LayoutInflater.from(kaWidgetFragmentContext).inflate(R.layout.widget_edit_button, parent, false);
@@ -237,8 +241,9 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         else if (holder instanceof ListWidgetViewHolder) {
             ((ListWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData,"", jwtToken);
         }
-
-
+        else if (holder instanceof TableListWidgetViewHolder) {
+            ((TableListWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData, "", jwtToken);
+        }
     }
 
 
@@ -543,6 +548,19 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
 
         public ListWidgetView getCustomView() {
+            return customView;
+        }
+    }
+
+    public class TableListWidgetViewHolder extends RecyclerView.ViewHolder {
+        private TableListWidgetView customView;
+
+        public TableListWidgetViewHolder(View v) {
+            super(v);
+            customView = (TableListWidgetView) v;
+        }
+
+        public TableListWidgetView getCustomView() {
             return customView;
         }
     }
