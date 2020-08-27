@@ -101,6 +101,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
     public static final String WIDGET_BG_COLOR = "WIDGET_BG_COLOR";
     public static final String WIDGET_TXT_COLOR = "WIDGET_TXT_COLOR";
+    public static final String WIDGET_BORDER_COLOR = "WIDGET_BORDER_COLOR";
+    public static final String WIDGET_DIVIDER_COLOR = "WIDGET_DIVIDER_COLOR";
     public static final String APPLY_THEME_NAME = "APPLY_THEME_NAME";
 
     public static final String BOT_CHAT_BUBBLE_BACKGROUND_COLOR="Bot chat bubble background color";

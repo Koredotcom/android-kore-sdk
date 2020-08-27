@@ -70,7 +70,7 @@ public class TextMediaLayout extends ViewGroup {
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
     private Gson gson = new Gson();
-    private String leftbgColor, leftTextColor, rightbgColor, rightTextColor, themeName;
+    private String leftbgColor, leftTextColor, rightbgColor, rightTextColor, themeName, widgetBorderColor;
     public boolean isClicable() {
         return isClicable;
     }//
@@ -107,6 +107,7 @@ public class TextMediaLayout extends ViewGroup {
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
         rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
+        widgetBorderColor= sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#d3d3d3");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
 
         //Transparency 15%
@@ -114,10 +115,16 @@ public class TextMediaLayout extends ViewGroup {
         rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_right_bubble_bg);
         rightDrawable.setColor(Color.parseColor(rightbgColor));
         rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+
         leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
+        leftDrawable.setColor(Color.parseColor(leftbgColor));
+        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(widgetBorderColor));
 
         if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-            leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
+        {
+//            leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
+            leftDrawable.setStroke((int) (1*dp1), Color.parseColor(widgetBorderColor));
+        }
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

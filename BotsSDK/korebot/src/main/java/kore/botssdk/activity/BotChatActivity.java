@@ -315,6 +315,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getButtonInactiveTextColor());
         editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBgColor());
         editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingModel.getWidgetTextColor());
+        editor.putString(BotResponse.WIDGET_BORDER_COLOR, brandingModel.getWidgetBorderColor());
+        editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
         editor.apply();
 
         if(botContentFragment != null)

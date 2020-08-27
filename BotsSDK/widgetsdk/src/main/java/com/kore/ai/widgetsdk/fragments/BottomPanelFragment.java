@@ -534,9 +534,6 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
     public int getItemViewType(WidgetsModel widget) {
 
-//        if(widget.getName().equalsIgnoreCase("Table List"))
-//            widget.setTemplateType("tableList");
-
         switch (widget.getTemplateType().toLowerCase()) {
             case WidgetConstants.MEETINGS_TEMPLATE_SERVER:
                 return WidgetConstants.MEETINGS_TEMPLATE;

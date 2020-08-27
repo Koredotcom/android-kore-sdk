@@ -98,9 +98,11 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
         rightDrawable.setColor(Color.parseColor("#FFFFFF"));
 
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+        String themeBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        String themeTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#444444");
+        rightDrawable.setColor(Color.parseColor(themeBgColor));
 
         if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
         {
@@ -123,6 +125,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
+        holder.botListItemTitle.setTextColor(Color.parseColor(themeTextColor));
         holder.bot_list_item_cost.setText(botListModel.getValue());
 
         if(botListModel.getColor() != null)
