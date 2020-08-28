@@ -641,6 +641,12 @@ public class PayloadInner {
                         }.getType();
                         formFields = gson.fromJson(elementsAsString, listType);
                     }
+                    else if(BotResponse.TEMPLATE_TYPE_FEEDBACK.equals(template_type))
+                    {
+                        Type listType = new TypeToken<ArrayList<NewFeedbackModel>>() {
+                        }.getType();
+                        formFields = gson.fromJson(elementsAsString, listType);
+                    }
                 }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
                     Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();

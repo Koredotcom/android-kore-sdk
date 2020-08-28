@@ -141,7 +141,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getBundleInfo();
         getDataFromTxt();
 
-        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
+//        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -175,7 +175,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         setupTextToSpeech();
         KoreEventCenter.register(this);
         BotSocketConnectionManager.getInstance().setChatListener(sListener);
-        attachFragments();
+//        attachFragments();
        // connectToWebSocketAnonymous();
     }
 

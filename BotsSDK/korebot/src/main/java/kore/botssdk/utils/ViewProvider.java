@@ -31,6 +31,7 @@ import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
+import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.HorizontalBarChartView;
 import kore.botssdk.view.KoraCarouselView;
@@ -329,6 +330,12 @@ public class ViewProvider {
         BotFormTemplateView botFormTemplateView = new BotFormTemplateView(context);
         botFormTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
         return  botFormTemplateView;
+    }
+
+    public static FeedbackTemplateView getFeedbackTemplateView(Context context){
+        FeedbackTemplateView feedbackTemplateView = new FeedbackTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  feedbackTemplateView;
     }
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
