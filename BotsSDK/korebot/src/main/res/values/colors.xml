@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryKa">#0059b2</color>
-    <color name="colorPrimaryDark">#0059b2</color>
     <!--<color name="colorAccent">#2f91e5</color>--><!-- HSBC - #db0012, BMC Helix - #2f91e5 -->
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
 
+<!--    General Theme-->
+    <color name="colorPrimaryKa">#0059b2</color>
+    <color name="colorPrimaryDark">#0059b2</color>
     <color name="colorPrimary">#008577</color>
     <color name="colorAccent">#D81B60</color>
+
+<!--    Associated Bank Theme-->
+    <color name="colorPrimaryKa_associated">#0ea84d</color>
+    <color name="colorPrimaryDark_associated">#0ea84d</color>
+    <color name="colorPrimary_associated">#0ea84d</color>
+    <color name="colorAccent_associated">#D81B60</color>
 
     <color name="mentionsAndHashTagColor">#6CC24A</color>
 
@@ -68,6 +75,8 @@
     <color name="bubble_link_text_color">#0076FF</color>
     <color name="default_link_dark_text_color">#0000EE</color>
     <color name="default_link_light_text_color">#5C5CFF</color>
+    <color name="bgBlueSignupOld">#00A7F4</color>
+    <color name="greyHead">#84959B</color>
 
     <!-- profile status color -->
     <color name="statusOnline">#2ADE75</color>

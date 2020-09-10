@@ -10,7 +10,7 @@
         android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/dimen_10_dp"
+        android:padding="@dimen/dimen_10dp"
         android:text="Theme 1" />
 
     <View
@@ -23,7 +23,7 @@
         android:layout_width="90dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/dimen_10_dp"
+        android:padding="@dimen/dimen_10dp"
         android:text="Theme 2" />
 
 </LinearLayout>

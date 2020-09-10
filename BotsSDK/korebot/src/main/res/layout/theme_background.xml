@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/dimen_10_dp">
+    android:padding="@dimen/dimen_10dp">
 
     <TextView
         android:id="@+id/tv_widget_name"
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_widget_name"
-        android:layout_marginTop="@dimen/dimen_10_dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@drawable/compose_bar_new_background"
         android:padding="5dp" />
 
@@ -26,8 +26,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/spWidgetThemes"
         android:layout_above="@+id/tvThemeSave"
-        android:layout_marginTop="@dimen/dimen_10_dp"
-        android:layout_marginBottom="@dimen/dimen_10_dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
         android:layout_weight="1" />
 
     <TextView

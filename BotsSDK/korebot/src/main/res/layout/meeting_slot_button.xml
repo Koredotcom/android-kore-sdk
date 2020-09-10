@@ -16,7 +16,7 @@
         android:maxLines="1"
         android:tag="medium"
         android:text="hi"
-        android:textColor="@color/theme_1_button_bg_color"
+        android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_normal"
         android:textStyle="bold" />
 </LinearLayout>

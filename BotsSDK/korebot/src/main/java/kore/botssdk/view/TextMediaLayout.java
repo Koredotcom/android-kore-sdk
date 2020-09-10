@@ -274,7 +274,6 @@ public class TextMediaLayout extends ViewGroup {
                 botContentTextView.setTextColor(Color.parseColor(leftTextColor));
                 themeName = getSharedPreferences().getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
-                Log.e("Theme Name", themeName);
                 if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
                     leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
 

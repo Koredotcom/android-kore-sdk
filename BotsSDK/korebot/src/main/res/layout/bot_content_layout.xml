@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_margin="@dimen/dimen_15_dp"
+            android:layout_margin="@dimen/dimen_15dp"
             android:text="@string/chase_digital_assistantSM"
             android:textColor="@color/white"
             android:textSize="@dimen/dimen_20dp"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:layout_margin="@dimen/dimen_15_dp"
+            android:layout_margin="@dimen/dimen_15dp"
             android:background="@mipmap/chase"
             android:visibility="gone" />
 
@@ -39,7 +39,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_gravity="right"
-            android:layout_marginRight="@dimen/dimen_10_dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
             android:background="@mipmap/ic_more_vert_white_24dp" />
 
     </RelativeLayout>
@@ -61,7 +61,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_centerInParent="true"
-            android:background="@mipmap/chase_logo"
+            android:background="@drawable/ic_launcher"
             android:visibility="gone" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
