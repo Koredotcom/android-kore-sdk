@@ -8,6 +8,7 @@ public class HeaderOptionsModel {
     private UrlModel url;
     private Widget.Button button;
     private ArrayList<Widget.Button> menu;
+    private BotListLayoutModel layout;
 
     public String getType() {
         return type;

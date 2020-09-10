@@ -135,6 +135,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotQuickRepliesTemplateView botQuickRepliesTemplateView;
     protected AgentTransferTemplateView agentTransferTemplateView;
     protected FeedbackTemplateView feedbackTemplateView;
+    protected ListWidgetView listWidgetView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -393,6 +394,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         feedbackTemplateView = ViewProvider.getFeedbackTemplateView(context);
         feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(feedbackTemplateView);
+
+        listWidgetView = ViewProvider.getListWidgetTemplateView(context);
+        listWidgetView.setComposeFooterInterface(composeFooterInterface);
+        addView(listWidgetView);
     }
 
 
@@ -491,6 +496,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(feedbackTemplateView != null){
             feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if(listWidgetView != null){
+            listWidgetView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -529,6 +538,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(feedbackTemplateView != null){
             feedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(listWidgetView != null){
+            listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

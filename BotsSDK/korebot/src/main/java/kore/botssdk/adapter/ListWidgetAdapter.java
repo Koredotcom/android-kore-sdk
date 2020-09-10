@@ -31,7 +31,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
+import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.squareup.picasso.Picasso;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -46,6 +48,7 @@ import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
@@ -56,6 +59,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
+import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
@@ -69,11 +73,12 @@ import static android.view.View.VISIBLE;
 public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
-
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterInterface composeFooterInterface;
     public ArrayList<String> getSelectedIds() {
         return selectedIds;
     }
-
+    private BottomSheetDialog bottomSheetDialog;
     public void setSelectedIds(ArrayList<String> selectedIds) {
         this.selectedIds = selectedIds;
     }
@@ -117,7 +122,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     private String type;
-    private ComposeFooterInterface composeFooterInterface;
     private boolean isFromWidget;
 
 
@@ -131,6 +135,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     Drawable errorIcon;
     String trigger;
     private boolean isLoginNeeded;
+    private WidgetComposeFooterInterface widgetComposeFooterInterface;
 
     public ListWidgetAdapter(Context mContext, String type, String trigger) {
         this.mContext = mContext;
@@ -139,7 +144,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         this.trigger = trigger;
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
-
     }
 
     public void clearSelectedItems() {
@@ -172,14 +176,14 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == REPORTS ){
-            View view = inflater.inflate(R.layout.need_login_widget_layout, parent, false);
+            View view = inflater.inflate( R.layout.need_login_widget_layout, parent, false);
             return new ReportsViewHolder(view);
         }
         else if (viewType == EMPTY_CARD || viewType == MESSAGE) {
-            View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
+            View view = inflater.inflate( R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
-            return new ViewHolder(inflater.inflate(R.layout.list_widget_item, parent, false));
+            return new ViewHolder(inflater.inflate( R.layout.listwidget_view, parent, false));
     }
 
 
@@ -191,10 +195,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         return "";
 
 
-    }
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
     }
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
@@ -210,7 +210,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         if(loginModel != null) {
                             Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                             intent.putExtra("url", loginModel.getUrl());
-                            intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                            intent.putExtra("header", mContext.getResources().getString( R.string.app_name));
                             ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
                         }
                     }else{
@@ -223,12 +223,12 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holderData;
 
             emptyHolder.tv_disrcription.setText(msg != null ? msg : "No data");
-            emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext, R.drawable.no_meeting) : errorIcon);
+            emptyHolder.img_icon.setImageDrawable(holderData.getItemViewType() == EMPTY_CARD ? ContextCompat.getDrawable(mContext,  R.drawable.no_meeting) : errorIcon);
 
 
         } else {
 
-            final ViewHolder holder = (ViewHolder) holderData;
+            final ListWidgetAdapter.ViewHolder holder = (ListWidgetAdapter.ViewHolder) holderData;
 
             final WidgetListElementModel model = items.get(position);
 
@@ -250,9 +250,9 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                 public void onClick(View v) {
                     boolean expanded = holder.buttonLayout.isExpanded();
                     if(!expanded)
-                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_arrow_drop_up_24px));
+                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable( R.drawable.ic_arrow_drop_up_24px));
                     else
-                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_arrow_drop_down_24px));
+                        holder.img_up_down.setImageDrawable(mContext.getResources().getDrawable( R.drawable.ic_arrow_drop_down_24px));
                     holder.buttonLayout.setExpanded(!expanded);
                 }
             });
@@ -369,7 +369,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                                 if(model.getValue().getUrl().getLink() != null) {
                                     Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                                     intent.putExtra("url", model.getValue().getUrl().getLink());
-                                    intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                                    intent.putExtra("header", mContext.getResources().getString( R.string.app_name));
                                     mContext.startActivity(intent);
                                 }
                             }
@@ -382,7 +382,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvText.setVisibility(GONE);
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
-                        if(model.getValue().getImage()!=null&&model.getValue().getImage().getImage_src()!=null) {
+                        if(model.getValue().getImage()!=null && !StringUtils.isNullOrEmpty(model.getValue().getImage().getImage_src()))
+                        {
                             Picasso.get().load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
                             holder.icon_image_load.setOnClickListener(new OnClickListener() {
                                 @Override
@@ -402,9 +403,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                             });
                         }
                         break;
-
-
-
                 }
 
             }
@@ -429,19 +427,26 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             });*/
 
             if (model.getButtons() != null  && model.getButtons().size() > 0) {
-            /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
-            layoutManager.setFlexDirection(FlexDirection.ROW);
-            layoutManager.setJustifyContent(JustifyContent.FLEX_START);*/
-
                 holder.recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
                 ListWidgetButtonAdapter buttonRecyclerAdapter = new ListWidgetButtonAdapter(mContext, model.getButtons(),trigger);
                 buttonRecyclerAdapter.setSkillName(skillName);
                 buttonRecyclerAdapter.setIsFromFullView(isFullView);
+                buttonRecyclerAdapter.setComposeFooterInterface(composeFooterInterface);
+                buttonRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+                buttonRecyclerAdapter.setBottomSheet(bottomSheetDialog);
                 holder.recyclerView.setAdapter(buttonRecyclerAdapter);
                 buttonRecyclerAdapter.notifyDataSetChanged();
             }else{
                 holder.img_up_down.setVisibility(GONE);
+            }
+
+            holder.alDetails.setVisibility(GONE);
+            if(model.getDetails() != null && model.getDetails().size() > 0)
+            {
+                holder.alDetails.setVisibility(VISIBLE);
+                ListWidgetDetailsAdapter listWidgetDetailsAdapter = new ListWidgetDetailsAdapter(mContext, model.getDetails());
+                holder.alDetails.setAdapter(listWidgetDetailsAdapter);
             }
 
             holder.innerlayout.setOnClickListener(new OnClickListener() {
@@ -486,8 +491,14 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         {
             ((Activity)mContext).finish();
         }
+    }
 
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
 
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public void buttonAction(Widget.Button button, boolean appendUtterance){
@@ -572,27 +583,9 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public int getItemCount() {
-      //  return items != null && items.size() > 0 ? items.size() : 1;
-        if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW)
-        {
-
-
-            return items != null && items.size() > 0 ? items.size() : 1;
-        }
-        if(isLoginNeeded()){
-            return 1;
-        }
-        return items != null && items.size() > 0 ? (!isExpanded && items.size() > previewLength ? previewLength : items.size()) : 1;
+        return items != null && items.size() > 0 ? (items.size() > previewLength ? previewLength : items.size()) : 1;
     }
 
-
-    public ComposeFooterInterface getComposeFooterInterface() {
-        return composeFooterInterface;
-    }
-
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
-    }
 
     @Override
     public ArrayList getData() {
@@ -601,15 +594,14 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     @Override
     public void setData(ArrayList data) {
-
+        this.items =  data;
+        notifyDataSetChanged();
     }
 
     public void setWidgetData(ArrayList<WidgetListElementModel> data) {
         this.items =  data;
         notifyDataSetChanged();
     }
-
-
 
     @Override
     public void setExpanded(boolean isExpanded) {
@@ -632,6 +624,10 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     public void setPreviewLength(int previewLength) {
         this.previewLength = previewLength;
+    }
+
+    public void setBottomSheet(BottomSheetDialog bottomSheetDialog) {
+        this.bottomSheetDialog = bottomSheetDialog;
     }
 
     public void setMessage(String msg, Drawable errorIcon) {
@@ -657,29 +653,26 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView tvUrl;
         public TextView tvButton;
         public LinearLayout tvButtonParent;
+        public AutoExpandListView alDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
-
-
-            imageIcon = (ImageView) itemView.findViewById(R.id.imageIcon);
-            buttonLayout = itemView.findViewById(R.id.button_layout);
-            img_up_down = itemView.findViewById(R.id.img_up_down);
-            innerlayout = itemView.findViewById(R.id.innerlayout);
-
-            recyclerView = itemView.findViewById(R.id.buttonsList);
-
-            divider = itemView.findViewById(R.id.divider);
-            imgMenu = itemView.findViewById(R.id.icon_image);
-            tvButton = itemView.findViewById(R.id.tv_button);
-            tvText = itemView.findViewById(R.id.tv_text);
-            tvUrl = itemView.findViewById(R.id.tv_url);
-            icon_image_load=itemView.findViewById(R.id.icon_image_load);
-            tvButtonParent = itemView.findViewById(R.id.tv_values_layout);
-
+            txtTitle = (TextView) itemView.findViewById( R.id.txtTitle);
+            txtSubTitle = (TextView) itemView.findViewById( R.id.txtSubtitle);
+            imageIcon = (ImageView) itemView.findViewById( R.id.imageIcon);
+            buttonLayout = itemView.findViewById( R.id.button_layout);
+            img_up_down = itemView.findViewById( R.id.img_up_down);
+            innerlayout = itemView.findViewById( R.id.innerlayout);
+            recyclerView = itemView.findViewById( R.id.buttonsList);
+            divider = itemView.findViewById( R.id.divider);
+            imgMenu = itemView.findViewById( R.id.icon_image);
+            tvButton = itemView.findViewById( R.id.tv_button);
+            tvText = itemView.findViewById( R.id.tv_text);
+            tvUrl = itemView.findViewById( R.id.tv_url);
+            icon_image_load=itemView.findViewById( R.id.icon_image_load);
+            tvButtonParent = itemView.findViewById( R.id.tv_values_layout);
+            alDetails = itemView.findViewById( R.id.alDetails);
         }
     }
 
@@ -704,8 +697,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         TextView txt;
         public ReportsViewHolder(@NonNull View itemView) {
             super(itemView);
-            loginBtn = itemView.findViewById(R.id.login_button);
-            txt = itemView.findViewById(R.id.tv_message);
+            loginBtn = itemView.findViewById( R.id.login_button);
+            txt = itemView.findViewById( R.id.tv_message);
         }
     }
 }

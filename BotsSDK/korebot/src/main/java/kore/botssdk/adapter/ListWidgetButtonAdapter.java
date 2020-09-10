@@ -22,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import kore.botssdk.R;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget.Button;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
@@ -40,9 +43,11 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     private LayoutInflater inflater;
     private ArrayList<Button> buttons;
     private Context mContext;
-
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterInterface composeFooterInterface;
     private String skillName;
     private String trigger;
+    private BottomSheetDialog bottomSheetDialog;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Button> buttons, String trigger) {
         this.buttons = buttons;
@@ -60,44 +65,33 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
-//        holder.ll.setVisibility(View.VISIBLE);
         Button btn = buttons.get(i);
-
-//        if(i<2)
         holder.tv.setText(btn.getTitle());
-//        else holder.tv.setText("More...");
-
-        String utt = null;
-        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
-            utt = btn.getPayload();
-        }
-        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
-            utt = btn.getUtterance();
-        }
-        final String utterance = utt;
 
         holder.tv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
-//                buttonAction(utterance);
-                if(!holder.tv.getText().equals("More...")) {
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                        buttonAction(utterance, true);
-                    } else {
-                        buttonAction(utterance, false);
-                    }
-                }else{
-                    WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-                    bottomSheetDialog.setisFromFullView(false);
-                    bottomSheetDialog.setSkillName(skillName,trigger);
-                    bottomSheetDialog.setData(buttons);
-                    bottomSheetDialog.setVerticalListViewActionHelper(null);
-                    bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
+                if(bottomSheetDialog != null)
+                    bottomSheetDialog.dismiss();
+
+                if(!StringUtils.isNullOrEmpty(btn.getPayload())){
+                    composeFooterInterface.onSendClick(btn.getPayload(), true);
                 }
             }
         });
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public void setBottomSheet(BottomSheetDialog bottomSheetDialog) {
+        this.bottomSheetDialog = bottomSheetDialog;
     }
 
     @Override

@@ -54,6 +54,12 @@ public class PayloadInner {
     private String subtitle;
     private String image_url;
     private boolean is_end;
+    private int emojiPosition = -1;
+    private String view;
+    private String messageTodisplay;
+    private boolean sliderView;
+    private String description;
+    private HeaderOptionsModel headerOptions;
 
     public boolean isIs_end() {
         return is_end;
@@ -63,6 +69,14 @@ public class PayloadInner {
         this.is_end = is_end;
     }
 
+    public void setSliderView(boolean sliderView) {
+        this.sliderView = sliderView;
+    }
+
+    public boolean getSliderView()
+    {
+        return sliderView;
+    }
 
     public String getComposeText() {
         return composeText;
@@ -230,7 +244,13 @@ public class PayloadInner {
         Auto_adjust_X_axis = auto_adjust_X_axis;
     }
 
+    public int getEmojiPosition() {
+        return emojiPosition;
+    }
 
+    public void setEmojiPosition(int emojiPosition) {
+        this.emojiPosition = emojiPosition;
+    }
 
     public String getPie_type() {
         return pie_type;
@@ -291,6 +311,10 @@ public class PayloadInner {
     private ArrayList<NarratorTextModel> narratorTextModel;
     private ArrayList<KoraUniversalSearchModel> universalSearchModels;
     private ArrayList<BotFormTemplateModel> formFields;
+    private ArrayList<FeedbackSmileyModel> smileyArrays;
+    private ArrayList<FeedbackStarModel> starArrays;
+    private boolean dialogCancel;
+
 
     public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
         return multiSelectModels;
@@ -337,6 +361,15 @@ public class PayloadInner {
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<BotTableListModel> tableListElements;
+    private ArrayList<WidgetListElementModel> widgetlistElements;
+
+    public void setWidgetlistElements(ArrayList<WidgetListElementModel> widgetlistElements) {
+        this.widgetlistElements = widgetlistElements;
+    }
+
+    public ArrayList<WidgetListElementModel> getWidgetlistElements() {
+        return widgetlistElements;
+    }
 
     public List<AnnoucementResModel> getAnnouncementResModels() {
         return announcementResModels;
@@ -393,6 +426,37 @@ public class PayloadInner {
         this.fileLookupModels = fileLookupModels;
     }
 
+    public void setSmileyArrays(ArrayList<FeedbackSmileyModel> smileyArrays) {
+        this.smileyArrays = smileyArrays;
+    }
+
+    public ArrayList<FeedbackSmileyModel> getSmileyArrays() {
+        return smileyArrays;
+    }
+
+    public void setStarArrays(ArrayList<FeedbackStarModel> starArrays) {
+        this.starArrays = starArrays;
+    }
+
+    public ArrayList<FeedbackStarModel> getStarArrays() {
+        return starArrays;
+    }
+
+    public void setView(String view) {
+        this.view = view;
+    }
+
+    public String getView() {
+        return view;
+    }
+
+    public void setMessageTodisplay(String messageTodisplay) {
+        this.messageTodisplay = messageTodisplay;
+    }
+
+    public String getMessageTodisplay() {
+        return messageTodisplay;
+    }
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
         return miniTableDataModels;
@@ -413,7 +477,21 @@ public class PayloadInner {
         this.barChartDataModels = barChartDataModels;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public HeaderOptionsModel getHeaderOptions() {
+        return headerOptions;
+    }
+
+    public void setHeaderOptions(HeaderOptionsModel headerOptions) {
+        this.headerOptions = headerOptions;
+    }
 
     public ArrayList<BotPieChartElementModel> getPieChartElements() {
         return pieChartElements;
@@ -647,6 +725,12 @@ public class PayloadInner {
                         }.getType();
                         formFields = gson.fromJson(elementsAsString, listType);
                     }
+                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equals(template_type))
+                    {
+                        Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
+                        }.getType();
+                        widgetlistElements = gson.fromJson(elementsAsString, listType);
+                    }
                 }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
                     Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();
@@ -830,6 +914,15 @@ public class PayloadInner {
 
     public void setWelcomeSummaryModel(ArrayList<WelcomeSummaryModel> welcomeSummaryModel) {
         this.welcomeSummaryModel = welcomeSummaryModel;
+    }
+
+    public void setDialogCancel(boolean b) {
+        dialogCancel = b;
+    }
+
+    public boolean getDialogCancel()
+    {
+        return dialogCancel;
     }
 
     public class Skill{

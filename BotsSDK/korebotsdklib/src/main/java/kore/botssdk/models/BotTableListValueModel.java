@@ -7,7 +7,7 @@ public class BotTableListValueModel implements Serializable
     private String type;
     private String text;
     private BotTableListUrlModel url;
-    private BotTableListLayoutModel layout;
+    private BotListLayoutModel layout;
 
     public void setType(String type)
     {
@@ -37,49 +37,15 @@ public class BotTableListValueModel implements Serializable
         return url;
     }
 
-    public void setLayout(BotTableListLayoutModel layout)
+    public void setLayout(BotListLayoutModel layout)
     {
         this.layout = layout;
     }
 
-    public BotTableListLayoutModel getLayout()
+    public BotListLayoutModel getLayout()
     {
         return layout;
     }
 
-    public class BotTableListLayoutModel implements Serializable
-    {
-        private String align;
-        private String colSize;
-        private String color;
-
-        public void setAlign(String align)
-        {
-            this.align = align;
-        }
-
-        public String getAlign()
-        {
-            return align;
-        }
-
-        public void setColSize(String colSize)
-        {
-            this.colSize = colSize;
-        }
-
-        public String getColSize()
-        {
-            return colSize;
-        }
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
-    }
 
 }
