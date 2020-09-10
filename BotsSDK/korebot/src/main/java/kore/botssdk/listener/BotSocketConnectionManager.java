@@ -149,8 +149,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(true);
         } else {
-//            makeJwtCallWithConfig(true);
-            makeTokenCallForJwt(false);
+            makeJwtCallWithConfig(true);
+//            makeTokenCallForJwt(false);
         }
     }
 
@@ -370,8 +370,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
         else
         {
-//            makeJwtCallWithConfig(false);
-            makeTokenCallForJwt(false);
+            makeJwtCallWithConfig(false);
+//            makeTokenCallForJwt(false);
         }
     }
 

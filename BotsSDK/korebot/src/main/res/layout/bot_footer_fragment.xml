@@ -206,7 +206,7 @@
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
                         android:padding="5dp"
-                        android:src="@drawable/ic_mic"
+                        ripple:srcCompat="@drawable/ic_mic"
                         android:visibility="visible" />
 
                     <ImageView

@@ -106,24 +106,26 @@ public class TextMediaLayout extends ViewGroup {
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
-        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
+        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0ea84d");
         widgetBorderColor= sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#d3d3d3");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+
+        //Banking Config
+        rightbgColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "#0ea84d");
 
         //Transparency 15%
         transparency = 0x26000000;
         rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_right_bubble_bg);
         rightDrawable.setColor(Color.parseColor(rightbgColor));
-        rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(rightbgColor));
 
         leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
         leftDrawable.setColor(Color.parseColor(leftbgColor));
-        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(widgetBorderColor));
+        leftDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
 
         if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
         {
-//            leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
-            leftDrawable.setStroke((int) (1*dp1), Color.parseColor(widgetBorderColor));
+            leftDrawable.setStroke((int) (2*dp1), Color.parseColor(widgetBorderColor));
         }
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
@@ -136,7 +138,7 @@ public class TextMediaLayout extends ViewGroup {
         botContentTextView.setAutoLinkMask(Linkify.ALL);
         botContentTextView.setId(BubbleConstants.TEXTVIEW_ID);
         botContentTextView.setPadding(0, 0, 0, 0);
-        botContentTextView.setLinkTextColor(linkTextColor);
+        botContentTextView.setLinkTextColor(getContext().getResources().getColor(R.color.bgBlueSignupOld));
         // KaFontUtils.setCustomTypeface(botContentTextView,KaFontUtils.ROBOTO_REGULAR, getContext());
         botContentTextView.setFocusable(false);
         botContentTextView.setClickable(false);
@@ -281,9 +283,12 @@ public class TextMediaLayout extends ViewGroup {
                 botContentTextView.setTextColor(Color.parseColor(leftTextColor));
                 themeName = getSharedPreferences().getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
-                Log.e("Theme Name", themeName);
+                leftDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+
                 if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-                    leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
+                {
+                    leftDrawable.setStroke((int) (2*dp1), Color.parseColor(widgetBorderColor));
+                }
 
                 botContentTextView.setBackground(leftDrawable);
             }

@@ -7,44 +7,6 @@
     android:background="@android:color/transparent">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryKa">
-
-        <TextView
-            android:id="@+id/tvChaseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="@dimen/dimen_15_dp"
-            android:text="@string/chase_digital_assistantSM"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_20dp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dimen_15_dp"
-            android:background="@mipmap/chase"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/ivThemeSwitcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/dimen_10_dp"
-            android:background="@mipmap/ic_more_vert_white_24dp" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/header_layout">
@@ -106,6 +68,7 @@
             android:visibility="gone">
 
 
+
             <!-- Typer Image -->
             <kore.botssdk.view.CircularProfileView
                 android:id="@+id/typing_status_item_cpv"
@@ -114,7 +77,7 @@
                 android:layout_gravity="center_vertical"
                 android:adjustViewBounds="true"
                 cpv:font_style="roboto_regular"
-                cpv:text_size="12dp" />
+                cpv:text_size="12dp"/>
 
             <!-- Presence Dots -->
             <kore.botssdk.views.DotsTextView

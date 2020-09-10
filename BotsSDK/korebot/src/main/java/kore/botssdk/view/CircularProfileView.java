@@ -92,7 +92,7 @@ public class CircularProfileView extends RoundedImageView {
             TypedArray attr = getContext().obtainStyledAttributes(attrs, R.styleable.CircularProfileView, 0, 0);
             PADDING = attr.getDimensionPixelSize(R.styleable.CircularProfileView_badge_padding, dp1 * 4);
             CPV_TEXT_SIZE = attr.getDimensionPixelSize(R.styleable.CircularProfileView_text_size, dp1 * 17);
-            PROFILE_DRAWABLE_PADDING = (int) attr.getDimension(R.styleable.CircularProfileView_profile_drawable_padding, 0);
+            PROFILE_DRAWABLE_PADDING = (int) attr.getDimension(R.styleable.CircularProfileView_profile_drawable_padding, dp1*2);
             hasBorder = attr.getBoolean(R.styleable.CircularProfileView_has_border, false);
             borderColor = attr.getColor(R.styleable.CircularProfileView_border_color, 0xffffffff);
             borderStrokeWidth = attr.getInt(R.styleable.CircularProfileView_border_width, 0);
@@ -252,7 +252,8 @@ public class CircularProfileView extends RoundedImageView {
             setDefaultBackground(color, "");
             setImageDrawable(d);
         } else if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.equalsIgnoreCase("no_avatar")) {
-            setProfileImageUrl(imageUrl, applyRoundTransform);
+            setDefaultBackground(color, "");
+            setProfileImageUrl(imageUrl, applyRoundTransform, color, "");
         } else {
             setImageDrawable(null);
             setDefaultBackground(color, nameInitials); // drawing initials.
@@ -321,7 +322,7 @@ public class CircularProfileView extends RoundedImageView {
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
             setImageDrawable(null);
             updateWithPic(bitmap);
-            setBackgroundDrawable(null);
+//            setBackgroundDrawable(null);
         }
 
         @Override

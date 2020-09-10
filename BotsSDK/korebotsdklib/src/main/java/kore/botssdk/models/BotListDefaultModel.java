@@ -21,6 +21,7 @@ public class BotListDefaultModel {
     String fallback_url;
     String payload;
     String action;
+    String title;
 
     public String getAction() {
         return action;
@@ -59,5 +60,13 @@ public class BotListDefaultModel {
 
     public String getPayload() {
         return payload;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

@@ -91,7 +91,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
             tvOptionsTitle.setText(title);
         }
 
-        ListViewMoreAdapter listViewMoreAdapter = new ListViewMoreAdapter(model);
+        ListViewMoreAdapter listViewMoreAdapter = new ListViewMoreAdapter(getActivity(), model);
         rvViewMore.setAdapter(listViewMoreAdapter);
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {

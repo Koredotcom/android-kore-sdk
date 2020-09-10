@@ -1,7 +1,9 @@
 package kore.botssdk.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +24,23 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder>{
     private ArrayList<BotListModel> model;
     RoundedCornersTransform roundedCornersTransform;
+    private Context context;
 
     // RecyclerView recyclerView;
-    public ListViewMoreAdapter(ArrayList<BotListModel> model) {
+    public ListViewMoreAdapter(Context context, ArrayList<BotListModel> model) {
         this.model = model;
+        this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.bot_listview_template_item_layout, parent, false);
+        View listItem= layoutInflater.inflate(R.layout.bot_listview_more_item_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
         return viewHolder;
     }

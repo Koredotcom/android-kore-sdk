@@ -13,6 +13,15 @@ public class BotButtonModel implements MultiSelectBase {
     String payload;
     String name;
     BotOptionPostBackModel botOptionPostBackModel;
+    BotOptionPostBackModel postback;
+
+    public BotOptionPostBackModel getPostback() {
+        return postback;
+    }
+
+    public void setPostback(BotOptionPostBackModel postback) {
+        this.postback = postback;
+    }
 
     public boolean isIs_actionable() {
         return is_actionable;

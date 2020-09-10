@@ -8,17 +8,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.kore.ai.widgetsdk.adapters.PannelAdapter;
@@ -29,6 +38,7 @@ import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -72,7 +82,12 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
+import kore.botssdk.utils.Utility;
+import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 import static android.view.View.VISIBLE;
 
@@ -82,7 +97,7 @@ import static android.view.View.VISIBLE;
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -104,7 +119,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
     private Gson gson = new Gson();
-
+    private float dp1;
     //For Bottom Panel
     private ProgressBar progressBarPanel;
     private RecyclerView pannel_recycler;
@@ -131,10 +146,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private SharedPreferences sharedPreferences;
     private String chatBgColor, chatTextColor;
     private ImageView ivChaseBackground, ivChaseLogo;
+    private RelativeLayout rlChatLayout;
+    private TextView tvChaseTitle, tvTheme1, tvTheme2;
+    private ImageView ivThemeSwitcher, ivTopLeft;
+    private PopupWindow popupWindow;
+    private View popUpView;
+    private String back_image, top_left_image, headerColor, headerTitle;
+    private RoundedCornersTransform roundedCornersTransform;
+    private RelativeLayout header_layout;
+    private KaRoundedCornersTransform kaRoundedCornersTransform;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new ThemeColors(BotChatActivity.this);
         setContentView(R.layout.bot_chat_layout);
         findViews();
 //        findPanelView();
@@ -148,7 +173,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
-        botContentFragment.setThemeChangeInterface(this);
+//        botContentFragment.setThemeChangeInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
@@ -232,6 +257,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void findViews() {
+        rlChatLayout = (RelativeLayout) findViewById(R.id.rlChatLayout);
         chatLayoutFooterContainer = (FrameLayout) findViewById(R.id.chatLayoutFooterContainer);
         chatLayoutContentContainer = (FrameLayout) findViewById(R.id.chatLayoutContentContainer);
         chatLayoutPanelContainer   = (FrameLayout) findViewById(R.id.chatLayoutPanelContainer);
@@ -239,6 +265,50 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ivChaseBackground = (ImageView) findViewById(R.id.ivChaseBackground);
         ivChaseLogo = (ImageView) findViewById(R.id.ivChaseLogo);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        tvChaseTitle = (TextView) findViewById(R.id.tvChaseTitle);
+        ivThemeSwitcher = (ImageView) findViewById(R.id.ivThemeSwitcher);
+        ivTopLeft = (ImageView) findViewById(R.id.ivTopLeft);
+        header_layout = (RelativeLayout) findViewById(R.id.header_layout);
+        dp1 = Utility.convertDpToPixel(BotChatActivity.this, 1);
+        tvChaseTitle.setText(Html.fromHtml(getResources().getString(R.string.app_name)));
+        roundedCornersTransform = new RoundedCornersTransform();
+        kaRoundedCornersTransform = new KaRoundedCornersTransform();
+
+        ivThemeSwitcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.showAtLocation(ivThemeSwitcher, Gravity.TOP|Gravity.RIGHT, (int)(28 * dp1), (int)(75 * dp1));
+            }
+        });
+
+        popUpView = LayoutInflater.from(this).inflate(R.layout.theme_change_layout, null);
+        popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+        findThemeViews(popUpView);
+
+        top_left_image = sharedPreferences.getString(BotResponse.TOP_LEFT_ICON, "");
+        back_image = sharedPreferences.getString(BotResponse.BACK_IMAGE, "");
+        headerColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "");
+        headerTitle = sharedPreferences.getString(BotResponse.HEADER_TITLE, "");
+
+        if(!StringUtils.isNullOrEmpty(headerTitle))
+            tvChaseTitle.setText(headerTitle);
+
+        if(!StringUtils.isNullOrEmpty(back_image))
+        {
+//            Picasso.get().load(back_image).transform(kaRoundedCornersTransform).into(ivChaseLogo);
+            Glide.with(BotChatActivity.this).load(back_image).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(ivChaseLogo));
+        }
+
+        if(!StringUtils.isNullOrEmpty(top_left_image))
+        {
+            Picasso.get().load(top_left_image).transform(roundedCornersTransform).into(ivTopLeft);
+        }
+
+        if(!StringUtils.isNullOrEmpty(headerColor))
+        {
+            header_layout.setBackgroundColor(Color.parseColor(headerColor));
+        }
     }
 
     private void updateTitleBar() {
@@ -319,6 +389,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
         editor.apply();
 
+        rlChatLayout.setBackgroundColor(Color.parseColor(brandingModel.getWidgetBgColor()));
+
         if(botContentFragment != null)
             botContentFragment.changeThemeBackGround(brandingModel.getWidgetBgColor(), brandingModel.getWidgetTextColor());
         Log.e("Saved", brandingModel.getBotchatBgColor());
@@ -377,7 +449,37 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         super.onPause();
     }
 
+    public void findThemeViews(View view)
+    {
+        tvTheme1 = view.findViewById(R.id.tvTheme1);
+        tvTheme2 = view.findViewById(R.id.tvTheme2);
 
+        tvTheme1.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                popupWindow.dismiss();
+                SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+                editor.apply();
+
+                onThemeChangeClicked(BotResponse.THEME_NAME_1);
+            }
+        });
+
+        tvTheme2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
+                editor.apply();
+
+                onThemeChangeClicked(BotResponse.THEME_NAME_2);
+            }
+        });
+    }
 
 
     @Override
@@ -722,13 +824,18 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         toggleQuickRepliesVisiblity(false);
     }
 
-    @Override
     public void onThemeChangeClicked(String message)
     {
         if(message.equalsIgnoreCase(BotResponse.THEME_NAME_1))
         {
             ivChaseLogo.setVisibility(View.VISIBLE);
             ivChaseBackground.setVisibility(View.GONE);
+
+            if(!StringUtils.isNullOrEmpty(back_image))
+            {
+//                Picasso.get().load(back_image).transform(roundedCornersTransform).into(ivChaseLogo);
+                Glide.with(BotChatActivity.this).load(back_image).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(ivChaseLogo));
+            }
         }
         else
         {

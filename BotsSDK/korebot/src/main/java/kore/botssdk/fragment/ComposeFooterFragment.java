@@ -4,9 +4,12 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +32,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -51,7 +56,9 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotOptionsModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.AppPermissionsHelper;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
 import static android.app.Activity.RESULT_OK;
@@ -95,6 +102,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private TTSUpdate ttsUpdate;
     private LinearLayout linearLayoutProgress;
     private BotOptionsModel botOptionsModel;
+    private SharedPreferences sharedPreferences;
+    private String headerColor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,9 +155,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 getContext().getResources().getColor(android.R.color.holo_orange_dark),
                 getContext().getResources().getColor(android.R.color.holo_red_dark)
         };
-        progress.setColors(colors);
 
+        progress.setColors(colors);
         text_view_speech = (TextView) view.findViewById(R.id.text_view_speech);
+        sharedPreferences = getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        headerColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "");
+
+//        if(!StringUtils.isNullOrEmpty(headerColor))
+//            DrawableCompat.applyTheme(rec_audio_img.getDrawable(), getContext().getTheme());
 
 //        footerDivider = view.findViewById(R.id.footer_divider);
 //        tasksRl = (RelativeLayout) view.findViewById(R.id.tasksRl);

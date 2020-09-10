@@ -56,14 +56,7 @@
           "title": "Freeze Card",
           "value": "freeze card"
         }
-    },{
-      "title": "Branding Change",
-      "icon":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAABCCAYAAADt/X6HAAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAOaADAAQAAAABAAAAQgAAAAA5k1t+AAAC20lEQVRoBe1bsW7UQBCdcYwUJSUNPRG/QJUvCN01VIALiEg60B0dEOjuJLqcFFJcoL+SPhIVv4DyATQpiZCiyzCzPl+ctZG1dzbedWalk73rufF783bX67sdBKsMJ5N7+AeewxXsEOAWAN21TDyq4jkCnUEE32gdjgdJ8qsMHOYbR+Mvr4DoAwFt5ttDOEfA34D4tr/39JONd0FyOD45YoIvbIPg6oifB3vPdvO4I6nMFQyfoJBhoQwfOZ8XNGPwAs9C7KIZCfsoXZc2aCsbo7FMMmUEEeESAKcE8BOJ+OBXIeQC8ICl6zG6O3l0wsdMngAfpT0mwkdsmLfh8csE19a2+7tPfty44GFldPT1Ic5m322i8nRguIZkxPzuF7HjNASCgjvFiVObQ/r4S1t54ik+B6WL2l/yuV6O95qXmV1tAj6OQRtjvl6Ft5Rk3kEXzpVkF1QUDqqkKhlQBGIXrKPDyXsX+yZs+/uJMwYnkvzQfdcEcEefziR14nGMsLfmqqS30jgCc5p4BvvJ4jchx/u0aq7dtdXw13hzVbLGYLbqSpVsNfw13lyVrDGYrbpSJVsNf403d1rWDQ8n/EpZfylbLsoLetn7a5ltFSLtrlURCuW6KhmKUlU4nSYefpk8qHJY2/UITvGqHm9OJJf5OXBZmP2XySl/Vz4rFx2TK4fQEweqpCdCrAzDaeLRZd3K8W7OgY7J5mL7fz3fCiWdJh5d1tXcA3VZ5xjQWzEmlaRjr/DWXJX0VhpHYKVKyv5uRz+tmlfhZZJ4biNkhryBPZxSjveaV2TSgAp8qCcb2AvNHjakOKlnQ8vziiXPiXfe3yAkO/Nlh/5ofOJ/ysRsVkiZMISF17zEksiFF/jGzg1JUxDosdg18gdIhmDZIwP8Fy6T/LJOx5nryGTBcCJX1tCJI/PJsnuEz2IW7XxCmrCVTDXE6LVJ0ZOGwIrgFvx2xp3QWCiZcepikuhflA/iioZEWnsAAAAASUVORK5CYII=",
-      "postback": {
-        "title": "Branding Change",
-        "value": "Branding Change"
-      }
-  }]
+    }]
     ,
     "heading": "How may i help you?"
     }

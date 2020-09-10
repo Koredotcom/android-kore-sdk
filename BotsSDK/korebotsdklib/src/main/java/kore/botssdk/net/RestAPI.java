@@ -3,6 +3,7 @@ package kore.botssdk.net;
 
 import java.util.HashMap;
 
+import kore.botssdk.models.BotBankingConfigModel;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
@@ -83,4 +84,8 @@ public interface RestAPI {
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
     Call<BotHistory> getBotHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
+
+    // Get JWT Token
+    @POST("bankingsolution-config/ws.php")
+    Call<BotBankingConfigModel> getBankingConfig();
 }

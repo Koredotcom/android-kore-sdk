@@ -6,21 +6,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.ColorInt;
 
 import kore.botssdk.R;
+import kore.botssdk.models.BotResponse;
 
 public class ThemeColors {
-
-    private static final String NAME = "ThemeColors", KEY = "color";
 
     @ColorInt
     public int color;
 
     public ThemeColors(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-        String stringColor = sharedPreferences.getString(KEY, "004bff");
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String stringColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "D81B60");
+        stringColor = stringColor.replace("#", "");
         color = Color.parseColor("#" + stringColor);
 
         if (isLightActionBar()) context.setTheme(R.style.AppTheme);
@@ -33,11 +34,12 @@ public class ThemeColors {
         green = Math.round(green / colorStep) * colorStep;
         blue = Math.round(blue / colorStep) * colorStep;
 
-        String stringColor = Integer.toHexString(Color.rgb(red, green, blue)).substring(2);
-        SharedPreferences.Editor editor = activity.getSharedPreferences(NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(KEY, stringColor);
+        String stringColor = "#"+Integer.toHexString(Color.rgb(red, green, blue)).substring(2);
+        SharedPreferences.Editor editor = activity.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(BotResponse.HEADER_COLOR, stringColor);
         editor.apply();
 
+        Log.e("Generate Color", stringColor);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) activity.recreate();
         else {
             Intent i = activity.getPackageManager().getLaunchIntentForPackage(activity.getPackageName());
@@ -48,8 +50,8 @@ public class ThemeColors {
 
     public static void setNewThemeColor(Activity activity, String color) {
 
-        SharedPreferences.Editor editor = activity.getSharedPreferences(NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(KEY, color);
+        SharedPreferences.Editor editor = activity.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(BotResponse.HEADER_COLOR, color);
         editor.apply();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) activity.recreate();

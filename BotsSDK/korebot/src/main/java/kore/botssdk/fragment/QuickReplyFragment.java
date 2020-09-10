@@ -3,6 +3,7 @@ package kore.botssdk.fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.TypedValue;
@@ -28,13 +29,14 @@ public class QuickReplyFragment extends Fragment {
     private LinearLayout quick_reply_container;
     private float dp1;
     private QuickReplyInterface mListener;
-
+    private String btnColor;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quickreply_layout, null);
         dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        btnColor = "#" + Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.theme_1_button_bg_color));
         findViews(view);
         return view;
     }
@@ -54,8 +56,8 @@ public class QuickReplyFragment extends Fragment {
             txtQuickReply.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
             txtQuickReply.setLayoutParams(layoutParams);
             txtQuickReply.setPadding((int) dp1 * 12, (int) dp1 * 8, (int) dp1 * 12, (int) dp1 * 8);
-            txtQuickReply.setTextColor(Color.parseColor("#01CDEF"));
-            txtQuickReply.setBackgroundResource(R.drawable.quick_reply_textbackground);
+            txtQuickReply.setTextColor(Color.parseColor(btnColor));
+            txtQuickReply.setBackgroundResource(R.drawable.theme_1_button_bg);
             txtQuickReply.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

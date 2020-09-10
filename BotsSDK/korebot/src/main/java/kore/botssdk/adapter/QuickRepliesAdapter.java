@@ -1,9 +1,11 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +20,11 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
 
 /**
@@ -33,20 +37,30 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
     Context context;
     private LayoutInflater layoutInflater;
     private RecyclerView parentRecyclerView;
-
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int quickWidgetColor,fillColor,quickReplyFontColor;
     private int dp1;
+    private SharedPreferences sharedPreferences;
+    private String headerColor;
 
     public QuickRepliesAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
+        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         layoutInflater = LayoutInflater.from(context);
+
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         quickReplyFontColor = Color.parseColor("#000000");
         dp1= (int)AppControl.getInstance(context).getDimensionUtil().dp1;
+        headerColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, SDKConfiguration.BubbleColors.quickReplyColor);
+
+        if(!StringUtils.isNullOrEmpty(headerColor))
+        {
+            quickWidgetColor = Color.parseColor(headerColor);
+            quickReplyFontColor = Color.parseColor(headerColor);
+        }
     }
 
     @NonNull
@@ -54,7 +68,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
     public QuickReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View convertView = layoutInflater.inflate(R.layout.quick_reply_item_layout, null);
         GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground();
-        gradientDrawable.setStroke(dp1, quickWidgetColor);
+        gradientDrawable.setStroke(2* dp1, quickWidgetColor);
         gradientDrawable.setColor(fillColor);
         QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
         viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);

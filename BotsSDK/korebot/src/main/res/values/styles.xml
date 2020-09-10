@@ -16,9 +16,16 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimaryKa</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/bgBlueSignup</item>
+        <item name="colorPrimary">@color/bubble_white_color</item>
+        <item name="colorPrimaryDark">@color/bubble_white_color</item>
+        <item name="colorAccent">@color/bubble_white_color</item>
+    </style>
+
+    <!-- Associated application theme. -->
+    <style name="AssociatedAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimaryKa_associated</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark_associated</item>
+        <item name="colorAccent">@color/colorPrimaryKa_associated</item>
     </style>
 
 <!--    <style name="AppThemeDarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">-->
@@ -58,7 +65,7 @@
         <!-- HeaderToggleButton -->
         <item name="materialCalendarHeaderToggleButton">@style/HeaderToggleButton</item>
         <item name="materialCalendarHeaderTitle">@style/HeaderToggleTitle</item>
-        <item name="materialCalendarHeaderLayout">@style/HeaderLayout</item>
+<!--        <item name="materialCalendarHeaderLayout">@style/HeaderLayout</item>-->
     </style>
 
     <style name="HeaderToggleButton" parent="@style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">

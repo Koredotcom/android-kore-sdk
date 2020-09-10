@@ -24,13 +24,12 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-public class BotListViewTemplateAdapter extends BaseAdapter {
+public class ListActionSheetAdapter extends BaseAdapter {
 
     String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
@@ -43,7 +42,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private GradientDrawable bgDrawable;
     int count = 0;
 
-    public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
+    public ListActionSheetAdapter(Context context, ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
@@ -104,17 +103,8 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         String themeBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         String themeTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#444444");
         rightDrawable.setColor(Color.parseColor(themeBgColor));
-
-        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-        {
-            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
-            holder.botListItemRoot.setBackground(rightDrawable);
-        }
-        else
-        {
-            rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
-            holder.botListItemRoot.setBackground(rightDrawable);
-        }
+        rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
+        holder.botListItemRoot.setBackground(rightDrawable);
 
 
 
@@ -138,27 +128,45 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
         }
-
-        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    int position = parentListView.getPositionForView(v);
-                    BotListModel _botListModel = getItem(position);
-                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-
-                            if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
-                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
-                            else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
-                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(),false);
-                        }
-                    }
-                }
-            }
-        });
+//        if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
+//            holder.botListItemButton.setVisibility(View.GONE);
+//        } else {
+//            holder.botListItemButton.setVisibility(View.VISIBLE);
+//            holder.botListItemButton.setText(botListModel.getButtons().get(0).getTitle());
+//            holder.botListItemButton.setTag(botListModel.getButtons().get(0));
+//
+//            holder.botListItemButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+//                        BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
+//                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
+//                            invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
+//                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
+//                            String listElementButtonPayload = botListElementButton.getPayload();
+//                            String listElementButtonTitle = botListElementButton.getTitle();
+//                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload,false);
+//                        }
+//                    }
+//                }
+//            });
+//        }
+//        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+//                    int position = parentListView.getPositionForView(v);
+//                    BotListModel _botListModel = getItem(position);
+//                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
+//                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+//                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
+//                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+//                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
+//                        }
+//                    }
+//                }
+//            }
+//        });
 
     }
 
@@ -194,4 +202,3 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         TextView botListItemSubtitle, bot_list_item_cost;
     }
 }
-

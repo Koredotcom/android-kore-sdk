@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryKa">#0059b2</color>
-    <color name="colorPrimaryDark">#0059b2</color>
     <!--<color name="colorAccent">#2f91e5</color>--><!-- HSBC - #db0012, BMC Helix - #2f91e5 -->
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
 
+    <color name="colorPrimaryKa">#0059b2</color>
+    <color name="colorPrimaryDark">#0059b2</color>
     <color name="colorPrimary">#008577</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!--    Associated Bank Theme-->
+    <color name="colorPrimaryKa_associated">#009b38</color>
+    <color name="colorPrimaryDark_associated">#009b38</color>
+    <color name="colorPrimary_associated">#009b38</color>
+    <color name="colorAccent_associated">#D81B60</color>
 
     <color name="mentionsAndHashTagColor">#6CC24A</color>
 
@@ -19,7 +25,8 @@
 
     <color name="right_bubble_selected">#0268de</color>
     <color name="date_picker_color">#008577</color>
-
+    <color name="theme_1_button_bg_color">@color/colorPrimary_associated</color>
+    <color name="theme_1_button_bg">#0078cd</color>
     <color name="right_bubble_unselected">#0076FF</color>
     <color name="bot_left_bubble_selected">#CCCCCC</color>
     <color name="bot_left_bubble_unselected">#CCCCCC</color>

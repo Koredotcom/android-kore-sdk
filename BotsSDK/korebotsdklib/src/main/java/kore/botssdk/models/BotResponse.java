@@ -118,6 +118,11 @@ public class BotResponse extends BaseBotMessage {
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
 
+//  Banking Config
+    public static final String HEADER_TITLE = "HEADER_TITLE";
+    public static final String HEADER_COLOR = "HEADER_COLOR";
+    public static final String BACK_IMAGE = "BACK_IMAGE";
+    public static final String TOP_LEFT_ICON = "TOP_LEFT_ICON";
 
     private String type;
     private BotInfoModel botInfo;

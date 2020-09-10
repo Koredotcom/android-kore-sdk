@@ -3,9 +3,11 @@ package kore.botssdk.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,14 +15,29 @@ import android.widget.Toast;
 
 //import com.kore.ai.widgetsdk.activities.PanelMainActivity;
 
+import com.kore.ai.widgetsdk.models.JWTTokenResponse;
+import com.kore.ai.widgetsdk.net.BotJWTRestBuilder;
+
+import java.util.HashMap;
 import java.util.Random;
 
 import kore.botssdk.R;
 import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.listener.BotSocketConnectionManager;
+import kore.botssdk.models.BotBankingConfigModel;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.BotBankingRestBuilder;
+import kore.botssdk.net.BotRestBuilder;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -30,14 +47,14 @@ public class BotHomeActivity extends BotAppCompactActivity {
 
     private Button launchBotBtn;
     private EditText etIdentity;
-
+    private BotBankingConfigModel botBankingConfigModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        new ThemeColors(this);
+        new ThemeColors(BotHomeActivity.this);
         setContentView(R.layout.bot_home_activity_layout);
-
+        getBankingConfig();
         findViews();
         setListeners();
 //        getJWTToken();
@@ -130,5 +147,41 @@ public class BotHomeActivity extends BotAppCompactActivity {
         } else {
             return false;
         }
+    }
+
+    private void getBankingConfig() {
+        Call<BotBankingConfigModel> getBankingConfigService = BotBankingRestBuilder.getBotConfigService().getBankingConfig();
+        getBankingConfigService.enqueue(new Callback<BotBankingConfigModel>() {
+            @Override
+            public void onResponse(Call<BotBankingConfigModel> call, Response<BotBankingConfigModel> response) {
+                if (response.isSuccessful())
+                {
+                    botBankingConfigModel = response.body();
+                    int colorStep = 15;
+                    int red = Math.round(Color.red(Color.parseColor(botBankingConfigModel.getHeader_color())) / colorStep) * colorStep;
+                    int green = Math.round(Color.green(Color.parseColor(botBankingConfigModel.getHeader_color())) / colorStep) * colorStep;
+                    int blue = Math.round(Color.blue(Color.parseColor(botBankingConfigModel.getHeader_color())) / colorStep) * colorStep;
+                    String stringColor = "#"+Integer.toHexString(Color.rgb(red, green, blue)).substring(2);
+
+                    SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+                    if(!sharedPreferences.getString(BotResponse.HEADER_COLOR, "").equalsIgnoreCase(stringColor))
+                    {
+                        SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                        editor.putString(BotResponse.HEADER_TITLE, botBankingConfigModel.getHeader_title());
+                        editor.putString(BotResponse.HEADER_COLOR, botBankingConfigModel.getHeader_color());
+                        editor.putString(BotResponse.BACK_IMAGE, botBankingConfigModel.getBack_img());
+                        editor.putString(BotResponse.TOP_LEFT_ICON, botBankingConfigModel.getTop_left_icon());
+                        editor.apply();
+                        SDKConfiguration.BubbleColors.setBotIconColor(botBankingConfigModel.getHeader_color());
+                        ThemeColors.setNewThemeColor(BotHomeActivity.this, Color.red(Color.parseColor(botBankingConfigModel.getHeader_color())), Color.green(Color.parseColor(botBankingConfigModel.getHeader_color())), Color.blue(Color.parseColor(botBankingConfigModel.getHeader_color())));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BotBankingConfigModel> call, Throwable t) {
+                Log.e("Skill Panel Data", t.toString());
+            }
+        });
     }
 }

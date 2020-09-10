@@ -68,8 +68,17 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
                     BotButtonModel quickReplyTemplate = quickReplyTemplateArrayList.get(position);
                     if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getType())) {
                         String quickReplyTitle = quickReplyTemplate.getName();
-                        String quickReplyPayload = quickReplyTemplate.getBotOptionPostBackModel().getValue();
-                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload,false);
+
+                        if(quickReplyTemplate.getBotOptionPostBackModel() != null)
+                        {
+                            String quickReplyPayload = quickReplyTemplate.getBotOptionPostBackModel().getValue();
+                            composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload,false);
+                        }
+                        else if(quickReplyTemplate.getPostback() != null)
+                        {
+                            String quickReplyPayload = quickReplyTemplate.getPostback().getValue();
+                            composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload,false);
+                        }
                     } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getType())){
                         invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                     }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getType())){

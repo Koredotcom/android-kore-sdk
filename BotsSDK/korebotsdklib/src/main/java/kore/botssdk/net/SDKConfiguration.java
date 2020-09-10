@@ -22,8 +22,6 @@ public class SDKConfiguration {
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static boolean APPLY_FONT_STYLE = true;
 
-
-
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
     }
@@ -113,6 +111,7 @@ public class SDKConfiguration {
 
         static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
         public static String SERVER_URL ="https://pilot-bots.kore.com/";
+        public static String BANKING_SERVER_URL ="https://demo.kore.ai/";
     }
 
     public static class Client {
@@ -198,18 +197,18 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-c6ea2967-8e9e-510d-9f30-4841f9f8d8f1";
 
         //Pilot
-//        public static String client_id = "cs-acf51d04-7530-5acb-b843-f23031114308";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "XbudDUnUM61RSOENcPz9d5s13j4hGGA7DSRDGe+yZws=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "subrahmanyam.donepudi@kore.com";
-//        public static String bot_name = "Banking Solution IVR Demo";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-13202efd-b6fe-593c-882f-78234643eed3";
+        public static String client_id = "cs-acf51d04-7530-5acb-b843-f23031114308";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "XbudDUnUM61RSOENcPz9d5s13j4hGGA7DSRDGe+yZws=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "subrahmanyam.donepudi@kore.com";
+        public static String bot_name = "Banking Solution IVR Demo";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-13202efd-b6fe-593c-882f-78234643eed3";
 
         //Finstra Login
-        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "sainath.bhima@kore.com";
-        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-9fe63e5b-38b0-5178-9ff3-cfa72f487765";
+//        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "sainath.bhima@kore.com";
+//        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-9fe63e5b-38b0-5178-9ff3-cfa72f487765";
         public static String tenant_id = "5f33b99cff636e7ae858df1c";
     }
 
@@ -268,6 +267,15 @@ public class SDKConfiguration {
         public static  String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = false;
+        private static String botIconColor = APP_REQ_COLOR;
+
+        public static String getBotIconColor() {
+            return botIconColor;
+        }
+
+        public static void setBotIconColor(String botIconColor) {
+            BubbleColors.botIconColor = botIconColor;
+        }
 
         public static int getIcon() {
             return icon;

@@ -41,16 +41,21 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         ownLayoutInflater = LayoutInflater.from(context);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
-        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.splash_color) & 0x00ffffff);
-        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled) & 0x00ffffff);
-        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white) & 0x00ffffff);
-        disableTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white) & 0x00ffffff);
+        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.theme_1_button_bg_color));
+        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.theme_1_button_bg_color));
+        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.theme_1_button_bg_color));
+        disableTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.theme_1_button_bg_color));
 
-        splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
-        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
-        disableTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, textColor);
-        Log.e("Inactive Text color", disableTextColor);
+//        splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
+//        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
+//        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
+//        disableTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, textColor);
+
+        //Banking Config
+        splashColour = sharedPreferences.getString(BotResponse.HEADER_COLOR, splashColour);
+        disabledColour = sharedPreferences.getString(BotResponse.HEADER_COLOR, disabledColour);
+        textColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, textColor);
+        disableTextColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, textColor);
     }
 
     @Override

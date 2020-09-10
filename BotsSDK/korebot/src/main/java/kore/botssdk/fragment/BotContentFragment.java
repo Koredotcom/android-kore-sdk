@@ -121,7 +121,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private int mBotIconId;
     private boolean fetching = false;
     private boolean hasMore = true;
-    private TextView headerView, tvTheme1, tvTheme2;
+    private TextView headerView;
     private Gson gson = new Gson();
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
@@ -136,24 +136,13 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private long oneYearForward;
     private Pair<Long, Long> todayPair;
     private Pair<Long, Long> nextMonthPair;
-    private ImageView ivThemeSwitcher, ivChaseLogo;
-    private PopupWindow popupWindow;
-    private View popUpView;
-    private TextView tvChaseTitle;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true;
-        popUpView = inflater.inflate(R.layout.theme_change_layout, null);
-        popupWindow = new PopupWindow(popUpView, width, height, focusable);
         findViews(view);
-        findThemeViews(popUpView);
         getBundleInfo();
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
@@ -168,11 +157,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         headerView = view.findViewById(R.id.filesSectionHeader);
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
-        ivThemeSwitcher = view.findViewById(R.id.ivThemeSwitcher);
-        ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
-        tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
+
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.chase_digital_assistantSM)));
+
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -192,46 +179,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
         });
 
-        ivThemeSwitcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                popupWindow.showAtLocation(ivThemeSwitcher, Gravity.TOP|Gravity.RIGHT, 80, 220);
-            }
-        });
-
-    }
-
-    public void findThemeViews(View view)
-    {
-        tvTheme1 = view.findViewById(R.id.tvTheme1);
-        tvTheme2 = view.findViewById(R.id.tvTheme2);
-
-        tvTheme1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                popupWindow.dismiss();
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-                editor.apply();
-
-                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_1);
-            }
-        });
-
-        tvTheme2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
-                editor.apply();
-
-                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_2);
-            }
-        });
     }
 
     public void changeThemeAndLaunch()
@@ -288,13 +235,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void setThemeChangeInterface(ThemeChangeListener themeChangeListener) {
-        this.themeChangeListener = themeChangeListener;
-    }
-
     private void getBundleInfo() {
         Bundle bundle = getArguments();
-        if (bundle != null) {
+        if (bundle != null)
+        {
             shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
             mBotNameInitials = bundle.getString(BundleUtils.BOT_NAME_INITIALS, "B");
@@ -452,10 +396,15 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getItemCount());
     }
 
-    protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
+    protected void initializeBotTypingStatus(View view, String mChannelIconURL)
+    {
+        BundleUtils.CHANNEL_ICON_URL = sharedPreferences.getString(BotResponse.TOP_LEFT_ICON, "");
+        mChannelIconURL = BundleUtils.CHANNEL_ICON_URL;
+        SDKConfiguration.BubbleColors.setBotIconColor(sharedPreferences.getString(BotResponse.HEADER_COLOR, SDKConfiguration.BubbleColors.getBotIconColor()));
+
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
-        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
+        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.getBotIconColor()), true);
         typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
         typingStatusItemDots.setTextColor(Color.BLACK);
     }

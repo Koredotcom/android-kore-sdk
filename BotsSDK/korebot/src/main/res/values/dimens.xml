@@ -59,5 +59,6 @@
     <dimen name="dimen_25dp">25dp</dimen>
     <dimen name="dimen_28dp">28dp</dimen>
     <dimen name="dimen_20dp">20dp</dimen>
+    <dimen name="button_height">35dp</dimen>
 
 </resources>
