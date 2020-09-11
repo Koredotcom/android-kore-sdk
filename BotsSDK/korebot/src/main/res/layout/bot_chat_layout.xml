@@ -57,7 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="visible" />
+        android:background="@drawable/ic_launcher"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

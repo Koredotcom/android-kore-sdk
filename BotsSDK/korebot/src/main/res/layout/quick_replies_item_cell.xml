@@ -18,8 +18,8 @@
         android:background="@drawable/theme_1_button_bg"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/dimen_15_dp"
-        android:paddingRight="@dimen/dimen_15_dp">
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingRight="@dimen/dimen_15dp">
 
         <ImageView
             android:id="@+id/quick_reply_item_image"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="Hello"
-            android:textColor="@color/theme_1_button_bg_color"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold" />
     </LinearLayout>

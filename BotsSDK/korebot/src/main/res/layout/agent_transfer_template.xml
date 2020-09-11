@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:text="Kevin Peterson"
                     android:textColor="@color/footerdivider_color"
-                    android:textSize="@dimen/dimen_12_dp" />
+                    android:textSize="@dimen/dimen_12dp" />
             </LinearLayout>
 
         </LinearLayout>

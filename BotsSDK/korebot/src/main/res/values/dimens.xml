@@ -38,6 +38,7 @@
     <dimen name="text_size_small">12dp</dimen>
     <dimen name="text_size_normal">14dp</dimen>
     <dimen name="text_size_sub_header">16dp</dimen>
+    <dimen name="text_size_header">18dp</dimen>
     <dimen name="agent_image_size">50dp</dimen>
     <dimen name="bottom_options_icon_width">30dp</dimen>
 

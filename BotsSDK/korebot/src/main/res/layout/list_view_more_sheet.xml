@@ -30,6 +30,15 @@
             android:background="@drawable/ic_close_black_24dp" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_marginRight="@dimen/dimen_5dp"
+        android:visibility="gone"
+        android:background="@drawable/inset_widget_divider" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMoreData"
         android:layout_width="match_parent"

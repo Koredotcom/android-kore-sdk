@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"BankAssist.ai"</string>
+    <string name="app_name">"Kore.ai"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>
@@ -91,7 +91,8 @@
     </string>
     <string name="save">Save</string>
     <string name="connect">Connect</string>
-
+    <string name="show_more">Show More</string>
+    <string name="about">About</string>
 
 
 </resources>

@@ -4,6 +4,7 @@
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
 
+<!--    General Theme-->
     <color name="colorPrimaryKa">#0059b2</color>
     <color name="colorPrimaryDark">#0059b2</color>
     <color name="colorPrimary">#008577</color>
@@ -75,6 +76,8 @@
     <color name="bubble_link_text_color">#0076FF</color>
     <color name="default_link_dark_text_color">#0000EE</color>
     <color name="default_link_light_text_color">#5C5CFF</color>
+    <color name="bgBlueSignupOld">#00A7F4</color>
+    <color name="greyHead">#84959B</color>
 
     <!-- profile status color -->
     <color name="statusOnline">#2ADE75</color>

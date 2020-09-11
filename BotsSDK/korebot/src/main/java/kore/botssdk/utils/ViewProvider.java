@@ -31,11 +31,13 @@ import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
+import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.HorizontalBarChartView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
+import kore.botssdk.view.ListWidgetView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
@@ -330,6 +332,19 @@ public class ViewProvider {
         botFormTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
         return  botFormTemplateView;
     }
+
+    public static FeedbackTemplateView getFeedbackTemplateView(Context context){
+        FeedbackTemplateView feedbackTemplateView = new FeedbackTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  feedbackTemplateView;
+    }
+
+    public static ListWidgetView getListWidgetTemplateView(Context context){
+        ListWidgetView feedbackTemplateView = new ListWidgetView(context);
+        feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  feedbackTemplateView;
+    }
+
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);

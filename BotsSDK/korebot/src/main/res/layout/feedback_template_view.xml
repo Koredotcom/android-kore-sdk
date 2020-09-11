@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/multiSelectLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llCloseBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvOptionsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_sub_header"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:background="@drawable/ic_close_black_24dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvfeedback_template_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="Testing"
+        android:textColor="#404051"
+        android:textSize="@dimen/text_size_sub_header"
+        android:textStyle="bold" />
+
+    <include
+        android:id="@+id/emojis"
+        layout="@layout/imojis_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_5dp"></include>
+
+    <RatingBar
+        android:id="@+id/rbFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        android:theme="@style/RatingBar"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvGlad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_20dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:fontFamily="@font/latoregular"
+        android:text="@string/app_name"
+        android:textSize="@dimen/text_size_header"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llFeedbackComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvCommentTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="@string/whatcanbeimproved"
+            android:textSize="@dimen/text_size_sub_header" />
+
+        <RelativeLayout
+            android:id="@+id/rlCommentBox"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:background="@drawable/form_input_bg"
+            android:padding="@dimen/dimen_10dp">
+
+            <EditText
+                android:id="@+id/etFeedbackComment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:gravity="top"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvFeedbackSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:background="@color/color_2f91e5"
+            android:gravity="center"
+            android:padding="@dimen/dimen_10dp"
+            android:text="@string/submit"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_sub_header" />
+    </LinearLayout>
+</LinearLayout>

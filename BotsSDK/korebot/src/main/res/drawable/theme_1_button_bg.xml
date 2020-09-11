@@ -8,6 +8,6 @@
         android:right="10dp"
         android:bottom="5dp"/>
     <stroke
-        android:color="@color/theme_1_button_bg_color"
+        android:color="@color/greyHead"
         android:width="2dp"/>
 </shape>

@@ -134,6 +134,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotTableListTemplateView botTableListTemplateView;
     protected BotQuickRepliesTemplateView botQuickRepliesTemplateView;
     protected AgentTransferTemplateView agentTransferTemplateView;
+    protected FeedbackTemplateView feedbackTemplateView;
+    protected ListWidgetView listWidgetView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -388,6 +390,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         agentTransferTemplateView = ViewProvider.getAgentTransferTemplateView(context);
         agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(agentTransferTemplateView);
+
+        feedbackTemplateView = ViewProvider.getFeedbackTemplateView(context);
+        feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(feedbackTemplateView);
+
+        listWidgetView = ViewProvider.getListWidgetTemplateView(context);
+        listWidgetView.setComposeFooterInterface(composeFooterInterface);
+        addView(listWidgetView);
     }
 
 
@@ -482,6 +492,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (agentTransferTemplateView != null) {
             agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if(feedbackTemplateView != null){
+            feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if(listWidgetView != null){
+            listWidgetView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -517,6 +535,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (agentTransferTemplateView != null) {
             agentTransferTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(feedbackTemplateView != null){
+            feedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(listWidgetView != null){
+            listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
