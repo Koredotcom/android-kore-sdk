@@ -183,7 +183,7 @@ public class TextMediaLayoutUniversal extends ViewGroup {
 
             String replaceText = str.substring(_start,_end);
             String _payload = replaceText.substring(2,replaceText.length()-2);
-            Log.d("!@#$% getReqText(", _payload);
+//            Log.d("!@#$% getReqText(", _payload);
             _payload = _payload.substring(_payload.indexOf("{"),_payload.length());
             EntityEditModel model = gson.fromJson(_payload, EntityEditModel.class);
             String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
@@ -216,9 +216,9 @@ public class TextMediaLayoutUniversal extends ViewGroup {
             boolean isPencilSpanClick = false;
 
             if(textualContent.indexOf("%%{")>0){
-                Log.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
+//                Log.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
                 textualContent = getReqText(textualContent);
-                Log.d("!@#$% AFTER ", textualContent);
+//                Log.d("!@#$% AFTER ", textualContent);
                 strBuilder = new SpannableStringBuilder(textualContent);
             }
             Matcher matcher = pattern.matcher(textualContent);
@@ -232,7 +232,7 @@ public class TextMediaLayoutUniversal extends ViewGroup {
                 String reqText = textualContent.substring(_start+2, _end-2);
                 reqText = reqText.substring(reqText.indexOf("{"));
 
-                Log.d("!@#$% REQ_TEXT while", reqText);
+//                Log.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = gson.fromJson(reqText, EntityEditModel.class);
                 String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";

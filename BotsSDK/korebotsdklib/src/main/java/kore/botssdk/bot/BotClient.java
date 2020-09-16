@@ -42,9 +42,9 @@ public class BotClient {
         return botInfoModel;
     }
 
-    public void setBotInfoModel(BotInfoModel botInfoModel) {
+   /* public void setBotInfoModel(BotInfoModel botInfoModel) {
         this.botInfoModel = botInfoModel;
-    }
+    }*/
 
     private BotInfoModel botInfoModel;
     private BotClient() {
@@ -64,11 +64,11 @@ public class BotClient {
     }
 
 
-    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
-                                              String url, String botUserId, String auth) {
+    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken,String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
+                                              String url, String botUserId, String auth, BotInfoModel botModel) {
 //        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, socketConnectionListener,url, botUserId, auth);
+        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botModel, socketConnectionListener,url, botUserId, auth);
     }
     /**
      * Connection for anonymous user
