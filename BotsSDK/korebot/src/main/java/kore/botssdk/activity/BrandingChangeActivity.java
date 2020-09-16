@@ -107,52 +107,52 @@ public class BrandingChangeActivity extends BotAppCompactActivity
                             {
                                 Log.e("Color Value", brandingDependenciesModel.getAllowedValues()[0]);
 
-                                if(BotResponse.BOT_CHAT_BUBBLE_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                if(BotResponse.BUBBLE_LEFT_BG_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleSelected(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.BOT_CHAT_BUBBLE_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUBBLE_LEFT_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.USER_CHAT_BUBBLE_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUBBLE_RIGHT_BG_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.USER_CHAT_BUBBLE_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUBBLE_RIGHT_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.BUTTON_ACTIVE_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUTTON_ACTIVE_BG_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUTTON_ACTIVE_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.BUTTON_ACTIVE_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUTTON_ACTIVE_TXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.BUTTON_INACTIVE_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUTTON_INACTIVE_BG_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.BUTTON_INACTIVE_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.BUTTON_INACTIVE_TXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.WIDGET_BACKGROUND_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.WIDGET_BG_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.WIDGET_BG_COLOR, brandingDependenciesModel.getAllowedValues()[0]);
                                 }
-                                else if(BotResponse.WIDGET_TEXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
+                                else if(BotResponse.WIDGET_TXT_COLOR.trim().equalsIgnoreCase(brandingWidgetThemeModel.getBrandingwidgetdesktop().getEntities().get(i).getLabel().trim()))
                                 {
 //                                    SDKConfiguration.BubbleColors.setRightBubbleTextColor(brandingDependenciesModel.getAllowedValues()[0]);
                                     editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingDependenciesModel.getAllowedValues()[0]);

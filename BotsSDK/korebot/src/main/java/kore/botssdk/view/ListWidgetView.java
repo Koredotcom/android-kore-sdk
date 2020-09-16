@@ -89,9 +89,8 @@ public class ListWidgetView extends LinearLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bot_list_widget_template_view, this, true);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-        rightDrawable.setColor(Color.parseColor("#FFFFFF"));
 
-       // KoreEventCenter.register(this);
+        // KoreEventCenter.register(this);
         botCustomListView = view.findViewById(R.id.botCustomListView);
         botCustomListView.setLayoutManager(new LinearLayoutManager(getContext()));
         botCustomListRoot = view.findViewById(R.id.botCustomListRoot);
@@ -105,6 +104,11 @@ public class ListWidgetView extends LinearLayout {
         imgMenu = view.findViewById(R.id.icon_image);
         widget_header = view.findViewById(R.id.meeting_header);
         meeting_desc = view.findViewById(R.id.meeting_desc);
+
+        if(sharedPreferences != null)
+        {
+            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
+        }
 
         botCustomListViewButton.setOnClickListener(new OnClickListener()
         {
@@ -193,11 +197,22 @@ public class ListWidgetView extends LinearLayout {
         this.model = model;
         if(model != null)
         {
-            widget_header.setText(model.getTitle());
+            if(!StringUtils.isNullOrEmpty(model.getTitle()))
+            {
+                widget_header.setVisibility(VISIBLE);
+                widget_header.setText(model.getTitle());
+
+                if(sharedPreferences != null)
+                    widget_header.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+            }
+
             if(!StringUtils.isNullOrEmpty(model.getDescription()))
             {
                 meeting_desc.setVisibility(VISIBLE);
                 meeting_desc.setText(model.getDescription());
+
+                if(sharedPreferences != null)
+                    meeting_desc.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
             }
 
             if(model.getHeaderOptions() != null && model.getHeaderOptions().getType()!=null ) {

@@ -1,6 +1,8 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotMultiSelectElementModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -29,6 +34,7 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
     private LayoutInflater ownLayoutInflator;
     private Context context;
     private Set<MultiSelectBase> checkedItems = new HashSet<>();
+    private SharedPreferences sharedPreferences;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -43,6 +49,7 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
     public MultiSelectButtonAdapter(Context context) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
+        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -78,20 +85,32 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
                 convertView = ownLayoutInflator.inflate(R.layout.multi_select_item, null);
                 holder.textView = convertView.findViewById(R.id.text_view);
                 holder.checkBox = convertView.findViewById(R.id.check_multi_item);
+                holder.root_layout = convertView.findViewById(R.id.root_layout);
             } else {
                 convertView = ownLayoutInflator.inflate(R.layout.multiselect_button, null);
                 holder.textView = (TextView) convertView.findViewById(R.id.text_view_button);
+                holder.root_layout_btn = convertView.findViewById(R.id.root_layout);
             }
             convertView.setTag(holder);
             KaFontUtils.applyCustomFont(context, convertView);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        /*if (convertView.getTag() == null) {
-            initializeViewHolder(convertView,multiSelectModels.get(position) instanceof BotMultiSelectElementModel?0:1);
+
+        if(holder != null && sharedPreferences != null && holder.root_layout != null)
+        {
+            holder.root_layout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
         }
 
-        holder = (ViewHolder) convertView.getTag();*/
+        if(holder != null && sharedPreferences != null && holder.root_layout_btn != null)
+        {
+            holder.root_layout_btn.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
+        }
+
+        if(holder != null && sharedPreferences != null &&  holder.textView != null)
+        {
+            holder.textView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+        }
 
         populateVIew(holder, position,multiSelectModels.get(position) instanceof BotMultiSelectElementModel?0:1);
 
@@ -188,5 +207,7 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
     private static class ViewHolder {
         CheckBox checkBox;
         TextView textView;
+        RelativeLayout root_layout;
+        LinearLayout root_layout_btn;
     }
 }

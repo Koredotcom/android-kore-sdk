@@ -369,8 +369,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
         else
         {
-            makeJwtCallWithConfig(false);
-//            makeTokenCallForJwt(false);
+//            makeJwtCallWithConfig(false);
+            makeTokenCallForJwt(false);
         }
     }
 

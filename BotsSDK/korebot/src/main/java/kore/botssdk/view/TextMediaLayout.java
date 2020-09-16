@@ -113,12 +113,15 @@ public class TextMediaLayout extends ViewGroup {
         transparency = 0x26000000;
         rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_right_bubble_bg);
         rightDrawable.setColor(Color.parseColor(rightbgColor));
-        rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(rightbgColor));
+
         leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
 
         if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
             leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme2_left_bubble);
 
+        leftDrawable.setColor(Color.parseColor(leftbgColor));
+        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(leftbgColor));
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         botContentTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);

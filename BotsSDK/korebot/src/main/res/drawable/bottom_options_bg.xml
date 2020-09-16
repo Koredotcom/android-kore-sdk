@@ -10,7 +10,7 @@
     </item>
 
     <!-- White Top color -->
-    <item  android:top="3dp">
+    <item  android:top="1dp">
 
         <shape  android:shape="rectangle">
 

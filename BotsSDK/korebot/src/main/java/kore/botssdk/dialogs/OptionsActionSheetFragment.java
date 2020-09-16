@@ -1,7 +1,10 @@
 package kore.botssdk.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +31,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotOptionsModel;
+import kore.botssdk.models.BotResponse;
 
 public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 {
@@ -36,20 +40,21 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
     private boolean isFromFullView;
     private BotOptionsModel model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private boolean isFromListMenu = false;
     private ListView lvMoreData;
     private int dp1;
     private TextView tvTab1, tvTab2;
     private TextView tvOptionsTitle;
-    private LinearLayout llCloseBottomSheet;
+    private LinearLayout llCloseBottomSheet, llBottomLayout;
     public String getSkillName() {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
     private LinearLayout llTabHeader;
     private RecyclerView rvViewMore;
+    private SharedPreferences sharedPreferences;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -70,10 +75,16 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
         tvTab2 = view.findViewById(R.id.tvTab2);
         tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        llBottomLayout = view.findViewById(R.id.llBottomLayout);
         llTabHeader = view.findViewById(R.id.llTabHeader);
         llTabHeader.setVisibility(View.GONE);
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore = view.findViewById(R.id.rvMoreData);
+        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+
+        if(sharedPreferences != null)
+            llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
+
         rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvViewMore.setVisibility(View.VISIBLE);
         lvMoreData.setVisibility(View.GONE);
@@ -94,7 +105,12 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
         bottomOptionsCycleAdapter.notifyDataSetChanged();
 
         if(model.getHeading() != null)
+        {
             tvOptionsTitle.setText(model.getHeading());
+
+            if(sharedPreferences != null)
+                tvOptionsTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, "#000000")));
+        }
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,9 +149,9 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight)-(100 * dp1);
+                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight)-(50 * dp1);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight) -(100 * dp1)));
+                bottomSheetBehavior.setPeekHeight((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight) -(50 * dp1)));
             }
         });
 

@@ -33,6 +33,7 @@
                 android:fontFamily="@font/latosemibold"
                 android:gravity="center|start"
                 android:letterSpacing="0.01"
+                android:visibility="gone"
                 android:textColor="@color/color_161620"
                 android:textSize="17sp"
                 android:textStyle="bold" />

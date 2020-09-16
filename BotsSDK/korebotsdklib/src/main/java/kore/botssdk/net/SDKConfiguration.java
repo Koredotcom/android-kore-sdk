@@ -263,7 +263,6 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-
         public static  String rightBubbleUnSelected=APP_REQ_COLOR;
         public static  String leftBubbleSelected="#ffffff";
         public static  String leftBubbleUnSelected="#f8f9f8";
@@ -302,6 +301,7 @@ public class SDKConfiguration {
         }
 
         public static  String quickReplyColor = "#EEEEF0";
+        public static  String quickReplyTextColor = "#000000";
 
     }
 

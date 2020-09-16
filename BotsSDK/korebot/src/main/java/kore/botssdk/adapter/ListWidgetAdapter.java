@@ -6,7 +6,9 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -51,6 +53,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
 import kore.botssdk.models.Widget;
@@ -82,7 +85,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setSelectedIds(ArrayList<String> selectedIds) {
         this.selectedIds = selectedIds;
     }
-
+    private SharedPreferences sharedPreferences;
     ArrayList<String> selectedIds = null;
 
     public ArrayList<WidgetListElementModel> getEventList() {
@@ -142,6 +145,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         inflater = LayoutInflater.from(mContext);
         this.type = type;
         this.trigger = trigger;
+        this.sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         notifyDataSetChanged();
         selectedIds = new ArrayList<>();
     }
@@ -229,19 +233,29 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         } else {
 
             final ListWidgetAdapter.ViewHolder holder = (ListWidgetAdapter.ViewHolder) holderData;
-
             final WidgetListElementModel model = items.get(position);
 
             if (StringUtils.isNullOrEmpty(model.getTitle())) {
                 holder.txtTitle.setVisibility(GONE);
-            } else {
+            } else
+            {
                 holder.txtTitle.setText(model.getTitle().trim());
+
+                if(sharedPreferences != null)
+                {
+                    holder.txtTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+                }
             }
 
             if (StringUtils.isNullOrEmpty(model.getSubtitle())) {
                 holder.txtSubTitle.setVisibility(GONE);
             } else {
                 holder.txtSubTitle.setText(model.getSubtitle().trim());
+
+                if(sharedPreferences != null)
+                {
+                    holder.txtSubTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+                }
             }
 
 

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/dimen_10dp"
-    android:orientation="vertical"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
     <TextView
+        android:id="@+id/text_view_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:ellipsize="end"
-        android:minWidth="300dp"
-        android:id="@+id/text_view_button"
         android:layout_gravity="center_vertical"
-        android:text="hi"
+        android:layout_marginBottom="@dimen/dimen_12dp"
+        android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
+        android:minWidth="300dp"
         android:tag="medium"
-        android:layout_marginBottom="@dimen/dimen_12dp"
-        android:textStyle="bold"
+        android:text="hi"
         android:textColor="@color/splash_color"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:textStyle="bold" />
 </LinearLayout>

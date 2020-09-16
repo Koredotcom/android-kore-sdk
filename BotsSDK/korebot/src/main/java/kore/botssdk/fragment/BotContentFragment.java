@@ -172,7 +172,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.chase_digital_assistantSM)));
+        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.app_name)));
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,

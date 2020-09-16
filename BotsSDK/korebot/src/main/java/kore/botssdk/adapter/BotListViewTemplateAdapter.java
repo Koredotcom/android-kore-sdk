@@ -24,6 +24,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
@@ -31,16 +32,17 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class BotListViewTemplateAdapter extends BaseAdapter {
 
-    String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
-    ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflator;
-    Context context;
-    RoundedCornersTransform roundedCornersTransform;
-    ListView parentListView;
+    private String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
+    private ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private LayoutInflater ownLayoutInflator;
+    private Context context;
+    private RoundedCornersTransform roundedCornersTransform;
+    private ListView parentListView;
     private GradientDrawable bgDrawable;
-    int count = 0;
+    private int count = 0;
+    private SharedPreferences sharedPreferences;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
@@ -48,6 +50,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
         this.count = count;
+        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -95,22 +98,24 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         BotListModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-        rightDrawable.setColor(Color.parseColor("#FFFFFF"));
-
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-
-        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+        if(sharedPreferences != null)
         {
-            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
-            holder.botListItemRoot.setBackground(rightDrawable);
-        }
-        else
-        {
-            rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
-            holder.botListItemRoot.setBackground(rightDrawable);
+            GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
+            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+
+            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+            {
+                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+                holder.botListItemRoot.setBackground(rightDrawable);
+            }
+            else
+            {
+                rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+                holder.botListItemRoot.setBackground(rightDrawable);
+            }
+
+            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
 
 
@@ -133,6 +138,9 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+
+            if(sharedPreferences != null)
+                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
 //        if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
 //            holder.botListItemButton.setVisibility(View.GONE);
@@ -157,22 +165,27 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 //                }
 //            });
 //        }
-//        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-//                    int position = parentListView.getPositionForView(v);
-//                    BotListModel _botListModel = getItem(position);
-//                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
-//                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-//                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-//                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-//                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
-//                        }
-//                    }
-//                }
-//            }
-//        });
+
+        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    int position = parentListView.getPositionForView(v);
+                    BotListModel _botListModel = getItem(position);
+                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
+                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
+                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+
+                            if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
+                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
+                            else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
+                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(),false);
+                        }
+                    }
+                }
+            }
+        });
 
     }
 

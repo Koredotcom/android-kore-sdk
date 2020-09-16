@@ -1,7 +1,10 @@
 package kore.botssdk.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +27,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotResponse;
 
 public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
@@ -37,13 +41,14 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     private ListView lvMoreData;
     private int dp1;
     private TextView tvTab1, tvTab2;
-    private LinearLayout llCloseBottomSheet;
+    private LinearLayout llCloseBottomSheet, llBottomLayout;
     public String getSkillName() {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
     private boolean showHeader = false;
     private LinearLayout llTabHeader;
+    private SharedPreferences sharedPreferences;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -63,6 +68,11 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         tvTab2 = view.findViewById(R.id.tvTab2);
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         llTabHeader = view.findViewById(R.id.llTabHeader);
+        llBottomLayout = view.findViewById(R.id.llBottomLayout);
+        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+
+        if(sharedPreferences != null)
+            llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
         this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;

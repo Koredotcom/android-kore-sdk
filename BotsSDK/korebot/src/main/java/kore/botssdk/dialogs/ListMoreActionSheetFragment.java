@@ -1,7 +1,10 @@
 package kore.botssdk.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +33,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
 
 public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
@@ -43,7 +47,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
     private boolean isFromListMenu = false;
     private ListView lvMoreData;
     private int dp1;
-    private LinearLayout llCloseBottomSheet;
+    private LinearLayout llCloseBottomSheet, llBottomLayout;
     public String getSkillName() {
         return skillName;
     }
@@ -53,6 +57,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
     private RecyclerView rvViewMore;
     private TextView tvOptionsTitle;
     private String title;
+    private SharedPreferences sharedPreferences;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -71,6 +76,8 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         rvViewMore = view.findViewById(R.id.rvMoreData);
+        llBottomLayout = view.findViewById(R.id.llBottomLayout);
+        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore.setVisibility(View.VISIBLE);
@@ -89,7 +96,13 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
 
         if(!StringUtils.isNullOrEmpty(title)) {
             tvOptionsTitle.setText(title);
+
+            if(sharedPreferences != null)
+                tvOptionsTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, "#000000")));
         }
+
+        if(sharedPreferences != null)
+            llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
         ListViewMoreAdapter listViewMoreAdapter = new ListViewMoreAdapter(model);
         rvViewMore.setAdapter(listViewMoreAdapter);
