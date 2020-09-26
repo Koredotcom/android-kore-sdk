@@ -1,11 +1,22 @@
 package kore.botssdk.models;
 
 
+import kore.botssdk.net.RestResponse;
+
 public class BotData {
     private String cloudProvider;
     private String workHours;
     private String KATZ;
     private boolean enableOnlineMeet;
+    private RestResponse.BotCustomData customData;
+
+    public RestResponse.BotCustomData getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(RestResponse.BotCustomData customData) {
+        this.customData = customData;
+    }
 
     public String getCloudProvider() {
         return cloudProvider;

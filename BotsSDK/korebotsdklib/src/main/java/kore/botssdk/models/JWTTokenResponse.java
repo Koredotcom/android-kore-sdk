@@ -1,11 +1,23 @@
 package kore.botssdk.models;
 
+import kore.botssdk.net.RestResponse;
+
 public class JWTTokenResponse{
     private String jwt;
     private String streamId;
+
+    public RestResponse.BotCustomData getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(RestResponse.BotCustomData customData) {
+        this.customData = customData;
+    }
+
     private String botName;
     private String botsUrl;
 
+    private RestResponse.BotCustomData customData;
     public String getIP() {
         return IP;
     }
