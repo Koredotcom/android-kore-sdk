@@ -6,6 +6,7 @@ import android.view.View;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -16,6 +17,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  */
 public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
 
+    CircularProfileView cpvSenderImage;
     KaReceivedBubbleLayout receivedBubbleLayout;
     View headerLayout;
 
@@ -40,6 +42,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         super.onFinishInflate();
         receivedBubbleLayout = (KaReceivedBubbleLayout) findViewById(R.id.receivedBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
+        cpvSenderImage = (CircularProfileView) findViewById(R.id.cpvSenderImage);
         headerLayout.setVisibility(VISIBLE);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
     }
@@ -84,12 +87,15 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
 
         int top = getPaddingTop();
         int left = getPaddingLeft();
+        if(SDKConfiguration.BubbleColors.showIcon) {
+            left = 30;
+        }
 
         /*
          * For Received Bubble Layout
          */
         top = dp1;
-        LayoutUtils.layoutChild(headerLayout,left,top);
+        LayoutUtils.layoutChild(headerLayout,getPaddingLeft(),top);
         top = headerLayout.getBottom();
         LayoutUtils.layoutChild(receivedBubbleLayout, left, top);
     }

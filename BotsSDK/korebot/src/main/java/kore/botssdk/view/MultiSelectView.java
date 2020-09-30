@@ -24,6 +24,7 @@ import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -151,6 +152,11 @@ public class MultiSelectView extends ViewGroup {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
                 LayoutUtils.layoutChild(child, childLeft, childTop);
+
+                if(SDKConfiguration.BubbleColors.showIcon) {
+                    LayoutUtils.layoutChild(child,  (int)(13 *dp1), 0);
+                }
+
                 childTop += child.getMeasuredHeight();
             }
         }

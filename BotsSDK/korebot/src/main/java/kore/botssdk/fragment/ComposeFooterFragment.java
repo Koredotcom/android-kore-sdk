@@ -159,7 +159,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         progress.setColors(colors);
         text_view_speech = (TextView) view.findViewById(R.id.text_view_speech);
         sharedPreferences = getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        headerColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "");
+        headerColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "");
 
 //        if(!StringUtils.isNullOrEmpty(headerColor))
 //            DrawableCompat.applyTheme(rec_audio_img.getDrawable(), getContext().getTheme());

@@ -266,7 +266,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         }*/
         String icon = ((BotResponse) baseBotMessage).getIcon();
         if(SDKConfiguration.BubbleColors.showIcon) {
-            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+            cpvSenderImage.populateLayout(" ", null, icon, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
             cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
         }else{
             cpvSenderImage.setVisibility(GONE);
@@ -594,7 +594,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For Sender icon [CPV]
          */
-        float cpvSenderImageDimen = dp1 * 21;
+        float cpvSenderImageDimen = dp1 * 23;
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
@@ -812,7 +812,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);
-        LayoutUtils.layoutChild(cpvSenderImage, left, top);
+        LayoutUtils.layoutChild(cpvSenderImage, 0, top-((int)(25 * dp1)));
         if (cpvSenderImage.getMeasuredWidth() > 0) {
             left = cpvSenderImage.getRight() + (int) (9 * dp1);
             top = top + (int) (1 * dp1);

@@ -22,6 +22,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
@@ -37,7 +38,7 @@ public class AgentTransferTemplateView extends LinearLayout
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private RecyclerView rvAgentButtons;
-    private LinearLayout llAgentDetails;
+    private LinearLayout llAgentDetails, llAgentTransfer;
     int maxWidth, listViewHeight;
 
     public AgentTransferTemplateView(Context context) {
@@ -57,6 +58,7 @@ public class AgentTransferTemplateView extends LinearLayout
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.agent_transfer_template, this, true);
+        llAgentTransfer = (LinearLayout) findViewById(R.id.llAgentTransfer);
         tvAgentCardText = (TextView) findViewById(R.id.tvAgentCardText);
         ivAgentImage = (ImageView) findViewById(R.id.ivAgentImage);
         tvAgentName = (TextView) findViewById(R.id.tvAgentName);
@@ -73,6 +75,15 @@ public class AgentTransferTemplateView extends LinearLayout
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
         listViewHeight = (int) AppControl.getInstance().getDimensionUtil().screenWidth;
+
+        if(SDKConfiguration.BubbleColors.showIcon)
+        {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins((int)(13 *dp1), 0, 0, 0);
+            llAgentTransfer.setLayoutParams(layoutParams);
+        }
     }
 
     public void populateAgentTemplateView(PayloadInner payloadInner)

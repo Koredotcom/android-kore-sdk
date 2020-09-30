@@ -16,6 +16,7 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -75,30 +76,9 @@ public class BotButtonView extends ViewGroup {
             buttonTypeAdapter = new BotButtonTemplateAdapter(getContext());
             buttonTypeAdapter.setEnabled(enabled);
             autoExpandListView.setAdapter(buttonTypeAdapter);
-            autoExpandListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null && buttonTypeAdapter.isEnabled()) {
-
-                        BotButtonModel botButtonModel = ((BotButtonModel) parent.getItemAtPosition(position));
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
-                        }
-                        else if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(botButtonModel.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
-                        }else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botButtonModel.getType())){
-                            buttonTypeAdapter.setEnabled(false);
-                            invokeGenericWebViewInterface.handleUserActions(botButtonModel.getAction(),botButtonModel.getCustomData());
-                        }else{
-                            buttonTypeAdapter.setEnabled(false);
-                            String title = botButtonModel.getTitle();
-                            String payload = botButtonModel.getPayload();
-                            composeFooterInterface.onSendClick(title, payload,false);
-                        }
-                    }
-                }
-            });
             buttonTypeAdapter.setBotButtonModels(botButtonModels);
+            buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
+            buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             buttonTypeAdapter.notifyDataSetChanged();
         } else {
             autoExpandListView.setAdapter(null);
@@ -150,6 +130,9 @@ public class BotButtonView extends ViewGroup {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
                 LayoutUtils.layoutChild(child, childLeft, childTop);
+                if(SDKConfiguration.BubbleColors.showIcon) {
+                    LayoutUtils.layoutChild(child,  (int)(13 *dp1), 0);
+                }
                 childTop += child.getMeasuredHeight();
             }
         }

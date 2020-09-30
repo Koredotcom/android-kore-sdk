@@ -1,5 +1,6 @@
 package kore.botssdk.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -279,18 +280,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 //                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
 //                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
 
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
-                        int strYear = cal.get(Calendar.YEAR);
-                        int strMonth = cal.get(Calendar.MONTH);
-                        int strDay = cal.get(Calendar.DAY_OF_MONTH);
-                        String minDate = strMonth+"-"+strDay+"-"+strYear;
-
                         MaterialDatePicker.Builder<Long> builder =  MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
+                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
+                        builder.setSelection(Calendar.getInstance().getTimeInMillis());
 
                         try
                         {
@@ -323,6 +318,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
                         builder.setCalendarConstraints(limitRange(payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
+                        builder.setSelection(todayPair);
 
                         try
                         {
@@ -398,9 +394,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL)
     {
-        BundleUtils.CHANNEL_ICON_URL = sharedPreferences.getString(BotResponse.TOP_LEFT_ICON, "");
-        mChannelIconURL = BundleUtils.CHANNEL_ICON_URL;
-        SDKConfiguration.BubbleColors.setBotIconColor(sharedPreferences.getString(BotResponse.HEADER_COLOR, SDKConfiguration.BubbleColors.getBotIconColor()));
+//        BundleUtils.CHANNEL_ICON_URL = sharedPreferences.getString(BotResponse.TOP_LEFT_ICON, "");
+//        mChannelIconURL = BundleUtils.CHANNEL_ICON_URL;
+//        SDKConfiguration.BubbleColors.setBotIconColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, SDKConfiguration.BubbleColors.getBotIconColor()));
 
         botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
@@ -530,6 +526,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     private void initSettings() {
         today = MaterialDatePicker.todayInUtcMilliseconds();
+
         Calendar calendar = getClearedUtc();
         calendar.setTimeInMillis(today);
         calendar.roll(Calendar.MONTH, 1);
@@ -589,17 +586,51 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     /*
       Limit selectable Date range
     */
-    private CalendarConstraints.Builder minRange(String date, String format) {
+    private CalendarConstraints.Builder minRange(String startDate, String enddate, String format) {
 
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-        constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
+        SimpleDateFormat f = new SimpleDateFormat(format);
+
+        if(!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(enddate))
+        {
+            constraintsBuilderRange.setValidator(new MyDateValidator(getDateInMills(startDate), getDateInMills(enddate)));
+        }
+        else if(!StringUtils.isNullOrEmpty(startDate))
+        {
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.from(getDateInMills(startDate)));
+        }
 
         return constraintsBuilderRange;
     }
 
+    private long getDateInMills(String startDate)
+    {
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
+
+        if(!StringUtils.isNullOrEmpty(startDate))
+        {
+            String srtDate[] = startDate.split("-");
+            if(srtDate != null && srtDate.length > 1)
+            {
+                String month = srtDate[0];
+                String day = srtDate[1];
+                String year = srtDate[2];
+
+                startCal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+                startCal.set(Calendar.MONTH, Integer.parseInt(month) - 1);
+                startCal.set(Calendar.YEAR, Integer.parseInt(year));
+            }
+        }
+
+        return startCal.getTimeInMillis();
+    }
+
+
+
     private Date stringToDate(String aDate,String aFormat) {
 
-        SimpleDateFormat format = new SimpleDateFormat("M-DD-YYYY");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-YYYY");
         try
         {
             Date date = format.parse(aDate);
@@ -609,6 +640,34 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         }
 
         return null;
+    }
+
+    @SuppressLint("ParcelCreator")
+    public class MyDateValidator implements CalendarConstraints.DateValidator {
+        long minDate, maxDate;
+
+        MyDateValidator(long minDate, long maxDate) {
+            this.minDate = minDate;
+            this.maxDate = maxDate;
+        }
+
+        @Override
+        public boolean isValid(long date) {
+            return (date >= minDate && date<=maxDate);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeLong(minDate);
+            dest.writeLong(maxDate);
+        }
+
+
     }
 
 

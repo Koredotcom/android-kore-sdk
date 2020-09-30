@@ -166,7 +166,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getBundleInfo();
         getDataFromTxt();
 
-//        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
+        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1), sharedPreferences.getBoolean(BotResponse.THEME_CHANGE_CALLED, false));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -288,7 +288,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
         top_left_image = sharedPreferences.getString(BotResponse.TOP_LEFT_ICON, "");
         back_image = sharedPreferences.getString(BotResponse.BACK_IMAGE, "");
-        headerColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "");
+        headerColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "");
         headerTitle = sharedPreferences.getString(BotResponse.HEADER_TITLE, "");
 
         if(!StringUtils.isNullOrEmpty(headerTitle))
@@ -464,7 +464,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 editor.apply();
 
-                onThemeChangeClicked(BotResponse.THEME_NAME_1);
+                onThemeChangeClicked(BotResponse.THEME_NAME_1, true);
             }
         });
 
@@ -476,7 +476,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
                 editor.apply();
 
-                onThemeChangeClicked(BotResponse.THEME_NAME_2);
+                onThemeChangeClicked(BotResponse.THEME_NAME_2, true);
             }
         });
     }
@@ -824,23 +824,29 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         toggleQuickRepliesVisiblity(false);
     }
 
-    public void onThemeChangeClicked(String message)
+    public void onThemeChangeClicked(String message, boolean themechangedcalled)
     {
-        if(message.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+        if(themechangedcalled)
         {
-            ivChaseLogo.setVisibility(View.VISIBLE);
-            ivChaseBackground.setVisibility(View.GONE);
-
-            if(!StringUtils.isNullOrEmpty(back_image))
+            ivThemeSwitcher.setVisibility(VISIBLE);
+            if(message.equalsIgnoreCase(BotResponse.THEME_NAME_1))
             {
-//                Picasso.get().load(back_image).transform(roundedCornersTransform).into(ivChaseLogo);
-                Glide.with(BotChatActivity.this).load(back_image).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(ivChaseLogo));
+                ivChaseLogo.setVisibility(View.VISIBLE);
+                ivChaseBackground.setVisibility(View.GONE);
+
+                if(!StringUtils.isNullOrEmpty(back_image))
+                {
+                    Glide.with(BotChatActivity.this).load(back_image).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(ivChaseLogo));
+                }
+            }
+            else
+            {
+                ivChaseBackground.setVisibility(VISIBLE);
+                ivChaseLogo.setVisibility(View.GONE);
             }
         }
-        else
-        {
-            ivChaseBackground.setVisibility(VISIBLE);
-            ivChaseLogo.setVisibility(View.GONE);
+        else {
+            ivThemeSwitcher.setVisibility(View.GONE);
         }
     }
 }

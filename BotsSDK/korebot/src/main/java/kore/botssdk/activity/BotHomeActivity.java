@@ -54,7 +54,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
         super.onCreate(savedInstanceState);
         new ThemeColors(BotHomeActivity.this);
         setContentView(R.layout.bot_home_activity_layout);
-        getBankingConfig();
+//        getBankingConfig();
         findViews();
         setListeners();
 //        getJWTToken();
@@ -64,7 +64,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
 
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
         etIdentity = (EditText) findViewById(R.id.etIdentity);
-        launchBotBtn.setText(getResources().getString(R.string.connect));
+        launchBotBtn.setText(SDKConfiguration.Client.bot_name);
         etIdentity.setText(SDKConfiguration.Client.identity);
         if(etIdentity.getText().toString() != null && etIdentity.getText().toString().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
@@ -107,7 +107,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
                 {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
-                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
+//                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
                         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
                         launchBotChatActivity();
                     }
@@ -164,13 +164,15 @@ public class BotHomeActivity extends BotAppCompactActivity {
                     String stringColor = "#"+Integer.toHexString(Color.rgb(red, green, blue)).substring(2);
 
                     SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-                    if(!sharedPreferences.getString(BotResponse.HEADER_COLOR, "").equalsIgnoreCase(stringColor))
+                    if(!sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "").equalsIgnoreCase(stringColor))
                     {
                         SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                         editor.putString(BotResponse.HEADER_TITLE, botBankingConfigModel.getHeader_title());
-                        editor.putString(BotResponse.HEADER_COLOR, botBankingConfigModel.getHeader_color());
+                        editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, botBankingConfigModel.getHeader_color());
                         editor.putString(BotResponse.BACK_IMAGE, botBankingConfigModel.getBack_img());
                         editor.putString(BotResponse.TOP_LEFT_ICON, botBankingConfigModel.getTop_left_icon());
+                        editor.putString(BotResponse.HEADER_TITLE, botBankingConfigModel.getHeader_title());
+                        editor.putBoolean(BotResponse.THEME_CHANGE_CALLED, true);
                         editor.apply();
                         SDKConfiguration.BubbleColors.setBotIconColor(botBankingConfigModel.getHeader_color());
                         ThemeColors.setNewThemeColor(BotHomeActivity.this, Color.red(Color.parseColor(botBankingConfigModel.getHeader_color())), Color.green(Color.parseColor(botBankingConfigModel.getHeader_color())), Color.blue(Color.parseColor(botBankingConfigModel.getHeader_color())));

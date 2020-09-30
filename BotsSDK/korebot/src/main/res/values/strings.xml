@@ -93,6 +93,7 @@
     <string name="connect">Connect</string>
     <string name="show_more">Show More</string>
     <string name="about">About</string>
-
+    <string name="whatcanbeimproved">What can be Improved ?</string>
+    <string name="submit">Submit</string>
 
 </resources>

@@ -12,22 +12,24 @@
         android:id="@+id/botCustomListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_3dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
         android:padding="2dp"
-        android:layout_margin="@dimen/dimen_3dp"
         android:scrollbars="none" />
 
     <TextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginRight="@dimen/dimen_10dp"
-        android:gravity="right|center_vertical"
+        android:layout_margin="@dimen/dimen_3dp"
+        android:background="@drawable/rounded_rect_feedback"
+        android:gravity="center"
         android:text="@string/show_more"
         android:textColor="@android:color/holo_blue_dark"
+        android:textSize="@dimen/text_size_sub_header"
         android:visibility="visible" />
 
     <TextView

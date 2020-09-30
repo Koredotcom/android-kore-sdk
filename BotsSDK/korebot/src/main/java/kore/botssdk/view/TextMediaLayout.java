@@ -105,13 +105,10 @@ public class TextMediaLayout extends ViewGroup {
         sharedPreferences = getSharedPreferences();
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
-        rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
-        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0ea84d");
+        rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, SDKConfiguration.BubbleColors.rightBubbleTextColor);
+        rightbgColor= sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, SDKConfiguration.BubbleColors.rightBubbleSelected);
         widgetBorderColor= sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#d3d3d3");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-
-        //Banking Config
-        rightbgColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "#0ea84d");
 
         //Transparency 15%
         transparency = 0x26000000;
@@ -121,12 +118,12 @@ public class TextMediaLayout extends ViewGroup {
 
         leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
         leftDrawable.setColor(Color.parseColor(leftbgColor));
-        leftDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+        leftDrawable.setStroke((int) (2*dp1), Color.parseColor(leftbgColor));
 
-        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-        {
-            leftDrawable.setStroke((int) (2*dp1), Color.parseColor(widgetBorderColor));
-        }
+//        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
+//        {
+//            leftDrawable.setStroke((int) (2*dp1), Color.parseColor(widgetBorderColor));
+//        }
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -283,12 +280,8 @@ public class TextMediaLayout extends ViewGroup {
                 botContentTextView.setTextColor(Color.parseColor(leftTextColor));
                 themeName = getSharedPreferences().getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
-                leftDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
-
-                if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-                {
-                    leftDrawable.setStroke((int) (2*dp1), Color.parseColor(widgetBorderColor));
-                }
+                leftDrawable.setColor(Color.parseColor(leftbgColor));
+                leftDrawable.setStroke((int) (2*dp1), Color.parseColor(leftbgColor));
 
                 botContentTextView.setBackground(leftDrawable);
             }
@@ -444,7 +437,10 @@ public class TextMediaLayout extends ViewGroup {
         }
 
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth , MeasureSpec.AT_MOST);
+        if(SDKConfiguration.BubbleColors.showIcon) {
+            parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth + (int)(13 *dp1) , MeasureSpec.AT_MOST);
+        }
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
 
     }
@@ -457,6 +453,9 @@ public class TextMediaLayout extends ViewGroup {
 
         //get the available size of child view
         int childLeft = this.getPaddingLeft();
+        if(SDKConfiguration.BubbleColors.showIcon) {
+            childLeft = this.getPaddingLeft() + (int)(13 *dp1);
+        }
         int childTop = this.getPaddingTop();
 
         //walk through each child, and arrange it from left to right

@@ -16,16 +16,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/bubble_white_color</item>
-        <item name="colorPrimaryDark">@color/bubble_white_color</item>
-        <item name="colorAccent">@color/bubble_white_color</item>
-    </style>
-
-    <!-- Associated application theme. -->
-    <style name="AssociatedAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimaryKa_associated</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark_associated</item>
-        <item name="colorAccent">@color/colorPrimaryKa_associated</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryKa</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <!-- Associated application theme. -->

@@ -97,26 +97,24 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         holder.botListItemImage.setVisibility(View.GONE);
 
         GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-        rightDrawable.setColor(Color.parseColor("#FFFFFF"));
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
         String themeBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         String themeTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#444444");
         rightDrawable.setColor(Color.parseColor(themeBgColor));
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(themeBgColor));
+        holder.botListItemRoot.setBackground(rightDrawable);
 
-        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-        {
-            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
-            holder.botListItemRoot.setBackground(rightDrawable);
-        }
-        else
-        {
-            rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
-            holder.botListItemRoot.setBackground(rightDrawable);
-        }
-
-
+//        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+//        {
+//            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#ffffff"));
+//            holder.botListItemRoot.setBackground(rightDrawable);
+//        }
+//        else
+//        {
+//            rightDrawable.setStroke((int) (2*dp1), Color.parseColor("#d3d3d3"));
+//            holder.botListItemRoot.setBackground(rightDrawable);
+//        }
 
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
@@ -150,10 +148,10 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
 
-                            if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
-                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
-                            else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
+                           if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
                                 composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(),false);
+                           else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
+                                composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
                         }
                     }
                 }

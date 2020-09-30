@@ -17,9 +17,12 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
@@ -34,6 +37,8 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     private SharedPreferences sharedPreferences;
     private GradientDrawable btnDrawable;
     private Context mContext;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public BotButtonTemplateAdapter(Context context)
     {
@@ -52,10 +57,10 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 //        disableTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, textColor);
 
         //Banking Config
-        splashColour = sharedPreferences.getString(BotResponse.HEADER_COLOR, splashColour);
-        disabledColour = sharedPreferences.getString(BotResponse.HEADER_COLOR, disabledColour);
-        textColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, textColor);
-        disableTextColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, textColor);
+        splashColour = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, splashColour);
+        disabledColour = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, disabledColour);
+        textColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, textColor);
+        disableTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, textColor);
     }
 
     @Override
@@ -100,6 +105,37 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 //        btnDrawable.setStroke((int) (2*dp1), Color.parseColor(splashColour));
 //        holder.botItemButton.setTextColor(Color.parseColor(textColor));
         holder.botItemButton.setText(buttonTemplate.getTitle());
+
+        holder.botItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled()) {
+
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    }
+                    else if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    }else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())){
+                        setEnabled(false);
+                        invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(),buttonTemplate.getCustomData());
+                    }else{
+                        setEnabled(false);
+                        String title = buttonTemplate.getTitle();
+                        String payload = buttonTemplate.getPayload();
+                        composeFooterInterface.onSendClick(title, payload,false);
+                    }
+                }
+            }
+        });
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public boolean isEnabled() {

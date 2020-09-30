@@ -34,6 +34,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -153,6 +154,10 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         View childView = getChildAt(0);
         LayoutUtils.layoutChild(childView, 0, 0);
+        if(SDKConfiguration.BubbleColors.showIcon) {
+            LayoutUtils.layoutChild(childView,  (int)(13 *dp1), 0);
+        }
+
     }
 
     public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {

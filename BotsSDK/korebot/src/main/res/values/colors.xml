@@ -7,7 +7,7 @@
 <!--    General Theme-->
     <color name="colorPrimaryKa">#0059b2</color>
     <color name="colorPrimaryDark">#0059b2</color>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#0059b2</color>
     <color name="colorAccent">#D81B60</color>
 
     <!--    Associated Bank Theme-->
@@ -26,7 +26,7 @@
 
     <color name="right_bubble_selected">#0268de</color>
     <color name="date_picker_color">#008577</color>
-    <color name="theme_1_button_bg_color">@color/colorPrimary_associated</color>
+    <color name="theme_1_button_bg_color">@color/colorPrimaryKa</color>
     <color name="theme_1_button_bg">#0078cd</color>
     <color name="right_bubble_unselected">#0076FF</color>
     <color name="bot_left_bubble_selected">#CCCCCC</color>

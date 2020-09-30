@@ -1,6 +1,9 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,37 +28,45 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class BotListViewTemplateView extends LinearLayout {
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-    String LOG_TAG = BotListTemplateView.class.getSimpleName();
+public class BotListViewTemplateView extends ViewGroup {
 
-    float dp1, layoutItemHeight = 0;
-    AutoExpandListView autoExpandListView;
-    TextView botCustomListViewButton;
-    TextView workBenchListViewButton;
-    LinearLayout botCustomListRoot;
-    float restrictedMaxWidth, restrictedMaxHeight;
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    VerticalListViewActionHelper verticalListViewActionHelper;
-    String title;
+    private String LOG_TAG = BotListTemplateView.class.getSimpleName();
+
+    private float dp1, layoutItemHeight = 0;
+    private AutoExpandListView autoExpandListView;
+    private TextView botCustomListViewButton;
+    private TextView workBenchListViewButton;
+    private LinearLayout botCustomListRoot;
+    private float restrictedMaxWidth, restrictedMaxHeight;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private VerticalListViewActionHelper verticalListViewActionHelper;
+    private String title;
+    private Context mContext;
 
     public BotListViewTemplateView(Context context) {
         super(context);
+        this.mContext = context;
         init();
     }
 
     public BotListViewTemplateView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mContext = context;
         init();
     }
 
     public BotListViewTemplateView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.mContext = context;
         init();
     }
 
@@ -67,6 +78,15 @@ public class BotListViewTemplateView extends LinearLayout {
         workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
+
+        GradientDrawable rightDrawable = (GradientDrawable) mContext.getResources().getDrawable(R.drawable.rounded_rect_feedback);
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+        String themeBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        String themeTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#444444");
+        rightDrawable.setColor(Color.parseColor(themeBgColor));
+        rightDrawable.setStroke((int) (1*dp1), Color.parseColor(themeBgColor));
+        botCustomListViewButton.setBackground(rightDrawable);
 
     }
 
@@ -199,47 +219,52 @@ public class BotListViewTemplateView extends LinearLayout {
         return viewHeight;
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-//
-//        int totalHeight = getPaddingTop();
-//        int childWidthSpec;
-//        int totalWidth = getPaddingLeft();
-//
-//        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
-//        MeasureUtils.measure(botCustomListRoot, childWidthSpec, wrapSpec);
-//
-//        totalHeight += botCustomListRoot.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
-//        totalWidth += botCustomListRoot.getMeasuredWidth() + getPaddingLeft()+getPaddingRight();
-//        if(totalHeight != 0){
-//            totalWidth = totalWidth + (int)(3 * dp1);
-//        }
-//
-//        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-//        int parentWidthSpec = MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.AT_MOST);
-//        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
-//    }
-//
-//    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//
-//        final int count = getChildCount();
-//        int parentWidth = getMeasuredWidth();
-//
-//        //get the available size of child view
-//        int childLeft = 0;
-//        int childTop = 0;
-//
-//        int itemWidth = (r - l) / getChildCount();
-//
-//        for (int i = 0; i < count; i++) {
-//            View child = getChildAt(i);
-//            if (child.getVisibility() != GONE) {
-//                LayoutUtils.layoutChild(child, childLeft, childTop);
-//                childTop += child.getMeasuredHeight();
-//            }
-//        }
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+        int totalHeight = getPaddingTop();
+        int childWidthSpec;
+        int totalWidth = getPaddingLeft();
+
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botCustomListRoot, childWidthSpec, wrapSpec);
+
+        totalHeight += botCustomListRoot.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
+        totalWidth += botCustomListRoot.getMeasuredWidth() + getPaddingLeft()+getPaddingRight();
+        if(totalHeight != 0){
+            totalWidth = totalWidth + (int)(3 * dp1);
+        }
+
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.AT_MOST);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        final int count = getChildCount();
+        int parentWidth = getMeasuredWidth();
+
+        //get the available size of child view
+        int childLeft = 0;
+        int childTop = 0;
+
+        int itemWidth = (r - l) / getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE)
+            {
+                LayoutUtils.layoutChild(child, childLeft, childTop);
+
+                if(SDKConfiguration.BubbleColors.showIcon) {
+                    LayoutUtils.layoutChild(child,  (int)(13 *dp1), 0);
+                }
+                childTop += child.getMeasuredHeight();
+            }
+        }
+    }
 }
 

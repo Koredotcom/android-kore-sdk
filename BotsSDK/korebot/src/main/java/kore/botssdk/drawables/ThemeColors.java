@@ -20,7 +20,7 @@ public class ThemeColors {
 
     public ThemeColors(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        String stringColor = sharedPreferences.getString(BotResponse.HEADER_COLOR, "D81B60");
+        String stringColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "D81B60");
         stringColor = stringColor.replace("#", "");
         color = Color.parseColor("#" + stringColor);
 
@@ -36,7 +36,7 @@ public class ThemeColors {
 
         String stringColor = "#"+Integer.toHexString(Color.rgb(red, green, blue)).substring(2);
         SharedPreferences.Editor editor = activity.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(BotResponse.HEADER_COLOR, stringColor);
+        editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, stringColor);
         editor.apply();
 
         Log.e("Generate Color", stringColor);
@@ -51,7 +51,7 @@ public class ThemeColors {
     public static void setNewThemeColor(Activity activity, String color) {
 
         SharedPreferences.Editor editor = activity.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(BotResponse.HEADER_COLOR, color);
+        editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, color);
         editor.apply();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) activity.recreate();

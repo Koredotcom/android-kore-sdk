@@ -123,9 +123,9 @@ public class BotResponse extends BaseBotMessage {
 
 //  Banking Config
     public static final String HEADER_TITLE = "HEADER_TITLE";
-    public static final String HEADER_COLOR = "HEADER_COLOR";
     public static final String BACK_IMAGE = "BACK_IMAGE";
     public static final String TOP_LEFT_ICON = "TOP_LEFT_ICON";
+    public static final String THEME_CHANGE_CALLED= "THEME_CHANGE_CALLED";
 
     private String type;
     private BotInfoModel botInfo;

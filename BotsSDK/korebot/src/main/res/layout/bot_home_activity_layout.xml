@@ -26,7 +26,7 @@
         android:layout_marginBottom="@dimen/dimen_20dp"
         android:background="@drawable/form_input_bg"
         android:padding="@dimen/dimen_7dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/etIdentity"
