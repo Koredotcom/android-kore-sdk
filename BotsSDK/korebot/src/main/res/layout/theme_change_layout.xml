@@ -7,11 +7,11 @@
 
     <TextView
         android:id="@+id/tvTheme1"
-        android:layout_width="90dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/dimen_10dp"
-        android:text="Theme 1" />
+        android:text="Logo theme" />
 
     <View
         android:layout_width="match_parent"
@@ -20,10 +20,10 @@
 
     <TextView
         android:id="@+id/tvTheme2"
-        android:layout_width="90dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/dimen_10dp"
-        android:text="Theme 2" />
+        android:text="Shopping theme" />
 
 </LinearLayout>
