@@ -23,8 +23,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Random;
 
-import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
-import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
+//import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
+//import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
 import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.BinaryMessage;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.ClientHandshake;
@@ -48,7 +48,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
  */
 class WebSocketWriter extends Handler {
 
-    private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketWriter.class.getName());
+    //private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketWriter.class.getName());
     private final static String CRLF = "\r\n";
 
     /// Random number generator for handshake key and frame mask generation.
@@ -93,7 +93,7 @@ class WebSocketWriter extends Handler {
         mBufferedOutputStream = new BufferedOutputStream(socket.getOutputStream(), options.getMaxFramePayloadSize() + 14);
         mActive = true;
 
-        LOGGER.d("Created");
+        //LOGGER.d("Created");
     }
 
     private void write(String stringToWrite) {
@@ -132,7 +132,7 @@ class WebSocketWriter extends Handler {
     public void forward(Object message) {
         // We have already quit, we are no longer sending messages.
         if (!mActive) {
-            LOGGER.d("We have already quit, not processing further messages");
+            //LOGGER.d("We have already quit, not processing further messages");
             return;
         }
         Message msg = obtainMessage();
@@ -287,7 +287,7 @@ class WebSocketWriter extends Handler {
             throw new WebSocketException("pong payload exceeds 125 octets");
         }
         sendFrame(10, true, message.mPayload);
-        LOGGER.d("WebSockets Pong Sent");
+        //LOGGER.d("WebSockets Pong Sent");
     }
 
 
@@ -447,13 +447,13 @@ class WebSocketWriter extends Handler {
 
         } catch (SocketException e) {
 
-            LOGGER.d("run() : SocketException (" + e.toString() + ")");
+            //LOGGER.d("run() : SocketException (" + e.toString() + ")");
 
             // wrap the exception and notify master
             notify(new ConnectionLost(null));
         } catch (Exception e) {
 
-            LOGGER.w(e.getMessage(), e);
+            //LOGGER.w(e.getMessage(), e);
 
             // wrap the exception and notify master
             notify(new Error(e));
@@ -503,7 +503,7 @@ class WebSocketWriter extends Handler {
             mLooper.quit();
             mActive = false;
 
-            LOGGER.d("Ended");
+            //LOGGER.d("Ended");
 
         } else {
 

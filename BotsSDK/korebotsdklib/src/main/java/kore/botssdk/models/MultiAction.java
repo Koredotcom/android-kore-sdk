@@ -1,10 +1,12 @@
 package kore.botssdk.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Ramachandra Pradeep on 11-Mar-19.
  */
 
-public class MultiAction {
+public class MultiAction implements Serializable {
     private String type;
     private String title;
     private String utterance;

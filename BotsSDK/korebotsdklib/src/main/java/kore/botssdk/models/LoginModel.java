@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class LoginModel {
+import java.io.Serializable;
+
+public class LoginModel implements Serializable {
     public String getTitle() {
         return title;
     }

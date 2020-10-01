@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
-import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
+//import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
+//import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
 import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.BinaryMessage;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.Close;
@@ -51,7 +51,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.utils.Utf8Validator;
  */
 class WebSocketReader extends Thread {
 
-    private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketReader.class.getName());
+   // private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketReader.class.getName());
 
     private final Handler mMaster;
     private final WebSocketOptions mOptions;
@@ -116,7 +116,7 @@ class WebSocketReader extends Thread {
         mFrameHeader = null;
         mState = STATE_CONNECTING;
 
-        LOGGER.d("Created");
+        //LOGGER.d("Created");
     }
 
     double getTimeSinceLastRead() {
@@ -128,7 +128,7 @@ class WebSocketReader extends Thread {
      */
     public void quit() {
         mState = STATE_CLOSED;
-        LOGGER.d("Quit");
+        //LOGGER.d("Quit");
     }
 
 
@@ -577,7 +577,7 @@ class WebSocketReader extends Thread {
                 String[] h = line.split(": ");
                 if (h.length == 2) {
                     headers.put(h[0], h[1]);
-                    LOGGER.d(String.format("'%s'='%s'", h[0], h[1]));
+                    //LOGGER.d(String.format("'%s'='%s'", h[0], h[1]));
                 }
             }
         }
@@ -596,7 +596,7 @@ class WebSocketReader extends Thread {
             statusMessageBuilder.append(" ");
         }
         String statusMessage = statusMessageBuilder.toString().trim();
-        LOGGER.d(String.format("Status: %d (%s)", statusCode, statusMessage));
+        //LOGGER.d(String.format("Status: %d (%s)", statusCode, statusMessage));
         return new Pair<>(statusCode, statusMessage);
     }
 
@@ -631,7 +631,7 @@ class WebSocketReader extends Thread {
     @Override
     public void run() {
 
-        LOGGER.d("Running");
+        //LOGGER.d("Running");
 
         try {
             do {
@@ -652,7 +652,7 @@ class WebSocketReader extends Thread {
 
                 } else if (len < 0) {
 
-                    LOGGER.d("run() : ConnectionLost");
+                    //LOGGER.d("run() : ConnectionLost");
 
                     notify(new ConnectionLost(null));
 
@@ -662,7 +662,7 @@ class WebSocketReader extends Thread {
 
         } catch (WebSocketException e) {
 
-            LOGGER.d("run() : WebSocketException (" + e.toString() + ")");
+            //LOGGER.d("run() : WebSocketException (" + e.toString() + ")");
 
             // wrap the exception and notify master
             notify(new ProtocolViolation(e));
@@ -672,7 +672,7 @@ class WebSocketReader extends Thread {
             // BufferedInputStream throws when the socket is closed,
             // eat the exception if we are already in STATE_CLOSED.
             if (mState != STATE_CLOSED && !mSocket.isClosed()) {
-                LOGGER.d("run() : SocketException (" + e.toString() + ")");
+                //LOGGER.d("run() : SocketException (" + e.toString() + ")");
 
                 // wrap the exception and notify master
                 notify(new ConnectionLost(null));
@@ -680,7 +680,7 @@ class WebSocketReader extends Thread {
 
         } catch (Exception e) {
 
-            LOGGER.d("run() : Exception (" + e.toString() + ")");
+            //LOGGER.d("run() : Exception (" + e.toString() + ")");
 
             // wrap the exception and notify master
             notify(new Error(e));
@@ -690,6 +690,6 @@ class WebSocketReader extends Thread {
             mStopped = true;
         }
 
-        LOGGER.d("Ended");
+        //LOGGER.d("Ended");
     }
 }

@@ -32,8 +32,7 @@ import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
-import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
-import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
+//import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
 import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException;
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocketConnectionHandler;
@@ -57,7 +56,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.messages.Error;
 
 public class WebSocketConnection implements IWebSocket {
 
-    private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketConnection.class.getName());
+    //private static final IABLogger LOGGER = ABLogger.getLogger(WebSocketConnection.class.getName());
 
     private Handler mMasterHandler;
 
@@ -181,7 +180,7 @@ public class WebSocketConnection implements IWebSocket {
     }
 
     public WebSocketConnection() {
-        LOGGER.d("Created");
+        //LOGGER.d("Created");
 
         // create WebSocket master handler
         createHandler();
@@ -242,7 +241,7 @@ public class WebSocketConnection implements IWebSocket {
                 }
             }
         } else {
-            LOGGER.d("mReader already NULL");
+           // LOGGER.d("mReader already NULL");
         }
     }
 
@@ -269,16 +268,16 @@ public class WebSocketConnection implements IWebSocket {
             try {
                 mWriterThread.join();
             } catch (InterruptedException e) {
-                LOGGER.v(e.getMessage(), e);
+               // LOGGER.v(e.getMessage(), e);
             }
         } else {
-            LOGGER.d("mWriter already NULL");
+            //LOGGER.d("mWriter already NULL");
         }
     }
 
 
     private void failConnection(int code, String reason) {
-        LOGGER.d("fail connection [code = " + code + ", reason = " + reason);
+        //LOGGER.d("fail connection [code = " + code + ", reason = " + reason);
 
         closeReaderThread(false);
 
@@ -288,17 +287,17 @@ public class WebSocketConnection implements IWebSocket {
             try {
                 closeUnderlyingSocket();
             } catch (IOException | InterruptedException e) {
-                LOGGER.v(e.getMessage(), e);
+                //LOGGER.v(e.getMessage(), e);
             }
         } else {
-            LOGGER.d("Socket already closed");
+            //LOGGER.d("Socket already closed");
         }
 
         closeReaderThread(true);
 
         onClose(code, reason);
 
-        LOGGER.d("Worker threads stopped");
+        //LOGGER.d("Worker threads stopped");
     }
 
     @Override
@@ -418,7 +417,7 @@ public class WebSocketConnection implements IWebSocket {
         if (mWriter != null) {
             mWriter.forward(new Close(code, reason));
         } else {
-            LOGGER.d("could not send Close .. writer already NULL");
+            //LOGGER.d("could not send Close .. writer already NULL");
         }
         onCloseCalled = false;
         mActive = false;
@@ -454,11 +453,11 @@ public class WebSocketConnection implements IWebSocket {
         int interval = mOptions.getReconnectInterval();
         boolean need = mActive && mPrevConnected && (interval > 0);
         if (need) {
-            LOGGER.d("Reconnection scheduled");
+            //LOGGER.d("Reconnection scheduled");
             mMasterHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    LOGGER.d("Reconnecting...");
+                    //LOGGER.d("Reconnecting...");
                     WebSocketConnection.this.reconnect();
                 }
             }, interval);
@@ -493,11 +492,11 @@ public class WebSocketConnection implements IWebSocket {
                     mWsHandler.onClose(code, reason);
                 }
             } catch (Exception e) {
-                LOGGER.v(e.getMessage(), e);
+                //LOGGER.v(e.getMessage(), e);
             }
             //mWsHandler = null;
         } else {
-            LOGGER.d("mWsHandler already NULL");
+            //LOGGER.d("mWsHandler already NULL");
         }
         onCloseCalled = true;
     }
@@ -515,7 +514,7 @@ public class WebSocketConnection implements IWebSocket {
             try {
                 closeUnderlyingSocket();
             } catch (IOException | InterruptedException e) {
-                LOGGER.v(e.getMessage(), e);
+                //LOGGER.v(e.getMessage(), e);
             }
         }
         closeReaderThread(true);
@@ -562,7 +561,7 @@ public class WebSocketConnection implements IWebSocket {
                 // We have received the closing handshake and replied to it, discard
                 // anything received after that.
                 if (onCloseCalled) {
-                    LOGGER.d("onClose called already, ignore message.");
+                    //LOGGER.d("onClose called already, ignore message.");
                     return;
                 }
 
@@ -573,7 +572,7 @@ public class WebSocketConnection implements IWebSocket {
                     if (mWsHandler != null) {
                         mWsHandler.onMessage(textMessage.mPayload);
                     } else {
-                        LOGGER.d("could not call onTextMessage() .. handler already NULL");
+                        //LOGGER.d("could not call onTextMessage() .. handler already NULL");
                     }
 
                 } else if (msg.obj instanceof RawTextMessage) {
@@ -583,7 +582,7 @@ public class WebSocketConnection implements IWebSocket {
                     if (mWsHandler != null) {
                         mWsHandler.onMessage(rawTextMessage.mPayload, false);
                     } else {
-                        LOGGER.d("could not call onRawTextMessage() .. handler already NULL");
+                        //LOGGER.d("could not call onRawTextMessage() .. handler already NULL");
                     }
 
                 } else if (msg.obj instanceof BinaryMessage) {
@@ -593,13 +592,13 @@ public class WebSocketConnection implements IWebSocket {
                     if (mWsHandler != null) {
                         mWsHandler.onMessage(binaryMessage.mPayload, true);
                     } else {
-                        LOGGER.d("could not call onBinaryMessage() .. handler already NULL");
+                        //LOGGER.d("could not call onBinaryMessage() .. handler already NULL");
                     }
 
                 } else if (msg.obj instanceof Ping) {
 
                     Ping ping = (Ping) msg.obj;
-                    LOGGER.d("WebSockets Ping received");
+                    //LOGGER.d("WebSockets Ping received");
 
                     if (ping.mPayload == null) {
                         mWsHandler.onPing();
@@ -615,7 +614,7 @@ public class WebSocketConnection implements IWebSocket {
                         mWsHandler.onPong(pong.mPayload);
                     }
 
-                    LOGGER.d("WebSockets Pong received");
+                    //LOGGER.d("WebSockets Pong received");
 
                 } else if (msg.obj instanceof Close) {
 
@@ -624,7 +623,7 @@ public class WebSocketConnection implements IWebSocket {
                     final int crossbarCloseCode = (close.mCode == 1000) ? IWebSocketConnectionHandler.CLOSE_NORMAL : IWebSocketConnectionHandler.CLOSE_CONNECTION_LOST;
 
                     if (close.mIsReply) {
-                        LOGGER.d("WebSockets Close received (" + close.mCode + " - " + close.mReason + ")");
+                        //LOGGER.d("WebSockets Close received (" + close.mCode + " - " + close.mReason + ")");
                         closeAndCleanup();
                         onClose(crossbarCloseCode, close.mReason);
                     } else if (mActive) {
@@ -633,7 +632,7 @@ public class WebSocketConnection implements IWebSocket {
                         mWriter.forward(new Close(1000, true));
                         mActive = false;
                     } else {
-                        LOGGER.d("WebSockets Close received (" + close.mCode + " - " + close.mReason + ")");
+                        //LOGGER.d("WebSockets Close received (" + close.mCode + " - " + close.mReason + ")");
                         // we've initiated disconnect, so ready to close the channel
                         closeAndCleanup();
                         onClose(crossbarCloseCode, close.mReason);
@@ -643,7 +642,7 @@ public class WebSocketConnection implements IWebSocket {
 
                     ServerHandshake serverHandshake = (ServerHandshake) msg.obj;
 
-                    LOGGER.d("opening handshake received");
+                    //LOGGER.d("opening handshake received");
 
                     if (serverHandshake.mSuccess) {
                         if (mWsHandler != null) {
@@ -657,9 +656,9 @@ public class WebSocketConnection implements IWebSocket {
                             mWsHandler.setConnection(WebSocketConnection.this);
                             mWsHandler.onConnect(new ConnectionResponse(protocol));
                             mWsHandler.onOpen();
-                            LOGGER.d("onOpen() called, ready to rock.");
+                            //LOGGER.d("onOpen() called, ready to rock.");
                         } else {
-                            LOGGER.d("could not call onOpen() .. handler already NULL");
+                            //LOGGER.d("could not call onOpen() .. handler already NULL");
                         }
                     }
                 } else if (msg.obj instanceof CannotConnect) {
@@ -711,7 +710,7 @@ public class WebSocketConnection implements IWebSocket {
         mWriterThread.start();
         mWriter = new WebSocketWriter(mWriterThread.getLooper(), mMasterHandler, mSocket, mOptions);
 
-        LOGGER.d("WS writer created and started");
+        //LOGGER.d("WS writer created and started");
     }
 
 
@@ -723,7 +722,7 @@ public class WebSocketConnection implements IWebSocket {
         mReader = new WebSocketReader(mMasterHandler, mSocket, mOptions, "WebSocketReader");
         mReader.start();
 
-        LOGGER.d("WS reader created and started");
+        //LOGGER.d("WS reader created and started");
     }
 
     /**
