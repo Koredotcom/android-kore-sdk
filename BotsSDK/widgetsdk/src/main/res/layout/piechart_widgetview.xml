@@ -38,9 +38,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:layout_marginTop="@dimen/dimen_10_dp"
-                        android:layout_marginBottom="@dimen/dimen_10_dp"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
                         android:fontFamily="@font/latosemibold"
                         android:layout_toStartOf="@+id/dummy_layout"
                         android:gravity="center|start"
@@ -57,93 +57,92 @@
                         android:orientation="horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:id="@+id/view_out"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp">
-
-                        <ImageView
-                            android:id="@+id/icon_image_load"
+                        <RelativeLayout
+                            android:id="@+id/view_out"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:minWidth="24dp"
-                            android:minHeight="24dp"
-                            android:padding="5dp"
-                            android:visibility="gone" />
 
-                        <ImageView
-                            android:id="@+id/icon_image"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:minWidth="24dp"
-                            android:minHeight="24dp"
-                            android:src="@mipmap/ic_more_vert_black_24dp"
-                            android:textColor="@color/color_7a799a"
-                            android:textSize="18sp"
-                            android:visibility="gone" />
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp">
 
-                        <LinearLayout
-                            android:id="@+id/tv_values_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/list_button_background"
-                            android:gravity="center_vertical"
-                            android:maxWidth="80dp"
-                            android:minWidth="60dp"
-                            android:minHeight="32dp"
-                            android:paddingStart="5dp"
-                            android:paddingEnd="5dp"
-                            android:visibility="gone">
+                            <ImageView
+                                android:id="@+id/icon_image_load"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:minWidth="24dp"
+                                android:minHeight="24dp"
+                                android:padding="5dp"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/icon_image"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:minWidth="24dp"
+                                android:minHeight="24dp"
+                                android:src="@mipmap/ic_more_vert_black_24dp"
+                                android:textColor="@color/color_7a799a"
+                                android:textSize="18sp"
+                                android:visibility="gone" />
+
+                            <LinearLayout
+                                android:id="@+id/tv_values_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/list_button_background"
+                                android:gravity="center_vertical"
+                                android:maxWidth="80dp"
+                                android:minWidth="60dp"
+                                android:minHeight="32dp"
+                                android:paddingStart="5dp"
+                                android:paddingEnd="5dp"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/tv_button"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:fontFamily="@font/latoregular"
+                                    android:gravity="center"
+                                    android:maxWidth="80dp"
+                                    android:maxLines="1"
+                                    android:singleLine="true"
+                                    android:text=""
+                                    android:textColor="#4741fa"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
                             <TextView
-                                android:id="@+id/tv_button"
-                                android:layout_width="match_parent"
+                                android:id="@+id/tv_text"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:fontFamily="@font/latoregular"
                                 android:gravity="center"
                                 android:maxWidth="80dp"
                                 android:maxLines="1"
+                                android:paddingEnd="5dp"
                                 android:singleLine="true"
-                                android:text=""
+                                android:textColor="@color/txtFontBlack"
+                                android:textSize="14sp"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:id="@+id/tv_url"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="@font/latoregular"
+                                android:gravity="center"
+                                android:maxWidth="100dp"
+                                android:maxLines="1"
+                                android:singleLine="true"
                                 android:textColor="#4741fa"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tv_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="@font/latoregular"
-                            android:gravity="center"
-                            android:maxWidth="80dp"
-                            android:maxLines="1"
-                            android:paddingEnd="5dp"
-                            android:singleLine="true"
-
-                            android:textColor="@color/txtFontBlack"
-                            android:textSize="14sp"
-                            android:visibility="gone" />
-
-                        <TextView
-                            android:id="@+id/tv_url"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:fontFamily="@font/latoregular"
-                            android:gravity="center"
-                            android:maxWidth="100dp"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="#4741fa"
-                            android:textSize="14sp"
-                            android:visibility="gone" />
-                    </RelativeLayout>
+                                android:textSize="14sp"
+                                android:visibility="gone" />
+                        </RelativeLayout>
                         <include layout="@layout/pin_layout" />
                     </LinearLayout>
 
@@ -166,8 +165,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginLeft="@dimen/dimen_10_dp"
-                    android:layout_marginTop="@dimen/dimen_10_dp"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
                     android:fontFamily="@font/latosemibold"
                     android:gravity="center|start"
                     android:letterSpacing="0.01"
@@ -197,9 +196,9 @@
                     android:id="@+id/mChart"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_marginLeft="@dimen/dimen_10_dp"
-                    android:layout_marginRight="@dimen/dimen_10_dp"
-                    android:layout_marginBottom="@dimen/dimen_10_dp"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
                     android:visibility="invisible" />
 
                 <include
@@ -216,22 +215,6 @@
                     android:layout_marginBottom="10dp" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_below="@+id/chart_progress"
-                android:orientation="vertical">
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/mBarChart"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_10_dp"
-                    android:layout_marginRight="@dimen/dimen_10_dp"
-                    android:layout_marginBottom="@dimen/dimen_10_dp"
-                    android:layout_height="200dp"/>
-            </LinearLayout>
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

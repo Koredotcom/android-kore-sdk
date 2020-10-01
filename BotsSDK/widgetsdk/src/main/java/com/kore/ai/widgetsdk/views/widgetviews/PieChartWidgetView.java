@@ -126,7 +126,7 @@ public class PieChartWidgetView extends BaseWidgetView {
     String panelName;
     private String jwtToken;
     private int labelCount = 0;
-    private BarChart mBarChart;
+//    private BarChart mBarChart;
 
     public PieChartWidgetView(Context context, String skillName) {
         super(context);
@@ -155,8 +155,8 @@ public class PieChartWidgetView extends BaseWidgetView {
         pin_view = view.findViewById(R.id.pin_view);
         panel_name_view=view.findViewById(R.id.panel_name_view);
 
-        //BarChart
-        mBarChart = view.findViewById(R.id.mBarChart);
+//        //BarChart
+//        mBarChart = view.findViewById(R.id.mBarChart);
         getUserData();
 
 
@@ -410,6 +410,14 @@ public class PieChartWidgetView extends BaseWidgetView {
                     tvUrl.setText(content);
                     tvButtonParent.setVisibility(GONE);
                     tvUrl.setVisibility(VISIBLE);
+
+                    tvUrl.setOnClickListener(new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
                     break;
                 case "image":
                     icon_image_load.setVisibility(GONE);
@@ -527,17 +535,17 @@ public class PieChartWidgetView extends BaseWidgetView {
                 l.setTextSize(11f);
                 l.setXEntrySpace(4f);
 
-                mBarChart.setData(data);
-
-                mBarChart.getBarData().setBarWidth(barWidth);
+//                mBarChart.setData(data);
+//
+//                mBarChart.getBarData().setBarWidth(barWidth);
 
                 // restrict the x-axis range
                 mChart.getXAxis().setAxisMinimum(startYear);
 
 
                 // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-                mChart.getXAxis().setAxisMaximum(startYear + mBarChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-                mBarChart.groupBars(startYear, groupSpace, barSpace);
+//                mChart.getXAxis().setAxisMaximum(startYear + mBarChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
+//                mBarChart.groupBars(startYear, groupSpace, barSpace);
                 mChart.invalidate();
             }
         }
