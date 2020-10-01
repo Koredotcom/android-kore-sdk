@@ -137,7 +137,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
         findViews();
-//        findPanelView();
         getBundleInfo();
         getDataFromTxt();
 
@@ -175,7 +174,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         setupTextToSpeech();
         KoreEventCenter.register(this);
         BotSocketConnectionManager.getInstance().setChatListener(sListener);
-//        attachFragments();
+        attachFragments();
        // connectToWebSocketAnonymous();
     }
 
@@ -675,18 +674,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void attachFragments() {
-        composerView = findViewById(R.id.chatLayoutPanelContainer);
-        composerView.setVisibility(VISIBLE);
-        composerFragment = new BottomPanelFragment();
-        composerFragment.setArguments(getIntent().getExtras());
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-        composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
-//        composerFragment.setInvokeGenericWebViewInterface(this);
-//        actionsContainer = findViewById(R.id.actions_container);
-        // footerContainer = findViewById(R.id.footer_container);
 
-
+        if(SDKConfiguration.Client.enablePanel)
+        {
+            composerView = findViewById(R.id.chatLayoutPanelContainer);
+            composerView.setVisibility(VISIBLE);
+            composerFragment = new BottomPanelFragment();
+            composerFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
+        }
     }
 
     private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {

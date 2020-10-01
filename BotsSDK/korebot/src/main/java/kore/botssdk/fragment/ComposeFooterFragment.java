@@ -114,7 +114,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListener();
         setListenerExplicitly();
         toggleTTSButton();
-        keyboard_img.performClick();
+        initialSetUp();
+//        keyboard_img.performClick();
 //        KoreEventCenter.register(this);
         return view;
     }
@@ -289,7 +290,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 animateLayoutVisible(mainContentLayout);
                 animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
-//                editTextMessage.requestFocus();
+                editTextMessage.requestFocus();
                 Utility.showVirtualKeyboard(getActivity(),editTextMessage);
         }
     };
@@ -299,6 +300,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         public void onClick(View v) {
             mainContentLayout.setVisibility(View.GONE);
             animateLayoutGone(mainContentLayout);
+            animateLayoutGone(newMenuLogo);
             animateLayoutVisible(defaultFooterLayout);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -324,6 +326,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         if (ttsUpdate != null) {
             ttsUpdate.ttsOnStop();
         }
+    }
+
+    public void initialSetUp()
+    {
+        mainContentLayout.setVisibility(View.GONE);
+        animateLayoutGone(mainContentLayout);
+        animateLayoutGone(newMenuLogo);
+        animateLayoutVisible(defaultFooterLayout);
     }
 
     public boolean isTTSEnabled() {
