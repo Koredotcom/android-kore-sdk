@@ -21,25 +21,17 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
-import com.kore.ai.widgetsdk.events.EntityEditEvent;
-import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.InvokeGenericWebViewInterface;
 import com.kore.ai.widgetsdk.models.BotTableListDefaultActionsModel;
 import com.kore.ai.widgetsdk.models.BotTableListElementsItemsModel;
 import com.kore.ai.widgetsdk.models.BotTableListElementsModel;
-import com.kore.ai.widgetsdk.models.BotTableListModel;
-import com.kore.ai.widgetsdk.models.BotTableListRowItemsModel;
-import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.view.AutoExpandListView;
 import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BotTableListTemlateAdapter extends BaseAdapter {
 

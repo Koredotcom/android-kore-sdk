@@ -48,7 +48,6 @@ import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
-import com.kore.ai.widgetsdk.view.AutoExpandListView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.RecyclerViewDataAccessor;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
@@ -49,7 +49,6 @@ import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
-import com.kore.ai.widgetsdk.view.AutoExpandListView;
 import com.kore.ai.widgetsdk.viewholder.EmptyWidgetViewHolder;
 import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
@@ -659,7 +658,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView tvUrl;
         public TextView tvButton;
         public LinearLayout tvButtonParent;
-        public AutoExpandListView alDetails;
+        public ListView alDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

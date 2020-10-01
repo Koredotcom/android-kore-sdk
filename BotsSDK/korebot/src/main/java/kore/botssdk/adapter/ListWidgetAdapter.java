@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -667,7 +668,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView tvUrl;
         public TextView tvButton;
         public LinearLayout tvButtonParent;
-        public AutoExpandListView alDetails;
+        public ListView alDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
