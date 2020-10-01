@@ -58,7 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="2dp"
         android:layout_below="@id/bot_list_item_subtitle"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
         android:background="@drawable/rounded_image_bg_blue"
         android:textSize="12dp" />
 

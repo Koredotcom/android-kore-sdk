@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
-                <com.kore.ai.widgetsdk.view.AutoExpandListView
+                <ListView
                     android:id="@+id/template_selection_tasksListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
