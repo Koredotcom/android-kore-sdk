@@ -35,9 +35,9 @@ public class UploadExecutor implements Runnable{
     private Context context;
     private ChunkUploadListener mListener = null;
     private String host;
-
+    boolean isFromComposebar;
     public UploadExecutor(Context context, String fileName, String fileToken, String accessToken,String userOrTeamId,byte[] dataToPost,
-                          int chunkNo, ChunkUploadListener listener, String host) {
+                          int chunkNo, ChunkUploadListener listener, String host,boolean isFromComposebar) {
 
         this.fileName=fileName;
         this.fileToken = fileToken;
@@ -48,6 +48,7 @@ public class UploadExecutor implements Runnable{
         this.mListener = listener;
         this.context = context;
         this.host = host;
+        this.isFromComposebar=isFromComposebar;
     }
 
     @Override
@@ -61,6 +62,9 @@ public class UploadExecutor implements Runnable{
 //            if(isTeam)
 //                FULL_URL = host + String.format(FileUploadEndPoints.TEAM_CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
 //            else
+                if(isFromComposebar)
+                 FULL_URL = host + String.format(FileUploadEndPoints.COMPOSEBAR_CHUNK_UPLOAD_END_POINT,fileToken);
+                else
                 FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD_END_POINT, userOrTeamId,fileToken);
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
 //            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();

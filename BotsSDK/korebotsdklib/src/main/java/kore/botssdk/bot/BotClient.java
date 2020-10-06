@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -154,6 +156,32 @@ public class BotClient {
         if(customData != null){
             customData.put("kmToken",accessToken);
         }
+    }
+
+    public void sendFormDataAttachment( String message, ArrayList<HashMap<String,String>> attachmentList) {
+
+        if (attachmentList != null) {
+            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+            customData.put("botToken",getAccessToken());
+            botMessage.setCustomData(customData);
+            botMessage.setAttachments(attachmentList);
+            //botMessage.setParams(Utils.jsonToMap(payLoad));
+            botPayLoad.setMessage(botMessage);
+            botPayLoad.setBotInfo(botInfoModel);
+
+            RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+            botPayLoad.setMeta(meta);
+
+            Gson gson = new Gson();
+            String jsonPayload = gson.toJson(botPayLoad);
+
+            Log.d("BotClient", "Payload : " + jsonPayload);
+            SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
+//            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+//            sendQueMessages();
+        }
+
     }
 
     public void sendFormData(String payLoad,String message) {

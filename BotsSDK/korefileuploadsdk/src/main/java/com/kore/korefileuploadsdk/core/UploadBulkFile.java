@@ -94,13 +94,16 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
     private ProgressDialog pDialog;
 
+	boolean isFromComposebar;
+
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						  String fileExtn,int BUFFER_SIZE, Messenger messenger,
 						  String thumbnailFilePath, String messageId,Context context,String componentType,
-						  String host, String orientation,long FILE_MAX_SIZE,long totalFileSize){
+						  String host, String orientation,long FILE_MAX_SIZE,long totalFileSize,boolean isFromComposebar){
 		this.fileName = fileName;
 		this.outFilePath = outFilePath;
 		this.accessToken = accessToken;
+		this.isFromComposebar=isFromComposebar;
 //		this.userId = userId;
 		this.fileContext = fileContext;
 		this.fileExtn = fileExtn;
@@ -143,7 +146,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 		this( fileName, outFilePath,  accessToken,  userId,  fileContext,
 				 fileExtn, BUFFER_SIZE,  messenger,
 				 thumbnailFilePath,  messageId, context, componentType,
-				 host,  orientation,FILE_SIZE_20MB,0);
+				 host,  orientation,FILE_SIZE_20MB,0,false);
 		isShowToast=true;
 	}
 
@@ -256,7 +259,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 					Thread.sleep(10);
 					System.gc();
                     upLoadProgressState(0,true);
-					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
+					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host,isFromComposebar));
 					chunkNo++;
 					chunkbaos.reset(); /*chunk size doubles in next iteration*/
 				}
@@ -310,7 +313,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
                         System.gc();
 
                         if(failedChunkList.contains(chunkNo+"")) {
-                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host));
+                            executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host,isFromComposebar));
                         }
                         chunkNo++;
                         chunkbaos.reset(); /*chunk size doubles in next iteration*/
@@ -369,7 +372,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	@Override
 	public void initiateFileUpload(FileUploadedListener listener) {
 		this.listener = listener;
-		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId);
+		new FileTokenManager(host,this, accessToken.replace("bearer", "").trim(),context, userOrTeamId,isFromComposebar);
 	}
 
 	void setChunkCount(int n){
@@ -397,6 +400,11 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 //				if(isTeam)
 //					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.TEAM_MERGE_END_POINT, userOrTeamId,fileToken));
 //				else
+					if(isFromComposebar)
+					{
+						koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, host + String.format(FileUploadEndPoints.COMPOSEBAR_MERGE_END_POINT,fileToken));
+//
+					}else
 					koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context,host + String.format(FileUploadEndPoints.MERGE_END_POINT, userOrTeamId,fileToken));
 
 //				koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
@@ -411,7 +419,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 				
 //				thumbnailFilePath = thumbnailFilePath;
 				if(thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") &&
-						(fileContext.equalsIgnoreCase("knowledge") || fileContext.equalsIgnoreCase("task"))){
+						(fileContext.equalsIgnoreCase("knowledge") || fileContext.equalsIgnoreCase("task")||fileContext.equalsIgnoreCase("workflows"))){
 
 					InputStream fis = null;
 					try {

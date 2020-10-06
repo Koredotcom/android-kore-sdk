@@ -105,7 +105,7 @@ public class RestResponse {
         }
 
         private HashMap<String, Object> params;
-        private ArrayList<Objects> attachments = new ArrayList<>();
+        private ArrayList<HashMap<String,String>> attachments = new ArrayList<>();
 
         public BotMessage(String body) {
             this.body = body;
@@ -115,7 +115,7 @@ public class RestResponse {
             this.body = body;
         }
 
-        public void setAttachments(ArrayList<Objects> attachments) {
+        public void setAttachments(ArrayList<HashMap<String,String>> attachments) {
             this.attachments = attachments;
         }
 

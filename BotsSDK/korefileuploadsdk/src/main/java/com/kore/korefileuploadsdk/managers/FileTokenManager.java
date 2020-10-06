@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.kore.korefileuploadsdk.configurations.Constants;
+import com.kore.korefileuploadsdk.configurations.FileUploadEndPoints;
 import com.kore.korefileuploadsdk.listeners.FileTokenListener;
 import com.kore.korefileuploadsdk.ssl.KoreHttpsUrlConnectionBuilder;
 import com.kore.korefileuploadsdk.utils.NetworkUtility;
@@ -28,15 +29,22 @@ public class FileTokenManager{
 	private String END_POINT = "/api/1.1/users/%s/file/token";
 	private String TEAMS_END_POINT = "/api/1.1/teams/%s/file/token";
 
+	boolean isFromComposebar;
+
     public FileTokenManager(String host, FileTokenListener listener,
-                     String accessToken, Context context, String userOrTeamId) {
+                     String accessToken, Context context, String userOrTeamId,boolean isFromComposebar) {
 
         _accessToken = accessToken;
         _mContext = context;
         _listener = listener;
+        this.isFromComposebar=isFromComposebar;
 //        if (isTeam)
 //            _Url = host + String.format(TEAMS_END_POINT, userOrTeamId);
 //        else
+        if (isFromComposebar)
+        {
+            _Url = host + String.format(FileUploadEndPoints.END_POINT_TOKEN);
+        }else
             _Url = host + String.format(END_POINT, userOrTeamId);
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
