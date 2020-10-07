@@ -9,6 +9,16 @@ public class PayloadOuter {
     private PayloadInner payload;
     private String text;
 
+    public boolean isEnableAattachment() {
+        return enableAattachment;
+    }
+
+    public void setEnableAattachment(boolean enableAattachment) {
+        this.enableAattachment = enableAattachment;
+    }
+
+    private boolean enableAattachment;
+
     public String getType() {
         return type;
     }
