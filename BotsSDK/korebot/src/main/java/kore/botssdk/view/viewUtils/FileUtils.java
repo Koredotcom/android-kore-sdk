@@ -431,6 +431,15 @@ public class FileUtils {
         rasterImageTypes.add("yuv");
     }
 
+    public static ArrayList<String> ImageTypes()
+    {
+         return  rasterImageTypes ;
+    }
+
+    public static ArrayList<String> VideoTypes()
+    {
+        return  videoTypes ;
+    }
     private static void loadVectorImgTypes() {
         vectorImgTypes.add("ai");
         vectorImgTypes.add("eps");
