@@ -4,6 +4,12 @@
     android:viewportWidth="46"
     android:viewportHeight="46">
   <path
+      android:pathData="M0,0h46v46h-46z"
+      android:strokeWidth="1"
+      android:fillColor="#FFFFFF"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+  <path
       android:pathData="M30.7862,20.9902C30.545,20.7709 30.1655,20.639 29.7973,20.6458C29.3974,20.6527 29.0151,20.8086 28.7492,21.0664L28.7492,18L27.5,18L27.5,28L28.7492,28L28.7492,22.7803C28.7492,22.4163 29.0003,22.0154 29.4658,21.9914C29.6732,21.9803 29.9609,22.0899 30.1062,22.3546C30.2614,22.6347 30.2522,23.0073 30.2522,23.4141L30.2508,28L31.5,28L31.5,23.3567C31.4993,21.9872 31.3526,21.4998 30.7862,20.9902"
       android:strokeWidth="1"
       android:fillColor="#007AC2"
