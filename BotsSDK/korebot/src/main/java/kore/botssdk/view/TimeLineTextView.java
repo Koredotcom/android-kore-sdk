@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -92,7 +93,8 @@ public class TimeLineTextView extends ViewGroup {
 
     public void setText(String text){
         unreadTimeLineTextView.setVisibility(StringUtils.isNullOrEmpty(text) ? GONE :VISIBLE);
-        unreadTimeLineTextView.setText(text);
+
+        unreadTimeLineTextView.setText(text!=null&&text.equalsIgnoreCase("Switched to Kora")?"Switched to "+Constants.SKILL_HOME:text);
     }
 
     /**
