@@ -8,6 +8,6 @@
         android:right="10dp"
         android:bottom="5dp"/>
     <stroke
-        android:color="@color/greyHead"
+        android:color="@color/colorPrimaryKa"
         android:width="2dp"/>
 </shape>

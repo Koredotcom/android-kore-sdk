@@ -17,9 +17,12 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 
 /**
  * Created by Anil Kumar on 12/1/2016.
@@ -31,16 +34,18 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     private boolean isEnabled;
     private SharedPreferences sharedPreferences;
     private float dp1;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public BotButtonTemplateAdapter(Context context)
     {
         ownLayoutInflater = LayoutInflater.from(context);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
-        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.splash_color) & 0x00ffffff);
-        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled) & 0x00ffffff);
-        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white) & 0x00ffffff);
-        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white) & 0x00ffffff);
+        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
+        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
+        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
+        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
 
         splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
         disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
@@ -90,6 +95,37 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         BotButtonModel buttonTemplate = getItem(position);
 
         holder.botItemButton.setText(buttonTemplate.getTitle());
+
+        holder.botItemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled()) {
+
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    }
+                    else if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    }else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())){
+                        setEnabled(false);
+                        invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(),buttonTemplate.getCustomData());
+                    }else{
+                        setEnabled(false);
+                        String title = buttonTemplate.getTitle();
+                        String payload = buttonTemplate.getPayload();
+                        composeFooterInterface.onSendClick(title, payload,false);
+                    }
+                }
+            }
+        });
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public boolean isEnabled() {
@@ -108,9 +144,9 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         ViewHolder viewHolder = new ViewHolder();
         viewHolder.botItemButton = (TextView) view.findViewById(R.id.text_view);
 
-        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setStroke((int)(1*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        viewHolder.botItemButton.setTextColor(isEnabled ? Color.parseColor(textColor) : Color.parseColor(disabledTextColor));
+//        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setStroke((int)(2*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        viewHolder.botItemButton.setTextColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
         view.setTag(viewHolder);
     }
 

@@ -48,7 +48,7 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
         layoutInflater = LayoutInflater.from(context);
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
-        quickReplyFontColor = Color.parseColor("#0078cd");
+        quickReplyFontColor = Color.parseColor("#3F51B5");
         dp1= (int) AppControl.getInstance(context).getDimensionUtil().dp1;
     }
 
