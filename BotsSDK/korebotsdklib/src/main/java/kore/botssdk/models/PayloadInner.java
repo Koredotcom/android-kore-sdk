@@ -362,6 +362,7 @@ public class PayloadInner {
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<BotTableListModel> tableListElements;
     private ArrayList<WidgetListElementModel> widgetlistElements;
+    private ArrayList<DropDownElementsModel> dropDownElementsModels;
 
     public void setWidgetlistElements(ArrayList<WidgetListElementModel> widgetlistElements) {
         this.widgetlistElements = widgetlistElements;
@@ -369,6 +370,14 @@ public class PayloadInner {
 
     public ArrayList<WidgetListElementModel> getWidgetlistElements() {
         return widgetlistElements;
+    }
+
+    public void setDropDownElementsModels(ArrayList<DropDownElementsModel> dropDownElementsModels) {
+        this.dropDownElementsModels = dropDownElementsModels;
+    }
+
+    public ArrayList<DropDownElementsModel> getDropDownElementsModels() {
+        return dropDownElementsModels;
     }
 
     public List<AnnoucementResModel> getAnnouncementResModels() {
@@ -730,6 +739,12 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
+                    }
+                    else if(BotResponse.TEMPLATE_DROPDOWN.equals(template_type))
+                    {
+                        Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
+                        }.getType();
+                        dropDownElementsModels = gson.fromJson(elementsAsString, listType);
                     }
                 }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)

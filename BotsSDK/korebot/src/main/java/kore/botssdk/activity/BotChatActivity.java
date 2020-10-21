@@ -415,7 +415,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
-
+        composeFooterFragment.setComposeText(text);
     }
 
     @Override

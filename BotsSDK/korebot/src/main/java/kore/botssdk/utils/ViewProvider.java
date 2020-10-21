@@ -22,6 +22,7 @@ import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
+import kore.botssdk.view.BotDropDownTemplateView;
 import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotListViewTemplateView;
@@ -345,6 +346,11 @@ public class ViewProvider {
         return  feedbackTemplateView;
     }
 
+    public static BotDropDownTemplateView getDropDownTemplateView(Context context){
+        BotDropDownTemplateView botDropDownTemplateView = new BotDropDownTemplateView(context);
+        botDropDownTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  botDropDownTemplateView;
+    }
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);

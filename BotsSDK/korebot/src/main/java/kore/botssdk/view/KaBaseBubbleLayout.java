@@ -136,6 +136,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected AgentTransferTemplateView agentTransferTemplateView;
     protected FeedbackTemplateView feedbackTemplateView;
     protected ListWidgetView listWidgetView;
+    protected BotDropDownTemplateView botDropDownTemplateView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -398,6 +399,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         listWidgetView = ViewProvider.getListWidgetTemplateView(context);
         listWidgetView.setComposeFooterInterface(composeFooterInterface);
         addView(listWidgetView);
+
+        botDropDownTemplateView = ViewProvider.getDropDownTemplateView(context);
+        botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(botDropDownTemplateView);
     }
 
 
@@ -500,6 +505,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(listWidgetView != null){
             listWidgetView.setComposeFooterInterface(composeFooterInterface);
         }
+
+        if(botDropDownTemplateView != null)
+        {
+            botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -541,6 +551,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if(listWidgetView != null){
             listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+
+        if(botDropDownTemplateView != null)
+        {
+            botDropDownTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

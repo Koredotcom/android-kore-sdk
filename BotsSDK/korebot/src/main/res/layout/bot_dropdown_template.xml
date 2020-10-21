@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_15dp">
+
+    <LinearLayout
+        android:id="@+id/multi_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/theme1_left_bubble_bg"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDropDownTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:minWidth="300dp"
+            android:minHeight="25dp"
+            android:tag="medium"
+            android:text="Hello"
+            android:textColor="#404051"
+            android:textSize="15dp" />
+
+        <LinearLayout
+            android:id="@+id/llSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/spinner_bg"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/snrSplitList"
+                android:layout_width="160dp"
+                android:layout_height="45dp"
+                android:textAlignment="center"
+                android:prompt="@string/app_name"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

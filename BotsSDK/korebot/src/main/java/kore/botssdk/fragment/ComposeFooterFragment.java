@@ -587,6 +587,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 .show();
     }
 
+    public void setComposeText(String text)
+    {
+        editTextMessage.setText(text);
+        editTextMessage.setSelection(text.length());
+    }
+
 
     /*AudioTaskListener mListener = new AudioTaskListener() {
         @Override
