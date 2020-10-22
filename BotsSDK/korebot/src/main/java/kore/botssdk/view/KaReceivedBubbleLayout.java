@@ -141,7 +141,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingSlotsView.getMeasuredWidth(),multiSelectView.getMeasuredWidth(), attendeeSlotSelectionView.getMeasuredWidth(), meetingConfirmationView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(),
                 lineChartView.getMeasuredWidth(),koraCarouselView.getMeasuredWidth(),
                 botListTemplateView.getMeasuredWidth(), contactInfoView.getMeasuredWidth(),tableListTemplateView.getMeasuredWidth() ,freemiumView.getMeasuredWidth(),meetingFollowupView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(), welcomeSummaryView.getMeasuredWidth(),
-                koraSummaryHelpView.getMeasuredWidth(),universalSearchView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+                koraSummaryHelpView.getMeasuredWidth(),disclaimerTemplateView.getMeasuredWidth(),universalSearchView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
 
         // headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
@@ -152,7 +152,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingConfirmationView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() +
                 lineChartView.getMeasuredHeight()+koraCarouselView.getMeasuredHeight()
                 + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + contactInfoView.getMeasuredHeight() + tableListTemplateView.getMeasuredHeight()+ freemiumView.getMeasuredHeight()+meetingFollowupView.getMeasuredHeight()+
-                welcomeSummaryView.getMeasuredHeight() +universalSearchView.getMeasuredHeight()+ koraSummaryHelpView.getMeasuredHeight()
+                welcomeSummaryView.getMeasuredHeight() +disclaimerTemplateView.getMeasuredHeight()+universalSearchView.getMeasuredHeight()+ koraSummaryHelpView.getMeasuredHeight()
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
@@ -163,7 +163,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 tableView.getMeasuredHeight() + lineChartView.getMeasuredHeight() +koraCarouselView.getMeasuredHeight()+
                 meetingSlotsView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() +multiSelectView.getMeasuredHeight()
                 +meetingConfirmationView.getMeasuredHeight() + contactInfoView.getMeasuredHeight()+ tableListTemplateView.getMeasuredHeight() + freemiumView.getMeasuredHeight()+meetingFollowupView.getMeasuredHeight()+ welcomeSummaryView.getMeasuredHeight()+
-                universalSearchView.getMeasuredHeight()+koraSummaryHelpView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+                disclaimerTemplateView.getMeasuredHeight()+    universalSearchView.getMeasuredHeight()+koraSummaryHelpView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
         }
@@ -184,7 +184,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingConfirmationView.getMeasuredHeight() > 0 || verticalListView.getMeasuredHeight() > 0 ||
                 meetingSlotsView.getMeasuredHeight() > 0 || botPieChartView.getMeasuredHeight() > 0 ||
                 lineChartView.getMeasuredHeight() > 0 || koraCarouselView.getMeasuredHeight()>0 ||tableView.getMeasuredHeight() > 0 ||
-                welcomeSummaryView.getMeasuredHeight()>0 || koraSummaryHelpView.getMeasuredHeight()>0 || universalSearchView.getMeasuredHeight()>0||multiSelectView.getMeasuredHeight() > 0;
+                welcomeSummaryView.getMeasuredHeight()>0 || koraSummaryHelpView.getMeasuredHeight()>0 ||disclaimerTemplateView.getMeasuredHeight()>0|| universalSearchView.getMeasuredHeight()>0||multiSelectView.getMeasuredHeight() > 0;
     }
 
     @Override
@@ -228,6 +228,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         welcomeSummaryView.setVisibility(GONE);
         universalSearchView.populateData(null,false);
         universalSearchView.setVisibility(GONE);
+
+        disclaimerTemplateView.populateData(null,null,null);
+        disclaimerTemplateView.setVisibility(GONE);
+
         koraSummaryHelpView.populateData(null);
         koraSummaryHelpView.setVisibility(GONE);
         botListTemplateView.setVisibility(View.GONE);
@@ -494,7 +498,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
                         welcomeSummaryView.populateData(welcomeSummaryModels.get(0),isLastItem);
 
-                }else if(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equalsIgnoreCase(payInner.getTemplate_type())){
+                }else if(BotResponse.DISCLAIMER_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())){
+                    disclaimerTemplateView.setVisibility(View.VISIBLE);
+                   // disclaimerTemplateView.populateText(payInner.getText());
+                    disclaimerTemplateView.populateData(payInner.getShortDesc(),payInner.getContentPreview(),payInner.getDescription());
+                }
+                else if(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equalsIgnoreCase(payInner.getTemplate_type())){
                     universalSearchView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     universalSearchView.populateData(payInner.getUniversalSearchModels(),isLastItem);
@@ -688,6 +697,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(freemiumView,childWidthSpec,wrapSpec);
         MeasureUtils.measure(meetingFollowupView,childWidthSpec,wrapSpec);
         MeasureUtils.measure(welcomeSummaryView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(disclaimerTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(universalSearchView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(koraSummaryHelpView, childWidthSpec, wrapSpec);
 //        MeasureUtils.measure(koraCarouselView,childWidthSpec,wrapSpec);
@@ -743,6 +753,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(freemiumView,top,left,arrayList);
         layoutView(meetingFollowupView,top,left,arrayList);
         layoutView(welcomeSummaryView, top, left, arrayList);
+        layoutView(disclaimerTemplateView, top, left, arrayList);
         layoutView(universalSearchView, top, left, arrayList);
         layoutView(koraSummaryHelpView, top, left, arrayList);
         layoutView(koraCarouselView, top, left, arrayList);

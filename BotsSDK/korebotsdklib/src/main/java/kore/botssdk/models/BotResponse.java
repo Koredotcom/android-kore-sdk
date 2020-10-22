@@ -52,8 +52,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String NARRATOR_TEXT = "narrator";
     public static final String TEMPLATE_TYPE_MULTI_SELECT = "multi_select";
 
+    public static final String DISCLAIMER_DAILOG_TEMPLATE = "disclaimer_templte_dailog";
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
-
+    public static final String DISCLAIMER_TEMPLATE = "showMoreDisclaimer";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_TYPE_FREEMIUM = "custom_button_template";
     public static final String TEMPLATE_TABLE_LIST = "tableList";

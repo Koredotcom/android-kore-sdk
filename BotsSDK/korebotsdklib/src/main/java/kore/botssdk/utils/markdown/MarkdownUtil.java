@@ -1,6 +1,8 @@
 package kore.botssdk.utils.markdown;
 
 
+import android.util.Log;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import kore.botssdk.utils.Utils;
@@ -320,11 +322,11 @@ public class MarkdownUtil {
             //<a href="http://google.com">Google!</a>
             //Go to [Google](http://google.com) and lookup
 
-            if (!link.startsWith("www.") && !link.startsWith("http://")) {
+            if (!link.startsWith("www.") && !link.startsWith("http://")&&!link.startsWith("https://")) {
                 link = "www." + link;
             }
 
-            if (!link.startsWith("http://")) {
+            if (!link.startsWith("http://")&&!link.startsWith("https://")) {
                 link = "http://" + link;
             }
 

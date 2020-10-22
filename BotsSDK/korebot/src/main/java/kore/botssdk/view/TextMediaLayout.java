@@ -5,22 +5,27 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
 
@@ -38,6 +43,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.markdown.MarkDownImageClick;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
@@ -181,7 +187,25 @@ public class TextMediaLayout extends ViewGroup {
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
-                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent, new MarkDownImageClick() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void imageClicked(String url) {
+
+                        botContentTextView.setOnTouchListener(new OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                                intent.putExtra("url", url);
+                                intent.putExtra("header", getResources().getString(R.string.app_name));
+                                getContext().startActivity(intent);
+                                return false;
+                            }
+                        });
+
+
+                     }
+                    }), new MarkdownTagHandler());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
             URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
@@ -278,7 +302,7 @@ public class TextMediaLayout extends ViewGroup {
             }*/
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
-                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent,null), new MarkdownTagHandler());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
             URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
