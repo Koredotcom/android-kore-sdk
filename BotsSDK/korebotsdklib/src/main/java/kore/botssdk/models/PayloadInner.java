@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +35,32 @@ public class PayloadInner {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String shortDesc,description,contentPreview;
+
+    public String getShortDesc() {
+        return shortDesc;
+    }
+
+    public void setShortDesc(String shortDesc) {
+        this.shortDesc = shortDesc;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getContentPreview() {
+        return contentPreview;
+    }
+
+    public void setContentPreview(String contentPreview) {
+        this.contentPreview = contentPreview;
     }
 
     private String text;
@@ -460,6 +488,7 @@ public class PayloadInner {
 
         try {
             if (elements != null) {
+                Log.d("shri",template_type+"-----------");
                 elementsAsString = gson.toJson(elements);
                 if(!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)){
                 if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
@@ -568,6 +597,7 @@ public class PayloadInner {
                     }.getType();
                     multiSelectModels = gson.fromJson(elementsAsString, listType);
                 }
+
             }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
                     Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();

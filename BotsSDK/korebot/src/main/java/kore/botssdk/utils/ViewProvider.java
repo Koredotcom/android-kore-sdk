@@ -24,6 +24,7 @@ import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ContactInfoView;
+import kore.botssdk.view.DisclaimerTemplateView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.FreemiumView;
 import kore.botssdk.view.KoraCarouselView;
@@ -71,6 +72,7 @@ public class ViewProvider {
     private static final int FOLLoWUP_VIEW_ID = 19800999;
     private static final int TABLE_LIST_TEMPLATE_VIEW_ID = 19800568;
 
+    private static final int DISCLAIMER_TEMPLATe_ID = 19800555;
     public static Path RoundedRect(
             float left, float top, float right, float bottom, float rx, float ry,
             boolean tl, boolean tr, boolean br, boolean bl
@@ -269,6 +271,12 @@ public class ViewProvider {
         UniversalSearchView universalSearchView = new UniversalSearchView(context);
         universalSearchView.setId(UNIVERSAL_SEARCH_VIEW_ID);
         return universalSearchView;
+    }
+
+    public static DisclaimerTemplateView getDisclaimerTemplateView(Context context){
+        DisclaimerTemplateView disclaimerTemplateView = new DisclaimerTemplateView(context);
+        disclaimerTemplateView.setId(DISCLAIMER_TEMPLATe_ID);
+        return disclaimerTemplateView;
     }
 
     public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){

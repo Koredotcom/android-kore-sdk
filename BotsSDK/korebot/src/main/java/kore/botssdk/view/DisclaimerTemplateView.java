@@ -2,6 +2,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -22,15 +24,18 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BaseCalenderTemplateModel;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class DisclaimerTemplateView extends ViewGroup implements VerticalListViewActionHelper {
-    View disclaimer_layout;
+    View disclaimer_layout,disclaimer_inner;
     private float dp1;
     public DisclaimerTemplateView(Context context) {
         super(context);
@@ -50,6 +55,7 @@ public class DisclaimerTemplateView extends ViewGroup implements VerticalListVie
     private void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.disclaimer_template_view, this, true);
         disclaimer_layout = view.findViewById(R.id.disclaimer_layout);
+        disclaimer_inner=view.findViewById(R.id.disclaimer_inner);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         tv_shortdescription=view.findViewById(R.id.tv_shortdescription);
         tv_link=view.findViewById(R.id.tv_link);
@@ -181,9 +187,24 @@ public class DisclaimerTemplateView extends ViewGroup implements VerticalListVie
 
         if(shortDesc!=null)
         {
+             int transparency;
             disclaimer_layout.setVisibility(VISIBLE);
+            transparency = 0x26000000;
+            GradientDrawable   rightDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.rounded_rectangle_bubble);
+            rightDrawable.setColor(Color.parseColor("#A7A9BE")+transparency);
+            rightDrawable.setStroke((int) (1*dp1), Color.parseColor("#A7A9BE")+transparency);
+            disclaimer_inner.setBackground(rightDrawable);
             tv_shortdescription.setText(shortDesc);
             tv_link.setText(contentPrev);
+
+            tv_link.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle bundle=new Bundle();
+                    bundle.putString("msg",discription);
+                    composeFooterInterface.launchActivityWithBundle(BotResponse.DISCLAIMER_DAILOG_TEMPLATE,bundle);
+                }
+            });
 
 
         }else {

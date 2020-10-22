@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,10 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
+
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 /**
  * Created by Pradeep Mahato on 28/7/17.
@@ -57,7 +61,17 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
         if (quickReplyTemplate.getImage_url() != null && !quickReplyTemplate.getImage_url().isEmpty()) {
-            Picasso.get().load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
+            //Picasso.get().load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
+            Picasso.Builder builder = new Picasso.Builder(context);
+            builder.listener(new Picasso.Listener()
+            {
+                @Override
+                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+                {
+                    exception.printStackTrace();
+                }
+            });
+            builder.build().load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
             holder.getQuickReplyImage().setVisibility(View.VISIBLE);
         } else {
             holder.getQuickReplyImage().setVisibility(View.GONE);
@@ -78,7 +92,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
                     } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
                         invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                     }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),false);
+                        composeFooterInterface.onSendClick(!StringUtils.isNullOrEmpty(quickReplyTemplate.getTitle())?quickReplyTemplate.getTitle():quickReplyTemplate.getPayload(),false);
                     }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
                         invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
                     }else{
