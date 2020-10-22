@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/wvLoadUrl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/cordinate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llComposeBar"
+        android:layout_weight="1"
+        android:visibility="visible">
+
+        <!--<Bottom Sheet Layout starts>-->
+        <!--        The idea is try the expanded lay out/ set some padding on expanded-->
+        <LinearLayout
+            android:id="@+id/persistentPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/findly_panel_bg"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_behavior="com.kore.findlysdk.widgetviews.CustomBottomSheetBehavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/findly_title_bg"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/panel_drag"
+                    android:layout_width="64dp"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/round_rect_panel_drag"
+                    android:clickable="false"
+                    android:paddingLeft="@dimen/dimen_20_dp"
+                    android:paddingRight="@dimen/dimen_20_dp"
+                    android:paddingBottom="@dimen/dimen_20_dp"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/panelTitleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/header_layout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:clickable="true"
+                                android:orientation="horizontal"
+                                android:padding="5dp">
+
+                                <include
+                                    android:id="@+id/panel_title_icon"
+                                    layout="@layout/pannel_adapter_findly_layout"
+                                    android:layout_width="50dp"
+                                    android:layout_height="32dp"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/txtTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center|start"
+                                    android:text="@string/findlyai"
+                                    android:textColor="@color/color_908f95"
+                                    android:textSize="@dimen/typing_layout_cpv_height" />
+                            </LinearLayout>
+
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:id="@+id/helpButton"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="@dimen/dimen_10dp"
+                                android:background="@mipmap/password_help"
+                                android:gravity="center"
+                                android:padding="@dimen/dimen_5dp"
+                                android:textColor="@color/color_161620"
+                                android:textSize="24sp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/editButton"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginTop="@dimen/dimen_5dp"
+                                android:layout_marginEnd="5dp"
+                                android:background="@mipmap/ic_more_vert_black_24dp"
+                                android:gravity="center"
+                                android:rotation="90"
+                                android:textColor="@color/color_161620"
+                                android:textSize="24sp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/closeBtnPanel"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="9dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:gravity="center"
+                                android:text="@string/icon_e94d"
+                                android:textColor="@color/color_161620"
+                                android:textSize="24sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view_onboard"
+                android:layout_width="match_parent"
+                android:layout_height="0.01dp" />
+
+            <FrameLayout
+                android:id="@+id/chatLayoutContentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ListView
+                android:id="@+id/recyclerView_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:background="@drawable/left_bubble_bg"
+                android:divider="@color/white"
+                android:dividerHeight="@dimen/dimen_10dp"
+                android:scrollbars="none"
+                android:transcriptMode="alwaysScroll"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <LinearLayout
+        android:id="@+id/llPopularSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llComposeBar"
+        android:layout_marginTop="65dp"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/round_popular_search_bg"
+            android:elevation="@dimen/dimen_2dp"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimen_5dp">
+
+            <LinearLayout
+                android:id="@+id/llPlrSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.kore.findlysdk.view.CustomTextViewBold
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:text="@string/popular_search"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:textStyle="bold" />
+
+                <com.kore.findlysdk.view.AutoExpandListView
+                    android:id="@+id/lvPopularSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/white"
+                    android:dividerHeight="@dimen/dimen_0" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRecentlyAsked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:text="@string/recently_asked"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:textStyle="bold" />
+
+                <com.kore.findlysdk.view.AutoExpandListView
+                    android:id="@+id/lvRecentlyAsked"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/white"
+                    android:dividerHeight="@dimen/dimen_0" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/llLiveSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/lvLiveSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/white"
+                    android:dividerHeight="@dimen/dimen_0" />
+
+                <com.kore.findlysdk.view.CustomTextView
+                    android:id="@+id/tvSeeAllResults"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/dimen_12dp"
+                    android:layout_marginRight="@dimen/dimen_10dp"
+                    android:text="@string/see_all_results"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:id="@+id/tvNoResult"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dimen_20dp"
+                android:gravity="center"
+                android:text="@string/noresultfound"
+                android:textSize="@dimen/text_size_header"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llComposeBar"
+        android:layout_marginTop="65dp"
+        android:background="@color/white"
+        android:gravity="bottom"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_popular_search_bg"
+            android:elevation="@dimen/dimen_2dp"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_44dp">
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_20dp"
+                android:text="@string/pleaselogin"
+                android:textColor="@color/txtFontlogin"
+                android:textStyle="bold" />
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="@string/userid"
+                android:textColor="@color/txtFontlogin"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtUserId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:background="@drawable/form_input_bg"
+                android:hint="@string/enteruserid"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="@dimen/dimen_7dp"
+                android:textSize="@dimen/text_size_normal" />
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="@string/password"
+                android:textColor="@color/txtFontlogin"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@drawable/form_input_bg"
+                android:hint="@string/enterpassword"
+                android:imeOptions="actionGo"
+                android:inputType="textPassword"
+                android:padding="@dimen/dimen_7dp"
+                android:textSize="@dimen/text_size_normal" />
+
+            <com.kore.findlysdk.view.CustomTextView
+                android:id="@+id/tvErrorLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/incorrectuser"
+                android:textColor="@color/Red"
+                android:textSize="@dimen/text_size_normal"
+                android:visibility="invisible" />
+
+            <com.kore.findlysdk.view.CustomTextView
+                android:id="@+id/tvUserLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@color/btnFontlogin"
+                android:gravity="center"
+                android:padding="@dimen/dimen_10dp"
+                android:text="@string/login"
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20dp"
+                android:layout_marginRight="@dimen/dimen_20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.kore.findlysdk.view.CustomTextView
+                    android:id="@+id/tvNewUser"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/newuser" />
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <com.kore.findlysdk.view.CustomTextView
+                        android:id="@+id/tvRegisterHere"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:text="@string/registerhere"
+                        android:textColor="@color/btnFontlogin" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tvRegisterHere"
+                        android:background="@drawable/ic_arrow_drop_down_table_resp_24px"
+                        android:rotation="-90" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <com.kore.findlysdk.view.CustomTextView
+                        android:id="@+id/tvForgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/forgotpassword"
+                        android:textColor="@color/btnFontlogin" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/tvForgotPassword"
+                        android:background="@drawable/ic_arrow_drop_down_table_resp_24px"
+                        android:rotation="-90" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llWelcomeMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llComposeBar"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:background="@drawable/left_bubble_bg"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivWelcomeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_arrow_drop_down_table_resp_24px" />
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:text="@string/welcomehello"
+            android:textSize="@dimen/text_size_normal"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llComposeBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/findly_compose_bg"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_5dp"
+        android:paddingTop="@dimen/dimen_3dp"
+        android:paddingRight="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_3dp">
+
+        <LinearLayout
+            android:id="@+id/composeFrameLl"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toStartOf="@+id/btnsend1"
+            android:layout_toLeftOf="@+id/btnsend1"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivChatIcon"
+                android:layout_width="@dimen/dimen_30dp"
+                android:layout_height="@dimen/dimen_30dp" />
+
+            <EditText
+                android:id="@+id/edtTxtMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:background="@null"
+                android:gravity="center_vertical|start"
+                android:hint="Ask anything"
+                android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                android:maxHeight="68dp"
+                android:minHeight="26dp"
+                android:paddingStart="10dp"
+                android:paddingLeft="8dp"
+                android:paddingEnd="8dp"
+                android:paddingRight="8dp"
+                android:scrollbars="vertical"
+                android:tag="regular"
+                android:textColor="@color/bubble_dark_text_color"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnsend1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/rec_audio_img"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:alpha="0.70"
+                android:padding="5dp"
+                android:src="@drawable/ic_mic"
+                android:visibility="visible" />
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:id="@+id/sendTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/chat_send_bg"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dimen_10dp"
+                android:tag="bold"
+                android:text="@string/go"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/audio_coor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/view_layout_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/panel_bg_round_rect"
+            android:visibility="gone"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="275dp"
+            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
+            tools:context=".activities.KoraMainActivity">
+
+            <include
+                android:id="@+id/audio_wave_layout"
+                layout="@layout/audio_wave_panel"
+                android:layout_width="match_parent"
+                android:layout_height="275dp" />
+
+        </LinearLayout>-->
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</RelativeLayout>

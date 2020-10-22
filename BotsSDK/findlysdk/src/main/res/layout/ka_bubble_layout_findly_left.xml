@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kore.findlysdk.view.KaReceivedBubbleFindlyContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/received_bubble_layout_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="false">
+
+    <include
+        android:id="@+id/headerLayout"
+        layout="@layout/kora_timestamps_findly_header" />
+
+    <com.kore.findlysdk.view.KaReceivedBubbleFindlyLayout
+        android:id="@+id/receivedBubbleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true">
+
+        <!-- Sender Image -->
+        <com.kore.findlysdk.view.CircularProfileFindlyView
+            android:id="@+id/cpvSenderImage"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_alignParentLeft="true" />
+
+
+    </com.kore.findlysdk.view.KaReceivedBubbleFindlyLayout>
+
+</com.kore.findlysdk.view.KaReceivedBubbleFindlyContainer>
