@@ -2,7 +2,6 @@ package kore.botssdk.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -12,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 //import com.kore.ai.widgetsdk.activities.PanelMainActivity;
+
+import com.kore.findlysdk.activity.MainActivity;
 
 import java.util.Random;
 
@@ -112,7 +113,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
      *
      */
     private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

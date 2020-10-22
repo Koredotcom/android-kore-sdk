@@ -62,6 +62,11 @@ dependencies {
         exclude group: 'org.apache.commons'
         exclude module: 'com.github.PhilJay'
     }
+    compile(project(':findlysdk')){
+        exclude module: 'support-v4'
+        exclude group: 'org.apache.commons'
+        exclude module: 'com.github.PhilJay'
+    }
     compile 'androidx.multidex:multidex:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.2.0'

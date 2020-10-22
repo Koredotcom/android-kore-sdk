@@ -29,6 +29,7 @@ import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
+import com.kore.findlysdk.fragments.FindlyFragment;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -131,6 +132,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private SharedPreferences sharedPreferences;
     private String chatBgColor, chatTextColor;
     private ImageView ivChaseBackground, ivChaseLogo;
+    private FindlyFragment findlyFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,13 +162,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer, quickReplyFragment).commit();
 
         //Add Bot Compose Footer Fragment
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         composeFooterFragment = new ComposeFooterFragment();
         composeFooterFragment.setArguments(getIntent().getExtras());
         composeFooterFragment.setComposeFooterInterface(this);
         composeFooterFragment.setBottomOptionData(getDataFromTxt());
-        fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
+//        fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
+
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        findlyFragment = new FindlyFragment();
+        fragmentTransaction.add(R.id.chatLayoutFooterContainer, findlyFragment).commit();
 
         updateTitleBar();
 
@@ -260,7 +266,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     botClient.sendMessage("welcomedialog");*/
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
-                composeFooterFragment.enableSendButton();
+//                composeFooterFragment.enableSendButton();
                 updateActionBar();
                 break;
             case DISCONNECTED:
@@ -268,7 +274,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 titleMsg = getString(R.string.socket_disconnected);
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
-                composeFooterFragment.updateUI();
+//                composeFooterFragment.updateUI();
                 updateActionBar();
                 break;
 
