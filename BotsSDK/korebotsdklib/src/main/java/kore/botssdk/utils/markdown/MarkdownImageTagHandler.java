@@ -37,22 +37,23 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
     private String htmlStringRemote;
     MarkDownImageClick markDownImageClick;
 
+
     public MarkdownImageTagHandler(Context context, TextView htmlTextViewRemote, String htmlStringRemote, MarkDownImageClick markDownImageClick) {
         this.context = context;
         this.htmlTextViewRemote = htmlTextViewRemote;
         this.htmlStringRemote = htmlStringRemote;
         this.markDownImageClick = markDownImageClick;
+
     }
 
     @Override
     public Drawable getDrawable(String source) {
-/*        HttpGetDrawableTask httpGetDrawableTask = new HttpGetDrawableTask(context, htmlTextViewRemote, htmlStringRemote,markDownImageClick);
-        httpGetDrawableTask.execute(source);
-        return null;*/
+
         final LevelListDrawable drawable = new LevelListDrawable();
 
         Glide.with(htmlTextViewRemote).asBitmap()  .apply(new RequestOptions().override(40, 40))
                 .centerCrop() .load(source).into(new CustomTarget<Bitmap>() {
+
 
 
             @Override
@@ -80,6 +81,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
         });
 
 
+
         return drawable;
 
     }
@@ -98,6 +100,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
             taskHtmlString = s;
             this.markDownImageClick = markDownImageClick;
         }
+
 
         @Override
         protected Drawable doInBackground(String... params) {
@@ -140,6 +143,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
                                 return taskDrawable;
                             }
                         }, null));
+
 
 
                 if (markDownImageClick != null) {
