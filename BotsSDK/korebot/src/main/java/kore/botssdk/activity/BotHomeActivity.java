@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.kore.ai.widgetsdk.models.JWTTokenResponse;
 import com.kore.ai.widgetsdk.net.BotJWTRestBuilder;
+import com.kore.findlysdk.activity.MainActivity;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -129,7 +130,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
      *
      */
     private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

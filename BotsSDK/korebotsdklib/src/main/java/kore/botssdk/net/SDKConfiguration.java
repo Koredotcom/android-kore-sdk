@@ -101,15 +101,20 @@ public class SDKConfiguration {
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
 
-        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
-        public static   String SERVER_URL ="https://bots.kore.ai";
+//        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
+//        public static   String SERVER_URL ="https://bots.kore.ai";
         public static   String TOKEN_SERVER_URL ="https://demodpd.kore.ai";
 
 
-//        static  String KORE_BOT_SERVER_URL = "https://staging-bots.korebots.com";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://staging-bots.korebots.com";
+//        static  String KORE_BOT_SERVER_URL = "https://bankingassistant-stg.kore.ai";//"https://bots.kore.ai";
+//        public static String SERVER_URL ="https://bankingassistant-stg.kore.ai";
 
-//        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
+        //QA
+        static String KORE_BOT_SERVER_URL = "https://bankingassistant-qa.kore.ai";//https://qa-bots.kore.ai";
+        public static String SERVER_URL ="https://bankingassistant-qa.kore.ai";
+
+
+        //        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
 //        public static String SERVER_URL ="https://pilot-bots.kore.com/";
         public static String BANKING_SERVER_URL ="https://demo.kore.ai/";
     }
@@ -150,73 +155,22 @@ public class SDKConfiguration {
 //        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
 //        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
 
-//        public static String client_id = "cs-1a6b077d-7f77-5846-8f0a-adc213f2b52c";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "hu/h+fIEwrcRe3Cu6OntkEfLXxh+oprNlOtlka4OcFE=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "varsha.poshala@kore.com";
-//        public static String bot_name = "Inline form template";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-2ec5752a-7f7f-5fc5-a35f-04b08229fadd";
-
-//        public static String client_id = "cs-0b5ad86f-123e-5fd1-98eb-34e16c8a915c";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "MYTkSavYxbSdrpKrBBOD57omc3Qk5++wjtYkSncvCnE=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "varsha.poshala@kore.com";
-//        public static String bot_name = "New Templates";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-cea139d0-eff1-528e-a3ee-b49a38efeaf3";
-
-        // Client Bot
-//        public static String bot_name = "CITI CLAIR 2.2";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-565baf73-16b1-5ff1-93ae-810f7f7a3b1b";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
-//        public static String client_id = "cs-706da910-ef62-5305-a5a3-015d6349a8db";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "u29l0S31B6OniN2NyYTa0F7X+qj/kDqfPadwMxOjH3k=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-
-        //Work Bench
-//        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "sainath.bhima@kore.com";
-//        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-ebb0ec51-28b9-5846-900f-baa98d069684";
-
-        //TableList
-//        public static String client_id = "cs-9316258a-4194-5315-8200-d71dd345bd84";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "hVWNra707jgy2kyQaw3DpkDQOn4i+4YrAR4gjbWG7/g=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "varsha.poshala@kore.com";
-//        public static String bot_name = "New Templates";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-5dc1c13a-a4e8-5ab1-a611-2faf4ceed2d0";
-
-        //Work Bench
-        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "sudheer.jampana@kore.com";
-        public static String bot_name = "Banking Dev 1";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-4c43bf14-ac30-51e2-80e9-0f69f246b4a9";
+        //Work Bench QA
+        public static String client_id = "cs-e28ed93e-0723-5e22-b8b4-27f8f66de93d";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "ezWdID0H6fu8rJUKLXjKRyMTeIFXmswm0Q/d+dwFkc0=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "ushasri.gundupinnu@kore.com";
+        public static String bot_name = "QA_Env_WB";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-13bd4aa0-8980-5226-984f-271b6468c848";
 
         //Staging Bot
-//        public static String client_id = "cs-1dae92c7-47b9-51c4-8dcd-d81f711283a0";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "2VJj2L713bmGxETvP6AyvLx8AVfBHEbmDRpZ8y5wFfo=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "subrahmanyam.donepudi@kore.com";
-//        public static String bot_name = "Banking Solution IVR Demo";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-c6ea2967-8e9e-510d-9f30-4841f9f8d8f1";
+//        public static String client_id = "cs-9c811447-60b2-5a25-b4f5-e03c0493f262";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "jTTTEgdvJ1t1Wo+9yVPSMRpM+LrWs3V3f30WubbubIw=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "ushasri.gundupinnu@kore.com";
+//        public static String bot_name = "Banking Staging ENV Bot";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-a9413ab9-f1e0-5c26-a23d-2f2fa19ad856";
 
-        //Pilot
-//        public static String client_id = "cs-acf51d04-7530-5acb-b843-f23031114308";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "XbudDUnUM61RSOENcPz9d5s13j4hGGA7DSRDGe+yZws=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "subrahmanyam.donepudi@kore.com";
-//        public static String bot_name = "Banking Solution IVR Demo";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-13202efd-b6fe-593c-882f-78234643eed3";
-
-        //Finstra Login
-//        public static String client_id = "cs-a677c7bd-75af-5c14-8f20-a7fccc8753bd";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "5lqiTkUCEykR2omAwp54Ps//7hmQX9WtcuaO2+tIiRQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "sainath.bhima@kore.com";
-//        public static String bot_name = "Solution 2.0";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-9fe63e5b-38b0-5178-9ff3-cfa72f487765";
         public static String tenant_id = "5f33b99cff636e7ae858df1c";
 
-        //Feedback Bot
-//        public static String client_id = "cs-d436af68-54de-5ed1-9465-b5e610853223";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "x1ejDu+17drGQQrpu7hpCdKfmo/8Li+ORLYQIU5QCdg=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "sudheer.jampana@kore.com";
-//        public static String bot_name = "BB7680";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-5dd9c471-a8be-5d7f-87b3-3b2ff22720c6";
     }
 
     public static class BubbleColors {

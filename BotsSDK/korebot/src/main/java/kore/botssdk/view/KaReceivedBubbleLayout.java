@@ -265,7 +265,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }*/
         String icon = ((BotResponse) baseBotMessage).getIcon();
-        if(SDKConfiguration.BubbleColors.showIcon) {
+        if(SDKConfiguration.BubbleColors.showIcon)
+        {
             cpvSenderImage.populateLayout(" ", null, icon, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
             cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
         }else{

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/full_results_bg"
+    android:orientation="vertical">
+
+    <com.kore.findlysdk.view.CustomTextViewBold
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:text="@string/search_results"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="@dimen/text_size_header" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/view_pager_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_tab_pressed"
+        android:visibility="gone"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/white"
+        app:tabIndicatorGravity="bottom"
+        app:tabMode="fixed" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_marginRight="@dimen/dimen_5dp"
+        android:background="@color/tabs_bg"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/tvAllResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dimen_5dp"
+            android:layout_weight="1"
+            android:background="@drawable/tabs_background"
+            android:gravity="center"
+            android:text="All Results(0)"
+            android:textColor="@color/txtFontBlack"
+            android:textSize="@dimen/dimen_13dp" />
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/tvFaqResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="FAQ's (0)"
+            android:textColor="@color/tabs_text_bg"
+            android:textSize="@dimen/dimen_12dp" />
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/tvPagesResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Pages (2)"
+            android:textColor="@color/tabs_text_bg"
+            android:textSize="@dimen/dimen_12dp" />
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/tvActionsResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Actions (3)"
+            android:textColor="@color/tabs_text_bg"
+            android:textSize="@dimen/dimen_12dp" />
+
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpAllResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tabs"></androidx.viewpager.widget.ViewPager>
+
+</LinearLayout>

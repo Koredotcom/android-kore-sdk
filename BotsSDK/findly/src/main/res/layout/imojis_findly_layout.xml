@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/icon_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/feedback_icon_1">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@+id/icon_1"
+            app:srcCompat="@drawable/feedback_icon_2">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@+id/icon_2"
+            app:srcCompat="@drawable/feedback_icon_3">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@+id/icon_3"
+            app:srcCompat="@drawable/feedback_icon_4">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/icon_5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toEndOf="@+id/icon_4"
+            app:srcCompat="@drawable/feedback_icon_5">
+
+        </ImageView>
+    </LinearLayout>
+</LinearLayout>

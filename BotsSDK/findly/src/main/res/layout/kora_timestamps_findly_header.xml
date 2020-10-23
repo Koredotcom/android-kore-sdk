@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/filesSectionHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/secure_email_file_background"
+        android:textColor="#8d8d8d"
+        android:textSize="14dp"
+        android:tag="medium" />
+
+</RelativeLayout>

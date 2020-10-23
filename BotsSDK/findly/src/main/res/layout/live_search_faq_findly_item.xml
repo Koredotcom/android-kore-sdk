@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_5dp"
+    android:background="@drawable/bottom_right_rounded_rectangle"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_15dp">
+
+    <com.kore.findlysdk.view.CustomTextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="@dimen/text_size_sub_header"
+        app:fontName="latobold" />
+
+    <com.kore.findlysdk.view.CustomTextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textColor="@color/left_footer_divider"
+        android:textSize="@dimen/text_size_normal"
+        app:fontName="latobold" />
+
+    <com.kore.findlysdk.view.CustomTextView
+        android:id="@+id/tvFullDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_3dp"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone"
+        app:fontName="latobold" />
+
+
+</LinearLayout>

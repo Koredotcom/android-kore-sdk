@@ -1,0 +1,27 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kore.findlysdk">
+
+    <application
+        android:hardwareAccelerated="true"
+        android:largeHeap="true">
+
+        <activity
+            android:name="com.kore.findlysdk.activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            />
+
+        <activity
+            android:name="com.kore.findlysdk.activity.FullResultsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            />
+
+        <activity
+            android:name="com.kore.findlysdk.activity.GenericWebViewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            />
+
+    </application>
+</manifest>
