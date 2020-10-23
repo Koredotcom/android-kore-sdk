@@ -45,6 +45,9 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setUseWideViewPort(true);
+       // webview.getSettings().setLoadWithOverviewMode(true);
+        webview.setInitialScale(1);
+        webview.getSettings().setBuiltInZoomControls(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
        webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 
