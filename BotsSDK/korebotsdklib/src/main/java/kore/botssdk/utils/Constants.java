@@ -10,11 +10,12 @@ public class Constants {
 
     //Skill switch name;
     public static  String  SKILL_SELECTION="";
-    public static final String SKILL_HOME="Digital Assistant";
-    public static final String SKILL_UTTERANCE="Ask Digital Assistant ";
+    public static final String SKILL_HOME="Stella";
+    public static final String SKILL_UTTERANCE="Ask Stella ";
+    public static final String APP_NAME_IN_CODE="Stella";
 
-    public static final String ASK_UTTERANCE ="Ask Digital Assistant" ;
-    public static final String SHOOT_UTTERANCE ="switch to Digital Assistant" ;
+    public static final String ASK_UTTERANCE ="Ask Stella" ;
+    public static final String SHOOT_UTTERANCE ="switch to Stella" ;
 //    public static final String PUSH_NOTIF_OS_TYPE_ANDROID = "android";
 //    public static final String PUSH_NOTIF_DEVICE_ID = "deviceId";
 //    public static final String PUSH_NOTIF_OS_TYPE = "osType";
