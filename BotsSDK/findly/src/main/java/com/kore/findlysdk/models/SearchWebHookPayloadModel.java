@@ -1,26 +1,54 @@
 package com.kore.findlysdk.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SearchWebHookPayloadModel
 {
-//    private ArrayList<PayloadOuter> text;
-//
-//    public void setText(ArrayList<PayloadOuter> text) {
-//        this.text = text;
-//    }
-//
-//    public ArrayList<PayloadOuter> getText() {
-//        return text;
-//    }
+    private Object text;
+    private boolean endOfTask;
+    private String endReason;
+    private String completedTaskId;
+    private String completedTaskName;
 
-    private ArrayList<String> text;
-
-    public void setText(ArrayList<String> text) {
+    public void setText(Object text) {
         this.text = text;
     }
 
-    public ArrayList<String> getText() {
+    public Object getText() {
         return text;
+    }
+
+    public void setCompletedTaskId(String completedTaskId) {
+        this.completedTaskId = completedTaskId;
+    }
+
+    public void setCompletedTaskName(String completedTaskName) {
+        this.completedTaskName = completedTaskName;
+    }
+
+    public void setEndOfTask(boolean endOfTask) {
+        this.endOfTask = endOfTask;
+    }
+
+    public void setEndReason(String endReason) {
+        this.endReason = endReason;
+    }
+
+    public String getCompletedTaskId() {
+        return completedTaskId;
+    }
+
+    public String getCompletedTaskName() {
+        return completedTaskName;
+    }
+
+    public String getEndReason() {
+        return endReason;
+    }
+
+    public boolean getEndOfTask()
+    {
+        return endOfTask;
     }
 }

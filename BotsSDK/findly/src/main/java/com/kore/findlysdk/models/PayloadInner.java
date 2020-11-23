@@ -3,6 +3,7 @@ package com.kore.findlysdk.models;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.kore.findlysdk.view.CardTemplateView;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -311,6 +312,7 @@ public class PayloadInner {
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
     private ArrayList<FeedbackStarModel> starArrays;
+    private ArrayList<CardsTemplateModel> arrCardsTemplateModels;
     private boolean dialogCancel;
 
 
@@ -438,6 +440,14 @@ public class PayloadInner {
 
     public ArrayList<FeedbackStarModel> getStarArrays() {
         return starArrays;
+    }
+
+    public void setArrCardsTemplateModels(ArrayList<CardsTemplateModel> arrCardsTemplateModels) {
+        this.arrCardsTemplateModels = arrCardsTemplateModels;
+    }
+
+    public ArrayList<CardsTemplateModel> getArrCardsTemplateModels() {
+        return arrCardsTemplateModels;
     }
 
     public void setView(String view) {
@@ -717,6 +727,12 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
+                    }
+                    else if(BotResponse.TEMPLATE_TYPE_CARDS.equals(template_type))
+                    {
+                        Type listType = new TypeToken<ArrayList<CardsTemplateModel>>() {
+                        }.getType();
+                        arrCardsTemplateModels = gson.fromJson(elementsAsString, listType);
                     }
                 }
             }

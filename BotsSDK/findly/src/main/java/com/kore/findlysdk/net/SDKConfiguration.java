@@ -10,7 +10,7 @@ package com.kore.findlysdk.net;
  */
 public class SDKConfiguration {
 
-    public static final String SDIX = "sidx-f3a43e5f-74b6-5632-a488-8af83c480b88";
+    public static final String SDIX = "";
     public static final String TOKEN = "";
     public static String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
     /**

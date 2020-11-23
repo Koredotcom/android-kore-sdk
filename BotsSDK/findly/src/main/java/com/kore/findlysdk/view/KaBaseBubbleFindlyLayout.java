@@ -127,6 +127,7 @@ public abstract class KaBaseBubbleFindlyLayout extends ViewGroup {
     protected FeedbackTemplateView feedbackTemplateView;
     protected ListWidgetView listWidgetView;
     protected ResultsTemplateView resultsTemplateView;
+    protected CardTemplateView cardTemplateView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -352,6 +353,10 @@ public abstract class KaBaseBubbleFindlyLayout extends ViewGroup {
         resultsTemplateView = ViewProvider.getResultsTemplateView(context);
         resultsTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(resultsTemplateView);
+
+        cardTemplateView = ViewProvider.getCardsTemplateView(context);
+        cardTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(cardTemplateView);
     }
 
 
@@ -432,6 +437,9 @@ public abstract class KaBaseBubbleFindlyLayout extends ViewGroup {
 
         if(resultsTemplateView != null)
             resultsTemplateView.setComposeFooterInterface(composeFooterInterface);
+
+        if(cardTemplateView != null)
+            cardTemplateView.setComposeFooterInterface(composeFooterInterface);
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -468,6 +476,10 @@ public abstract class KaBaseBubbleFindlyLayout extends ViewGroup {
         if(resultsTemplateView != null)
         {
             resultsTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(cardTemplateView != null)
+        {
+            cardTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

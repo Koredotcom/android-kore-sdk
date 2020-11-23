@@ -27,6 +27,7 @@ import com.kore.findlysdk.view.BotResponsiveExpandTableView;
 import com.kore.findlysdk.view.BotResponsiveTableView;
 import com.kore.findlysdk.view.BotTableListTemplateView;
 import com.kore.findlysdk.view.BotTableView;
+import com.kore.findlysdk.view.CardTemplateView;
 import com.kore.findlysdk.view.FeedbackTemplateView;
 import com.kore.findlysdk.view.FormActionView;
 import com.kore.findlysdk.view.HorizontalBarChartView;
@@ -313,6 +314,12 @@ public class ViewProvider {
         ResultsTemplateView resultsTemplateView = new ResultsTemplateView(context);
         resultsTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
         return  resultsTemplateView;
+    }
+
+    public static CardTemplateView getCardsTemplateView(Context context){
+        CardTemplateView cardTemplateView = new CardTemplateView(context);
+        cardTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  cardTemplateView;
     }
 
 }

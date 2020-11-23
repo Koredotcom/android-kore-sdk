@@ -359,14 +359,14 @@
                 android:text="@string/incorrectuser"
                 android:textColor="@color/Red"
                 android:textSize="@dimen/text_size_normal"
-                android:visibility="invisible" />
+                android:visibility="gone" />
 
             <com.kore.findlysdk.view.CustomTextView
                 android:id="@+id/tvUserLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_20dp"
-                android:layout_marginTop="@dimen/dimen_20dp"
+                android:layout_marginTop="@dimen/dimen_18_dp"
                 android:layout_marginRight="@dimen/dimen_20dp"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:background="@color/btnFontlogin"

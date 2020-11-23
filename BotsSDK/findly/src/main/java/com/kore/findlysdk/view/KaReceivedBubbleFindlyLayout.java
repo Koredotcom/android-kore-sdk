@@ -121,7 +121,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), timeStampsTextView.getMeasuredWidth(), timeLineView.getMeasuredWidth(),
                 multiSelectView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(),responsiveTableView.getMeasuredWidth(),responsiveExpandTableView.getMeasuredWidth(),
                 lineChartView.getMeasuredWidth(),barChartView.getMeasuredWidth(),horizontalBarChartView.getMeasuredWidth(), stackedBarChatView.getMeasuredWidth(), botListViewTemplateView.getMeasuredWidth(),
-                botListTemplateView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(), botFormTemplateView.getMeasuredWidth(),botTableListTemplateView.getMeasuredWidth(),botQuickRepliesTemplateView.getMeasuredWidth(),
+                botListTemplateView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(), botFormTemplateView.getMeasuredWidth(),botTableListTemplateView.getMeasuredWidth(),botQuickRepliesTemplateView.getMeasuredWidth(), cardTemplateView.getMeasuredWidth(),
                 agentTransferTemplateView.getMeasuredWidth(),feedbackTemplateView.getMeasuredWidth(),listWidgetView.getMeasuredWidth(),resultsTemplateView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
 
@@ -132,7 +132,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 textMediaDimen[1] + botCarouselView.getMeasuredHeight() + multiSelectView.getMeasuredHeight() + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() +
                 botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() + responsiveTableView.getMeasuredHeight() + responsiveExpandTableView.getMeasuredHeight() +
                 lineChartView.getMeasuredHeight()+barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+ resultsTemplateView.getMeasuredHeight()
-                + botListViewTemplateView.getMeasuredHeight()+botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight()
+                + botListViewTemplateView.getMeasuredHeight()+botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight() + cardTemplateView.getMeasuredHeight()
                 + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + listWidgetView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ? dp2 : 0);
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
@@ -142,7 +142,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 + barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()
                 + agentTransferTemplateView.getMeasuredHeight()
                 + multiSelectView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight()+botListViewTemplateView.getMeasuredHeight()
-                + botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+resultsTemplateView.getMeasuredHeight()+
+                + botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+resultsTemplateView.getMeasuredHeight()+cardTemplateView.getMeasuredHeight()
                 +feedbackTemplateView.getMeasuredHeight()+listWidgetView.getMeasuredHeight()+ BUBBLE_CONTENT_BOTTOM_MARGIN;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
@@ -155,7 +155,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 || botFormTemplateView.getMeasuredHeight() > 0 || botListViewTemplateView.getMeasuredHeight() > 0 || botTableListTemplateView.getMeasuredHeight() > 0 ||
                 lineChartView.getMeasuredHeight() > 0 ||barChartView.getMeasuredHeight() > 0||horizontalBarChartView.getMeasuredHeight() > 0||stackedBarChatView.getMeasuredHeight() > 0 || listWidgetView.getMeasuredHeight() > 0 ||
                 tableView.getMeasuredHeight() > 0 ||responsiveTableView.getMeasuredHeight() > 0 ||responsiveExpandTableView.getMeasuredHeight() > 0 || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 ||
-                multiSelectView.getMeasuredHeight() > 0 || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || resultsTemplateView.getMeasuredHeight() > 0;
+                multiSelectView.getMeasuredHeight() > 0 || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || resultsTemplateView.getMeasuredHeight() > 0 || cardTemplateView.getMeasuredHeight() > 0;
     }
 
     @Override
@@ -209,6 +209,8 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
         listWidgetView.populateListWidgetData(null);
         resultsTemplateView.setVisibility(GONE);
         resultsTemplateView.populateResultsTemplateView(null);
+        cardTemplateView.setVisibility(GONE);
+        cardTemplateView.populateCardTemplateView(null);
     }
 
     @Override
@@ -380,6 +382,12 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                     resultsTemplateView.setVisibility(VISIBLE);
                     resultsTemplateView.populateResultsTemplateView(payInner);
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                }
+                else if(BotResponse.TEMPLATE_TYPE_CARDS.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
+                    cardTemplateView.setVisibility(VISIBLE);
+                    cardTemplateView.populateCardTemplateView(payInner);
+                    bubbleTextMediaLayout.populateText("Choose the credit card to pay bill");
                 }
                 else if (BotResponse.TEMPLATE_TYPE_AUTO_FORMS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
@@ -601,6 +609,12 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 30 * (int) dp1, MeasureSpec.EXACTLY);
         MeasureUtils.measure(resultsTemplateView, childWidthSpec, wrapSpec);
 
+        /*
+         * For Results List Templates
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(cardTemplateView, childWidthSpec, wrapSpec);
+
         MeasureUtils.measure(multiSelectView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(botButtonView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
@@ -662,6 +676,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
         layoutView(feedbackTemplateView, top, left, arrayList);
         layoutView(listWidgetView, top, left, arrayList);
         layoutView(resultsTemplateView, top, left, arrayList);
+        layoutView(cardTemplateView, top, left, arrayList);
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);

@@ -132,6 +132,9 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
     private LinearLayout llWelcomeMessage;
     private ImageView ivWelcomeImage;
     private boolean isEditTouched = false;
+    private String displayMsg = "Hello! How can i help you?";
+    private boolean lockLiveSearch = false;
+    private String userId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -202,8 +205,11 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                 perssiatentPanel.setVisibility(GONE);
                 llPopularSearch.setVisibility(GONE);
                 edtTxtMessage.setText("");
+
                 if(botContentFragment != null)
                     botContentFragment.removeAllChatMessages();
+
+                displayMessage(displayMsg);
             }
         });
 
@@ -298,7 +304,8 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
             {
                 if(!StringUtils.isNullOrEmpty(s.toString()))
                 {
-                    getLiveSearch(s.toString());
+                    if(!lockLiveSearch)
+                        getLiveSearch(s.toString());
                 }
                 else
                 {
@@ -336,18 +343,27 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
             @Override
             public void onClick(View view)
             {
-                llPopularSearch.setVisibility(GONE);
-                perssiatentPanel.setVisibility(View.VISIBLE);
-                saveStringPreferences(edtTxtMessage.getText().toString());
-                sendMessage(edtTxtMessage.getText().toString());
-                edtTxtMessage.setText("");
+                if(!StringUtils.isNullOrEmpty(edtTxtMessage.getText().toString()))
+                {
+                    llPopularSearch.setVisibility(GONE);
+                    perssiatentPanel.setVisibility(View.VISIBLE);
+                    saveStringPreferences(edtTxtMessage.getText().toString());
+                    sendMessage(edtTxtMessage.getText().toString());
+                    edtTxtMessage.setText("");
+                }
             }
         });
 
-        welcomeMessage();
+        if(StringUtils.isNullOrEmpty(userId))
+        {
+            userId = UUID.randomUUID().toString();
+        }
+
+        displayMessage(displayMsg);
         getPopularSearch();
         getRecentlyAsked();
         setLogin(MainActivity.this, BotResponse.USER_LOGIN, false);
+
 
         lvPopularSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -382,7 +398,13 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                         llPopularSearch.setVisibility(GONE);
                         tvErrorLogin.setVisibility(GONE);
                         setLogin(MainActivity.this, BotResponse.USER_LOGIN, true);
-                        getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
+
+                        if(searchModel != null && searchModel.getTemplate() != null && searchModel.getTemplate().getResults() != null
+                            && searchModel.getTemplate().getResults().getTask() != null && searchModel.getTemplate().getResults().getTask().size() > 0)
+                        {
+                            getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
+                            lockLiveSearch = true;
+                        }
                     }
                     else
                         tvErrorLogin.setVisibility(View.VISIBLE);
@@ -459,13 +481,13 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         }
     }
 
-    public void welcomeMessage()
+    public void displayMessage(String text)
     {
         PayloadInner payloadInner = new PayloadInner();
         payloadInner.setTemplate_type("text");
 
         PayloadOuter payloadOuter = new PayloadOuter();
-        payloadOuter.setText("Hello! How can i help you?");
+        payloadOuter.setText(text);
         payloadOuter.setType("text");
         payloadOuter.setPayload(payloadInner);
 
@@ -593,6 +615,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                             if(getLogin(MainActivity.this, BotResponse.USER_LOGIN))
                             {
                                 getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
+                                lockLiveSearch = true;
                             }
                             else
                             {
@@ -602,72 +625,120 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                         }
                         else if(searchModel.getTemplate().getWebhookPayload() != null)
                         {
-                            ComponentModel componentModel = new ComponentModel();
-                            componentModel.setType("template");
+                            if(searchModel.getTemplate().getWebhookPayload().getText() instanceof String)
+                            {
+                                try
+                                {
+                                    Type carouselType = new TypeToken<PayloadOuter>() {
+                                    }.getType();
+                                    PayloadOuter carouselElements = gson.fromJson((String) searchModel.getTemplate().getWebhookPayload().getText(), carouselType);
 
-                            Type carouselType = new TypeToken<PayloadOuter>() {
-                            }.getType();
-                            PayloadOuter carouselElements = gson.fromJson(searchModel.getTemplate().getWebhookPayload().getText().get(0), carouselType);
+                                    ComponentModel componentModel = new ComponentModel();
+                                    componentModel.setType("template");
+                                    componentModel.setPayload(carouselElements);
 
-                            componentModel.setPayload(carouselElements);
+                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
+                                    botResponseMessage.setType("template");
+                                    botResponseMessage.setComponent(componentModel);
 
-                            BotResponseMessage botResponseMessage = new BotResponseMessage();
-                            botResponseMessage.setType("template");
-                            botResponseMessage.setComponent(componentModel);
+                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+                                    arrBotResponseMessages.add(botResponseMessage);
 
-                            ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                            arrBotResponseMessages.add(botResponseMessage);
+                                    BotResponse botResponse = new BotResponse();
+                                    botResponse.setType("template");
+                                    botResponse.setMessage(arrBotResponseMessages);
 
-                            BotResponse botResponse = new BotResponse();
-                            botResponse.setType("template");
-                            botResponse.setMessage(arrBotResponseMessages);
+                                    processPayload("", botResponse);
+                                }
+                                catch (JsonSyntaxException e)
+                                {
+                                    displayMessage((String)searchModel.getTemplate().getWebhookPayload().getText());
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    ComponentModel componentModel = new ComponentModel();
+                                    componentModel.setType("template");
 
-                            processPayload("", botResponse);
+                                    Type carouselType = new TypeToken<PayloadOuter>() {
+                                    }.getType();
+                                    PayloadOuter carouselElements = gson.fromJson(((ArrayList<String>)(searchModel.getTemplate().getWebhookPayload().getText())).get(0), carouselType);
+
+                                    componentModel.setPayload(carouselElements);
+
+                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
+                                    botResponseMessage.setType("template");
+                                    botResponseMessage.setComponent(componentModel);
+
+                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+                                    arrBotResponseMessages.add(botResponseMessage);
+
+                                    BotResponse botResponse = new BotResponse();
+                                    botResponse.setType("template");
+                                    botResponse.setMessage(arrBotResponseMessages);
+
+                                    processPayload("", botResponse);
+                                }
+                                catch (JsonSyntaxException e)
+                                {
+                                    displayMessage(((ArrayList<String>)(searchModel.getTemplate().getWebhookPayload().getText())).get(0));
+                                }
+                            }
+
+                            if(searchModel.getTemplate().getWebhookPayload().getEndOfTask())
+                                lockLiveSearch = !searchModel.getTemplate().getWebhookPayload().getEndOfTask();
                         }
                         else
                         {
-                            arrTempAllResults = new ArrayList<>();
 
-                            PayloadInner payloadInner = new PayloadInner();
-                            payloadInner.setTemplate_type(searchModel.getTemplateType());
+                            if(searchModel.getTemplate().getResults() != null)
+                            {
+                                arrTempAllResults = new ArrayList<>();
 
-                            if(searchModel.getTemplate().getResults().getFaq() != null &&
-                                    searchModel.getTemplate().getResults().getFaq().size() > 0)
-                                arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFaq());
+                                PayloadInner payloadInner = new PayloadInner();
+                                payloadInner.setTemplate_type(searchModel.getTemplateType());
 
-                            if(searchModel.getTemplate().getResults().getPage() != null &&
-                                    searchModel.getTemplate().getResults().getPage().size() > 0)
-                                arrTempAllResults.addAll(searchModel.getTemplate().getResults().getPage());
+                                if(searchModel.getTemplate().getResults().getFaq() != null &&
+                                        searchModel.getTemplate().getResults().getFaq().size() > 0)
+                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFaq());
 
-                            if(searchModel.getTemplate().getResults().getTask() != null &&
-                                    searchModel.getTemplate().getResults().getTask().size() > 0)
-                                arrTempAllResults.addAll(searchModel.getTemplate().getResults().getTask());
+                                if(searchModel.getTemplate().getResults().getPage() != null &&
+                                        searchModel.getTemplate().getResults().getPage().size() > 0)
+                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getPage());
 
-                            payloadInner.setElements(arrTempAllResults);
-                            payloadInner.setTitle(searchModel.getTitle());
-                            payloadInner.setText("Sure, please find the matched results below");
+                                if(searchModel.getTemplate().getResults().getTask() != null &&
+                                        searchModel.getTemplate().getResults().getTask().size() > 0)
+                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getTask());
 
-                            PayloadOuter payloadOuter = new PayloadOuter();
-                            payloadOuter.setText(searchModel.getTitle());
-                            payloadOuter.setType("template");
-                            payloadOuter.setPayload(payloadInner);
+                                payloadInner.setElements(arrTempAllResults);
+                                payloadInner.setTitle(searchModel.getTitle());
+                                payloadInner.setText("Sure, please find the matched results below");
 
-                            ComponentModel componentModel = new ComponentModel();
-                            componentModel.setType("template");
-                            componentModel.setPayload(payloadOuter);
+                                PayloadOuter payloadOuter = new PayloadOuter();
+                                payloadOuter.setText(searchModel.getTitle());
+                                payloadOuter.setType("template");
+                                payloadOuter.setPayload(payloadInner);
 
-                            BotResponseMessage botResponseMessage = new BotResponseMessage();
-                            botResponseMessage.setType("template");
-                            botResponseMessage.setComponent(componentModel);
+                                ComponentModel componentModel = new ComponentModel();
+                                componentModel.setType("template");
+                                componentModel.setPayload(payloadOuter);
 
-                            ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                            arrBotResponseMessages.add(botResponseMessage);
+                                BotResponseMessage botResponseMessage = new BotResponseMessage();
+                                botResponseMessage.setType("template");
+                                botResponseMessage.setComponent(componentModel);
 
-                            BotResponse botResponse = new BotResponse();
-                            botResponse.setType("template");
-                            botResponse.setMessage(arrBotResponseMessages);
+                                ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+                                arrBotResponseMessages.add(botResponseMessage);
 
-                            processPayload("", botResponse);
+                                BotResponse botResponse = new BotResponse();
+                                botResponse.setType("template");
+                                botResponse.setMessage(arrBotResponseMessages);
+
+                                processPayload("", botResponse);
+
+                            }
                         }
                     }
                 }
@@ -734,7 +805,8 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (view instanceof EditText) {
+        if (view instanceof EditText && !lockLiveSearch)
+        {
             cordinate_layout.setVisibility(View.VISIBLE);
             perssiatentPanel.setVisibility(View.VISIBLE);
             llPopularSearch.setVisibility(View.VISIBLE);// User touched edittext
@@ -753,7 +825,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
 
         jsonObject.addProperty("query", query.toLowerCase());
         jsonObject.addProperty("maxNumOfResults", 9);
-        jsonObject.addProperty("userId", UUID.randomUUID().toString());
+        jsonObject.addProperty("userId", userId);
         jsonObject.addProperty("streamId", "st-a4a4fabe-11d3-56cc-801d-894ddcd26c51");
         jsonObject.addProperty("lang", "en");
 
@@ -786,12 +858,11 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
 
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
-
+        sendMessage(message);
     }
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
-
     }
 
     @Override
