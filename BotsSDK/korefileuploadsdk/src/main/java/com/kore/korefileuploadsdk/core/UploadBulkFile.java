@@ -622,7 +622,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 			} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return response;
+		return StringUtils.isNullOrEmpty(response)?"Uploading Failed":response;
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) {
@@ -636,7 +636,14 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
             }
 			if(!StringUtils.isNullOrEmpty(response)){
 				Log.d(LOG_TAG,"Failed chunks are "+response);
-				MissingChunks msc = new Gson().fromJson(response,MissingChunks.class);
+				MissingChunks msc=null;
+				try{
+					msc = new Gson().fromJson(response, MissingChunks.class);
+				}catch (Exception e)
+				{
+					sendUploadFailedNotice(true,getErrorMessage(errorStream));
+
+				}
 				if(msc != null){
 					UploadError uE = msc.getErrors().get(0);
 					ArrayList<String> missingChunks = new ArrayList<String>(Arrays.asList(uE.getMsg().substring(1,uE.getMsg().length()-1).split("\\s*,\\s*")));
