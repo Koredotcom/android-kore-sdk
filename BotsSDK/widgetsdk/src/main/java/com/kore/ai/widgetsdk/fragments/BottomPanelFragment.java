@@ -828,7 +828,11 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     {
         perssiatentPanel.setVisibility(GONE);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        widgetComposeFooterInterface.onPanelSendClick(entityEditEvent.getMessage(), true);
+
+        if(!StringUtils.isNullOrEmpty(entityEditEvent.getBody()))
+            widgetComposeFooterInterface.onPanelSendClick(entityEditEvent.getBody(), entityEditEvent.getMessage(), true);
+        else
+            widgetComposeFooterInterface.onPanelSendClick(entityEditEvent.getMessage(), true);
     }
 
     private void unregisterEventBus() {

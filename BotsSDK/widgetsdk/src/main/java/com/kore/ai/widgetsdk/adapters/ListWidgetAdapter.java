@@ -37,7 +37,6 @@ import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.RecyclerViewDataAccessor;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
@@ -179,7 +178,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             View view = inflater.inflate(R.layout.card_empty_widget_layout, parent, false);
             return new EmptyWidgetViewHolder(view);
         }else
-            return new ListWidgetAdapter.ViewHolder(inflater.inflate(R.layout.listwidget_view, parent, false));
+            return new ListWidgetAdapter.ViewHolder(inflater.inflate(R.layout.list_widget_view, parent, false));
     }
 
 

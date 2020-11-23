@@ -69,18 +69,22 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 //        else holder.tv.setText("More...");
 
         String utt = null;
+
         if(!StringUtils.isNullOrEmpty(btn.getPayload())){
             utt = btn.getPayload();
         }
+
         if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
             utt = btn.getUtterance();
         }
+
         if(!StringUtils.isNullOrEmpty(btn.getUrl())){
             utt = btn.getUrl();
         }
 
 //        holder.ivButtonIcon.setVisibility(View.GONE);
-        if(holder.ivListBtnIcon != null && !StringUtils.isNullOrEmpty(btn.getImage().getImage_src()))
+        if(holder.ivListBtnIcon != null && btn.getImage() != null
+                && !StringUtils.isNullOrEmpty(btn.getImage().getImage_src()))
         {
             holder.ivListBtnIcon.setVisibility(View.VISIBLE);
             String url = btn.getImage().getImage_src().trim();
@@ -97,10 +101,19 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 //                buttonAction(utterance);
                 if(!holder.tvBtnText.getText().equals("More...")) {
                     if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                        buttonAction(utterance, true);
-                    } else {
-                        buttonAction(utterance, false);
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)))
+                    {
+                        if(!StringUtils.isNullOrEmpty(btn.getUtterance()))
+                            buttonAction(utterance, btn.getUtterance(),true);
+                        else
+                            buttonAction(utterance, true);
+                    }
+                    else
+                    {
+                        if(!StringUtils.isNullOrEmpty(btn.getUtterance()))
+                            buttonAction(utterance, btn.getUtterance(),false);
+                        else
+                            buttonAction(utterance, false);
                     }
 
 //                    if(widgetComposeFooterInterface != null)
@@ -163,6 +176,37 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         if(appendUtterance && trigger!= null)
             msg = msg.append(trigger).append(" ");
         msg.append(utterance);
+        event.setMessage(msg.toString());
+        event.setPayLoad(new Gson().toJson(hashMap));
+        event.setScrollUpNeeded(true);
+        KoreEventCenter.post(event);
+
+        try {
+            if (isFullView) {
+                ((Activity) mContext).finish();
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void buttonAction(String utterance, String payload, boolean appendUtterance){
+        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+            if(utterance.startsWith("tel:")){
+                launchDialer(mContext,utterance);
+            }else if(utterance.startsWith("mailto:")){
+                showEmailIntent((Activity) mContext,utterance.split(":")[1]);
+            }
+            return;
+        }
+        EntityEditEvent event = new EntityEditEvent();
+        StringBuffer msg = new StringBuffer("");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("refresh", Boolean.TRUE);
+        if(appendUtterance && trigger!= null)
+            msg = msg.append(trigger).append(" ");
+        msg.append(utterance);
+        event.setBody(payload);
         event.setMessage(msg.toString());
         event.setPayLoad(new Gson().toJson(hashMap));
         event.setScrollUpNeeded(true);

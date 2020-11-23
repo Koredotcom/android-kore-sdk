@@ -377,6 +377,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         progress.setVisibility(View.GONE);
                         if (e.getMessage().equalsIgnoreCase("410") || e.getMessage().equalsIgnoreCase("401"))
                         {
