@@ -24,7 +24,7 @@ public class BotBankingRestBuilder {
     public static RestAPI getBotConfigService(){
         if(serviceBot == null) {
             serviceBot = new Retrofit.Builder()
-                    .baseUrl(SDKConfiguration.Server.BANKING_SERVER_URL)
+                    .baseUrl(SDKConfiguration.Server.SERVER_URL)
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(getClient())
