@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kore.findlysdk.view.CardTemplateView;
+
 import java.util.ArrayList;
 
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -344,7 +346,6 @@ public class ViewProvider {
         feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
         return  feedbackTemplateView;
     }
-
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);

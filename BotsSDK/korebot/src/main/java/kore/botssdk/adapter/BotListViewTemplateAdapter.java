@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,9 +55,12 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        if (count > 0) {
+        if (count > 0 && count < botListModelArrayList.size())
+        {
             return count;
-        } else {
+        }
+        else
+        {
             return botListModelArrayList.size();
         }
     }
@@ -64,7 +69,9 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     public BotListModel getItem(int position) {
         if (position == AdapterView.INVALID_POSITION) {
             return null;
-        } else {
+        }
+        else
+        {
             return botListModelArrayList.get(position);
         }
     }
@@ -132,9 +139,12 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
         holder.bot_list_item_cost.setTypeface(null, Typeface.BOLD);
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
+        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle()))
+        {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+            // get our html content
+            Spanned htmlAsSpanned = Html.fromHtml(botListModel.getSubtitle());
+            holder.botListItemSubtitle.setText(htmlAsSpanned);
         }
 
         holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
@@ -143,15 +153,21 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     int position = parentListView.getPositionForView(v);
                     BotListModel _botListModel = getItem(position);
-                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
+                    if (_botListModel != null && _botListModel.getDefault_action() != null)
+                    {
                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
                             invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-
+                        }
+                        else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType()))
+                        {
                            if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
                                 composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(),false);
                            else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
                                 composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(),false);
+                        }
+                        else if(!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
+                        {
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(),false);
                         }
                     }
                 }

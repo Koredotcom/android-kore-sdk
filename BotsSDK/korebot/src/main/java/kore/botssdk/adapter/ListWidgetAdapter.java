@@ -58,7 +58,6 @@ import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;

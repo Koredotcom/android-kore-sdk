@@ -109,7 +109,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         holder.botItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled()) {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
 
                     if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                         invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());

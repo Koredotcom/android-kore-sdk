@@ -95,7 +95,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         isDisabled = disabled;
     }
 
-    boolean isDisabled, isFirstTime, isTTSEnabled = true;
+    boolean isDisabled, isFirstTime, isTTSEnabled = false;
     ComposeFooterInterface composeFooterInterface;
     private String TapToSpeakFragmentTag = "TapToSpeakFragment";
 //    private TapToSpeakFragment tapToSpeakFragment;
@@ -301,7 +301,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         public void onClick(View v) {
 
                 animateLayoutVisible(mainContentLayout);
-                animateLayoutVisible(newMenuLogo);
+//                animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
 //                editTextMessage.requestFocus();
                 Utility.showVirtualKeyboard(getActivity(),editTextMessage);

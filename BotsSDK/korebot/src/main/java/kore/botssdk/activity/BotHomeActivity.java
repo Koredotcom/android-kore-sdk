@@ -65,8 +65,8 @@ public class BotHomeActivity extends BotAppCompactActivity {
 
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
         etIdentity = (EditText) findViewById(R.id.etIdentity);
-        launchBotBtn.setText(SDKConfiguration.Client.bot_name);
-        etIdentity.setText(SDKConfiguration.Client.identity);
+        launchBotBtn.setText("Connect");
+//        etIdentity.setText(SDKConfiguration.Client.identity);
         if(etIdentity.getText().toString() != null && etIdentity.getText().toString().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
     }

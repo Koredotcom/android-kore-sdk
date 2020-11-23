@@ -200,7 +200,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         setupTextToSpeech();
         KoreEventCenter.register(this);
         BotSocketConnectionManager.getInstance().setChatListener(sListener);
-//        attachFragments();
+        attachFragments();
        // connectToWebSocketAnonymous();
     }
 
@@ -270,7 +270,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ivTopLeft = (ImageView) findViewById(R.id.ivTopLeft);
         header_layout = (RelativeLayout) findViewById(R.id.header_layout);
         dp1 = Utility.convertDpToPixel(BotChatActivity.this, 1);
-        tvChaseTitle.setText(Html.fromHtml(getResources().getString(R.string.app_name)));
+        tvChaseTitle.setText(Html.fromHtml(SDKConfiguration.Client.bot_name));
         roundedCornersTransform = new RoundedCornersTransform();
         kaRoundedCornersTransform = new KaRoundedCornersTransform();
 
