@@ -51,4 +51,108 @@ public class BundleConstants {
     public static final String MEETING_CHANGE_SLOTS = "MEETING_CHANGE_SLOTS";
     public static final int TRANSPERANCY_50_PERCENT = 0xE6000000;
     public static final int REQ_CODE_REFRESH_CURRENT_PANEL = 5443;
+
+
+    public static final String PAYLOAD = "payload";
+    public static final String MESSAGE = "message";
+    public static final String PICK_TYPE = "pickType";
+    public static final String FILE_CONTEXT = "fileContext";
+
+
+
+    public static final String DOWNLOAD_URL = "downloadUrl";
+    public static final String TARGET_PATH = "targetPath";
+    public static final String FILE_NAME = "fileName";
+    public static final String FILE_ID = "fileId";
+    public static final String MEDIA_TYPE = "mediaType";
+    public static final String REQUEST_HEADERS = "requestHeaders";
+    public static final String DOWNLOAD_STATUS = "downloadStatus";
+    public static final String DOWNLOAD_STATUS_SUCCESS = "downloadStatusSuccess";
+    public static final String DOWNLOAD_STATUS_FAILURE = "downloadStatusFailure";
+    public static final String PIN_CERTIFICATE = "pinCertificate";
+    public static final String INTENT_ACTION_MEDIA_DOWNLOADED = "com.kore.media.downloaded";
+
+    public static final String DOWNLOADED_MEDIA_FILE_PATH = "mediaDownloadedFilePath";
+    public static final String DOWNLOADED_MEDIA_TYPE = "downloadedMediaType";
+    public static final String DOWNLOADED_MEDIA_COMPONENT_ID = "downloadedMediaComponentId";
+    public static final String KEY_FOOTER_MEDIA_FILE_PATH = "KeyFooterMediaFilePath";
+    public static final String KEY_IMMEDIATE_PLAYBACK = "KeyImmediatePlayback";
+    public static final String KEY_SEEK_POINTER = "KeySeekPointer";
+    public static final String KEY_PLAYBACK_SEEK_POSITION = "KeyPlaybackSeekPosition";
+
+    public static final String ORIENTATION = "orientation";
+
+    public static final int ONBOARDING_COMPLETE_CODE = 12522;
+    public static final int REQ_CODE_COLOR = 673;
+    public static final int NON_MEMBER_OR_MEMBER_PERMISSIONS = 757;
+    public static final int REQ_ADMIN_PERMISSIONS=896;
+    public static final int TEAM_LAUNCHING=887;
+    public static final int SKILL_STORE_LAUNCH = 122;
+    public static final int REQ_CODE_PROFILE_REFRESH = 674;
+
+    /**
+     * meeting related bundles
+     */
+    public static final String SELECTED_DATE_POSITION = "selected_date_position";
+    public static final String SELECTED_TIME_POSITION = "selected_time_position";
+
+    public static final String SELECTED_CUSTOM_DATE_FROM = "selected_custom_date_from";
+    public static final String SELECTED_CUSTOM_DATE_TO = "selected_custom_date_to";
+
+    public static final String SELECTED_CUSTOM_TIME_FROM = "selected_custom_time_from";
+    public static final String SELECTED_CUSTOM_TIME_TO = "selected_custom_time_to";
+
+    public static final String SELECTED_DURATION = "selected_duration";
+    public static final String SELECTED_DURATION_POSITION = "selected_duration_position";
+    public static final String IS_FOR_ALL = "is_for_all";
+
+
+
+    public static final String SELECTED_COLOR = "selected_color";
+    public static final String FROM_OVERLAY = "from_overlay";
+
+    /**
+     * teams bundle
+     */
+
+    public static final String CAN_SHARE = "can_share";
+    public static final String APPROVAL_MODE = "approval_mode";
+    public static final String IS_MEMBER_MODE = "is_member_mode";
+    public static final String CAN_MANAGE_MEMBERS = "can_manage_members";
+    public static final String CAN_CHANGE_SETTINGS = "can_change_settings";
+    public static final String CAN_APPROVE = "can_approve";
+    public static final String TEAM_ID = "team_id";
+    public static final String PENDING_COUNT = "pending_count";
+    public static final String TEAM_NAME = "team_name";
+    public static final String OWNER = "owner";
+    public static final String IS_CREATE_MODE = "is_create_mode";
+    public static final String TEAM_DATA = "team_data";
+    public static final String IS_PENDING = "is_pending";
+    public static final String IS_APPROVED = "is_approved";
+    public static final String IS_SHARED = "is_shared";
+
+
+    //Meeting requests
+    public static final String IS_POST_DATA_TO_BOT_THROUGH_PUSH = "post_data_to_bot";
+    public static final String IS_ONBOARD_TRY_NOW_BUTTON_CLICKED = "onboard_try_now_post_data";
+    //    public static final String TRY_NOW_UTTERANCE = "try_now_utterance";
+//    public static final String DATA_TO_POST = "data_to_post";
+    public static final String MEETING_HOST_TYPE = "meeting_host_type";
+    public static final String MEETING_ID = "meeting_id";
+    public static final String HOST_NAME = "host_name";
+    public static final String MEETING_TITLE = "meeting_title";
+    public static final String START_TIME = "startTime";
+    public static final String SHOULD_SHOW_PERMISSIONS = "should_show_permissions";
+    public static final String END_TIME = "endTime";
+    public static final String USER_AVAILABLE = "user_available";
+    public static final String MEETING_TYPE_INFO = "meeting_type_info";
+    public static final String MAKE_IT_DEFAULT = "make_it_default";
+    public static final String ID = "id";
+    public static final String NAME_ID_MAP = "name_id_map";
+    public static final String CATEGORY = "shortcut_category";
+    public static final String IS_FROM_SHORTCUTS = "is_from_shortcuts";
+
+    public static final int CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST = 1234;
+    public static final int CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST = 1434;
+    public static final int CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST = 3453;
 }

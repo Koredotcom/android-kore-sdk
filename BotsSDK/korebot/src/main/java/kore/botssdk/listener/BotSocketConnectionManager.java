@@ -8,8 +8,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Random;
 
 import io.reactivex.Observer;
@@ -393,6 +395,38 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient.sendMessage(payLoad);
         else
             botClient.sendMessage(message);
+
+        //Update the bot content list with the send message
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        botPayLoad.setMessage(botMessage);
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
+        botPayLoad.setBotInfo(botInfo);
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botPayLoad);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+//        socketUpdateListener.onMessageUpdate(message, true, botRequest);
+//        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
+        persistBotMessage(null,true,botRequest);
+        if(chatListener != null ){
+            chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
+        }
+
+    }
+
+    public void sendAttachmentMessage(String message, ArrayList<HashMap<String, String>> attachments) {
+        stopTextToSpeech();
+        if (message != null)
+        {
+            if(attachments != null && attachments.size() > 0)
+                botClient.sendMessage(message, attachments);
+            else
+                botClient.sendMessage(message);
+        }
+        else if(attachments != null && attachments.size() > 0)
+            botClient.sendMessage(message, attachments);
 
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);

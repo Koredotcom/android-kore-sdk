@@ -133,7 +133,7 @@
                     android:paddingEnd="5dp"
                     android:singleLine="true"
 
-                    android:textColor="@color/txtFontBlack"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
                     android:visibility="gone" />
 

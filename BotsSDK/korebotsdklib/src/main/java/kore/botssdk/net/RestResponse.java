@@ -105,17 +105,22 @@ public class RestResponse {
         }
 
         private HashMap<String, Object> params;
-        private ArrayList<Objects> attachments = new ArrayList<>();
+        private ArrayList<HashMap<String, String>> attachments = new ArrayList<>();
 
         public BotMessage(String body) {
             this.body = body;
+        }
+
+        public BotMessage(String body, ArrayList<HashMap<String, String>> attachments) {
+            this.body = body;
+            this.attachments = attachments;
         }
 
         public void setBody(String body) {
             this.body = body;
         }
 
-        public void setAttachments(ArrayList<Objects> attachments) {
+        public void setAttachments(ArrayList<HashMap<String, String>> attachments) {
             this.attachments = attachments;
         }
 

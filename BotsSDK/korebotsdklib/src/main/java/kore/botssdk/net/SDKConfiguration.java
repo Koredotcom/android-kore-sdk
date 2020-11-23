@@ -95,11 +95,12 @@ public class SDKConfiguration {
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = true;
-        public static   String SERVER_URL ="https://demo.kore.net";
+        public static   String SERVER_URL = "https://bots.kore.ai"; // "https://demo.kore.net";
         public static String SERVER_IP = "qa.kore.ai";
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
         public static String TOKEN_SERVER_URL ="https://demodpd.kore.ai";
+
     }
 
     public static class Client {
@@ -131,6 +132,7 @@ public class SDKConfiguration {
         public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
         public static String tenant_id = "";
         public static boolean enablePanel = true;
+
     }
 
     public static class BubbleColors {

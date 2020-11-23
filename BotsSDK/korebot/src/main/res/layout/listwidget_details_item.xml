@@ -20,6 +20,6 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:layout_marginLeft="@dimen/dimen_5dp"
-        android:layout_marginRight="@dimen/dimen_10_dp"
+        android:layout_marginRight="@dimen/dimen_10dp"
         android:text="@string/about" />
 </LinearLayout>
