@@ -206,6 +206,16 @@ public class FileUtils {
 
     private static final String pdf = "pdf";
 
+    public static ArrayList<String> ImageTypes()
+    {
+        return  rasterImageTypes ;
+    }
+
+    public static ArrayList<String> VideoTypes()
+    {
+        return  videoTypes ;
+    }
+
     static {
         loadMsoffice();
         loadVideoTypes();

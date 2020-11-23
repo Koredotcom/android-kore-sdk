@@ -55,6 +55,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
     private static DecimalFormat df2 = new DecimalFormat("###.##");
+	public static final String error_msz_key="error_msz_key";
+	public static final String isFileSizeMore_key="isFileSizeMore";
+	public  static final String fileSizeBytes_key="fileSizeBytes";
 	private String LOG_TAG = getClass().getSimpleName();
 	private String fileName;
 	private String outFilePath=null;

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -284,6 +285,25 @@ public class BitmapUtils {
         return resultBitmap;
     }
 
+    public static Bitmap rotateIfNecessary(String fileName, Bitmap bitmap) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(fileName);
+//            KoreLogger.debugLog("EXIF value", exif.getAttribute(ExifInterface.TAG_ORIENTATION));
+            if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")) {
+
+                bitmap = rotate(bitmap, 90);
+            } else if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")) {
+                bitmap = rotate(bitmap, 270);
+            } else if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")) {
+                bitmap = rotate(bitmap, 180);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+    }
 
 
     public static Bitmap decodeBitmapFromFile(File file, int reqWidth, int reqHeight) {
@@ -468,7 +488,44 @@ public class BitmapUtils {
         }
     }
 
+    public static String createImageThumbnailForBulk(Bitmap thumbnail, String thumbPath, int compressQualityInt) {
+        String originalFilepath = thumbPath;
+        int index = thumbPath.lastIndexOf(".");
+        /*if(AppSandboxUtils.shouldEncryptLocalFiles){
+            thumbPath = thumbPath.substring(0, index) + "_th"+AppSandboxUtils.ENCRYPTED_FILE_SUFFIX+".png";
+        }else {*/
+        thumbPath = thumbPath.substring(0, index) + "_th.png";
+//        }
 
+        Log.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail path = " + thumbPath);
+
+        File thumbnailFile = new File(thumbPath);
+        Log.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.getAbsolutePath());
+
+        try {
+            FileOutputStream fos = new FileOutputStream(thumbnailFile);
+            OutputStream outputStream = null;
+
+            thumbnail.compress(Bitmap.CompressFormat.PNG, compressQualityInt, fos);
+            thumbnail = rotateIfNecessary(thumbPath, thumbnail);
+            if(outputStream != null){
+                outputStream.flush();
+                outputStream.close();
+            }
+            fos.flush();
+            fos.close();
+
+        } catch (IOException e) {
+            Log.e("BitmapUtils", "createImageThumbnailForBulk() - Excep: = " + e.getMessage(), e);
+
+        } finally {
+            if (thumbnail != null) {
+                thumbnail.recycle();
+            }
+        }
+
+        return thumbPath;
+    }
 
     
     public static String getFileAssetOnAttachmentType(String fileType) {
