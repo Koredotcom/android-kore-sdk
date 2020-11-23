@@ -68,7 +68,8 @@
     <string name="icon_28">&#x28;</string>
     <string name="icon_e91a">&#xe91a;</string>
     <string name="icon_e913">&#xe913;</string>
-
+    <string name="camera">&#128247;</string>
+    <string name="attachment">&#128193;</string>
     <string name="icon_e995">&#xe995;</string> <!-- threads-->
     <string name="icon_e996">&#xe996;</string> <!-- teams-->
 
@@ -95,6 +96,15 @@
     <string name="submit">Submit</string>
     <string name="show_more">Show More</string>
     <string name="about">About</string>
+
+    <string-array name="attachments_strings">
+        <item>Take Photo</item>
+        <item>Upload Photo</item>
+        <item>Take Video</item>
+        <item>Upload Video</item>
+        <item>Attach Document</item>
+    </string-array>
+
 
 
 </resources>

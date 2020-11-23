@@ -9,7 +9,7 @@ android {
     }
     defaultConfig {
            applicationId "kore.botssdk"
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion 29
         versionCode 1
         versionName "1.1.0"

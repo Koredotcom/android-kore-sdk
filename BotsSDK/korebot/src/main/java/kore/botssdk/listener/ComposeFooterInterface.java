@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
@@ -21,6 +23,8 @@ public interface ComposeFooterInterface {
      * @param payload : Payload to be send
      */
     void onSendClick(String message, String payload, boolean isFromUtterance);
+
+    void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance);
 
     void onFormActionButtonClicked(FormActionTemplate fTemplate);
 

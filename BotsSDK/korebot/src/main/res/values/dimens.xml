@@ -18,7 +18,7 @@
     <dimen name="dot_view_margin_bottom">6dp</dimen>
     <dimen name="typing_layout_margin_left">2dp</dimen>
     <dimen name="typing_layout_margin_right">2dp</dimen>
-
+    <integer name="toast_gravity_default">0x00000051</integer>
     <!-- Carousel View -->
     <dimen name="carousel_layout_height">375dp</dimen>
     <item name="carousel_item_width_factor" format="float" type="dimen">0.8</item>
