@@ -101,8 +101,8 @@ public class SDKConfiguration {
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
 
-//        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
-//        public static   String SERVER_URL ="https://bots.kore.ai";
+        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
+        public static   String SERVER_URL ="https://bots.kore.ai";
         public static   String TOKEN_SERVER_URL ="https://demodpd.kore.ai";
 
 
@@ -110,8 +110,8 @@ public class SDKConfiguration {
 //        public static String SERVER_URL ="https://bankingassistant-stg.kore.ai";
 
         //QA
-        static String KORE_BOT_SERVER_URL = "https://bankingassistant-qa.kore.ai";//https://qa-bots.kore.ai";
-        public static String SERVER_URL ="https://bankingassistant-qa.kore.ai";
+//        static String KORE_BOT_SERVER_URL = "https://bankingassistant-qa.kore.ai";//https://qa-bots.kore.ai";
+//        public static String SERVER_URL ="https://bankingassistant-qa.kore.ai";
 
 
         //        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
@@ -156,11 +156,11 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
 
         //Work Bench QA
-        public static String client_id = "cs-e28ed93e-0723-5e22-b8b4-27f8f66de93d";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "ezWdID0H6fu8rJUKLXjKRyMTeIFXmswm0Q/d+dwFkc0=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "ushasri.gundupinnu@kore.com";
-        public static String bot_name = "QA_Env_WB";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-13bd4aa0-8980-5226-984f-271b6468c848";
+//        public static String client_id = "cs-e28ed93e-0723-5e22-b8b4-27f8f66de93d";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "ezWdID0H6fu8rJUKLXjKRyMTeIFXmswm0Q/d+dwFkc0=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "ushasri.gundupinnu@kore.com";
+//        public static String bot_name = "QA_Env_WB";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-13bd4aa0-8980-5226-984f-271b6468c848";
 
         //Staging Bot
 //        public static String client_id = "cs-9c811447-60b2-5a25-b4f5-e03c0493f262";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
@@ -170,6 +170,28 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-a9413ab9-f1e0-5c26-a23d-2f2fa19ad856";
 
         public static String tenant_id = "5f33b99cff636e7ae858df1c";
+
+        //        IKEA Coworker
+//        public static String client_id = "cs-5cd31fe5-cc44-5ab1-8b9c-104637d393fe";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "LB2BtYsg4zWjZ6fprvRGhDG9ShX4TrkMNajiATImyIk=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "henrikjansen72@gmail.com";
+//        public static String bot_name = "IKEA Coworker";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-3e4fb572-3e9b-57ae-abd2-13fa1799f947";
+
+        //        IKEA Manager
+//        public static String client_id = "cs-49695009-17b1-557d-821a-87ae2516fbf7";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "tIcDPU9UlUEgSXcxt491mhj5uVP91Bv4IKLAKZhc/5A=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "henrikjansen72@gmail.com";
+//        public static String bot_name = "IKEA Manager";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-6180af24-7567-5c04-8782-53002fd6e810";
+
+
+        //        IKEA Buddy
+        public static String client_id = "cs-dfc84d2c-cd14-5b2a-a73a-baf2c210f275";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "lxeZGHfmsxFjRCo8e0LH0aUe0efK52UFg4vMvQnc//o=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "henrikjansen72@gmail.com";
+        public static String bot_name = "IKEA Buddy";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-35cbecc0-2ace-550d-8865-84afd8ba5794";
 
     }
 

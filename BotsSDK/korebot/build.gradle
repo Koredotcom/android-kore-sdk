@@ -8,7 +8,7 @@ android {
         enabled = true
     }
     defaultConfig {
-           applicationId "kore.botssdk"
+        applicationId "kore.botssdk"
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
@@ -35,6 +35,13 @@ android {
            sales_ot{
                applicationId 'kore.botssdk.salesot'
                dimension "asana"
+           }
+           ikeamanager {
+               dimension 'asana'
+               applicationId 'com.kore.botsdk.ikeamanager'
+               applicationIdSuffix 'ikeamanager'
+               versionCode 1
+               versionName '1'
            }
        }
     compileOptions {

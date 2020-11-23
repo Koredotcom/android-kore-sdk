@@ -6,7 +6,7 @@
     android:clipToPadding="false"
     android:clipChildren="false"
     android:paddingBottom="@dimen/carousel_view_padding_bottom"
-    android:paddingLeft="@dimen/carousel_view_padding_left"
+    android:paddingLeft="@dimen/dimen_10dp"
     android:paddingRight="20dp"
     android:paddingTop="@dimen/carousel_view_padding_top"
     android:visibility="visible" />

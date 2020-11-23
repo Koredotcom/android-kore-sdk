@@ -51,10 +51,10 @@
             android:maxLines="1"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text="Subtitle"
+            android:text="🟠 Assigned"
             android:textColor="@color/footer_color_dark_grey"
             android:textSize="12dp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </LinearLayout>
 

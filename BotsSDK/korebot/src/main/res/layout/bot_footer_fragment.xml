@@ -30,8 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="1dp"
             android:layout_gravity="bottom"
-            android:visibility="gone"
-            android:background="@color/footerdivider_color" />
+            android:background="@color/footerdivider_color"
+            android:visibility="gone" />
 
         <!--<com.kore.koreapp.views.AudioVisualiserView
             android:id="@+id/bot_bottom_strip"
@@ -48,24 +48,24 @@
             android:id="@+id/fl_footer"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:gravity="center_vertical"
             android:layout_gravity="bottom"
             android:background="@color/compose_chase_color"
+            android:gravity="center_vertical"
             android:visibility="visible">
 
             <RelativeLayout
                 android:id="@+id/composeFooterRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:background="@color/compose_chase_color">
+                android:background="@color/compose_chase_color"
+                android:gravity="center_vertical">
 
                 <RelativeLayout
                     android:id="@+id/tasksRl"
                     android:layout_width="wrap_content"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_height="wrap_content">
+                    android:gravity="center_vertical">
 
                     <ImageView
                         android:id="@+id/newTasksLogo"
@@ -95,7 +95,7 @@
                         android:paddingRight="5dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/widget_menu"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/loadingTasks"
@@ -138,9 +138,9 @@
                     android:id="@+id/composeFrameLl"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
                     android:layout_marginStart="5dp"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
@@ -158,6 +158,7 @@
                         android:id="@+id/edtTxtMessage"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
                         android:background="@null"
                         android:gravity="center_vertical|start"
                         android:hint="message..."
@@ -171,8 +172,7 @@
                         android:scrollbars="vertical"
                         android:tag="regular"
                         android:textColor="@color/bubble_dark_text_color"
-                        android:textSize="16sp"
-                        android:layout_marginLeft="@dimen/dimen_5dp"/>
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -188,6 +188,7 @@
                         android:id="@+id/sendTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_3dp"
                         android:gravity="center_vertical"
                         android:paddingStart="5dp"
                         android:paddingLeft="5dp"
@@ -204,10 +205,11 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/dimen_3dp"
                         android:alpha="0.70"
                         android:padding="5dp"
-                        ripple:srcCompat="@drawable/ic_mic"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        ripple:srcCompat="@drawable/ic_mic" />
 
                     <ImageView
                         android:id="@+id/audio_speak_tts"
@@ -217,7 +219,7 @@
                         android:alpha="0.70"
                         android:padding="5dp"
                         android:src="@drawable/ic_volume_up_black_24dp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
