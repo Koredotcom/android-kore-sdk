@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/dimen_10dp"
         android:singleLine="true"
         android:text="Select"
-        android:textColor="@color/txtFontBlack"
+        android:textColor="@color/black"
         android:textSize="18dp" />
 
 </LinearLayout>

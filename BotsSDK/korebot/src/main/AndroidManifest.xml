@@ -9,14 +9,23 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+           android:requestLegacyExternalStorage="true"
            android:name=".application.BotApplication"
            android:allowBackup="true"
            android:icon="@drawable/ic_launcher"
            android:label="@string/app_name"
            android:supportsRtl="true"
            android:theme="@style/AssociatedAppTheme">
+
            <activity
                android:name=".activity.GenericWebViewActivity"
                android:label="Kora"
@@ -47,6 +56,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".activity.KaCaptureImageActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
         <service
             android:name=".net.BotDemoRestService"
             android:exported="false" />
@@ -56,6 +70,20 @@
         <service
             android:name=".net.BotLocalService"
             android:exported="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/image_path" />
+        </provider>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
     </application>
 
