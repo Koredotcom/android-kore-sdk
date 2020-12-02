@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,14 +14,25 @@ import android.widget.Toast;
 
 //import com.kore.ai.widgetsdk.activities.PanelMainActivity;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import kore.botssdk.R;
 import kore.botssdk.drawables.ThemeColors;
+import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.listener.BotSocketConnectionManager;
+import kore.botssdk.models.BotOptionsModel;
+import kore.botssdk.models.BrandingNewModel;
+import kore.botssdk.models.TokenResponseModel;
+import kore.botssdk.net.RestBuilder;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.websocket.SocketWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -30,7 +42,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
 
     private Button launchBotBtn;
     private EditText etIdentity;
-
+    private TokenResponseModel tokenResponseModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +103,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
                         SDKConfiguration.Client.identity = etIdentity.getText().toString();
-                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
-                        launchBotChatActivity();
+                        getFinastraToken();
                     }
                     else
                         Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
@@ -130,5 +141,36 @@ public class BotHomeActivity extends BotAppCompactActivity {
         } else {
             return false;
         }
+    }
+
+    private void getFinastraToken()
+    {
+            RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
+            botCustomData.put("tenantId", SDKConfiguration.Client.tenant_id);
+            botCustomData.put("uniqueUserId", SDKConfiguration.Client.uniqueuserId);
+
+        Call<TokenResponseModel> getBankingConfigService = RestBuilder.getTokenRestAPI().getFinastraTokenDetails(botCustomData, "published", "1","en_US");
+        getBankingConfigService.enqueue(new Callback<TokenResponseModel>() {
+            @Override
+            public void onResponse(Call<TokenResponseModel> call, Response<TokenResponseModel> response)
+            {
+                if (response.isSuccessful())
+                {
+                    tokenResponseModel = response.body();
+                    SDKConfiguration.Client.bot_name = tokenResponseModel.getBotInfo().getName();
+                    SDKConfiguration.Client.bot_id = tokenResponseModel.getBotInfo().get_id();
+                    SDKConfiguration.Server.setServerUrl(tokenResponseModel.getKoreAPIUrl());
+                    SDKConfiguration.Server.setKoreBotServerUrl(tokenResponseModel.getKoreAPIUrl());
+
+                    BotSocketConnectionManager.getInstance().startAndInitiateConnection(getApplicationContext(), null, tokenResponseModel.getJwt(), tokenResponseModel.getBotInfo().getName(), tokenResponseModel.getBotInfo().get_id());
+                    launchBotChatActivity();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TokenResponseModel> call, Throwable t) {
+                Log.e("Skill Panel Data", t.toString());
+            }
+        });
     }
 }

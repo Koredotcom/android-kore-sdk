@@ -19,6 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.BotDb.BotDataPersister;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
@@ -26,6 +27,7 @@ import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
+import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.net.RestAPIHelper;
@@ -40,6 +42,7 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -175,6 +178,29 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+    public void connectasAnonymousUser(String jwtToken, String botName, String streamId, final boolean isRefresh) {
+        try
+        {
+            KoreEventCenter.post(jwtToken);
+
+            if (!isRefresh)
+            {
+                botClient.connectAsAnonymousUser(jwtToken, botName, streamId, botSocketConnectionManager);
+            }
+            else
+            {
+                KoreEventCenter.post(jwtToken);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            if(chatListener != null )
+                chatListener.onConnectionStateChanged(connection_state,false);
+        }
+
+    }
+
 
     public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg){
 
@@ -289,8 +315,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             }
         });
-
-
     }
 
     @Override
@@ -353,6 +377,30 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+    @Override
+    public void startAndInitiateConnection(Context mContext, RestResponse.BotCustomData botCustomData1, String jwtToken, String botName, String streamId) {
+        this.botCustomData = botCustomData1;
+        if (connection_state == null || connection_state == DISCONNECTED) {
+            this.mContext = mContext;
+            connection_state = CONNECTION_STATE.CONNECTING;
+//            KoreEventCenter.post(connection_state);
+            if(chatListener != null ){
+                chatListener.onConnectionStateChanged(connection_state,false);
+            }
+            if(botCustomData == null) {
+                botCustomData = new RestResponse.BotCustomData();
+            }
+            botCustomData.put("kmUId", userId);
+            botCustomData.put("kmToken", accessToken);
+            this.isWithAuth = false;
+            botClient = new BotClient(mContext, botCustomData);
+            ttsSynthesizer = new TTSSynthesizer(mContext);
+//            this.socketUpdateListener = socketUpdateListener;
+            /*if (!botsSpiceManager.isStarted())
+                botsSpiceManager.start(this.mContext);*/
+            initiateConnectionWithToken(jwtToken, botName, streamId);
+        }
+    }
 
     private void initiateConnection() {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
@@ -375,6 +423,22 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 //            makeTokenCallForJwt(false);
         }
     }
+
+    private void initiateConnectionWithToken(String jwtToken, String botName, String streamId) {
+        if (!NetworkUtility.isNetworkConnectionAvailable(mContext))
+        {
+            connection_state = DISCONNECTED;
+
+            if(chatListener != null){
+                chatListener.onConnectionStateChanged(connection_state,false);
+            }
+            return;
+        }
+
+        connectasAnonymousUser(jwtToken, botName, streamId, false);
+    }
+
+
 
     public String getStreamId() {
         return streamId;

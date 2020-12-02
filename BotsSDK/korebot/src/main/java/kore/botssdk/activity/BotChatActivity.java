@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -35,7 +34,6 @@ import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.JWTTokenResponse;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
-import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
@@ -49,7 +47,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 import kore.botssdk.R;
@@ -76,6 +73,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.FormActionTemplate;
@@ -84,7 +82,10 @@ import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.models.UniqueUserModel;
 import kore.botssdk.models.limits.Attachment;
+import kore.botssdk.net.RestBuilder;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
@@ -93,6 +94,9 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
 import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
@@ -155,6 +159,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected Attachment attachment;
     Handler messageHandler = new Handler();
     protected static long totalFileSize;
+    private ArrayList<BrandingNewModel> arrBrandingNewDos;
+    private UniqueUserModel uniqueUserModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +206,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         BotSocketConnectionManager.getInstance().setChatListener(sListener);
         attachFragments();
        // connectToWebSocketAnonymous();
+
     }
 
     SocketChatListener sListener = new SocketChatListener() {
@@ -285,6 +292,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
                 updateActionBar();
+                getBrandingDetails();
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
@@ -337,17 +345,22 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingModel.getButtonActiveTextColor());
         editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingModel.getButtonInactiveBgColor());
         editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getButtonInactiveTextColor());
-        editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBgColor());
+        editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBodyColor());
         editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingModel.getWidgetTextColor());
         editor.putString(BotResponse.WIDGET_BORDER_COLOR, brandingModel.getWidgetBorderColor());
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
+        editor.putString(BotResponse.WIDGET_FOOTER_COLOR, brandingModel.getWidgetFooterColor());
+        editor.putString(BotResponse.WIDGET_HEADER_COLOR, brandingModel.getWidgetHeaderColor());
         editor.apply();
 
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getButtonActiveBgColor();
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
 
         if(botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBgColor(), brandingModel.getWidgetTextColor());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor());
+
+        if(composeFooterFragment != null)
+            composeFooterFragment.setFooterBackground(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetDividerColor());
     }
 
 
@@ -379,7 +392,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
-
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
             actionBarTitleUpdateHandler = new Handler();
@@ -403,8 +415,33 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         super.onPause();
     }
 
-
-
+//    public void displayMessage(String text)
+//    {
+//        PayloadInner payloadInner = new PayloadInner();
+//        payloadInner.setTemplate_type("text");
+//
+//        PayloadOuter payloadOuter = new PayloadOuter();
+//        payloadOuter.setText(text);
+//        payloadOuter.setType("text");
+//        payloadOuter.setPayload(payloadInner);
+//
+//        ComponentModel componentModel = new ComponentModel();
+//        componentModel.setType("text");
+//        componentModel.setPayload(payloadOuter);
+//
+//        BotResponseMessage botResponseMessage = new BotResponseMessage();
+//        botResponseMessage.setType("text");
+//        botResponseMessage.setComponent(componentModel);
+//
+//        ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+//        arrBotResponseMessages.add(botResponseMessage);
+//
+//        BotResponse botResponse = new BotResponse();
+//        botResponse.setType("text");
+//        botResponse.setMessage(arrBotResponseMessages);
+//
+//        processPayload("", botResponse);
+//    }
 
     @Override
     public void onSendClick(String message,boolean isFromUtterance) {
@@ -966,4 +1003,62 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             return "doc_" + System.currentTimeMillis();
         }
     }
+
+    private void getBrandingDetails() {
+        Call<ArrayList<BrandingNewModel>> getBankingConfigService = RestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "5f9274c15b6a927ae14dce42", "published", "1","en_US");
+        getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
+                if (response.isSuccessful())
+                {
+                    arrBrandingNewDos = response.body();
+
+                    if(arrBrandingNewDos != null && arrBrandingNewDos.size() > 0)
+                    {
+                        BotOptionsModel botOptionsModel = arrBrandingNewDos.get(0).getHamburgermenu();
+
+                        if(composeFooterFragment != null)
+                            composeFooterFragment.setBottomOptionData(botOptionsModel);
+
+                        if(arrBrandingNewDos.size() > 1)
+                            onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
+                    }
+                }
+
+                sendUniqueUserIdDetails();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
+            {
+                Log.e("getBrandingDetails", t.toString());
+                sendUniqueUserIdDetails();
+            }
+        });
+    }
+
+    private void sendUniqueUserIdDetails()
+    {
+        RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
+        botCustomData.put("userId", SocketWrapper.getInstance(BotChatActivity.this).getBotUserId());
+        botCustomData.put("uniqueUserId", SDKConfiguration.Client.uniqueuserId);
+
+        Call<UniqueUserModel> getBankingConfigService = RestBuilder.getRestAPI().sendUniqueUserDetails(botCustomData, "published", "1","en_US");
+        getBankingConfigService.enqueue(new Callback<UniqueUserModel>() {
+            @Override
+            public void onResponse(Call<UniqueUserModel> call, Response<UniqueUserModel> response) {
+                if (response.isSuccessful())
+                {
+                    uniqueUserModel = response.body();
+                    Log.e("senduniqueuserIdDetails", uniqueUserModel.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UniqueUserModel> call, Throwable t) {
+                Log.e("Skill Panel Data", t.toString());
+            }
+        });
+    }
+
 }

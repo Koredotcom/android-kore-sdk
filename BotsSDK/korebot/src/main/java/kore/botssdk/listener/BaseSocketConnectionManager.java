@@ -61,4 +61,5 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
     public abstract void unSubscribe();
     public abstract void startAndInitiateConnectionWithConfig(Context mContext,RestResponse.BotCustomData botCustomData);
     public abstract void startAndInitiateConnection(Context mContext, String userId, String accessToken, UserNameModel userNameModel, String orgId);
+    public abstract void startAndInitiateConnection(Context mContext, RestResponse.BotCustomData botCustomData, String jwtToken, String botName, String streamId);
 }
