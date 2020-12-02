@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -267,7 +268,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 //            @Override
 //            public void run() {
         if (SDKConfiguration.BubbleColors.showIcon && isLastItem) {
-            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), Color.parseColor("#ffffff"), true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
                     /*if(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText())) {
                         visibility= View.GONE;
                         delayTime=700;
