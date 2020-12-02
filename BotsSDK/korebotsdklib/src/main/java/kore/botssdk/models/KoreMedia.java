@@ -1,4 +1,7 @@
 package kore.botssdk.models;
+
+import kore.botssdk.exceptions.InvalidMediaIDException;
+
 public interface KoreMedia{
 	
 	public static final String MEDIA_TYPE_AUDIO = "audio";
@@ -43,6 +46,14 @@ public interface KoreMedia{
 	public static final byte STOP = 1;
 	public static final byte PLAY = 2;
 	
+	public static String CHOOSE_TYPE_GALLERY = "choose";
+	public static String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
+	public static String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
+	public static String CHOOSE_TYPE_FILE = "choose_file";
+	public static String CHOOSE_TYPE_CAMERA = "camera";
+	public static String FOR_MESSAGE = "message";
+	public static String FOR_PROFILE = "profile";
+
 	public  void startMediaRecording();
 	public  void stopMediaRecording();
 
@@ -51,9 +62,11 @@ public interface KoreMedia{
 	public void playOrViewMedia();
 	public void pauseOrStopMedia();
 	public void resumeMedia();
-	
+
 	public void getUserinfo();
 	public void getFileTokenAndStartUpload();
 
-	
+	String DIR_TYPE_TEMP = "temp";
+
+	public void setMediaEncoding() throws InvalidMediaIDException;
 }

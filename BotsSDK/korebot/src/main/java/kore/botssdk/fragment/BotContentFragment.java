@@ -103,7 +103,7 @@ import retrofit2.Response;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
-    RelativeLayout rvChatContent;
+    RelativeLayout rvChatContent, header_layout;
     RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
@@ -138,7 +138,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private Pair<Long, Long> nextMonthPair;
     private ImageView ivThemeSwitcher, ivChaseLogo;
     private PopupWindow popupWindow;
-    private View popUpView;
+    private View popUpView, footer_header;
     private TextView tvChaseTitle;
 
     @Nullable
@@ -171,6 +171,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         ivThemeSwitcher = view.findViewById(R.id.ivThemeSwitcher);
         ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
+        header_layout = view.findViewById(R.id.header_layout);
+        footer_header = view.findViewById(R.id.footer_header);
         headerView.setVisibility(View.GONE);
         tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.app_name)));
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
@@ -179,7 +181,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -254,13 +256,26 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     }
 
-    public void changeThemeBackGround(String bgColor, String textColor)
+    public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor)
     {
-        rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
+        if(!StringUtils.isNullOrEmpty(bgColor))
+        {
+            rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
+            GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
+            gradientDrawable.setColor(Color.parseColor(bgColor));
+        }
 
-        GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-        gradientDrawable.setColor(Color.parseColor(bgColor));
-        headerView.setTextColor(Color.parseColor(textColor));
+        if(!StringUtils.isNullOrEmpty(textColor))
+        {
+            headerView.setTextColor(Color.parseColor(textColor));
+            tvChaseTitle.setTextColor(Color.parseColor(textColor));
+        }
+
+        if(!StringUtils.isNullOrEmpty(headerColor))
+            header_layout.setBackgroundColor(Color.parseColor(headerColor));
+
+        if(!StringUtils.isNullOrEmpty(dividerColor))
+            footer_header.setBackgroundColor(Color.parseColor(dividerColor));
     }
 
     private void setupAdapter() {

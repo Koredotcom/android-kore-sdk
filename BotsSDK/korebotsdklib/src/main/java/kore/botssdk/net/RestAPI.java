@@ -1,12 +1,15 @@
 package kore.botssdk.net;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.models.BotHistory;
+import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
 import kore.botssdk.models.TokenResponseModel;
+import kore.botssdk.models.UniqueUserModel;
 import kore.botssdk.net.RestResponse.LoginResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -83,4 +86,20 @@ public interface RestAPI {
 
     @GET("/api" + URL_VERSION + "/botmessages/rtm")
     Call<BotHistory> getBotHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
+
+    // Get JWT Token
+    @POST("finastraLoginDEMO/token")
+    Call<TokenResponseModel> getBrandingDetails(@Header("Authorization") String token);
+
+    // Get JWT Token
+    @GET("/api" + URL_VERSION + "/wbservice/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop")
+    Call<ArrayList<BrandingNewModel>> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language);
+
+    // Get JWT Token
+    @POST("/finastra-wrapper/token")
+    Call<TokenResponseModel> getFinastraTokenDetails( @Body HashMap<String, Object> body, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language);
+
+    // Get JWT Token
+    @POST("/finastra-wrapper/uniqueUser")
+    Call<UniqueUserModel> sendUniqueUserDetails(@Body HashMap<String, Object> body, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language);
 }

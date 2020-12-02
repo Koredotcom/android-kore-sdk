@@ -2,6 +2,9 @@ package kore.botssdk.models;
 
 public class BrandingModel
 {
+    private String botName;
+    private String widgetBgImage;
+    private String bankLogo;
     private String botchatBgColor;
     private String botchatTextColor;
     private String buttonActiveBgColor;
@@ -13,10 +16,12 @@ public class BrandingModel
     private String theme;
     private String userchatBgColor;
     private String userchatTextColor;
-    private String widgetBgColor;
     private String widgetTextColor;
     private String widgetBorderColor;
     private String widgetDividerColor;
+    private String widgetHeaderColor;
+    private String widgetBodyColor;
+    private String widgetFooterColor;
 
     public void setBotchatBgColor(String botchatBgColor) {
         this.botchatBgColor = botchatBgColor;
@@ -78,10 +83,6 @@ public class BrandingModel
         this.userchatTextColor = userchatTextColor;
     }
 
-    public void setWidgetBgColor(String widgetBgColor) {
-        this.widgetBgColor = widgetBgColor;
-    }
-
     public void setWidgetBorderColor(String widgetBorderColor) {
         this.widgetBorderColor = widgetBorderColor;
     }
@@ -122,10 +123,6 @@ public class BrandingModel
         return userchatTextColor;
     }
 
-    public String getWidgetBgColor() {
-        return widgetBgColor;
-    }
-
     public String getWidgetBorderColor() {
         return widgetBorderColor;
     }
@@ -136,5 +133,53 @@ public class BrandingModel
 
     public String getWidgetTextColor() {
         return widgetTextColor;
+    }
+
+    public void setBankLogo(String bankLogo) {
+        this.bankLogo = bankLogo;
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+    }
+
+    public void setWidgetBgImage(String widgetBgImage) {
+        this.widgetBgImage = widgetBgImage;
+    }
+
+    public void setWidgetBodyColor(String widgetBodyColor) {
+        this.widgetBodyColor = widgetBodyColor;
+    }
+
+    public void setWidgetFooterColor(String widgetFooterColor) {
+        this.widgetFooterColor = widgetFooterColor;
+    }
+
+    public void setWidgetHeaderColor(String widgetHeaderColor) {
+        this.widgetHeaderColor = widgetHeaderColor;
+    }
+
+    public String getBankLogo() {
+        return bankLogo;
+    }
+
+    public String getBotName() {
+        return botName;
+    }
+
+    public String getWidgetBgImage() {
+        return widgetBgImage;
+    }
+
+    public String getWidgetBodyColor() {
+        return widgetBodyColor;
+    }
+
+    public String getWidgetFooterColor() {
+        return widgetFooterColor;
+    }
+
+    public String getWidgetHeaderColor() {
+        return widgetHeaderColor;
     }
 }

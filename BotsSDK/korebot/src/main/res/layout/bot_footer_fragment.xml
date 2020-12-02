@@ -32,7 +32,7 @@
             android:layout_height="1dp"
             android:layout_gravity="bottom"
             android:background="@color/footerdivider_color"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <!--<com.kore.koreapp.views.AudioVisualiserView
             android:id="@+id/bot_bottom_strip"
@@ -49,7 +49,7 @@
             android:id="@+id/attachment_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"/>
+            android:layout_marginStart="2dp" />
 
         <RelativeLayout
             android:id="@+id/fl_footer"
@@ -202,6 +202,7 @@
                         android:id="@+id/sendTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="@dimen/dimen_3dp"
                         android:gravity="center_vertical"
                         android:paddingStart="5dp"
                         android:paddingLeft="5dp"
@@ -218,6 +219,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/dimen_3dp"
                         android:alpha="0.70"
                         android:padding="5dp"
                         android:src="@drawable/ic_mic"

@@ -45,6 +45,15 @@
 
     </RelativeLayout>
 
+    <View
+        android:id="@+id/footer_header"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/header_layout"
+        android:layout_gravity="bottom"
+        android:background="@color/footerdivider_color"
+        android:visibility="visible" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -26,9 +26,6 @@ import android.os.Messenger;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -43,6 +40,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,7 +84,6 @@ import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.KaCaptureImageActivity;
 import kore.botssdk.adapter.AttachmentOptionsAdapter;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
-import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
@@ -109,6 +106,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.SharedPreferenceUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.FileUtils;
@@ -182,6 +180,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private Attachment attachment;
     private static long totalFileSize;
     private int compressQualityInt = 100;
+    private RelativeLayout composeFooterRl;
+    private View footer_divider;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,6 +204,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         initialSetUp();
         keyboard_img.performClick();
 //        KoreEventCenter.register(this);
+
         return view;
     }
 
@@ -229,6 +230,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         progress = (SpeechProgressView) view.findViewById(R.id.progress);
         attachemnt= (ImageView) view.findViewById(R.id.attachemnt);
         attachment_recycler=view.findViewById(R.id.attachment_recycler);
+        composeFooterRl = (RelativeLayout)view.findViewById(R.id.composeFooterRl);
+        footer_divider = (View)view.findViewById(R.id.footer_divider);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         int[] colors = {
                 getContext().getResources().getColor(android.R.color.black),
@@ -265,10 +268,15 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             }
         });
 
-//        footerDivider = view.findViewById(R.id.footer_divider);
-//        tasksRl = (RelativeLayout) view.findViewById(R.id.tasksRl);
-//        footer = (RelativeLayout) view.findViewById(R.id.fl_footer);
-//        mRecordingThread = new RawAudioRecorder(audioDataReceivedListener);
+    }
+
+    public void setFooterBackground(String footerColor, String dividerColor)
+    {
+        if(!StringUtils.isNullOrEmpty(footerColor))
+            composeFooterRl.setBackgroundColor(Color.parseColor(footerColor));
+
+        if(!StringUtils.isNullOrEmpty(dividerColor))
+            footer_divider.setBackgroundColor(Color.parseColor(dividerColor));
     }
 
     public void updateUI() {
@@ -324,10 +332,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(),false);
-           /* if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
-                tapToSpeakFragment.clearBuffAndCloseFragment();
-                editTextMessage.setText("");
-            }*/
         } else {
             Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
@@ -426,6 +430,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
             }
+
         }
     };
     View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
