@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
-import android.service.autofill.UserData;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -23,39 +19,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.activities.FullViewActivity;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
-import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.utils.BundleConstants;
-import com.kore.ai.widgetsdk.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.ListWidgetAdapter;
-import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.dialogs.ListMoreActionSheetFragment;
 import kore.botssdk.dialogs.ListWidgetActionSheetFragment;
+import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BaseCalenderTemplateModel;
-import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.ContactViewListModel;
-import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
-import kore.botssdk.utils.WidgetViewMoreEnum;
 
 import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 public class ListWidgetView extends LinearLayout {
     private float dp1;
@@ -260,7 +243,7 @@ public class ListWidgetView extends LinearLayout {
 
                                 WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                                 bottomSheetDialog.setisFromFullView(false);
-//                                bottomSheetDialog.setSkillName(name,trigger);
+                                bottomSheetDialog.setSkillName("skillName","trigger");
                                 bottomSheetDialog.setData(model,true);
 
                                 bottomSheetDialog.setVerticalListViewActionHelper(null);

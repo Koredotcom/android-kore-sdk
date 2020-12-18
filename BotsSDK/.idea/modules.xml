@@ -2,11 +2,17 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Bot SDk-BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/Bot SDk-BotsSDK.iml" group="BotsSDK" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Bot SDk-BotsSDK-MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Bot SDk-BotsSDK-MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/Bot SDk-BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/Bot SDk-BotsSDK-korebot.iml" group="BotsSDK/korebot" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/Bot SDk-BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/Bot SDk-BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Bot SDk-BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Bot SDk-BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
       <module fileurl="file://$PROJECT_DIR$/BotsSDK.iml" filepath="$PROJECT_DIR$/BotsSDK.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK-MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK-MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
       <module fileurl="file://$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" group="BotsSDK/korebot" />
       <module fileurl="file://$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
       <module fileurl="file://$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK-widgetsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK-widgetsdk.iml" group="BotsSDK/widgetsdk" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Kore_Bot-BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/Kore_Bot-BotsSDK.iml" group="BotsSDK" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/Kore_Bot-BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/Kore_Bot-BotsSDK-korebot.iml" group="BotsSDK/korebot" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_Bot-BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_Bot-BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />

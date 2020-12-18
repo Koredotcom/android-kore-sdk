@@ -36,6 +36,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BaseChartModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.Widget;
@@ -95,6 +96,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         {
             BaseChartModel baseChartModel=(BaseChartModel)model;
             this.actionList=baseChartModel.getHeaderOptions().getMenu();
+        }
+        else if(model instanceof PayloadInner)
+        {
+            PayloadInner payloadInner = (PayloadInner)model;
+            this.actionList=payloadInner.getHeaderOptions().getMenu();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -321,9 +327,31 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 }
             });
 
-        }else if(model instanceof BaseChartModel)
+        }
+        else if(model instanceof BaseChartModel)
         {
             BaseChartModel ba=(BaseChartModel)model;
+            //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
+            Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
+            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    (widgetDialogActivity).dismiss();
+                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
+
+
+                        buttonClick(finalButton, true) ;
+                    } else {
+                        buttonClick(finalButton, false) ;
+                    }
+                }
+            });
+        }
+        else if(model instanceof PayloadInner)
+        {
+            PayloadInner ba= (PayloadInner)model;
             //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
             holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
@@ -451,6 +479,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         }else if(model instanceof WidgetListModel)
         {
             WidgetListModel ba=(WidgetListModel)model;
+            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+        }
+        else if(model instanceof PayloadInner)
+        {
+            PayloadInner ba=(PayloadInner)model;
             return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
         }
         return 0;
