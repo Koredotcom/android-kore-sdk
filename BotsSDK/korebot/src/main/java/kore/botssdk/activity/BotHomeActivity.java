@@ -103,7 +103,8 @@ public class BotHomeActivity extends BotAppCompactActivity {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
                         SDKConfiguration.Client.identity = etIdentity.getText().toString();
-                        getFinastraToken();
+                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), null);
+                        launchBotChatActivity();
                     }
                     else
                         Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
@@ -143,34 +144,4 @@ public class BotHomeActivity extends BotAppCompactActivity {
         }
     }
 
-    private void getFinastraToken()
-    {
-            RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
-            botCustomData.put("tenantId", SDKConfiguration.Client.tenant_id);
-            botCustomData.put("uniqueUserId", SDKConfiguration.Client.uniqueuserId);
-
-        Call<TokenResponseModel> getBankingConfigService = RestBuilder.getTokenRestAPI().getFinastraTokenDetails(botCustomData, "published", "1","en_US");
-        getBankingConfigService.enqueue(new Callback<TokenResponseModel>() {
-            @Override
-            public void onResponse(Call<TokenResponseModel> call, Response<TokenResponseModel> response)
-            {
-                if (response.isSuccessful())
-                {
-                    tokenResponseModel = response.body();
-                    SDKConfiguration.Client.bot_name = tokenResponseModel.getBotInfo().getName();
-                    SDKConfiguration.Client.bot_id = tokenResponseModel.getBotInfo().get_id();
-                    SDKConfiguration.Server.setServerUrl(tokenResponseModel.getKoreAPIUrl());
-                    SDKConfiguration.Server.setKoreBotServerUrl(tokenResponseModel.getKoreAPIUrl());
-
-                    BotSocketConnectionManager.getInstance().startAndInitiateConnection(getApplicationContext(), null, tokenResponseModel.getJwt(), tokenResponseModel.getBotInfo().getName(), tokenResponseModel.getBotInfo().get_id());
-                    launchBotChatActivity();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TokenResponseModel> call, Throwable t) {
-                Log.e("Skill Panel Data", t.toString());
-            }
-        });
-    }
 }

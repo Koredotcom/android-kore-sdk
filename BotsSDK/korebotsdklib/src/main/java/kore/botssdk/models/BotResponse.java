@@ -112,6 +112,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String APPLY_THEME_NAME = "APPLY_THEME_NAME";
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
+    public static final String BOT_NAME = "BOT_NAME";
 
 
     private String type;

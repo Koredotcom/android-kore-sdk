@@ -17,6 +17,5 @@
         android:tag="medium"
         android:text="hi"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_size_normal"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_normal"/>
 </LinearLayout>

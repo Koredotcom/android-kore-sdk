@@ -34,6 +34,7 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
     RoundedCornersTransform roundedCornersTransform;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
+    private Context mContext;
 
     // RecyclerView recyclerView;
     public ListViewMoreAdapter(ArrayList<BotListModel> model) {
@@ -48,7 +49,7 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         ViewHolder viewHolder = new ViewHolder(listItem);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         rightDrawable = (GradientDrawable) parent.getContext().getResources().getDrawable(R.drawable.rounded_rect_feedback);
-
+        mContext = parent.getContext();
         return viewHolder;
     }
 
@@ -59,21 +60,21 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
 
         if(rightDrawable != null && sharedPreferences != null)
         {
-            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+//            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+//            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+//
+//            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+//            {
+//                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+//                holder.botListItemRoot.setBackground(rightDrawable);
+//            }
+//            else
+//            {
+//                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+//                holder.botListItemRoot.setBackground(rightDrawable);
+//            }
 
-            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
-            else
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
-
-            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+            holder.botListItemTitle.setTextColor(mContext.getResources().getColor(R.color.txtFontBlack));
         }
 
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
@@ -96,7 +97,7 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
 
             if(sharedPreferences != null)
-                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, "#505968")));
         }
     }
 

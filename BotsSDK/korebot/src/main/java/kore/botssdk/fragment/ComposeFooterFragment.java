@@ -270,13 +270,16 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     }
 
-    public void setFooterBackground(String footerColor, String dividerColor)
+    public void setFooterBackground(String footerColor, String dividerColor, String userChatTextColor)
     {
         if(!StringUtils.isNullOrEmpty(footerColor))
             composeFooterRl.setBackgroundColor(Color.parseColor(footerColor));
 
         if(!StringUtils.isNullOrEmpty(dividerColor))
             footer_divider.setBackgroundColor(Color.parseColor(dividerColor));
+
+        if(!StringUtils.isNullOrEmpty(userChatTextColor))
+            editTextMessage.setTextColor(Color.parseColor(userChatTextColor));
     }
 
     public void updateUI() {

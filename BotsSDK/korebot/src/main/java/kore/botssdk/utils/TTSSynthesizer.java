@@ -122,6 +122,7 @@ public class TTSSynthesizer {
     private void stopTextToSpeechNative() {
         if (textToSpeech != null) {
             textToSpeech.stop();
+            textToSpeech.shutdown();
         }
     }
     private SocketConnectionListener sListener = new SocketConnectionListener() {

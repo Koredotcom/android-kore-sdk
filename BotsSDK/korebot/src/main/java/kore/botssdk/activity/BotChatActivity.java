@@ -160,7 +160,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     Handler messageHandler = new Handler();
     protected static long totalFileSize;
     private ArrayList<BrandingNewModel> arrBrandingNewDos;
-    private UniqueUserModel uniqueUserModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +169,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getBundleInfo();
         getDataFromTxt();
 
-//        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
+        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -246,6 +245,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onDestroy() {
+
+        //Close the Text to Speech Library
+        if(ttsSynthesizer != null) {
+            ttsSynthesizer.stopTextToSpeech();
+        }
+
         botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();
@@ -286,8 +291,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 updateActionBar();
                 break;
             case CONNECTED:
-                /*if(isItFirstConnect)
-                    botClient.sendMessage("welcomedialog");*/
+                if(isItFirstConnect)
+                {
+                    botClient.sendMessage("BotNotifications");
+                    isItFirstConnect = false;
+                }
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
@@ -337,7 +345,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void onEvent(BrandingModel brandingModel)
     {
         SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBotchatBgColor());
+        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff"/*brandingModel.getBotchatBgColor()*/);
         editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingModel.getBotchatTextColor());
         editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getUserchatBgColor());
         editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getUserchatTextColor());
@@ -351,16 +359,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
         editor.putString(BotResponse.WIDGET_FOOTER_COLOR, brandingModel.getWidgetFooterColor());
         editor.putString(BotResponse.WIDGET_HEADER_COLOR, brandingModel.getWidgetHeaderColor());
+        editor.putString(BotResponse.BOT_NAME, brandingModel.getBotName());
         editor.apply();
 
-        SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getButtonActiveBgColor();
+        SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getWidgetBorderColor();
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
 
         if(botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor(), brandingModel.getBotName());
 
         if(composeFooterFragment != null)
-            composeFooterFragment.setFooterBackground(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetDividerColor());
+            composeFooterFragment.setFooterBackground(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetDividerColor(), brandingModel.getWidgetTextColor());
     }
 
 
@@ -1005,7 +1014,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void getBrandingDetails() {
-        Call<ArrayList<BrandingNewModel>> getBankingConfigService = RestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "5f9274c15b6a927ae14dce42", "published", "1","en_US");
+        Call<ArrayList<BrandingNewModel>> getBankingConfigService = RestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US");
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
             public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
@@ -1024,41 +1033,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
                     }
                 }
-
-                sendUniqueUserIdDetails();
             }
 
             @Override
             public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
             {
                 Log.e("getBrandingDetails", t.toString());
-                sendUniqueUserIdDetails();
             }
         });
     }
-
-    private void sendUniqueUserIdDetails()
-    {
-        RestResponse.BotCustomData botCustomData = new RestResponse.BotCustomData();
-        botCustomData.put("userId", SocketWrapper.getInstance(BotChatActivity.this).getBotUserId());
-        botCustomData.put("uniqueUserId", SDKConfiguration.Client.uniqueuserId);
-
-        Call<UniqueUserModel> getBankingConfigService = RestBuilder.getRestAPI().sendUniqueUserDetails(botCustomData, "published", "1","en_US");
-        getBankingConfigService.enqueue(new Callback<UniqueUserModel>() {
-            @Override
-            public void onResponse(Call<UniqueUserModel> call, Response<UniqueUserModel> response) {
-                if (response.isSuccessful())
-                {
-                    uniqueUserModel = response.body();
-                    Log.e("senduniqueuserIdDetails", uniqueUserModel.getMessage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UniqueUserModel> call, Throwable t) {
-                Log.e("Skill Panel Data", t.toString());
-            }
-        });
-    }
-
 }

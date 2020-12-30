@@ -74,9 +74,9 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         {
             GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
             rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-            rightDrawable.setStroke((int)(1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+            rightDrawable.setStroke((int)(1 * dp1), Color.parseColor("#000000"));
             holder.bot_list_item_root.setBackground(rightDrawable);
-            holder.bottom_option_name.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+            holder.bottom_option_name.setTextColor(Color.parseColor("#000000"));
         }
 
         if(!StringUtils.isNullOrEmpty(botListModel.getIcon()))
@@ -99,8 +99,6 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         }
 
         holder.bottom_option_name.setText(botListModel.getTitle());
-        holder.bottom_option_name.setTypeface(null, Typeface.BOLD);
-
         holder.bot_list_item_root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

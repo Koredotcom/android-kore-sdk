@@ -16,8 +16,8 @@
         <!-- Item image -->
         <ImageView
             android:id="@+id/bottom_option_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="5dp"

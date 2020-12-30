@@ -103,19 +103,19 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
             GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
             rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
 
-            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
-            else
-            {
-                rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
+//            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+//            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+//            {
+//                rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+//                holder.botListItemRoot.setBackground(rightDrawable);
+//            }
+//            else
+//            {
+//                rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+//                holder.botListItemRoot.setBackground(rightDrawable);
+//            }
 
-            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+            holder.botListItemTitle.setTextColor(Color.parseColor("#000000"));
         }
 
 
@@ -140,7 +140,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
 
             if(sharedPreferences != null)
-                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, "#505968")));
         }
 //        if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
 //            holder.botListItemButton.setVisibility(View.GONE);

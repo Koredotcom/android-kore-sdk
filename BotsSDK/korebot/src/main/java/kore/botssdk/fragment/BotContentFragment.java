@@ -256,7 +256,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     }
 
-    public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor)
+    public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor, String botName)
     {
         if(!StringUtils.isNullOrEmpty(bgColor))
         {
@@ -276,6 +276,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
         if(!StringUtils.isNullOrEmpty(dividerColor))
             footer_header.setBackgroundColor(Color.parseColor(dividerColor));
+
+        if(!StringUtils.isNullOrEmpty(botName))
+            tvChaseTitle.setText(botName);
     }
 
     private void setupAdapter() {

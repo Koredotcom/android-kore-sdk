@@ -25,7 +25,7 @@
                 android:layout_weight="1"
                 android:text="Title"
                 android:textColor="@color/black"
-                android:textSize="@dimen/text_size_sub_header"
+                android:textSize="@dimen/text_size_header"
                 android:textStyle="bold"
                 android:visibility="invisible" />
 
