@@ -1,6 +1,7 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
+import android.os.Debug;
 import android.util.Log;
 
 import java.text.DateFormatSymbols;
@@ -695,11 +696,29 @@ public class DateUtils {
 
     public static String getCorrectedTimeZone(String timeZone) {
         if (kore.botssdk.utils.StringUtils.isNullOrEmptyWithTrim(timeZone)) return "";
-        timeZone = timeZone.toLowerCase();
-        if (timeZone.contains("calcutta")) {
-            timeZone = timeZone.replace("calcutta", "kolkata");
+          //timeZone = timeZone.toLowerCase();
+        if (timeZone.toLowerCase().contains("calcutta")) {
+            String replaceString;
+            String kolkatta="kolkata";
+                if(timeZone.contains("calcutta")) {
+                    replaceString = "calcutta";
+                    kolkatta="kolkatta";
+                }
+                else if(timeZone.contains("Calcutta")) {
+                    replaceString = "Calcutta";
+                    kolkatta="Kolkatta";
+                }
+                else {
+                    replaceString = "calcutta";
+                    timeZone = timeZone.toLowerCase();
+                }
+
+
+            timeZone = timeZone.replace(replaceString, kolkatta);
+            return timeZone;
+
         }
-        return timeZone;
+          return timeZone;
     }
 
 
