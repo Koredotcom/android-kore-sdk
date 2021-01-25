@@ -78,6 +78,7 @@ public class ViewProvider {
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
     private static final int TABLE_RESPONSIVE_VIEW_ID = 19800350;
+    private static final int LIST_VIEW_ID = 11111111;
 
 
     public static Path RoundedRect(
@@ -354,7 +355,7 @@ public class ViewProvider {
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);
-        botListTemplateView.setId(LIST_ID);
+        botListTemplateView.setId(LIST_VIEW_ID);
         return botListTemplateView;
     }
 

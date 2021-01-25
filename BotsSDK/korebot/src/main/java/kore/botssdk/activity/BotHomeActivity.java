@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import kore.botssdk.R;
 import kore.botssdk.drawables.ThemeColors;
@@ -102,7 +103,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
                 {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
-                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
+                        SDKConfiguration.Client.identity = UUID.randomUUID().toString();
                         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), null);
                         launchBotChatActivity();
                     }

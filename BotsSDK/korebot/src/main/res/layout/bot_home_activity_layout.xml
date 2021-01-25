@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
+            android:text="Prodaccout2@abc.com"
             android:hint="Please enter email"
             android:inputType="textEmailAddress"
             />

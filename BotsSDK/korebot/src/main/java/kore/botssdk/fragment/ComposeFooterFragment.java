@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -279,7 +280,15 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             footer_divider.setBackgroundColor(Color.parseColor(dividerColor));
 
         if(!StringUtils.isNullOrEmpty(userChatTextColor))
+        {
             editTextMessage.setTextColor(Color.parseColor(userChatTextColor));
+
+//            if(rec_audio_img != null)
+//            {
+//                rec_audio_img.setColorFilter(Color.parseColor(userChatTextColor));
+//            }
+        }
+
     }
 
     public void updateUI() {

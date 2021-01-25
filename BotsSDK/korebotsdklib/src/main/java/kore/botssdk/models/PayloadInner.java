@@ -626,10 +626,12 @@ public class PayloadInner {
                         }.getType();
                         carouselElements = gson.fromJson(elementsAsString, carouselType);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
+                        listElements = new ArrayList<>();
                         Type listType = new TypeToken<ArrayList<BotListModel>>() {
                         }.getType();
                         listElements = gson.fromJson(elementsAsString, listType);
                     } else if (BotResponse.TEMPLATE_TYPE_LIST_VIEW.equalsIgnoreCase(template_type)) {
+                        listElements = new ArrayList<>();
                         Type listType = new TypeToken<ArrayList<BotListModel>>() {
                         }.getType();
                         listElements = gson.fromJson(elementsAsString, listType);

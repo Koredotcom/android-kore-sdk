@@ -37,6 +37,7 @@ import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,26 +73,27 @@ import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.models.UniqueUserModel;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.RestBuilder;
-import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
@@ -291,16 +293,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 updateActionBar();
                 break;
             case CONNECTED:
-                if(isItFirstConnect)
-                {
-                    botClient.sendMessage("BotNotifications");
-                    isItFirstConnect = false;
-                }
                 titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
                 updateActionBar();
                 getBrandingDetails();
+
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
@@ -345,7 +343,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void onEvent(BrandingModel brandingModel)
     {
         SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff"/*brandingModel.getBotchatBgColor()*/);
+        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBotchatBgColor());
         editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingModel.getBotchatTextColor());
         editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getUserchatBgColor());
         editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getUserchatTextColor());
@@ -359,11 +357,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
         editor.putString(BotResponse.WIDGET_FOOTER_COLOR, brandingModel.getWidgetFooterColor());
         editor.putString(BotResponse.WIDGET_HEADER_COLOR, brandingModel.getWidgetHeaderColor());
+        editor.putString(BotResponse.WIDGET_BG_IMAGE, brandingModel.getWidgetBgImage());
         editor.putString(BotResponse.BOT_NAME, brandingModel.getBotName());
         editor.apply();
 
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getWidgetBorderColor();
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
+
+        if(!StringUtils.isNullOrEmpty(sharedPreferences.getString(BotResponse.WIDGET_BG_IMAGE, "")))
+        {
+            Picasso.get().load(sharedPreferences.getString(BotResponse.WIDGET_BG_IMAGE, "")).into(ivChaseLogo);
+        }
 
         if(botContentFragment != null)
             botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor(), brandingModel.getBotName());
@@ -424,33 +428,33 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         super.onPause();
     }
 
-//    public void displayMessage(String text)
-//    {
-//        PayloadInner payloadInner = new PayloadInner();
-//        payloadInner.setTemplate_type("text");
-//
-//        PayloadOuter payloadOuter = new PayloadOuter();
-//        payloadOuter.setText(text);
-//        payloadOuter.setType("text");
-//        payloadOuter.setPayload(payloadInner);
-//
-//        ComponentModel componentModel = new ComponentModel();
-//        componentModel.setType("text");
-//        componentModel.setPayload(payloadOuter);
-//
-//        BotResponseMessage botResponseMessage = new BotResponseMessage();
-//        botResponseMessage.setType("text");
-//        botResponseMessage.setComponent(componentModel);
-//
-//        ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-//        arrBotResponseMessages.add(botResponseMessage);
-//
-//        BotResponse botResponse = new BotResponse();
-//        botResponse.setType("text");
-//        botResponse.setMessage(arrBotResponseMessages);
-//
-//        processPayload("", botResponse);
-//    }
+    public void displayMessage(String text)
+    {
+        PayloadInner payloadInner = new PayloadInner();
+        payloadInner.setTemplate_type("text");
+
+        PayloadOuter payloadOuter = new PayloadOuter();
+        payloadOuter.setText(text);
+        payloadOuter.setType("text");
+        payloadOuter.setPayload(payloadInner);
+
+        ComponentModel componentModel = new ComponentModel();
+        componentModel.setType("text");
+        componentModel.setPayload(payloadOuter);
+
+        BotResponseMessage botResponseMessage = new BotResponseMessage();
+        botResponseMessage.setType("text");
+        botResponseMessage.setComponent(componentModel);
+
+        ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+        arrBotResponseMessages.add(botResponseMessage);
+
+        BotResponse botResponse = new BotResponse();
+        botResponse.setType("text");
+        botResponse.setMessage(arrBotResponseMessages);
+
+        processPayload("", botResponse);
+    }
 
     @Override
     public void onSendClick(String message,boolean isFromUtterance) {
@@ -528,7 +532,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
 
-        try {
+        try
+        {
             final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
@@ -556,7 +561,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     }
                 }
             }
-            final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
+            final PayloadInner payloadInner = payOuter == null ? null : (PayloadInner) payOuter.getPayload();
             if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
@@ -575,7 +580,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     }
                 }, BundleConstants.TYPING_STATUS_TIME);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
@@ -586,11 +593,34 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
                         botContentFragment.updateContentListOnSend(botRequest);
                     }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                }
+                catch (Exception e1)
+                {
+                    try
+                    {
+                        final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
+                        if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                            return;
+                        }
+                        Log.d(LOG_TAG, payload);
+                        boolean resolved = true;
+                        if (!botResponse.getMessage().isEmpty()) {
+                            ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
+                            if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload()))
+                            {
+                                displayMessage(compModel.getPayload());
+                            }
+                        }
+                    }
+                    catch (Exception e2)
+                    {
+                        e2.printStackTrace();
+                    }
+//                    e1.printStackTrace();
                 }
             }
         }
+
 
     }
 
@@ -690,14 +720,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType) || payOuter.getType() == null) {
                     botResponseTextualFormat = payOuter.getText();
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
-                    botResponseTextualFormat = payOuter.getPayload().getText();
+                    botResponseTextualFormat = ((PayloadInner)payOuter.getPayload()).getText();
                 } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) || BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
                     PayloadInner payInner;
                     if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
                         Gson gson = new Gson();
                         payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                     }
-                    payInner = payOuter.getPayload();
+                    payInner = (PayloadInner)payOuter.getPayload();
 
                     if (payInner.getSpeech_hint() != null) {
                         botResponseTextualFormat = payInner.getSpeech_hint();
@@ -804,8 +834,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     {
         if(message.equalsIgnoreCase(BotResponse.THEME_NAME_1))
         {
-            ivChaseLogo.setVisibility(View.VISIBLE);
+            ivChaseLogo.setVisibility(VISIBLE);
             ivChaseBackground.setVisibility(View.GONE);
+
+            if(!StringUtils.isNullOrEmpty(sharedPreferences.getString(BotResponse.WIDGET_BG_IMAGE, "")))
+            {
+                Picasso.get().load(sharedPreferences.getString(BotResponse.WIDGET_BG_IMAGE, "")).into(ivChaseLogo);
+            }
         }
         else
         {
@@ -1014,7 +1049,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void getBrandingDetails() {
-        Call<ArrayList<BrandingNewModel>> getBankingConfigService = RestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US");
+        Call<ArrayList<BrandingNewModel>> getBankingConfigService = RestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
             public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
@@ -1031,6 +1066,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
                         if(arrBrandingNewDos.size() > 1)
                             onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
+
+                        if(isItFirstConnect)
+                        {
+                            botClient.sendMessage("BotNotifications");
+                            isItFirstConnect = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if(isItFirstConnect)
+                    {
+                        botClient.sendMessage("BotNotifications");
+                        isItFirstConnect = false;
                     }
                 }
             }
@@ -1039,6 +1088,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
             {
                 Log.e("getBrandingDetails", t.toString());
+
+                if(isItFirstConnect)
+                {
+                    botClient.sendMessage("BotNotifications");
+                    isItFirstConnect = false;
+                }
             }
         });
     }

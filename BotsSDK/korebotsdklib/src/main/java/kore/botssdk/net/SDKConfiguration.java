@@ -107,9 +107,13 @@ public class SDKConfiguration {
 //        static  String KORE_BOT_SERVER_URL = "https://bankingassistant-qa.kore.ai";//https://qa-bots.kore.ai";
 //        public static   String SERVER_URL = "https://bankingassistant-qa.kore.ai"; // "https://demo.kore.net";
 
-        static  String KORE_BOT_SERVER_URL = "https://bankingassistant-stg.kore.ai";//https://qa-bots.kore.ai";
-        public static   String SERVER_URL = "https://bankingassistant-stg.kore.ai"; // "https://demo.kore.net";
+        //Staging
+//        static  String KORE_BOT_SERVER_URL = "https://bankingassistant-stg.kore.ai";//https://qa-bots.kore.ai";
+//        public static   String SERVER_URL = "https://bankingassistant-stg.kore.ai"; // "https://demo.kore.net";
 
+        //Production
+        static  String KORE_BOT_SERVER_URL = "https://bankassist.kore.ai";//https://qa-bots.kore.ai";
+        public static   String SERVER_URL = "https://bankassist.kore.ai";
     }
 
     public static class Client {
@@ -139,9 +143,9 @@ public class SDKConfiguration {
 //        public static String identity = "anilkumar.routhu@kore.com";
 //        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
 //        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
-        public static String tenant_id = "5f818b297b86a9659e1075f2";// "mlz-b2c-sandbox"; // "5f9274c15b6a927ae14dce42";
+        public static String tenant_id = "5ff46e176b35062143cce27d"; // "5f818b297b86a9659e1075f2";// "mlz-b2c-sandbox"; // "5f9274c15b6a927ae14dce42";
         public static String uniqueuserId = "ffdcuser2_mlz-b2c-sandbox";
-        public static boolean enablePanel = true;
+        public static boolean enablePanel = false;
 
         //Non Finastra
 //        public static String client_id = "cs-a376418f-5b9e-5a33-9020-37a986cb043f";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
@@ -151,11 +155,18 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-0d759d37-c8e8-57f8-a340-aadbb8aea91d";
 
         //Non Fintra Staging
-        public static String client_id = "cs-94fdf33f-9637-5c12-9c23-0f49244a81c3";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "0s9e2wCuomUnQdWegAjXJQgWJlF/YH5SxqyN0hfKX5g=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "sudheer.jampana@kore.com";
-        public static String bot_name = "Banking Assist";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-b846e2bc-9bae-514e-9d20-6b54f938e993";
+//        public static String client_id = "cs-94fdf33f-9637-5c12-9c23-0f49244a81c3";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "0s9e2wCuomUnQdWegAjXJQgWJlF/YH5SxqyN0hfKX5g=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "sudheer.jampana@kore.com";
+//        public static String bot_name = "Banking Assist";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-b846e2bc-9bae-514e-9d20-6b54f938e993";
+
+        //Production Env
+        public static String client_id = "cs-cde002cd-0e1f-5606-8085-3ff144d64bd4";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "vupD3nKQnxm420pXSSAW8xzoB6ufbKtakU3m5C06G5A=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "Sudheer.Jampana@kore.com";//"Prodaccout2@abc.com";
+        public static String bot_name = "Bank Assist Dev";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-7fb7a8d6-7fd5-51a1-9099-fa1cca07f900";
 
     }
 

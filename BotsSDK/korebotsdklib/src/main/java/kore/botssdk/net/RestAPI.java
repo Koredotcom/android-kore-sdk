@@ -93,7 +93,7 @@ public interface RestAPI {
 
     // Get JWT Token
     @GET("workbench/api/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop")
-    Call<ArrayList<BrandingNewModel>> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language);
+    Call<ArrayList<BrandingNewModel>> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
 
     // Get JWT Token
     @POST("/finastra-wrapper/token")

@@ -29,7 +29,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class BotListViewTemplateView extends LinearLayout {
+public class BotListViewTemplateView extends ViewGroup {
 
     String LOG_TAG = BotListTemplateView.class.getSimpleName();
 
@@ -77,33 +77,29 @@ public class BotListViewTemplateView extends LinearLayout {
 
         if (botListModelArrayList != null && botListModelArrayList.size() > 0)
         {
-            BotListViewTemplateAdapter botListTemplateAdapter;
-            if (autoExpandListView.getAdapter() == null)
-            {
-                if(!StringUtils.isNullOrEmpty(seeMore)) {
-                    if(moreCount != 0)
-                    {
-                        botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
-                        autoExpandListView.setAdapter(botListTemplateAdapter);
-                        botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-                        botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
-                        botListTemplateAdapter.notifyDataSetChanged();
-                    }
-                }
-                else
-                {
-                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
-                    autoExpandListView.setAdapter(botListTemplateAdapter);
-                    botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-                    botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                    botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
-                    botListTemplateAdapter.notifyDataSetChanged();
-                }
+            BotListViewTemplateAdapter botListTemplateAdapter = null;
 
-            } else {
-                botListTemplateAdapter = (BotListViewTemplateAdapter) autoExpandListView.getAdapter();
+            if(!StringUtils.isNullOrEmpty(seeMore))
+            {
+                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
+                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
+                else
+                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
             }
+            else
+            {
+                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
+                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
+                else
+                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
+            }
+
+            autoExpandListView.setAdapter(botListTemplateAdapter);
+            botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+            botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
+            botListTemplateAdapter.notifyDataSetChanged();
+
 
             botCustomListRoot.setVisibility(VISIBLE);
             if(botButtonModelArrayList != null && botButtonModelArrayList.size() > 0)
@@ -199,47 +195,47 @@ public class BotListViewTemplateView extends LinearLayout {
         return viewHeight;
     }
 
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-//
-//        int totalHeight = getPaddingTop();
-//        int childWidthSpec;
-//        int totalWidth = getPaddingLeft();
-//
-//        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
-//        MeasureUtils.measure(botCustomListRoot, childWidthSpec, wrapSpec);
-//
-//        totalHeight += botCustomListRoot.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
-//        totalWidth += botCustomListRoot.getMeasuredWidth() + getPaddingLeft()+getPaddingRight();
-//        if(totalHeight != 0){
-//            totalWidth = totalWidth + (int)(3 * dp1);
-//        }
-//
-//        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-//        int parentWidthSpec = MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.AT_MOST);
-//        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
-//    }
-//
-//    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//
-//        final int count = getChildCount();
-//        int parentWidth = getMeasuredWidth();
-//
-//        //get the available size of child view
-//        int childLeft = 0;
-//        int childTop = 0;
-//
-//        int itemWidth = (r - l) / getChildCount();
-//
-//        for (int i = 0; i < count; i++) {
-//            View child = getChildAt(i);
-//            if (child.getVisibility() != GONE) {
-//                LayoutUtils.layoutChild(child, childLeft, childTop);
-//                childTop += child.getMeasuredHeight();
-//            }
-//        }
-//    }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+
+        int totalHeight = getPaddingTop();
+        int childWidthSpec;
+        int totalWidth = getPaddingLeft();
+
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedMaxWidth, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botCustomListRoot, childWidthSpec, wrapSpec);
+
+        totalHeight += botCustomListRoot.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
+        totalWidth += botCustomListRoot.getMeasuredWidth() + getPaddingLeft()+getPaddingRight();
+        if(totalHeight != 0){
+            totalWidth = totalWidth + (int)(3 * dp1);
+        }
+
+        int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(totalWidth, MeasureSpec.AT_MOST);
+        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        final int count = getChildCount();
+        int parentWidth = getMeasuredWidth();
+
+        //get the available size of child view
+        int childLeft = 0;
+        int childTop = 0;
+
+        int itemWidth = (r - l) / getChildCount();
+
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() != GONE) {
+                LayoutUtils.layoutChild(child, childLeft, childTop);
+                childTop += child.getMeasuredHeight();
+            }
+        }
+    }
 }
 

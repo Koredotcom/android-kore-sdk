@@ -10,7 +10,7 @@
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryKa">
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/tvChaseTitle"
@@ -18,8 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_margin="@dimen/dimen_15dp"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
+            android:text="Bank Assist"
+            android:textColor="@color/black"
             android:textSize="@dimen/dimen_20dp"
             android:textStyle="bold" />
 

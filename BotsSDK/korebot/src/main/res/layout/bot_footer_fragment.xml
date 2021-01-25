@@ -173,7 +173,7 @@
                             android:layout_marginLeft="@dimen/dimen_5dp"
                             android:background="@null"
                             android:gravity="center_vertical|start"
-                            android:hint="message..."
+                            android:hint="Message..."
                             android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
                             android:maxHeight="68dp"
                             android:minHeight="26dp"

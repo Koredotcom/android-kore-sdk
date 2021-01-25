@@ -174,7 +174,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         header_layout = view.findViewById(R.id.header_layout);
         footer_header = view.findViewById(R.id.footer_header);
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.app_name)));
+//        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.app_name)));
+        botsBubblesListView.setItemViewCacheSize(30);
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -258,12 +259,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor, String botName)
     {
-        if(!StringUtils.isNullOrEmpty(bgColor))
-        {
-            rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
-            GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-            gradientDrawable.setColor(Color.parseColor(bgColor));
-        }
+//        if(!StringUtils.isNullOrEmpty(bgColor))
+//        {
+//            rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
+//            GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
+//            gradientDrawable.setColor(Color.parseColor(bgColor));
+//        }
 
         if(!StringUtils.isNullOrEmpty(textColor))
         {
@@ -630,27 +631,11 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     */
     private CalendarConstraints.Builder limitRange(String date, String format) {
 
+        /*
+      Limit selectable Date range
+    */
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-
-        Calendar calendarStart = Calendar.getInstance();
-        Calendar calendarEnd = Calendar.getInstance();
-
-//        int year = 2020;
-//        int startMonth = 1;
-//        int startDate = 1;
-//
-//        calendarStart.set(year, startMonth - 1, startDate);
-
-        Date endDate = stringToDate(date, format);
-        calendarStart.setTime(endDate);
-
-        long minDate = calendarStart.getTimeInMillis();
-        long maxDate = calendarEnd.getTimeInMillis();
-
-
-        constraintsBuilderRange.setStart(minDate);
-        constraintsBuilderRange.setEnd(maxDate);
-        constraintsBuilderRange.setValidator(new RangeValidator(minDate, maxDate));
+        constraintsBuilderRange.setValidator(DateValidatorPointBackward.now());
 
         return constraintsBuilderRange;
     }
@@ -665,68 +650,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
         return constraintsBuilderRange;
     }
-
-    private Date stringToDate(String aDate,String aFormat) {
-
-        SimpleDateFormat format = new SimpleDateFormat("M-DD-YYYY");
-        try
-        {
-            Date date = format.parse(aDate);
-            return date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-
-    static class RangeValidator implements CalendarConstraints.DateValidator {
-
-        long minDate, maxDate;
-
-        RangeValidator(long minDate, long maxDate) {
-            this.minDate = minDate;
-            this.maxDate = maxDate;
-        }
-
-        RangeValidator(Parcel parcel) {
-            minDate = parcel.readLong();
-            maxDate = parcel.readLong();
-        }
-
-        @Override
-        public boolean isValid(long date) {
-            return !(minDate > date || maxDate < date);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeLong(minDate);
-            dest.writeLong(maxDate);
-        }
-
-        public static final Creator<RangeValidator> CREATOR = new Creator<RangeValidator>() {
-
-            @Override
-            public RangeValidator createFromParcel(Parcel parcel) {
-                return new RangeValidator(parcel);
-            }
-
-            @Override
-            public RangeValidator[] newArray(int size) {
-                return new RangeValidator[size];
-            }
-        };
-
-
-    }
-
 
     private void loadChatHistory(final int _offset, final int limit) {
         if (fetching){

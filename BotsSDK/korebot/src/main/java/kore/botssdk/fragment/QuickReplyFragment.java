@@ -65,7 +65,7 @@ public class QuickReplyFragment extends Fragment {
             txtQuickReply.setBackgroundResource(R.drawable.theme_1_button_bg);
 
             GradientDrawable gradientDrawable = (GradientDrawable)txtQuickReply.getBackground();
-            gradientDrawable.setStroke((int) dp1, quickReplyColor);
+            gradientDrawable.setStroke((int) (2 * dp1), quickReplyColor);
             txtQuickReply.setBackground(gradientDrawable);
 
             txtQuickReply.setOnClickListener(new View.OnClickListener() {

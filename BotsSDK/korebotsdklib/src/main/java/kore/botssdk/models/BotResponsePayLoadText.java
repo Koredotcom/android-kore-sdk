@@ -2,13 +2,7 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
-import kore.botssdk.utils.StringUtils;
-
-/**
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
-public class BotResponse extends BaseBotMessage {
+public class BotResponsePayLoadText extends BaseBotMessage {
 
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
@@ -120,7 +114,7 @@ public class BotResponse extends BaseBotMessage {
 
     private String type;
     private BotInfoModel botInfo;
-    private ArrayList<BotResponseMessage> message;
+    private ArrayList<BotResponseMessagePayloadText> message;
     private String icon;
 
     public String getMessageId() {
@@ -145,14 +139,14 @@ public class BotResponse extends BaseBotMessage {
         this.botInfo = botInfo;
     }
 
-    public void setMessage(ArrayList<BotResponseMessage> message) {
+    public void setMessage(ArrayList<BotResponseMessagePayloadText> message) {
         this.message = message;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    public ArrayList<BotResponseMessage> getMessage() {
+    public ArrayList<BotResponseMessagePayloadText> getMessage() {
         return message;
     }
 
@@ -160,7 +154,7 @@ public class BotResponse extends BaseBotMessage {
      * returns null if there are no messages
      * @return
      */
-    public BotResponseMessage getTempMessage() {
+    public BotResponseMessagePayloadText getTempMessage() {
         return message!=null && message.size() > 0?message.get(0):null;
     }
 
