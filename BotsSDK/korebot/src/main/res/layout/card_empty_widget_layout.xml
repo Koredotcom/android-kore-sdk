@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         app:srcCompat="@drawable/no_meeting" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

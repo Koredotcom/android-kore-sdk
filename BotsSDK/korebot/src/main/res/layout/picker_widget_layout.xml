@@ -6,7 +6,7 @@
     android:background="#f9f9f9"
     android:gravity="center_vertical">
 
-    <TextView
+    <kore.botssdk.views.CustomTextViewBold
         android:id="@+id/done"
         android:layout_width="wrap_content"
         android:layout_height="50dp"

@@ -34,7 +34,7 @@
                 android:background="@drawable/offer_layout"
                 android:visibility="gone">
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/carousel_item_offer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:background="@drawable/save_layout"
                 android:visibility="gone">
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/carousel_item_saved"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
 
             </FrameLayout>
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/carousel_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 android:textSize="15sp"
                 android:textStyle="normal" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/carousel_item_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:visibility="visible">
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/hash_tags_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                 android:textColor="@color/splash_background_color"
                 android:textSize="14sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/knowledge_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 android:textSize="12sp"
                 android:textStyle="normal" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/knowledge_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

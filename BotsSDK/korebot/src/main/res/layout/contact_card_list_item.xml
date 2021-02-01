@@ -25,7 +25,7 @@
         android:layout_marginTop="10dp"
         >
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/headerTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:textColor="@color/color_767688"
             android:textSize="14sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/valueTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:textColor="@color/color_626281"
             android:textSize="15sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/contactListItemIV"
             android:layout_width="32dp"
             android:layout_height="32dp"

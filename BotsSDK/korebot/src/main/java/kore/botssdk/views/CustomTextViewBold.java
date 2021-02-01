@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.res.ResourcesCompat;
 
-import kore.korebotsdklib.R;
+import kore.botssdk.R;
 
 public class CustomTextViewBold extends AppCompatTextView {
 

@@ -18,7 +18,7 @@
             android:gravity="center_vertical"
             android:padding="@dimen/dimen_20dp">
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/tvOptionsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:padding="@dimen/dimen_5dp">
 
-                <TextView
+                <kore.botssdk.views.CustomTextViewBold
                     android:id="@+id/tvTab1"
                     android:layout_width="@dimen/carousel_view_button_height_individual"
                     android:layout_height="30dp"
@@ -70,7 +70,7 @@
                 android:gravity="center"
                 android:padding="@dimen/dimen_5dp">
 
-                <TextView
+                <kore.botssdk.views.CustomTextViewBold
                     android:id="@+id/tvTab2"
                     android:layout_width="@dimen/carousel_view_button_height_individual"
                     android:layout_height="@dimen/dimen_30dp"

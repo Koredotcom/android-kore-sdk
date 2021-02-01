@@ -12,7 +12,7 @@
         android:background="@color/color_f6f6f8"
         android:padding="7dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/icon_view"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -23,7 +23,7 @@
             android:textColor="#FFFFFF"
             android:textSize="13sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/root_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             android:textSize="13sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/count_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:textColor="@color/color_e48015"
             app:srcCompat="@drawable/sugestive_icon" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/star_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
             android:textColor="@color/color_767688"
             android:textSize="15sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/sub_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
         android:visibility="visible">
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/peopleicon"
             android:layout_width="18dp"
             android:layout_height="20dp"
@@ -144,7 +144,7 @@
             android:textColor="@color/color_767688"
             android:textSize="14sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
             android:textSize="12sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/percent_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

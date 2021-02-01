@@ -21,7 +21,7 @@
         android:paddingTop="15dp">
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textColor="@color/color_485260"
             android:textSize="17sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:textSize="15sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/from"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             android:src="@mipmap/icon_attachment_doc"
             android:visibility="@{emailModel.attachments == null || emailModel.attachments.length == 0 ? View.GONE : View.VISIBLE}" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

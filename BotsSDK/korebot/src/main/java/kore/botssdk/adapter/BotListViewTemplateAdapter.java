@@ -127,13 +127,10 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
-        holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.bot_list_item_cost.setText(botListModel.getValue());
 
         if(botListModel.getColor() != null)
             holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));
-
-        holder.bot_list_item_cost.setTypeface(null, Typeface.BOLD);
 
         if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);

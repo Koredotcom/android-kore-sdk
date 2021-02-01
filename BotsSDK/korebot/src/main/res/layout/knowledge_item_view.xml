@@ -42,7 +42,7 @@
                 android:visibility="visible"
                 app:loadImage="@{knowledge.imageUrl}" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:textColor="@color/color_465360"
                 android:textSize="21sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:textColor="@color/color_a3b0be"
                 android:textSize="13sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
             android:layout_marginBottom="12dp"
             android:paddingEnd="@dimen/dimen_12dp">
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/eye_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                 android:textSize="12sp"
                 android:visibility="@{knowledge.NViews > 0 ? View.VISIBLE :View.GONE}" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/chat_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                 android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/like_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
                 android:visibility="@{knowledge.nShares>0 ? View.VISIBLE :View.GONE}" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/downvote_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

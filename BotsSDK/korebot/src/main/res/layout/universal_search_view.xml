@@ -37,7 +37,7 @@
                     android:layout_height="1dp"
                     android:background="#e0e1e9" />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"

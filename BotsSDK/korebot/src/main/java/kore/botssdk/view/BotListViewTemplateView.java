@@ -25,6 +25,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -60,12 +61,13 @@ public class BotListViewTemplateView extends ViewGroup {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list_view_template, this, true);
+        View view =  LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list_view_template, this, true);
         botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        KaFontUtils.applyCustomFont(getContext(), view);
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
     }

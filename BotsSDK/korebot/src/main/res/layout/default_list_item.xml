@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <TextView
+                <kore.botssdk.views.CustomTextViewBold
                     android:id="@+id/txtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                     android:textSize="18sp" />
             </RelativeLayout>
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/txtSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 android:textSize="14sp" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/txtText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 android:maxLines="3"
                 android:textSize="12sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/txtTextModif"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

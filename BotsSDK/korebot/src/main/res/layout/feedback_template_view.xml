@@ -13,7 +13,7 @@
         android:padding="@dimen/dimen_10dp"
         android:visibility="gone">
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/tvOptionsTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:background="@drawable/ic_close_black_24dp" />
     </LinearLayout>
 
-    <TextView
+    <kore.botssdk.views.CustomTextViewBold
         android:id="@+id/tvfeedback_template_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
         android:theme="@style/RatingBar"
         android:visibility="gone" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextViewBold
         android:id="@+id/tvGlad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/tvCommentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
             android:background="@drawable/form_input_bg"
             android:padding="@dimen/dimen_10dp">
 
-            <EditText
+            <kore.botssdk.views.CustomEditTextView
                 android:id="@+id/etFeedbackComment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

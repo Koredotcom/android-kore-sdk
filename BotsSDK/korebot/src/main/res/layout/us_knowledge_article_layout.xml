@@ -11,7 +11,7 @@
         android:background="@color/color_f6f6f8"
         android:padding="7dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/icon_view"
             android:layout_width="22dp"
             android:layout_height="22dp"
@@ -22,7 +22,7 @@
             android:textColor="#FFFFFF"
             android:textSize="13sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/root_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textSize="13sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/count_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_marginBottom="5dp"
                 android:visibility="gone" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
                 android:textColor="@color/color_465360"
                 android:textSize="21sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
                 android:textColor="@color/color_a3b0be"
                 android:textSize="13sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,7 +123,7 @@
             android:paddingStart="10dp"
             android:paddingEnd="@dimen/dimen_12dp">
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/eye_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -137,7 +137,7 @@
 
                 android:textSize="12sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/chat_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
                 android:textSize="12sp" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/like_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                 android:textSize="12sp" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/downvote_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -190,14 +190,14 @@
         android:visibility="gone">
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/peopleicon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:text="@string/icon_e922" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/people_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
             android:textSize="12sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/percent_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

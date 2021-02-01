@@ -12,7 +12,7 @@
         android:background="@color/color_f6f6f8"
         android:padding="7dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/icon_view"
             android:layout_width="22dp"
             android:layout_height="22dp"
@@ -23,7 +23,7 @@
             android:textColor="#FFFFFF"
             android:textSize="13sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/root_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:textSize="13sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/count_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
             android:textColor="@color/color_485260"
             android:textSize="17sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
             android:textSize="15sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/from"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
             android:src="@mipmap/icon_attachment_doc"
             />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

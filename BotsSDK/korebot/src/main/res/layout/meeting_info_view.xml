@@ -14,7 +14,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:textSize="16sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/location_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:textColor="@color/color_404051"
             android:textSize="13dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/persons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -25,7 +25,7 @@
         android:layout_height="wrap_content">
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/summary_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

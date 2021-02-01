@@ -166,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <EditText
+                        <kore.botssdk.views.CustomEditTextView
                             android:id="@+id/edtTxtMessage"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
@@ -198,7 +198,7 @@
                     android:layout_alignParentRight="true"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextViewBold
                         android:id="@+id/sendTv"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -257,7 +257,7 @@
                 android:descendantFocusability="afterDescendants"
                 android:visibility="gone">
 
-                <TextView
+                <kore.botssdk.views.CustomTextViewBold
                     android:id="@+id/tv_footerConnectBot"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -282,7 +282,7 @@
         android:alpha="1.0"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/text_view_speech"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -328,7 +328,7 @@
                 android:padding="5dp"
                 android:src="@drawable/keyboard_white" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/speaker_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

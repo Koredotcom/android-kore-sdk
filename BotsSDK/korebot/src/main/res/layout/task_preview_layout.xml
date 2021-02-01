@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_12dp">
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textColor="@color/splash_color"
             android:textSize="@dimen/dimen_14dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

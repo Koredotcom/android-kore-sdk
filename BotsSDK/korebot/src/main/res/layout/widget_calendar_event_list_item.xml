@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <kore.botssdk.views.CustomTextViewBold
         android:id="@+id/txtDateAndTime"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +22,7 @@
 
         android:visibility="visible" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -54,7 +54,7 @@
 
                 android:visibility="gone" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <TextView
+                <kore.botssdk.views.CustomTextViewBold
                     android:id="@+id/txtTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
                     android:src="@drawable/meeting_dot"
                     android:visibility="gone" />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/time_tostart_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
                     android:textSize="10sp" />
             </LinearLayout>
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/txtPlace"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                 android:textSize="13sp" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
                 android:textColor="#485260"
                 android:textSize="13sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_meeting_note"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -221,7 +221,7 @@
                     android:paddingEnd="10dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextViewBold
                         android:id="@+id/icon_dial"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -231,7 +231,7 @@
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"
@@ -257,7 +257,7 @@
                     android:paddingEnd="10dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextView
                         android:id="@+id/icon_join"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -267,7 +267,7 @@
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"
@@ -293,7 +293,7 @@
                     android:paddingEnd="10dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextViewBold
                         android:id="@+id/icon_notes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -303,7 +303,7 @@
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 
-                    <TextView
+                    <kore.botssdk.views.CustomTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoextrabold"

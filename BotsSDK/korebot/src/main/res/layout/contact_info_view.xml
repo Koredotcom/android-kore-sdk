@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="17dp">
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/source"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
@@ -49,7 +49,7 @@
                 android:layout_alignParentRight="true"
                 android:textSize="12sp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/sourceIcon"
                 android:layout_toLeftOf="@id/source"
                 android:layout_width="match_parent"
@@ -62,7 +62,7 @@
                 android:gravity="right"
                 />
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/initials"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -78,7 +78,7 @@
                 android:gravity="center"
                 android:textSize="22sp" />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:gravity="center_horizontal"
                     android:textSize="28sp" />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/role"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                     android:adapter="@{myAdapter}"
                     />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/view_more_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="44dp"
@@ -152,7 +152,7 @@
                     android:textColor="@color/color_767688"
                     android:textSize="@dimen/dimen_12dp" />
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/viewMoreIV"
                     android:layout_width="24dp"
                     android:layout_height="44dp"

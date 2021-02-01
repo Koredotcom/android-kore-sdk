@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/tvChaseTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

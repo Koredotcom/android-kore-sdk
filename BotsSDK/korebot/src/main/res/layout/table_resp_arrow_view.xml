@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/dimen_35dp"
         android:orientation="horizontal" >
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/tvColumnName1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

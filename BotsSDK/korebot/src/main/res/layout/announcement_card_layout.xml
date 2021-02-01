@@ -42,7 +42,7 @@
                 android:textSize="10sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextViewBold
                 android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_shared"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:textSize="13sp"
                 android:visibility="@{annoucement.getSharedVisiblity}" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 android:singleLine="true"
                 android:textColor="@color/color_167_169_190" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                 android:visibility="@{annoucement.titleVisiblity}" />
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/tv_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
                 android:layout_below="@+id/tv_description"
                 android:layout_toEndOf="@+id/user_profile_name">
 
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/tv_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
                     android:text="@{Long.toString(annoucement.NComments)}"
                     android:textColor="@color/color_626281"
                     android:textSize="12sp" />
-                <TextView
+                <kore.botssdk.views.CustomTextView
                     android:id="@+id/tv_upvotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

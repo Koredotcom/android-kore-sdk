@@ -28,7 +28,7 @@
             android:layout_marginRight="5dp"
             android:scaleType="centerCrop" />-->
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/form_action_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

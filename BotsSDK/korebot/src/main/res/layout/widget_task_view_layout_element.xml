@@ -34,7 +34,7 @@
             android:src="@mipmap/checkbox_off"
             android:tag="@{widgetTask.id}" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/title_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:textColor="@color/color_1a1a1a"
             android:textSize="16dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
             android:textSize="13dp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/creator_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:textColor="@color/color_485260"
             android:textSize="13dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/assignee_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

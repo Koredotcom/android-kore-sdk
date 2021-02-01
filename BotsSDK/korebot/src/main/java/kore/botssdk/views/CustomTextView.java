@@ -8,7 +8,8 @@ import android.util.AttributeSet;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.res.ResourcesCompat;
 
-import kore.korebotsdklib.R;
+import kore.botssdk.R;
+
 
 public class CustomTextView extends AppCompatTextView {
 
@@ -28,7 +29,7 @@ public class CustomTextView extends AppCompatTextView {
     private void style(Context context, AttributeSet attrs) {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
-        Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latomediu);
+        Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latomedium);
         setTypeface(tfRegular);
         a.recycle();
     }

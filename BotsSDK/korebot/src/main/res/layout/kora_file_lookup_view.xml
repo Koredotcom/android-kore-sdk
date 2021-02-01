@@ -29,7 +29,7 @@
             android:layout_alignParentTop="true"
             android:scaleType="fitCenter" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:textSize="16sp" />
 
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/sharedBy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
             android:textColor="#a3b0be"
             android:textSize="13sp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/sharedBy"

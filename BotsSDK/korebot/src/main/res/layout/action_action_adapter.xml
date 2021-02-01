@@ -7,13 +7,12 @@
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="schedue meeting"
         android:textSize="16sp"
-
         android:gravity="left|center_vertical"
         android:layout_centerVertical="true"
         android:padding="13dp"

@@ -25,7 +25,7 @@
         android:id="@+id/divider"
         android:background="#dfdfe2" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"

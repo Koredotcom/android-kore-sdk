@@ -30,7 +30,7 @@
             android:background="@drawable/round_rect_image"
             android:scaleType="centerCrop" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

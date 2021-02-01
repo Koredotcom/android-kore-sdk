@@ -20,7 +20,7 @@
         android:layout_margin="@dimen/dimen_3dp"
         android:scrollbars="none" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -30,7 +30,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="visible" />
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/workBenchListViewButton"
         android:layout_width="match_parent"
         android:layout_height="45dp"

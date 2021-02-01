@@ -4,7 +4,7 @@
     android:layout_height="30dp"
     android:background="@drawable/rectangle_background" >
 
-    <TextView
+    <kore.botssdk.views.CustomTextView
         android:id="@+id/tvContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -18,7 +18,7 @@
             android:paddingTop="10dp"
             android:paddingLeft="10dp">
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/from_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
                 android:textColor="@color/color_8b93a0"
                 android:textSize="@dimen/dimen_14dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/from_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
                 android:textColor="@color/color_656ce7"
                 android:textSize="@dimen/dimen_14dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/to_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:textColor="@color/color_8b93a0"
                 android:textSize="@dimen/dimen_14dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/to_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:textColor="@color/color_1a1a1a"
                 android:textSize="@dimen/dimen_14dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/cc_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                 android:textColor="@color/color_8b93a0"
                 android:textSize="@dimen/dimen_14dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/cc_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
 
         </RelativeLayout>
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
             android:textColor="@color/color_1a1a1a"
             android:textSize="@dimen/dimen_14dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/attachment_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
             android:paddingRight="10dp">
 
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/email_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                 android:textColor="@color/color_8b93a0"
                 android:textSize="@dimen/dimen_12dp" />
 
-            <TextView
+            <kore.botssdk.views.CustomTextView
                 android:id="@+id/mail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

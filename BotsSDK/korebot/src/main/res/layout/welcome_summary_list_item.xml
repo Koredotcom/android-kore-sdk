@@ -18,7 +18,7 @@
         android:layout_marginTop="11dp"
         android:layout_alignParentStart="true">
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/icon"
             android:layout_width="22dp"
             android:layout_height="22dp"
@@ -28,7 +28,7 @@
             android:textColor="#FFFFFF"
             android:layout_marginEnd="17dp" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/widget_summary_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
