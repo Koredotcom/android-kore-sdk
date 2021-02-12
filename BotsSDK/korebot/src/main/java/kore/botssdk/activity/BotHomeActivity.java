@@ -91,8 +91,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
                 {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
-//                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
-                        SDKConfiguration.Client.identity = UUID.randomUUID().toString();
+                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
                         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
                         launchBotChatActivity();
                     }
