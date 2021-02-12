@@ -68,6 +68,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_NOTIFICATIONS = "Notification";
     public static final String TEMPLATE_TYPE_FEEDBACK = "feedbackTemplate";
     public static final String TEMPLATE_TYPE_LIST_WIDGET = "List_widget";
+    public static final String TEMPLATE_TYPE_LIST_WIDGET_2 = "listWidget";
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_DROPDOWN = "dropdown_template";
@@ -116,7 +117,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
     public static final String BOT_NAME = "BOT_NAME";
-
+    public static final String BANK_LOGO = "BANK_LOGO";
 
     private String type;
     private BotInfoModel botInfo;

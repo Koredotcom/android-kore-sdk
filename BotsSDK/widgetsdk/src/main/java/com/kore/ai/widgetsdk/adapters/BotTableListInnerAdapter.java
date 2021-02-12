@@ -105,7 +105,6 @@ public class BotTableListInnerAdapter extends BaseAdapter
         if(botListModel.getTitle() != null)
         {
             holder.botListItemTitle.setText(botListModel.getTitle());
-            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
 
             if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
                 holder.botListItemSubtitle.setVisibility(View.VISIBLE);
@@ -116,7 +115,6 @@ public class BotTableListInnerAdapter extends BaseAdapter
 //            if(botListModel.getTitle().getUrl() != null)
 //        {
 //            holder.botListItemTitle.setText(botListModel.getTitle().getUrl().getTitle());
-//            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
 //
 //            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getUrl().getSubtitle())) {
 //                holder.botListItemSubtitle.setVisibility(View.VISIBLE);

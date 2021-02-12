@@ -131,6 +131,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected HorizontalBarChartView horizontalBarChartView;
     protected BotFormTemplateView botFormTemplateView;
     protected BotListViewTemplateView botListViewTemplateView;
+    protected BotListWidgetTemplateView botListWidgetTemplateView;
     protected BotTableListTemplateView botTableListTemplateView;
     protected BotQuickRepliesTemplateView botQuickRepliesTemplateView;
     protected AgentTransferTemplateView agentTransferTemplateView;
@@ -380,6 +381,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botListViewTemplateView);
 
+        botListWidgetTemplateView = ViewProvider.getBotListWidgetTempleteView(context);
+        botListWidgetTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(botListWidgetTemplateView);
+
         botTableListTemplateView = ViewProvider.getBotTableListTempleteView(context);
         botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botTableListTemplateView);
@@ -486,6 +491,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
 
+        if (botListWidgetTemplateView != null) {
+            botListWidgetTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
         if (botTableListTemplateView != null) {
             botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -536,6 +545,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (botListViewTemplateView != null) {
             botListViewTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botListWidgetTemplateView != null) {
+            botListWidgetTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if (botTableListTemplateView != null) {
             botTableListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

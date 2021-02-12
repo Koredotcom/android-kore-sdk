@@ -99,7 +99,6 @@ public class BotListTemplateAdapter extends BaseAdapter {
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
-        holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());

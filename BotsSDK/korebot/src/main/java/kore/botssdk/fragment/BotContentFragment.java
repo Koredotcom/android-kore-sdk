@@ -36,6 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.CompositeDateValidator;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -257,7 +258,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     }
 
-    public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor, String botName)
+    public void changeThemeBackGround(String bgColor, String textColor, String headerColor, String dividerColor, String botName, String bankLogo)
     {
 //        if(!StringUtils.isNullOrEmpty(bgColor))
 //        {
@@ -280,6 +281,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
         if(!StringUtils.isNullOrEmpty(botName))
             tvChaseTitle.setText(botName);
+
+        if(!StringUtils.isNullOrEmpty(bankLogo))
+        {
+            mChannelIconURL = bankLogo;
+            botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
+        }
     }
 
     private void setupAdapter() {
@@ -347,26 +354,14 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     PayloadInner payInner = payOuter.getPayload();
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
                     {
-//                        CalenderActionSheetFragment bottomSheetDialog = new CalenderActionSheetFragment();
-//                        bottomSheetDialog.setisFromFullView(false);
-//                        bottomSheetDialog.setSkillName("skillName","trigger");
-//                        bottomSheetDialog.setData(payInner);
-//                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-//                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
-
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
-                        int strYear = cal.get(Calendar.YEAR);
-                        int strMonth = cal.get(Calendar.MONTH);
-                        int strDay = cal.get(Calendar.DAY_OF_MONTH);
-                        String minDate = strMonth+"-"+strDay+"-"+strYear;
-
                         MaterialDatePicker.Builder<Long> builder =  MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
+                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
+//                        if(getDateTimeMills(payInner.getEndDate()) > 0)
+//                            builder.setSelection(getDateTimeMills(payInner.getEndDate()));
                         try
                         {
                             MaterialDatePicker<Long> picker = builder.build();
@@ -643,13 +638,91 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     /*
       Limit selectable Date range
     */
-    private CalendarConstraints.Builder minRange(String date, String format) {
+    private CalendarConstraints.Builder minRange(String startDate, String date, String format) {
 
-        CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-        constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
+        if(StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate))
+        {
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
 
-        return constraintsBuilderRange;
+            return constraintsBuilderRange;
+        }
+        else if(!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(date))
+        {
+            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(getDateTimeMills(startDate));
+            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(getDateTimeMills(date));
+
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMin);
+            listValidators.add(dateValidatorMax);
+
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
+
+            return constraintsBuilderRange;
+        }
+        else if(!StringUtils.isNullOrEmpty(startDate))
+        {
+            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(getDateTimeMills(startDate));
+
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMin);
+
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
+
+            return constraintsBuilderRange;
+        }
+        else if(!StringUtils.isNullOrEmpty(date))
+        {
+            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.now();
+            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(getDateTimeMills(date));
+
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMin);
+
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
+
+            return constraintsBuilderRange;
+        }
+        else
+        {
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
+
+            return constraintsBuilderRange;
+        }
     }
+
+    private long getDateTimeMills(String date)
+    {
+        Calendar calendar = Calendar.getInstance();
+
+        if(!StringUtils.isNullOrEmpty(date))
+        {
+            String[] endDate = date.split("-");
+
+            if(endDate.length > 0)
+            {
+                calendar.set(Calendar.MONTH, (Integer.parseInt(endDate[0]) - 1));
+                calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(endDate[1]));
+                calendar.set(Calendar.YEAR,Integer.parseInt(endDate[2]));
+            }
+
+            return calendar.getTimeInMillis();
+        }
+
+        return calendar.getTimeInMillis();
+    }
+
+
 
     private void loadChatHistory(final int _offset, final int limit) {
         if (fetching){

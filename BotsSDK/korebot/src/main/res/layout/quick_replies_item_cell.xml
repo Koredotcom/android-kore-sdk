@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginRight="@dimen/dimen_7dp"
         android:background="@drawable/theme_1_button_bg"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"

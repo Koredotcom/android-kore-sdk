@@ -118,7 +118,6 @@ public class BottomOptionsAdapter extends BaseAdapter {
         }
 
         holder.bottom_option_name.setText(botListModel.getTitle());
-        holder.bottom_option_name.setTypeface(null, Typeface.BOLD);
     }
 
     public void setBotListModelArrayList(List<BotOptionModel> botOptionModels) {

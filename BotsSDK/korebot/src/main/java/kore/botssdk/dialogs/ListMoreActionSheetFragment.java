@@ -114,6 +114,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
                     bottomSheetDialog.dismiss();
             }
         });
+
         return view;
 
     }

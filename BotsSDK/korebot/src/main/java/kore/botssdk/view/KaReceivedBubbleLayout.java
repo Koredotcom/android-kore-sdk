@@ -139,7 +139,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingSlotsView.getMeasuredWidth(),multiSelectView.getMeasuredWidth(), attendeeSlotSelectionView.getMeasuredWidth(), meetingConfirmationView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(),responsiveTableView.getMeasuredWidth(),responsiveExpandTableView.getMeasuredWidth(),
                 lineChartView.getMeasuredWidth(),barChartView.getMeasuredWidth(),horizontalBarChartView.getMeasuredWidth(), stackedBarChatView.getMeasuredWidth(),koraCarouselView.getMeasuredWidth(),botListViewTemplateView.getMeasuredWidth(),
                 botListTemplateView.getMeasuredWidth(), contactInfoView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(), welcomeSummaryView.getMeasuredWidth(),botFormTemplateView.getMeasuredWidth(),botTableListTemplateView.getMeasuredWidth(),botQuickRepliesTemplateView.getMeasuredWidth(),
-                agentTransferTemplateView.getMeasuredWidth(),feedbackTemplateView.getMeasuredWidth(),listWidgetView.getMeasuredWidth(), botDropDownTemplateView.getMeasuredWidth(),
+                agentTransferTemplateView.getMeasuredWidth(),feedbackTemplateView.getMeasuredWidth(),listWidgetView.getMeasuredWidth(), botDropDownTemplateView.getMeasuredWidth(),botListWidgetTemplateView.getMeasuredWidth(),
                 koraSummaryHelpView.getMeasuredWidth(),universalSearchView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
 
@@ -151,7 +151,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingConfirmationView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() + responsiveTableView.getMeasuredHeight() + responsiveExpandTableView.getMeasuredHeight() +
                 lineChartView.getMeasuredHeight()+barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+koraCarouselView.getMeasuredHeight()
                 + botListViewTemplateView.getMeasuredHeight()+botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight()
-                + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + contactInfoView.getMeasuredHeight() + listWidgetView.getMeasuredHeight() +
+                + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + contactInfoView.getMeasuredHeight() + listWidgetView.getMeasuredHeight() + botListWidgetTemplateView.getMeasuredHeight() +
                 welcomeSummaryView.getMeasuredHeight() +universalSearchView.getMeasuredHeight()+ koraSummaryHelpView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight() + botDropDownTemplateView.getMeasuredHeight()
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
@@ -162,8 +162,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
                 tableView.getMeasuredHeight() + responsiveTableView.getMeasuredHeight() + responsiveExpandTableView.getMeasuredHeight() + lineChartView.getMeasuredHeight()
                 +barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+koraCarouselView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight()+
-                meetingSlotsView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() +multiSelectView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight()+botListViewTemplateView.getMeasuredHeight()
-                +meetingConfirmationView.getMeasuredHeight() + contactInfoView.getMeasuredHeight()+ welcomeSummaryView.getMeasuredHeight()+ botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+
+                meetingSlotsView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() +multiSelectView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight()+botListViewTemplateView.getMeasuredHeight() + botListWidgetTemplateView.getMeasuredHeight() +
+                +meetingConfirmationView.getMeasuredHeight() + contactInfoView.getMeasuredHeight()+ welcomeSummaryView.getMeasuredHeight()+ botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+ botListWidgetTemplateView.getMeasuredHeight() +
                 +feedbackTemplateView.getMeasuredHeight()+listWidgetView.getMeasuredHeight()+universalSearchView.getMeasuredHeight()+koraSummaryHelpView.getMeasuredHeight() + botDropDownTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
@@ -176,7 +176,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 meetingConfirmationView.getMeasuredHeight() > 0 || verticalListView.getMeasuredHeight() > 0 ||
                 meetingSlotsView.getMeasuredHeight() > 0 || botPieChartView.getMeasuredHeight() > 0 || botFormTemplateView.getMeasuredHeight() > 0 || botListViewTemplateView.getMeasuredHeight() > 0 || botTableListTemplateView.getMeasuredHeight() > 0 ||
                 lineChartView.getMeasuredHeight() > 0 ||barChartView.getMeasuredHeight() > 0||horizontalBarChartView.getMeasuredHeight() > 0||stackedBarChatView.getMeasuredHeight() > 0|| koraCarouselView.getMeasuredHeight()>0 || listWidgetView.getMeasuredHeight() > 0 ||
-                tableView.getMeasuredHeight() > 0 ||responsiveTableView.getMeasuredHeight() > 0 ||responsiveExpandTableView.getMeasuredHeight() > 0 || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 ||
+                tableView.getMeasuredHeight() > 0 ||responsiveTableView.getMeasuredHeight() > 0 ||responsiveExpandTableView.getMeasuredHeight() > 0 || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 || botListWidgetTemplateView.getMeasuredHeight() > 0 ||
                 welcomeSummaryView.getMeasuredHeight()>0 || koraSummaryHelpView.getMeasuredHeight()>0 || universalSearchView.getMeasuredHeight()>0||multiSelectView.getMeasuredHeight() > 0 || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || botDropDownTemplateView.getMeasuredHeight() > 0;
     }
 
@@ -237,6 +237,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         botFormTemplateView.setVisibility(GONE);
         botListViewTemplateView.setVisibility(View.GONE);
         botListViewTemplateView.populateListTemplateView(null, null,null, null, 0, null);
+        botListWidgetTemplateView.setVisibility(View.GONE);
+        botListWidgetTemplateView.populateListWidgetTemplateView(null, null,null, null, 0, null);
         botTableListTemplateView.setVisibility(View.GONE);
         botTableListTemplateView.populateListTemplateView(null);
         botQuickRepliesTemplateView.setVisibility(View.GONE);
@@ -267,8 +269,16 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }*/
         String icon = ((BotResponse) baseBotMessage).getIcon();
-        if(SDKConfiguration.BubbleColors.showIcon) {
-            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+        if(SDKConfiguration.BubbleColors.showIcon)
+        {
+//            if(!StringUtils.isNullOrEmpty(icon))
+//            {
+//                cpvSenderImage.populateLayout(" ", null, icon, null, SDKConfiguration.BubbleColors.getIcon(), 0, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+//            }
+//            else
+//            {
+                cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+//            }
             cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
         }else{
             cpvSenderImage.setVisibility(GONE);
@@ -397,8 +407,15 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 else if(BotResponse.TEMPLATE_TYPE_LIST_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     botListViewTemplateView.setVisibility(View.VISIBLE);
                     botListViewTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
-                    botListViewTemplateView.populateListTemplateView(payInner.getText(), payInner.getMoreData(), payInner.getListElements(), payInner.getButtons(), payInner.getMoreCount(), payInner.getSeeMore());
+                    botListViewTemplateView.populateListTemplateView(payInner.getText(), payInner.getMoreData(), payInner.getListElements(), payInner.getButtons(), StringUtils.getInt(payInner.getMoreCount()), payInner.getSeeMore());
                     bubbleTextMediaLayout.populateText(payInner.getText());
+                }
+                else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
+                    botListWidgetTemplateView.setVisibility(View.VISIBLE);
+                    botListWidgetTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
+                    botListWidgetTemplateView.populateListWidgetTemplateView(payInner.getTitle(), payInner.getMoreData(), payInner.getListWidgetElements(), payInner.getButtons(), StringUtils.getInt(payInner.getMoreCount()), payInner.getSeeMore());
+//                    bubbleTextMediaLayout.populateText(payInner.getTitle());
                 }
                 else if(BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(payInner.getTemplate_type())){
                     botTableListTemplateView.setVisibility(View.VISIBLE);
@@ -419,7 +436,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     feedbackTemplateView.setVisibility(View.VISIBLE);
                     feedbackTemplateView.populateData(payInner, true);
                 }
-                else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(payInner.getTemplate_type())){
+                else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(payInner.getTemplate_type()) ){
                     listWidgetView.setVisibility(View.VISIBLE);
                     listWidgetView.populateListWidgetData(payInner);
                 }
@@ -637,6 +654,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
         MeasureUtils.measure(botListViewTemplateView, childWidthSpec, wrapSpec);
 
+        /*
+         * For List Widget Templates
+         */
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botListWidgetTemplateView, childWidthSpec, wrapSpec);
 
         /**
          * For TableViev
@@ -807,6 +830,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(koraCarouselView, top, left, arrayList);
         layoutView(botFormTemplateView, top, left, arrayList);
         layoutView(botListViewTemplateView, top, left, arrayList);
+        layoutView(botListWidgetTemplateView, top, left, arrayList);
         layoutView(botTableListTemplateView, top, left, arrayList);
         layoutView(botQuickRepliesTemplateView, top, left, arrayList);
         layoutView(agentTransferTemplateView, top, left, arrayList);

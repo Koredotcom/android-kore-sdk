@@ -95,14 +95,12 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
             holder.botListItemTitle.setTag(botListModel);
             holder.botListItemTitle.setVisibility(View.VISIBLE);
             holder.botListItemTitle.setText(botListModel.getSectionHeader());
-            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         }
 
         if(!StringUtils.isNullOrEmpty(botListModel.getSectionHeaderDesc())) {
             holder.bot_list_item_desc.setTag(botListModel);
             holder.bot_list_item_desc.setVisibility(View.VISIBLE);
             holder.bot_list_item_desc.setText(botListModel.getSectionHeaderDesc());
-            holder.bot_list_item_desc.setTypeface(null, Typeface.BOLD);
         }
 
         if(botListModel.getRowItems() != null && botListModel.getRowItems().size() > 0)

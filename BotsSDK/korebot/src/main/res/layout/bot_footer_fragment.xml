@@ -232,7 +232,7 @@
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_vertical"
                         android:padding="8dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/attachment_comp" />
 
                     <ImageView

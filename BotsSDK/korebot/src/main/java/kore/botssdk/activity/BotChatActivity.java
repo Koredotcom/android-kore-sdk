@@ -359,6 +359,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.WIDGET_HEADER_COLOR, brandingModel.getWidgetHeaderColor());
         editor.putString(BotResponse.WIDGET_BG_IMAGE, brandingModel.getWidgetBgImage());
         editor.putString(BotResponse.BOT_NAME, brandingModel.getBotName());
+        editor.putString(BotResponse.BANK_LOGO, brandingModel.getBankLogo());
         editor.apply();
 
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getWidgetBorderColor();
@@ -370,7 +371,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
 
         if(botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor(), brandingModel.getBotName());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetTextColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetDividerColor(), brandingModel.getBotName(), brandingModel.getBankLogo());
 
         if(composeFooterFragment != null)
             composeFooterFragment.setFooterBackground(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetDividerColor(), brandingModel.getWidgetTextColor());
@@ -584,7 +585,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         catch (Exception e)
         {
             /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
-            e.printStackTrace();
+//            e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
                 try {
                     //This is the case Bot returning user sent message from another channel

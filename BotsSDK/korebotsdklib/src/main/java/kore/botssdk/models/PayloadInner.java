@@ -47,10 +47,11 @@ public class PayloadInner {
     private String heading;
     private String title;
     private String endDate;
+    private String startDate;
     private String format;
     private String boxShadow;
     private String seeMore;
-    private int moreCount = 0;
+    private String moreCount;
     private String subtitle;
     private String image_url;
     private boolean is_end;
@@ -130,11 +131,11 @@ public class PayloadInner {
         this.stacked = stacked;
     }
 
-    public void setMoreCount(int moreCount) {
+    public void setMoreCount(String moreCount) {
         this.moreCount = moreCount;
     }
 
-    public int getMoreCount() {
+    public String getMoreCount() {
         return moreCount;
     }
 
@@ -224,6 +225,14 @@ public class PayloadInner {
     public String getEndDate()
     {
         return endDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
     }
 
     public void setFormat(String endDate)
@@ -358,6 +367,7 @@ public class PayloadInner {
 
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
+    private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private ArrayList<BotTableListModel> tableListElements;
@@ -581,6 +591,10 @@ public class PayloadInner {
         return listElements;
     }
 
+    public ArrayList<BotListWidgetModel> getListWidgetElements() {
+        return listWidgetModels;
+    }
+
     public ArrayList<BotTableListModel> getTableListElements() {
         return tableListElements;
     }
@@ -635,7 +649,14 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<BotListModel>>() {
                         }.getType();
                         listElements = gson.fromJson(elementsAsString, listType);
-                    }else if (BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(template_type)) {
+                    }
+                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
+                        listWidgetModels = new ArrayList<>();
+                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
+                        }.getType();
+                        listWidgetModels = gson.fromJson(elementsAsString, listType);
+                    }
+                    else if (BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(template_type)) {
                         Type listType = new TypeToken<ArrayList<BotTableListModel>>() {
                         }.getType();
                         tableListElements = gson.fromJson(elementsAsString, listType);

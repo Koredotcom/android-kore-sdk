@@ -250,4 +250,15 @@ public class StringUtils {
             return false;
         }
     }
+
+    public static int getInt(String val)
+    {
+        int value;
+        try
+        { value = Integer.parseInt(val); }
+        catch (Exception e)
+        { value = 0; }
+
+        return value;
+    }
 }

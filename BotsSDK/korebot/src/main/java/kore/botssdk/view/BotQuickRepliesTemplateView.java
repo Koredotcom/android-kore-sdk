@@ -103,7 +103,11 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
 
             quickRepliesAdapter.setQuickReplyTemplateArrayList(quickReplyTemplates);
             quickRepliesAdapter.notifyDataSetChanged();
-            listViewHeight = (int)(60 * (quickReplyTemplates.size()/2) * dp1);
+
+            if((quickReplyTemplates.size() > 1))
+                listViewHeight = (int)(60 * (quickReplyTemplates.size()/2) * dp1);
+            else
+                listViewHeight = (int)(60 * (1) * dp1);
             recyclerView.setVisibility(VISIBLE);
         } else {
             recyclerView.setVisibility(GONE);
