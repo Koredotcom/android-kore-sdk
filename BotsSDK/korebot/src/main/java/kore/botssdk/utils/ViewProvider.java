@@ -26,6 +26,7 @@ import kore.botssdk.view.BotDropDownTemplateView;
 import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
 import kore.botssdk.view.BotListViewTemplateView;
+import kore.botssdk.view.BotListWidgetTemplateView;
 import kore.botssdk.view.BotQuickRepliesTemplateView;
 import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
@@ -354,6 +355,12 @@ public class ViewProvider {
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);
+        botListTemplateView.setId(LIST_ID);
+        return botListTemplateView;
+    }
+
+    public static BotListWidgetTemplateView getBotListWidgetTempleteView(Context context){
+        BotListWidgetTemplateView botListTemplateView = new BotListWidgetTemplateView(context);
         botListTemplateView.setId(LIST_ID);
         return botListTemplateView;
     }

@@ -99,6 +99,8 @@ public class BotButtonView extends ViewGroup {
 //                }
 //            });
             buttonTypeAdapter.setBotButtonModels(botButtonModels);
+            buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
+            buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             buttonTypeAdapter.notifyDataSetChanged();
         } else {
             autoExpandListView.setAdapter(null);

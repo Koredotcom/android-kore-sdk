@@ -75,9 +75,11 @@ import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
+import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
+import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
@@ -91,6 +93,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
 
@@ -540,8 +543,30 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
                         botContentFragment.updateContentListOnSend(botRequest);
                     }
-                } catch (Exception e1) {
-                    e1.printStackTrace();
+                }
+                catch (Exception e1)
+                {
+//                    e1.printStackTrace();
+                    try
+                    {
+                        final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
+                        if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                            return;
+                        }
+                        Log.d(LOG_TAG, payload);
+                        boolean resolved = true;
+                        if (!botResponse.getMessage().isEmpty()) {
+                            ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
+                            if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload()))
+                            {
+                                displayMessage(compModel.getPayload());
+                            }
+                        }
+                    }
+                    catch (Exception e2)
+                    {
+                        e2.printStackTrace();
+                    }
                 }
             }
         }
@@ -585,6 +610,34 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             e.printStackTrace();
         }
         return botOptionsModel;
+    }
+
+    public void displayMessage(String text)
+    {
+        PayloadInner payloadInner = new PayloadInner();
+        payloadInner.setTemplate_type("text");
+
+        PayloadOuter payloadOuter = new PayloadOuter();
+        payloadOuter.setText(text);
+        payloadOuter.setType("text");
+        payloadOuter.setPayload(payloadInner);
+
+        ComponentModel componentModel = new ComponentModel();
+        componentModel.setType("text");
+        componentModel.setPayload(payloadOuter);
+
+        BotResponseMessage botResponseMessage = new BotResponseMessage();
+        botResponseMessage.setType("text");
+        botResponseMessage.setComponent(componentModel);
+
+        ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+        arrBotResponseMessages.add(botResponseMessage);
+
+        BotResponse botResponse = new BotResponse();
+        botResponse.setType("text");
+        botResponse.setMessage(arrBotResponseMessages);
+
+        processPayload("", botResponse);
     }
 
     @Override

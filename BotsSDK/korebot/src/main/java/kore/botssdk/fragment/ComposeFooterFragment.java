@@ -119,11 +119,6 @@ import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENC
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 import static com.kore.ai.widgetsdk.utils.BundleUtils.THUMBNAIL_FILE_PATH;
-import static kore.botssdk.models.KoreMedia.CHOOSE_TYPE_CAMERA;
-import static kore.botssdk.models.KoreMedia.CHOOSE_TYPE_FILE;
-import static kore.botssdk.models.KoreMedia.CHOOSE_TYPE_GALLERY;
-import static kore.botssdk.models.KoreMedia.CHOOSE_TYPE_VIDEO_GALLERY;
-import static kore.botssdk.models.KoreMedia.MEDIA_TYPE_VIDEO;
 import static kore.botssdk.utils.BitmapUtils.getBufferSize;
 import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
@@ -740,19 +735,19 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private void launchSelectedMode(int position) {
         switch (position) {
             case 0:
-                fileBrowsingActivity(CHOOSE_TYPE_CAMERA, REQ_CAMERA, KoreMedia.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAMERA, REQ_CAMERA, KoreMedia.MEDIA_TYPE_IMAGE);
                 break;
             case 1:
-                fileBrowsingActivity(CHOOSE_TYPE_GALLERY, REQ_IMAGE, KoreMedia.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_GALLERY, REQ_IMAGE, KoreMedia.MEDIA_TYPE_IMAGE);
                 break;
             case 2:
                 launchVideoRecorder();
                 break;
             case 3:
-                fileBrowsingActivity(CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, MEDIA_TYPE_VIDEO);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, KoreMedia.MEDIA_TYPE_VIDEO);
                 break;
             case 4:
-                fileBrowsingActivity(CHOOSE_TYPE_FILE, REQ_FILE, KoreMedia.MEDIA_TYPE_DOCUMENT);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_FILE, REQ_FILE, KoreMedia.MEDIA_TYPE_DOCUMENT);
                 break;
 
 
@@ -801,7 +796,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
         cameraVideoUri1 = null;
         try {
-            File actualImageFile = KaMediaUtils.getOutputMediaFile(MEDIA_TYPE_VIDEO, null);
+            File actualImageFile = KaMediaUtils.getOutputMediaFile(KoreMedia.MEDIA_TYPE_VIDEO, null);
             Uri uri;
             if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 cameraVideoUri1 = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", actualImageFile);
@@ -1072,7 +1067,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String name = pickFile.getName();
                 String type = pickFile.getType();
                 if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(MEDIA_TYPE_VIDEO, "");
+                    KaMediaUtils.setupAppDir(KoreMedia.MEDIA_TYPE_VIDEO, "");
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
                     new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }

@@ -356,6 +356,7 @@ public class PayloadInner {
         this.carouselElements = carouselElements;
     }
 
+    private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotCarouselModel> carouselElements;
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
@@ -581,6 +582,10 @@ public class PayloadInner {
         return listElements;
     }
 
+    public ArrayList<BotListWidgetModel> getListWidgetElements() {
+        return listWidgetModels;
+    }
+
     public ArrayList<BotTableListModel> getTableListElements() {
         return tableListElements;
     }
@@ -739,6 +744,12 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
+                    }
+                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
+                        listWidgetModels = new ArrayList<>();
+                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
+                        }.getType();
+                        listWidgetModels = gson.fromJson(elementsAsString, listType);
                     }
                     else if(BotResponse.TEMPLATE_DROPDOWN.equals(template_type))
                     {

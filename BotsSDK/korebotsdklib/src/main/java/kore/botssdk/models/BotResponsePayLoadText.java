@@ -2,11 +2,7 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
-/**
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
-public class BotResponse extends BaseBotMessage {
+public class BotResponsePayLoadText extends BaseBotMessage {
 
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
@@ -66,7 +62,6 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_NOTIFICATIONS = "Notification";
     public static final String TEMPLATE_TYPE_FEEDBACK = "feedbackTemplate";
     public static final String TEMPLATE_TYPE_LIST_WIDGET = "List_widget";
-    public static final String TEMPLATE_TYPE_LIST_WIDGET_2 = "listWidget";
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_DROPDOWN = "dropdown_template";
@@ -105,17 +100,21 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUTTON_INACTIVE_BG_COLOR = "BUTTON_INACTIVE_BG_COLOR";
     public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
     public static final String WIDGET_BG_COLOR = "WIDGET_BG_COLOR";
+    public static final String WIDGET_BG_IMAGE = "WIDGET_BG_IMAGE";
     public static final String WIDGET_TXT_COLOR = "WIDGET_TXT_COLOR";
     public static final String WIDGET_BORDER_COLOR = "WIDGET_BORDER_COLOR";
     public static final String WIDGET_DIVIDER_COLOR = "WIDGET_DIVIDER_COLOR";
+    public static final String WIDGET_HEADER_COLOR = "WIDGET_DIVIDER_COLOR";
+    public static final String WIDGET_FOOTER_COLOR = "WIDGET_DIVIDER_COLOR";
     public static final String APPLY_THEME_NAME = "APPLY_THEME_NAME";
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
+    public static final String BOT_NAME = "BOT_NAME";
 
 
     private String type;
     private BotInfoModel botInfo;
-    private ArrayList<BotResponseMessage> message;
+    private ArrayList<BotResponseMessagePayloadText> message;
     private String icon;
 
     public String getMessageId() {
@@ -140,14 +139,14 @@ public class BotResponse extends BaseBotMessage {
         this.botInfo = botInfo;
     }
 
-    public void setMessage(ArrayList<BotResponseMessage> message) {
+    public void setMessage(ArrayList<BotResponseMessagePayloadText> message) {
         this.message = message;
     }
 
     public void setIcon(String icon) {
         this.icon = icon;
     }
-    public ArrayList<BotResponseMessage> getMessage() {
+    public ArrayList<BotResponseMessagePayloadText> getMessage() {
         return message;
     }
 
@@ -155,7 +154,7 @@ public class BotResponse extends BaseBotMessage {
      * returns null if there are no messages
      * @return
      */
-    public BotResponseMessage getTempMessage() {
+    public BotResponseMessagePayloadText getTempMessage() {
         return message!=null && message.size() > 0?message.get(0):null;
     }
 
