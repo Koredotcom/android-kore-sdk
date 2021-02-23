@@ -15,7 +15,7 @@ public class BotRequest extends BaseBotMessage {
     private RestResponse.BotMessage message;
     private String resourceid = "/bot.message";
     private BotInfoModel botInfo;
-    private long id = 1;
+    private Object id = 1;
 
     public void setMessage(RestResponse.BotMessage message) {
         this.message = message;

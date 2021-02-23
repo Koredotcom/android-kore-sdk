@@ -572,6 +572,7 @@ public class PayloadInner {
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
                     Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();
                     universalSearchModels = gson.fromJson(elementsAsString,listType);
+
                     if(universalSearchModels != null && universalSearchModels.size()>0){
                         for(int index = 0; index < universalSearchModels.size();index++){
                             if(universalSearchModels.get(index) != null){
@@ -603,6 +604,23 @@ public class PayloadInner {
                             }
 
                             if(universalSearchModels!=null&&universalSearchModels.size()>0&& getAskExpert()!=null)
+                            {
+                                universalSearchModels.get(0).setAskExpert(getAskExpert());
+                            }
+                        }
+                    }else
+                    {
+                        if(getAskExpert()!=null||!StringUtils.isNullOrEmptyWithTrim(getExpiryMsg()))
+                        {
+                            universalSearchModels=new ArrayList<KoraUniversalSearchModel>();
+                            universalSearchModels.add(new KoraUniversalSearchModel());
+                            if(!StringUtils.isNullOrEmptyWithTrim(getExpiryMsg()))
+                            {
+                                universalSearchModels.get(0).setAuthRequired(isAuthRequired());
+                                universalSearchModels.get(0).setExpiryMsg(getExpiryMsg());
+                            }
+
+                            if(getAskExpert()!=null)
                             {
                                 universalSearchModels.get(0).setAskExpert(getAskExpert());
                             }
