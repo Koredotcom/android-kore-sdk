@@ -2,32 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BotsSDK.iml" filepath="$PROJECT_DIR$/BotsSDK.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK-MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK-MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
-      <module fileurl="file://$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/korebot/BotsSDK-korebot.iml" group="BotsSDK/korebot" />
-      <module fileurl="file://$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/korebotsdklib/BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
-      <module fileurl="file://$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/korefileuploadsdk/BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK-widgetsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK-widgetsdk.iml" group="BotsSDK/widgetsdk" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Kore_Bot-BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/Kore_Bot-BotsSDK.iml" group="BotsSDK" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/Kore_Bot-BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/Kore_Bot-BotsSDK-korebot.iml" group="BotsSDK/korebot" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_Bot-BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_Bot-BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Kore_Bot-BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Kore_Bot-BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Kore_WorkBench-BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/Kore_WorkBench-BotsSDK.iml" group="BotsSDK" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Kore_WorkBench-BotsSDK-MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Kore_WorkBench-BotsSDK-MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/Kore_WorkBench-BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/Kore_WorkBench-BotsSDK-korebot.iml" group="BotsSDK/korebot" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_WorkBench-BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/Kore_WorkBench-BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Kore_WorkBench-BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Kore_WorkBench-BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
-      <module fileurl="file://$PROJECT_DIR$/MPAndroidChart-3.1.0/MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/MPAndroidChart-3.1.0/MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
-      <module fileurl="file://$PROJECT_DIR$/MyProjects-BotsSDK.iml" filepath="$PROJECT_DIR$/MyProjects-BotsSDK.iml" group="BotsSDK" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Non_Finastra-BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/Non_Finastra-BotsSDK.iml" group="BotsSDK" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Non_Finastra-BotsSDK-MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/Non_Finastra-BotsSDK-MPAndroidChart-3.1.0.iml" group="BotsSDK/MPAndroidChart-3.1.0" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/Non_Finastra-BotsSDK-korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/Non_Finastra-BotsSDK-korebot.iml" group="BotsSDK/korebot" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/Non_Finastra-BotsSDK-korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/Non_Finastra-BotsSDK-korebotsdklib.iml" group="BotsSDK/korebotsdklib" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Non_Finastra-BotsSDK-korefileuploadsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/korefileuploadsdk/Non_Finastra-BotsSDK-korefileuploadsdk.iml" group="BotsSDK/korefileuploadsdk" />
-      <module fileurl="file://$PROJECT_DIR$/korebot/korebot.iml" filepath="$PROJECT_DIR$/korebot/korebot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/korebotsdklib/korebotsdklib.iml" filepath="$PROJECT_DIR$/korebotsdklib/korebotsdklib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/korefileuploadsdk/korefileuploadsdk.iml" filepath="$PROJECT_DIR$/korefileuploadsdk/korefileuploadsdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetsdk/widgetsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetsdk/widgetsdk.iml" group="BotsSDK/widgetsdk" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/BotsSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/BotsSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK.MPAndroidChart-3.1.0.iml" filepath="$PROJECT_DIR$/.idea/modules/MPAndroidChart-3.1.0/BotsSDK.MPAndroidChart-3.1.0.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebot/BotsSDK.korebot.iml" filepath="$PROJECT_DIR$/.idea/modules/korebot/BotsSDK.korebot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korebotsdklib/BotsSDK.korebotsdklib.iml" filepath="$PROJECT_DIR$/.idea/modules/korebotsdklib/BotsSDK.korebotsdklib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/korefileuploadsdk/BotsSDK.korefileuploadsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/korefileuploadsdk/BotsSDK.korefileuploadsdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK.widgetsdk.iml" filepath="$PROJECT_DIR$/.idea/modules/widgetsdk/BotsSDK.widgetsdk.iml" />
     </modules>
   </component>
 </project>

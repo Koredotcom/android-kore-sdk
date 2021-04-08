@@ -92,7 +92,7 @@ public interface RestAPI {
     Call<TokenResponseModel> getBrandingDetails(@Header("Authorization") String token);
 
     // Get JWT Token
-    @GET("/api/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop")
+    @GET("workbench/api/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop")
     Call<ArrayList<BrandingNewModel>> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
 
     // Get JWT Token
