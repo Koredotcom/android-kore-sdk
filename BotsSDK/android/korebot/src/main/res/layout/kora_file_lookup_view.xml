@@ -1,0 +1,92 @@
+
+<layout>
+
+    <data>
+
+        <variable
+            name="fileModel"
+            type="kore.botssdk.models.KaFileLookupModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="10dp"
+
+        android:background="?android:selectableItemBackground"
+        android:paddingTop="15dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="36dp"
+            android:layout_height="45dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitCenter" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/image"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="1"
+            android:paddingEnd="12dp"
+            android:text="@{fileModel.fileName}"
+            android:textColor="@color/color_485260"
+            android:textSize="16sp" />
+
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/sharedBy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="10dp"
+            android:layout_toEndOf="@+id/image"
+            android:ellipsize="end"
+            android:fontFamily="@font/latomedium"
+            android:maxLines="1"
+            android:text="@{fileModel.getSharedByDetails()}"
+            android:visibility='@{fileModel.getSharedByDetails() == null || fileModel.getSharedByDetails.trim().equals("") ? View.GONE : View.VISIBLE}'
+
+
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sharedBy"
+            android:layout_alignStart="@+id/sharedBy"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/image"
+            android:fontFamily="@font/latomedium"
+            android:id="@+id/last_edited"
+            android:paddingEnd="10dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@{fileModel.getLastModifiedDate()}"
+            android:textColor="#a3b0be"
+            android:textSize="13sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+
+            android:id="@+id/divider"
+            android:layout_below="@+id/last_edited"
+            android:layout_alignStart="@+id/image"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/inset_file_divider" />
+    </RelativeLayout>
+</layout>

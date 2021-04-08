@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quick_reply_item_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="beforeDescendants"
+    android:orientation="horizontal"
+    android:paddingStart="0dp"
+    android:paddingTop="5dp"
+    android:paddingEnd="5dp">
+
+    <LinearLayout
+        android:id="@+id/quick_reply_view"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/dimen_7dp"
+        android:background="@drawable/theme_1_button_bg"
+        android:descendantFocusability="beforeDescendants"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingRight="@dimen/dimen_15dp">
+
+        <ImageView
+            android:id="@+id/quick_reply_item_image"
+            android:layout_width="@dimen/quick_reply_image_width"
+            android:layout_height="@dimen/quick_reply_image_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/round_rect_image"
+            android:scaleType="centerCrop" />
+
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/quick_reply_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="Hello"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_sub_header"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llListHeader"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ic_mashreq_loan"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:orientation="vertical">
+
+</LinearLayout>

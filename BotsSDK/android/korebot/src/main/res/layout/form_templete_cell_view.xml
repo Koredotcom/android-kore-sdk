@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/multi_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_12dp"
+        android:layout_marginRight="@dimen/dimen_12dp"
+        android:layout_marginBottom="@dimen/dimen_12dp"
+        android:orientation="vertical">
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/tvFormFieldTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:minWidth="300dp"
+            android:minHeight="25dp"
+            android:tag="medium"
+            android:text="Hello"
+            android:textColor="#404051"
+            android:textSize="15dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:background="@drawable/form_input_bg">
+
+            <kore.botssdk.views.CustomEditTextView
+                android:id="@+id/edtFormInput"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_30dp"
+                android:background="@null"
+                android:inputType="textPassword"
+                android:textColorHint="@color/readReceiptGrey"
+                android:textColor="#404051"
+                android:textSize="@dimen/text_size_normal" />
+
+            <Button
+                android:id="@+id/btfieldButton"
+                android:layout_width="@dimen/carousel_view_button_height_individual"
+                android:layout_height="@dimen/dimen_28dp"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/dimen_3dp"
+                android:background="@drawable/form_button_bg"
+                android:text="Ok"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

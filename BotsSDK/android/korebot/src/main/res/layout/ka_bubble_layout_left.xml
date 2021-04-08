@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kore.botssdk.view.KaReceivedBubbleContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/received_bubble_layout_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:focusable="false">
+
+    <include
+        android:id="@+id/headerLayout"
+        layout="@layout/kora_timestamps_header" />
+
+    <kore.botssdk.view.KaReceivedBubbleLayout
+        android:id="@+id/receivedBubbleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true">
+
+        <!-- Sender Image -->
+        <kore.botssdk.view.CircularProfileView
+            android:id="@+id/cpvSenderImage"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_alignParentLeft="true" />
+
+
+    </kore.botssdk.view.KaReceivedBubbleLayout>
+
+</kore.botssdk.view.KaReceivedBubbleContainer>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/meeting_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingBottom="2dp">
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/slots_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:divider="@null"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/slots_list"
+        android:orientation="horizontal">
+
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/button1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/meeting_slot_modify_background"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:tag="bold"
+            android:text="@string/modify_slots"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/button2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/meeting_slot_modify_background"
+            android:gravity="center"
+            android:layout_marginStart="10dp"
+            android:minHeight="40dp"
+            android:tag="bold"
+            android:text="Send Slots"
+            android:textAllCaps="true"
+            android:textColor="@color/splash_color"
+            android:textSize="15dp" />
+    </LinearLayout>
+</RelativeLayout>

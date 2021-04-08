@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.0"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:visibility="visible">
+
+        <!-- Bot Message Fragment resides -->
+        <FrameLayout
+            android:id="@+id/post_frame_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/footer_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@color/footerdivider_color"
+            android:visibility="visible" />
+
+        <!--<com.kore.koreapp.views.AudioVisualiserView
+            android:id="@+id/bot_bottom_strip"
+            android:layout_width="220dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:background="@color/teamPostViewForAlertsStripColor"
+            android:orientation="horizontal"
+            android:visibility="gone"/>-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/attachment_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp" />
+
+        <RelativeLayout
+            android:id="@+id/fl_footer"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom"
+            android:background="@color/compose_chase_color"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/composeFooterRl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/compose_chase_color"
+                android:gravity="center_vertical">
+
+                <RelativeLayout
+                    android:id="@+id/tasksRl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:id="@+id/newTasksLogo"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="10dp"
+                        android:src="@drawable/new_task"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/newMenuLogo"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_centerVertical="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="5dp"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="10dp"
+                        android:src="@drawable/widget_menu"
+                        android:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/loadingTasks"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@color/connectBotBackground"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:indeterminate="false"
+                            android:paddingStart="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="10dp"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/errorLoading"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:paddingStart="10dp"
+                            android:paddingLeft="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingEnd="5dp"
+                            android:paddingRight="5dp"
+                            android:paddingBottom="10dp"
+                            android:src="@drawable/conection_error"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/composeFrameLl"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_toStartOf="@+id/btnsend1"
+                    android:layout_toLeftOf="@+id/btnsend1"
+                    android:layout_toEndOf="@id/tasksRl"
+                    android:layout_toRightOf="@id/tasksRl"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <kore.botssdk.views.CustomEditTextView
+                            android:id="@+id/edtTxtMessage"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/dimen_5dp"
+                            android:background="@null"
+                            android:gravity="center_vertical|start"
+                            android:hint="@string/typeyourmessagehere"
+                            android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                            android:maxHeight="68dp"
+                            android:minHeight="26dp"
+                            android:paddingStart="10dp"
+                            android:paddingLeft="8dp"
+                            android:paddingEnd="8dp"
+                            android:paddingRight="8dp"
+                            android:scrollbars="vertical"
+                            android:tag="regular"
+                            android:textColor="@color/bubble_dark_text_color"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnsend1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:orientation="horizontal">
+
+                    <kore.botssdk.views.CustomTextViewBold
+                        android:id="@+id/sendTv"
+                        android:layout_width="@dimen/dimen_25dp"
+                        android:layout_height="@dimen/dimen_25dp"
+                        android:layout_marginRight="@dimen/dimen_15dp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="5dp"
+                        android:paddingLeft="5dp"
+                        android:layout_gravity="center_vertical"
+                        android:paddingEnd="5dp"
+                        android:paddingRight="5dp"
+                        android:tag="bold"
+                        android:background="@drawable/ic_mashreq_chat_send"
+                        android:textColor="@color/bgBlueSignup"
+                        android:textSize="14dp"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/rec_audio_img"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/dimen_15dp"
+                        android:alpha="0.70"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_microphone_orange"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/attachemnt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:padding="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/attachment_comp" />
+
+                    <ImageView
+                        android:id="@+id/audio_speak_tts"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.70"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_volume_up_black_24dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/footerConnectBotWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/connectBotBackground"
+                android:descendantFocusability="afterDescendants"
+                android:visibility="gone">
+
+                <kore.botssdk.views.CustomTextViewBold
+                    android:id="@+id/tv_footerConnectBot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:tag="bold"
+                    android:text="Connect"
+                    android:textAlignment="center"
+                    android:textColor="@color/bgBlueSignup"
+                    android:textSize="14dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/default_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="1.0"
+        android:orientation="vertical">
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/text_view_speech"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:gravity="right|end"
+            android:padding="5dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#341423"
+            android:gravity="center_vertical">
+
+
+            <LinearLayout
+                android:id="@+id/linearLayoutProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <net.gotev.speech.ui.SpeechProgressView
+                    android:id="@+id/progress"
+                    android:layout_width="120dp"
+                    android:layout_height="90dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/keyboard_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/click_hear_to_enter_text"
+                android:padding="5dp"
+                android:src="@drawable/keyboard_white" />
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/speaker_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="5dp"
+                android:drawableTop="@drawable/mic_white"
+                android:padding="5dp"
+                android:tag="regular"
+                android:text="@string/tap_to_speak"
+                android:textColor="#ffffff"
+                android:textSize="12dp" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

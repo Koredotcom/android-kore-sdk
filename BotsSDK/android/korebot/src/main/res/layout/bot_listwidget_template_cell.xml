@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_5dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/dimen_15dp">
+
+    <!-- Item image -->
+    <ImageView
+        android:id="@+id/bot_list_item_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:clickable="false"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/bot_list_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/bot_list_item_image"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Title"
+            android:textColor="@color/left_bubble_text_color"
+            android:textSize="14dp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/bot_list_item_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bot_list_item_title"
+            android:layout_toRightOf="@id/bot_list_item_image"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:text="Subtitle"
+            android:textColor="@color/footer_color_dark_grey"
+            android:textSize="12dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/bot_list_item_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="@dimen/dimen_5dp"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textSize="14dp"
+        android:textStyle="bold" />
+
+</LinearLayout>

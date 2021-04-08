@@ -1,0 +1,29 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pickerWidgetLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f9f9f9"
+    android:gravity="center_vertical">
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:tag="bold"
+        android:textStyle="bold"
+        android:text="DONE"
+        android:textColor="#1432ff"
+        android:textSize="16dp" />
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_below="@+id/done"
+        android:background="@color/white"
+        android:id="@+id/single_selectable"
+        android:layout_height="300dp"/>
+</RelativeLayout>

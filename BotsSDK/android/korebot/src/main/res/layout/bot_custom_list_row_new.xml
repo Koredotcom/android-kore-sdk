@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/rootId"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/imageUrl"
+        android:src="@drawable/ic_launcher"
+        android:background="@drawable/rectangle_background"
+        />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/imageUrl"
+        android:gravity="left"
+        android:textSize="13dp"
+        android:paddingLeft="10dp"
+        android:textColor="#222222"
+        android:textStyle="bold"
+        android:text="Stripped Shirt"
+        />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/subtitle"
+        android:layout_toRightOf="@id/imageUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:textSize="12dp"
+        android:textColor="#9d9d9d"
+        android:paddingLeft="10dp"
+        android:paddingTop="2dp"
+        android:layout_below="@id/title"
+        android:text="$40.99"
+        />
+
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/productDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:textColor="#0076ff"
+        android:layout_below="@id/imageUrl"
+        android:text="Buy"
+        android:paddingBottom="4dp"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"/>
+
+</RelativeLayout>
+
+

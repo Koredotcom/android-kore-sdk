@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/multi_select_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/contact_list_seperator"
+    android:orientation="vertical"
+    android:paddingBottom="2dp">
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvform_template_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="Testing"
+        android:textColor="#404051"
+        android:textSize="@dimen/text_size_header"
+        android:textStyle="bold"/>
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/multi_select_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:divider="@null"
+        android:visibility="visible" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/btfieldButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:layout_margin="@dimen/dimen_3dp"
+        android:layout_weight="0"
+        android:textStyle="bold"
+        android:background="@drawable/form_button_bg"
+        android:text="Ok" />
+</LinearLayout>

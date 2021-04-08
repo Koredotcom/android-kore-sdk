@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_options_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llBottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llCloseBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_20dp">
+
+            <kore.botssdk.views.CustomTextViewBold
+                android:id="@+id/tvOptionsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_header"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_close_black_24dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llTabHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp">
+
+                <kore.botssdk.views.CustomTextViewBold
+                    android:id="@+id/tvTab1"
+                    android:layout_width="@dimen/carousel_view_button_height_individual"
+                    android:layout_height="30dp"
+                    android:background="@drawable/bottom_sheet_button_bg"
+                    android:gravity="center"
+                    android:text="Tab1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp">
+
+                <kore.botssdk.views.CustomTextViewBold
+                    android:id="@+id/tvTab2"
+                    android:layout_width="@dimen/carousel_view_button_height_individual"
+                    android:layout_height="@dimen/dimen_30dp"
+                    android:background="@drawable/calender_view_background"
+                    android:gravity="center"
+                    android:text="Tab2" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMoreData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:visibility="gone" />
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/lvMoreData"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_layout_height"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:divider="#ffffff"
+            android:dividerHeight="@dimen/dimen_10dp"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:padding="2dp"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
+</LinearLayout>
