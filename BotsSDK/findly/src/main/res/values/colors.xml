@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //CVS
+<!--    <color name="colorPrimaryKa">#cc0001</color>-->
+<!--    <color name="colorPrimaryDark">#cc0001</color>-->
+<!--    <color name="appRequiredColor">#cc0001</color>-->
+
     <color name="colorPrimaryKa">#3942f6</color>
     <color name="colorPrimaryDark">#3942f6</color>
     <color name="appRequiredColor">#3942f6</color>
+
+    <color name="colorPrimary">#3942f6</color>
+    <color name="colorAccent">#3942f6</color>
     <!--<color name="colorAccent">#2f91e5</color>-->
     <color name="toolbar_title_color">#ffffff</color>
     <color name="txtFontBlack">#000000</color>
@@ -179,7 +187,6 @@
     <color name="color_afeefa">#afeefa</color>
     <color name="color_8A9DA6">#8A9DA6</color>
     <color name="statusbar">#8A9DA6</color>
-    <color name="colorPrimary">#d32f2f</color>
 
     <color name="meetings">#4e74f0</color>
     <color name="tasks">#ff5b6a</color>

@@ -7,7 +7,7 @@
                 android:centerY="-9.740159E-16"
                 android:gradientRadius="40" android:type="radial">
                 <item android:color="?attr/colorPrimary" android:offset="0"/>
-                <item android:color="?attr/colorPrimary" android:offset="1"/>
+                <item android:color="?attr/colorPrimary" android:offset="0"/>
             </gradient>
         </aapt:attr>
     </path>

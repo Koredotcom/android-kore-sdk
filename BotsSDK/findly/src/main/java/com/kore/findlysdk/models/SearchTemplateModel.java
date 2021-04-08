@@ -1,6 +1,7 @@
 package com.kore.findlysdk.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class SearchTemplateModel implements Serializable
 {
@@ -9,6 +10,8 @@ public class SearchTemplateModel implements Serializable
     private LiveSearchFacetsModel facets;
     private SearchResultsModel results;
     private SearchWebHookPayloadModel webhookPayload;
+    private ArrayList<SearchFacetsModel> searchFacets;
+
 
     public void setCleanQuery(String cleanQuery) {
         this.cleanQuery = cleanQuery;
@@ -48,5 +51,13 @@ public class SearchTemplateModel implements Serializable
 
     public SearchWebHookPayloadModel getWebhookPayload() {
         return webhookPayload;
+    }
+
+    public void setSearchFacets(ArrayList<SearchFacetsModel> searchFacets) {
+        this.searchFacets = searchFacets;
+    }
+
+    public ArrayList<SearchFacetsModel> getSearchFacets() {
+        return searchFacets;
     }
 }

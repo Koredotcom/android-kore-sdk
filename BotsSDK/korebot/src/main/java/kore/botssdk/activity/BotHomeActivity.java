@@ -46,7 +46,7 @@ import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
  */
 public class BotHomeActivity extends BotAppCompactActivity {
 
-    private Button launchBotBtn;
+    private Button launchBotBtn, launchCVSBotBtn, launchPfizerBotBtn;
     private EditText etIdentity;
     private BotBankingConfigModel botBankingConfigModel;
 
@@ -64,11 +64,29 @@ public class BotHomeActivity extends BotAppCompactActivity {
     private void findViews() {
 
         launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
+        launchCVSBotBtn = (Button) findViewById(R.id.launchCVSBotBtn);
+        launchPfizerBotBtn = (Button) findViewById(R.id.launchPfizerBotBtn);
         etIdentity = (EditText) findViewById(R.id.etIdentity);
-        launchBotBtn.setText("Connect");
+//        launchBotBtn.setText("Connect");
 //        etIdentity.setText(SDKConfiguration.Client.identity);
         if(etIdentity.getText().toString() != null && etIdentity.getText().toString().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
+
+        launchCVSBotBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBotConfiguration("careMark", "cs-0b9dcc51-26f3-53ed-b9d9-65888e5aaaeb", "97KKpL/OF4ees3Z69voceE1nm5FnelhxrtrwOJuRMPA=", "st-bd231a03-1ab7-58fb-8862-c19416471cdb", "sidx-6fff8b04-f206-565c-bb02-fb13ae366fd3");
+                launchBotChatActivity();
+            }
+        });
+
+        launchPfizerBotBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBotConfiguration("Pfizer", "cs-549d8874-cf8c-5715-bce1-cb83ec4faedb", "ZLnSvXa5fhxrRM8znYbhWOVN/yDNH8vikdIivggA6WI=", "st-8dbd1e15-1f88-5ff7-9c23-e30ac1d38212", "sidx-d9006b59-6c8c-5a78-bcbd-00e3e0ceb9aa");
+                launchBotChatActivity();
+            }
+        });
     }
 
     private void setListeners() {
@@ -104,19 +122,20 @@ public class BotHomeActivity extends BotAppCompactActivity {
         public void onClick(View v) {
             if (isOnline())
             {
-                if(!StringUtils.isNullOrEmpty(etIdentity.getText().toString()))
-                {
-                    if(StringUtils.isValidEmail(etIdentity.getText().toString()))
-                    {
-                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
+//                if(!StringUtils.isNullOrEmpty(etIdentity.getText().toString()))
+//                {
+//                    if(StringUtils.isValidEmail(etIdentity.getText().toString()))
+//                    {
+//                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
                         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+                        setBotConfiguration("Future Bank Copy", "cs-b63967bb-0599-5ec2-8e84-8af15028f86f", "Q9W/R5t2V03/aUtZ1O/M25ObJP5k/rQhHZPjC977o7o=", "st-c877d8bd-8383-5472-ab69-8410ac17cd4d", "sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e");
                         launchBotChatActivity();
-                    }
-                    else
-                        Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
-                }
-                else
-                    Toast.makeText(BotHomeActivity.this, "Please enter your Email.", Toast.LENGTH_SHORT).show();
+//                    }
+//                    else
+//                        Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
+//                }
+//                else
+//                    Toast.makeText(BotHomeActivity.this, "Please enter your Email.", Toast.LENGTH_SHORT).show();
             } else
                 {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();
@@ -130,7 +149,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
      *
      */
     private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
@@ -186,5 +205,14 @@ public class BotHomeActivity extends BotAppCompactActivity {
                 Log.e("Skill Panel Data", t.toString());
             }
         });
+    }
+
+    private void setBotConfiguration(String botName, String clientId, String clientSecret, String botId, String sxId)
+    {
+        com.kore.findlysdk.net.SDKConfiguration.Client.setBot_name(botName);
+        com.kore.findlysdk.net.SDKConfiguration.Client.setClient_id(clientId);
+        com.kore.findlysdk.net.SDKConfiguration.Client.setClient_secret(clientSecret);
+        com.kore.findlysdk.net.SDKConfiguration.Client.setBot_id(botId);
+        com.kore.findlysdk.net.SDKConfiguration.setSDIX(sxId);
     }
 }

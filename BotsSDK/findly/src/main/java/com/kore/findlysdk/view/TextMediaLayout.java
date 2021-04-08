@@ -291,9 +291,9 @@ public class TextMediaLayout extends ViewGroup {
                 botContentTextView.setBackground(leftDrawable);
                 final String pureBase64Encoded = chatIcon.substring(chatIcon.indexOf(",")  + 1);
                 Drawable img = new BitmapDrawable(getResources(), convertBase64ToBitmap(pureBase64Encoded));
-                img.setBounds(0, 0, 70, 70);
+                img.setBounds(0, 0, 60, 60);
                 botContentTextView.setCompoundDrawables(img, null, null, null);
-                botContentTextView.setCompoundDrawablePadding(25);
+                botContentTextView.setCompoundDrawablePadding(20);
             }
 
             if(isPencilSpanClick && !isClicable()){
@@ -424,8 +424,8 @@ public class TextMediaLayout extends ViewGroup {
             switch (child.getId()) {
                 case BubbleConstants.TEXTVIEW_ID:
                     childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.UNSPECIFIED);
-                    MeasureUtils.measure(child, childWidthSpec, wrapSpec);
-                    childWidth = child.getMeasuredWidth();
+                    MeasureUtils.measure(child, childWidthSpec , wrapSpec);
+                    childWidth = child.getMeasuredWidth() - 100;
                     if (childWidth > restrictedLayoutWidth) {
                         childWidthSpec = MeasureSpec.makeMeasureSpec((int) restrictedLayoutWidth, MeasureSpec.AT_MOST);
                         MeasureUtils.measure(child, childWidthSpec, wrapSpec);
@@ -447,8 +447,8 @@ public class TextMediaLayout extends ViewGroup {
         }
 
         int parentHeightSpec = MeasureSpec.makeMeasureSpec(totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST);
-        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
+        int parentWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.UNSPECIFIED);
+        setMeasuredDimension(parentWidthSpec , parentHeightSpec);
 
     }
 

@@ -124,23 +124,6 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
             holder.checkBox.setChecked(checkedItems.contains(item));
             holder.checkBox.setTag(item);
             holder.checkBox.setOnClickListener(itemSelectionListener);
-            /*holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (composeFooterInterface != null && isEnabled) {
-                        setEnabled(false);
-                        multiSelectView.setMeetingLayoutAlpha(isEnabled());
-                   *//* MeetingSlotModel.Slot meetingSlotModel = (MeetingSlotModel.Slot) v.getTag();
-                    if (meetingSlotModel != null) {
-                        HashMap<String, ArrayList<MeetingSlotModel.Slot>> selectedSlot = new HashMap<>();
-                        ArrayList<MeetingSlotModel.Slot> slotModels = new ArrayList<>();
-                        slotModels.add(meetingSlotModel);
-                        selectedSlot.put("slots",slotModels);
-                        composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0,false);
-                    }*//*
-                    }
-                }
-            });*/
         }else{
             holder.textView.setTag(item);
             holder.textView.setText(((BotButtonModel)item).getTitle());

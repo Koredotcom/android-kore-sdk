@@ -27,6 +27,7 @@
     <dimen name="text_size_header">20dp</dimen>
     <dimen name="agent_image_size">50dp</dimen>
     <dimen name="bottom_options_icon_width">30dp</dimen>
+    <dimen name="text_size_very_small">11dp</dimen>
 
     <!-- Typing statis CPV -->
     <dimen name="typing_layout_cpv_height">24dp</dimen>

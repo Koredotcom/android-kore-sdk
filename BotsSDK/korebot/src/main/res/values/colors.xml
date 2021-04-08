@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="colorAccent">#2f91e5</color>--><!-- HSBC - #db0012, BMC Helix - #2f91e5 -->
-    <color name="bgBlueSignup">#3F51B5</color>
+    <color name="bgBlueSignup">#cc0001</color>
     <color name="bgLightBlue">#9fa8da</color>
 
-<!--    General Theme-->
-    <color name="colorPrimaryKa">#0059b2</color>
-    <color name="colorPrimaryDark">#0059b2</color>
-    <color name="colorPrimary">#0059b2</color>
-    <color name="colorAccent">#D81B60</color>
+<!--    General Theme CVS-->
+<!--    <color name="colorPrimaryKa">#cc0001</color>-->
+<!--    <color name="colorPrimaryDark">#cc0001</color>-->
+<!--    <color name="colorPrimary">#cc0001</color>-->
+<!--    <color name="colorAccent">#D81B60</color>-->
+
+    // Pfizer
+<!--    <color name="colorPrimaryKa">#000000</color>-->
+<!--    <color name="colorPrimaryDark">#000000</color>-->
+<!--    <color name="colorPrimary">#000000</color>-->
+<!--    <color name="colorAccent">#000000</color>-->
+
+    <color name="colorPrimaryKa">#3942f6</color>
+    <color name="colorPrimaryDark">#3942f6</color>
+    <color name="colorPrimary">#3942f6</color>
+    <color name="colorAccent">#3942f6</color>
 
     <!--    Associated Bank Theme-->
     <color name="colorPrimaryKa_associated">#009b38</color>

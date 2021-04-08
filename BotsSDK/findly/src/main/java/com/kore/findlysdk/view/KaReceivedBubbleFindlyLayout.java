@@ -379,8 +379,14 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 }
                 else if(BotResponse.TEMPLATE_TYPE_RESULTS_LIST.equalsIgnoreCase(payInner.getTemplate_type()))
                 {
-                    resultsTemplateView.setVisibility(VISIBLE);
-                    resultsTemplateView.populateResultsTemplateView(payInner);
+                    if(payInner.getTemplate() != null && payInner.getTemplate().getResults() != null
+                        && payInner.getTemplate().getResults() != null && (payInner.getTemplate().getResults().getFaq().size() > 0
+                            || payInner.getTemplate().getResults().getPage().size() > 0))
+                    {
+                        resultsTemplateView.setVisibility(VISIBLE);
+                        resultsTemplateView.populateResultsTemplateView(payInner);
+                    }
+
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 }
                 else if(BotResponse.TEMPLATE_TYPE_CARDS.equalsIgnoreCase(payInner.getTemplate_type()))

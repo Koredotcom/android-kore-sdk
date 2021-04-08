@@ -1,11 +1,14 @@
 package com.kore.findlysdk.view.viewUtils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
+import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -95,9 +98,24 @@ public class CarouselItemViewHelper {
                 carouselViewHolder.carouselItemSubTitle.setVisibility(GONE);
             }
             try {
-                if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
-                    Picasso.get().load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
-                    carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
+                if(botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty())
+                {
+                    if(botCarouselModel.getImage_url().contains("base64"))
+                    {
+                        try
+                        {
+                            String image = botCarouselModel.getImage_url().substring(botCarouselModel.getImage_url().indexOf(",") + 1);
+                            byte[] decodedString = Base64.decode(image.getBytes(), Base64.DEFAULT);
+                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                            carouselViewHolder.carouselItemImage.setImageBitmap(decodedByte);
+                        } catch (Exception e) {
+                        }
+                    }
+                    else
+                    {
+                        Picasso.get().load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
+                        carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
+                    }
                 }else{
                     carouselViewHolder.carouselItemImage.setVisibility(GONE);
                 }

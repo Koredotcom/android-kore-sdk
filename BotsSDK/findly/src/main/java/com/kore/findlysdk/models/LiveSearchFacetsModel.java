@@ -5,6 +5,7 @@ public class LiveSearchFacetsModel
     private int faq;
     private int page;
     private int task;
+    private int document;
 
     public int getFaq() {
         return faq;
@@ -28,5 +29,13 @@ public class LiveSearchFacetsModel
 
     public void setTask(int task) {
         this.task = task;
+    }
+
+    public int getDocument() {
+        return document;
+    }
+
+    public void setDocument(int document) {
+        this.document = document;
     }
 }

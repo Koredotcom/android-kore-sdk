@@ -107,7 +107,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
                     arrTempAllResults.addAll(liveSearchResultsModel.getTemplate().getResults().getTask());
 
                 if(arrTempAllResults != null && arrTempAllResults.size() > 0)
-                    chatAdapterViewHolder.lvLiveSearch.setAdapter( new LiveSearchCyclerAdapter(context, getTopFourList(arrTempAllResults), 1, invokeGenericWebViewInterface));
+                    chatAdapterViewHolder.lvLiveSearch.setAdapter( new LiveSearchCyclerAdapter(context, getTopFourList(arrTempAllResults), 1, invokeGenericWebViewInterface, null));
                 else
                     chatAdapterViewHolder.llLiveSearch.setVisibility(View.GONE);
 

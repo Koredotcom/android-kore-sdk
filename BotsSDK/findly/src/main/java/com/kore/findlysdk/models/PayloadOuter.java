@@ -8,6 +8,15 @@ public class PayloadOuter {
     private String type;
     private PayloadInner payload;
     private String text;
+    private SearchTemplateModel template;
+
+    public void setTemplate(SearchTemplateModel template) {
+        this.template = template;
+    }
+
+    public SearchTemplateModel getTemplate() {
+        return template;
+    }
 
     public String getType() {
         return type;

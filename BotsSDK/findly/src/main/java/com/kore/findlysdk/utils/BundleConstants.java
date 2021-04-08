@@ -5,6 +5,7 @@ public class BundleConstants
     public static final String FAQ = "faq";
     public static final String PAGE = "page";
     public static final String TASK = "task";
+    public static final String DOCUMENT = "document";
     public static final String REQ_TEXT_TO_DISPLAY = "reqTextTodisplay";
 
     public static final String KNOWLEDGE_ID = "knowledgeId";

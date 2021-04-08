@@ -10,8 +10,8 @@
         android:topLeftRadius="@dimen/dimen_5dp"
         android:topRightRadius="5dp" />
     <padding
-        android:bottom="@dimen/dimen_12dp"
-        android:left="@dimen/dimen_12dp"
-        android:right="@dimen/dimen_12dp"
-        android:top="@dimen/dimen_12dp" />
+        android:bottom="@dimen/dimen_10dp"
+        android:left="@dimen/dimen_7dp"
+        android:right="@dimen/dimen_7dp"
+        android:top="@dimen/dimen_10dp" />
 </shape>

@@ -2,7 +2,10 @@ package com.kore.findlysdk.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -36,6 +39,7 @@ public class ResultsTemplateView extends LinearLayout {
     private TextView tvSeeAllResults;
     private ArrayList<LiveSearchResultsModel> botListModelArrayList;
     private Context mContext;
+    private SharedPreferences sharedPreferences;
 
     public ResultsTemplateView(Context context) {
         super(context);
@@ -62,10 +66,10 @@ public class ResultsTemplateView extends LinearLayout {
         lvLiveSearch.setLayoutManager(new LinearLayoutManager(mContext));
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
     }
 
-    public void populateResultsTemplateView(PayloadInner payloadInner) {
+    public void populateResultsTemplateView(final PayloadInner payloadInner) {
 
         if (payloadInner != null && payloadInner.getElements() != null )
         {
@@ -74,7 +78,7 @@ public class ResultsTemplateView extends LinearLayout {
 
             if(botListModelArrayList != null && botListModelArrayList.size() > 0)
             {
-                botListTemplateAdapter = new LiveSearchCyclerAdapter(getContext(), getTopFourList(botListModelArrayList), 1, invokeGenericWebViewInterface);
+                botListTemplateAdapter = new LiveSearchCyclerAdapter(getContext(), getTopFourList(botListModelArrayList), 1, invokeGenericWebViewInterface, composeFooterInterface);
                 lvLiveSearch.setAdapter(botListTemplateAdapter);
 
                 tvSeeAllResults.setOnClickListener(new OnClickListener() {
@@ -84,7 +88,11 @@ public class ResultsTemplateView extends LinearLayout {
                         if(botListModelArrayList != null && botListModelArrayList.size() > 0)
                         {
                             Intent intent = new Intent(mContext, FullResultsActivity.class);
-                            intent.putExtra("Results", botListModelArrayList);
+                            intent.putExtra("originalQuery", payloadInner.getTemplate().getCleanQuery());
+
+                            if(sharedPreferences != null)
+                                intent.putExtra("messagePayload", sharedPreferences.getString("Payload", ""));
+
                             mContext.startActivity(intent);
                         }
                     }
@@ -172,6 +180,35 @@ public class ResultsTemplateView extends LinearLayout {
                 }
             }
         }
+
+        if(arrTempResults.size() >= 1)
+        {
+            int suntoAdd = arrTempResults.size()+2;
+            for (int i = 0; i < arrResults.size(); i++)
+            {
+                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.TASK))
+                {
+                    arrTempResults.add(arrResults.get(i));
+                    if(arrTempResults.size() == suntoAdd)
+                        break;
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < arrResults.size(); i++)
+            {
+                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.TASK))
+                {
+                    arrTempResults.add(arrResults.get(i));
+                    if(arrTempResults.size() == 2)
+                        break;
+                }
+            }
+        }
+
+
+
 
         return arrTempResults;
     }

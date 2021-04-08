@@ -332,9 +332,12 @@ public final class SocketWrapper{
                     }
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
-                        try {
+                        try
+                        {
+                            Log.e("Need to change here", rtmUrl.getUrl());
                             connectToSocket(rtmUrl.getUrl(),false);
-                        } catch (URISyntaxException e) {
+                        }
+                        catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
                     }

@@ -4,11 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/left_footer_divider"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lvLiveSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_5dp"
         android:divider="@color/white"
         android:dividerHeight="@dimen/dimen_0" />
 

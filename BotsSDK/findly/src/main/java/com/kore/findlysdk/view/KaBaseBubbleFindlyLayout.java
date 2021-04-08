@@ -270,7 +270,7 @@ public abstract class KaBaseBubbleFindlyLayout extends ViewGroup {
         ownLayoutInflater = LayoutInflater.from(context);
 
         bubbleTextMediaLayout = ViewProvider.getTextMediaLayout(context,getLinkTextColor());
-        bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
+        bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth() - 30 * dp1);
         //  bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);

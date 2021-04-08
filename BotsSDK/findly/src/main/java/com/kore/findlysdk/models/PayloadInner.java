@@ -59,6 +59,15 @@ public class PayloadInner {
     private boolean sliderView;
     private String description;
     private HeaderOptionsModel headerOptions;
+    private SearchTemplateModel template;
+
+    public void setTemplate(SearchTemplateModel template) {
+        this.template = template;
+    }
+
+    public SearchTemplateModel getTemplate() {
+        return template;
+    }
 
     public boolean isIs_end() {
         return is_end;
@@ -314,7 +323,6 @@ public class PayloadInner {
     private ArrayList<FeedbackStarModel> starArrays;
     private ArrayList<CardsTemplateModel> arrCardsTemplateModels;
     private boolean dialogCancel;
-
 
     public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
         return multiSelectModels;

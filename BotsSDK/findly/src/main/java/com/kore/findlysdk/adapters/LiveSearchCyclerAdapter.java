@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.kore.findlysdk.R;
+import com.kore.findlysdk.listners.ComposeFooterInterface;
 import com.kore.findlysdk.listners.InvokeGenericWebViewInterface;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
 import com.kore.findlysdk.utils.BundleConstants;
@@ -36,14 +37,16 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
     private Context context;
     private int from = 0;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ComposeFooterInterface composeFooterInterface;
     private String cardImage= "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAJ1BMVEUAAAAAVaoEbq4DbK8GbK4Gbq8Gba0Fba8Fba4Fbq4Eba4Fba7////SVqJwAAAAC3RSTlMAA0hJVYKDqKmq4875bAAAAAABYktHRAyBs1FjAAAAP0lEQVQI12NgwACMJi5A4CzAwLobDBIYOCaAxDknMLCvnAkEsyYwcECkkBicMDV4GGwQxQEMjCogK5wEMC0HALyTIMofpWLWAAAAAElFTkSuQmCC";
 
-    public LiveSearchCyclerAdapter(Context context, ArrayList<LiveSearchResultsModel> model, int from, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public LiveSearchCyclerAdapter(Context context, ArrayList<LiveSearchResultsModel> model, int from, InvokeGenericWebViewInterface invokeGenericWebViewInterface, ComposeFooterInterface composeFooterInterface) {
         this.model = model;
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.from = from;
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+        this.composeFooterInterface = composeFooterInterface;
     }
 
     @NonNull
@@ -59,7 +62,7 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final LiveSearchResultsModel liveSearchResultsModel = model.get(position);
 
-        holder.ivPagesCell.setVisibility(View.GONE);
+
         holder.ivSuggestedPage.setVisibility(View.GONE);
 
         holder.llPages.setVisibility(VISIBLE);
@@ -67,6 +70,7 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
 
         if (liveSearchResultsModel.getQuestion() != null)
         {
+            holder.ivPagesCell.setVisibility(View.GONE);
             holder.tvTitle.setMaxLines(1);
             holder.tvTitle.setText(liveSearchResultsModel.getQuestion());
             holder.tvDescription.setText(liveSearchResultsModel.getAnswer());
@@ -86,7 +90,11 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
         {
             holder.llPages.setVisibility(View.GONE);
             holder.llTask.setVisibility(View.VISIBLE);
-            holder.tvTaskName.setText(liveSearchResultsModel.getTaskName());
+
+            if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getTaskName()))
+                holder.tvTaskName.setText(liveSearchResultsModel.getTaskName());
+            else if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getName()))
+                holder.tvTaskName.setText(liveSearchResultsModel.getName());
 //            if(!StringUtils.isNullOrEmpty(cardImage))
 //            {
                 try
@@ -116,16 +124,20 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
                             holder.tvPageTitle.setText("Suggested Pages");
                         else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.FAQ))
                             holder.tvPageTitle.setText("Suggested FAQS");
-                        else
+                        else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.TASK))
                             holder.tvPageTitle.setText("Suggested ACTIONS");
+                        else
+                            holder.tvPageTitle.setText("Suggested Documents");
                         break;
                     case 1:
                         if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.PAGE))
                             holder.tvPageTitle.setText("Matched Pages");
                         else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.FAQ))
                             holder.tvPageTitle.setText("Matched FAQS");
-                        else
+                        else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.TASK))
                             holder.tvPageTitle.setText("Matched ACTIONS");
+                        else
+                            holder.tvPageTitle.setText("Matched Documents");
                         break;
                 }
 
@@ -142,16 +154,20 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
                         holder.tvPageTitle.setText("Suggested Pages");
                     else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.FAQ))
                         holder.tvPageTitle.setText("Suggested FAQS");
-                    else
+                    else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.TASK))
                         holder.tvPageTitle.setText("Suggested ACTIONS");
+                    else
+                        holder.tvPageTitle.setText("Suggested Documents");
                     break;
                 case 1:
                     if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.PAGE))
                         holder.tvPageTitle.setText("Matched Pages");
                     else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.FAQ))
                         holder.tvPageTitle.setText("Matched FAQS");
-                     else
+                     else if (liveSearchResultsModel.getContentType().equalsIgnoreCase(BundleConstants.TASK))
                         holder.tvPageTitle.setText("Matched ACTIONS");
+                     else
+                        holder.tvPageTitle.setText("Matched Documents");
                     break;
             }
 
@@ -183,6 +199,17 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
 
                 if(invokeGenericWebViewInterface != null && !StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
                     invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
+                else if(invokeGenericWebViewInterface != null && !StringUtils.isNullOrEmpty(liveSearchResultsModel.getExternalFileUrl()))
+                    invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getExternalFileUrl());
+            }
+        });
+
+        holder.llTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(composeFooterInterface != null)
+                    composeFooterInterface.onSendClick(liveSearchResultsModel.getPayload(), false);
             }
         });
     }
@@ -190,6 +217,12 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
     @Override
     public int getItemCount() {
         return model.size();
+    }
+
+    public void refresh(ArrayList<LiveSearchResultsModel> arrLiveSearchResultsModels)
+    {
+        this.model = arrLiveSearchResultsModels;
+        notifyDataSetChanged();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

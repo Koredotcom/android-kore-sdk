@@ -20,7 +20,10 @@
     <string name="search_results">Search Results</string>
     <string name="go">Go</string>
     <string name="view_more">View more</string>
-
+    <string name="filter">Filter</string>
+    <string name="filter_by">Filter By</string>
+    <string name="clear_all"><u>Clear all</u></string>
+    <string name="apply"><u>Apply</u></string>
     <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
     <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
     <string name="icon_e979">&#xe979;</string> <!-- MEETING -->

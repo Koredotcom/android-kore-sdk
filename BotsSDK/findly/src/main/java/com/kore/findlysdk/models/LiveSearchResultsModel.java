@@ -19,7 +19,14 @@ public class LiveSearchResultsModel implements Serializable
     private String searchResultPreview;
     private String taskName;
     private LiveSearchPostBackPayloadModel postBackPayload;
-
+    private String childBotId;
+    private String childBotName;
+    private String taskId;
+    private String name;
+    private String text;
+    private String titleText;
+    private String payload;
+    private String externalFileUrl;
 
     public String getTitle() {
         return title;
@@ -131,5 +138,69 @@ public class LiveSearchResultsModel implements Serializable
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPayload(String payload) {
+        this.payload = payload;
+    }
+
+    public void setChildBotId(String childBotId) {
+        this.childBotId = childBotId;
+    }
+
+    public void setChildBotName(String childBotName) {
+        this.childBotName = childBotName;
+    }
+
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public void setTitleText(String titleText) {
+        this.titleText = titleText;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getPayload() {
+        return payload;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getChildBotId() {
+        return childBotId;
+    }
+
+    public String getChildBotName() {
+        return childBotName;
+    }
+
+    public String getTaskId() {
+        return taskId;
+    }
+
+    public String getTitleText() {
+        return titleText;
+    }
+
+    public String getExternalFileUrl() {
+        return externalFileUrl;
+    }
+
+    public void setExternalFileUrl(String externalFileUrl) {
+        this.externalFileUrl = externalFileUrl;
     }
 }

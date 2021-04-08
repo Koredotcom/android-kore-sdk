@@ -1,3 +1,2 @@
-include ':findly'
 include ':korebot', ':korebotsdklib', ':korefileuploadsdk', ':MPAndroidChart-3.1.0'
-include ':widgetsdk'
+include ':widgetsdk', ':findly'

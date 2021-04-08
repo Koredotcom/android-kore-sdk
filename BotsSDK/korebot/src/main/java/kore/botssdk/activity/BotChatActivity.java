@@ -38,6 +38,7 @@ import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
+import com.kore.findlysdk.fragments.FindlyFragment;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -113,6 +114,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotContentFragment botContentFragment;
     CarouselFragment carouselFragment;
     ComposeFooterFragment composeFooterFragment;
+    FindlyFragment findlyFragment;
     TTSSynthesizer ttsSynthesizer;
     QuickReplyFragment quickReplyFragment;
     BotContentFragmentUpdate botContentFragmentUpdate;
@@ -190,8 +192,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         composeFooterFragment.setArguments(getIntent().getExtras());
         composeFooterFragment.setComposeFooterInterface(this);
         composeFooterFragment.setBottomOptionData(getDataFromTxt());
-        fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
+//        fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
+
+        //Add Bot Compose Footer Fragment
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        findlyFragment = new FindlyFragment();
+        findlyFragment.setArguments(getIntent().getExtras());
+//        findlyFragment.setComposeFooterInterface(this);
+//        findlyFragment.setBottomOptionData(getDataFromTxt());
+        fragmentTransaction.add(R.id.chatLayoutFooterContainer, findlyFragment).commit();
+//        setComposeFooterUpdate(composeFooterFragment);
 
         updateTitleBar();
 
@@ -338,7 +349,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 titleMsg = getString(R.string.socket_disconnected);
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
-                composeFooterFragment.updateUI();
+//                composeFooterFragment.updateUI();
                 updateActionBar();
                 break;
 

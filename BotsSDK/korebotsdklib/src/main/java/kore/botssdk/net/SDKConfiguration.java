@@ -101,10 +101,9 @@ public class SDKConfiguration {
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
 
-        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
-        public static   String SERVER_URL ="https://bots.kore.ai";
+//        public static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//https://qa-bots.kore.ai";//"https://bots.kore.ai";
+//        public static   String SERVER_URL ="https://bots.kore.ai";
         public static   String TOKEN_SERVER_URL ="https://demodpd.kore.ai";
-
 
 //        static  String KORE_BOT_SERVER_URL = "https://bankingassistant-stg.kore.ai";//"https://bots.kore.ai";
 //        public static String SERVER_URL ="https://bankingassistant-stg.kore.ai";
@@ -117,6 +116,12 @@ public class SDKConfiguration {
         //        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
 //        public static String SERVER_URL ="https://pilot-bots.kore.com/";
         public static String BANKING_SERVER_URL ="https://demo.kore.ai/";
+
+        //Findly
+        static  String KORE_BOT_SERVER_URL = "https://pilot.findly.ai";//"https://bots.kore.ai";
+        public static String SERVER_URL ="https://pilot.findly.ai";
+
+
     }
 
     public static class Client {
@@ -187,12 +192,18 @@ public class SDKConfiguration {
 
 
         //        IKEA Buddy
-        public static String client_id = "cs-dfc84d2c-cd14-5b2a-a73a-baf2c210f275";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "lxeZGHfmsxFjRCo8e0LH0aUe0efK52UFg4vMvQnc//o=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "henrikjansen72@gmail.com";
-        public static String bot_name = "IKEA Buddy";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-35cbecc0-2ace-550d-8865-84afd8ba5794";
+//        public static String client_id = "cs-dfc84d2c-cd14-5b2a-a73a-baf2c210f275";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "lxeZGHfmsxFjRCo8e0LH0aUe0efK52UFg4vMvQnc//o=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "henrikjansen72@gmail.com";
+//        public static String bot_name = "IKEA Buddy";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-35cbecc0-2ace-550d-8865-84afd8ba5794";
 
+        //Findly Pilot
+        public static String client_id = "cs-99c4522b-d1ff-5cdf-b826-86459d8c835e";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "dTwkNeAtYB2zs7ZBlRrVLi76jQgwP4j9YBYInqkIUpw=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "raj.peda@kore.com";
+        public static String bot_name = "testSDK1";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-afc6cf90-4d91-5fa5-aaf3-d7a65f372ae8";
     }
 
     public static class BubbleColors {

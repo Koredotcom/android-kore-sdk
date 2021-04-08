@@ -9,6 +9,7 @@
         android:id="@+id/receivedBubbleLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/dimen_30dp"
         android:layout_alignParentLeft="true"
         android:background="#0000FF00">
 

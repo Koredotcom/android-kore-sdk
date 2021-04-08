@@ -10,7 +10,13 @@
         android:id="@+id/wvLoadUrl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible" />
+        android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/pfizer_bg"
+        android:visibility="gone"/>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/cordinate_layout"
@@ -451,7 +457,7 @@
         android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
-        android:background="@drawable/left_bubble_bg"
+        android:background="@drawable/cvs_welcome_bg"
         android:gravity="center_vertical"
         android:visibility="gone">
 
@@ -466,7 +472,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:text="@string/welcomehello"
-            android:textSize="@dimen/text_size_normal"/>
+            android:textSize="@dimen/text_size_normal"
+            android:textColor="@color/white"/>
 
     </LinearLayout>
 

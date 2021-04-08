@@ -8,6 +8,7 @@ public class SearchResultsModel implements Serializable
     private ArrayList<LiveSearchResultsModel> faq;
     private ArrayList<LiveSearchResultsModel> page;
     private ArrayList<LiveSearchResultsModel> task;
+    private ArrayList<LiveSearchResultsModel> document;
 
     public ArrayList<LiveSearchResultsModel> getFaq() {
         return faq;
@@ -31,5 +32,13 @@ public class SearchResultsModel implements Serializable
 
     public ArrayList<LiveSearchResultsModel> getTask() {
         return task;
+    }
+
+    public ArrayList<LiveSearchResultsModel> getDocument() {
+        return document;
+    }
+
+    public void setDocument(ArrayList<LiveSearchResultsModel> document) {
+        this.document = document;
     }
 }

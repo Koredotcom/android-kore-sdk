@@ -19,6 +19,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            versionNameSuffix rulesVersion
+            signingConfig signingConfigs.debug
+        }
     }
 }
 
@@ -44,5 +48,6 @@ dependencies {
     implementation project(':MPAndroidChart-3.1.0')
     //For jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.10.5'
+    compile 'io.reactivex.rxjava2:rxandroid:2.1.0'
 
 }
