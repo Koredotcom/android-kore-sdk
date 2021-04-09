@@ -60,6 +60,15 @@ public class PayloadInner {
     private boolean sliderView;
     private String description;
     private HeaderOptionsModel headerOptions;
+    private BotFormFieldButtonModel fieldButton;
+
+    public void setFieldButton(BotFormFieldButtonModel fieldButton) {
+        this.fieldButton = fieldButton;
+    }
+
+    public BotFormFieldButtonModel getFieldButton() {
+        return fieldButton;
+    }
 
     public boolean isIs_end() {
         return is_end;

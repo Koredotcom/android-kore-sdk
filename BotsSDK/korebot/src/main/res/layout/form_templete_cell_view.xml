@@ -52,7 +52,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_margin="@dimen/dimen_3dp"
                 android:background="@drawable/form_button_bg"
-                android:text="Ok" />
+                android:text="Ok"
+                android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>
 

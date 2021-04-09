@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.BotFormFieldButtonModel;
 import kore.botssdk.models.BotFormTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
 
 public class BotFormTemplateAdapter extends BaseAdapter {
 
@@ -24,6 +26,7 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     private LayoutInflater ownLayoutInflator;
     private Context context;
     private ArrayList<BotFormTemplateModel> arrBotFormTemplateModels;
+    private String textColor;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -34,6 +37,10 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     }
 
     private boolean isEnabled;
+
+    public void setTextColor(String textColor) {
+        this.textColor = textColor;
+    }
 
     public BotFormTemplateAdapter(Context context, ArrayList<BotFormTemplateModel> arrBotFormTemplateModels) {
         this.ownLayoutInflator = LayoutInflater.from(context);
@@ -91,21 +98,31 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     {
         final BotFormTemplateModel item = getItem(position);
         holder.btfieldButton.setTag(item);
-        holder.btfieldButton.setText(((BotFormFieldButtonModel) item.getFieldButton()).getTitle());
+
+        if(((BotFormFieldButtonModel) item.getFieldButton()) != null)
+            holder.btfieldButton.setText(((BotFormFieldButtonModel) item.getFieldButton()).getTitle());
+        else
+            holder.btfieldButton.setText("Ok");
+
         holder.tvFormFieldTitle.setText(item.getLabel()+" : ");
         holder.edtFormInput.setHint(item.getPlaceHolder());
 
-        holder.btfieldButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && isEnabled)
-                {
-                    StringBuffer sb = new StringBuffer();
-                    sb.append(holder.edtFormInput.getText().toString());
-                    composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(),false);
-                }
-            }
-        });
+        if(!StringUtils.isNullOrEmpty(textColor))
+        {
+            holder.tvFormFieldTitle.setTextColor(Color.parseColor(textColor));
+        }
+
+//        holder.btfieldButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (composeFooterInterface != null && isEnabled)
+//                {
+//                    StringBuffer sb = new StringBuffer();
+//                    sb.append(holder.edtFormInput.getText().toString());
+//                    composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(),false);
+//                }
+//            }
+//        });
     }
 
     private String getDotMessage(String strPassword)
