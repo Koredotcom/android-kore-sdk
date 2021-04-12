@@ -178,6 +178,130 @@ pushNotificationRegistrar.unsubscribePushNotification(Context context, String ac
 ----
 //Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
 botconnector.disconnect();
+
+# Native BotSDK integration in React Native Application
+## Steps to integrate :
+
+1) Copy “korebot”, “Korebotsdklib” into android folder which is available in Master Branch
+
+## Bridge Creation in React Native Application
+
+2) Create a Native Module which extends “ReactContextBaseJavaModule” with @ReactMethod
+
+```java
+public class BotConnectionModule extends ReactContextBaseJavaModule {
+   private Context context;
+
+   BotConnectionModule(ReactApplicationContext context) {
+       super(context);
+       this.context = context;
+   }
+
+   @ReactMethod
+   public void initialize(String bot_id, String bot_name, String client_id, String client_secret, String identity)
+   {
+       SDKConfiguration.Client.bot_id = bot_id;
+       SDKConfiguration.Client.bot_name = bot_name;
+       SDKConfiguration.Client.client_id = client_id;
+       SDKConfiguration.Client.client_secret = client_secret;
+       SDKConfiguration.Client.identity = identity;
+   }
+
+   @ReactMethod
+   public void show()
+   {  
+   BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(context, null);
+   
+       Intent intent = new Intent(context, BotChatActivity.class);
+       context.startActivity(intent);
+   }
+
+   @Override
+   public String getName() {
+       return "BotConnectionModule";
+   }
+}
+```
+3) Create a Package class which should extend “ReactPackage”  and should add created module init.
+
+```java
+class MyAppPackage implements ReactPackage 
+{
+   @Override
+   public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) 
+   {
+       return Collections.emptyList();
+   }
+
+   @Override
+   public List<NativeModule> createNativeModules(
+           ReactApplicationContext reactContext) {
+       List<NativeModule> modules = new ArrayList<>();
+
+       modules.add(new BotConnectionModule(reactContext));
+       return modules;
+   }
+}
+```
+
+4) Add the above created package into MainApplication class which is already available under “app -> src -> java”
+
+```java
+public class MainApplication extends Application implements ReactApplication 
+{
+ private final ReactNativeHost mReactNativeHost =
+   new ReactNativeHost(this) {
+     @Override
+     public boolean getUseDeveloperSupport() {
+       return BuildConfig.DEBUG;
+     }
+
+     @Override
+     protected List<ReactPackage> getPackages() {
+       @SuppressWarnings("UnnecessaryLocalVariable")
+       List<ReactPackage> packages = new PackageList(this).getPackages();
+       // Packages that cannot be autolinked yet can be added manually here, for      example:
+       // packages.add(new MyReactNativePackage());
+         packages.add(new MyAppPackage());
+       return packages;
+     }
+
+     @Override
+     protected String getJSMainModuleName() {
+       return "index";
+     }
+   };
+```
+
+## Inflating Native Module into React Native .js File
+
+- By the above code you have successfully created a Bridge Module in Native android now you have into call the native methods from react native class for that kindly follow as below
+
+- Fetching the native module in react native class
+
+```java
+const { BotConnectionModule } = ReactNative.NativeModules;
+```
+
+## Initializing The Bot
+
+- To initialize the bot we need to have a botid, botName, identity, clientid and  client secret that can be obtained from Bot builder.
+
+- When user opens the application(React Native) kindly initialize the bot by calling
+
+````java
+BotConnectionModule.initialize(bot_id, bot_name, client_id, client_secret, identity)
+````
+
+## Chatbot Screen
+
+- When user want to chat with our chat bot by clicking the chat icon provided in screen kindly call this method from react native class
+
+````java
+BotConnectionModule.show()
+````
+
+- chat window will be presented to the user 
 ```
 License
 ```
