@@ -61,8 +61,10 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
 
     public String getDescription() {
-
-        return description != null ? description : "";
+        String descriptionString= description != null ? description : "";
+        //descriptionString= descriptionString.replaceAll("(?s)<!--.*?-->", "").trim();
+      
+        return descriptionString.replaceAll("(?s)<!--.*?-->", "").trim();
     }
 
     public void setDescription(String description) {
