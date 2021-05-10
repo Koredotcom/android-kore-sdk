@@ -3,6 +3,7 @@ package com.kore.findlysdk.net;
 import com.kore.findlysdk.models.LiveSearchModel;
 import com.kore.findlysdk.models.PopularSearchModel;
 import com.kore.findlysdk.models.RestResponse;
+import com.kore.findlysdk.models.ResultsViewModel;
 import com.kore.findlysdk.models.SearchModel;
 
 import java.util.ArrayList;
@@ -39,10 +40,12 @@ public interface BotRestAPI {
 //    https://pilot.findly.ai/api/1.1/searchAssist/sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e/liveSearch
 
     @POST("api"+URL_VERSION+"/searchAssist/{sidx}/liveSearch")
-    Call<LiveSearchModel> getLiveSearch(@Path("sidx") String sidx,@Header("Authorization") String token, @Body Object body);
+    Call<LiveSearchModel> getLiveSearch(@Path("sidx") String sidx,@Header("Authorization") String token, @Header("state") String state, @Body Object body);
 
+    @GET("api"+URL_VERSION+"/findly/{sidx}/getresultviewsettings")
+    Call<ResultsViewModel> getResultViewSettings(@Path("sidx") String sidx, @Header("Authorization") String token);
 
-    @POST("searchAssistant/search/{sidx}")
+    @POST("api"+URL_VERSION+"/findly/{sidx}/search")
     Call<SearchModel> getSearch(@Path("sidx") String sidx, @Header("Authorization") String token, @Body Object body);
 
     // Get JWT Token

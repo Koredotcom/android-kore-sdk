@@ -70,6 +70,7 @@ import com.kore.findlysdk.models.FormActionTemplate;
 import com.kore.findlysdk.models.KnowledgeCollectionModel;
 import com.kore.findlysdk.models.LiveSearchModel;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
+import com.kore.findlysdk.models.LiveSearchResultsOuterModel;
 import com.kore.findlysdk.models.PayloadInner;
 import com.kore.findlysdk.models.PayloadOuter;
 import com.kore.findlysdk.models.PopularSearchModel;
@@ -332,8 +333,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             @Override
             public void onClick(View view) {
 
-                if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null
-                        && liveSearchModel.getTemplate().getResults().size() > 0)
+                if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null)
                 {
                     Intent intent = new Intent(getActivity(), FullResultsActivity.class);
                     intent.putExtra("originalQuery", liveSearchModel.getTemplate().getOriginalQuery());
@@ -645,7 +645,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     public void getLiveSearch(String query)
     {
         JsonObject jsonObject = getJsonBody(query, false, 0);
-        Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.getSDIX(),"bearer "+ SocketWrapper.getInstance(getActivity()).getAccessToken(), jsonObject);
+        Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.getSDIX(),"bearer "+ SocketWrapper.getInstance(getActivity()).getAccessToken(), "published", jsonObject);
         getJWTTokenService.enqueue(new Callback<LiveSearchModel>() {
             @Override
             public void onResponse(Call<LiveSearchModel> call, Response<LiveSearchModel> response) {
@@ -653,7 +653,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                 {
                     liveSearchModel = response.body();
 
-                    if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null && liveSearchModel.getTemplate().getResults().size() > 0)
+                    if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null)
                     {
                         cordinate_layout.setVisibility(View.VISIBLE);
                         perssiatentPanel.setVisibility(View.VISIBLE);
@@ -852,65 +852,62 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             return false;
     }
 
-    private ArrayList<LiveSearchResultsModel> getTopFourList(ArrayList<LiveSearchResultsModel> arrResults)
+    private ArrayList<LiveSearchResultsModel> getTopFourList(LiveSearchResultsOuterModel results)
     {
         arrTempResults = new ArrayList<>();
-        for (int i = 0; i < arrResults.size(); i++)
+        if(results != null)
         {
-            if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.FAQ))
+            if(results.getFaq() != null && results.getFaq().size() > 0)
             {
-                arrTempResults.add(arrResults.get(i));
-                if(arrTempResults.size() == 2)
-                    break;
-            }
-        }
-
-        if(arrTempResults.size() >= 1)
-        {
-            int suntoAdd = arrTempResults.size()+2;
-            for (int i = 0; i < arrResults.size(); i++)
-            {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+                for (int i = 0; i < results.getFaq().size(); i++)
                 {
-                    arrTempResults.add(arrResults.get(i));
-                    if(arrTempResults.size() == suntoAdd)
-                        break;
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < arrResults.size(); i++)
-            {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.PAGE))
-                {
-                    arrTempResults.add(arrResults.get(i));
+                    arrTempResults.add(results.getFaq().get(i));
                     if(arrTempResults.size() == 2)
                         break;
                 }
             }
+
+            if(results.getPage() != null && results.getPage().size() > 0)
+            {
+                if(arrTempResults.size() >= 1)
+                {
+                    int suntoAdd = arrTempResults.size()+2;
+                    for (int i = 0; i < results.getPage().size(); i++)
+                    {
+                        arrTempResults.add(results.getPage().get(i));
+                        if(arrTempResults.size() == suntoAdd)
+                            break;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < results.getPage().size(); i++)
+                    {
+                        arrTempResults.add(results.getPage().get(i));
+                        if(arrTempResults.size() == 2)
+                            break;
+                    }
+                }
+            }
         }
 
-        if(arrTempResults.size() >= 1)
+        if(results.getDocument() != null && results.getDocument().size() > 0)
         {
-            int suntoAdd = arrTempResults.size()+2;
-            for (int i = 0; i < arrResults.size(); i++)
+            if(arrTempResults.size() >= 1)
             {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.DOCUMENT))
+                int suntoAdd = arrTempResults.size()+2;
+                for (int i = 0; i < results.getDocument().size(); i++)
                 {
-                    arrTempResults.add(arrResults.get(i));
+                    arrTempResults.add(results.getDocument().get(i));
                     if(arrTempResults.size() == suntoAdd)
                         break;
                 }
             }
-        }
-        else
-        {
-            for (int i = 0; i < arrResults.size(); i++)
+            else
             {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.DOCUMENT))
+                for (int i = 0; i < results.getDocument().size(); i++)
                 {
-                    arrTempResults.add(arrResults.get(i));
+                    arrTempResults.add(results.getDocument().get(i));
                     if(arrTempResults.size() == 2)
                         break;
                 }

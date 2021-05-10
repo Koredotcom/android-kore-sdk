@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/pfizer_bg"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/cordinate_layout"
@@ -252,7 +252,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:divider="@color/white"
-                    android:dividerHeight="@dimen/dimen_0" />
+                    android:dividerHeight="@dimen/dimen_0"
+                    android:visibility="gone" />
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/llAllresults"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical" />
+
+                </ScrollView>
 
                 <com.kore.findlysdk.view.CustomTextView
                     android:id="@+id/tvSeeAllResults"
@@ -472,8 +485,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:text="@string/welcomehello"
-            android:textSize="@dimen/text_size_normal"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_normal" />
 
     </LinearLayout>
 

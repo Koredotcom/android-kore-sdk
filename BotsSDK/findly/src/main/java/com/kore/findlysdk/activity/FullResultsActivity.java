@@ -47,6 +47,9 @@ import com.kore.findlysdk.models.BotResponseMessage;
 import com.kore.findlysdk.models.ComponentModel;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
 import com.kore.findlysdk.models.PayloadOuter;
+import com.kore.findlysdk.models.ResultsViewAppearance;
+import com.kore.findlysdk.models.ResultsViewModel;
+import com.kore.findlysdk.models.ResultsViewSetting;
 import com.kore.findlysdk.models.SearchFacetsBucketsModel;
 import com.kore.findlysdk.models.SearchModel;
 import com.kore.findlysdk.net.BotRestBuilder;
@@ -83,6 +86,7 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     private float dp1;
     private ListView alvFacetsName;
     private String messagePayload;
+    private ResultsViewSetting searchSettings;
     private MyResultsAdapter myResultsAdapter;
     private ArrayList<SearchFacetsBucketsModel> arrTempFilters = new ArrayList<>();
     private FacetsFilterAdapter facetsFilterAdapter;
@@ -95,6 +99,9 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout llAllresults,llFaqs,llPages,llActions,llDocuments;
     private ArrayList<BotOptionModel> arrBotOptionModels;
     private HorizontalScrollView hsvOptionsFooter;
+    private ResultsViewAppearance faq;
+    private ResultsViewAppearance page;
+    private ResultsViewAppearance document;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -269,17 +276,26 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
         for (int i = 0; i < arrAllResultsModels.size(); i++)
         {
-            if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.FAQ))
+            if(arrAllResultsModels.get(i).get__contentType().equalsIgnoreCase(BundleConstants.FAQ))
+            {
+                arrAllResultsModels.get(i).setAppearance(faq);
                 arrFaqSearchResultsModels.add(arrAllResultsModels.get(i));
+            }
 
-            if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+            if(arrAllResultsModels.get(i).get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
+            {
+                arrAllResultsModels.get(i).setAppearance(page);
                 arrPageSearchResultsModels.add(arrAllResultsModels.get(i));
+            }
 
-            if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.TASK))
+            if(arrAllResultsModels.get(i).get__contentType().equalsIgnoreCase(BundleConstants.TASK))
                 arrActionSearchResultsModels.add(arrAllResultsModels.get(i));
 
-            if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.DOCUMENT))
+            if(arrAllResultsModels.get(i).get__contentType().equalsIgnoreCase(BundleConstants.DOCUMENT))
+            {
+                arrAllResultsModels.get(i).setAppearance(document);
                 arrDocumentSearchReultsModels.add(arrAllResultsModels.get(i));
+            }
         }
 
         arrLiveSearchResultsModels = new ArrayList<>();
@@ -293,6 +309,21 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     {
         originalQuery = getIntent().getExtras().getString("originalQuery");
         messagePayload = getIntent().getExtras().getString("messagePayload");
+        searchSettings = (ResultsViewSetting) getIntent().getExtras().getSerializable("searchSetting");
+
+        if(searchSettings != null && searchSettings.getAppearance() != null
+                    && searchSettings.getAppearance().size() > 0)
+        {
+            for(int i = 0; i < searchSettings.getAppearance().size(); i++)
+            {
+                if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.FAQ))
+                    faq = searchSettings.getAppearance().get(i);
+                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.PAGE))
+                    page = searchSettings.getAppearance().get(i);
+                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.DOCUMENT))
+                    document = searchSettings.getAppearance().get(i);
+            }
+        }
 
         if(!StringUtils.isNullOrEmpty(originalQuery))
             getSearch(originalQuery);
@@ -683,7 +714,7 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
     public void getSearch(String query)
     {
-        JsonObject jsonObject = getJsonBody(query, true);
+        JsonObject jsonObject = getJsonBody(query, true, messagePayload);
         Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(FullResultsActivity.this).getAccessToken(), jsonObject);
         getJWTTokenService.enqueue(new Callback<SearchModel>() {
             @Override
@@ -816,7 +847,7 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     public void getFilterSearch(String query, JsonArray filters, String messagePayload)
     {
         JsonObject jsonObject = getJsonFilterBody(query, filters, messagePayload);
-        Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.getSDIX(), SDKConfiguration.TOKEN, jsonObject);
+        Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(FullResultsActivity.this).getAccessToken(),  jsonObject);
         getJWTTokenService.enqueue(new Callback<SearchModel>() {
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response)
@@ -874,7 +905,7 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private JsonObject getJsonBody(String query, boolean smallTalk)
+    private JsonObject getJsonBody(String query, boolean smallTalk, String messagePayload)
     {
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
@@ -885,9 +916,13 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         jsonObject.addProperty("userId", SocketWrapper.getInstance(FullResultsActivity.this).getBotUserId());
         jsonObject.addProperty("streamId", SDKConfiguration.Client.bot_id);
         jsonObject.addProperty("lang", "en");
+        jsonObject.addProperty("isDev", false);
+        jsonObject.addProperty("pageNumber", 0);
+        jsonObject.addProperty("messagePayload", messagePayload);
 
-        if(smallTalk)
-            jsonObject.addProperty("smallTalk", true);
+
+//        if(smallTalk)
+//            jsonObject.addProperty("smallTalk", true);
 
         Log.e("JsonObject", jsonObject.toString());
         return jsonObject;
@@ -905,7 +940,8 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         jsonObject.addProperty("streamId", SDKConfiguration.Client.bot_id);
         jsonObject.addProperty("lang", "en");
         jsonObject.addProperty("isDev", false);
-//        jsonObject.add("messagePayload", new JsonParser().parse(messagePayload).getAsJsonObject());
+        jsonObject.addProperty("pageNumber", 0);
+        jsonObject.add("messagePayload", new JsonParser().parse(messagePayload).getAsJsonObject());
 
         Log.e("JsonObject", jsonObject.toString());
         return jsonObject;

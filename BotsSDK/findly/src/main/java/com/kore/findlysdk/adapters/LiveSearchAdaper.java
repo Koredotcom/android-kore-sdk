@@ -96,11 +96,11 @@ public class LiveSearchAdaper extends BaseAdapter
 
         if ((position - 1) >= 0)
         {
-            if (!popularSearchModel.getContentType().equalsIgnoreCase(arrLiveSearchResultsModels.get(position - 1).getContentType()))
+            if (!popularSearchModel.get__contentType().equalsIgnoreCase(arrLiveSearchResultsModels.get(position - 1).get__contentType()))
             {
                 liveSearchViewHolder.tvPageTitle.setVisibility(View.VISIBLE);
 
-                if (popularSearchModel.getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+                if (popularSearchModel.get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
                     liveSearchViewHolder.tvPageTitle.setText("Matched Pages");
                 else
                     liveSearchViewHolder.tvPageTitle.setText("Matched FAQS");
@@ -113,7 +113,7 @@ public class LiveSearchAdaper extends BaseAdapter
         {
             liveSearchViewHolder.tvPageTitle.setVisibility(View.VISIBLE);
 
-            if (popularSearchModel.getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+            if (popularSearchModel.get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
                 liveSearchViewHolder.tvPageTitle.setText("Matched Pages");
             else
                 liveSearchViewHolder.tvPageTitle.setText("Matched FAQS");
@@ -125,7 +125,7 @@ public class LiveSearchAdaper extends BaseAdapter
         liveSearchViewHolder.tvTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (popularSearchModel.getContentType().equalsIgnoreCase(BundleConstants.FAQ)) {
+                if (popularSearchModel.get__contentType().equalsIgnoreCase(BundleConstants.FAQ)) {
                     if ((boolean) view.getTag()) {
                         liveSearchViewHolder.tvDescription.setVisibility(View.GONE);
                         liveSearchViewHolder.tvFullDescription.setVisibility(View.VISIBLE);

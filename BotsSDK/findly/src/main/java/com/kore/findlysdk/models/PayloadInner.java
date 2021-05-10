@@ -60,6 +60,7 @@ public class PayloadInner {
     private String description;
     private HeaderOptionsModel headerOptions;
     private SearchTemplateModel template;
+    private ResultsViewSetting resultsViewSetting;
 
     public void setTemplate(SearchTemplateModel template) {
         this.template = template;
@@ -616,6 +617,14 @@ public class PayloadInner {
     public BotListViewMoreDataModel getMoreData()
     {
         return moreData;
+    }
+
+    public void setResultsViewSetting(ResultsViewSetting resultsViewSetting) {
+        this.resultsViewSetting = resultsViewSetting;
+    }
+
+    public ResultsViewSetting getResultsViewSetting() {
+        return resultsViewSetting;
     }
 
     public void convertElementToAppropriate() {

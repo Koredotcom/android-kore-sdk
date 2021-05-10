@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlArrows"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5dp"
+            android:layout_centerVertical="true">
+
+            <ImageButton
+                android:id="@+id/ibResults"
+                android:layout_width="@dimen/dimen_10dp"
+                android:layout_height="@dimen/dimen_15dp"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:background="@drawable/ic_triangle_2"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/ibResults2"
+                android:layout_width="@dimen/dimen_15dp"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_margin="@dimen/dimen_5dp"
+                android:background="@drawable/ic_drop_down_arrow"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/tvPageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_7dp"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_toRightOf="@+id/rlArrows"
+            android:text="FAQs"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_sub_header"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

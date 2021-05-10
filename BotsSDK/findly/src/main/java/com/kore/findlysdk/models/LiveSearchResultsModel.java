@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class LiveSearchResultsModel implements Serializable
 {
     private String contentId;
-    private String contentType;
+    private String __contentType;
     private String score;
     private ArrayList<String> keywords;
     private String question;
@@ -27,6 +27,11 @@ public class LiveSearchResultsModel implements Serializable
     private String titleText;
     private String payload;
     private String externalFileUrl;
+    private String pageTitle;
+    private String pageSearchResultPreview;
+    private String pageImageUrl;
+    private ResultsViewAppearance appearance;
+    private String contentType;
 
     public String getTitle() {
         return title;
@@ -56,8 +61,8 @@ public class LiveSearchResultsModel implements Serializable
         return contentId;
     }
 
-    public String getContentType() {
-        return contentType;
+    public String get__contentType() {
+        return __contentType;
     }
 
     public String getImageUrl() {
@@ -100,8 +105,8 @@ public class LiveSearchResultsModel implements Serializable
         this.contentId = contentId;
     }
 
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
+    public void set__contentType(String contentType) {
+        this.__contentType = contentType;
     }
 
     public void setFeedback(LiveSearchFeedbackModel feedback) {
@@ -202,5 +207,45 @@ public class LiveSearchResultsModel implements Serializable
 
     public void setExternalFileUrl(String externalFileUrl) {
         this.externalFileUrl = externalFileUrl;
+    }
+
+    public void setPageTitle(String pageTitle) {
+        this.pageTitle = pageTitle;
+    }
+
+    public void setPageImageUrl(String pageImageUrl) {
+        this.pageImageUrl = pageImageUrl;
+    }
+
+    public void setPageSearchResultPreview(String pageSearchResultPreview) {
+        this.pageSearchResultPreview = pageSearchResultPreview;
+    }
+
+    public String getPageImageUrl() {
+        return pageImageUrl;
+    }
+
+    public String getPageSearchResultPreview() {
+        return pageSearchResultPreview;
+    }
+
+    public String getPageTitle() {
+        return pageTitle;
+    }
+
+    public void setAppearance(ResultsViewAppearance appearance) {
+        this.appearance = appearance;
+    }
+
+    public ResultsViewAppearance getAppearance() {
+        return appearance;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

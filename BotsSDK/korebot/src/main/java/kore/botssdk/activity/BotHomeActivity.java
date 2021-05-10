@@ -127,8 +127,8 @@ public class BotHomeActivity extends BotAppCompactActivity {
 //                    if(StringUtils.isValidEmail(etIdentity.getText().toString()))
 //                    {
 //                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
-                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
-                        setBotConfiguration("Future Bank Copy", "cs-b63967bb-0599-5ec2-8e84-8af15028f86f", "Q9W/R5t2V03/aUtZ1O/M25ObJP5k/rQhHZPjC977o7o=", "st-c877d8bd-8383-5472-ab69-8410ac17cd4d", "sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e");
+//                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+//                        setBotConfiguration("Future Bank Copy", "cs-b63967bb-0599-5ec2-8e84-8af15028f86f", "Q9W/R5t2V03/aUtZ1O/M25ObJP5k/rQhHZPjC977o7o=", "st-c877d8bd-8383-5472-ab69-8410ac17cd4d", "sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e");
                         launchBotChatActivity();
 //                    }
 //                    else
@@ -149,7 +149,7 @@ public class BotHomeActivity extends BotAppCompactActivity {
      *
      */
     private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

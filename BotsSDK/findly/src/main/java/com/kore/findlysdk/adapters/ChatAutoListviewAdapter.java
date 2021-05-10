@@ -146,7 +146,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
         arrTempResults = new ArrayList<>();
         for (int i = 0; i < arrResults.size(); i++)
         {
-            if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.FAQ))
+            if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.FAQ))
             {
                 arrTempResults.add(arrResults.get(i));
                 if(arrTempResults.size() == 2)
@@ -159,7 +159,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
             int suntoAdd = arrTempResults.size()+2;
             for (int i = 0; i < arrResults.size(); i++)
             {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+                if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
                 {
                     arrTempResults.add(arrResults.get(i));
                     if(arrTempResults.size() == suntoAdd)
@@ -171,7 +171,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
         {
             for (int i = 0; i < arrResults.size(); i++)
             {
-                if(arrResults.get(i).getContentType().equalsIgnoreCase(BundleConstants.PAGE))
+                if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
                 {
                     arrTempResults.add(arrResults.get(i));
                     if(arrTempResults.size() == 2)

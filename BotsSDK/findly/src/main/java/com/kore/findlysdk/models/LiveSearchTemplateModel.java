@@ -8,7 +8,7 @@ public class LiveSearchTemplateModel implements Serializable
     private String originalQuery;
     private String cleanQuery;
     private LiveSearchFacetsModel facets;
-    private ArrayList<LiveSearchResultsModel> results;
+    private LiveSearchResultsOuterModel results;
 
     public void setCleanQuery(String cleanQuery) {
         this.cleanQuery = cleanQuery;
@@ -22,11 +22,11 @@ public class LiveSearchTemplateModel implements Serializable
         this.originalQuery = originalQuery;
     }
 
-    public void setResults(ArrayList<LiveSearchResultsModel> results) {
+    public void setResults(LiveSearchResultsOuterModel results) {
         this.results = results;
     }
 
-    public ArrayList<LiveSearchResultsModel> getResults() {
+    public LiveSearchResultsOuterModel getResults() {
         return results;
     }
 

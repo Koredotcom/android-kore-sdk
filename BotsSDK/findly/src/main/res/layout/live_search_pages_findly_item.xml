@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_5dp"
-    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <com.kore.findlysdk.view.CustomTextViewBold
@@ -21,39 +20,52 @@
         android:visibility="visible" />
 
     <LinearLayout
-        android:id="@+id/llPages"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/tvPageTitle"
         android:background="@drawable/pages_item_bg"
-        android:orientation="horizontal"
-        android:padding="@dimen/dimen_15dp"
-        android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/ivPagesCell"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:visibility="visible"
-            android:src="@mipmap/pfizer_logo"/>
+        android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/llImageCentredContent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/image_height"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivCenteredContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_3dp"
+                android:src="@mipmap/imageplaceholder_left" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCentredContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_below="@+id/tvPageTitle"
+            android:layout_margin="@dimen/dimen_3dp"
+            android:background="#e4e5e7"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_5dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <com.kore.findlysdk.view.CustomTextViewBold
-                    android:id="@+id/tvTitle"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvTitleCentredContent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_margin="@dimen/dimen_7dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -61,52 +73,147 @@
                     android:textColor="@color/left_bubble_text_color"
                     android:textSize="@dimen/text_size_sub_header" />
 
-                <ImageView
-                    android:id="@+id/ivSuggestedPage"
+
+                <com.kore.findlysdk.view.CustomTextView
+                    android:id="@+id/tvDescriptionCentredContent"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_7dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Title"
+                    android:textColor="@color/left_footer_divider"
+                    android:textSize="@dimen/text_size_normal"
+                    android:visibility="gone" />
+
+                <com.kore.findlysdk.view.CustomTextViewBold
+                    android:id="@+id/tvFullDescriptionCentredContent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_3dp"
-                    android:background="@drawable/ic_launch_24px2"
-                    android:visibility="gone" />
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:text="Title"
+                    android:textColor="@color/left_footer_divider"
+                    android:textSize="@dimen/text_size_normal"
+                    android:visibility="visible" />
+
             </LinearLayout>
 
-            <com.kore.findlysdk.view.CustomTextView
-                android:id="@+id/tvDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_3dp"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Title"
-                android:textColor="@color/left_footer_divider"
-                android:textSize="@dimen/text_size_normal" />
+        </LinearLayout>
 
-            <com.kore.findlysdk.view.CustomTextViewBold
-                android:id="@+id/tvFullDescription"
+        <LinearLayout
+            android:id="@+id/llPages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tvPageTitle"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_15dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/ivPagesCell"
+                android:layout_width="100dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/pfizer_logo"
+                android:visibility="gone" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:layout_marginTop="@dimen/dimen_3dp"
                 android:layout_weight="1"
-                android:ellipsize="end"
-                android:text="Title"
-                android:textColor="@color/left_bubble_text_color"
-                android:textSize="@dimen/text_size_normal"
-                android:visibility="gone" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rlArrows"
+                        android:layout_width="@dimen/dimen_15dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical">
+
+                        <ImageButton
+                            android:id="@+id/ibResults"
+                            android:layout_width="@dimen/dimen_10dp"
+                            android:layout_height="@dimen/dimen_15dp"
+                            android:background="@drawable/ic_triangle_2"
+                            android:visibility="visible" />
+
+                        <ImageButton
+                            android:id="@+id/ibResults2"
+                            android:layout_width="@dimen/dimen_15dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:background="@drawable/ic_drop_down_arrow"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
+
+                    <com.kore.findlysdk.view.CustomTextViewBold
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_7dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:text="Title"
+                        android:textColor="@color/left_bubble_text_color"
+                        android:textSize="@dimen/text_size_sub_header" />
+
+                    <ImageView
+                        android:id="@+id/ivSuggestedPage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:layout_marginTop="@dimen/dimen_3dp"
+                        android:background="@drawable/ic_launch_24px2"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <com.kore.findlysdk.view.CustomTextView
+                    android:id="@+id/tvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_3dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Title"
+                    android:textColor="@color/left_footer_divider"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <com.kore.findlysdk.view.CustomTextViewBold
+                    android:id="@+id/tvFullDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_3dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:text="Title"
+                    android:textColor="@color/left_footer_divider"
+                    android:textSize="@dimen/text_size_normal"
+                    android:visibility="gone" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/llTask"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_below="@+id/tvPageTitle"
-        android:background="@drawable/actions_bg"
+        android:background="@drawable/pages_item_bg"
         android:orientation="horizontal"
         android:padding="@dimen/dimen_15dp"
         android:visibility="gone">
@@ -116,7 +223,7 @@
             android:layout_width="@dimen/dimen_30dp"
             android:layout_height="@dimen/dimen_30dp"
             android:layout_gravity="center"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
 
         <com.kore.findlysdk.view.CustomTextViewBold

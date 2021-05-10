@@ -322,7 +322,7 @@ public final class SocketWrapper {
                         {
 
                             Log.e("Need to change here", rtmUrl.getUrl());
-                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://pilot.findly.ai"),false);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://qa.findly.ai"),false);
                         }
                         catch (URISyntaxException e) {
                             e.printStackTrace();
