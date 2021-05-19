@@ -9,6 +9,15 @@ public class KoraSummaryHelpModel {
     private String title;
     private String text;
     private List<ButtonTemplate> body = null;
+
+    public List<ButtonTemplate> getBody() {
+        return body;
+    }
+
+    public void setBody(List<ButtonTemplate> body) {
+        this.body = body;
+    }
+
     private List<ButtonTemplate> buttons = null;
 
     public String getTitle() {

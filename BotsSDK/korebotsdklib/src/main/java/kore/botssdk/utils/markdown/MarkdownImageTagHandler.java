@@ -64,9 +64,9 @@ class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
 
             // convert Bitmap to Drawable
             drawable = new BitmapDrawable(context.getResources(), bm);
-
-            drawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
-
+if(bm !=null) {
+    drawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
+}
         } catch (IOException e) {
             e.printStackTrace();
         }
