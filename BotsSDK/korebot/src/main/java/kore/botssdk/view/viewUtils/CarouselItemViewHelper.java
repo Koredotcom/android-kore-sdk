@@ -37,6 +37,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -90,9 +91,15 @@ public class CarouselItemViewHelper {
         if (botCarouselModel != null) {
 
 
+         if(botCarouselModel.getTitle()!=null&&!botCarouselModel.getTitle().trim().equalsIgnoreCase("")) {
+                carouselViewHolder.carouselItemTitle.setVisibility(VISIBLE);
+                carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
+            }else
+            {
 
-            carouselViewHolder.carouselItemTitle.setText(botCarouselModel.getTitle());
-            if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
+                carouselViewHolder.carouselItemTitle.setVisibility(GONE);
+            }
+           if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
                 carouselViewHolder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
                carouselViewHolder.carouselItemSubTitle.setMaxLines(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? Integer.MAX_VALUE : 3);
                 carouselViewHolder.carouselItemSubTitle.setVisibility(View.VISIBLE);
