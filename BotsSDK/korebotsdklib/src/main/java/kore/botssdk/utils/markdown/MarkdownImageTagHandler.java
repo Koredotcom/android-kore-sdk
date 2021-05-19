@@ -59,6 +59,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 if (resource != null) {
 
+
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(),resource);
                     drawable.addLevel(1, 1, bitmapDrawable);
                     drawable.setBounds(0, 0, resource.getWidth()+20 , resource.getHeight()+20 );
@@ -77,6 +78,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
 
 
         });
+
 
         return drawable;
 
