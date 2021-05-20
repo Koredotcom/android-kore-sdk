@@ -364,9 +364,14 @@ public class MarkdownUtil {
                     exit = true;
                     break;
                 }
+                try {
+                    if (text.length()!=indexP1 + 1 && text.charAt(indexP1 + 1) != ' ') {
+                        continue;
+                    }
+                }catch (Exception e)
+                {
 
-                if (text.charAt(indexP1 + 1) != ' ') {
-                    continue;
+
                 }
 
                 indexP2 = text.indexOf(MarkdownConstant.NEW_LINE, indexP1 + 1);
