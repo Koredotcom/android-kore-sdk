@@ -3,7 +3,7 @@
     <dimen name="carousel_view_button_list_max_height">146dp</dimen>
     <dimen name="carousel_view_button_height">48dp</dimen>
     <dimen name="list_item_view_height">80dp</dimen>
-    <dimen name="quick_reply_layout_height">40dp</dimen>
+    <dimen name="quick_reply_layout_height">45dp</dimen>
     <dimen name="quick_reply_image_height">24dp</dimen>
     <dimen name="quick_reply_image_width">26dp</dimen>
     <dimen name="quick_reply_item_height">50dp</dimen>
