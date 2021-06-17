@@ -70,9 +70,9 @@ public class ChatAdapterOld extends RecyclerView.Adapter<ChatAdapterOld.ViewHold
                         liveSearchResultsModel.getTemplate().getResults().getFaq().size() > 0)
                     arrTempResults.addAll(liveSearchResultsModel.getTemplate().getResults().getFaq());
 
-                if(liveSearchResultsModel.getTemplate().getResults().getPage() != null &&
-                        liveSearchResultsModel.getTemplate().getResults().getPage().size() > 0)
-                    arrTempResults.addAll(liveSearchResultsModel.getTemplate().getResults().getPage());
+                if(liveSearchResultsModel.getTemplate().getResults().getWeb() != null &&
+                        liveSearchResultsModel.getTemplate().getResults().getWeb().size() > 0)
+                    arrTempResults.addAll(liveSearchResultsModel.getTemplate().getResults().getWeb());
 
                 if(arrTempResults != null && arrTempResults.size() > 0)
                     holder.lvLiveSearch.setAdapter( new LiveSearchAdaper(context, arrTempResults));

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 public class LiveSearchResultsModel implements Serializable
 {
     private String contentId;
-    private String __contentType;
     private String score;
     private ArrayList<String> keywords;
-    private String question;
+    private String faqQuestion;
     private String answer;
+    private String faqAnswer;
     private LiveSearchConfigModel config;
     private LiveSearchFeedbackModel feedback;
     private String title;
@@ -29,9 +29,25 @@ public class LiveSearchResultsModel implements Serializable
     private String externalFileUrl;
     private String pageTitle;
     private String pageSearchResultPreview;
+    private String pagePreview;
+    private String pageBody;
     private String pageImageUrl;
+    private String pageUrl;
     private ResultsViewAppearance appearance;
+    private String sysContentType;
+    private String fileTitle;
+    private String fileUrl;
+    private String fileContent;
+    private String fileImageUrl;
+    private String fileContentType;
+    private String sysSourceName;
+    private String filePreview;
     private String contentType;
+    private String product;
+    private String category;
+    private String default_pipeline;
+    private String extractionSourceId;
+    private String docId;
 
     public String getTitle() {
         return title;
@@ -57,20 +73,24 @@ public class LiveSearchResultsModel implements Serializable
         return answer;
     }
 
-    public String getContentId() {
-        return contentId;
+    public String getFaqAnswer() {
+        return faqAnswer;
     }
 
-    public String get__contentType() {
-        return __contentType;
+    public void setFaqAnswer(String faqAnswer) {
+        this.faqAnswer = faqAnswer;
+    }
+
+    public String getContentId() {
+        return contentId;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public String getQuestion() {
-        return question;
+    public String getFaqQuestion() {
+        return faqQuestion;
     }
 
     public String getScore() {
@@ -105,8 +125,8 @@ public class LiveSearchResultsModel implements Serializable
         this.contentId = contentId;
     }
 
-    public void set__contentType(String contentType) {
-        this.__contentType = contentType;
+    public void setSysContentType(String sysContentType) {
+        this.sysContentType = sysContentType;
     }
 
     public void setFeedback(LiveSearchFeedbackModel feedback) {
@@ -117,8 +137,8 @@ public class LiveSearchResultsModel implements Serializable
         this.keywords = keywords;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public void setFaqQuestion(String question) {
+        this.faqQuestion = question;
     }
 
     public void setScore(String score) {
@@ -241,11 +261,135 @@ public class LiveSearchResultsModel implements Serializable
         return appearance;
     }
 
-    public String getContentType() {
-        return contentType;
+    public String getSysContentType() {
+        return sysContentType;
+    }
+
+    public void setPageBody(String pageBody) {
+        this.pageBody = pageBody;
+    }
+
+    public void setPagePreview(String pagePreview) {
+        this.pagePreview = pagePreview;
+    }
+
+    public String getPageBody() {
+        return pageBody;
+    }
+
+    public String getPagePreview() {
+        return pagePreview;
+    }
+
+    public void setFileContent(String fileContent) {
+        this.fileContent = fileContent;
+    }
+
+    public void setFileContentType(String fileContentType) {
+        this.fileContentType = fileContentType;
+    }
+
+    public void setFileImageUrl(String fileImageUrl) {
+        this.fileImageUrl = fileImageUrl;
+    }
+
+    public void setFilePreview(String filePreview) {
+        this.filePreview = filePreview;
+    }
+
+    public void setFileTitle(String fileTitle) {
+        this.fileTitle = fileTitle;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public void setSysSourceName(String sysSourceName) {
+        this.sysSourceName = sysSourceName;
     }
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getFileContent() {
+        return fileContent;
+    }
+
+    public String getFileContentType() {
+        return fileContentType;
+    }
+
+    public String getFileImageUrl() {
+        return fileImageUrl;
+    }
+
+    public String getFilePreview() {
+        return filePreview;
+    }
+
+    public String getFileTitle() {
+        return fileTitle;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public String getSysSourceName() {
+        return sysSourceName;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setPageUrl(String pageUrl) {
+        this.pageUrl = pageUrl;
+    }
+
+    public String getPageUrl() {
+        return pageUrl;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setDefault_pipeline(String default_pipeline) {
+        this.default_pipeline = default_pipeline;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
+
+    public void setExtractionSourceId(String extractionSourceId) {
+        this.extractionSourceId = extractionSourceId;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getDefault_pipeline() {
+        return default_pipeline;
+    }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public String getExtractionSourceId() {
+        return extractionSourceId;
+    }
+
+    public String getProduct() {
+        return product;
     }
 }

@@ -109,6 +109,11 @@ public final class SocketWrapper {
         return auth;
     }
 
+    public String getJWTToken()
+    {
+        return JWTToken;
+    }
+
     /**
      * The global default SocketWrapper instance
      */
@@ -322,7 +327,7 @@ public final class SocketWrapper {
                         {
 
                             Log.e("Need to change here", rtmUrl.getUrl());
-                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://qa.findly.ai"),false);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai"),false);
                         }
                         catch (URISyntaxException e) {
                             e.printStackTrace();
@@ -543,7 +548,7 @@ public final class SocketWrapper {
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"), true);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai").concat("&isReconnect=true"), true);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
@@ -647,7 +652,7 @@ public final class SocketWrapper {
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"),true);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai").concat("&isReconnect=true"),true);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }

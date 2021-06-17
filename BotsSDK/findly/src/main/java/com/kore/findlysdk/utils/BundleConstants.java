@@ -4,8 +4,12 @@ public class BundleConstants
 {
     public static final String FAQ = "faq";
     public static final String PAGE = "page";
+    public static final String WEB = "web";
     public static final String TASK = "task";
+    public static final String FILE = "file";
+    public static final String DATA = "data";
     public static final String DOCUMENT = "document";
+    public static final String STRUCTURE_DATA = "structuredData";
     public static final String TILE_WITH_TEXT = "tileWithText";
     public static final String TILE_WITH_IMAGE = "tileWithImage";
     public static final String TILE_WITH_CENTERED_CONTENT = "tileWithCenteredContent";
@@ -15,14 +19,20 @@ public class BundleConstants
     public static final String FULL_SEARCH= "fullSearch";
     public static final String SEARCH= "search";
     public static final String LAYOUT_TYPE_GRID = "grid";
+    public static final String LAYOUT_TYPE_CAROUSEL = "carousel";
+    public static final String SEARCH_INTERFACE = "SEARCH_INTERFACE";
+    public static final String LIVE_SEARCH_RESULTS_LIMIT = "liveSearchResultsLimit";
 
     //Faq
-    public static final String QUESTION= "question";
-    public static final String ANSWER= "answer";
+    public static final String QUESTION= "faqQuestion";
+    public static final String ANSWER= "faqAnswer";
 
     //Page
     public static final String PAGE_TITLE= "pageTitle";
     public static final String PAGE_SEARCH_RESULT_PREVIEW= "pageSearchResultPreview";
+
+    //Data
+    public static final String PRODUCT= "product";
 
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
@@ -35,6 +45,10 @@ public class BundleConstants
     public static String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
+
+    //ButtonPosition
+    public static final String POSITION_OUTSIDE= "outside";
+
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";
     public static final String DELAY_MESSAGES[] = { "I’m working on it…", "Still, working on it…",

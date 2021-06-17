@@ -9,6 +9,7 @@ public class PayloadOuter {
     private PayloadInner payload;
     private String text;
     private SearchTemplateModel template;
+    private String templateType;
 
     public void setTemplate(SearchTemplateModel template) {
         this.template = template;
@@ -39,5 +40,13 @@ public class PayloadOuter {
 
     public void setPayload(PayloadInner payload) {
         this.payload = payload;
+    }
+
+    public void setTemplateType(String templateType) {
+        this.templateType = templateType;
+    }
+
+    public String getTemplateType() {
+        return templateType;
     }
 }

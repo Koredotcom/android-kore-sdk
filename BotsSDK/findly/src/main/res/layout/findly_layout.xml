@@ -22,7 +22,7 @@
         android:id="@+id/cordinate_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llComposeBar"
+        android:layout_above="@+id/llComposeBarNew"
         android:layout_weight="1"
         android:visibility="visible">
 
@@ -80,6 +80,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
                                 android:clickable="true"
                                 android:orientation="horizontal"
                                 android:padding="5dp">
@@ -125,6 +126,7 @@
                                 android:layout_height="32dp"
                                 android:layout_marginTop="@dimen/dimen_5dp"
                                 android:layout_marginEnd="5dp"
+                                android:layout_marginRight="5dp"
                                 android:background="@mipmap/ic_more_vert_black_24dp"
                                 android:gravity="center"
                                 android:rotation="90"
@@ -138,6 +140,7 @@
                                 android:layout_height="32dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginEnd="9dp"
+                                android:layout_marginRight="9dp"
                                 android:background="?selectableItemBackgroundBorderless"
                                 android:gravity="center"
                                 android:text="@string/icon_e94d"
@@ -178,7 +181,7 @@
         android:id="@+id/llPopularSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llComposeBar"
+        android:layout_above="@+id/llComposeBarNew"
         android:layout_marginTop="65dp"
         android:background="@color/white"
         android:visibility="gone">
@@ -277,7 +280,8 @@
                     android:text="@string/see_all_results"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="@dimen/text_size_sub_header"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
@@ -299,7 +303,7 @@
         android:id="@+id/llLogin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/llComposeBar"
+        android:layout_above="@+id/llComposeBarNew"
         android:layout_marginTop="65dp"
         android:background="@color/white"
         android:gravity="bottom"
@@ -466,7 +470,7 @@
         android:id="@+id/llWelcomeMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/llComposeBar"
+        android:layout_above="@+id/llComposeBarNew"
         android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
@@ -476,11 +480,11 @@
 
         <ImageView
             android:id="@+id/ivWelcomeImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_arrow_drop_down_table_resp_24px" />
+            android:layout_width="@dimen/dimen_20dp"
+            android:layout_height="@dimen/dimen_20dp" />
 
         <com.kore.findlysdk.view.CustomTextView
+            android:id="@+id/tvWelcomeMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dimen_10dp"
@@ -491,11 +495,33 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/llComposeBar"
+        android:id="@+id/llAutoSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llComposeBarNew"
+        android:background="@drawable/actions_bg"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.kore.findlysdk.view.AutoExpandListView
+            android:id="@+id/lvAutoSuggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/color_hint_composer"
+            android:dividerHeight="@dimen/dimen_0"
+            android:listSelector="@android:color/transparent"
+            android:paddingLeft="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_20dp"
+            android:paddingBottom="@dimen/dimen_10dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llComposeBarNew"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/findly_compose_bg"
+        android:layout_marginBottom="-1dp"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dimen_5dp"
         android:paddingTop="@dimen/dimen_3dp"
@@ -503,86 +529,118 @@
         android:paddingBottom="@dimen/dimen_3dp">
 
         <LinearLayout
-            android:id="@+id/composeFrameLl"
+            android:id="@+id/llComposeBar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toStartOf="@+id/btnsend1"
-            android:layout_toLeftOf="@+id/btnsend1"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="-1dp"
+            android:layout_toLeftOf="@+id/sendTvOutside"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:background="@drawable/findly_compose_bg"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dimen_5dp"
+            android:paddingTop="@dimen/dimen_3dp"
+            android:paddingRight="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_3dp">
 
-            <ImageView
-                android:id="@+id/ivChatIcon"
-                android:layout_width="@dimen/dimen_30dp"
-                android:layout_height="@dimen/dimen_30dp" />
-
-            <EditText
-                android:id="@+id/edtTxtMessage"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_5dp"
-                android:background="@null"
-                android:gravity="center_vertical|start"
-                android:hint="Ask anything"
-                android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
-                android:maxHeight="68dp"
-                android:minHeight="26dp"
-                android:paddingStart="10dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:scrollbars="vertical"
-                android:tag="regular"
-                android:textColor="@color/bubble_dark_text_color"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btnsend1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/rec_audio_img"
-                android:layout_width="40dp"
+            <LinearLayout
+                android:id="@+id/composeFrameLl"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                android:alpha="0.70"
-                android:padding="5dp"
-                android:src="@drawable/ic_mic"
-                android:visibility="visible" />
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_toStartOf="@+id/btnsend1"
+                android:layout_toLeftOf="@+id/btnsend1"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <com.kore.findlysdk.view.CustomTextViewBold
-                android:id="@+id/sendTv"
+                <ImageView
+                    android:id="@+id/ivChatIcon"
+                    android:layout_width="@dimen/dimen_30dp"
+                    android:layout_height="@dimen/dimen_30dp" />
+
+                <EditText
+                    android:id="@+id/edtTxtMessage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:background="@null"
+                    android:gravity="center_vertical|start"
+                    android:hint="type here to search"
+                    android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                    android:maxHeight="68dp"
+                    android:minHeight="26dp"
+                    android:paddingStart="10dp"
+                    android:paddingLeft="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingRight="8dp"
+                    android:scrollbars="vertical"
+                    android:tag="regular"
+                    android:textColor="@color/bubble_dark_text_color"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnsend1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/chat_send_bg"
-                android:gravity="center_vertical"
-                android:padding="@dimen/dimen_10dp"
-                android:tag="bold"
-                android:text="@string/go"
-                android:textColor="@color/white"
-                android:textSize="14dp"
-                android:textStyle="bold"
-                android:visibility="visible" />
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/rec_audio_img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.70"
+                    android:padding="5dp"
+                    android:visibility="visible" />
+
+                <com.kore.findlysdk.view.CustomTextViewBold
+                    android:id="@+id/sendTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/chat_send_bg"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dimen_10dp"
+                    android:tag="bold"
+                    android:text="@string/go"
+                    android:textColor="@color/white"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </LinearLayout>
 
         </LinearLayout>
+
+        <com.kore.findlysdk.view.CustomTextViewBold
+            android:id="@+id/sendTvOutside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/dimen_3dp"
+            android:background="@drawable/chat_send_bg"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_10dp"
+            android:tag="bold"
+            android:text="@string/go"
+            android:textColor="@color/white"
+            android:textSize="14dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
     </LinearLayout>
+
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/audio_coor_layout"

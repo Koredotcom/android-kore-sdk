@@ -6,45 +6,45 @@ import java.util.ArrayList;
 public class LiveSearchResultsOuterModel implements Serializable
 {
     private ArrayList<LiveSearchResultsModel> faq;
-    private ArrayList<LiveSearchResultsModel> page;
+    private ArrayList<LiveSearchResultsModel> web;
     private ArrayList<LiveSearchResultsModel> task;
-    private ArrayList<LiveSearchResultsModel> document;
-    private ArrayList<LiveSearchResultsModel> object;
+    private ArrayList<LiveSearchResultsModel> file;
+    private ArrayList<LiveSearchResultsModel> data;
 
-    public ArrayList<LiveSearchResultsModel> getDocument() {
-        return document;
+    public ArrayList<LiveSearchResultsModel> getFile() {
+        return file;
     }
 
     public ArrayList<LiveSearchResultsModel> getFaq() {
         return faq;
     }
 
-    public ArrayList<LiveSearchResultsModel> getObject() {
-        return object;
+    public ArrayList<LiveSearchResultsModel> getData() {
+        return data;
     }
 
-    public ArrayList<LiveSearchResultsModel> getPage() {
-        return page;
+    public ArrayList<LiveSearchResultsModel> getWeb() {
+        return web;
     }
 
     public ArrayList<LiveSearchResultsModel> getTask() {
         return task;
     }
 
-    public void setDocument(ArrayList<LiveSearchResultsModel> document) {
-        this.document = document;
+    public void setFile(ArrayList<LiveSearchResultsModel> file) {
+        this.file = file;
     }
 
     public void setFaq(ArrayList<LiveSearchResultsModel> faq) {
         this.faq = faq;
     }
 
-    public void setObject(ArrayList<LiveSearchResultsModel> object) {
-        this.object = object;
+    public void setObject(ArrayList<LiveSearchResultsModel> data) {
+        this.data = data;
     }
 
-    public void setPage(ArrayList<LiveSearchResultsModel> page) {
-        this.page = page;
+    public void setPage(ArrayList<LiveSearchResultsModel> web) {
+        this.web = web;
     }
 
     public void setTask(ArrayList<LiveSearchResultsModel> task) {

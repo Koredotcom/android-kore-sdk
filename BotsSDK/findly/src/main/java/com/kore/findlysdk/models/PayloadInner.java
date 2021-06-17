@@ -61,6 +61,11 @@ public class PayloadInner {
     private HeaderOptionsModel headerOptions;
     private SearchTemplateModel template;
     private ResultsViewSetting resultsViewSetting;
+    private ResultsViewSetting fullSearchresultsViewSetting;
+    private ResultsViewAppearance faq;
+    private ResultsViewAppearance web;
+    private ResultsViewAppearance file;
+    private ResultsViewAppearance object;
 
     public void setTemplate(SearchTemplateModel template) {
         this.template = template;
@@ -625,6 +630,46 @@ public class PayloadInner {
 
     public ResultsViewSetting getResultsViewSetting() {
         return resultsViewSetting;
+    }
+
+    public void setFullSearchresultsViewSetting(ResultsViewSetting fullSearchresultsViewSetting) {
+        this.fullSearchresultsViewSetting = fullSearchresultsViewSetting;
+    }
+
+    public ResultsViewSetting getFullSearchresultsViewSetting() {
+        return fullSearchresultsViewSetting;
+    }
+
+    public void setFaq(ResultsViewAppearance faq) {
+        this.faq = faq;
+    }
+
+    public void setFile(ResultsViewAppearance file) {
+        this.file = file;
+    }
+
+    public void setWeb(ResultsViewAppearance web) {
+        this.web = web;
+    }
+
+    public void setObject(ResultsViewAppearance object) {
+        this.object = object;
+    }
+
+    public ResultsViewAppearance getFaq() {
+        return faq;
+    }
+
+    public ResultsViewAppearance getFile() {
+        return file;
+    }
+
+    public ResultsViewAppearance getWeb() {
+        return web;
+    }
+
+    public ResultsViewAppearance getObject() {
+        return object;
     }
 
     public void convertElementToAppropriate() {

@@ -98,12 +98,12 @@ public class ChatAutoListviewAdapter extends BaseAdapter
                         liveSearchResultsModel.getTemplate().getResults().getFaq().size() > 0)
                     arrTempAllResults.addAll(liveSearchResultsModel.getTemplate().getResults().getFaq());
 
-                if(liveSearchResultsModel.getTemplate().getResults().getPage() != null &&
-                        liveSearchResultsModel.getTemplate().getResults().getPage().size() > 0)
-                    arrTempAllResults.addAll(liveSearchResultsModel.getTemplate().getResults().getPage());
+                if(liveSearchResultsModel.getTemplate().getResults().getWeb() != null &&
+                        liveSearchResultsModel.getTemplate().getResults().getWeb().size() > 0)
+                    arrTempAllResults.addAll(liveSearchResultsModel.getTemplate().getResults().getWeb());
 
-                if(liveSearchResultsModel.getTemplate().getResults().getPage() != null &&
-                        liveSearchResultsModel.getTemplate().getResults().getPage().size() > 0)
+                if(liveSearchResultsModel.getTemplate().getResults().getTask() != null &&
+                        liveSearchResultsModel.getTemplate().getResults().getTask().size() > 0)
                     arrTempAllResults.addAll(liveSearchResultsModel.getTemplate().getResults().getTask());
 
                 if(arrTempAllResults != null && arrTempAllResults.size() > 0)
@@ -146,7 +146,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
         arrTempResults = new ArrayList<>();
         for (int i = 0; i < arrResults.size(); i++)
         {
-            if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.FAQ))
+            if(arrResults.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.FAQ))
             {
                 arrTempResults.add(arrResults.get(i));
                 if(arrTempResults.size() == 2)
@@ -159,7 +159,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
             int suntoAdd = arrTempResults.size()+2;
             for (int i = 0; i < arrResults.size(); i++)
             {
-                if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
+                if(arrResults.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.WEB))
                 {
                     arrTempResults.add(arrResults.get(i));
                     if(arrTempResults.size() == suntoAdd)
@@ -171,7 +171,7 @@ public class ChatAutoListviewAdapter extends BaseAdapter
         {
             for (int i = 0; i < arrResults.size(); i++)
             {
-                if(arrResults.get(i).get__contentType().equalsIgnoreCase(BundleConstants.PAGE))
+                if(arrResults.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.WEB))
                 {
                     arrTempResults.add(arrResults.get(i));
                     if(arrTempResults.size() == 2)

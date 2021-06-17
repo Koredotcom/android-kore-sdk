@@ -126,4 +126,6 @@ public class AllResultsFragment extends Fragment
         this.showCount = showCount;
     }
 
+    
+
 }

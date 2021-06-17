@@ -65,7 +65,7 @@
         <!-- HeaderToggleButton -->
         <item name="materialCalendarHeaderToggleButton">@style/HeaderToggleButton</item>
         <item name="materialCalendarHeaderTitle">@style/HeaderToggleTitle</item>
-<!--        <item name="materialCalendarHeaderLayout">@style/HeaderLayout</item>-->
+        <item name="materialCalendarHeaderLayout">@style/HeaderLayout</item>
     </style>
 
     <style name="HeaderToggleButton" parent="@style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">

@@ -6,20 +6,19 @@ import java.util.ArrayList;
 public class SearchResultsModel implements Serializable
 {
     private ArrayList<LiveSearchResultsModel> faq;
-    private ArrayList<LiveSearchResultsModel> page;
+    private ArrayList<LiveSearchResultsModel> web;
     private ArrayList<LiveSearchResultsModel> task;
-    private ArrayList<LiveSearchResultsModel> document;
+    private ArrayList<LiveSearchResultsModel> file;
+    private ArrayList<LiveSearchResultsModel> data;
 
     public ArrayList<LiveSearchResultsModel> getFaq() {
         return faq;
     }
 
-    public ArrayList<LiveSearchResultsModel> getPage() {
-        return page;
-    }
+    public ArrayList<LiveSearchResultsModel> getWeb() { return web; }
 
-    public void setPage(ArrayList<LiveSearchResultsModel> page) {
-        this.page = page;
+    public void setWeb(ArrayList<LiveSearchResultsModel> web) {
+        this.web = web;
     }
 
     public void setFaq(ArrayList<LiveSearchResultsModel> faq) {
@@ -34,11 +33,19 @@ public class SearchResultsModel implements Serializable
         return task;
     }
 
-    public ArrayList<LiveSearchResultsModel> getDocument() {
-        return document;
+    public ArrayList<LiveSearchResultsModel> getFile() {
+        return file;
     }
 
-    public void setDocument(ArrayList<LiveSearchResultsModel> document) {
-        this.document = document;
+    public void setFile(ArrayList<LiveSearchResultsModel> file) {
+        this.file = file;
+    }
+
+    public void setData(ArrayList<LiveSearchResultsModel> data) {
+        this.data = data;
+    }
+
+    public ArrayList<LiveSearchResultsModel> getData() {
+        return data;
     }
 }

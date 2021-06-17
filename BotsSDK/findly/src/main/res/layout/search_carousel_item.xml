@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bot_list_item_root"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="200dp"
+    android:layout_height="200dp"
     android:layout_margin="@dimen/dimen_5dp"
     android:orientation="horizontal">
 
@@ -17,7 +17,7 @@
         android:text="Suggested FAQ"
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_sub_header"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +29,7 @@
         <LinearLayout
             android:id="@+id/llImageCentredContent"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/image_height"
+            android:layout_height="90dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -46,7 +46,7 @@
         <LinearLayout
             android:id="@+id/llCentredContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@+id/tvPageTitle"
             android:layout_margin="@dimen/dimen_3dp"
             android:background="#e4e5e7"
@@ -58,7 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical">
 
                 <com.kore.findlysdk.view.CustomTextViewBold
@@ -68,7 +67,7 @@
                     android:layout_margin="@dimen/dimen_7dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="3"
                     android:text="Title"
                     android:textColor="@color/left_bubble_text_color"
                     android:textSize="@dimen/text_size_sub_header" />
@@ -81,7 +80,7 @@
                     android:layout_margin="@dimen/dimen_7dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="4"
                     android:text="Title"
                     android:textColor="@color/left_footer_divider"
                     android:textSize="@dimen/text_size_normal"
@@ -95,6 +94,7 @@
                     android:layout_marginTop="@dimen/dimen_3dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
+                    android:maxLines="4"
                     android:text="Title"
                     android:textColor="@color/left_footer_divider"
                     android:textSize="@dimen/text_size_normal"
@@ -109,16 +109,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tvPageTitle"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/dimen_15dp"
             android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/ivPagesCell"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -153,6 +147,13 @@
                             android:visibility="gone" />
 
                     </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/ivPagesCell"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:visibility="visible" />
 
                     <com.kore.findlysdk.view.CustomTextViewBold
                         android:id="@+id/tvTitle"
@@ -211,11 +212,11 @@
     <LinearLayout
         android:id="@+id/llTask"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_below="@+id/tvPageTitle"
         android:background="@drawable/pages_item_bg"
         android:orientation="horizontal"
-        android:padding="@dimen/dimen_15_dp"
+        android:padding="@dimen/dimen_15dp"
         android:visibility="gone">
 
         <ImageView

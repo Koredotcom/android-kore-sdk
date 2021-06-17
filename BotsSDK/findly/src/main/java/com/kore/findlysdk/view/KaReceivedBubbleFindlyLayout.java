@@ -381,7 +381,7 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 {
                     if(payInner.getTemplate() != null && payInner.getTemplate().getResults() != null
                         && payInner.getTemplate().getResults() != null && (payInner.getTemplate().getResults().getFaq().size() > 0
-                            || payInner.getTemplate().getResults().getPage().size() > 0 || payInner.getTemplate().getResults().getTask().size() > 0))
+                            || payInner.getTemplate().getResults().getWeb().size() > 0 || payInner.getTemplate().getResults().getTask().size() > 0))
                     {
                         resultsTemplateView.setVisibility(VISIBLE);
                         resultsTemplateView.populateResultsTemplateView(payInner);

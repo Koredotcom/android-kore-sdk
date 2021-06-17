@@ -601,7 +601,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
     public void getPopularSearch()
     {
-        Call<ArrayList<PopularSearchModel>> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.getSDIX());
+        Call<ArrayList<PopularSearchModel>> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), SocketWrapper.getInstance(getActivity()).getJWTToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
         getJWTTokenService.enqueue(new Callback<ArrayList<PopularSearchModel>>() {
             @Override
             public void onResponse(Call<ArrayList<PopularSearchModel>> call, Response<ArrayList<PopularSearchModel>> response) {
@@ -645,7 +645,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     public void getLiveSearch(String query)
     {
         JsonObject jsonObject = getJsonBody(query, false, 0);
-        Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.getSDIX(),"bearer "+ SocketWrapper.getInstance(getActivity()).getAccessToken(), "published", jsonObject);
+        Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(),"bearer "+ SocketWrapper.getInstance(getActivity()).getAccessToken(), "published", jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
         getJWTTokenService.enqueue(new Callback<LiveSearchModel>() {
             @Override
             public void onResponse(Call<LiveSearchModel> call, Response<LiveSearchModel> response) {
@@ -689,7 +689,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     public void getSearch(String query, int from)
     {
         JsonObject jsonObject = getJsonBody(query, true, from);
-        Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.getSDIX(), SDKConfiguration.TOKEN, jsonObject);
+        Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
         getJWTTokenService.enqueue(new Callback<SearchModel>() {
             @Override
             public void onResponse(Call<SearchModel> call, Response<SearchModel> response)
@@ -795,9 +795,9 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                                         searchModel.getTemplate().getResults().getFaq().size() > 0)
                                     arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFaq());
 
-                                if(searchModel.getTemplate().getResults().getPage() != null &&
-                                        searchModel.getTemplate().getResults().getPage().size() > 0)
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getPage());
+                                if(searchModel.getTemplate().getResults().getWeb() != null &&
+                                        searchModel.getTemplate().getResults().getWeb().size() > 0)
+                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getWeb());
 
                                 if(searchModel.getTemplate().getResults().getTask() != null &&
                                         searchModel.getTemplate().getResults().getTask().size() > 0)
@@ -867,23 +867,23 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                 }
             }
 
-            if(results.getPage() != null && results.getPage().size() > 0)
+            if(results.getWeb() != null && results.getWeb().size() > 0)
             {
                 if(arrTempResults.size() >= 1)
                 {
                     int suntoAdd = arrTempResults.size()+2;
-                    for (int i = 0; i < results.getPage().size(); i++)
+                    for (int i = 0; i < results.getWeb().size(); i++)
                     {
-                        arrTempResults.add(results.getPage().get(i));
+                        arrTempResults.add(results.getWeb().get(i));
                         if(arrTempResults.size() == suntoAdd)
                             break;
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < results.getPage().size(); i++)
+                    for (int i = 0; i < results.getWeb().size(); i++)
                     {
-                        arrTempResults.add(results.getPage().get(i));
+                        arrTempResults.add(results.getWeb().get(i));
                         if(arrTempResults.size() == 2)
                             break;
                     }
@@ -891,23 +891,23 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
         }
 
-        if(results.getDocument() != null && results.getDocument().size() > 0)
+        if(results.getFile() != null && results.getFile().size() > 0)
         {
             if(arrTempResults.size() >= 1)
             {
                 int suntoAdd = arrTempResults.size()+2;
-                for (int i = 0; i < results.getDocument().size(); i++)
+                for (int i = 0; i < results.getFile().size(); i++)
                 {
-                    arrTempResults.add(results.getDocument().get(i));
+                    arrTempResults.add(results.getFile().get(i));
                     if(arrTempResults.size() == suntoAdd)
                         break;
                 }
             }
             else
             {
-                for (int i = 0; i < results.getDocument().size(); i++)
+                for (int i = 0; i < results.getFile().size(); i++)
                 {
-                    arrTempResults.add(results.getDocument().get(i));
+                    arrTempResults.add(results.getFile().get(i));
                     if(arrTempResults.size() == 2)
                         break;
                 }
@@ -1212,9 +1212,9 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                         payloadOuter.getTemplate().getResults().getFaq().size() > 0)
                     arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFaq());
 
-                if(payloadOuter.getTemplate().getResults().getPage() != null &&
-                        payloadOuter.getTemplate().getResults().getPage().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getPage());
+                if(payloadOuter.getTemplate().getResults().getWeb() != null &&
+                        payloadOuter.getTemplate().getResults().getWeb().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getWeb());
 
                 if(payloadOuter.getTemplate().getResults().getTask() != null &&
                         payloadOuter.getTemplate().getResults().getTask().size() > 0)

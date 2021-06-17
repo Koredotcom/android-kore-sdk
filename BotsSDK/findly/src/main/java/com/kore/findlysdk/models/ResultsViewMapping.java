@@ -7,6 +7,7 @@ public class ResultsViewMapping implements Serializable
     private String description;
     private String img;
     private String heading;
+    private String url;
 
     public String getDescription() {
         return description;
@@ -30,5 +31,13 @@ public class ResultsViewMapping implements Serializable
 
     public String getHeading() {
         return heading;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

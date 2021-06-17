@@ -19,7 +19,7 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
 //    public SocketUpdateListener socketUpdateListener;
 //    public boolean isWithAuth;
 
-    public JWTTokenResponse getJwtKeyResponse() {
+    public RestResponse.JWTTokenResponse getJwtKeyResponse() {
         return jwtKeyResponse;
     }
 
@@ -31,12 +31,12 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
         this.tokenResponseModel = tokenResponseModel;
     }
 
-    public void setJwtKeyResponse(JWTTokenResponse jwtKeyResponse) {
+    public void setJwtKeyResponse(RestResponse.JWTTokenResponse jwtKeyResponse) {
         this.jwtKeyResponse = jwtKeyResponse;
     }
 
     public TokenResponseModel tokenResponseModel;
-    protected JWTTokenResponse jwtKeyResponse;
+    protected RestResponse.JWTTokenResponse jwtKeyResponse;
     protected boolean isSubscribed;
 
     public enum EVENT_TYPE{

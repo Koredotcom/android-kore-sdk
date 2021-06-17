@@ -18,6 +18,7 @@
     <color name="txtFontSubTitleGrey">#B4FFFFFF</color>
     <color name="txtFontlogin">#161928</color>
     <color name="btnFontlogin">#5199c6</color>
+    <color name="searchassist_widget_border">#E4E5E7</color>
 
 
     <!--<color name="bgBlueSignup">#2f91e5</color>-->

@@ -10,8 +10,7 @@ package com.kore.findlysdk.net;
  */
 public class SDKConfiguration {
 
-    private static String SDIX = "sidx-24471eaf-88c7-5789-9cfc-4a17e7e94a9e"; // "sidx-965c04cf-97cd-5192-a5ff-165178091863";// Pfizer "sidx-d9006b59-6c8c-5a78-bcbd-00e3e0ceb9aa"; // CVS "sidx-6fff8b04-f206-565c-bb02-fb13ae366fd3"; // Future "sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e";
-    public static final String TOKEN = "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.wrUCyDpNEwAaf4aU5Jf2-0ajbiwmTU3Yf7ST8yFJdqM";
+    private static String SDIX = "sidx-4c33c7cf-9561-58f2-b547-4745ce12b513"; // "sidx-2c9905a1-73ab-5c78-87fb-1b40f2f3439f"; // "sidx-4c33c7cf-9561-58f2-b547-4745ce12b513"; // "sidx-8fb06646-1d82-56bb-9901-e27fc84611e0"; // "sidx-b3350cec-b831-55e9-925a-3e8a39d67f8c"; // "sidx-666bd120-a112-5d47-b3b2-62cf88505bbf"; // "sidx-965c04cf-97cd-5192-a5ff-165178091863";// Pfizer "sidx-d9006b59-6c8c-5a78-bcbd-00e3e0ceb9aa"; // CVS "sidx-6fff8b04-f206-565c-bb02-fb13ae366fd3"; // Future "sidx-a0d5b74c-ef8d-51df-8cf0-d32617d3e66e";
     public static String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
     /**
      * bot init text  and related settings
@@ -91,26 +90,20 @@ public class SDKConfiguration {
             IS_PRESENCE_SSL = isPresenceSsl;
         }
 
-//        static  String KORE_BOT_SERVER_URL = "https://qa1-bots.kore.ai";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://qa1-bots.kore.ai";
-//        public static String WIDGETS_SERVER_URL = "https://qa1-bots.kore.ai";
-
-        //Staging
-//        static  String KORE_BOT_SERVER_URL = "https://staging-bots.korebots.com";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://staging-bots.korebots.com";
-//        public static String WIDGETS_SERVER_URL = "https://staging-bots.korebots.com";
-
-        //Pilot
-//        static  String KORE_BOT_SERVER_URL = "https://pilot-bots.kore.com/";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://pilot-bots.kore.com/";
         public static String WIDGETS_SERVER_URL = "https://pilot-bots.kore.com/";
+        public static String BOT_SERVER_URL = "https://dev.findly.ai/";
 
         //Findly
-//        static  String KORE_BOT_SERVER_URL = "https://app.findly.ai/";//"https://bots.kore.ai";
-//        public static String SERVER_URL ="https://app.findly.ai/";
+//        static  String KORE_BOT_SERVER_URL = "https://qa.findly.ai";//"https://bots.kore.ai";
+//        public static String SERVER_URL ="https://qa.findly.ai";
 
-        static  String KORE_BOT_SERVER_URL = "https://qa.findly.ai";//"https://bots.kore.ai";
-        public static String SERVER_URL ="https://qa.findly.ai";
+        //Dev SearchAssist
+        static  String KORE_BOT_SERVER_URL = "https://dev.findly.ai/searchassistapi/searchsdk/stream/";//"https://bots.kore.ai";
+        public static String SERVER_URL ="https://dev.findly.ai/searchassistapi/searchsdk/stream/";
+
+        //App SearchAssist
+//        static  String KORE_BOT_SERVER_URL = "https://app.findly.ai/searchassistapi/businessapp/searchsdk/stream/";//"https://bots.kore.ai";
+//        public static String SERVER_URL ="https://app.findly.ai/searchassistapi/businessapp/searchsdk/stream/";
 
         public static String SERVER_IP = "qa.kore.ai";
         public static String SERVER_PORT = "443";
@@ -145,18 +138,32 @@ public class SDKConfiguration {
 
 
         //Future Bank
-        public static String client_id = "cs-f8ab4184-1db2-5638-be23-81316dfd4169";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "csHEMy8x8aN48IJLNqekdBi0phYmsbHqA33y3AzxrAM=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "raj.peda@kore.com";
-        public static String bot_name = "Future Bank App";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-f83a36b2-d239-5495-b86a-2ec863a4c723";
-
-        //Future Bank
-//        public static String client_id = "cs-f3ea9339-f876-5126-ac69-8aa4f8a4c8a2";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "fpWr6xFY2hJfN4HMTSd1Rdc/9dwIzQdhg2iessg26k8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String client_id = "cs-f8ab4184-1db2-5638-be23-81316dfd4169";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "csHEMy8x8aN48IJLNqekdBi0phYmsbHqA33y3AzxrAM=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
 //        public static String identity = "raj.peda@kore.com";
-//        public static String bot_name = "April 14";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-d3f62f3e-0ce5-5269-ab4c-1b5a60c305b4";
+//        public static String bot_name = "Future Bank App";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-f83a36b2-d239-5495-b86a-2ec863a4c723";
+
+        //App Credentials
+//        public static String client_id = "cs-c111b3d0-ffc2-5446-b025-649f8706296b";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "E0M9pGZJ/BSPBzK3gUMvuSvtg0dvk2+8I9lsOGxHW/s=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "raj.peda@kore.com";
+//        public static String bot_name = "June 3";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-21f814e3-78c1-557d-abc7-216573823c1c";
+
+        //Dev Credentials
+        public static String client_id = "cs-85d24fec-86e3-5b3e-8fb7-0e296f09fa21";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "KWf79rvhmDEPjA+G0Z+EKJasibER0oT4/pzvucFAWSQ=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "raj.peda@kore.com";
+        public static String bot_name = "31May";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-12466d46-dc91-5855-a301-b6ecd7a95d82";
+
+        //Dev Credentials
+//        public static String client_id = "cs-cd5db130-8296-55ba-8307-7a87d4ec8fff";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "ozk5oqlrWerwpZ6odW9wkKr4WHBebTYDYIqP7LBqP4s=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "raj.peda@kore.com";
+//        public static String bot_name = "May 20";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-ba8e817a-0bcd-5855-bd91-eb2be2fdec30";
 
     }
 

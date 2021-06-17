@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kore.findlysdk.BotDb.BotDataPersister;
 import com.kore.findlysdk.bot.BotClient;
 import com.kore.findlysdk.events.AuthTokenUpdateEvent;
@@ -19,12 +20,16 @@ import com.kore.findlysdk.models.JWTTokenResponse;
 import com.kore.findlysdk.models.RestResponse;
 import com.kore.findlysdk.models.TokenResponseModel;
 import com.kore.findlysdk.models.UserNameModel;
+import com.kore.findlysdk.net.BotJWTRestBuilder;
 import com.kore.findlysdk.net.BotRestBuilder;
+import com.kore.findlysdk.net.RestAPIHelper;
 import com.kore.findlysdk.net.SDKConfiguration;
 import com.kore.findlysdk.utils.BundleConstants;
 import com.kore.findlysdk.utils.DateUtils;
 import com.kore.findlysdk.utils.NetworkUtility;
 import com.kore.findlysdk.utils.Utils;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -167,6 +172,55 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+    public void jwtCallWithConfig(JsonObject body, final boolean isRefresh)
+    {
+        Call<RestResponse.JWTTokenResponse> jwtTokenCall = BotJWTRestBuilder.getBotJWTRestAPI().getJWTSearchToken(body);
+        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<RestResponse.JWTTokenResponse>() {
+            @Override
+            public void onResponse(Call<RestResponse.JWTTokenResponse> call, Response<RestResponse.JWTTokenResponse> response) {
+                if(response.isSuccessful()){
+                    jwtKeyResponse = response.body();
+                    KoreEventCenter.post(jwtKeyResponse);
+                }else{
+//                    Log.d("token refresh", t.getMessage());
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestResponse.JWTTokenResponse> call, Throwable t) {
+//                if (t instanceof NoNetworkException) {
+//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+//                } else {
+                Log.d("token refresh", t.getMessage());
+//                }
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            }
+        });
+
+//        if(botCustomData == null) {
+//            botCustomData = new RestResponse.BotCustomData();
+//        }
+//        botCustomData.put("kmUId", userId);
+//        botCustomData.put("kmToken", accessToken);
+//        botClient = new BotClient(mContext, botCustomData);
+//
+//        try
+//        {
+//            String jwt = botClient.generateJWT(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+//            KoreEventCenter.post(jwt);
+//        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+//            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+//            if(chatListener != null )
+//                chatListener.onConnectionStateChanged(connection_state,false);
+//        }
+
+    }
+
 
     public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg){
 
@@ -205,39 +259,38 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             }
         });*/
     }
+
     private void makeJwtCallWithToken(final boolean isRefresh) {
-//        Call<JWTTokenResponse> jwtTokenCall = BotRestBuilder.getRestAPI().getJWTToken(Utils.accessTokenHeader(accessToken), new HashMap<String, Object>());
-//        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<JWTTokenResponse>() {
-//            @Override
-//            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
-//                if(response.isSuccessful()){
-//                    jwtKeyResponse = response.body();
-//                    botName = jwtKeyResponse.getBotName();
-//                    streamId = jwtKeyResponse.getStreamId();
-//                    if (!isRefresh) {
-////                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
-////                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
-//                    } else {
-//                        KoreEventCenter.post(response.body().getJwt());
-//                    }
-//                }else{
-////                    Log.d("token refresh", t.getMessage());
-//                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
-////                if (t instanceof NoNetworkException) {
-////                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
-////                } else {
+        Call<RestResponse.JWTTokenResponse> jwtTokenCall = BotRestBuilder.getRestAPI().getJWTToken(Utils.accessTokenHeader(accessToken));
+        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<RestResponse.JWTTokenResponse>() {
+            @Override
+            public void onResponse(Call<RestResponse.JWTTokenResponse> call, Response<RestResponse.JWTTokenResponse> response) {
+                if(response.isSuccessful()){
+                    jwtKeyResponse = response.body();
+
+                    if (!isRefresh)
+                    {
+//                        botClient.connectAsAnonymousUserForKora(accessToken, jwtKeyResponse.getJwt(), jwtKeyResponse.getClientId(),
+//                                jwtKeyResponse.getBotName(), jwtKeyResponse.getStreamId(), botSocketConnectionManager);
+                    } else {
+                        KoreEventCenter.post(response.body().getJwt());
+                    }
+                }else{
 //                    Log.d("token refresh", t.getMessage());
-////                }
-//                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-//            }
-//        });
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                }
+            }
 
-
+            @Override
+            public void onFailure(Call<RestResponse.JWTTokenResponse> call, Throwable t) {
+//                if (t instanceof NoNetworkException) {
+//                    Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+//                } else {
+                    Log.d("token refresh", t.getMessage());
+//                }
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            }
+        });
     }
 
     @Override
