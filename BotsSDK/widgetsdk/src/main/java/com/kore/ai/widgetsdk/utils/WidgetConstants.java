@@ -25,6 +25,7 @@ public class WidgetConstants {
     public static final byte SUMMARY_CARD_TEMPLATE=24;
     public static final byte HEADLINE_TEMPLATE=25;
     public static final byte TABLE_LIST_TEMPLATE = 26;
+    public static final byte FORM_TEMPLATE = 27;
     public static final String HEADLINE_TEMPLATE_SERVER="headlines";
 
 
@@ -60,6 +61,7 @@ public class WidgetConstants {
     public final static String LIST_WIDGET = "list";
     public final static String TABLE_LIST_WIDGET = "tableList";
     public final static String STANDARD = "standard";
+    public final static String FORM = "form";
 
 
     //public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";

@@ -29,6 +29,7 @@ import com.kore.ai.widgetsdk.views.widgetviews.ArticlesWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.BarChartWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.ChartListWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.DefaultWidgetView;
+import com.kore.ai.widgetsdk.views.widgetviews.FormWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.GenericWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.LineChartWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.ListWidgetView;
@@ -163,7 +164,9 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             case WidgetConstants.TABLE_LIST_TEMPLATE:
                 TableListWidgetView tableListWidgetView = new TableListWidgetView(parent.getContext(),widget.getData().getName(), widgetViewMoreEnum);
                 return new TableListWidgetViewHolder(tableListWidgetView);
-
+            case WidgetConstants.FORM_TEMPLATE:
+                FormWidgetView formWidgetView = new FormWidgetView(parent.getContext(), widget.getData().getName());
+                return new FormWidgetViewHolder(formWidgetView);
             /*case EDIT_TEMPLATE_TEMP:
                 view = LayoutInflater.from(kaWidgetFragmentContext).inflate(R.layout.widget_edit_button, parent, false);
                 return new EditViewHolder(view);*/
@@ -193,6 +196,9 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             ((MeetingViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData);
         } else if (holder instanceof SkillViewHolder) {
 //            ((SkillViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData);
+        }
+        else if (holder instanceof FormWidgetViewHolder) {
+            ((FormWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position),panelData, jwtToken);
         }
 //        else if (holder instanceof AnnouncementViewHolder) {
 ////            ((AnnouncementViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position), false,panelData);
@@ -309,10 +315,8 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             case WidgetConstants.HEADLINE_TEMPLATE_SERVER:
                 return WidgetConstants.HEADLINE_TEMPLATE;
 
-
-           /* case EDIT_TEMPLATE:
-                return EDIT_TEMPLATE_TEMP;
-*/
+            case WidgetConstants.STANDARD:
+                return WidgetConstants.TABLE_LIST_TEMPLATE;
 
             default:
 
@@ -330,7 +334,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         View btnEdit;
         public EditViewHolder(@NonNull View itemView) {
             super(itemView);
-            btnEdit=itemView.findViewById(R.id.btnEdit);
+//            btnEdit=itemView.findViewById(R.id.btnEdit);
         }
     }
 
@@ -523,6 +527,19 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
 
         public BarChartWidgetView getCustomView() {
+            return customView;
+        }
+    }
+
+    public class FormWidgetViewHolder extends RecyclerView.ViewHolder {
+        private FormWidgetView customView;
+
+        public FormWidgetViewHolder(View v) {
+            super(v);
+            customView = (FormWidgetView) v;
+        }
+
+        public FormWidgetView getCustomView() {
             return customView;
         }
     }

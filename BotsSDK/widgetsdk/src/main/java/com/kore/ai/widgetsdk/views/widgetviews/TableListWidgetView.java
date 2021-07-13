@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -40,6 +41,7 @@ import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
+import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
@@ -76,8 +78,8 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
     public ImageView imgMenu;
     public TextView tvText;
     public TextView tvUrl;
-    public TextView tvButton;
-    public LinearLayout tvButtonParent;
+    public TextView tvButton, tvFillForm;
+    public LinearLayout tvButtonParent, llFormData;
     private String jwtToken;
     private TextView pin_view,panel_name_view;
     public WidgetsModel getWidget() {
@@ -183,6 +185,8 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
         tvText = view.findViewById(R.id.tv_text);
         tvUrl = view.findViewById(R.id.tv_url);
         tvButtonParent = view.findViewById(R.id.tv_values_layout);
+        llFormData = view.findViewById(R.id.llFormData);
+        tvFillForm = view.findViewById(R.id.tvFillForm);
         getUserData();
     }
 
@@ -588,7 +592,8 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
 //            listWidgetAdapter.setPreviewLength(3);
             listWidgetAdapter.notifyDataSetChanged();
-        }else if(model.getData().get(0).getTemplateType().equals("loginURL")){
+        }
+        else if(model.getData().get(0).getTemplateType().equals("loginURL")){
             if(model != null ) {
                 listWidgetAdapter.setBotListModelArrayList(null);
 //                listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
@@ -596,7 +601,29 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
 //                listWidgetAdapter.setLoginNeeded(true);
             }
         }
+        else if(model.getData().get(0).getTemplateType().equals("form"))
+        {
+            if(model != null)
+            {
+                list_widget_root_recycler.setVisibility(GONE);
+                llFormData.setVisibility(VISIBLE);
+                tvFillForm.setText(mWidget.getTitle());
 
+                tvFillForm.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                            intent.putExtra("url", model.getData().get(0).getFormLink());
+                            intent.putExtra("header",mWidget.getTitle());
+                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                        }else{
+                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
         else {
             listWidgetAdapter.setBotListModelArrayList(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);

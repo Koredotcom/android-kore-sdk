@@ -78,6 +78,7 @@
                 android:visibility="invisible" />
 
             <LinearLayout
+                android:id="@+id/llDefaultWidget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/meeting_progress"
@@ -101,6 +102,34 @@
                     android:textColor="#737d87"
                     android:textSize="@dimen/dimen_12_dp"
                     android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llFormData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/ivMeetingImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/no_meeting"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvFillForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fill the Form"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:gravity="center"
+                    android:padding="@dimen/dimen_10dp"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/list_button_background"/>
+
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

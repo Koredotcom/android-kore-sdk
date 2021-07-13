@@ -9,6 +9,7 @@ public class WidgetListModel {
     private String heading;
     private String text;
     private HeaderOptionsModel headerOptions;
+    private String formLink;
 
     public LoginModel getLoginModel() {
         return login;
@@ -66,4 +67,12 @@ public class WidgetListModel {
     }
 
     private ArrayList<WidgetListElementModel> elements;
+
+    public String getFormLink() {
+        return formLink;
+    }
+
+    public void setFormLink(String formLink) {
+        this.formLink = formLink;
+    }
 }

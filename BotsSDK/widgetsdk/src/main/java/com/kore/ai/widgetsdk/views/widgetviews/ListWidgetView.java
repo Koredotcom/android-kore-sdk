@@ -11,10 +11,13 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -83,8 +86,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     public ImageView imgMenu;
     public TextView tvText;
     public TextView tvUrl;
-    public TextView tvButton;
-    public LinearLayout tvButtonParent;
+    public TextView tvButton, tvFillForm;
+    public LinearLayout tvButtonParent, llFormData;
     private String jwtToken;
     private TextView pin_view,panel_name_view;
     public WidgetsModel getWidget() {
@@ -132,13 +135,16 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         icon_image_load=view.findViewById(R.id.icon_image_load);
         view_more = view.findViewById(R.id.view_more);
         menu_btn = view.findViewById(R.id.menu_meeting_btn);
+        llFormData = view.findViewById(R.id.llFormData);
+        tvFillForm = view.findViewById(R.id.tvFillForm);
+
         menu_btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 //                showPopUpMenu();
             }
         });
-       // KoreEventCenter.register(this);
+
         list_widget_root_recycler = view.findViewById(R.id.upcoming_meeting_root_recycler);
         list_widget_root_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -598,12 +604,11 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             }
 
             listWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
-//            listWidgetAdapter.setMultiActions(model.());
-//            calendarEventsAdapter.setPreviewLength(model.getPreview_length());
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setPreviewLength(3);
             listWidgetAdapter.notifyDataSetChanged();
-        }else if(model.getData().get(0).getTemplateType().equals("loginURL")){
+        }
+        else if(model.getData().get(0).getTemplateType().equals("loginURL")){
             if(model != null ) {
                 listWidgetAdapter.setWidgetData(null);
                 listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
@@ -611,14 +616,34 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                 listWidgetAdapter.setLoginNeeded(true);
             }
         }
+        else if(model.getData().get(0).getTemplateType().equals("form"))
+        {
+            if(model != null)
+            {
+                list_widget_root_recycler.setVisibility(GONE);
+                llFormData.setVisibility(VISIBLE);
+                tvFillForm.setText(mWidget.getTitle());
 
-        else {
+                tvFillForm.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                            intent.putExtra("url", model.getData().get(0).getFormLink());
+                            intent.putExtra("header",mWidget.getTitle());
+                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                        }else{
+                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+        else
+        {
             listWidgetAdapter.setData(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.notifyDataSetChanged();
         }
-        //KoreEventCenter.post(new ShowLayoutEvent(0));
     }
-
-
 }

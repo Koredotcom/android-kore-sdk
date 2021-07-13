@@ -9,6 +9,7 @@ public class BotTableListTemplateModel
     public String description;
     public HeaderOptionsModel headerOptions;
     public ArrayList<BotTableListElementsModel> records;
+    private String formLink;
 
     public void setTitle(String title) {
         this.title = title;
@@ -50,4 +51,11 @@ public class BotTableListTemplateModel
         return templateType;
     }
 
+    public String getFormLink() {
+        return formLink;
+    }
+
+    public void setFormLink(String formLink) {
+        this.formLink = formLink;
+    }
 }

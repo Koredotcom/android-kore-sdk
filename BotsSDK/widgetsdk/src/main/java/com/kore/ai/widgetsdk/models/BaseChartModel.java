@@ -115,11 +115,20 @@ public class BaseChartModel {
         this.lineChartElements = lineChartElements;
     }
 
+    public String getFormLink() {
+        return formLink;
+    }
+
+    public void setFormLink(String formLink) {
+        this.formLink = formLink;
+    }
+
     private String templateType;
     private String title;
     private String pie_type;
     private List<Object> elements = null;
     private List<ContentModel> content = null;
+    private String formLink;
 
     public HeaderOptionsModel getHeaderOptions() {
         return headerOptions;

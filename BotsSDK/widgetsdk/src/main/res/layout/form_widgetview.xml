@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/meeting_root_view"
+    android:id="@+id/chart_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,33 +17,32 @@
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/root_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="36dp"
-                android:paddingStart="10dp"
-                android:paddingTop="10dp"
-
-                >
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="wrap_content">
 
-                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/meeting_header"
+                        android:id="@+id/chart_header"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_centerInParent="true"
-                        android:layout_toStartOf="@+id/dump"
+                        android:layout_marginLeft="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
                         android:fontFamily="@font/latosemibold"
+                        android:layout_toStartOf="@+id/dummy_layout"
                         android:gravity="center|start"
                         android:letterSpacing="0.01"
                         android:textColor="@color/color_161620"
@@ -52,19 +51,17 @@
 
 
                     <LinearLayout
-                        android:id="@+id/dump"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/dummy_layout"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:gravity="center">
-
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
                         <RelativeLayout
                             android:id="@+id/view_out"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
+
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp">
 
@@ -128,7 +125,6 @@
                                 android:maxLines="1"
                                 android:paddingEnd="5dp"
                                 android:singleLine="true"
-
                                 android:textColor="@color/txtFontBlack"
                                 android:textSize="14sp"
                                 android:visibility="gone" />
@@ -147,162 +143,72 @@
                                 android:textSize="14sp"
                                 android:visibility="gone" />
                         </RelativeLayout>
-
                         <include layout="@layout/pin_layout" />
                     </LinearLayout>
+
+
                 </RelativeLayout>
+                <include layout="@layout/panel_name_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/root_layout"/>
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/inset_widget_divider" />
 
-                <ImageView
-                    android:id="@+id/menu_meeting_btn"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerInParent="true"
-                    android:visibility="gone"
-                    app:srcCompat="@drawable/vector_menu" />
+                <TextView
+                    android:id="@+id/chart_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:fontFamily="@font/latosemibold"
+                    android:gravity="center|start"
+                    android:letterSpacing="0.01"
+                    android:text=""
+                    android:textColor="@color/color_161620"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
-            </RelativeLayout>
-
-            <include
-                layout="@layout/panel_name_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/root_layout"
-                android:layout_marginStart="10dp" />
+            </LinearLayout>
 
             <ProgressBar
-                android:id="@+id/meeting_progress"
+                android:id="@+id/chart_progress"
                 style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="6dp"
-                android:layout_below="@+id/panel_name_view"
+                android:layout_below="@+id/root_layout"
                 android:indeterminate="true"
                 android:visibility="invisible" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/meeting_progress"
-                android:layout_marginTop="10dp"
+                android:layout_below="@+id/chart_progress"
                 android:orientation="vertical">
 
-                <ListView
-                    android:id="@+id/upcoming_meeting_root_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/color_dfdfeb"
-                    android:dividerHeight="1dp"
-                    android:footerDividersEnabled="true"
-                    android:headerDividersEnabled="true"
-                    android:padding="2dp"
-                    android:scrollbars="none"
-                    android:visibility="visible"/>
-
-                <LinearLayout
-                    android:id="@+id/llFormData"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/no_meeting"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:id="@+id/tvFillForm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Fill the Form"
-                        android:textSize="@dimen/text_size_sub_header"
-                        android:gravity="center"
-                        android:padding="@dimen/dimen_10dp"
-                        android:layout_margin="@dimen/dimen_10dp"
-                        android:background="@drawable/list_button_background"/>
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="@dimen/dimen_10_dp"
-                    android:layout_below="@+id/upcoming_meeting_root_recycler"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:background="#ffffff" />
-
                 <TextView
-                    android:id="@+id/botCustomListViewButton"
+                    android:id="@+id/tvFillForm"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="@dimen/dimen_10_dp"
-                    android:gravity="right|center_vertical"
-                    android:text="more"
-                    android:textColor="@android:color/holo_blue_dark"
+                    android:layout_height="wrap_content"
+                    android:text="Fill the Form"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:gravity="center"
+                    android:padding="@dimen/dimen_10dp"
+                    android:layout_margin="@dimen/dimen_10dp"
+                    android:background="@drawable/list_button_background"/>
+
+                <include
+                    android:id="@+id/login_View"
+                    layout="@layout/need_login_widget_layout"
                     android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/workBenchListViewButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:background="@drawable/list_view_template_bg"
-                    android:gravity="center"
-                    android:text="Show more"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/view_more"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/upcoming_meeting_root_recycler"
-                    android:layout_alignParentEnd="true"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <View
-                        android:id="@+id/divider"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@drawable/inset_widget_divider" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginEnd="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="44dp"
-                            android:layout_marginEnd="10dp"
-                            android:drawablePadding="8dp"
-                            android:fontFamily="@font/latomedium"
-                            android:gravity="center_vertical"
-                            android:paddingStart="10dp"
-                            android:text="See more"
-                            android:textColor="#4741fa"
-                            android:textSize="14sp" />
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="2dp"
-                            android:layout_marginRight="3dp"
-                            android:gravity="center_vertical"
-                            app:srcCompat="@drawable/ic_baseline_chevron_right_blue_24px">
-
-                        </ImageView>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

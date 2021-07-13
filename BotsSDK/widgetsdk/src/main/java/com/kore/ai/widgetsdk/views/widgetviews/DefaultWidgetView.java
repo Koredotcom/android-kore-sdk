@@ -1,5 +1,6 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -8,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +43,7 @@ import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
+import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
@@ -74,6 +78,9 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
     }
     private TextView pin_view,panel_name_view;
     PanelLevelData panelData;
+    private LinearLayout llFormData, llDefaultWidget;
+    private TextView tvFillForm;
+
     public void setWidget(WidgetsModel mWidget, PanelLevelData panelData, String jwtToken) {
         this.mWidget = mWidget;
         this.panelData=panelData;
@@ -114,6 +121,10 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
         menu_meeting_btn = view.findViewById(R.id.menu_meeting_btn);
         pin_view = view.findViewById(R.id.pin_view);
         panel_name_view=view.findViewById(R.id.panel_name_view);
+        llDefaultWidget = view.findViewById(R.id.llDefaultWidget);
+        llFormData = view.findViewById(R.id.llFormData);
+        tvFillForm = view.findViewById(R.id.tvFillForm);
+
         menu_meeting_btn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -401,23 +412,48 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
             if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
             }
-
+            llDefaultWidget.setVisibility(VISIBLE);
             defaultWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
             defaultWidgetAdapter.setMultiActions(model.getData().get(0).getMultiActions());
 //            calendarEventsAdapter.setPreviewLength(model.getPreview_length());
             upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
             defaultWidgetAdapter.setPreviewLength(3);
             defaultWidgetAdapter.notifyDataSetChanged();
-        }else if(model != null && model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getTemplateType().equals("loginURL")){
+        }
+        else if(model != null && model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getTemplateType().equals("loginURL")){
             if(model != null ) {
+                llDefaultWidget.setVisibility(VISIBLE);
                 defaultWidgetAdapter.setWidgetData(null);
                 defaultWidgetAdapter.setLoginModel(model.getData().get(0).getLogin());
                 upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
                 defaultWidgetAdapter.setLoginNeeded(true);
             }
         }
+        else if(model.getData().get(0).getTemplateType().equals("form"))
+        {
+            if(model != null)
+            {
+                llDefaultWidget.setVisibility(GONE);
+                llFormData.setVisibility(VISIBLE);
+                tvFillForm.setText(mWidget.getTitle());
 
-        else {
+                tvFillForm.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                            intent.putExtra("url", model.getData().get(0).getFormLink());
+                            intent.putExtra("header",mWidget.getTitle());
+                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                        }else{
+                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+        }
+        else
+        {
             defaultWidgetAdapter.setData(null);
             upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
             defaultWidgetAdapter.notifyDataSetChanged();

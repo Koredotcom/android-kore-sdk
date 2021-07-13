@@ -584,6 +584,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 return WidgetConstants.LIST_WIDGET_TEMPLATE;
             case WidgetConstants.STANDARD:
                 return WidgetConstants.TABLE_LIST_TEMPLATE;
+            case WidgetConstants.FORM:
+                return WidgetConstants.FORM_TEMPLATE;
             default:
                 return WidgetConstants.DEFAULT_TEMPLATE;
 

@@ -84,6 +84,10 @@ public class SDKConfiguration {
         public static String SERVER_URL ="https://qa1-bots.kore.ai";
         public static String WIDGETS_SERVER_URL = "https://qa1-bots.kore.ai";
 
+//        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//"https://bots.kore.ai";
+//        public static String SERVER_URL ="https://bots.kore.ai";
+//        public static String WIDGETS_SERVER_URL = "https://bots.kore.ai";
+
         public static String SERVER_IP = "qa.kore.ai";
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
@@ -120,7 +124,6 @@ public class SDKConfiguration {
         public static  String identity = "sri.harsha@kore.com";
         public static  String bot_name = "SDK_WIDGET_MAIN";
         public static  String bot_id = "st-5baee3ee-0254-5f9b-8f13-f06da3a0fc5c";
-
     }
 
 

@@ -190,7 +190,36 @@
                     android:id="@+id/upcoming_meeting_root_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="@dimen/dimen_recycler_empty" />
+                    android:minHeight="@dimen/dimen_recycler_empty"
+                    android:visibility="visible"/>
+
+                <LinearLayout
+                    android:id="@+id/llFormData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/ivMeetingImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/no_meeting"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:id="@+id/tvFillForm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Fill the Form"
+                        android:textSize="@dimen/text_size_sub_header"
+                        android:gravity="center"
+                        android:padding="@dimen/dimen_10dp"
+                        android:layout_margin="@dimen/dimen_10dp"
+                        android:background="@drawable/list_button_background"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/view_more"

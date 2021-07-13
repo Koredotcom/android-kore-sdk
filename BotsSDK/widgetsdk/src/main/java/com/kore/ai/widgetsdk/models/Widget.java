@@ -119,7 +119,8 @@ public class Widget implements Serializable,Cloneable {
     }
 
     public String pname;
-public String trigger;
+    public String trigger;
+    public String formLink;
 
     public String getTrigger() {
         return trigger;
@@ -139,6 +140,14 @@ public String trigger;
 
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
+    }
+
+    public void setFormLink(String formLink) {
+        this.formLink = formLink;
+    }
+
+    public String getFormLink() {
+        return formLink;
     }
 
     private boolean pinned;
