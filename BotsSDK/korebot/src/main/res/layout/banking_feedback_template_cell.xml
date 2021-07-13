@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llExperience"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/dimen_10_dp">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/rbSelect"
+        android:layout_width="@dimen/dimen_40dp"
+        android:layout_height="@dimen/dimen_40dp"
+        android:src="@drawable/ic_check_off"
+        style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"/>
+
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/tvExperience"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="Option"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="@dimen/text_size_normal" />
+</LinearLayout>

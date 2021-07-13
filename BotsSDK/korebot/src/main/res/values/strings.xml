@@ -96,6 +96,7 @@
     <string name="submit">Submit</string>
     <string name="show_more">Show More</string>
     <string name="about">About</string>
+    <string name="add_suggestions">Add Suggestions</string>
 
     <string-array name="attachments_strings">
         <item>Take Photo</item>
