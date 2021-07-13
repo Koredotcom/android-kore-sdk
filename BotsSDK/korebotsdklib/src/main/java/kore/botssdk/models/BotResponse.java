@@ -23,6 +23,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String COMPONENT_TYPE_TEXT = "text";
     public static final String COMPONENT_TYPE_ERROR = "error";
     public static final String COMPONENT_TYPE_MESSAGE = "message";
+    public static final String COMPONENT_TYPE_IMAGE = "image";
+    public static final String COMPONENT_TYPE_AUDIO = "audio";
+    public static final String COMPONENT_TYPE_VIDEO = "video";
     public static final String  TEMPLATE_TYPE_KORA_CAROUSAL = "kora_carousel";
     public static final String  TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL = "announcement_carousel";
     public static final String  TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL = "kora_search_carousel";
@@ -70,6 +73,9 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_DROPDOWN = "dropdown_template";
+    public static final String TEMPLATE_IMAGE = "image";
+    public static final String TEMPLATE_BANKING_FEEDBACK = "bankingFeedbackTemplate";
+
 
     //widgets
     public static final String TEMPLATE_TYPE_FILES_LOOKUP_WIDGET = "files_search_carousel_widget";

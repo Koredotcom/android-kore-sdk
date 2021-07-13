@@ -251,6 +251,36 @@ public class StringUtils {
         }
     }
 
+    //time conversion
+    public static String timeConversion(long value) {
+        String songTime;
+        int dur = (int) value;
+        int hrs = (dur / 3600000);
+        int mns = (dur / 60000) % 60000;
+        int scs = dur % 60000 / 1000;
+
+        if (hrs > 0) {
+            songTime = String.format("%02d:%02d:%02d", hrs, mns, scs);
+        } else {
+            songTime = String.format("%02d:%02d", mns, scs);
+        }
+        return songTime;
+    }
+
+    public static String getFileNameFromUrl(String url) {
+
+        String name = "";
+        try
+        {
+            name = url.substring(url.lastIndexOf('/') + 1);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return name;
+    }
+
     public static int getInt(String val)
     {
         int value;

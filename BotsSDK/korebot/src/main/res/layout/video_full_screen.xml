@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlVideo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/txtFontBlack">
+
+    <VideoView
+        android:id="@+id/vvFullVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/llPlayControls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#80000000"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/sbVideo"
+            android:padding="@dimen/dimen_10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivPlayPauseIcon"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:src="@drawable/ic_pause_icon" />
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/tvVideoTiming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/sbVideo"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_toRightOf="@+id/ivPlayPauseIcon"
+                android:layout_weight="1"
+                android:text="00:00/00:00"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <ImageView
+                android:id="@+id/ivFullScreen"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_above="@+id/sbVideo"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dimen_15_dp"
+                android:src="@drawable/ic_exit_fullscreen_icon" />
+
+            <ImageView
+                android:id="@+id/ivVideoMore"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_weight="0"
+                android:src="@drawable/ic_more_vert_white_24dp" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/sbVideo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:maxHeight="@dimen/dimen_3dp"
+            android:minHeight="@dimen/dimen_3dp"
+            android:progressDrawable="@drawable/seekbar_progress_style"
+            android:splitTrack="false"
+            android:thumbTint="@color/transparent_card" />
+    </LinearLayout>
+</RelativeLayout>

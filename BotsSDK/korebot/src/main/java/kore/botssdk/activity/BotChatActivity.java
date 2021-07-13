@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
@@ -92,6 +94,8 @@ import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.KaMediaUtils;
+import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
@@ -99,6 +103,8 @@ import kore.botssdk.websocket.SocketWrapper;
 
 import static android.view.View.VISIBLE;
 import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -120,7 +126,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     Handler actionBarTitleUpdateHandler;
     BotClient botClient;
     BotContentFragment botContentFragment;
-    CarouselFragment carouselFragment;
     ComposeFooterFragment composeFooterFragment;
     TTSSynthesizer ttsSynthesizer;
     QuickReplyFragment quickReplyFragment;
@@ -129,25 +134,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     boolean isItFirstConnect = true;
     private Gson gson = new Gson();
     //For Bottom Panel
-    private ProgressBar progressBarPanel;
-    private RecyclerView pannel_recycler;
-    private PannelAdapter pannelAdapter;
-    private String jwtToken;
-    private TextView emptyPanelView;
-    private JWTTokenResponse jwtKeyResponse;
-    private SharedPreferenceUtils sharedPreferenceUtils;
     private String packageName = "com.kore.koreapp";
     private String appName = "Kore";
     private CustomBottomSheetBehavior mBottomSheetBehavior;
-    private boolean keyBoardShowing = false;
-//    private PanelBaseModel pModels;
-    private LinearLayout perssiatentPanel, persistentSubLayout;
-    private ImageView img_skill;
-    private TextView closeBtnPanel, editButton;
-    private RecyclerView recyclerView_panel;
-    private LinearLayout single_item_container;
-//    private KaWidgetBaseAdapterNew widgetBaseAdapter;
-    private TextView img_icon, txtTitle;
     //Fragment Approch
     private FrameLayout composerView;
     private BottomPanelFragment composerFragment;
@@ -158,6 +147,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected Attachment attachment;
     Handler messageHandler = new Handler();
     protected static long totalFileSize;
+    private String fileUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,6 +372,34 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
+    @Override
+    public void externalReadWritePermission(String fileUrl)
+    {
+        this.fileUrl = fileUrl;
+        if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        }
+        else
+        {
+            KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST,
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST)
+        {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
+
+                if(!StringUtils.isNullOrEmpty(fileUrl))
+                    KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 
     private void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {

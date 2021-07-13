@@ -16,6 +16,7 @@ public class BundleConstants {
     public static String BUTTON_TYPE_POSTBACK_DISP_PAYLOAD = "postback_disp_payload";
     public static String BUTTON_TYPE_WEB_URL = "web_url";
     public static String BUTTON_TYPE_URL = "url";
+    public static String BUTTON_TYPE_CONFIRM = "Confirm";
     public static String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static String FORM_TYPE_OPEN_FORM="open_form";
@@ -59,6 +60,18 @@ public class BundleConstants {
     public static final String FILE_CONTEXT = "fileContext";
 
 
+    public static String CHOOSE_TYPE_GALLERY = "choose";
+    public static String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
+    public static String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
+    public static String CHOOSE_TYPE_FILE = "choose_file";
+    public static String CHOOSE_TYPE_CAMERA = "camera";
+    public static String FOR_MESSAGE = "message";
+    public static String FOR_PROFILE = "profile";
+    public static final String MEDIA_TYPE_AUDIO = "audio";
+    public static final String MEDIA_TYPE_VIDEO = "video";
+    public static final String MEDIA_TYPE_IMAGE = "image";
+    public static final String MEDIA_TYPE_NONE = "text";
+    public static final String MEDIA_TYPE_DOCUMENT = "docs";
 
     public static final String DOWNLOAD_URL = "downloadUrl";
     public static final String TARGET_PATH = "targetPath";

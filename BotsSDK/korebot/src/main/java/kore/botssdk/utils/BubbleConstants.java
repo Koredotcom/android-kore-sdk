@@ -22,4 +22,5 @@ public class BubbleConstants {
     public static final int QUICK_REPLY_TEMPLATE_ID = 19800397;
     public static final int AGENT_TRANSFER_TEMPLATE_ID = 19800398;
     public static final int DROP_DOWN_TEMPLATE_ID = 19800405;
+    public static final int FEEDBACK_TEMPLATE_ID = 19800406;
 }

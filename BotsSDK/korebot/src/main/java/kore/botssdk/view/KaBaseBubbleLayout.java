@@ -138,6 +138,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected ListWidgetView listWidgetView;
     protected BotListWidgetTemplateView botListWidgetTemplateView;
     protected BotDropDownTemplateView botDropDownTemplateView;
+    protected ImageTemplateView imageTemplateView;
+    protected BankingFeedbackTemplateView bankingFeedbackTemplateView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -408,6 +410,14 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botDropDownTemplateView = ViewProvider.getDropDownTemplateView(context);
         botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botDropDownTemplateView);
+
+        imageTemplateView = ViewProvider.getImageTemplateView(context);
+        imageTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(imageTemplateView);
+
+        bankingFeedbackTemplateView = ViewProvider.getBankingFeedbackTemplateView(context);
+        bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(bankingFeedbackTemplateView);
     }
 
 
@@ -515,9 +525,16 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             listWidgetView.setComposeFooterInterface(composeFooterInterface);
         }
 
-        if(botDropDownTemplateView != null)
-        {
+        if(botDropDownTemplateView != null) {
             botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if(imageTemplateView != null) {
+            imageTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if(bankingFeedbackTemplateView != null) {
+            bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -565,9 +582,16 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
 
-        if(botDropDownTemplateView != null)
-        {
+        if(botDropDownTemplateView != null) {
             botDropDownTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+
+        if(imageTemplateView != null) {
+            imageTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+
+        if(bankingFeedbackTemplateView != null) {
+            bankingFeedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

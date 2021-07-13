@@ -735,19 +735,19 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private void launchSelectedMode(int position) {
         switch (position) {
             case 0:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAMERA, REQ_CAMERA, KoreMedia.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_CAMERA, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
             case 1:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_GALLERY, REQ_IMAGE, KoreMedia.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_GALLERY, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
             case 2:
                 launchVideoRecorder();
                 break;
             case 3:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, KoreMedia.MEDIA_TYPE_VIDEO);
+                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
                 break;
             case 4:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_FILE, REQ_FILE, KoreMedia.MEDIA_TYPE_DOCUMENT);
+                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_FILE, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
                 break;
 
 
@@ -792,11 +792,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private Uri getImageUri() {
         // Store image in Kore folder
         KaMediaUtils.updateExternalStorageState();
-//        KaMediaUtils.setupAppDir(KoreMedia.MEDIA_TYPE_VIDEO, userData.getId());
+//        KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, userData.getId());
 
         cameraVideoUri1 = null;
         try {
-            File actualImageFile = KaMediaUtils.getOutputMediaFile(KoreMedia.MEDIA_TYPE_VIDEO, null);
+            File actualImageFile = KaMediaUtils.getOutputMediaFile(BundleConstants.MEDIA_TYPE_VIDEO, null);
             Uri uri;
             if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                 cameraVideoUri1 = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", actualImageFile);
@@ -841,7 +841,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     public void fileBrowsingActivity(String choosetype, int reqCode, String mediaType) {
         Intent photoPickerIntent = new Intent(getActivity(), KaCaptureImageActivity.class);
         photoPickerIntent.putExtra("pickType", choosetype);
-        photoPickerIntent.putExtra("fileContext", KaCaptureImageActivity.FOR_MESSAGE);
+        photoPickerIntent.putExtra("fileContext", BundleConstants.FOR_MESSAGE);
         photoPickerIntent.putExtra("mediaType", mediaType);
         startActivityForResult(photoPickerIntent, reqCode);
     }
@@ -1067,7 +1067,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String name = pickFile.getName();
                 String type = pickFile.getType();
                 if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(KoreMedia.MEDIA_TYPE_VIDEO, "");
+                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
                     new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -1241,9 +1241,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     };
 
     private String getComponentId(String componentType) {
-        if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
+        if (componentType.equalsIgnoreCase(BundleConstants.MEDIA_TYPE_IMAGE)) {
             return "image_" + System.currentTimeMillis();
-        } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
+        } else if (componentType.equalsIgnoreCase(BundleConstants.MEDIA_TYPE_VIDEO)) {
             return "video_" + System.currentTimeMillis();
         } else {
             return "doc_" + System.currentTimeMillis();

@@ -131,6 +131,7 @@ public class SDKConfiguration {
         public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
         public static String tenant_id = "";
         public static boolean enablePanel = true;
+
     }
 
     public static class BubbleColors {

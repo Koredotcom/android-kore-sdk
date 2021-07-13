@@ -47,4 +47,6 @@ public interface ComposeFooterInterface {
     void onPanelClicked(Object pModel, boolean isFirstLaunch);
 
     void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id);
+
+    void externalReadWritePermission(String fileUrl);
 }

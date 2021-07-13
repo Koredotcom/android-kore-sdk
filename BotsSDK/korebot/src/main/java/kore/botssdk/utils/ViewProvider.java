@@ -19,6 +19,7 @@ import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
+import kore.botssdk.view.BankingFeedbackTemplateView;
 import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
@@ -36,6 +37,7 @@ import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.HorizontalBarChartView;
+import kore.botssdk.view.ImageTemplateView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
@@ -351,6 +353,18 @@ public class ViewProvider {
         BotDropDownTemplateView botDropDownTemplateView = new BotDropDownTemplateView(context);
         botDropDownTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
         return  botDropDownTemplateView;
+    }
+
+    public static ImageTemplateView getImageTemplateView(Context context){
+        ImageTemplateView imageTemplateView = new ImageTemplateView(context);
+        imageTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
+        return  imageTemplateView;
+    }
+
+    public static BankingFeedbackTemplateView getBankingFeedbackTemplateView(Context context){
+        BankingFeedbackTemplateView feedbackTemplateView = new BankingFeedbackTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
+        return  feedbackTemplateView;
     }
 
     public static BotListViewTemplateView getBotListViewTempleteView(Context context){

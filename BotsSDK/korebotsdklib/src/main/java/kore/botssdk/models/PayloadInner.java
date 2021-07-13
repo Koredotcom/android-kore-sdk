@@ -61,6 +61,15 @@ public class PayloadInner {
     private String description;
     private HeaderOptionsModel headerOptions;
     private BotFormFieldButtonModel fieldButton;
+    private String url;
+    private String videoUrl;
+    private String audioUrl;
+    private double videoCurrentPosition;
+    //Feedback Template
+    private String feedbackListHeading;
+    private String userSuggestion;
+    private ArrayList<FeedbackExperienceContentModel> experienceContent;
+    private ArrayList<FeedbackListModel> feedbackList;
 
     public void setFieldButton(BotFormFieldButtonModel fieldButton) {
         this.fieldButton = fieldButton;
@@ -223,6 +232,30 @@ public class PayloadInner {
 
     public String getImage_url() {
         return image_url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setAudioUrl(String audioUrl) {
+        this.audioUrl = audioUrl;
+    }
+
+    public String getAudioUrl() {
+        return audioUrl;
     }
 
     public void setEndDate(String endDate)
@@ -958,6 +991,46 @@ public class PayloadInner {
     public boolean getDialogCancel()
     {
         return dialogCancel;
+    }
+
+    public void setVideoCurrentPosition(double videoCurrentPosition) {
+        this.videoCurrentPosition = videoCurrentPosition;
+    }
+
+    public double getVideoCurrentPosition() {
+        return videoCurrentPosition;
+    }
+
+    public ArrayList<FeedbackExperienceContentModel> getExperienceContent() {
+        return experienceContent;
+    }
+
+    public ArrayList<FeedbackListModel> getFeedbackList() {
+        return feedbackList;
+    }
+
+    public String getUserSuggestion() {
+        return userSuggestion;
+    }
+
+    public String getFeedbackListHeading() {
+        return feedbackListHeading;
+    }
+
+    public void setFeedbackListHeading(String feedbackListHeading) {
+        this.feedbackListHeading = feedbackListHeading;
+    }
+
+    public void setFeedbackList(ArrayList<FeedbackListModel> feedbackList) {
+        this.feedbackList = feedbackList;
+    }
+
+    public void setExperienceContent(ArrayList<FeedbackExperienceContentModel> experienceContent) {
+        this.experienceContent = experienceContent;
+    }
+
+    public void setUserSuggestion(String userSuggestion) {
+        this.userSuggestion = userSuggestion;
     }
 
     public class Skill{
