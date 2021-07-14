@@ -16,6 +16,17 @@ public class ContactInfoModel extends UserNameModel implements Serializable {
     private String department;
     private String address;
 
+    public String getTextSize()
+    {
+        return getName()!=null?"28sp":"14sp";
+    }
+    public String getInitialOfEmail(){
+        return kore.botssdk.utils.StringUtils.getInitials(getCombinedEmail());
+    }
+    public String getCombinedEmail()
+    {
+        return emailId!=null? emailId:email!=null?email:null;
+    }
     public String getEmailId() {
         return emailId!=null?emailId:"";
     }
