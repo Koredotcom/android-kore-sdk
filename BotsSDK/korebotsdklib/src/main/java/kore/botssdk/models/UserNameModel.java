@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.view.View;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -12,11 +14,14 @@ public class UserNameModel implements Serializable {
     }
     private String _id;
 
+
+
     public void setfN(String fN) {
         this.fN = fN;
     }
     public String getName(){
-        return fN+" "+lN;
+
+        return fN!=null?fN:""+" "+lN!=null?lN:"";
     }
     public String getlN() {
         return lN;

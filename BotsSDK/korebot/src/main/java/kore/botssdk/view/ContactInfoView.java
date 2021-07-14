@@ -157,6 +157,8 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
         if (contactInfoModel != null) {
             contactInfoViewBinding.getRoot().setVisibility(VISIBLE);
+
+            contactInfoViewBinding.name.setTextSize(contactInfoModel.getName()!=null?28:18);
             contactInfoViewBinding.setContactInfo(contactInfoModel);
 
             ArrayList<ContactViewListModel> list = new ArrayList<ContactViewListModel>();

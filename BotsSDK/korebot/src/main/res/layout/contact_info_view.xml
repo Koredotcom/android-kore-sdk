@@ -14,7 +14,7 @@
         <variable
             name="myAdapter"
             type="kore.botssdk.view.ContactViewRecyclerAdapter" />
-
+        <import type="android.text.TextUtils"/>
         <import type="android.view.View" />
     </data>
 
@@ -69,11 +69,13 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="15dp"
                 android:layout_below="@id/source"
+
                 android:background="@drawable/background_circle"
                 android:fontFamily="@font/latobold"
-                android:text="@{contactInfo.getInitials()}"
+                android:text="@{!TextUtils.isEmpty(contactInfo.getInitials())?contactInfo.getInitials:contactInfo.getInitialOfEmail}"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
+
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textSize="22sp" />
@@ -87,7 +89,7 @@
                     android:layout_below="@id/initials"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:text="@{contactInfo.getName()}"
+                       android:text="@{contactInfo.getName()!=null?contactInfo.getName():contactInfo.getCombinedEmail()}"
                     android:textColor="@color/color_626281"
                     android:gravity="center_horizontal"
                     android:textSize="28sp" />
