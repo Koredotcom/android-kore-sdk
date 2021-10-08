@@ -960,10 +960,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     }
 
-    @Override
-    public void setMediaEncoding() throws InvalidMediaIDException {
-
-    }
+//    @Override
+//    public void setMediaEncoding() throws InvalidMediaIDException {
+//
+//    }
 
 
     @Override

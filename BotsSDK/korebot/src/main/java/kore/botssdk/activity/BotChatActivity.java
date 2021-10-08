@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -20,24 +19,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.kore.ai.widgetsdk.adapters.PannelAdapter;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.kore.ai.widgetsdk.models.JWTTokenResponse;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
-import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
@@ -51,7 +44,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 import kore.botssdk.R;
@@ -60,7 +52,6 @@ import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fragment.BotContentFragment;
-import kore.botssdk.fragment.CarouselFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -79,6 +70,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
@@ -89,6 +81,7 @@ import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.limits.Attachment;
+import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
@@ -100,11 +93,13 @@ import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
 import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -148,6 +143,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     Handler messageHandler = new Handler();
     protected static long totalFileSize;
     private String fileUrl;
+    private ArrayList<BrandingNewModel> arrBrandingNewDos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,6 +274,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
                 updateActionBar();
+                getBrandingDetails();
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
@@ -1036,5 +1033,55 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         } else {
             return "doc_" + System.currentTimeMillis();
         }
+    }
+
+    private void getBrandingDetails() {
+        Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
+        getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
+                if (response.isSuccessful())
+                {
+                    arrBrandingNewDos = response.body();
+
+                    if(arrBrandingNewDos != null && arrBrandingNewDos.size() > 0)
+                    {
+                        BotOptionsModel botOptionsModel = arrBrandingNewDos.get(0).getHamburgermenu();
+
+                        if(composeFooterFragment != null)
+                            composeFooterFragment.setBottomOptionData(botOptionsModel);
+
+                        if(arrBrandingNewDos.size() > 1)
+                            onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
+
+                        if(isItFirstConnect)
+                        {
+                            botClient.sendMessage("BotNotifications");
+                            isItFirstConnect = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if(isItFirstConnect)
+                    {
+                        botClient.sendMessage("BotNotifications");
+                        isItFirstConnect = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
+            {
+                Log.e("getBrandingDetails", t.toString());
+
+                if(isItFirstConnect)
+                {
+                    botClient.sendMessage("BotNotifications");
+                    isItFirstConnect = false;
+                }
+            }
+        });
     }
 }

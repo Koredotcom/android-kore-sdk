@@ -26,7 +26,6 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import kore.botssdk.activity.VideoFullScreenActivity;
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.models.KoreComponentModel;

@@ -256,10 +256,13 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void changeThemeBackGround(String bgColor, String textColor)
     {
-        rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
+        if(!StringUtils.isNullOrEmpty(bgColor))
+        {
+            rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
+            GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
+            gradientDrawable.setColor(Color.parseColor(bgColor));
+        }
 
-        GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-        gradientDrawable.setColor(Color.parseColor(bgColor));
         headerView.setTextColor(Color.parseColor(textColor));
     }
 
