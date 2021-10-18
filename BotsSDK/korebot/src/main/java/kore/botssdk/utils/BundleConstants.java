@@ -33,6 +33,7 @@ public class BundleConstants {
     "The chat is still inactive for around two minutes, it will be closed in about a minute","Your session is going to expire soon as you are inactive for last 3 min... "};
     public static final String TASK_INFO = "task_information";
 
+    public static final String ROOM_FINDER = "room_finder";
     public static final String CONTACT_SUGGESTIONS = "contact_suggestion";
     public static final String QUESTION_ASKED = "question_asked";
     public static final String INFORMATION_EDITOR = "INFORMATION_EDITOR";
