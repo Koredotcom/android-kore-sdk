@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.models.BotHistory;
+import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
 import kore.botssdk.models.TokenResponseModel;
+import kore.botssdk.models.WebHookResponseDataModel;
+import kore.botssdk.models.WebHookResponseModel;
 import kore.botssdk.net.RestResponse.LoginResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -90,4 +93,16 @@ public interface RestAPI {
     @GET("workbench/api/workbench/sdkData?objectId=hamburgermenu&objectId=brandingwidgetdesktop")
     Call<ArrayList<BrandingNewModel>> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
 
+    // Send WebHook Message
+    @POST("chatbot/v2/webhook/{streamId}")
+    Call<WebHookResponseDataModel> sendWebHookMessage(@Path("streamId") String streamId, @Header("Authorization") String token, @Body HashMap<String, Object> body);
+
+    @GET("/api/chathistory/{streamId}/ivr?")
+    Call<BotHistory> getWebHookBotHistory(@Header("Authorization") String token, @Path("streamId") String streamId, @Query("botId") String botId, @Query("limit") int limit);
+
+    @GET("api/botmeta/{streamId}")
+    Call<BotMetaModel> getWebHookBotMeta(@Header("Authorization") String token, @Path("streamId") String streamId);
+
+    @GET("chatbot/v2/webhook/{streamId}/poll/{pollId}")
+    Call<WebHookResponseDataModel> getPollIdData(@Header("Authorization") String token, @Path("streamId") String streamId, @Path("pollId") String pollId);
 }

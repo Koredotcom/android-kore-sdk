@@ -91,9 +91,16 @@ public class BotHomeActivity extends BotAppCompactActivity {
                 {
                     if(StringUtils.isValidEmail(etIdentity.getText().toString()))
                     {
-                        SDKConfiguration.Client.identity = etIdentity.getText().toString();
-                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
-                        launchBotChatActivity();
+                        if(!SDKConfiguration.Client.isWebHook)
+                        {
+                            SDKConfiguration.Client.identity = UUID.randomUUID().toString();
+                            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+                            launchBotChatActivity();
+                        }
+                        else
+                        {
+                            launchBotChatActivity();
+                        }
                     }
                     else
                         Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();

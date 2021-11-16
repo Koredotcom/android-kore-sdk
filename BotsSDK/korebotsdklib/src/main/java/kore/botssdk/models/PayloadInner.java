@@ -355,6 +355,7 @@ public class PayloadInner {
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
     private ArrayList<FeedbackStarModel> starArrays;
+    private ArrayList<ContactTemplateModel> cards;
     private boolean dialogCancel;
 
 
@@ -512,6 +513,14 @@ public class PayloadInner {
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
         return miniTableDataModels;
+    }
+
+    public ArrayList<ContactTemplateModel> getCards() {
+        return cards;
+    }
+
+    public void setCards(ArrayList<ContactTemplateModel> cards) {
+        this.cards = cards;
     }
 
     public void setMiniTableDataModels(ArrayList<BotMiniTableModel> miniTableDataModels) {

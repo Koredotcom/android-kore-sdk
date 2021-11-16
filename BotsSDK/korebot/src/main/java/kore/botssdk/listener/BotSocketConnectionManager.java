@@ -38,6 +38,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import retrofit2.Call;
@@ -172,7 +173,20 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if(chatListener != null )
                 chatListener.onConnectionStateChanged(connection_state,false);
         }
+    }
 
+    public String makeJwtCallwithConfig()
+    {
+        String jwt = "";
+        try{
+            jwt = botClient.generateJWTForAPI(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+            KoreEventCenter.post(jwt);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+        }
+
+        return jwt;
     }
 
 
@@ -371,7 +385,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
         else
         {
-            makeJwtCallWithConfig(false);
+            if(!SDKConfiguration.Client.isWebHook)
+                makeJwtCallWithConfig(false);
+            else
+                makeJwtCallwithConfig();
+
 //            makeTokenCallForJwt(false);
         }
     }

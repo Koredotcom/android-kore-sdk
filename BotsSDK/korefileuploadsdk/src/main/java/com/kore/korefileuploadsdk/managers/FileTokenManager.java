@@ -26,17 +26,33 @@ public class FileTokenManager{
 	private String _Url;
 	private String _accessToken;
 	private Context _mContext;
+	private boolean isWebHook;
+	private String botId;
 
-    public FileTokenManager(String host, FileTokenListener listener,
-                     String accessToken, Context context, String userOrTeamId, boolean isAnonymousUser) {
+    public FileTokenManager(String host, FileTokenListener listener, String accessToken,
+                            Context context, String userOrTeamId, boolean isAnonymousUser,
+                            boolean isWebHook, String botId) {
 
         _accessToken = accessToken;
         _mContext = context;
         _listener = listener;
+        this.isWebHook = isWebHook;
+        this.botId = botId;
+
         if (isAnonymousUser)
-            _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TOKEN);
+        {
+            if(!isWebHook)
+                _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TOKEN);
+            else
+                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TOKEN, botId, "ivr");
+        }
         else
-            _Url = host + String.format(FileUploadEndPoints.FILE_TOKEN, userOrTeamId);
+        {
+            if(!isWebHook)
+                _Url = host + String.format(FileUploadEndPoints.FILE_TOKEN, userOrTeamId);
+            else
+                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TOKEN, botId, "ivr");
+        }
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
 

@@ -36,9 +36,11 @@ public class UploadExecutor implements Runnable{
     private ChunkUploadListener mListener = null;
     private String host;
     private boolean isAnonymousUser;
+    private boolean isWebhook;
+    private String botId;
 
     public UploadExecutor(Context context, String fileName, String fileToken, String accessToken,String userOrTeamId,byte[] dataToPost,
-                          int chunkNo, ChunkUploadListener listener, String host, boolean isAnonymousUser) {
+                          int chunkNo, ChunkUploadListener listener, String host, boolean isAnonymousUser, boolean isWebHook, String botId) {
 
         this.fileName=fileName;
         this.fileToken = fileToken;
@@ -50,6 +52,8 @@ public class UploadExecutor implements Runnable{
         this.context = context;
         this.host = host;
         this.isAnonymousUser = isAnonymousUser;
+        this.isWebhook = isWebHook;
+        this.botId = botId;
     }
 
     @Override
@@ -61,11 +65,20 @@ public class UploadExecutor implements Runnable{
             Log.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
             String FULL_URL = null;
             if(isAnonymousUser)
-                FULL_URL = host + String.format(FileUploadEndPoints.ANONYMOUS_CHUNK_UPLOAD, userOrTeamId,fileToken);
+            {
+                if(!isWebhook)
+                    FULL_URL = host + String.format(FileUploadEndPoints.ANONYMOUS_CHUNK_UPLOAD, userOrTeamId,fileToken);
+                else
+                    FULL_URL = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_CHUNK_UPLOAD, botId, "ivr", fileToken);
+            }
             else
-                FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD, userOrTeamId,fileToken);
+            {
+                if(!isWebhook)
+                    FULL_URL = host + String.format(FileUploadEndPoints.CHUNK_UPLOAD, userOrTeamId,fileToken);
+                else
+                    FULL_URL = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_CHUNK_UPLOAD, botId, "ivr", fileToken);
+            }
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
-//            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             HttpsURLConnection httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
             httpsURLConnection.setRequestMethod("POST");
@@ -100,46 +113,6 @@ public class UploadExecutor implements Runnable{
             int statusCode = httpsURLConnection.getResponseCode();
             Log.e(LOG_TAG,"status code for chunks"+chunkNo+ "is"+statusCode);
 
-            // TODO Don't delete, this code was used previously
-           /* HttpParams httpParameters = new BasicHttpParams();
-            // Set the timeout in milliseconds until a connection is established.
-            // The default value is zero, that means the timeout is not used.
-            int timeoutConnection = 60000;
-            HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
-            HttpClient httpClient = null;
-            httpClient = new DefaultHttpClient(httpParameters);
-            HttpContext httpContext = new BasicHttpContext();
-
-            HttpPost httpPost = new HttpPost(FULL_URL);
-            HttpResponse response = null;
-            KoreLogger.debugLog(LOG_TAG, "hostAddress " + BASE_URL);
-            KoreLogger.debugLog(LOG_TAG, "uploadUrl "+ FULL_URL);
-
-
-            MultipartEntity reqEntity = new MultipartEntity();
-            reqEntity.addPart("chunkNo", new StringBody(chunkNo+""));
-
-            reqEntity.addPart("fileToken", new StringBody(fileToken));
-            reqEntity.addPart("chunk", new ByteArrayBody(dataToSet, fileName));
-//        			reqEntity.addPart("fileName", new StringBody(fileName));
-//        			reqEntity.addPart("fileExtn", new StringBody(fileExtn));
-            httpPost.setHeader("User-Agent", Constants.getUserAgent());
-            httpPost.setHeader("Authorization", accessToken);
-            httpPost.setHeader("Cache-Control", "no-cache");
-            if(Cookie != null && !Cookie.equalsIgnoreCase("")){
-                httpPost.setHeader("Cookie", Cookie);
-            }
-            httpPost.setEntity(reqEntity);
-
-            response = httpClient.execute(httpPost, httpContext);
-
-            int statusCode = response.getStatusLine().getStatusCode();
-
-
-            KoreLogger.debugLog(LOG_TAG,"status code for chunks"+chunkNo+ "is"+statusCode);
-            serverResponse = EntityUtils.toString(response.getEntity());
-
-            KoreLogger.debugLog(LOG_TAG,"Got serverResponse for chunk upload"+ serverResponse);*/
             String chunkNo = null;
 
             if (statusCode == 200) {

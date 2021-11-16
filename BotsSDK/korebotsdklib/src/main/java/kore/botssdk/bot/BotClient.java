@@ -115,6 +115,24 @@ public class BotClient {
                         signWith(SignatureAlgorithm.HS256,secret.getBytes()).compact();
     }
 
+    public String generateJWTForAPI(String email,String secret,String clientId, boolean isAnonymousUser){
+        long curTime = System.currentTimeMillis();
+        long expTime = curTime+86400000;
+
+        return Jwts.builder()
+                .setHeaderParam("typ","JWT")
+                .claim("iat", curTime)
+                .claim("exp",expTime)
+                .claim("aud","https://idproxy.kore.com/authorize")
+                .claim("iss", clientId)
+                .claim("sub", email)
+                .claim("isAnonymous", isAnonymousUser)
+                .claim("userIdentity", email)
+                .claim("appId", clientId)
+                .signWith(SignatureAlgorithm.HS256,secret.getBytes())
+                .compact();
+    }
+
     public  String getAccessToken(){
         return SocketWrapper.getInstance(mContext).getAccessToken();
     }

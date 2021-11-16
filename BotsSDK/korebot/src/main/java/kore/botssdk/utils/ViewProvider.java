@@ -23,6 +23,7 @@ import kore.botssdk.view.BankingFeedbackTemplateView;
 import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
+import kore.botssdk.view.BotContactTemplateView;
 import kore.botssdk.view.BotDropDownTemplateView;
 import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
@@ -248,6 +249,12 @@ public class ViewProvider {
         MeetingSlotsView meetingSlotsView = new MeetingSlotsView(context);
         meetingSlotsView.setId(MEETING_SLOTS_VIEW_ID);
         return meetingSlotsView;
+    }
+    public static BotContactTemplateView getBotContactView(Context context, ComposeFooterInterface listener) {
+        BotContactTemplateView botButtonView = new BotContactTemplateView(context);
+        botButtonView.setId(BUTTON_VIEW_ID);
+        botButtonView.setComposeFooterInterface(listener);
+        return botButtonView;
     }
     public static MultiSelectView getMultiSelectView(Context context){
         MultiSelectView multiSelectView = new MultiSelectView(context);

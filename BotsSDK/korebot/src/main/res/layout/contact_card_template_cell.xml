@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_view_template_bg"
+    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:padding="15dp">
+
+    <!-- Item image -->
+    <ImageView
+        android:id="@+id/bot_list_item_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="15dp"
+        android:clickable="false"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/bot_list_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="14dp"
+        android:textStyle="bold"/>
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/bot_list_item_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bot_list_item_title"
+        android:layout_marginTop="@dimen/dimen_7dp"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="Subtitle"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/bot_list_item_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bot_list_item_subtitle"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:paddingBottom="2dp"
+        android:text="email"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

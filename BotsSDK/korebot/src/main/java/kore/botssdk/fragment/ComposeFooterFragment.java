@@ -173,6 +173,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private Attachment attachment;
     private static long totalFileSize;
     private int compressQualityInt = 100;
+    private String jwt;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -917,13 +918,26 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     void processFileUpload(String fileName, String filePath, String extn, String mediaType, String thumbnailFilePath, String orientation) {
 
         long fileLimit=  getFileMaxSize();
-        KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
-                filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
-                SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
-                getBufferSize(mediaType),
-                new Messenger(messagesMediaUploadAcknowledgeHandler),
-                thumbnailFilePath, "AT_" + System.currentTimeMillis(),
-                getActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true));
+        if(!SDKConfiguration.Client.isWebHook)
+        {
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                    filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
+                    SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
+                    getBufferSize(mediaType),
+                    new Messenger(messagesMediaUploadAcknowledgeHandler),
+                    thumbnailFilePath, "AT_" + System.currentTimeMillis(),
+                    getActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+        }
+        else
+        {
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                    filePath, "bearer " + jwt,
+                    SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
+                    getBufferSize(mediaType),
+                    new Messenger(messagesMediaUploadAcknowledgeHandler),
+                    thumbnailFilePath, "AT_" + System.currentTimeMillis(),
+                    getActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+        }
     }
 
     private long getFileMaxSize() {
@@ -976,13 +990,27 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
             }
             long fileLimit =  getFileMaxSize();
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
-                    filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
-                    SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
-                    KoreMedia.BUFFER_SIZE_IMAGE,
-                    new Messenger(messagesMediaUploadAcknowledgeHandler),
-                    filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                    getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true));
+
+            if(!SDKConfiguration.Client.isWebHook)
+            {
+                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                        filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
+                        SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
+                        KoreMedia.BUFFER_SIZE_IMAGE,
+                        new Messenger(messagesMediaUploadAcknowledgeHandler),
+                        filePathThumbnail, "AT_" + System.currentTimeMillis(),
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            }
+            else
+            {
+                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                        filePath, "bearer " + jwt,
+                        SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
+                        KoreMedia.BUFFER_SIZE_IMAGE,
+                        new Messenger(messagesMediaUploadAcknowledgeHandler),
+                        filePathThumbnail, "AT_" + System.currentTimeMillis(),
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            }
 
 
         } else {
@@ -1017,6 +1045,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             rec_audio_img.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.GONE);
         }
+    }
+
+    public void setJwtToken(String jwt)
+    {
+        this.jwt = jwt;
     }
 
     private void processVideoResponse(Uri selectedImage, boolean isCapturedVideo, Intent intent) {

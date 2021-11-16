@@ -26,4 +26,14 @@ public class FileUploadEndPoints {
     public static String ANONYMOUS_CHUNK_UPLOAD = "/api/1.1/users/%s/file/%s/chunk";
 
     public static String ANONYMOUS_MERGE = "/api/1.1/users/%s/file/%s";
+
+    /**
+     * End points for anonymous user webHook
+     */
+    public static String WEBHOOK_ANONYMOUS_FILE_TOKEN = "api/attachments/%s/%s/token";
+    
+    public static String WEBHOOK_ANONYMOUS_CHUNK_UPLOAD = "api/attachments/%s/%s/token/%s/chunk";
+
+    public static String WEBHOOK_ANONYMOUS_MERGE = "api/attachments/%s/ivr/token/%s";
+
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.MediaCas;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
@@ -45,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
@@ -64,6 +68,8 @@ import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -80,15 +86,22 @@ import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.models.WebHookRequestModel;
+import kore.botssdk.models.WebHookResponseDataModel;
+import kore.botssdk.models.WebHookResponseModel;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.BrandingRestBuilder;
+import kore.botssdk.net.RestBuilder;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
+import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
@@ -100,6 +113,8 @@ import retrofit2.Response;
 import static android.view.View.VISIBLE;
 import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+
+import org.json.JSONObject;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -144,6 +159,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected static long totalFileSize;
     private String fileUrl;
     private ArrayList<BrandingNewModel> arrBrandingNewDos;
+    private WebHookResponseDataModel webHookResponseDataModel;
+    private BotMetaModel botMetaModel;
+    private Handler pollHandler = new Handler();
+    private Runnable runnable;
+    private int poll_delay = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,9 +206,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
-        BotSocketConnectionManager.getInstance().setChatListener(sListener);
         attachFragments();
-       // connectToWebSocketAnonymous();
+
+        if(!SDKConfiguration.Client.isWebHook)
+        {
+            BotSocketConnectionManager.getInstance().setChatListener(sListener);
+        }
+        else
+            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
     }
 
     SocketChatListener sListener = new SocketChatListener() {
@@ -200,7 +225,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         @Override
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED){
-                //fetchBotMessages();
+                getBrandingDetails();
             }
             updateTitleBar(state);
         }
@@ -236,7 +261,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-
             jwt = bundle.getString(BundleUtils.JWT_TOKEN, "");
         }
         chatBot = SDKConfiguration.Client.bot_name;
@@ -274,7 +298,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
                 updateActionBar();
-                getBrandingDetails();
+
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
@@ -299,7 +323,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
+    public void onEvent(String jwt)
+    {
+        this.jwt = jwt;
+        if(botContentFragment != null)
+            botContentFragment.setJwtTokenForWebHook(jwt);
 
+        getWebHookMeta();
+    }
 
     public void onEvent(SocketDataTransferModel data) {
         if (data == null) return;
@@ -426,17 +457,40 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onSendClick(String message,boolean isFromUtterance) {
-        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+
+        if(!SDKConfiguration.Client.isWebHook)
+            BotSocketConnectionManager.getInstance().sendMessage(message, null);
+        else
+        {
+            addSentMessageToChat(message);
+            sendWebHookMessage(false, message, null);
+        }
     }
 
     @Override
-    public void onSendClick(String message, String payload, boolean isFromUtterance) {
-        if(payload != null){
-            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-        }else{
-            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+    public void onSendClick(String message, String payload, boolean isFromUtterance)
+    {
+        if(!SDKConfiguration.Client.isWebHook)
+        {
+            if(payload != null){
+                BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+            }else{
+                BotSocketConnectionManager.getInstance().sendMessage(message, "");
+            }
         }
-
+        else
+        {
+            if(payload != null)
+            {
+                addSentMessageToChat(payload);
+                sendWebHookMessage(false, payload, null);
+            }
+            else
+            {
+                addSentMessageToChat(message);
+                sendWebHookMessage(false, message, null);
+            }
+        }
 
         toggleQuickRepliesVisiblity(false);
     }
@@ -444,7 +498,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         if(attachments != null && attachments.size() > 0)
-            BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+        {
+            if(!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            else
+            {
+                addSentMessageToChat(message);
+                sendWebHookMessage(false, message, attachments);
+            }
+        }
     }
 
     @Override
@@ -629,30 +691,62 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void displayMessage(String text)
     {
-        PayloadInner payloadInner = new PayloadInner();
-        payloadInner.setTemplate_type("text");
+        try
+        {
+            PayloadOuter payloadOuter = gson.fromJson(text, PayloadOuter.class);
+            if(payloadOuter != null)
+            {
+                ComponentModel componentModel = new ComponentModel();
+                componentModel.setType(payloadOuter.getType());
+                componentModel.setPayload(payloadOuter);
 
-        PayloadOuter payloadOuter = new PayloadOuter();
-        payloadOuter.setText(text);
-        payloadOuter.setType("text");
-        payloadOuter.setPayload(payloadInner);
+                BotResponseMessage botResponseMessage = new BotResponseMessage();
+                botResponseMessage.setType(componentModel.getType());
+                botResponseMessage.setComponent(componentModel);
 
-        ComponentModel componentModel = new ComponentModel();
-        componentModel.setType("text");
-        componentModel.setPayload(payloadOuter);
+                ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+                arrBotResponseMessages.add(botResponseMessage);
 
-        BotResponseMessage botResponseMessage = new BotResponseMessage();
-        botResponseMessage.setType("text");
-        botResponseMessage.setComponent(componentModel);
+                BotResponse botResponse = new BotResponse();
+                botResponse.setType(componentModel.getType());
+                botResponse.setMessage(arrBotResponseMessages);
 
-        ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-        arrBotResponseMessages.add(botResponseMessage);
+                if(botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
+                    botResponse.setIcon(botMetaModel.getIcon());
 
-        BotResponse botResponse = new BotResponse();
-        botResponse.setType("text");
-        botResponse.setMessage(arrBotResponseMessages);
+                processPayload("", botResponse);
+            }
+        }
+        catch (Exception e)
+        {
+            PayloadInner payloadInner = new PayloadInner();
+            payloadInner.setTemplate_type("text");
 
-        processPayload("", botResponse);
+            PayloadOuter payloadOuter = new PayloadOuter();
+            payloadOuter.setText(text);
+            payloadOuter.setType("text");
+            payloadOuter.setPayload(payloadInner);
+
+            ComponentModel componentModel = new ComponentModel();
+            componentModel.setType("text");
+            componentModel.setPayload(payloadOuter);
+
+            BotResponseMessage botResponseMessage = new BotResponseMessage();
+            botResponseMessage.setType("text");
+            botResponseMessage.setComponent(componentModel);
+
+            ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+            arrBotResponseMessages.add(botResponseMessage);
+
+            BotResponse botResponse = new BotResponse();
+            botResponse.setType("text");
+            botResponse.setMessage(arrBotResponseMessages);
+
+            if(botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
+                botResponse.setIcon(botMetaModel.getIcon());
+
+            processPayload("", botResponse);
+        }
     }
 
     @Override
@@ -668,11 +762,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onResume() {
-        BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
-        updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
+
+        if(!SDKConfiguration.Client.isWebHook)
+        {
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
+            updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
+        }
         super.onResume();
     }
-
 
     @Override
     public void ttsUpdateListener(boolean isTTSEnabled) {
@@ -901,13 +998,27 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (extn != null) {
                 //Common place for addition to composeBar
                 long fileLimit = getFileMaxSize();
-                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
-                        filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(),
-                        SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn,
-                        KoreMedia.BUFFER_SIZE_IMAGE,
-                        new Messenger(messagesMediaUploadAcknowledgeHandler),
-                        filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true));
+
+                if(!SDKConfiguration.Client.isWebHook)
+                {
+                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                            filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(),
+                            SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn,
+                            KoreMedia.BUFFER_SIZE_IMAGE,
+                            new Messenger(messagesMediaUploadAcknowledgeHandler),
+                            filePathThumbnail, "AT_" + System.currentTimeMillis(),
+                            BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                }
+                else
+                {
+                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
+                            filePath, "bearer " + jwt,
+                            SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn,
+                            KoreMedia.BUFFER_SIZE_IMAGE,
+                            new Messenger(messagesMediaUploadAcknowledgeHandler),
+                            filePathThumbnail, "AT_" + System.currentTimeMillis(),
+                            BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                }
             } else {
                 showToast("Unable to attach!");
             }
@@ -1083,5 +1194,194 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
             }
         });
+    }
+
+    private void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
+    {
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
+        getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
+            @Override
+            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+                if (response.isSuccessful())
+                {
+                    webHookResponseDataModel = response.body();
+                    taskProgressBar.setVisibility(View.GONE);
+                    composeFooterFragment.enableSendButton();
+                    updateActionBar();
+//                    getBrandingDetails();
+
+                    if(webHookResponseDataModel != null && webHookResponseDataModel.getData() != null &&
+                            webHookResponseDataModel.getData().size() > 0)
+                    {
+                        for(int i = 0; i < webHookResponseDataModel.getData().size(); i++)
+                        {
+                            displayMessage(webHookResponseDataModel.getData().get(i).getVal());
+                        }
+
+                        if(!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId()))
+                            startSendingPo11(webHookResponseDataModel.getPollId());
+                    }
+                }
+                else
+                {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            {
+            }
+        });
+    }
+
+    private void getWebHookMeta()
+    {
+        Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.bot_id);
+        getBankingConfigService.enqueue(new Callback<BotMetaModel>() {
+            @Override
+            public void onResponse(Call<BotMetaModel> call, Response<BotMetaModel> response) {
+                if (response.isSuccessful())
+                {
+                    botMetaModel = response.body();
+
+                    sendWebHookMessage(true, "ON_CONNECT", null);
+                }
+                else
+                {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BotMetaModel> call, Throwable t)
+            {}
+        });
+    }
+
+    private void postPollingData(String pollId)
+    {
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.bot_id, pollId);
+        getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
+            @Override
+            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+                if (response.isSuccessful())
+                {
+                    webHookResponseDataModel = response.body();
+                    taskProgressBar.setVisibility(View.GONE);
+                    composeFooterFragment.enableSendButton();
+                    updateActionBar();
+//                    getBrandingDetails();
+
+                    if(webHookResponseDataModel != null && webHookResponseDataModel.getData() != null &&
+                            webHookResponseDataModel.getData().size() > 0)
+                    {
+                        for(int i = 0; i < webHookResponseDataModel.getData().size(); i++)
+                        {
+                            displayMessage(webHookResponseDataModel.getData().get(i).getVal());
+                        }
+
+                        stopSendingPolling();
+                    }
+                }
+                else
+                {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            {}
+        });
+    }
+
+    private void addSentMessageToChat(String message)
+    {
+        //Update the bot content list with the send message
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        botPayLoad.setMessage(botMessage);
+        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
+        botPayLoad.setBotInfo(botInfo);
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botPayLoad);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        sListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
+    }
+
+    private HashMap<String, Object> getJsonRequest(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
+    {
+        String jsonPayload = "";
+        HashMap<String, Object> hsh = new HashMap<>();
+
+        try
+        {
+            WebHookRequestModel webHookRequestModel = new WebHookRequestModel();
+
+            WebHookRequestModel.Session session = new WebHookRequestModel.Session();
+            session.setNewSession(new_session);
+            webHookRequestModel.setSession(session);
+            hsh.put("session", session);
+
+            WebHookRequestModel.Message message = new WebHookRequestModel.Message();
+            message.setVal(msg);
+
+            if (new_session)
+                message.setType("event");
+            else
+                message.setType("text");
+
+            webHookRequestModel.setMessage(message);
+            hsh.put("message", message);
+
+            WebHookRequestModel.From from = new WebHookRequestModel.From();
+            from.setId(SDKConfiguration.Client.identity);
+            WebHookRequestModel.From.WebHookUserInfo userInfo = new WebHookRequestModel.From.WebHookUserInfo();
+            userInfo.setFirstName("");
+            userInfo.setLastName("");
+            userInfo.setEmail("");
+            from.setUserInfo(userInfo);
+            webHookRequestModel.setFrom(from);
+            hsh.put("from", from);
+
+            WebHookRequestModel.To to = new WebHookRequestModel.To();
+            to.setId("Kore.ai");
+            WebHookRequestModel.To.GroupInfo groupInfo = new WebHookRequestModel.To.GroupInfo();
+            groupInfo.setId("");
+            groupInfo.setName("");
+            to.setGroupInfo(groupInfo);
+            webHookRequestModel.setTo(to);
+            hsh.put("to", to);
+
+            WebHookRequestModel.Token token = new WebHookRequestModel.Token();
+            hsh.put("token", token);
+
+            if(attachments != null && attachments.size() > 0)
+                hsh.put("attachments", attachments);
+
+            jsonPayload = gson.toJson(webHookRequestModel);
+        }
+        catch (Exception e)
+        {
+
+        }
+
+        return hsh;
+    }
+
+    private void startSendingPo11(String pollId)
+    {
+        handler.postDelayed(runnable = new Runnable() {
+            public void run()
+            {
+                handler.postDelayed(runnable, poll_delay);
+                postPollingData(pollId);
+            }
+        }, poll_delay);
+    }
+
+    private void stopSendingPolling()
+    {
+        handler.removeCallbacks(runnable);
     }
 }
