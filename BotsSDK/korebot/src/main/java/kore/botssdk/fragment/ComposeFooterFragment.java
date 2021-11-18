@@ -1009,7 +1009,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         KoreMedia.BUFFER_SIZE_IMAGE,
                         new Messenger(messagesMediaUploadAcknowledgeHandler),
                         filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
             }
 
 

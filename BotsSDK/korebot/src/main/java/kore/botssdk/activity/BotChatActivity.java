@@ -1017,7 +1017,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             KoreMedia.BUFFER_SIZE_IMAGE,
                             new Messenger(messagesMediaUploadAcknowledgeHandler),
                             filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                            BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                            BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
                 }
             } else {
                 showToast("Unable to attach!");
@@ -1198,7 +1198,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
     {
-        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
             public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
@@ -1236,7 +1236,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private void getWebHookMeta()
     {
-        Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.bot_id);
+        Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id);
         getBankingConfigService.enqueue(new Callback<BotMetaModel>() {
             @Override
             public void onResponse(Call<BotMetaModel> call, Response<BotMetaModel> response) {
@@ -1259,7 +1259,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private void postPollingData(String pollId)
     {
-        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.bot_id, pollId);
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
             public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
@@ -1335,7 +1335,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             hsh.put("message", message);
 
             WebHookRequestModel.From from = new WebHookRequestModel.From();
-            from.setId(SDKConfiguration.Client.identity);
+            from.setId(SDKConfiguration.Client.webHook_identity);
             WebHookRequestModel.From.WebHookUserInfo userInfo = new WebHookRequestModel.From.WebHookUserInfo();
             userInfo.setFirstName("");
             userInfo.setLastName("");
