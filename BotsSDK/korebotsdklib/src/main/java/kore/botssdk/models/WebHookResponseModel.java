@@ -3,7 +3,7 @@ package kore.botssdk.models;
 public class WebHookResponseModel
 {
     private String type;
-    private String val;
+    private Object val;
     private String createdOn;
     private String _v;
     private boolean endOfTask;
@@ -40,7 +40,7 @@ public class WebHookResponseModel
         return type;
     }
 
-    public String getVal() {
+    public Object getVal() {
         return val;
     }
 

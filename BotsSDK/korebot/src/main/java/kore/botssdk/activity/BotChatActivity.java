@@ -462,10 +462,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BotSocketConnectionManager.getInstance().sendMessage(message, null);
         else
         {
+            BotSocketConnectionManager.getInstance().stopTextToSpeech();
             addSentMessageToChat(message);
             sendWebHookMessage(false, message, null);
         }
     }
+
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance)
@@ -480,6 +482,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
         else
         {
+            BotSocketConnectionManager.getInstance().stopTextToSpeech();
             if(payload != null)
             {
                 addSentMessageToChat(payload);
@@ -503,6 +506,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else
             {
+                BotSocketConnectionManager.getInstance().stopTextToSpeech();
                 addSentMessageToChat(message);
                 sendWebHookMessage(false, message, attachments);
             }
@@ -1208,14 +1212,18 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     taskProgressBar.setVisibility(View.GONE);
                     composeFooterFragment.enableSendButton();
                     updateActionBar();
-//                    getBrandingDetails();
 
                     if(webHookResponseDataModel != null && webHookResponseDataModel.getData() != null &&
                             webHookResponseDataModel.getData().size() > 0)
                     {
                         for(int i = 0; i < webHookResponseDataModel.getData().size(); i++)
                         {
-                            displayMessage(webHookResponseDataModel.getData().get(i).getVal());
+                            if(webHookResponseDataModel.getData().get(i).getVal() instanceof String)
+                                displayMessage(webHookResponseDataModel.getData().get(i).getVal().toString());
+                            else
+                            {
+
+                            }
                         }
 
                         if(!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId()))
@@ -1224,6 +1232,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
                 else
                 {
+                    taskProgressBar.setVisibility(View.GONE);
+                    composeFooterFragment.enableSendButton();
+                    updateActionBar();
                 }
             }
 
@@ -1276,7 +1287,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     {
                         for(int i = 0; i < webHookResponseDataModel.getData().size(); i++)
                         {
-                            displayMessage(webHookResponseDataModel.getData().get(i).getVal());
+                            if(webHookResponseDataModel.getData().get(i).getVal() instanceof String)
+                                displayMessage(webHookResponseDataModel.getData().get(i).getVal().toString());
                         }
 
                         stopSendingPolling();

@@ -425,7 +425,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         public void onClick(View v) {
 
                 animateLayoutVisible(mainContentLayout);
-                animateLayoutVisible(newMenuLogo);
+//                animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
                 editTextMessage.requestFocus();
                 Utility.showVirtualKeyboard(getActivity(),editTextMessage);
@@ -437,7 +437,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         public void onClick(View v) {
             mainContentLayout.setVisibility(View.GONE);
             animateLayoutGone(mainContentLayout);
-            animateLayoutGone(newMenuLogo);
+//            animateLayoutGone(newMenuLogo);
             animateLayoutVisible(defaultFooterLayout);
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -469,7 +469,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     {
         mainContentLayout.setVisibility(View.GONE);
         animateLayoutGone(mainContentLayout);
-        animateLayoutGone(newMenuLogo);
+//        animateLayoutGone(newMenuLogo);
         animateLayoutVisible(defaultFooterLayout);
     }
 

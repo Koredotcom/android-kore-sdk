@@ -491,7 +491,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
 
-    private int limit = 30;
+    private int limit = 10;
     RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -834,7 +834,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     }
 
                     if (list != null && list.size() > 0) {
-                        addMessagesToBotChatAdapter(list, offset == 0);
+                        addMessagesToBotChatAdapter(list, true);
+                        composeFooterInterface.onSendClick("", false);
                     }
 
                     if ((list == null || list.size() < limit) && offset != 0) {
