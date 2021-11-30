@@ -36,13 +36,17 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
     private TextView htmlTextViewRemote;
     private String htmlStringRemote;
     MarkDownImageClick markDownImageClick;
+    private  int MIN_WIDTH;
+    private  int MIN_HEIGHT;
 
-
-    public MarkdownImageTagHandler(Context context, TextView htmlTextViewRemote, String htmlStringRemote, MarkDownImageClick markDownImageClick) {
+    public MarkdownImageTagHandler(Context context, TextView htmlTextViewRemote, String htmlStringRemote,float dp1, MarkDownImageClick markDownImageClick) {
         this.context = context;
         this.htmlTextViewRemote = htmlTextViewRemote;
         this.htmlStringRemote = htmlStringRemote;
         this.markDownImageClick = markDownImageClick;
+
+        MIN_WIDTH=(int)(18*dp1);
+        MIN_HEIGHT=(int)(18*dp1);
 
     }
 
@@ -51,8 +55,8 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
 
         final LevelListDrawable drawable = new LevelListDrawable();
 
-        Glide.with(htmlTextViewRemote).asBitmap()  .apply(new RequestOptions().override(40, 40))
-                .centerCrop() .load(source).into(new CustomTarget<Bitmap>() {
+        Glide.with(htmlTextViewRemote).asBitmap().centerCrop()
+               .load(source).into(new CustomTarget<Bitmap>() {
 
 
 
@@ -63,8 +67,12 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
 
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(),resource);
                     drawable.addLevel(1, 1, bitmapDrawable);
-                    drawable.setBounds(0, 0, resource.getWidth()+20 , resource.getHeight()+20 );
-                    drawable.setLevel(1);
+                    if(resource.getWidth()<MIN_WIDTH&&resource.getHeight()<MIN_HEIGHT) {
+                        drawable.setBounds(0, 0,MIN_WIDTH, MIN_HEIGHT);
+                    }else {
+                        drawable.setBounds(0, 0, resource.getWidth(), resource.getHeight());
+                    }
+                      drawable.setLevel(1);
                     htmlTextViewRemote.invalidate();
 
                    // htmlTextViewRemote.setText(htmlStringRemote);

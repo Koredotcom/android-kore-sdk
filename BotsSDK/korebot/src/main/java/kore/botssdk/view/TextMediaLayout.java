@@ -187,7 +187,7 @@ public class TextMediaLayout extends ViewGroup {
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
-                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent, new MarkDownImageClick() {
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent,dp1, new MarkDownImageClick() {
                         @RequiresApi(api = Build.VERSION_CODES.M)
                         @Override
                         public void imageClicked(String url) {
@@ -302,7 +302,7 @@ public class TextMediaLayout extends ViewGroup {
             }*/
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
-                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent,null), new MarkdownTagHandler());
+                    new MarkdownImageTagHandler(mContext, botContentTextView, textualContent,dp1,null), new MarkdownTagHandler());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
             URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
