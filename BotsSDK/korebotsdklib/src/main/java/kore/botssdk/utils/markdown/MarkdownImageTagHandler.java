@@ -45,8 +45,8 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
         this.htmlStringRemote = htmlStringRemote;
         this.markDownImageClick = markDownImageClick;
 
-        MIN_WIDTH=(int)(18*dp1);
-        MIN_HEIGHT=(int)(18*dp1);
+        MIN_WIDTH=(int)(17*dp1);
+        MIN_HEIGHT=(int)(17*dp1);
 
     }
 
@@ -73,7 +73,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
                         drawable.setBounds(0, 0, resource.getWidth(), resource.getHeight());
                     }
                       drawable.setLevel(1);
-                    htmlTextViewRemote.invalidate();
+                    htmlTextViewRemote.requestLayout();
 
                    // htmlTextViewRemote.setText(htmlStringRemote);
 
@@ -81,9 +81,7 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
             }
 
             @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-            }
+            public void onLoadCleared(@Nullable Drawable placeholder) {}
 
 
         });
@@ -94,76 +92,76 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
 
     }
 
-    class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
-
-        private Context context;
-        private TextView taskTextView;
-        private String taskHtmlString;
-        MarkDownImageClick markDownImageClick;
-        String url;
-
-        HttpGetDrawableTask(Context context, TextView v, String s, MarkDownImageClick markDownImageClick) {
-            this.context = context;
-            taskTextView = v;
-            taskHtmlString = s;
-            this.markDownImageClick = markDownImageClick;
-        }
-
-
-        @Override
-        protected Drawable doInBackground(String... params) {
-            Drawable drawable = null;
-            URL sourceURL;
-            try {
-                sourceURL = new URL(params[0]);
-                url = params[0];
-                URLConnection urlConnection = sourceURL.openConnection();
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(
-                        inputStream);
-                Bitmap bm = BitmapFactory.decodeStream(bufferedInputStream);
-
-                // convert Bitmap to Drawable
-                drawable = new BitmapDrawable(context.getResources(), bm);
-                if (bm != null) {
-                    drawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return drawable;
-        }
-
-        @Override
-        protected void onPostExecute(Drawable result) {
-
-            final Drawable taskDrawable = result;
-
-            if (taskDrawable != null) {
-                taskTextView.setText(Html.fromHtml(taskHtmlString,
-                        new Html.ImageGetter() {
-
-                            @Override
-                            public Drawable getDrawable(String source) {
-                                return taskDrawable;
-                            }
-                        }, null));
-
-
-
-                if (markDownImageClick != null) {
-
-                    //  markDownImageClick.imageClicked(url);
-
-
-                }
-            }
-
-
-        }
-
-    }
+//    class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
+//
+//        private Context context;
+//        private TextView taskTextView;
+//        private String taskHtmlString;
+//        MarkDownImageClick markDownImageClick;
+//        String url;
+//
+//        HttpGetDrawableTask(Context context, TextView v, String s, MarkDownImageClick markDownImageClick) {
+//            this.context = context;
+//            taskTextView = v;
+//            taskHtmlString = s;
+//            this.markDownImageClick = markDownImageClick;
+//        }
+//
+//
+//        @Override
+//        protected Drawable doInBackground(String... params) {
+//            Drawable drawable = null;
+//            URL sourceURL;
+//            try {
+//                sourceURL = new URL(params[0]);
+//                url = params[0];
+//                URLConnection urlConnection = sourceURL.openConnection();
+//                urlConnection.connect();
+//
+//                InputStream inputStream = urlConnection.getInputStream();
+//                BufferedInputStream bufferedInputStream = new BufferedInputStream(
+//                        inputStream);
+//                Bitmap bm = BitmapFactory.decodeStream(bufferedInputStream);
+//
+//                // convert Bitmap to Drawable
+//                drawable = new BitmapDrawable(context.getResources(), bm);
+//                if (bm != null) {
+//                    drawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return drawable;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Drawable result) {
+//
+//            final Drawable taskDrawable = result;
+//
+//            if (taskDrawable != null) {
+//                taskTextView.setText(Html.fromHtml(taskHtmlString,
+//                        new Html.ImageGetter() {
+//
+//                            @Override
+//                            public Drawable getDrawable(String source) {
+//                                return taskDrawable;
+//                            }
+//                        }, null));
+//
+//
+//
+//                if (markDownImageClick != null) {
+//
+//                    //  markDownImageClick.imageClicked(url);
+//
+//
+//                }
+//            }
+//
+//
+//        }
+//
+//    }
 }

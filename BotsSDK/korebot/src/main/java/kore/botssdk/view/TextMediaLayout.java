@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -50,6 +51,8 @@ import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+import static kore.botssdk.adapter.ListWidgetAdapter.launchDialer;
+import static kore.botssdk.adapter.ListWidgetAdapter.showEmailIntent;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 /**
@@ -362,6 +365,15 @@ public class TextMediaLayout extends ViewGroup {
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(View view) {
+                String _url = span.getURL();
+                if (_url != null && (_url.startsWith("tel:") || _url.startsWith("mailto:"))) {
+                    if (_url.startsWith("tel:")) {
+                        launchDialer(mContext, _url);
+                    } else if (_url.startsWith("mailto:")) {
+                        showEmailIntent((Activity) mContext, _url.split(":")[1]);
+                    }
+                    return;
+                }
                 Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
                 intent.putExtra("url", span.getURL());
                 intent.putExtra("header", getResources().getString(R.string.app_name));
