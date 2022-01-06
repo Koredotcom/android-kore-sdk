@@ -1,8 +1,9 @@
-package kore.botssdk.view.tableview;
+package kore.botssdk.view;
+
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -10,51 +11,42 @@ import android.widget.ListView;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.tableview.TableCustomView;
+import kore.botssdk.view.tableview.TableView;
 import kore.botssdk.view.tableview.adapters.BotTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
-/**
- * Extension of the {@link TableView} that gives the possibility to sort the table by every single
- * column. For this purpose implementations of {@link Comparator} are used. If there is a comparator
- * set for a column the  will automatically display an ImageView at the start
- * of the header indicating to the user, that this column is sortable.
- * If the user clicks this header the given comparator will used to sort the table ascending by the
- * content of this column. If the user clicks this header again, the table is sorted descending
- * by the content of this column.
- *
- * @author ISchwarz
- */
-public class BotMiniTableView extends TableView<MiniTableModel> {
-
+public class BotCustomTableView extends TableCustomView<MiniTableModel> {
 
     private Context context;
-    public BotMiniTableView(final Context context) {
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+
+    public BotCustomTableView(final Context context) {
         this(context, null);
         this.context = context;
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotMiniTableView(final Context context, final AttributeSet attributes) {
+    public BotCustomTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
 //        setBackgroundColor(0xffff0000);
 
     }
 
-    public BotMiniTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
+    public BotCustomTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
 //        setBackgroundColor(0xffff0000);
 
@@ -96,15 +88,28 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
                 model.setElements(additional.get(j));
                 lists.add(model);
             }
-            BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment, null, null);
-            setDataAdapter(tableAdapter, lists.size());
+            BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment, composeFooterInterface, invokeGenericWebViewInterface);
+            if(lists.size() > 5)
+                setDataAdapter(tableAdapter, 5, true);
+            else
+                setDataAdapter(tableAdapter, lists.size(), false);
         }
+    }
 
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public void setData(PayloadInner payloadInner){
         if(payloadInner != null) {
             String[] alignment = addHeaderAdapter(payloadInner.getColumns());
+            setPayloadInner(payloadInner);
+            setTableComposeFooterInterface(composeFooterInterface);
+            setTableInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             addDataAdapterForTable(payloadInner, alignment);
         }/*else{
             setDataAdapter(null);
@@ -120,9 +125,12 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
             model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
             lists.add(model);
         }
-        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment, null, null);
-        setDataAdapter(tableAdapter, lists.size());
+        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment, composeFooterInterface, invokeGenericWebViewInterface);
 
+        if(lists.size() > 5)
+            setDataAdapter(tableAdapter, 5, true);
+        else
+            setDataAdapter(tableAdapter, lists.size(), false);
     }
 
     @Override
@@ -157,10 +165,12 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
             height += tableHeaderView.getMeasuredHeight();
 
             if (height != 0 ) {
-                height = height + (int) (25 * dp1);
+                if(tableDataView != null && tableDataView.getAdapter() != null && tableDataView.getAdapter().getCount() > 4)
+                    height = height + (int) (85 * dp1);
+                else
+                    height = height + (int) (30 * dp1);
             }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
-            Log.d("IKIDO","On measure called for botminitab , The total height is "+ height);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;
@@ -185,12 +195,9 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            int measuredHeight = listItem.getMeasuredHeight();
-            Log.d("IKIDO","On measure called for listview , The total height of individual view is "+ measuredHeight);
             totalHeight += listItem.getMeasuredHeight();
         }
         return totalHeight;
-
     }
 
 }

@@ -35,7 +35,7 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
     private final List<T> data;
     private TableColumnModel columnModel;
     private TableDataRowBackgroundProvider<? super T> rowBackgroundProvider;
-
+    private int count;
 
     /**
      * Creates a new TableDataAdapter.
@@ -204,5 +204,18 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
      */
     protected void setColumnModel(final TableColumnModel columnModel) {
         this.columnModel = columnModel;
+    }
+
+    @Override
+    public int getCount()
+    {
+        if(count != 0)
+            return count;
+        else
+            return super.getCount();
+    }
+
+    protected void setCount(int count) {
+        this.count = count;
     }
 }

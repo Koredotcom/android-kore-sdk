@@ -7,11 +7,6 @@ import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.core.view.ViewCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +18,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
@@ -44,8 +43,7 @@ import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
-
-public class TableView<T> extends LinearLayout {
+public class TableCustomView<T> extends LinearLayout {
 
     private final String LOG_TAG = TableView.class.getName();
 
@@ -65,6 +63,8 @@ public class TableView<T> extends LinearLayout {
     protected ListView tableDataView;
     private TableDataAdapter<T> tableDataAdapter;
     private TableHeaderAdapter tableHeaderAdapter;
+    private LinearLayout llTableDataView;
+    private TextView botTableShowMoreButton;
     private float dp1;
     private PayloadInner payloadInner;
     private int headerElevation;
@@ -80,7 +80,7 @@ public class TableView<T> extends LinearLayout {
      *
      * @param context The context that shall be used.
      */
-    public TableView(final Context context) {
+    public TableCustomView(final Context context) {
         this(context, null);
     }
 
@@ -91,7 +91,7 @@ public class TableView<T> extends LinearLayout {
      * @param context    The context that shall be used.
      * @param attributes The attributes that shall be set to the view.
      */
-    public TableView(final Context context, final AttributeSet attributes) {
+    public TableCustomView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
     }
 
@@ -102,7 +102,7 @@ public class TableView<T> extends LinearLayout {
      * @param attributes      The attributes that shall be set to the view.
      * @param styleAttributes The style attributes that shall be set to the view.
      */
-    public TableView(final Context context, final AttributeSet attributes, final int styleAttributes) {
+    public TableCustomView(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
         this.dp1 = AppControl.getInstance().getDimensionUtil().density;
         setOrientation(LinearLayout.VERTICAL);
@@ -454,11 +454,81 @@ public class TableView<T> extends LinearLayout {
             tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
             tableDataView.setAdapter(tableDataAdapter);
 
+            if(count > 4)
+                botTableShowMoreButton.setVisibility(View.VISIBLE);
+
+            botTableShowMoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showTableViewDialog();
+                }
+            });
+
             forceRefresh();
         }else{
             tableDataView.setAdapter(null);
             tableHeaderView.setAdapter(null);
         }
+    }
+
+    /**
+     * Sets the {@link TableDataAdapter} that is used to render the data view for each cell.
+     *
+     * @param dataAdapter The {@link TableDataAdapter} that should be set.
+     */
+    public void setDataAdapter(final TableDataAdapter<T> dataAdapter, int count, boolean showiewMore) {
+        if(dataAdapter != null) {
+            tableDataAdapter = dataAdapter;
+            tableDataAdapter.setCount(count);
+            tableDataAdapter.setColumnModel(columnModel);
+            tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
+            tableDataView.setAdapter(tableDataAdapter);
+
+            if(showiewMore)
+                botTableShowMoreButton.setVisibility(VISIBLE);
+
+            botTableShowMoreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showTableViewDialog();
+                }
+            });
+
+            forceRefresh();
+        }else{
+            tableDataView.setAdapter(null);
+            tableHeaderView.setAdapter(null);
+        }
+    }
+
+    private void showTableViewDialog()
+    {
+        dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.tableview_dialog);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.CENTER;
+
+        dialog.getWindow().setAttributes(lp);
+
+        LinearLayout llTableView = (LinearLayout)dialog.findViewById(R.id.llTableView);
+        ImageView ivDialogClose = (ImageView)dialog.findViewById(R.id.ivDialogClose);
+        BotTableView tableView = new BotTableView(getContext());
+        tableView.setComposeFooterInterface(composeFooterInterface);
+        tableView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        tableView.setDialogReference(dialog);
+        tableView.setData(payloadInner);
+        llTableView.addView(tableView);
+
+        ivDialogClose.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -569,24 +639,64 @@ public class TableView<T> extends LinearLayout {
     }
 
     private void setupTableHeaderView(final AttributeSet attributes) {
+//        if (isInEditMode()) {
+//            tableHeaderAdapter = new EditModeTableHeaderAdapter(getContext());
+//        } else {
         tableHeaderAdapter = new DefaultTableHeaderAdapter(getContext());
+//        }
+
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
         tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
         setHeaderView(tableHeaderView);
     }
 
-    private void setupTableDataView(final AttributeSet attributes, final int styleAttributes) {
-        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.WRAP_CONTENT);
+//    private void setupTableDataView(final AttributeSet attributes, final int styleAttributes) {
+//        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.WRAP_CONTENT);
+//
+////        if (isInEditMode()) {
+////            tableDataAdapter = new EditModeTableDataAdapter(getContext());
+////        } else {
+//            tableDataAdapter = new DefaultTableDataAdapter(getContext());
+////        }
+//        tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
+//
+//        tableDataView = new ListView(getContext(), attributes, styleAttributes);
+//        tableDataView.setVerticalScrollBarEnabled(false);
+////        tableDataView.setOnItemClickListener(new InternalDataClickListener());
+////        tableDataView.setOnItemLongClickListener(new InternalDataLongClickListener());
+//        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+//        tableDataView.setAdapter(tableDataAdapter);
+//        tableDataView.setId(R.id.table_data_view);
+//        addView(tableDataView);
+////        tableDataView.setOnScrollListener(new InternalOnScrollListener());
+//
+////        swipeRefreshLayout = new SwipeRefreshLayout(getContext());
+////        swipeRefreshLayout.setLayoutParams(dataViewLayoutParams);
+////        swipeRefreshLayout.addView(tableDataView);
+////        swipeRefreshLayout.setColorSchemeColors(headerColor);
+////        swipeRefreshLayout.setEnabled(false);
+////
+////        addView(swipeRefreshLayout);
+//    }
 
+    private void setupTableDataView(final AttributeSet attributes, final int styleAttributes)
+    {
+        llTableDataView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_show_more, null);
         tableDataAdapter = new DefaultTableDataAdapter(getContext());
         tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
 
-        tableDataView = new ListView(getContext(), attributes, styleAttributes);
+        tableDataView = (ListView)llTableDataView.findViewById(R.id.lvTableDataView);
+        botTableShowMoreButton = (TextView)llTableDataView.findViewById(R.id.botTableShowMoreButton);
+//        tableDataView = new ListView(getContext(), attributes, styleAttributes);
         tableDataView.setVerticalScrollBarEnabled(false);
-        tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        tableDataView.setDivider(getContext().getDrawable(R.drawable.divider_new));
+        tableDataView.setDividerHeight((int)(10 * dp1));
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        layoutParams.weight = 1;
+        llTableDataView.setLayoutParams(layoutParams);
         tableDataView.setAdapter(tableDataAdapter);
         tableDataView.setId(R.id.table_data_view);
-        addView(tableDataView);
+        addView(llTableDataView);
     }
 
     private int getWidthAttribute(final AttributeSet attributes) {
@@ -595,6 +705,86 @@ public class TableView<T> extends LinearLayout {
         ta.recycle();
         return layoutWidth;
     }
+
+    /**
+     * Internal management of clicks on the data view.
+     *
+     * @author ISchwarz
+     */
+    /*private class InternalDataClickListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(final AdapterView<?> adapterView, final View view, final int i, final long l) {
+            informAllListeners(i);
+        }
+
+        private void informAllListeners(final int rowIndex) {
+            final T clickedObject = tableDataAdapter.getItem(rowIndex);
+
+            for (final TableDataClickListener<T> listener : dataClickListeners) {
+                try {
+                    listener.onDataClicked(rowIndex, clickedObject);
+                } catch (final Throwable t) {
+                    Log.w(LOG_TAG, "Caught Throwable on listener notification: " + t.toString());
+                    // continue calling listeners
+                }
+            }
+        }
+    }*/
+
+    /**
+     * Internal long click management of clicks on the data view.
+     *
+     * @author ISchwarz
+     */
+    /*private class InternalDataLongClickListener implements AdapterView.OnItemLongClickListener {
+
+        @Override
+        public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int rowIndex, final long id) {
+            return informAllListeners(rowIndex);
+        }
+
+        private boolean informAllListeners(final int rowIndex) {
+            final T clickedObject = tableDataAdapter.getItem(rowIndex);
+            boolean isConsumed = false;
+
+            for (final TableDataLongClickListener<T> listener : dataLongClickListeners) {
+                try {
+                    isConsumed |= listener.onDataLongClicked(rowIndex, clickedObject);
+                } catch (final Throwable t) {
+                    Log.w(LOG_TAG, "Caught Throwable on listener notification: " + t.toString());
+                    // continue calling listeners
+                }
+            }
+            return isConsumed;
+        }
+    }*/
+
+    /**
+     * Internal on {@link AbsListView.OnScrollListener} that dispatches the callbacks to the registered
+     * {@link OnScrollListener}s.
+     *
+     * @author ISchwarz
+     */
+    /*private class InternalOnScrollListener implements AbsListView.OnScrollListener {
+
+        @Override
+        public void onScrollStateChanged(final AbsListView absListView, final int scrollStateValue) {
+            final OnScrollListener.ScrollState scrollState = OnScrollListener.ScrollState.fromValue(scrollStateValue);
+
+            for (final OnScrollListener onScrollListener : onScrollListeners) {
+                onScrollListener.onScrollStateChanged(tableDataView, scrollState);
+            }
+        }
+
+        @Override
+        public void onScroll(final AbsListView absListView, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
+
+            for (final OnScrollListener onScrollListener : onScrollListeners) {
+                onScrollListener.onScroll(tableDataView, firstVisibleItem, visibleItemCount, totalItemCount);
+            }
+        }
+    }*/
 
     /**
      * The {@link TableHeaderAdapter} that is used by default. It contains the column model of the

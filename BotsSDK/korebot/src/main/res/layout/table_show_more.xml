@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="right"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dimen_10dp"
+    android:paddingRight="@dimen/dimen_10dp"
+    android:paddingBottom="@dimen/dimen_10dp">
+
+    <ListView
+        android:id="@+id/lvTableDataView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/botTableShowMoreButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:text="@string/view_more"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone" />
+
+</LinearLayout>

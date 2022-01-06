@@ -141,6 +141,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected ImageTemplateView imageTemplateView;
     protected BankingFeedbackTemplateView bankingFeedbackTemplateView;
     protected BotContactTemplateView botContactTemplateView;
+    protected BotCustomTableView botCustomTableView;
 
     //    protected int[] dimens;
     protected int textColor;
@@ -342,7 +343,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         addView(botPieChartView);
 
         tableView = ViewProvider.getTableView(context);
+        tableView.setComposeFooterInterface(composeFooterInterface);
         addView(tableView);
+
+        botCustomTableView = ViewProvider.getCustomTableView(context);
+        botCustomTableView.setComposeFooterInterface(composeFooterInterface);
+        addView(botCustomTableView);
 
         responsiveExpandTableView = ViewProvider.getResponsiveExpandTableView(context);
         addView(responsiveExpandTableView);
@@ -539,6 +545,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             imageTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
 
+        if(tableView != null)
+            tableView.setComposeFooterInterface(composeFooterInterface);
+
+        if(botCustomTableView != null)
+            botCustomTableView.setComposeFooterInterface(composeFooterInterface);
+
         if(bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -590,7 +602,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(listWidgetView != null){
             listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-
+        if(tableView != null){
+            tableView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(botCustomTableView != null){
+            botCustomTableView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
         if(botDropDownTemplateView != null) {
             botDropDownTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
