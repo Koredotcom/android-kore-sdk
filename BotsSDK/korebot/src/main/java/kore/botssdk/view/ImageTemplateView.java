@@ -46,6 +46,7 @@ import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -96,6 +97,7 @@ public class ImageTemplateView extends LinearLayout
     private View popUpView;
     private TextView tvTheme1, tvTheme2, tvVideoTitle;
     private View vTheme;
+    private String fileName;
 
     public ImageTemplateView(Context context)
     {
@@ -215,21 +217,36 @@ public class ImageTemplateView extends LinearLayout
         if(payloadInner != null && templateType != null)
         {
             this.payloadInner = payloadInner;
-
             switch (templateType)
             {
                 case BundleConstants.MEDIA_TYPE_IMAGE:
                     llAudio.setVisibility(GONE);
                     rlVideo.setVisibility(GONE);
                     ivImage.setVisibility(VISIBLE);
+                    tvVideoTitle.setVisibility(GONE);
+                    tvFileName.setVisibility(GONE);
+
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
+                    {
+                        tvVideoTitle.setVisibility(VISIBLE);
+                        tvVideoTitle.setText(payloadInner.getText());
+                    }
 
                     if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                     {
+                        tvFileName.setVisibility(VISIBLE);
+                        fileName = payloadInner.getUrl().substring(payloadInner.getUrl().lastIndexOf("/") + 1, payloadInner.getUrl().length());
+
+                        if(!StringUtils.isNullOrEmpty(fileName))
+                        {
+                            tvFileName.setText(fileName);
+                        }
+
                         Glide.with(getContext())
                                 .load(payloadInner.getUrl())
                                 .apply(new RequestOptions()
                                         .diskCacheStrategy(DiskCacheStrategy.NONE))
-                                .error(R.mipmap.imageplaceholder_left)
+                                .error(R.drawable.ic_image_photo)
                                 .into(new DrawableImageViewTarget(ivImage));
                     }
                     break;
@@ -246,15 +263,37 @@ public class ImageTemplateView extends LinearLayout
                         tvVideoTitle.setText(payloadInner.getText());
                     }
 
-                    try
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                     {
-                        Uri uri = Uri.parse(payloadInner.getAudioUrl());
-                        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        player.setDataSource(getContext(), uri);
-                        player.prepareAsync();
-                    } catch(Exception e) {
-                        System.out.println(e.toString());
+                        try
+                        {
+                            Uri uri = Uri.parse(payloadInner.getAudioUrl());
+                            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            player.setDataSource(getContext(), uri);
+                            player.prepareAsync();
+                        } catch(Exception e) {
+                            System.out.println(e.toString());
+                        }
                     }
+                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                    {
+                        try
+                        {
+                            Uri uri = Uri.parse(payloadInner.getUrl());
+                            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                            player.setDataSource(getContext(), uri);
+                            player.prepareAsync();
+                        } catch(Exception e) {
+                            System.out.println(e.toString());
+                        }
+                    }
+
+                    tvFileName.setVisibility(VISIBLE);
+
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
+                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                     player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
@@ -312,170 +351,154 @@ public class ImageTemplateView extends LinearLayout
                             if(checkForPermissionAccessAndRequest())
                             {
                                 KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_AUDIO, "");
-                                KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getAudioUrl());
+                                if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                                    KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getAudioUrl());
+                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                    KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getUrl());
                             }
                             else if(composeFooterInterface != null)
-                                composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
+                            {
+                                if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                                    composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
+                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                    composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
+                            }
+                        }
+                    });
+
+                    break;
+                case BundleConstants.MEDIA_TYPE_VIDEO:
+                    ivImage.setVisibility(GONE);
+                    rlVideo.setVisibility(VISIBLE);
+                    vvAttachment.setVisibility(VISIBLE);
+                    llAudio.setVisibility(GONE);
+                    tvVideoTitle.setVisibility(GONE);
+
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
+                    {
+                        tvVideoTitle.setVisibility(VISIBLE);
+                        tvVideoTitle.setText(payloadInner.getText());
+                    }
+
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        vvAttachment.setVideoPath(payloadInner.getVideoUrl());
+                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        vvAttachment.setVideoPath(payloadInner.getUrl());
+
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)vvAttachment.getLayoutParams();
+                    layoutParams.height=(int)(190 * dp1);
+                    vvAttachment.setLayoutParams(layoutParams);
+                    ivImage.setVisibility(GONE);
+                    rlVideo.setVisibility(VISIBLE);
+                    vvAttachment.setVisibility(VISIBLE);
+
+                    vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            setVideoProgress(payloadInner);
+                        }
+                    });
+
+                    if(payloadInner.getVideoCurrentPosition() > 0)
+                        setVideoPosition(payloadInner.getVideoCurrentPosition());
+
+                    tvFileName.setVisibility(VISIBLE);
+
+                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
+                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
+
+                    vvAttachment.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            vvAttachment.seekTo(1);
+                            ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
+                            ivPlayPauseIcon.setTag(true);
+                        }
+                    });
+
+                    vvAttachment.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mp, int what, int extra) {
+                            return false;
+                        }
+                    });
+
+                    ivPlayPauseIcon.setTag(true);
+                    ivPlayPauseIcon.setOnClickListener(new OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if((boolean)v.getTag())
+                            {
+                                ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_pause_icon));
+                                vvAttachment.requestFocus();
+                                vvAttachment.start();
+                                v.setTag(false);
+                            }
+                            else
+                            {
+                                ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
+                                vvAttachment.pause();
+                                v.setTag(true);
+                            }
+
+                            hideToolBar();
+                        }
+                    });
+
+                    vvAttachment.setOnTouchListener(new OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event)
+                        {
+                            llPlayControls.setVisibility(VISIBLE);
+                            hideToolBar();
+                            return false;
+                        }
+                    });
+
+                    ivFullScreen.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            Intent intent = new Intent(getContext(), VideoFullScreenActivity.class);
+                            if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                                intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
+                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                intent.putExtra("VideoUrl", payloadInner.getUrl());
+
+                            intent.putExtra("CurrentPosition", current_pos);
+                            getContext().startActivity(intent);
 
                         }
                     });
 
-//                    LayoutParams params = new LayoutParams((int)(350 * dp1), (int)(180 * dp1));
-//                    wvAudio.setLayoutParams(params);
-//
-//                    wvAudio.setVisibility(VISIBLE);
-//
-//                    wvAudio.getSettings().setJavaScriptEnabled(true);
-//                    wvAudio.getSettings().setUseWideViewPort(true);
-//                    wvAudio.getSettings().setMediaPlaybackRequiresUserGesture(false);
-//                    wvAudio.getSettings().setPluginState(WebSettings.PluginState.ON_DEMAND);
-//                    wvAudio.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-//                    wvAudio.getSettings().setBuiltInZoomControls(false);
-//                    wvAudio.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-//                    wvAudio.getSettings().setLoadWithOverviewMode(true);
-//                    wvAudio.getSettings().setUseWideViewPort(true);
-//                    wvAudio.clearHistory();
-//                    wvAudio.clearFormData();
-//                    wvAudio.clearCache(true);
-//                    wvAudio.getSettings().setAllowFileAccess(true);
-//                    wvAudio.addJavascriptInterface(new WebInterface(getContext()), "Android");
-//
-//                    wvAudio.setWebViewClient(new WebViewClient() {
-//                        // autoplay when finished loading via javascript injection
-//                        public void onPageFinished(WebView view, String url) { wvAudio.loadUrl("javascript:(function() { document.getElementsByTagName('video')[0].play(); })()"); }
-//                    });
-//
-//                    wvAudio.setWebChromeClient(new WebChromeClient());
-//                    wvAudio.loadUrl(payloadInner.getAudioUrl());
-                    break;
-                case BundleConstants.MEDIA_TYPE_VIDEO:
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                    tvTheme1.setOnClickListener(new View.OnClickListener()
                     {
-                        ivImage.setVisibility(GONE);
-                        rlVideo.setVisibility(VISIBLE);
-                        vvAttachment.setVisibility(VISIBLE);
-                        llAudio.setVisibility(GONE);
-                        tvVideoTitle.setVisibility(GONE);
-
-                        if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
+                        @Override
+                        public void onClick(View v)
                         {
-                            tvVideoTitle.setVisibility(VISIBLE);
-                            tvVideoTitle.setText(payloadInner.getText());
-                        }
-
-//                        wvAudio.setVisibility(VISIBLE);
-//
-//                        wvAudio.getSettings().setJavaScriptEnabled(true);
-//                        wvAudio.getSettings().setUseWideViewPort(true);
-//                        wvAudio.getSettings().setMediaPlaybackRequiresUserGesture(true);
-//                        wvAudio.loadUrl(payloadInner.getVideoUrl().replace("http:", "https:"));
-//                        wvAudio.setWebViewClient(new WebViewClient() {
-//                        // autoplay when finished loading via javascript injection
-//                        public void onPageFinished(WebView view, String url) { wvAudio.loadUrl("javascript:(function() { document.getElementsByTagName('video')[0].pause(); })()"); }
-//                        });
-
-                        vvAttachment.setVideoURI(Uri.parse(payloadInner.getVideoUrl()));
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)vvAttachment.getLayoutParams();
-                        layoutParams.height=(int)(190 * dp1);
-                        vvAttachment.setLayoutParams(layoutParams);
-                        ivImage.setVisibility(GONE);
-                        rlVideo.setVisibility(VISIBLE);
-                        vvAttachment.setVisibility(VISIBLE);
-
-                        vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                setVideoProgress(payloadInner);
-                            }
-                        });
-
-                        if(payloadInner.getVideoCurrentPosition() > 0)
-                            setVideoPosition(payloadInner.getVideoCurrentPosition());
-
-                        tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-
-
-                        vvAttachment.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer mp) {
-                                vvAttachment.seekTo(1);
-                                ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
-                                ivPlayPauseIcon.setTag(true);
-                            }
-                        });
-
-                        vvAttachment.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                            @Override
-                            public boolean onError(MediaPlayer mp, int what, int extra) {
-                                return false;
-                            }
-                        });
-
-                        ivPlayPauseIcon.setTag(true);
-                        ivPlayPauseIcon.setOnClickListener(new OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
+                            popupWindow.dismiss();
+                            if(checkForPermissionAccessAndRequest())
                             {
-                                if((boolean)v.getTag())
-                                {
-                                    ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_pause_icon));
-                                    vvAttachment.start();
-                                    v.setTag(false);
-                                }
-                                else
-                                {
-                                    ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
-                                    vvAttachment.pause();
-                                    v.setTag(true);
-                                }
-
-                                hideToolBar();
-                            }
-                        });
-
-                        vvAttachment.setOnTouchListener(new OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View v, MotionEvent event)
-                            {
-                                llPlayControls.setVisibility(VISIBLE);
-                                hideToolBar();
-                                return false;
-                            }
-                        });
-
-                        ivFullScreen.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-//                                Intent intent = new Intent(Intent.ACTION_VIEW );
-//                                intent.setDataAndType(Uri.parse(payloadInner.getVideoUrl().replace("http:", "https:")), "video/*");
-//                                getContext().startActivity(intent);
-
-                                Intent intent = new Intent(getContext(), VideoFullScreenActivity.class);
-                                intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
-                                intent.putExtra("CurrentPosition", current_pos);
-                                getContext().startActivity(intent);
-
-                            }
-                        });
-
-                        tvTheme1.setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                popupWindow.dismiss();
-                                if(checkForPermissionAccessAndRequest())
-                                {
-                                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                                KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getVideoUrl());
-                                }
-                                else if(composeFooterInterface != null)
-                                    composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
+                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                    KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getUrl());
                             }
-                        });
-                    }
-                    break;
+                            else if(composeFooterInterface != null)
+                            {
+                                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                                    composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
+                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                    composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
+                            }
+                        }
+                    });
+                break;
             }
         }
     }
@@ -490,7 +513,7 @@ public class ImageTemplateView extends LinearLayout
     {
         sbVideo.setProgress((int)event.getCurrentPos());
         vvAttachment.seekTo((int)event.getCurrentPos());
-        vvAttachment.start();
+        ivAudioPlayPauseIcon.performClick();
     }
 
     public class WebInterface{
@@ -508,6 +531,25 @@ public class ImageTemplateView extends LinearLayout
         @JavascriptInterface
         public void pauseSound(String toast) {
             Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isUrlReachable(String file_url)
+    {
+        try {
+            URL url = new URL(file_url);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            int code = connection.getResponseCode();
+
+            if(code == 200)
+            {   return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception e)
+        {
+            return false;
         }
     }
 

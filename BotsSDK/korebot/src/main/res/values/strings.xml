@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"Kore.ai"</string>
+    <string name="app_name">"Kore.ai Bot"</string>
     <string name="socket_connecting">Connecting</string>
     <string name="socket_connected">Connected</string>
     <string name="socket_disconnected">Disconnected</string>
@@ -69,7 +69,9 @@
     <string name="icon_e91a">&#xe91a;</string>
     <string name="icon_e913">&#xe913;</string>
     <string name="camera">&#128247;</string>
-    <string name="attachment">&#128193;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <string name="audio">&#9835;</string>
     <string name="icon_e995">&#xe995;</string> <!-- threads-->
     <string name="icon_e996">&#xe996;</string> <!-- teams-->
 
@@ -97,6 +99,7 @@
     <string name="show_more">Show More</string>
     <string name="about">About</string>
     <string name="add_suggestions">Add Suggestions</string>
+    <string name="get_started">Get Started</string>
 
     <string-array name="attachments_strings">
         <item>Take Photo</item>

@@ -47,7 +47,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
-import androidx.documentfile.provider.DocumentFile;
+//import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -397,10 +397,18 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             {
                 if(composebarAttachmentAdapter.getItemCount()>0)
                 {
-                    if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".pdf"))
-                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.attachment)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
-                    else
+                    if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
+                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpg")
+                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpeg"))
                         sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.camera)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+                    else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
+                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.video)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+                    else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
+                            || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".m4a"))
+                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.audio)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+                    else
+                        sendMessageAttachmentText(msg+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+
                 }
                 else
                     sendMessageText(msg);
@@ -411,10 +419,18 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             }
             else if(composebarAttachmentAdapter.getItemCount()>0)
             {
-                if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".pdf"))
-                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.attachment)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else
+                if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
+                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpg")
+                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpeg"))
                     sendMessageAttachmentText(getActivity().getResources().getString(R.string.camera)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.video)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
+                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".m4a"))
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.audio)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                else
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.attachment)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
             }
@@ -1090,24 +1106,25 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
             processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-        } else {
-            try {
-                DocumentFile pickFile = DocumentFile.fromSingleUri(getActivity(), selectedImage);
-                String name = pickFile.getName();
-                String type = pickFile.getType();
-                if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
-                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
-                    new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            } catch (NoExternalStorageException e) {
-                e.printStackTrace();
-            } catch (NoWriteAccessException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+//        else {
+//            try {
+//                DocumentFile pickFile = DocumentFile.fromSingleUri(getActivity(), selectedImage);
+//                String name = pickFile.getName();
+//                String type = pickFile.getType();
+//                if (type != null && type.contains("video")) {
+//                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+//                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
+//                    new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//                }
+//            } catch (NoExternalStorageException e) {
+//                e.printStackTrace();
+//            } catch (NoWriteAccessException e) {
+//                e.printStackTrace();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private class SaveVideoTask extends AsyncTask<String, String, String> {

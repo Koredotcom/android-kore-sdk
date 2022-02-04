@@ -65,9 +65,15 @@
         <!-- HeaderToggleButton -->
         <item name="materialCalendarHeaderToggleButton">@style/HeaderToggleButton</item>
         <item name="materialCalendarHeaderTitle">@style/HeaderToggleTitle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/buttonBarNegative</item>
+
     </style>
 
     <style name="HeaderToggleButton" parent="@style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="buttonBarNegative" parent="@style/Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
         <item name="android:visibility">gone</item>
     </style>
 

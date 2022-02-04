@@ -155,7 +155,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
                 @Override
                 public void onClick(View v) {
                     BotRequest botRequest = (BotRequest) getItem(position);
-                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
+//                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
                 }
             });
         }
@@ -232,7 +232,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     }
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
-        baseBotMessageArrayList.add(baseBotMessage);
+        if(!baseBotMessageArrayList.contains(baseBotMessage))
+            baseBotMessageArrayList.add(baseBotMessage);
+
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
             headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() -1);
         }

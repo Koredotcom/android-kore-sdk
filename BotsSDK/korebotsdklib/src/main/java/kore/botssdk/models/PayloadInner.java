@@ -70,6 +70,15 @@ public class PayloadInner {
     private String userSuggestion;
     private ArrayList<FeedbackExperienceContentModel> experienceContent;
     private ArrayList<FeedbackListModel> feedbackList;
+    private String text_message;
+
+    public String getText_message() {
+        return text_message;
+    }
+
+    public void setText_message(String text_message) {
+        this.text_message = text_message;
+    }
 
     public void setFieldButton(BotFormFieldButtonModel fieldButton) {
         this.fieldButton = fieldButton;

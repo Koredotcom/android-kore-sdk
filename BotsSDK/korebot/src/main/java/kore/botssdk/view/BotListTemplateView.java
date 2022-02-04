@@ -88,8 +88,9 @@ public class BotListTemplateView extends ViewGroup {
                             if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botButtonModel.getType())) {
                                 invokeGenericWebViewInterface.invokeGenericWebView(botButtonModel.getUrl());
                             } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botButtonModel.getType())) {
-                                String message = botButtonModel.getPayload();
-                                composeFooterInterface.onSendClick(message, false);
+                                String payload = botButtonModel.getPayload();
+                                String message = botCustomListViewButton.getText().toString();
+                                composeFooterInterface.onSendClick(message, payload, false);
                             }
                         }
                     }

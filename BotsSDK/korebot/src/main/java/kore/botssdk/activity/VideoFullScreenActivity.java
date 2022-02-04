@@ -1,12 +1,12 @@
 package kore.botssdk.activity;
 
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
+
 import android.Manifest;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,38 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import androidx.documentfile.provider.DocumentFile;
-
-import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.events.EntityEditEvent;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-
-import io.socket.client.On;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.events.VideoTimerEvent;
-import kore.botssdk.exceptions.NoExternalStorageException;
-import kore.botssdk.exceptions.NoWriteAccessException;
-import kore.botssdk.fragment.ComposeFooterFragment;
-import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.ToastUtils;
-
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 public class VideoFullScreenActivity extends BotAppCompactActivity
 {
@@ -93,24 +68,28 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         videoUrl = getIntent().getExtras().getString("VideoUrl");
-        vvFullScreen.setVideoURI(Uri.parse(videoUrl));
 
-        vvFullScreen.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                setVideoProgress();
+        if(!StringUtils.isNullOrEmpty(videoUrl))
+        {
+            vvFullScreen.setVideoPath(videoUrl);
 
-                if(getIntent().hasExtra("CurrentPosition"))
-                {
-                    current_pos = getIntent().getExtras().getDouble("CurrentPosition");
-                    sbVideo.setProgress((int)current_pos);
-                    vvFullScreen.seekTo((int)current_pos);
+            vvFullScreen.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    setVideoProgress();
+
+                    if(getIntent().hasExtra("CurrentPosition"))
+                    {
+                        current_pos = getIntent().getExtras().getDouble("CurrentPosition");
+                        sbVideo.setProgress((int)current_pos);
+                        vvFullScreen.seekTo((int)current_pos);
+                    }
+
+                    vvFullScreen.start();
+                    ivPlayPauseIcon.setTag(false);
                 }
-
-                vvFullScreen.start();
-                ivPlayPauseIcon.setTag(false);
-            }
-        });
+            });
+        }
 
         ivFullScreen.setOnClickListener(new View.OnClickListener() {
             @Override

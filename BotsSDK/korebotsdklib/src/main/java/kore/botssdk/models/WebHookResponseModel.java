@@ -7,6 +7,7 @@ public class WebHookResponseModel
     private String createdOn;
     private String _v;
     private boolean endOfTask;
+    private String messageId;
 
     public void set_v(String _v) {
         this._v = _v;
@@ -46,5 +47,13 @@ public class WebHookResponseModel
 
     public boolean getEndOfTask(){
         return endOfTask;
+    }
+
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
+    }
+
+    public String getMessageId() {
+        return messageId;
     }
 }

@@ -275,8 +275,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }*/
         String icon = ((BotResponse) baseBotMessage).getIcon();
-        if(SDKConfiguration.BubbleColors.showIcon) {
-            cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+        if(SDKConfiguration.BubbleColors.showIcon)
+        {
+            if(!StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+                cpvSenderImage.populateLayout(" ", null, SDKConfiguration.BubbleColors.getIcon_url(), null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
+            else
+                cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
             cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
         }else{
             cpvSenderImage.setVisibility(GONE);
@@ -578,8 +582,14 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 }else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())){
                     bubbleTextMediaLayout.populateErrorText(payInner.getText(),payInner.getColor());
                 } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
-                    bubbleTextMediaLayout.populateText(payInner.getText());
-                } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
+                    if(!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                        bubbleTextMediaLayout.populateText(payInner.getText());
+                    else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+                        bubbleTextMediaLayout.populateText(payInner.getText_message());
+                }
+                else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
+                    bubbleTextMediaLayout.populateText(payInner.getTemplate_type());
+                else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
                     timeStampsTextView.setText("");
                 }
 

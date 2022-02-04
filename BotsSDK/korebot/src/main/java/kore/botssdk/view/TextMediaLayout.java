@@ -23,8 +23,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.emojione.tools.Client;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,6 +76,9 @@ public class TextMediaLayout extends ViewGroup {
     public boolean isClicable() {
         return isClicable;
     }//
+    private final String REGEX_SIMLEY = ":)";
+    private final String REGEX_THUMSUB = ":thumbsup";
+    private final String REGEX_SAD = ":(";
 
     public void setClicable(boolean clicable) {
         isClicable = clicable;
@@ -129,7 +134,7 @@ public class TextMediaLayout extends ViewGroup {
         botContentTextView.setLayoutParams(txtVwParams);
         botContentTextView.setSingleLine(false);
         botContentTextView.setClickable(false);
-        botContentTextView.setAutoLinkMask(Linkify.ALL);
+        botContentTextView.setAutoLinkMask(Linkify.WEB_URLS);
         botContentTextView.setId(BubbleConstants.TEXTVIEW_ID);
         botContentTextView.setPadding(0, 0, 0, 0);
         botContentTextView.setLinkTextColor(linkTextColor);
@@ -286,8 +291,95 @@ public class TextMediaLayout extends ViewGroup {
             if(isPencilSpanClick && !isClicable()){
                 botContentTextView.setText(getRemovedEntityEditString(strBuilder.toString()));
             }else{
+                if(strBuilder.toString().contains(REGEX_SIMLEY))
+                {
+                    botContentTextView.setText(strBuilder);
 
-                botContentTextView.setText(strBuilder);
+                    Client client = new Client(getContext());
+                    client.setAscii(true);              // convert ascii smileys? =)
+                    client.setShortcodes(true);         // convert shortcodes? :joy:
+                    client.setGreedyMatch(true);        // true enables less strict unicode matching
+                    client.setRiskyMatchAscii(true);
+
+                    SpannableStringBuilder finalStrBuilder1 = strBuilder;
+                    client.shortnameToImage(REGEX_SIMLEY,(int)(20 * dp1), new com.emojione.tools.Callback() {
+                        @Override
+                        public void onFailure(IOException e) {
+                            botContentTextView.setText(e.getMessage());
+                        }
+                        @Override
+                        public void onSuccess(final SpannableStringBuilder ssb) {
+                            int start = finalStrBuilder1.toString().indexOf(":");
+                            int end = finalStrBuilder1.toString().indexOf(")", start);
+
+                            if(start != -1 && end != -1)
+                                finalStrBuilder1.delete(start, end+1);
+
+                            finalStrBuilder1.append(ssb);
+                            botContentTextView.setText(finalStrBuilder1);
+                        }
+                    });
+                }
+                else if(strBuilder.toString().contains(REGEX_THUMSUB))
+                {
+                    botContentTextView.setText(strBuilder);
+
+                    Client client = new Client(getContext());
+                    client.setAscii(true);              // convert ascii smileys? =)
+                    client.setShortcodes(true);         // convert shortcodes? :joy:
+                    client.setGreedyMatch(true);        // true enables less strict unicode matching
+                    client.setRiskyMatchAscii(true);
+
+                    SpannableStringBuilder finalStrBuilder1 = strBuilder;
+                    client.shortnameToImage(REGEX_THUMSUB,(int)(20 * dp1), new com.emojione.tools.Callback() {
+                        @Override
+                        public void onFailure(IOException e) {
+                            botContentTextView.setText(e.getMessage());
+                        }
+                        @Override
+                        public void onSuccess(final SpannableStringBuilder ssb) {
+                            int start = finalStrBuilder1.toString().indexOf(":");
+                            int end = finalStrBuilder1.toString().indexOf("p", start);
+
+                            if(start != -1 && end != -1)
+                                finalStrBuilder1.delete(start, end+1);
+
+                            finalStrBuilder1.append(ssb);
+                            botContentTextView.setText(finalStrBuilder1);
+                        }
+                    });
+                }
+                else if(strBuilder.toString().contains(REGEX_SAD))
+                {
+                    botContentTextView.setText(strBuilder);
+
+                    Client client = new Client(getContext());
+                    client.setAscii(true);              // convert ascii smileys? =)
+                    client.setShortcodes(true);         // convert shortcodes? :joy:
+                    client.setGreedyMatch(true);        // true enables less strict unicode matching
+                    client.setRiskyMatchAscii(true);
+
+                    SpannableStringBuilder finalStrBuilder1 = strBuilder;
+                    client.shortnameToImage(REGEX_SAD,(int)(20 * dp1), new com.emojione.tools.Callback() {
+                        @Override
+                        public void onFailure(IOException e) {
+                            botContentTextView.setText(e.getMessage());
+                        }
+                        @Override
+                        public void onSuccess(final SpannableStringBuilder ssb) {
+                            int start = finalStrBuilder1.toString().indexOf(":");
+                            int end = finalStrBuilder1.toString().indexOf("(", start);
+
+                            if(start != -1 && end != -1)
+                                finalStrBuilder1.delete(start, end+1);
+
+                            finalStrBuilder1.append(ssb);
+                            botContentTextView.setText(finalStrBuilder1);
+                        }
+                    });
+                }
+                else
+                    botContentTextView.setText(strBuilder);
             }
 
             if(isPencilSpanClick)
@@ -302,8 +394,10 @@ public class TextMediaLayout extends ViewGroup {
         }
     }
 
-    public void populateTextSenders(String textualContent) {
-        if (textualContent != null && !textualContent.isEmpty()) {
+    public void populateTextSenders(String textualContent)
+    {
+        if (textualContent != null && !textualContent.isEmpty())
+        {
             textualContent = unescapeHtml4(textualContent.trim());
             /*if(gravity != BubbleConstants.GRAVITY_LEFT) {
                 textualContent = "\"" + textualContent + "\"";

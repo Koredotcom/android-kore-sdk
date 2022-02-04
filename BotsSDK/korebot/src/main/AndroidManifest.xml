@@ -18,41 +18,46 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-           android:requestLegacyExternalStorage="true"
-           android:name=".application.BotApplication"
-           android:allowBackup="true"
-           android:icon="@drawable/ic_launcher"
-           android:label="@string/app_name"
-           android:supportsRtl="true"
-           android:theme="@style/AssociatedAppTheme">
+        android:name=".application.BotApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:supportsRtl="true"
+        android:theme="@style/AssociatedAppTheme"
+        android:usesCleartextTraffic="true">
 
-           <activity
-               android:name=".activity.GenericWebViewActivity"
-               android:label="Kora"
-               android:theme="@style/Theme.AppCompat.NoActionBar"
+        <activity
+            android:name=".activity.GenericWebViewActivity"
+            android:label="Kora"
+            android:screenOrientation="portrait"
 
-               android:screenOrientation="portrait"
-               android:windowSoftInputMode="adjustResize" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
 
-           <activity
-               android:name=".activity.BotHomeActivity"
-               android:screenOrientation="portrait"
-               android:theme="@style/AppTheme">
-               <intent-filter>
-                   <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".activity.BotHomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                   <category android:name="android.intent.category.LAUNCHER" />
-               </intent-filter>
-           </activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-           <activity
-               android:name=".activity.BotChatActivity"
-               android:screenOrientation="portrait"
-               android:theme="@style/AppTheme"
-               android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.BotChatActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.BrandingChangeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
@@ -65,16 +70,6 @@
             android:name=".activity.VideoFullScreenActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme" />
-
-        <service
-            android:name=".net.BotDemoRestService"
-            android:exported="false" />
-        <service
-            android:name=".net.BotRestService"
-            android:exported="false" />
-        <service
-            android:name=".net.BotLocalService"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -178,7 +178,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(getActivity().getResources().getString(R.string.app_name)));
+        tvChaseTitle.setText(Html.fromHtml(Client.bot_name));
         sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
@@ -189,13 +189,23 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                  if (botsChatAdapter != null)
+                if(!Client.isWebHook)
+                {
+                    if (botsChatAdapter != null)
                         loadChatHistory(botsChatAdapter.getItemCount(), limit);
                     else
                         loadChatHistory(0, limit);
                 }
+                else
+                {
+                    fetching = false;
 
+                        if (swipeRefreshLayout != null) {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+
+                }
+            }
         });
 
         ivThemeSwitcher.setOnClickListener(new View.OnClickListener() {
@@ -322,7 +332,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             if (typingStatusItemDots != null) {
                 botTypingStatusRl.setVisibility(View.VISIBLE);
                 typingStatusItemDots.start();
-                Log.d("Hey", "Started animation");
+//                Log.d("Hey", "Started animation");
 
                 if(StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
                     mChannelIconURL = botResponse.getIcon();
@@ -348,13 +358,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     PayloadInner payInner = payOuter.getPayload();
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
                     {
-//                        CalenderActionSheetFragment bottomSheetDialog = new CalenderActionSheetFragment();
-//                        bottomSheetDialog.setisFromFullView(false);
-//                        bottomSheetDialog.setSkillName("skillName","trigger");
-//                        bottomSheetDialog.setData(payInner);
-//                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-//                        bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
-
                         Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
                         int strYear = cal.get(Calendar.YEAR);
@@ -365,7 +368,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         MaterialDatePicker.Builder<Long> builder =  MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
+//                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try
@@ -382,7 +385,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                     int stDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                                     String formatedDate = "";
-                                    formatedDate = DateUtils.getMonthName(stMonth)+" "+stDay+DateUtils.getDayOfMonthSuffix(stDay)+", "+stYear;
+//                                    formatedDate = DateUtils.getMonthName(stMonth)+" "+stDay+DateUtils.getDayOfMonthSuffix(stDay)+", "+stYear;
+                                    formatedDate = ((stMonth+1) > 9 ? (stMonth+1) : "0"+(stMonth+1))
+                                                    +"-"+(stDay > 9 ? stDay : "0"+stDay)
+                                                    +"-"+stYear;
 
                                     if(!formatedDate.isEmpty())
                                         composeFooterInterface.onSendClick(formatedDate, false);
@@ -397,7 +403,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         MaterialDatePicker.Builder<Pair<Long, Long>> builder =  MaterialDatePicker.Builder.dateRangePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(limitRange(payInner.getEndDate(), payInner.getFormat()).build());
+//                        builder.setCalendarConstraints(limitRange(payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try
@@ -492,26 +498,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
 
     private int limit = 10;
-    RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            int pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
-
-            if (dy > 0) //check for scroll down
-            {
-                if (!fetching && hasMore) {
-                    if (pastVisiblesItems <= 10) {
-                        fetching = true;
-                        loadChatHistory(botsChatAdapter.getItemCount(), limit);
-                    }
-                }
-            }
-        }
-    };
-
-
-
-
 
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
         botsChatAdapter.addBaseBotMessages(list);
@@ -835,7 +821,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
                     if (list != null && list.size() > 0) {
                         addMessagesToBotChatAdapter(list, true);
-                        composeFooterInterface.onSendClick("", false);
                     }
 
                     if ((list == null || list.size() < limit) && offset != 0) {

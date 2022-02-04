@@ -3,9 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_image_photo.xml" value="0.19166666666666668" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_raster_image.xml" value="0.19166666666666668" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_video_icon.xml" value="0.19166666666666668" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/activity_main.xml" value="0.5" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/attachment_view_composebar.xml" value="0.17552083333333332" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/bot_content_layout.xml" value="0.17552083333333332" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/bot_custom_list.xml" value="0.1796875" />
-        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/bot_footer_fragment.xml" value="0.17552083333333332" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/bot_footer_fragment.xml" value="0.4466666666666667" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/bot_home_activity_layout.xml" value="0.17552083333333332" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/contact_card_template_cell.xml" value="0.1796875" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/image_template.xml" value="0.5" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/layout/video_view_new.xml" value="0.17552083333333332" />
+        <entry key="..\:/WebHook_Integration/BotsSDK/widgetsdk/src/main/res/layout/reusable_listview_actionsheet.xml" value="0.17552083333333332" />
       </map>
     </option>
   </component>
