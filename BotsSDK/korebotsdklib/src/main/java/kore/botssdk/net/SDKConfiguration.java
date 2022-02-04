@@ -135,24 +135,6 @@ public class SDKConfiguration {
         public static boolean enablePanel = false;
         public static boolean isWebHook = false;
 
-//        public static String client_id = "cs-3e779bfd-7ec8-5774-aa77-1d11a89e354a";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "lNMpvYsQoQ5/lTh8uXMPmu0e0Z3eoHGr2xWXHJTcvDI=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "rajasekhar.balla12345@kore.com";
-//        public static String bot_name = "Fit New Pro";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-ea1b128f-7895-581a-8c87-bbfe3b9f1ff1";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
-
-//        public static String client_id = "cs-40cf8610-ef67-533c-b061-84af1fef1a79";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "EnQYptKNQJdMMLrNuLaKXCdZSDHMA9SiP72ddM0TgOM=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "Sudheer.J@kore.com";
-//        public static String bot_name = "Airforce 9.1";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-bb738a13-0846-5d48-aca5-779437c4b022";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
-
-//        installer
-//        public static String client_id = "cs-bcd0fb97-9e4a-5f93-8d01-feb8ea889b41";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "9inbWqBzFag/RdAqqElRZ/obcruMtSFPlq415PtRcBE=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "Sudheer.J@kore.com";
-//        public static String bot_name = "Air New";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-6e9f5e9d-58b2-5a52-9423-60eb6b90f37f";
         public static String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
         public static String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
         public static String webHook_identity = "sudheer.jampana@kore.com";
