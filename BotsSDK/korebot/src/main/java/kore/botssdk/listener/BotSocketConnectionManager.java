@@ -179,7 +179,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     {
         String jwt = "";
         try{
-            jwt = botClient.generateJWTForAPI(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+            jwt = botClient.generateJWTForAPI(SDKConfiguration.Client.webHook_identity,SDKConfiguration.Client.webHook_client_secret,SDKConfiguration.Client.webHook_client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
             KoreEventCenter.post(jwt);
         }catch (Exception e){
             e.printStackTrace();

@@ -1,10 +1,12 @@
 package kore.botssdk.view;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -15,6 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.listener.ListClickListner;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.TableView;
@@ -40,8 +45,11 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
  */
 public class BotTableView extends TableView<MiniTableModel> {
 
-
     private Context context;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private Dialog dialog;
+
     public BotTableView(final Context context) {
         this(context, null);
         this.context = context;
@@ -97,15 +105,31 @@ public class BotTableView extends TableView<MiniTableModel> {
                 model.setElements(additional.get(j));
                 lists.add(model);
             }
-            BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment);
-            setDataAdapter(tableAdapter);
+            BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment, composeFooterInterface, invokeGenericWebViewInterface);
+            if(dialog != null)
+                tableAdapter.setDialogReference(dialog);
+            setDataAdapter(tableAdapter, lists.size());
         }
+    }
 
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public void setDialogReference(Dialog dialog) {
+        this.dialog = dialog;
     }
 
     public void setData(PayloadInner payloadInner){
         if(payloadInner != null) {
             String[] alignment = addHeaderAdapter(payloadInner.getColumns());
+            setPayloadInner(payloadInner);
+            setTableComposeFooterInterface(composeFooterInterface);
+            setTableInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             addDataAdapterForTable(payloadInner, alignment);
         }/*else{
             setDataAdapter(null);
@@ -121,9 +145,12 @@ public class BotTableView extends TableView<MiniTableModel> {
             model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
             lists.add(model);
         }
-        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment);
-        setDataAdapter(tableAdapter);
+        BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment, composeFooterInterface, invokeGenericWebViewInterface);
 
+        if(dialog != null)
+            tableAdapter.setDialogReference(dialog);
+
+        setDataAdapter(tableAdapter, lists.size());
     }
 
     @Override
@@ -158,7 +185,10 @@ public class BotTableView extends TableView<MiniTableModel> {
             height += tableHeaderView.getMeasuredHeight();
 
             if (height != 0 ) {
-                height = height + (int) (25 * dp1);
+                if(tableDataView != null && tableDataView.getAdapter() != null && tableDataView.getAdapter().getCount() > 4)
+                    height = height + (int) (85 * dp1);
+                else
+                    height = height + (int) (30 * dp1);
             }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
     /*        for(int i = 0; i < getChildCount(); i++) {

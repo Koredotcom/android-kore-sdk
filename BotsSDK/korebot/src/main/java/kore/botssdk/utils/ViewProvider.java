@@ -24,6 +24,7 @@ import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotContactTemplateView;
+import kore.botssdk.view.BotCustomTableView;
 import kore.botssdk.view.BotDropDownTemplateView;
 import kore.botssdk.view.BotFormTemplateView;
 import kore.botssdk.view.BotListTemplateView;
@@ -214,6 +215,11 @@ public class ViewProvider {
     }
     public static BotTableView getTableView(Context context){
         BotTableView tableView = new BotTableView(context);
+        tableView.setId(TABLE_VIEW_ID);
+        return tableView;
+    }
+    public static BotCustomTableView getCustomTableView(Context context){
+        BotCustomTableView tableView = new BotCustomTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }

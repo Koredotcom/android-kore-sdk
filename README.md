@@ -176,9 +176,25 @@ pushNotificationRegistrar.unsubscribePushNotification(Context context, String ac
 ```
 #### 10. Disconnect
 ----
-//Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
+Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
 botconnector.disconnect();
 ```
 License
 ```
+# How to enable API based (webhook channel) message communication
+----
+#### 1. Enable the webhook channel by following the below link
+	https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
+	
+#### 2. Configure the botOptions in SDKConfiguration.java with the values you get in above steps
+	 SDKConfiguration.Client.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
+	 SDKConfiguration.Client.webHook_bot_name = "PLEASE_ENTER_BOT_NAME" // bot name is case sensitive
+	 SDKConfiguration.Client.webHook_bot_id = "PLEASE_ENTER_BOT_ID" 
+	 SDKConfiguration.Client.webHook_client_id = "PLEASE_ENTER_CLIENT_ID";
+	 SDKConfiguration.Client.webHook_client_secret = "PLEASE_ENTER_CLIENT_SECRET";
+
+#### 3. Change the following lines in SDKConfiguration.java and provide the webhookURL which you get in the above steps
+	public static boolean isWebHook = true; // Default it's false
+	SDKConfiguration.koreAPIUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
+	
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.

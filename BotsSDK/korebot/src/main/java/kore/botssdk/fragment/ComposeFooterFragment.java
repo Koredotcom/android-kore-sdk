@@ -1,5 +1,17 @@
 package kore.botssdk.fragment;
 
+import static android.app.Activity.RESULT_OK;
+import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
+import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS;
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
+import static com.kore.ai.widgetsdk.utils.BundleUtils.THUMBNAIL_FILE_PATH;
+import static kore.botssdk.utils.BitmapUtils.getBufferSize;
+import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.view.viewUtils.FileUtils.EXT_JPG;
+import static kore.botssdk.view.viewUtils.FileUtils.EXT_PNG;
+import static kore.botssdk.view.viewUtils.FileUtils.EXT_VIDEO;
+
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -109,18 +121,6 @@ import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.FileUtils;
 import kore.botssdk.websocket.SocketWrapper;
-
-import static android.app.Activity.RESULT_OK;
-import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
-import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS;
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
-import static com.kore.ai.widgetsdk.utils.BundleUtils.THUMBNAIL_FILE_PATH;
-import static kore.botssdk.utils.BitmapUtils.getBufferSize;
-import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_JPG;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_PNG;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_VIDEO;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -1025,7 +1025,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         KoreMedia.BUFFER_SIZE_IMAGE,
                         new Messenger(messagesMediaUploadAcknowledgeHandler),
                         filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
             }
 
 
@@ -1092,9 +1092,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             } else {
                 thumbnail = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
             }
-
-//            Bitmap bitMap =
-
 
             if (thumbnail == null) {
                 thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
