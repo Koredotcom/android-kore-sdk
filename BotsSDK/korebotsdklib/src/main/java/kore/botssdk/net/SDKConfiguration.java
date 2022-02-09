@@ -101,7 +101,7 @@ public class SDKConfiguration {
         public static Boolean IS_PRESENCE_SSL = true;
         public static String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
         public static String Branding_SERVER_URL ="https://bankingassistant-qa-bots.kore.ai/";
-        public static String koreAPIUrl = "https://bots.kore.ai/";
+        public static String koreAPIUrl = "https://qa1-bots.kore.ai/";
     }
 
     public static class Client {
@@ -143,11 +143,17 @@ public class SDKConfiguration {
 
         //Weebhook
         // for webhook based communication use following option
-        public static String webhookURL = "https://bots.kore.ai/chatbot/v2/webhook/st-ea1b128f-7895-581a-8c87-bbfe3b9f1ff1";
+        public static String webhookURL = "https://qa1-bots.kore.ai/chatbot/v2/webhook/st-ea1b128f-7895-581a-8c87-bbfe3b9f1ff1";
         public static int apiVersion = 2;
         //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b',
         //webhookURL:'https://qa-bots.kore.ai/chatbot/hooks/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
         //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
+    }
+
+    public static class SSLConfig
+    {
+        public static String sslCertificatePath = "kore-qa1.cer";
+        public static boolean isSSLEnable = false;
     }
 
     public static class BubbleColors {

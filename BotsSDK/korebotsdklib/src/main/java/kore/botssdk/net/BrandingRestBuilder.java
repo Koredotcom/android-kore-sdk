@@ -1,5 +1,7 @@
 package kore.botssdk.net;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -13,6 +15,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
+import kore.botssdk.ssl.SSLHelper;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -24,6 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BrandingRestBuilder {
 
     private static RestAPI restAPI;
+    private static Context mContext;
 
     private BrandingRestBuilder(){}
 
@@ -41,6 +45,12 @@ public class BrandingRestBuilder {
         return restAPI;
     }
 
+    public static void setContext(Context context)
+    {
+        mContext = context;
+    }
+
+
     private static OkHttpClient getClient(){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -48,15 +58,29 @@ public class BrandingRestBuilder {
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);
 
-        //        client.interceptors().add(KoreRequestInterceptor.getInstance(mContext));
-        return new OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .addInterceptor(interceptor)
-                .dispatcher(dispatcher)
-                //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-                //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-                .build();
+        if(SDKConfiguration.SSLConfig.isSSLEnable)
+        {
+            return new OkHttpClient.Builder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(interceptor)
+                    .dispatcher(dispatcher)
+                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.Branding_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
+                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+                    .build();
+        }
+        else
+        {
+            return new OkHttpClient.Builder()
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .addInterceptor(interceptor)
+                    .dispatcher(dispatcher)
+                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+                    .build();
+        }
     }
 
     private static GsonConverterFactory createConverter() {

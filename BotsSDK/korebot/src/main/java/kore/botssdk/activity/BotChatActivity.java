@@ -89,6 +89,7 @@ import kore.botssdk.models.WebHookRequestModel;
 import kore.botssdk.models.WebHookResponseDataModel;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.BrandingRestBuilder;
+import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
@@ -270,6 +271,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ivChaseBackground = (ImageView) findViewById(R.id.ivChaseBackground);
         ivChaseLogo = (ImageView) findViewById(R.id.ivChaseLogo);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        RestBuilder.setContext(BotChatActivity.this);
+        WebHookRestBuilder.setContext(BotChatActivity.this);
+        BrandingRestBuilder.setContext(BotChatActivity.this);
     }
 
     private void updateTitleBar() {
