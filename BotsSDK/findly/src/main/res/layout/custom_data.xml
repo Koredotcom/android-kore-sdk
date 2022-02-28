@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    android:background="@drawable/auto_suggestion_bg"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edtCustomData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/auto_suggestion_bg"
+        android:gravity="top"
+        android:hint="enter json"
+        android:padding="@dimen/dimen_10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:background="#f6f7f9"
+        android:padding="@dimen/dimen_10dp">
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:id="@+id/tvClear"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_right_rounded_rectangle"
+            android:gravity="center"
+            android:padding="@dimen/dimen_5dp"
+            android:text="@string/clear" />
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:id="@+id/tvOk"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20_dp"
+            android:background="@drawable/meeting_button_background"
+            android:gravity="center"
+            android:padding="@dimen/dimen_5dp"
+            android:text="@string/ok"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

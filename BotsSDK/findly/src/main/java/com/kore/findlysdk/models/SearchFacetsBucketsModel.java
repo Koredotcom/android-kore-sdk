@@ -5,6 +5,7 @@ public class SearchFacetsBucketsModel
     private String key;
     private int doc_count;
     private String fieldName;
+    private String name;
     private boolean isChecked = false;
 
     public int getDoc_count() {
@@ -38,5 +39,13 @@ public class SearchFacetsBucketsModel
     public boolean getChecked()
     {
         return isChecked;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

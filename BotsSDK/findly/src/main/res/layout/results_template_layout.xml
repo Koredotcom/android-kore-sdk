@@ -24,16 +24,16 @@
         <LinearLayout
             android:id="@+id/llAllresults"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" />
 
         <com.kore.findlysdk.view.CustomTextView
             android:id="@+id/tvSeeAllResults"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_below="@id/llAllresults"
             android:layout_marginTop="@dimen/dimen_12dp"
-            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginLeft="@dimen/dimen_10dp"
             android:text="@string/see_all_results"
             android:textColor="?attr/colorPrimary"
             android:textSize="@dimen/text_size_sub_header"

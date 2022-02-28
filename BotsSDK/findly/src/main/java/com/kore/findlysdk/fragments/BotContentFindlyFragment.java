@@ -143,9 +143,6 @@ public class BotContentFindlyFragment extends Fragment implements BotContentFrag
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
-//        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
-        // botsBubblesListView.setOnScrollListener(onScrollListener);
-//        quickReplyView = new QuickReplyView(getContext());
         quickReplyFindlyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyFindlyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
     }

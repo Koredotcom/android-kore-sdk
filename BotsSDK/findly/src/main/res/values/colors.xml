@@ -19,7 +19,8 @@
     <color name="txtFontlogin">#161928</color>
     <color name="btnFontlogin">#5199c6</color>
     <color name="searchassist_widget_border">#E4E5E7</color>
-
+    <color name="colorUnselected">#F4F4F4</color>
+    <color name="readReceiptGrey">#c0cfd4</color>
 
     <!--<color name="bgBlueSignup">#2f91e5</color>-->
     <color name="bgBlueSignupAlpha">#503942f6</color>

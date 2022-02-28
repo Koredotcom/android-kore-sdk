@@ -66,6 +66,7 @@ public class PayloadInner {
     private ResultsViewAppearance web;
     private ResultsViewAppearance file;
     private ResultsViewAppearance object;
+    private String requestId;
 
     public void setTemplate(SearchTemplateModel template) {
         this.template = template;
@@ -73,6 +74,14 @@ public class PayloadInner {
 
     public SearchTemplateModel getTemplate() {
         return template;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getRequestId() {
+        return requestId;
     }
 
     public boolean isIs_end() {

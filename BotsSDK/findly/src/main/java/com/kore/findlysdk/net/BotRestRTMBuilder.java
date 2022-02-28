@@ -20,20 +20,16 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Jampana Sudheer on 18-09-2020.
- */
-
-public class BotRestBuilder {
+public class BotRestRTMBuilder {
 
     private static BotRestAPI botRestAPI;
 
-    private BotRestBuilder(){}
+    private BotRestRTMBuilder(){}
 
-    public static BotRestAPI getBotJWTRestAPI(){
+    public static BotRestAPI getBotRestService(){
         if(botRestAPI == null) {
             botRestAPI = new Retrofit.Builder()
-                    .baseUrl(SDKConfiguration.Server.KORE_BOT_SERVER_URL)
+                    .baseUrl(SDKConfiguration.Server.BOT_SERVER_URL)
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(getClient())
@@ -41,31 +37,6 @@ public class BotRestBuilder {
         }
         return botRestAPI;
     }
-
-    public static BotRestAPI getRestAPI(){
-        if(botRestAPI == null) {
-            botRestAPI = new Retrofit.Builder()
-                    .baseUrl(SDKConfiguration.Server.KORE_BOT_SERVER_URL)
-                    .addConverterFactory(new NullOnEmptyConverterFactory())
-                    .addConverterFactory(createConverter())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(getClient())
-                    .build().create(BotRestAPI.class);
-        }
-        return botRestAPI;
-    }
-
-//    public static BotRestAPI getBotRestService(){
-//        if(botRestAPI == null) {
-//            botRestAPI = new Retrofit.Builder()
-//                    .baseUrl(SDKConfiguration.Server.BOT_SERVER_URL)
-//                    .addConverterFactory(createConverter())
-//                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-//                    .client(getClient())
-//                    .build().create(BotRestAPI.class);
-//        }
-//        return botRestAPI;
-//    }
 
     private static OkHttpClient getClient(){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -81,7 +52,7 @@ public class BotRestBuilder {
 
     private static GsonConverterFactory createConverter() {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(boolean.class, new BooleanDeserializer());
+        gsonBuilder.registerTypeAdapter(boolean.class, new BotRestBuilder.BooleanDeserializer());
         gsonBuilder.excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT);
         final Gson gson = gsonBuilder.create();
         return GsonConverterFactory.create(gson);

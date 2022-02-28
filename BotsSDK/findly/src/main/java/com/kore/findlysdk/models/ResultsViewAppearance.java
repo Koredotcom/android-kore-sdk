@@ -4,12 +4,25 @@ import java.io.Serializable;
 
 public class ResultsViewAppearance implements Serializable
 {
-    private String type;
+    private String op;
+    private String fieldValue;
     private String templateId;
     private ResultsViewTemplate template;
 
-    public void setType(String type) {
-        this.type = type;
+    public void setFieldValue(String fieldValue) {
+        this.fieldValue = fieldValue;
+    }
+
+    public void setOp(String op) {
+        this.op = op;
+    }
+
+    public String getFieldValue() {
+        return fieldValue;
+    }
+
+    public String getOp() {
+        return op;
     }
 
     public void setTemplate(ResultsViewTemplate template) {
@@ -18,10 +31,6 @@ public class ResultsViewAppearance implements Serializable
 
     public void setTemplateId(String templateId) {
         this.templateId = templateId;
-    }
-
-    public String getType() {
-        return type;
     }
 
     public ResultsViewTemplate getTemplate() {

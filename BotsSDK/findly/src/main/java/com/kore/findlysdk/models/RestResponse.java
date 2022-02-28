@@ -1,8 +1,12 @@
 package com.kore.findlysdk.models;
 
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -151,6 +155,10 @@ public class RestResponse {
         private Meta meta;
         private int id = clientMessageId;
         private String client = "Android";
+        private LinkedBotNLModel linkedBotNLMeta;
+
+        @SerializedName("interface")
+        private String myInterface;
 
         public void setMessage(BotMessage message) {
             this.message = message;
@@ -200,6 +208,22 @@ public class RestResponse {
 
         public BotInfoModel getBotInfo() {
             return botInfo;
+        }
+
+        public void setLinkedBotNLMeta(LinkedBotNLModel linkedBotNLMeta) {
+            this.linkedBotNLMeta = linkedBotNLMeta;
+        }
+
+        public LinkedBotNLModel getLinkedBotNLMeta() {
+            return linkedBotNLMeta;
+        }
+
+        public void setMyInterface(String myInterface) {
+            this.myInterface = myInterface;
+        }
+
+        public String getMyInterface() {
+            return myInterface;
         }
     }
 

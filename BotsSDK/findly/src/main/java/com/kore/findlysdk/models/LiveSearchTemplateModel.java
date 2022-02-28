@@ -7,14 +7,14 @@ public class LiveSearchTemplateModel implements Serializable
 {
     private String originalQuery;
     private String cleanQuery;
-    private LiveSearchFacetsModel facets;
+    private ArrayList<LiveSearchFacetsModel> facets;
     private LiveSearchResultsOuterModel results;
 
     public void setCleanQuery(String cleanQuery) {
         this.cleanQuery = cleanQuery;
     }
 
-    public void setFacets(LiveSearchFacetsModel facets) {
+    public void setFacets(ArrayList<LiveSearchFacetsModel> facets) {
         this.facets = facets;
     }
 
@@ -30,7 +30,7 @@ public class LiveSearchTemplateModel implements Serializable
         return results;
     }
 
-    public LiveSearchFacetsModel getFacets() {
+    public ArrayList<LiveSearchFacetsModel> getFacets() {
         return facets;
     }
 

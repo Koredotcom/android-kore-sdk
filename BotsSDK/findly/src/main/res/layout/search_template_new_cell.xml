@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rlTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical">
@@ -13,8 +14,9 @@
             android:id="@+id/rlArrows"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dimen_5dp"
-            android:layout_centerVertical="true">
+            android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/ibResults"
@@ -28,25 +30,49 @@
                 android:id="@+id/ibResults2"
                 android:layout_width="@dimen/dimen_15dp"
                 android:layout_height="@dimen/dimen_20dp"
-                android:layout_margin="@dimen/dimen_5dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginLeft="@dimen/dimen_5dp"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:layout_marginEnd="@dimen/dimen_5dp"
+                android:layout_marginRight="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_5dp"
                 android:background="@drawable/ic_drop_down_arrow"
                 android:visibility="visible" />
 
         </RelativeLayout>
 
-
-        <com.kore.findlysdk.view.CustomTextViewBold
-            android:id="@+id/tvPageTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_7dp"
-            android:layout_marginTop="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_10dp"
-            android:layout_toRightOf="@+id/rlArrows"
-            android:text="FAQs"
-            android:textAllCaps="true"
-            android:textSize="@dimen/text_size_sub_header"
-            android:visibility="visible" />
+            android:layout_toRightOf="@+id/rlArrows">
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:id="@+id/tvPageTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:layout_weight="1"
+                android:text="FAQs"
+                android:textAllCaps="true"
+                android:textSize="@dimen/text_size_sub_header"
+                android:visibility="visible" />
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:id="@+id/tvShowAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_7dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:text="Show All Faqs"
+                android:textSize="@dimen/text_size_normal"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
 
     </RelativeLayout>
 
@@ -54,17 +80,30 @@
         android:id="@+id/alResults"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:layout_margin="@dimen/dimen_5dp"
+        android:background="@drawable/classic_bg"
+        android:padding="@dimen/dimen_15dp"
+        android:visibility="visible" />
 
     <com.kore.findlysdk.view.HeightAdjustableViewPager
         android:id="@+id/carouselViewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/carousel_view_padding_bottom"
         android:paddingLeft="@dimen/dimen_10dp"
-        android:paddingRight="20dp"
         android:paddingTop="@dimen/carousel_view_padding_top"
+        android:paddingRight="20dp"
+        android:paddingBottom="@dimen/carousel_view_padding_bottom"
         android:visibility="gone" />
 
+    <com.kore.findlysdk.view.AutoExpandListView
+        android:id="@+id/lvResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:background="@drawable/classic_bg"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="@dimen/dimen_1dp"
+        android:padding="@dimen/dimen_10dp"
+        android:visibility="gone" />
 
 </LinearLayout>

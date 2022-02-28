@@ -6,13 +6,21 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kore.findlysdk.models.BotInfoModel;
 import com.kore.findlysdk.models.BotSocketOptions;
+import com.kore.findlysdk.models.LinkedBotNLModel;
 import com.kore.findlysdk.models.RestResponse;
+import com.kore.findlysdk.net.SDKConfiguration;
+import com.kore.findlysdk.utils.BundleConstants;
+import com.kore.findlysdk.utils.StringUtils;
 import com.kore.findlysdk.utils.Utils;
 import com.kore.findlysdk.websocket.SocketConnectionListener;
 import com.kore.findlysdk.websocket.SocketWrapper;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -30,6 +38,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 public class BotClient {
     private Context mContext;
+    private String custData, linkedBotNLMeta;
+    private SharedPreferences sharedPreferences;
 
     public RestResponse.BotCustomData getCustomData() {
         return customData;
@@ -59,11 +69,12 @@ public class BotClient {
     public BotClient(Context mContext) {
         this.customData = new RestResponse.BotCustomData();
         this.mContext = mContext.getApplicationContext();
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
     public BotClient(Context mContext, RestResponse.BotCustomData customData){
         this.mContext = mContext;
         this.customData = customData;
-
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
 
@@ -149,11 +160,53 @@ public class BotClient {
 
         if (msg != null && !msg.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+
+            if(sharedPreferences != null)
+            {
+                custData = sharedPreferences.getString(BundleConstants.CUSTOM_DATA, "");
+                if(!StringUtils.isNullOrEmpty(custData))
+                {
+                    try
+                    {
+                        JSONObject jsonObject = new JSONObject(custData);
+                        HashMap<String, Object> mapObj = new Gson().fromJson(jsonObject.toString(), HashMap.class);
+
+                        botInfoModel = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, mapObj);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    botInfoModel = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id,customData);
+                }
+
+                linkedBotNLMeta = sharedPreferences.getString(BundleConstants.LINKED_BOT_NL_META, "");
+                if(!StringUtils.isNullOrEmpty(linkedBotNLMeta))
+                {
+                    try
+                    {
+                        JSONObject jsonObject = new JSONObject(linkedBotNLMeta);
+                        LinkedBotNLModel linkedBotNLModel = new Gson().fromJson(jsonObject.toString(), LinkedBotNLModel.class);
+                        botPayLoad.setLinkedBotNLMeta(linkedBotNLModel);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(BundleConstants.LINKED_BOT_NL_META, "");
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
+            botPayLoad.setMyInterface("conversationalSearch");
             botPayLoad.setBotInfo(botInfoModel);
 
             RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
@@ -184,6 +237,49 @@ public class BotClient {
         if (payLoad != null && !payLoad.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
+
+            if(sharedPreferences != null)
+            {
+                custData = sharedPreferences.getString(BundleConstants.CUSTOM_DATA, "");
+                if(!StringUtils.isNullOrEmpty(custData))
+                {
+                    try
+                    {
+                        JSONObject jsonObject = new JSONObject(custData);
+                        HashMap<String, Object> mapObj = new Gson().fromJson(jsonObject.toString(), HashMap.class);
+
+                        botInfoModel = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, mapObj);
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    botInfoModel = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id,customData);
+                }
+
+                linkedBotNLMeta = sharedPreferences.getString(BundleConstants.LINKED_BOT_NL_META, "");
+                if(!StringUtils.isNullOrEmpty(linkedBotNLMeta))
+                {
+                    try
+                    {
+                        JSONObject jsonObject = new JSONObject(linkedBotNLMeta);
+                        LinkedBotNLModel linkedBotNLModel = new Gson().fromJson(jsonObject.toString(), LinkedBotNLModel.class);
+                        botPayLoad.setLinkedBotNLMeta(linkedBotNLModel);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(BundleConstants.LINKED_BOT_NL_META, "");
+                        editor.commit();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botMessage.setParams(Utils.jsonToMap(payLoad));

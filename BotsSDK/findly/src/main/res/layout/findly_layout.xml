@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/llComposeBarNew"
         android:layout_weight="1"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!--<Bottom Sheet Layout starts>-->
         <!--        The idea is try the expanded lay out/ set some padding on expanded-->
@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/findly_panel_bg"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_behavior="com.kore.findlysdk.widgetviews.CustomBottomSheetBehavior">
 
             <LinearLayout
@@ -196,30 +196,6 @@
             android:paddingTop="@dimen/dimen_5dp">
 
             <LinearLayout
-                android:id="@+id/llPlrSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <com.kore.findlysdk.view.CustomTextViewBold
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_10dp"
-                    android:text="@string/popular_search"
-                    android:textSize="@dimen/text_size_sub_header"
-                    android:textStyle="bold" />
-
-                <com.kore.findlysdk.view.AutoExpandListView
-                    android:id="@+id/lvPopularSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@color/white"
-                    android:dividerHeight="@dimen/dimen_0" />
-
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/llRecentlyAsked"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -281,7 +257,7 @@
                     android:textColor="?attr/colorPrimary"
                     android:textSize="@dimen/text_size_sub_header"
                     android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -469,28 +445,71 @@
     <LinearLayout
         android:id="@+id/llWelcomeMessage"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/llComposeBarNew"
         android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
-        android:background="@drawable/cvs_welcome_bg"
-        android:gravity="center_vertical"
+        android:orientation="vertical"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/ivWelcomeImage"
-            android:layout_width="@dimen/dimen_20dp"
-            android:layout_height="@dimen/dimen_20dp" />
-
-        <com.kore.findlysdk.view.CustomTextView
-            android:id="@+id/tvWelcomeMsg"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_10dp"
-            android:text="@string/welcomehello"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_normal" />
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivWelcomeImage"
+                android:layout_width="@dimen/dimen_20dp"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_gravity="center_vertical" />
+
+            <com.kore.findlysdk.view.CustomTextView
+                android:id="@+id/tvWelcomeMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:background="@drawable/popular_search_bg"
+                android:padding="@dimen/dimen_10dp"
+                android:text="@string/welcomehello"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_normal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llPlrSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivWelcomeImageNew"
+                android:layout_width="@dimen/dimen_20dp"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:visibility="invisible" />
+
+            <com.kore.findlysdk.view.CustomTextViewBold
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:text="@string/popular_search"
+                android:textSize="@dimen/text_size_sub_header"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/lvPopularSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:divider="@color/white"
+                android:dividerHeight="@dimen/dimen_0" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -572,6 +591,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:background="@null"
+                    android:cursorVisible="false"
                     android:gravity="center_vertical|start"
                     android:hint="type here to search"
                     android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
@@ -640,35 +660,4 @@
             android:visibility="gone" />
 
     </LinearLayout>
-
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/audio_coor_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/view_layout_audio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/panel_bg_round_rect"
-            android:visibility="gone"
-            app:behavior_hideable="true"
-            app:behavior_peekHeight="275dp"
-            app:layout_behavior="com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior"
-            tools:context=".activities.KoraMainActivity">
-
-            <include
-                android:id="@+id/audio_wave_layout"
-                layout="@layout/audio_wave_panel"
-                android:layout_width="match_parent"
-                android:layout_height="275dp" />
-
-        </LinearLayout>-->
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 </RelativeLayout>

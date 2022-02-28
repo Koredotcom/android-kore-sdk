@@ -1,11 +1,15 @@
 package com.kore.findlysdk.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -18,14 +22,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,23 +39,28 @@ import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
+import com.kore.findlysdk.R;
 import com.kore.findlysdk.activity.FullResultsActivity;
 import com.kore.findlysdk.activity.GenericWebViewActivity;
-import com.kore.findlysdk.activity.MainActivity;
-import com.kore.findlysdk.adapters.ChatAdapterOld;
-import com.kore.findlysdk.adapters.ChatAutoListviewAdapter;
+import com.kore.findlysdk.adapters.AutoSuggestionsAdapter;
+import com.kore.findlysdk.adapters.LiveSearchAdaper;
 import com.kore.findlysdk.adapters.LiveSearchCyclerAdapter;
+import com.kore.findlysdk.adapters.LiveSearchDynamicAdapter;
+import com.kore.findlysdk.adapters.LiveSearchListAdapter;
 import com.kore.findlysdk.adapters.PopularSearchAdapter;
 import com.kore.findlysdk.adapters.RecentlySearchAdapter;
+import com.kore.findlysdk.adapters.SearchAssistCarouselAdapter;
+import com.kore.findlysdk.adapters.SearchResultsCarouselAdapter;
 import com.kore.findlysdk.events.KoreEventCenter;
 import com.kore.findlysdk.events.SocketDataTransferModel;
 import com.kore.findlysdk.listners.BaseSocketConnectionManager;
@@ -59,38 +69,54 @@ import com.kore.findlysdk.listners.BotSocketConnectionManager;
 import com.kore.findlysdk.listners.ComposeFooterInterface;
 import com.kore.findlysdk.listners.InvokeGenericWebViewInterface;
 import com.kore.findlysdk.listners.SocketChatListener;
+import com.kore.findlysdk.models.AutoSuggestionsModel;
 import com.kore.findlysdk.models.BotButtonModel;
-import com.kore.findlysdk.models.BotInfoModel;
 import com.kore.findlysdk.models.BotRequest;
 import com.kore.findlysdk.models.BotResponse;
 import com.kore.findlysdk.models.BotResponseMessage;
 import com.kore.findlysdk.models.CalEventsTemplateModel;
 import com.kore.findlysdk.models.ComponentModel;
 import com.kore.findlysdk.models.FormActionTemplate;
+import com.kore.findlysdk.models.InteractionsConfigModel;
 import com.kore.findlysdk.models.KnowledgeCollectionModel;
 import com.kore.findlysdk.models.LiveSearchModel;
+import com.kore.findlysdk.models.LiveSearchResultsDataModel;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
 import com.kore.findlysdk.models.LiveSearchResultsOuterModel;
 import com.kore.findlysdk.models.PayloadInner;
 import com.kore.findlysdk.models.PayloadOuter;
 import com.kore.findlysdk.models.PopularSearchModel;
-import com.kore.findlysdk.R;
+import com.kore.findlysdk.models.PopularSearchResultsModel;
+import com.kore.findlysdk.models.RecentSearchesModel;
 import com.kore.findlysdk.models.RestResponse;
+import com.kore.findlysdk.models.ResultsViewAppearance;
+import com.kore.findlysdk.models.ResultsViewMapping;
+import com.kore.findlysdk.models.ResultsViewModel;
+import com.kore.findlysdk.models.ResultsViewSetting;
+import com.kore.findlysdk.models.ResultsViewTemplate;
+import com.kore.findlysdk.models.ResultsViewlayout;
+import com.kore.findlysdk.models.SearchInterfaceModel;
 import com.kore.findlysdk.models.SearchModel;
+import com.kore.findlysdk.models.TabFacetsModel;
+import com.kore.findlysdk.models.WidgetConfigModel;
 import com.kore.findlysdk.net.BotRestBuilder;
 import com.kore.findlysdk.net.SDKConfiguration;
 import com.kore.findlysdk.utils.AppControl;
 import com.kore.findlysdk.utils.BundleConstants;
 import com.kore.findlysdk.utils.DateUtils;
 import com.kore.findlysdk.utils.StringUtils;
+import com.kore.findlysdk.view.AgentTransferTemplateView;
 import com.kore.findlysdk.view.AutoExpandListView;
+import com.kore.findlysdk.view.HeightAdjustableViewPager;
+import com.kore.findlysdk.view.RoundedCornersTransform;
 import com.kore.findlysdk.websocket.SocketWrapper;
 import com.kore.findlysdk.widgetviews.CustomBottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,13 +126,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebViewInterface, ComposeFooterInterface, View.OnTouchListener
 {
     private View view;
     private LinearLayout perssiatentPanel, llComposeBar, panel_root, llPlrSearch, llRecentlyAsked, llLogin;
     private RelativeLayout llLiveSearch;
-    private LinearLayout llPopularSearch;
+    private LinearLayout llPopularSearch, llAllresults, llAutoSuggestions;
     private ImageView img_skill, ivChatIcon;
     private TextView closeBtnPanel, editButton, tvNoResult,tvSeeAllResults;
     private TextView  txtTitle, sendTv;
@@ -119,18 +146,17 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     private ArrayList<LiveSearchResultsModel> arrTempResults;
     private PopularSearchAdapter popularSearchAdapter;
     private RecentlySearchAdapter recentlySearchAdapter;
-    private AutoExpandListView lvPopularSearch, lvRecentlyAsked;
+    private AutoExpandListView lvRecentlyAsked;
     private RecyclerView lvLiveSearch;
     private EditText edtTxtMessage;
     private LiveSearchModel liveSearchModel;
-    private SearchModel searchModel;
-    private ChatAdapterOld chatAdapterOld;
-    private ChatAutoListviewAdapter chatAutoListviewAdapter;
+    private ResultsViewModel resultsViewModel;
+    private SearchInterfaceModel searchInterfaceModel;
+    private AutoSuggestionsModel autoSuggestionsModel;
+    private TabFacetsModel tabFacetsModel;
     ArrayList<SearchModel> arrLiveSearchModels = new ArrayList<>();
     private WebView wvLoadUrl;
-    private ArrayList<PopularSearchModel> arrPopularSearchModels;
-    private String chatIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAbCAYAAABiFp9rAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAW0SURBVHgBrVY7bxxVFD73MbOzu36skzgRDVoLISUFitPQQkoqNl3KICQKGuAXJP4FpESisJEQosNUlCy/gICQCAXyFkgkIDvr7HrncV9858zaROSBkJjR1c7MnTnf+b7znXtX0b8cBx8+GmgXb0VqrpJS22RoYIymGOIkEU1Dnb42ROOtT16avCiOet7Ezzd/HxpFu42fvxlcRREnpUhJedLaku11qeivkjEZ+QVmXdqLgXaufPlswGcC3R89+MAFd7epKgqxIc9A/Bs9qZQoUcBQZHRO1ha0fmmTut0uuYWjPLN3tr7Y3Hkh0MHoYBBpdfdkVo6cc9RglG5GIdSQqkZ4MGJmpHEqKGlJKw3Agnpgd+Glc6SjBnPa18G8s7W/MT2NbZ8EMn6wW5XlqJo1VNYlNdFRHUqw8eRTQyHFNjsFkAQwpGl0B79Iqn5MzczRhQvnqNfrjpROA7x6/SlGv7z+8Ha2Zu8cHR3TvCmpChXVkKuJbX1YQmaTkqIkwikAWMoUAylGx3VOPdOh86sDWl3pU57buy9/s/HRGdD3lw+GxVr3IKRAhydTKhG8Dg1VqUbgBDYQDYNP3AoQCRTAYEOrNUDs8l7RuXydNjrrtLayQtqa61vjjbFIZ6zdtdHQ4WIKJg6jJpc82LTBA+L6xBYgAEaplBdTtMw6KaOeSlTAHE1yNId5MpyFKqhj9W18NlbMJs86Bx5h/qyPqEQtHrNsAHIylozYawLCVgCgZA8xMZ/B7myPFZ2JYdZ1ly5ma3TerlMBKXOdX7PaZCOmP/czSBXomBmBQRMTsiP50KVWrIDgHmD61ElsCrgOpm8lZbMkfk4Si991UAXtPbIdnb/dgMUMDpvi4RwvLiLWAbzEUnHx+VW/dJzHPcvn5Wlr88IouXIxSu005h8j1iUkwiqkFN6wVunhoWeQREcYFV4QIPySvAg20N/jmV5+6ERC5tdWqQqoE+asMq2VIxfV0TBPhByY5NAih+EfCPooMAuFGhmqkO8iJXGaGDO1NYkxSmCWkpRuq4Rrh0Qa9FpHG5FVpTYhLgFDd0kNrcPDYwSYYaLERzw5B3BFrd7sNa5Da2sGYatzVyQwlIfiymbpSGYVpTYksbipV7meRtnpSUyDCh/XCBQQFK+L4+Kpt1KShgtLi6fTrCX/tOyoJPVywp5kaSo5CdwMjJraQptJrrPt2pcinZcAFuIZsTSJoxK13QP5lsFp2bIkdeElqTUPioOaGupilZhhmbL4di3Gexbl/G5gettJleI0z82ILmdmtWisBCBRuyIwHCun0pIJKyDXWlLQkmCO5x0wklQ4zg+68rSfIYMCKzB2GsjX9gUho4CPGMxh3glLK2zF7qq9r5OW7yQ5BlEZ9qsCbuvA4knkc1Ht6ys/rY7XTGesEZhfCFg6OChnFakjQaRRkXkAIEvqBRR9w614ep94Hous7sMQBVhndAiToSyTt+5vjqXJN222s6KZbg4mWEbOBkvITDMxCCeRZJlBYIA23ENSFdQOSeZ6RQbHmQHEyeaoZRMUoNfudceX8/7YChAkw2iWMjmuFT5okDlL6NFnYSklJxORTAKIxvqmVA/PDS0Qs+RtQxd7792/uHcGxMelrH/jWmdj0jfdVj7FIJmwaXDNmZ/ALHOYYQHdK7aygPUwupCqkPouMF8DLFe9SRHynac2Pj6+ulwOHxJ9+2MzH07CHEVsELSW36XRKZ7uRKrdfTTYWcWbAvyG6x5M0Edd8pSu703+/qPy1J+TOwDTSX38m29GD7CNzwUI2wVOn/xZeypZgqjd+hQzyGAfTX1lxvDajf3J1vTJuM/9u/X+q/Nbx0HdnpIfltyMGA3AgmyG0k2yEvAKwADndT65qMPOp7+2Nfnn8Vyg0+PdV05GD2IawRBXsZFvu+WqAP+BRZp0yYxXYvrs88nqmP7P49awHN7EoP94/AUUr0KuNdomKAAAAABJRU5ErkJggg==";
-    private String welconicon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAJmSURBVHgBtVJLS5RhFH7O+10cZ2jmM5sgUfg0BAkq3VqhRrhx0biQ2ql7w7atnF2rsD8Q02XZQluGhhVBdIHGS4Q7JSOi0hk/57t/7+l1umCouzqr9+Wc5znP83CA/10rKyvmzcfexcFbbttBfdr78V7adiqFs+r5DHpjCazfm88sLTx4sd2ba9TFBaTnRvLt6VrgT2uJX2wcqqyLvQSGoXWzSM/CtCYhMjbM/MyluK/QdST7+sqZ9POeEVCU0Qp6Sh9L0FDYxYi925UeizTzNoy2IvT8GkR2DfqJuzdOD02c7yKnkyjQTbqspXTWGrTuvwh2twsjVQI0C5BPYeQLysYayNwCZYu8OjhV96wJW+gCrInufRnw8qkijJYpkFGGblnQsrYiK3Pw2SYEOSTeIyTfCzIMOHCiarr/Y9MfAn57chSGfh3G0UXox0chjAq0TC5xqyRMDYh3QOyoQY9l4FNY3Wa4sr1ugZlFJJPFenAk+iCrs+DISpwNEoYaSDzI0FV61T49T2Q0MyeC/DDsEfMfuPn+E6dpYvXNF8T+ACQssCxId2NLaDFIOpDepiKpMWSkWgTJJslEpcXIiaXlDXduHeeqntn68Nj71ST8Oo54Uw37yl9NAatKlKfk7yj8jhLmIXbVW+WQEK3XM7h6p9bS20HiWn/jJyJiftc5xoJKP0/NrEvn0EfkBsqvjsjxkYR+2Rre7CEcUtGrjqIimyLzKJga1PYAcVW5dF2WsVxUEgeahiuVQwl2y11onSQ2pmHmiJXn2PmGJHLL+AXedwcH1daMZZNmlCDJrt8Ex+O/wf+kfgAhFxenJ2BlUQAAAABJRU5ErkJggg==";
+    private PopularSearchResultsModel popularSearchResultsModel;
     private FragmentTransaction fragmentTransaction;
     private BotContentFindlyFragment botContentFragment;
     private BotContentFragmentUpdate botContentFragmentUpdate;
@@ -139,7 +165,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     private ArrayList<LiveSearchResultsModel> arrTempAllResults;
     private ArrayList<String> arrRecentSearches;
     private EditText edtPassword, edtUserId;
-    private TextView tvUserLogin,tvErrorLogin;
+    private TextView tvUserLogin,tvErrorLogin, tvWelcomeMsg, sendTvOutside;
     private LinearLayout llWelcomeMessage;
     private ImageView ivWelcomeImage;
     private boolean isEditTouched = false;
@@ -148,29 +174,47 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     private SharedPreferences sharedPreferences;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
+    private AutoExpandListView lvAutoSuggestions;
+    private RoundedCornersTransform roundedCornersTransform;
+    private ImageView rec_audio_img;
+    private RecentSearchesModel recentSearchesModel;
+    private ResultsViewSetting liveSearchSetting;
+    private ResultsViewSetting searchSetting;
+    private ResultsViewSetting fullSearchSetting;
+    private ResultsViewAppearance faq;
+    private ResultsViewAppearance page;
+    private ResultsViewAppearance document;
+    private ResultsViewAppearance task;
+    private ResultsViewAppearance data;
+    private ResultsViewAppearance default_group;
+    private float dp1;
+    private String speakerIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAETSURBVHgBxVPbSsNAEN2d3XRVSvqQBwNNQwmpgn3xC/x7/0ETEpG2oGAeTKVJ3HXH3Qch1KQiKfTAsJc5c/YyM4QMBO1zhGEYAYwWdg6gn/I8T7p4rGtzPr/xOWcLKat7rdUzIXw5Hl+W2+1btc+FLgGA2kWUa4PKGmO4FuLT6+SSgTi9AG8voii6OkT+8bczctwnNA3stGYXTTMqzOVmQRCcW1OKzBDx3VBcANj1Cvj+5BWAepR+GBKsOD+7s0apk0spSzO6dV0X7ZhflTidxoEQcG2q79Gc/mL30jSdMCZuHYcmWZatDgpYxHHsSkmWjFFPa5SIpFSKJ5vNQ0H+A/vrf2WG9gWaNtkL/Er6GmoQvgHqBWZkE0i8BAAAAABJRU5ErkJggg==";
+    private Context context;
+    private RecyclerView lvPopularSearch;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private ResultsViewTemplate defaultTemplate;
+    private LinearLayoutManager linearLayoutManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.findly_layout, container, false);
         screenHeight = (int) AppControl.getInstance(getContext()).getDimensionUtil().screenHeight;
-
+        dp1 = (int) AppControl.getInstance(getActivity()).getDimensionUtil().density;
         perssiatentPanel = view.findViewById(R.id.persistentPanel);
         img_skill = view.findViewById(R.id.img_skill);
         txtTitle = view.findViewById(R.id.txtTitle);
         editButton = (TextView)  view.findViewById(R.id.editButton);
         edtTxtMessage = (EditText) view.findViewById(R.id.edtTxtMessage);
-        editButton.setTypeface(getTypeFaceObj(getActivity()));
         cordinate_layout = view.findViewById(R.id.cordinate_layout);
         recyclerView_panel =  view.findViewById(R.id.recyclerView_panel);
         closeBtnPanel = (TextView)  view.findViewById(R.id.closeBtnPanel);
         closeBtnPanel.setTypeface(getTypeFaceObj(getActivity()));
         panelDrag =  view.findViewById(R.id.panel_drag);
-        lvPopularSearch = (AutoExpandListView) view.findViewById(R.id.lvPopularSearch);
+        lvPopularSearch = (RecyclerView) view.findViewById(R.id.lvPopularSearch);
         lvRecentlyAsked = (AutoExpandListView) view.findViewById(R.id.lvRecentlyAsked);
         lvLiveSearch = (RecyclerView) view.findViewById(R.id.lvLiveSearch);
         llRecentlyAsked = (LinearLayout) view.findViewById(R.id.llRecentlyAsked);
-//        recyclerView_panel.setLayoutManager(new LinearLayoutManager(this));
         mBottomSheetBehavior = CustomBottomSheetBehavior.from(perssiatentPanel);
         llComposeBar =  (LinearLayout) view.findViewById(R.id.llComposeBar);
         llPopularSearch = (LinearLayout) view.findViewById(R.id.llPopularSearch);
@@ -190,6 +234,18 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         llWelcomeMessage = (LinearLayout) view.findViewById(R.id.llWelcomeMessage);
         ivWelcomeImage = (ImageView) view.findViewById(R.id.ivWelcomeImage);
 
+        llAllresults = (LinearLayout) view.findViewById(R.id.llAllresults);
+        tvWelcomeMsg = (TextView) view.findViewById(R.id.tvWelcomeMsg);
+        llAutoSuggestions = (LinearLayout) view.findViewById(R.id.llAutoSuggestions);
+        lvAutoSuggestions = (AutoExpandListView) view.findViewById(R.id.lvAutoSuggestions);
+        roundedCornersTransform = new RoundedCornersTransform();
+        rec_audio_img = (ImageView) view.findViewById(R.id.rec_audio_img);
+        sendTvOutside = (TextView) view.findViewById(R.id.sendTvOutside);
+
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.HORIZONTAL);
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+
+        lvPopularSearch.setLayoutManager(linearLayoutManager);
         wvLoadUrl.getSettings().setJavaScriptEnabled(true);
 //        wvLoadUrl.loadUrl("https://www.caremark.com/");
 
@@ -199,13 +255,14 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFindlyFragment();
-//        botContentFragment.setArguments(getIntent().getExtras());
+        botContentFragment.setArguments(getActivity().getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
-        lvLiveSearch.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        BotSocketConnectionManager.getInstance().jwtCallWithConfig(getJwtBody(SDKConfiguration.Client.client_id, SDKConfiguration.Client.client_secret, SDKConfiguration.Client.identity, false), false);
+        lvLiveSearch.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
         closeBtnPanel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,24 +278,12 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
         });
 
-        try
-        {
-            chatIcon = chatIcon.substring(chatIcon.indexOf(",") + 1);
-            byte[] decodedString = Base64.decode(chatIcon.getBytes(), Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            ivChatIcon.setImageBitmap(decodedByte);
-        } catch (Exception e) {
-        }
-
-        try
-        {
-            welconicon = welconicon.substring(welconicon.indexOf(",") + 1);
-            byte[] decodedString = Base64.decode(welconicon.getBytes(), Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            ivWelcomeImage.setImageBitmap(decodedByte);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCustomDataDialog(getActivity());
+            }
+        });
 
         mBottomSheetBehavior.setPeekHeight((int) ((AppControl.getInstance(getActivity()).getDimensionUtil().screenHeight)));
         mBottomSheetBehavior.setBottomSheetCallback(new CustomBottomSheetBehavior.BottomSheetCallback() {
@@ -289,8 +334,13 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent)
             {
-                llPopularSearch.setVisibility(View.GONE);
-                edtTxtMessage.clearFocus();
+                if(llAutoSuggestions.getVisibility() == VISIBLE)
+                    llAutoSuggestions.setVisibility(GONE);
+                else
+                {
+                    llPopularSearch.setVisibility(View.GONE);
+                    edtTxtMessage.clearFocus();
+                }
 
 //                SearchModel liveSearchResultsModel = new SearchModel();
 //                liveSearchResultsModel.setLeft(true);
@@ -309,7 +359,16 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                 if(!StringUtils.isNullOrEmpty(s.toString()))
                 {
                     if(!lockLiveSearch)
+                    {
+                        getAutoSuggestions(s.toString());
                         getLiveSearch(s.toString());
+
+                        sendTv.setTextColor(getActivity().getResources().getColor(R.color.white));
+                        sendTvOutside.setTextColor(getActivity().getResources().getColor(R.color.white));
+
+                        ((GradientDrawable) sendTv.getBackground()).setColor(getActivity().getResources().getColor(R.color.primary));
+                        ((GradientDrawable) sendTvOutside.getBackground()).setColor(getActivity().getResources().getColor(R.color.primary));
+                    }
                 }
                 else
                 {
@@ -317,6 +376,21 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                     llRecentlyAsked.setVisibility(View.VISIBLE);
                     llLiveSearch.setVisibility(GONE);
                     tvNoResult.setVisibility(GONE);
+
+                    if(searchInterfaceModel != null && searchInterfaceModel.getWidgetConfig() != null)
+                    {
+                        if(!StringUtils.isNullOrEmpty(searchInterfaceModel.getWidgetConfig().getButtonTextColor()))
+                        {
+                            sendTv.setTextColor(Color.parseColor(searchInterfaceModel.getWidgetConfig().getButtonTextColor()));
+                            sendTvOutside.setTextColor(Color.parseColor(searchInterfaceModel.getWidgetConfig().getButtonTextColor()));
+                        }
+
+                        if(!StringUtils.isNullOrEmpty(searchInterfaceModel.getWidgetConfig().getButtonFillColor()))
+                        {
+                            ((GradientDrawable) sendTv.getBackground()).setColor(Color.parseColor(searchInterfaceModel.getWidgetConfig().getButtonFillColor()));
+                            ((GradientDrawable) sendTvOutside.getBackground()).setColor(Color.parseColor(searchInterfaceModel.getWidgetConfig().getButtonFillColor()));
+                        }
+                    }
                 }
             }
 
@@ -335,7 +409,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
                 if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null)
                 {
-                    Intent intent = new Intent(getActivity(), FullResultsActivity.class);
+                    Intent intent = new Intent(context, FullResultsActivity.class);
                     intent.putExtra("originalQuery", liveSearchModel.getTemplate().getOriginalQuery());
 
                     if(sharedPreferences != null)
@@ -360,11 +434,11 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                     if(edtTxtMessage.getText().toString().equalsIgnoreCase("Pay bill")
                             || edtTxtMessage.getText().toString().equalsIgnoreCase("Show Balance"))
                     {
-                        if(getLogin(getActivity(), BotResponse.USER_LOGIN))
+                        if(getLogin(context, BotResponse.USER_LOGIN))
                         {
                             llPopularSearch.setVisibility(GONE);
                             perssiatentPanel.setVisibility(View.VISIBLE);
-                            saveStringPreferences(edtTxtMessage.getText().toString());
+//                            saveStringPreferences(edtTxtMessage.getText().toString());
 //                    sendMessage(edtTxtMessage.getText().toString());
                             sendMessageText(edtTxtMessage.getText().toString());
                             edtTxtMessage.setText("");
@@ -381,8 +455,8 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                     {
                         llPopularSearch.setVisibility(GONE);
                         perssiatentPanel.setVisibility(View.VISIBLE);
-                        saveStringPreferences(edtTxtMessage.getText().toString());
-//                    sendMessage(edtTxtMessage.getText().toString());
+                        llAutoSuggestions.setVisibility(GONE);
+//                        saveStringPreferences(edtTxtMessage.getText().toString());
                         sendMessageText(edtTxtMessage.getText().toString());
                         edtTxtMessage.setText("");
                     }
@@ -390,37 +464,77 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
         });
 
-//        if(StringUtils.isNullOrEmpty(userId))
-//        {
-//            userId = UUID.randomUUID().toString();
-//        }
-
-        displayMessage(displayMsg);
-        getPopularSearch();
-        getRecentlyAsked();
-        setLogin(getActivity(), BotResponse.USER_LOGIN, false);
-        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getActivity(),null);
-        BotSocketConnectionManager.getInstance().setChatListener(sListener);
-
-        lvPopularSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        sendTvOutside.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
+            public void onClick(View view)
+            {
+                if(!StringUtils.isNullOrEmpty(edtTxtMessage.getText().toString()))
                 {
-                    edtTxtMessage.setText(arrPopularSearchModels.get(i).get_id());
-                    edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
+                    if(edtTxtMessage.getText().toString().equalsIgnoreCase("Y"))
+                    {
+                        lockLiveSearch = false;
+                    }
+
+                    if(edtTxtMessage.getText().toString().equalsIgnoreCase("Pay bill")
+                            || edtTxtMessage.getText().toString().equalsIgnoreCase("Show Balance"))
+                    {
+                        if(getLogin(context, BotResponse.USER_LOGIN))
+                        {
+                            llPopularSearch.setVisibility(GONE);
+                            perssiatentPanel.setVisibility(View.VISIBLE);
+                            sendMessageText(edtTxtMessage.getText().toString());
+                            edtTxtMessage.setText("");
+                            lockLiveSearch = true;
+                        }
+                        else
+                        {
+                            llPopularSearch.setVisibility(GONE);
+                            llLogin.setVisibility(View.VISIBLE);
+                            lockLiveSearch = true;
+                        }
+                    }
+                    else
+                    {
+                        llPopularSearch.setVisibility(GONE);
+                        perssiatentPanel.setVisibility(View.VISIBLE);
+                        llAutoSuggestions.setVisibility(GONE);
+                        sendMessageText(edtTxtMessage.getText().toString());
+                        edtTxtMessage.setText("");
+                    }
                 }
             }
         });
 
+        setLogin(context, BotResponse.USER_LOGIN, false);
+
+
         lvRecentlyAsked.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(arrRecentSearches != null && arrRecentSearches.size() > 0)
-                {
-                    edtTxtMessage.setText(arrRecentSearches.get(i));
-                    edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
-                }
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                edtTxtMessage.setText(recentSearchesModel.getRecentSearches().get(i));
+                edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
+            }
+        });
+
+//        lvPopularSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
+//                {
+//                    ArrayList<PopularSearchModel> arrPopularSearchModels = popularSearchResultsModel.getResult();
+//                    edtTxtMessage.setText(arrPopularSearchModels.get(i).get_id());
+//                    edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
+//                }
+//            }
+//        });
+
+        lvRecentlyAsked.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                edtTxtMessage.setText(recentSearchesModel.getRecentSearches().get(i));
+                edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
             }
         });
 
@@ -434,14 +548,8 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                         llLogin.setVisibility(GONE);
                         llPopularSearch.setVisibility(GONE);
                         tvErrorLogin.setVisibility(GONE);
-                        setLogin(getActivity(), BotResponse.USER_LOGIN, true);
+                        setLogin(context, BotResponse.USER_LOGIN, true);
 
-//                        if(searchModel != null && searchModel.getTemplate() != null && searchModel.getTemplate().getResults() != null
-//                            && searchModel.getTemplate().getResults().getTask() != null && searchModel.getTemplate().getResults().getTask().size() > 0)
-//                        {
-//                            getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
-//                            lockLiveSearch = true;
-//                        }
                         saveStringPreferences(edtTxtMessage.getText().toString());
                         sendMessageText(edtTxtMessage.getText().toString());
                         edtTxtMessage.setText("");
@@ -452,15 +560,15 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(!isEditTouched)
-                {
-                    llWelcomeMessage.setVisibility(View.VISIBLE);
-                }
-            }
-        }, 3000);
+        try
+        {
+            speakerIcon = speakerIcon.substring(speakerIcon.indexOf(",") + 1);
+            byte[] decodedString = Base64.decode(speakerIcon.getBytes(), Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            rec_audio_img.setImageBitmap(decodedByte);
+        } catch (Exception e) {
+        }
+
         return view;
     }
 
@@ -473,8 +581,15 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
         @Override
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
-            if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED){
-                //fetchBotMessages();
+            if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED)
+            {
+                getPopularSearch();
+                getTabFacets();
+
+                if(resultsViewModel == null)
+                    getResultViewSettings();
+
+                doUnlock();
             }
         }
 
@@ -493,9 +608,16 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         }
     };
 
+    @Override
+    public void onDestroy()
+    {
+        BotSocketConnectionManager.getInstance().shutDownConnection();
+        super.onDestroy();
+    }
+
     private void saveStringPreferences(String toString)
     {
-        ArrayList<String> arrRecentSearchDos = getStringArrayPref(getActivity(), BotResponse.RECENT_SEARCH);
+        ArrayList<String> arrRecentSearchDos = getStringArrayPref(context, BotResponse.RECENT_SEARCH);
 
         if(arrRecentSearchDos != null && arrRecentSearchDos.size() > 0)
         {
@@ -517,12 +639,17 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             arrRecentSearchDos.add(toString);
 
         if(arrRecentSearchDos != null)
-            setStringArrayPref(getActivity(), BotResponse.RECENT_SEARCH, arrRecentSearchDos);
+            setStringArrayPref(context, BotResponse.RECENT_SEARCH, arrRecentSearchDos);
 
         getRecentlyAsked();
     }
 
-//    @Override
+    public void setActivityContext(Context activityContext)
+    {
+        this.context= activityContext;
+    }
+
+    //    @Override
 //    public void onBackPressed()
 //    {
 //        if(perssiatentPanel.getVisibility() == View.VISIBLE)
@@ -539,33 +666,6 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 //        else
 //            super.onBackPressed();
 //    }
-
-    private void setObject(SearchModel searchModel)
-    {
-        if(searchModel != null)
-        {
-            if(searchModel.getTemplate() != null && searchModel.getTemplate().getResults() != null
-                    && searchModel.getTemplate().getResults().getTask() != null
-                    && searchModel.getTemplate().getResults().getTask().size() > 0)
-            {
-                getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
-            }
-            else
-            {
-                arrLiveSearchModels.add(searchModel);
-
-                if(chatAutoListviewAdapter == null)
-                {
-                    chatAutoListviewAdapter = new ChatAutoListviewAdapter(getContext(), arrLiveSearchModels, invokeGenericWebViewInterface);
-                    recyclerView_panel.setAdapter(chatAutoListviewAdapter);
-                }
-                else
-                {
-                    chatAutoListviewAdapter.refresh(arrLiveSearchModels);
-                }
-            }
-        }
-    }
 
     public void displayMessage(String text)
     {
@@ -601,19 +701,20 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
     public void getPopularSearch()
     {
-        Call<ArrayList<PopularSearchModel>> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), SocketWrapper.getInstance(getActivity()).getJWTToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
-        getJWTTokenService.enqueue(new Callback<ArrayList<PopularSearchModel>>() {
+        Call<PopularSearchResultsModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<PopularSearchResultsModel>() {
             @Override
-            public void onResponse(Call<ArrayList<PopularSearchModel>> call, Response<ArrayList<PopularSearchModel>> response) {
+            public void onResponse(Call<PopularSearchResultsModel> call, Response<PopularSearchResultsModel> response) {
                 if (response.isSuccessful())
                 {
-                    arrPopularSearchModels = response.body();
+                    popularSearchResultsModel = response.body();
 
-                    if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
+                    if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
                     {
                         llPlrSearch.setVisibility(View.VISIBLE);
                         llLiveSearch.setVisibility(GONE);
-                        popularSearchAdapter = new PopularSearchAdapter(getActivity(), arrPopularSearchModels);
+                        popularSearchAdapter = new PopularSearchAdapter(context, popularSearchResultsModel.getResult());
+                        popularSearchAdapter.setComposeFooterInterface(FindlyFragment.this);
                         lvPopularSearch.setAdapter(popularSearchAdapter);
                     }
                 }
@@ -622,222 +723,669 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
 
             @Override
-            public void onFailure(Call<ArrayList<PopularSearchModel>> call, Throwable t) {
+            public void onFailure(Call<PopularSearchResultsModel> call, Throwable t) {
                 Log.e("Popular Search Data", t.toString());
                 llPlrSearch.setVisibility(View.VISIBLE);
             }
         });
     }
 
+    public void doUnlock()
+    {
+        if(sharedPreferences == null)
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(BundleConstants.CUSTOM_DATA, "");
+        editor.commit();
+
+        Call<ArrayList<PopularSearchModel>> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().doUnlock(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), SocketWrapper.getInstance(getActivity()).getJWTToken(), getUnlockBody());
+        getJWTTokenService.enqueue(new Callback<ArrayList<PopularSearchModel>>() {
+            @Override
+            public void onResponse(Call<ArrayList<PopularSearchModel>> call, Response<ArrayList<PopularSearchModel>> response) {
+                if (response.isSuccessful())
+                {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<PopularSearchModel>> call, Throwable t) {
+                Log.e("Popular Search Data", t.toString());
+            }
+        });
+    }
+
+    private JsonObject getJwtBody(String clientId, String clientSecret, String identity, boolean isAnonymous)
+    {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("clientId", clientId);
+        jsonObject.addProperty("clientSecret", clientSecret);
+        jsonObject.addProperty("identity:", identity);
+        jsonObject.addProperty("aud", "");
+        jsonObject.addProperty("isAnonymous", isAnonymous);
+
+        Log.e("JsonObject", jsonObject.toString());
+        return jsonObject;
+    }
+
+    public void getRecentSearches()
+    {
+        Call<RecentSearchesModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getRecentSearches(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<RecentSearchesModel>() {
+            @Override
+            public void onResponse(Call<RecentSearchesModel> call, Response<RecentSearchesModel> response) {
+                if (response.isSuccessful())
+                {
+                    recentSearchesModel = response.body();
+
+                    if(recentSearchesModel != null && recentSearchesModel.getRecentSearches() != null && recentSearchesModel.getRecentSearches().size() > 0)
+                    {
+                        lvRecentlyAsked.setVisibility(View.VISIBLE);
+                        llRecentlyAsked.setVisibility(View.VISIBLE);
+                        llLiveSearch.setVisibility(GONE);
+                        recentlySearchAdapter = new RecentlySearchAdapter(context, recentSearchesModel.getRecentSearches());
+                        lvRecentlyAsked.setAdapter(recentlySearchAdapter);
+                    }
+                    else
+                    {
+                        lvRecentlyAsked.setVisibility(GONE);
+                        llRecentlyAsked.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    lvRecentlyAsked.setVisibility(GONE);
+                    llRecentlyAsked.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RecentSearchesModel> call, Throwable t) {
+                Log.e("Popular Search Data", t.toString());
+                llRecentlyAsked.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
     public void getRecentlyAsked()
     {
-        arrRecentSearches = getStringArrayPref(getActivity(), BotResponse.RECENT_SEARCH);
+        arrRecentSearches = getStringArrayPref(context, BotResponse.RECENT_SEARCH);
 
         if(arrRecentSearches != null && arrRecentSearches.size() > 0)
         {
             llRecentlyAsked.setVisibility(View.VISIBLE);
             llLiveSearch.setVisibility(GONE);
-            recentlySearchAdapter = new RecentlySearchAdapter(getActivity(), arrRecentSearches);
+            recentlySearchAdapter = new RecentlySearchAdapter(context, arrRecentSearches);
             lvRecentlyAsked.setAdapter(recentlySearchAdapter);
         }
     }
 
     public void getLiveSearch(String query)
     {
-        JsonObject jsonObject = getJsonBody(query, false, 0);
-        Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(),"bearer "+ SocketWrapper.getInstance(getActivity()).getAccessToken(), "published", jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
-        getJWTTokenService.enqueue(new Callback<LiveSearchModel>() {
+        try
+        {
+            JsonObject jsonObject = getJsonBody(query, false, 0, 9);
+            Call<LiveSearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getLiveSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(),"bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(),"published" ,jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
+            getJWTTokenService.enqueue(new Callback<LiveSearchModel>() {
+                @Override
+                public void onResponse(Call<LiveSearchModel> call, Response<LiveSearchModel> response) {
+                    if (response.isSuccessful())
+                    {
+                        liveSearchModel = response.body();
+
+                        if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null)
+                        {
+                            lockLiveSearch = false;
+                            cordinate_layout.setVisibility(View.VISIBLE);
+                            perssiatentPanel.setVisibility(View.VISIBLE);
+                            llPopularSearch.setVisibility(View.VISIBLE);
+
+                            tvNoResult.setVisibility(GONE);
+                            llPlrSearch.setVisibility(GONE);
+                            llRecentlyAsked.setVisibility(GONE);
+                            llLiveSearch.setVisibility(View.VISIBLE);
+                            llAllresults.removeAllViews();
+
+                            if(liveSearchModel.getTemplate().getResults().getFaq() != null)
+                            {
+                                addLayoutView(liveSearchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
+                            }
+
+                            if(liveSearchModel.getTemplate().getResults().getDefault_group() != null)
+                            {
+                                addLayoutView(liveSearchModel.getTemplate().getResults().getDefault_group(), default_group, 6, "");
+                            }
+
+                            if(liveSearchModel.getTemplate().getResults().getWeb() != null)
+                            {
+                                addLayoutView(liveSearchModel.getTemplate().getResults().getWeb(), page, 2, BundleConstants.WEB);
+                            }
+
+                            if(liveSearchModel.getTemplate().getResults().getTask() != null)
+                            {
+                                if(task == null)
+                                    task = getResultsViewAppearance(BundleConstants.TASK);
+
+                                addLayoutView(liveSearchModel.getTemplate().getResults().getTask(), task, 3, BundleConstants.TASK);
+                            }
+
+                            if(liveSearchModel.getTemplate().getResults().getFile() != null)
+                            {
+                                addLayoutView(liveSearchModel.getTemplate().getResults().getFile(), document, 4, BundleConstants.FILE);
+                            }
+
+//                            if(liveSearchModel.getTemplate().getResults().getData() != null)
+//                            {
+//                                addLayoutView(liveSearchModel.getTemplate().getResults().getData(), data, 5, BundleConstants.DATA);
+//                            }
+                        }
+                        else
+                        {
+                            lockLiveSearch = true;
+                            llPlrSearch.setVisibility(GONE);
+                            llLiveSearch.setVisibility(GONE);
+                            llRecentlyAsked.setVisibility(GONE);
+                            llPopularSearch.setVisibility(GONE);
+                            perssiatentPanel.setVisibility(View.VISIBLE);
+                            tvNoResult.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LiveSearchModel> call, Throwable t) {
+                    Log.e("Live Search Data", t.toString());
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void addLayoutView(LiveSearchResultsDataModel liveSearchResultsDataModel, final ResultsViewAppearance appearance, int from, String constant)
+    {
+        if(liveSearchResultsDataModel.getData() != null && liveSearchResultsDataModel.getData().size() > 0)
+        {
+            LinearLayout llFaq = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.search_template_new_cell, null);
+            final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
+            final RelativeLayout rlTitle = (RelativeLayout) llFaq.findViewById(R.id.rlTitle);
+            final ImageButton ibResults = (ImageButton) llFaq.findViewById(R.id.ibResults);
+            final ImageButton ibResults2 = (ImageButton) llFaq.findViewById(R.id.ibResults2);
+            final RelativeLayout rlArrows = (RelativeLayout) llFaq.findViewById(R.id.rlArrows);
+            TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
+            final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
+            int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+            final AutoExpandListView lvResults = (AutoExpandListView) llFaq.findViewById(R.id.lvResults);
+            alResults.addItemDecoration(new VerticalSpaceItemDecoration((int)(10 * dp1)));
+//            ViewGroup.LayoutParams params= heightAdjustableViewPager.getLayoutParams();
+//            params.height = (int)(170 * dp1);    //500px
+//            heightAdjustableViewPager.setLayoutParams(params);
+
+            heightAdjustableViewPager.setPageMargin(pageMargin);
+            if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
+            {
+                heightAdjustableViewPager.setVisibility(GONE);
+                alResults.setVisibility(GONE);
+                lvResults.setVisibility(GONE);
+
+                if(appearance.getTemplate().getLayout() != null)
+                {
+                    if(appearance.getTemplate().getLayout().getRenderTitle())
+                        rlTitle.setVisibility(VISIBLE);
+                    else
+                        rlTitle.setVisibility(GONE);
+                }
+
+                if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                {
+                    alResults.setVisibility(VISIBLE);
+                    alResults.setLayoutManager(new GridLayoutManager(context, 2));
+                    alResults.setAdapter(new LiveSearchCyclerAdapter(context, getTopList(liveSearchResultsDataModel.getData(),  constant), 0, FindlyFragment.this, FindlyFragment.this));
+                }
+                else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                {
+                    heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                    alResults.setVisibility(GONE);
+
+//                    if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_CENTERED_CONTENT))
+//                    {
+//                        params.height = (int)(300 * dp1);    //500px
+//                        heightAdjustableViewPager.setLayoutParams(params);
+//                    }
+//                    else if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_HEADER))
+//                    {
+//                        params.height = (int)(110 * dp1);    //500px
+//                        heightAdjustableViewPager.setLayoutParams(params);
+//                    }
+//                    else
+//                    {
+//                        params.height = (int)(110 * dp1);    //500px
+//                        heightAdjustableViewPager.setLayoutParams(params);
+//                    }
+
+                    heightAdjustableViewPager.setAdapter(new SearchAssistCarouselAdapter(context, getTopList(liveSearchResultsDataModel.getData(),  constant), 0, FindlyFragment.this, FindlyFragment.this));
+                }
+                else
+                {
+                    if(appearance.getTemplate().getLayout() != null && !StringUtils.isNullOrEmpty(appearance.getTemplate().getLayout().getListType()) && !appearance.getTemplate().getLayout().getListType().equalsIgnoreCase(BundleConstants.PLAIN))
+                    {
+                        lvResults.setDivider(getResources().getDrawable(android.R.color.transparent));
+                        lvResults.setDividerHeight((int)(10 * dp1));
+                    }
+
+                    lvResults.setVisibility(VISIBLE);
+                    lvResults.setAdapter(new LiveSearchAdaper(context, getTopList(liveSearchResultsDataModel.getData(),  constant), 0, FindlyFragment.this, FindlyFragment.this));
+                }
+            }
+
+            switch (from)
+            {
+                case 1:
+                {
+                    tvPageTitle.setVisibility(VISIBLE);
+                    tvPageTitle.setText("FAQS");
+                    break;
+                }
+                case 2:
+                {
+                    tvPageTitle.setVisibility(VISIBLE);
+                    tvPageTitle.setText("Web");
+                    break;
+                }
+                case 3:
+                {
+                    tvPageTitle.setVisibility(VISIBLE);
+                    tvPageTitle.setText("Task");
+                    break;
+                }
+                case 4:
+                {
+                    tvPageTitle.setVisibility(VISIBLE);
+                    tvPageTitle.setText("File");
+                    break;
+                }
+                case 5:
+                {
+                    tvPageTitle.setVisibility(VISIBLE);
+                    tvPageTitle.setText("Data");
+                    break;
+                }
+                default:
+                {
+                    rlArrows.setVisibility(GONE);
+                    tvPageTitle.setVisibility(GONE);
+                }
+            }
+
+
+            ibResults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == View.GONE || heightAdjustableViewPager.getVisibility() == GONE
+                            || lvResults.getVisibility() == View.GONE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                        else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                            alResults.setVisibility(View.VISIBLE);
+                        else
+                            lvResults.setVisibility(View.VISIBLE);
+
+                        ibResults.setVisibility(GONE);
+                        ibResults2.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            ibResults2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE
+                            || lvResults.getVisibility() == View.VISIBLE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(GONE);
+                        else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                            alResults.setVisibility(GONE);
+                        else
+                            lvResults.setVisibility(GONE);
+
+                        ibResults2.setVisibility(GONE);
+                        ibResults.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            llFaq.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent)
+                {
+                    llAutoSuggestions.setVisibility(GONE);
+                    return false;
+                }
+            });
+
+            llAllresults.addView(llFaq);
+        }
+    }
+
+    private void addResultsView(ArrayList<HashMap<String, Object>> arrSearchResults, final ResultsViewAppearance appearance, int from, String constant)
+    {
+        LinearLayout llFaq = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.search_template_new_cell, null);
+        final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
+        final ImageButton ibResults = (ImageButton) llFaq.findViewById(R.id.ibResults);
+        final ImageButton ibResults2 = (ImageButton) llFaq.findViewById(R.id.ibResults2);
+        TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
+        final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
+        int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+        final AutoExpandListView lvResults = (AutoExpandListView) llFaq.findViewById(R.id.lvResults);
+
+        ViewGroup.LayoutParams params= heightAdjustableViewPager.getLayoutParams();
+        params.height = (int)(170 * dp1);    //500px
+        heightAdjustableViewPager.setLayoutParams(params);
+
+        heightAdjustableViewPager.setPageMargin(pageMargin);
+        if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
+        {
+            heightAdjustableViewPager.setVisibility(GONE);
+            alResults.setVisibility(GONE);
+            lvResults.setVisibility(GONE);
+
+            if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+            {
+                alResults.setVisibility(VISIBLE);
+                alResults.setLayoutManager(new GridLayoutManager(context, 2));
+                alResults.setAdapter(new LiveSearchDynamicAdapter(context, getResultsTopList(arrSearchResults,  constant), 0, FindlyFragment.this, FindlyFragment.this));
+            }
+            else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+            {
+                heightAdjustableViewPager.setVisibility(View.VISIBLE);
+
+                if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_CENTERED_CONTENT))
+                {
+                    params.height = (int)(300 * dp1);    //500px
+                    heightAdjustableViewPager.setLayoutParams(params);
+                }
+                else if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_HEADER))
+                {
+                    params.height = (int)(100 * dp1);    //500px
+                    heightAdjustableViewPager.setLayoutParams(params);
+                }
+
+                heightAdjustableViewPager.setAdapter(new SearchResultsCarouselAdapter(context, getResultsTopList(arrSearchResults,  constant), 0, FindlyFragment.this, FindlyFragment.this));
+            }
+            else
+            {
+                lvResults.setVisibility(VISIBLE);
+                lvResults.setAdapter(new LiveSearchListAdapter(context, getResultsTopList(arrSearchResults,  constant), 0, FindlyFragment.this, FindlyFragment.this));
+            }
+        }
+
+        switch (from)
+        {
+            case 1:
+            {
+                tvPageTitle.setText("FAQS");
+                break;
+            }
+            case 2:
+            {
+                tvPageTitle.setText("Web");
+                break;
+            }
+            case 3:
+            {
+                tvPageTitle.setText("Task");
+                break;
+            }
+            case 4:
+            {
+                tvPageTitle.setText("File");
+                break;
+            }
+            case 5:
+            {
+                tvPageTitle.setText("Data");
+                break;
+            }
+        }
+
+
+        ibResults.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<LiveSearchModel> call, Response<LiveSearchModel> response) {
+            public void onClick(View view) {
+                if(alResults.getVisibility() == View.GONE || heightAdjustableViewPager.getVisibility() == GONE
+                        || lvResults.getVisibility() == View.GONE)
+                {
+                    if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                        heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                    else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                        alResults.setVisibility(View.VISIBLE);
+                    else
+                        lvResults.setVisibility(View.VISIBLE);
+
+                    ibResults.setVisibility(GONE);
+                    ibResults2.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        ibResults2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE
+                        || lvResults.getVisibility() == View.VISIBLE)
+                {
+                    if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                        heightAdjustableViewPager.setVisibility(GONE);
+                    else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                        alResults.setVisibility(GONE);
+                    else
+                        lvResults.setVisibility(GONE);
+
+                    ibResults2.setVisibility(GONE);
+                    ibResults.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        llFaq.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent)
+            {
+                llAutoSuggestions.setVisibility(GONE);
+                return false;
+            }
+        });
+
+        llAllresults.addView(llFaq);
+    }
+
+    public void onEvent(RestResponse.JWTTokenResponse jwtTokenResponse)
+    {
+        if(searchInterfaceModel == null)
+        {
+            getSearchInterface(jwtTokenResponse.getJwt());
+        }
+    }
+
+    public void getResultViewSettings()
+    {
+        Call<ResultsViewModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getResultViewSettings(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(),"bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<ResultsViewModel>() {
+            @Override
+            public void onResponse(Call<ResultsViewModel> call, Response<ResultsViewModel> response) {
                 if (response.isSuccessful())
                 {
-                    liveSearchModel = response.body();
+                    resultsViewModel = response.body();
 
-                    if(liveSearchModel != null && liveSearchModel.getTemplate() != null && liveSearchModel.getTemplate().getResults() != null)
+                    if(resultsViewModel != null && resultsViewModel.getSettings() != null)
                     {
-                        cordinate_layout.setVisibility(View.VISIBLE);
-                        perssiatentPanel.setVisibility(View.VISIBLE);
-                        llPopularSearch.setVisibility(View.VISIBLE);
-                        tvNoResult.setVisibility(GONE);
-                        llPlrSearch.setVisibility(GONE);
-                        llRecentlyAsked.setVisibility(GONE);
-                        llLiveSearch.setVisibility(View.VISIBLE);
-                        lvLiveSearch.setAdapter( new LiveSearchCyclerAdapter(getActivity(), getTopFourList(liveSearchModel.getTemplate().getResults()), 0, invokeGenericWebViewInterface, composeFooterInterface));
-                    }
-                    else
-                    {
-                        llPlrSearch.setVisibility(GONE);
-                        llLiveSearch.setVisibility(GONE);
-                        llRecentlyAsked.setVisibility(GONE);
-                        llPopularSearch.setVisibility(GONE);
-                        perssiatentPanel.setVisibility(View.VISIBLE);
-                        tvNoResult.setVisibility(View.VISIBLE);
-//                        cordinate_layout.setVisibility(View.VISIBLE);
-//                        perssiatentPanel.setVisibility(View.VISIBLE);
-//                        llPopularSearch.setVisibility(View.VISIBLE);
+                        for(int i = 0; i < resultsViewModel.getSettings().size(); i++)
+                        {
+                            if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.LIVE_SEARCH))
+                            {
+                                liveSearchSetting = resultsViewModel.getSettings().get(i);
+
+                                if(liveSearchSetting != null && liveSearchSetting.getGroupSetting() != null
+                                        && liveSearchSetting.getGroupSetting().getConditions() != null
+                                        && liveSearchSetting.getGroupSetting().getConditions().size() > 0)
+                                {
+                                    for(int k = 0; k < liveSearchSetting.getGroupSetting().getConditions().size(); k++)
+                                    {
+                                        if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.FAQ))
+                                            faq = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.PAGE))
+                                            page = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.FILE))
+                                            document = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.TASK))
+                                        {
+                                            task = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        }
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.DATA))
+                                            data = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                    }
+
+                                    if(liveSearchSetting.getDefaultTemplate() != null)
+                                        defaultTemplate = liveSearchSetting.getDefaultTemplate();
+
+                                    if(faq == null)
+                                        faq = getDefaultApperence(BundleConstants.FAQ);
+
+                                    if(page == null)
+                                        page = getDefaultApperence(BundleConstants.WEB);
+
+                                    if(document == null)
+                                        document = getDefaultApperence(BundleConstants.FILE);
+
+                                    if(data == null)
+                                        data = getDefaultApperence(BundleConstants.DATA);
+
+                                    if(task == null)
+                                        task = getDefaultApperence(BundleConstants.TASK);
+
+                                    if(default_group == null)
+                                        default_group = getDefaultApperence(BundleConstants.FAQ);
+                                }
+                            }
+                            else if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.CONVERSATIONAL_SEARCH))
+                            {
+                                searchSetting = resultsViewModel.getSettings().get(i);
+                            }
+                            else if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.FULL_SEARCH))
+                            {
+                                fullSearchSetting = resultsViewModel.getSettings().get(i);
+                            }
+                        }
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<LiveSearchModel> call, Throwable t) {
+            public void onFailure(Call<ResultsViewModel> call, Throwable t) {
                 Log.e("Live Search Data", t.toString());
             }
         });
     }
 
-    public void getSearch(String query, int from)
+    public void getAutoSuggestions(final String query)
     {
-        JsonObject jsonObject = getJsonBody(query, true, from);
-        Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
-        getJWTTokenService.enqueue(new Callback<SearchModel>() {
+        JsonObject jsonObject = getJsonBody(query, false, 2, 3);
+        Call<AutoSuggestionsModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getAutoSuggestions(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), jsonObject, SocketWrapper.getInstance(getActivity()).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<AutoSuggestionsModel>() {
             @Override
-            public void onResponse(Call<SearchModel> call, Response<SearchModel> response)
-            {
+            public void onResponse(Call<AutoSuggestionsModel> call, Response<AutoSuggestionsModel> response) {
                 if (response.isSuccessful())
                 {
-                    searchModel = response.body();
+                    autoSuggestionsModel = response.body();
 
-                    if(searchModel != null && searchModel.getTemplate() != null)
+                    if(autoSuggestionsModel != null)
                     {
-                        if(searchModel.getTemplate().getResults() != null && searchModel.getTemplate().getResults().getTask() != null
-                                && searchModel.getTemplate().getResults().getTask().size() > 0)
+//                        getLiveSearch(query);
+
+                        if(autoSuggestionsModel.getAutoComplete() != null && autoSuggestionsModel.getAutoComplete().getQuerySuggestions() != null &&
+                                autoSuggestionsModel.getAutoComplete().getQuerySuggestions().size() > 0 )
                         {
-                            if(getLogin(getActivity(), BotResponse.USER_LOGIN))
-                            {
-                                getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
-                                lockLiveSearch = true;
-                            }
-                            else
-                            {
-                                llPopularSearch.setVisibility(GONE);
-                                llLogin.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        else if(searchModel.getTemplate().getWebhookPayload() != null)
-                        {
-                            if(searchModel.getTemplate().getWebhookPayload().getText() instanceof String)
-                            {
-                                try
-                                {
-                                    Type carouselType = new TypeToken<PayloadOuter>() {
-                                    }.getType();
-                                    PayloadOuter carouselElements = gson.fromJson((String) searchModel.getTemplate().getWebhookPayload().getText(), carouselType);
+                            llAutoSuggestions.setVisibility(View.VISIBLE);
+                            lvAutoSuggestions.setAdapter(new AutoSuggestionsAdapter(context, autoSuggestionsModel.getAutoComplete().getQuerySuggestions()));
 
-                                    ComponentModel componentModel = new ComponentModel();
-                                    componentModel.setType("template");
-                                    componentModel.setPayload(carouselElements);
 
-                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
-                                    botResponseMessage.setType("template");
-                                    botResponseMessage.setComponent(componentModel);
-
-                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                                    arrBotResponseMessages.add(botResponseMessage);
-
-                                    BotResponse botResponse = new BotResponse();
-                                    botResponse.setType("template");
-                                    botResponse.setMessage(arrBotResponseMessages);
-
-                                    processPayload("", botResponse);
+                            lvAutoSuggestions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    llPopularSearch.setVisibility(GONE);
+                                    perssiatentPanel.setVisibility(View.VISIBLE);
+                                    edtTxtMessage.setText("");
+                                    llAutoSuggestions.setVisibility(GONE);
+                                    sendMessageText(autoSuggestionsModel.getAutoComplete().getQuerySuggestions().get(i));
                                 }
-                                catch (JsonSyntaxException e)
-                                {
-                                    displayMessage((String)searchModel.getTemplate().getWebhookPayload().getText());
-                                }
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    ComponentModel componentModel = new ComponentModel();
-                                    componentModel.setType("template");
-
-                                    Type carouselType = new TypeToken<PayloadOuter>() {
-                                    }.getType();
-                                    PayloadOuter carouselElements = gson.fromJson(((ArrayList<String>)(searchModel.getTemplate().getWebhookPayload().getText())).get(0), carouselType);
-
-                                    componentModel.setPayload(carouselElements);
-
-                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
-                                    botResponseMessage.setType("template");
-                                    botResponseMessage.setComponent(componentModel);
-
-                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                                    arrBotResponseMessages.add(botResponseMessage);
-
-                                    BotResponse botResponse = new BotResponse();
-                                    botResponse.setType("template");
-                                    botResponse.setMessage(arrBotResponseMessages);
-
-                                    processPayload("", botResponse);
-                                }
-                                catch (JsonSyntaxException e)
-                                {
-                                    displayMessage(((ArrayList<String>)(searchModel.getTemplate().getWebhookPayload().getText())).get(0));
-                                }
-                            }
-
-                            if(searchModel.getTemplate().getWebhookPayload().getEndOfTask())
-                                lockLiveSearch = !searchModel.getTemplate().getWebhookPayload().getEndOfTask();
+                            });
                         }
                         else
-                        {
-
-                            if(searchModel.getTemplate().getResults() != null)
-                            {
-                                arrTempAllResults = new ArrayList<>();
-
-                                PayloadInner payloadInner = new PayloadInner();
-                                payloadInner.setTemplate_type(searchModel.getTemplateType());
-
-                                if(searchModel.getTemplate().getResults().getFaq() != null &&
-                                        searchModel.getTemplate().getResults().getFaq().size() > 0)
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFaq());
-
-                                if(searchModel.getTemplate().getResults().getWeb() != null &&
-                                        searchModel.getTemplate().getResults().getWeb().size() > 0)
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getWeb());
-
-                                if(searchModel.getTemplate().getResults().getTask() != null &&
-                                        searchModel.getTemplate().getResults().getTask().size() > 0)
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getTask());
-
-                                payloadInner.setElements(arrTempAllResults);
-                                payloadInner.setTitle(searchModel.getTitle());
-                                payloadInner.setText("Sure, please find the matched results below");
-
-                                PayloadOuter payloadOuter = new PayloadOuter();
-                                payloadOuter.setText(searchModel.getTitle());
-                                payloadOuter.setType("template");
-                                payloadOuter.setPayload(payloadInner);
-
-                                ComponentModel componentModel = new ComponentModel();
-                                componentModel.setType("template");
-                                componentModel.setPayload(payloadOuter);
-
-                                BotResponseMessage botResponseMessage = new BotResponseMessage();
-                                botResponseMessage.setType("template");
-                                botResponseMessage.setComponent(componentModel);
-
-                                ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                                arrBotResponseMessages.add(botResponseMessage);
-
-                                BotResponse botResponse = new BotResponse();
-                                botResponse.setType("template");
-                                botResponse.setMessage(arrBotResponseMessages);
-
-                                processPayload("", botResponse);
-
-                            }
-                        }
+                            llAutoSuggestions.setVisibility(GONE);
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<SearchModel> call, Throwable t) {
-                Log.e("Search data", t.toString());
+            public void onFailure(Call<AutoSuggestionsModel> call, Throwable t) {
+                Log.e("Live Search Data", t.toString());
+            }
+        });
+    }
+
+    public void getSearchInterface(String jwt)
+    {
+        Call<SearchInterfaceModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearchInterface(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(),jwt);
+        getJWTTokenService.enqueue(new Callback<SearchInterfaceModel>()
+        {
+            @Override
+            public void onResponse(Call<SearchInterfaceModel> call, Response<SearchInterfaceModel> response) {
+                if (response.isSuccessful())
+                {
+                    searchInterfaceModel = response.body();
+
+                    if(searchInterfaceModel != null)
+                    {
+                        applySearchBoxStyles(searchInterfaceModel);
+                        saveSearchInterfaceInPref(context, searchInterfaceModel);
+
+                        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(context,null);
+                        BotSocketConnectionManager.getInstance().setChatListener(sListener);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchInterfaceModel> call, Throwable t) {
+                Log.e("Live Search Data", t.toString());
+            }
+        });
+    }
+
+    public void getTabFacets()
+    {
+        Call<TabFacetsModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getTabFacets(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(getActivity()).getAccessToken(), SocketWrapper.getInstance(getActivity()).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<TabFacetsModel>() {
+            @Override
+            public void onResponse(Call<TabFacetsModel> call, Response<TabFacetsModel> response) {
+                if (response.isSuccessful())
+                {
+                    tabFacetsModel = response.body();
+
+                    if(tabFacetsModel != null)
+                    {
+                        sharedPreferences.edit().putString(BundleConstants.TAB_FACETS, gson.toJson(tabFacetsModel)).commit();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TabFacetsModel> call, Throwable t) {
+                Log.e("Live Search Data", t.toString());
             }
         });
     }
@@ -857,33 +1405,35 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         arrTempResults = new ArrayList<>();
         if(results != null)
         {
-            if(results.getFaq() != null && results.getFaq().size() > 0)
+            if(results.getFaq() != null && results.getFaq().getData() != null
+                    && results.getFaq().getData().size() > 0)
             {
-                for (int i = 0; i < results.getFaq().size(); i++)
+                for (int i = 0; i < results.getFaq().getData().size(); i++)
                 {
-                    arrTempResults.add(results.getFaq().get(i));
+                    arrTempResults.add(results.getFaq().getData().get(i));
                     if(arrTempResults.size() == 2)
                         break;
                 }
             }
 
-            if(results.getWeb() != null && results.getWeb().size() > 0)
+            if(results.getWeb() != null && results.getWeb().getData() != null
+                    && results.getWeb().getData().size() > 0)
             {
                 if(arrTempResults.size() >= 1)
                 {
                     int suntoAdd = arrTempResults.size()+2;
-                    for (int i = 0; i < results.getWeb().size(); i++)
+                    for (int i = 0; i < results.getWeb().getData().size(); i++)
                     {
-                        arrTempResults.add(results.getWeb().get(i));
+                        arrTempResults.add(results.getWeb().getData().get(i));
                         if(arrTempResults.size() == suntoAdd)
                             break;
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < results.getWeb().size(); i++)
+                    for (int i = 0; i < results.getWeb().getData().size(); i++)
                     {
-                        arrTempResults.add(results.getWeb().get(i));
+                        arrTempResults.add(results.getWeb().getData().get(i));
                         if(arrTempResults.size() == 2)
                             break;
                     }
@@ -891,23 +1441,24 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
         }
 
-        if(results.getFile() != null && results.getFile().size() > 0)
+        if(results.getFile() != null && results.getFile().getData() != null
+                && results.getFile().getData().size() > 0)
         {
             if(arrTempResults.size() >= 1)
             {
                 int suntoAdd = arrTempResults.size()+2;
-                for (int i = 0; i < results.getFile().size(); i++)
+                for (int i = 0; i < results.getFile().getData().size(); i++)
                 {
-                    arrTempResults.add(results.getFile().get(i));
+                    arrTempResults.add(results.getFile().getData().get(i));
                     if(arrTempResults.size() == suntoAdd)
                         break;
                 }
             }
             else
             {
-                for (int i = 0; i < results.getFile().size(); i++)
+                for (int i = 0; i < results.getFile().getData().size(); i++)
                 {
-                    arrTempResults.add(results.getFile().get(i));
+                    arrTempResults.add(results.getFile().getData().get(i));
                     if(arrTempResults.size() == 2)
                         break;
                 }
@@ -917,17 +1468,36 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         return arrTempResults;
     }
 
+    private ResultsViewAppearance getDefaultApperence(String type)
+    {
+        ResultsViewAppearance resultsViewAppearance = new ResultsViewAppearance();
+        resultsViewAppearance.setOp("equals");
+        resultsViewAppearance.setFieldValue(type);
+
+        if(defaultTemplate != null)
+        {
+            resultsViewAppearance.setTemplateId(defaultTemplate.get_id());
+            resultsViewAppearance.setTemplate(defaultTemplate);
+            return resultsViewAppearance;
+        }
+
+        return null;
+    }
+
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         if (view instanceof EditText && !lockLiveSearch)
         {
+            edtTxtMessage.setCursorVisible(true);
             cordinate_layout.setVisibility(View.VISIBLE);
             perssiatentPanel.setVisibility(View.VISIBLE);
             llPopularSearch.setVisibility(View.VISIBLE);// User touched edittext
             llPlrSearch.setVisibility(GONE);
+            llAutoSuggestions.setVisibility(GONE);
+            getRecentSearches();
 
-            if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
-                llPlrSearch.setVisibility(View.VISIBLE);
+//            if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
+//                llPlrSearch.setVisibility(View.VISIBLE);
 
             isEditTouched = true;
             llWelcomeMessage.setVisibility(GONE);
@@ -935,7 +1505,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         return false;
     }
 
-    private JsonObject getJsonBody(String query, boolean smallTalk, int from)
+    private JsonObject getJsonBody(String query, boolean smallTalk, int from, int maxResults)
     {
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
@@ -944,13 +1514,33 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             jsonObject.addProperty("isBotAction", true);
 
         jsonObject.addProperty("query", query.toLowerCase());
-        jsonObject.addProperty("maxNumOfResults", 9);
+        jsonObject.addProperty("maxNumOfResults", maxResults);
         jsonObject.addProperty("userId", SocketWrapper.getInstance(getActivity()).getBotUserId());
-        jsonObject.addProperty("streamId", SDKConfiguration.Client.bot_id);
+        jsonObject.addProperty("streamId", "st-a4a4fabe-11d3-56cc-801d-894ddcd26c51");
         jsonObject.addProperty("lang", "en");
 
         if(smallTalk)
             jsonObject.addProperty("smallTalk", true);
+
+        if(from == 2)
+            jsonObject.addProperty("isDev", false);
+
+        Log.e("JsonObject", jsonObject.toString());
+        return jsonObject;
+    }
+
+    private JsonObject getUnlockBody()
+    {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("client", "sdk");
+        jsonObject.addProperty("userId", SocketWrapper.getInstance(getActivity()).getBotUserId());
+        jsonObject.addProperty("streamId", SDKConfiguration.getSDIX());
+        jsonObject.addProperty("lang", "en");
+
+        JsonObject botInfo = new JsonObject();
+        botInfo.addProperty("chatBot", SDKConfiguration.Client.bot_name);
+        botInfo.addProperty("taskBotId", SDKConfiguration.Client.bot_id);
+        jsonObject.add("botInfo", botInfo);
 
         Log.e("JsonObject", jsonObject.toString());
         return jsonObject;
@@ -960,7 +1550,7 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
     public void invokeGenericWebView(String url)
     {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(getActivity(), GenericWebViewActivity.class);
+            Intent intent = new Intent(context, GenericWebViewActivity.class);
             intent.putExtra("url", url);
             intent.putExtra("header", getResources().getString(R.string.app_name));
             startActivity(intent);
@@ -984,11 +1574,22 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
-        if(payload != null){
+        if(payload != null)
+        {
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-        }else{
+        }
+        else
+        {
             BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         }
+
+        cordinate_layout.setVisibility(View.VISIBLE);
+        llPlrSearch.setVisibility(GONE);
+        llWelcomeMessage.setVisibility(GONE);
+        llPopularSearch.setVisibility(GONE);
+        perssiatentPanel.setVisibility(View.VISIBLE);
+        llAutoSuggestions.setVisibility(GONE);
+        edtTxtMessage.setText("");
     }
 
     @Override
@@ -1046,26 +1647,86 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
     }
 
-    public void sendMessage(String message) {
-        //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel("botName", "streamId", null);
-        botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
-        String jsonPayload = gson.toJson(botPayLoad);
+    private ArrayList<LiveSearchResultsModel> getTopList(ArrayList<LiveSearchResultsModel> results, String type)
+    {
+        ArrayList<LiveSearchResultsModel> arrTempResults = new ArrayList<>();
 
-        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-//        persistBotMessage(null,true,botRequest);
+        if(sharedPreferences == null)
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int maxValue = 0;
 
-        onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
+        if(results != null && results.size() > 0)
+        {
+            if(results.size() > sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2))
+                maxValue = sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2);
+            else
+                maxValue = results.size();
 
-        getSearch(message, 0);
+            for (int i = 0; i < maxValue; i++)
+            {
+                if (type.equalsIgnoreCase(BundleConstants.FAQ))
+                    results.get(i).setAppearance(faq);
+                else if(type.equalsIgnoreCase(BundleConstants.WEB))
+                    results.get(i).setAppearance(page);
+                else if(type.equalsIgnoreCase(BundleConstants.TASK))
+                    results.get(i).setAppearance(task);
+                else if(type.equalsIgnoreCase(BundleConstants.FILE))
+                    results.get(i).setAppearance(document);
+                else if(type.equalsIgnoreCase(BundleConstants.DATA))
+                    results.get(i).setAppearance(data);
+                else
+                    results.get(i).setAppearance(default_group);
+
+                arrTempResults.add(results.get(i));
+            }
+        }
+
+        return arrTempResults;
     }
 
-    private void sendMessageText(String message) {
+    private ArrayList<HashMap<String, Object>> getResultsTopList(ArrayList<HashMap<String, Object>> results, String type)
+    {
+        ArrayList<HashMap<String, Object>> arrTempResults = new ArrayList<>();
+
+        if(sharedPreferences == null)
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int maxValue = 0;
+
+        if(results != null && results.size() > 0)
+        {
+            if(results.size() > sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2))
+                maxValue = sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2);
+            else
+                maxValue = results.size();
+
+            for (int i = 0; i < maxValue; i++)
+            {
+                if (type.equalsIgnoreCase(BundleConstants.FAQ))
+                    results.get(i).put("appearance", faq);
+                else if(type.equalsIgnoreCase(BundleConstants.WEB))
+                    results.get(i).put("appearance",page);
+                else if(type.equalsIgnoreCase(BundleConstants.TASK))
+                {
+                    if(task == null)
+                        task = getResultsViewAppearance(BundleConstants.TASK);
+
+                    results.get(i).put("appearance",task);
+                }
+                else if(type.equalsIgnoreCase(BundleConstants.FILE))
+                    results.get(i).put("appearance",document);
+                else if(type.equalsIgnoreCase(BundleConstants.DATA))
+                    results.get(i).put("appearance",data);
+
+                arrTempResults.add(results.get(i));
+            }
+        }
+
+        return arrTempResults;
+    }
+
+
+    private void sendMessageText(String message)
+    {
         BotSocketConnectionManager.getInstance().sendMessage(message, null);
     }
 
@@ -1106,10 +1767,16 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
             }
             payOuter.setType("template");
             final PayloadInner payloadInner = payOuter == null ? null : getPayLoadInner(payOuter);
-
+            botContentFragment.showTypingStatus(botResponse);
             if (payloadInner != null)
             {
                 payloadInner.convertElementToAppropriate();
+
+                if(payloadInner.getTemplate_type().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_RESULTS_LIST))
+                {
+                    payloadInner.setResultsViewSetting(searchSetting);
+                    payloadInner.setFullSearchresultsViewSetting(fullSearchSetting);
+                }
             }
 
             if (resolved) {
@@ -1173,6 +1840,96 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
         return urls;
     }
 
+    private void applySearchBoxStyles(SearchInterfaceModel searchInterfaceModel)
+    {
+        WidgetConfigModel widgetConfigModel = searchInterfaceModel.getWidgetConfig();
+        final InteractionsConfigModel interactionsConfigModel = searchInterfaceModel.getInteractionsConfig();
+
+        if(widgetConfigModel != null)
+        {
+            ((GradientDrawable) llComposeBar.getBackground()).setColor(Color.parseColor(widgetConfigModel.getSearchBarFillColor().substring(0, 7)));
+            ((GradientDrawable) llComposeBar.getBackground()).setStroke((int)(2 * dp1) , Color.parseColor(widgetConfigModel.getSearchBarBorderColor().substring(0, 7)));
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getSearchBarIcon()))
+            {
+                Picasso.get().load(widgetConfigModel.getSearchBarIcon()).transform(roundedCornersTransform).into(ivChatIcon);
+                Picasso.get().load(widgetConfigModel.getSearchBarIcon()).transform(roundedCornersTransform).into(ivWelcomeImage);
+            }
+
+
+            edtTxtMessage.setHint(widgetConfigModel.getSearchBarPlaceholderText());
+            edtTxtMessage.setHintTextColor(Color.parseColor(widgetConfigModel.getSearchBarPlaceholderTextColor()));
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonText()))
+                sendTv.setText(widgetConfigModel.getButtonText());
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonTextColor()))
+                sendTv.setTextColor(Color.parseColor(widgetConfigModel.getButtonTextColor()));
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonBorderColor()) &&
+                    !StringUtils.isNullOrEmpty(widgetConfigModel.getButtonFillColor()))
+            {
+                ((GradientDrawable) sendTv.getBackground()).setColor(Color.parseColor(widgetConfigModel.getButtonFillColor()));
+                ((GradientDrawable) sendTv.getBackground()).setStroke((int)(2 * dp1) , Color.parseColor(widgetConfigModel.getButtonBorderColor()));
+            }
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonText()))
+                sendTvOutside.setText(widgetConfigModel.getButtonText());
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonTextColor()))
+                sendTvOutside.setTextColor(Color.parseColor(widgetConfigModel.getButtonTextColor()));
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonBorderColor()) &&
+                    !StringUtils.isNullOrEmpty(widgetConfigModel.getButtonFillColor()))
+            {
+                ((GradientDrawable) sendTvOutside.getBackground()).setColor(Color.parseColor(widgetConfigModel.getButtonFillColor()));
+                ((GradientDrawable) sendTvOutside.getBackground()).setStroke((int)(2 * dp1) , Color.parseColor(widgetConfigModel.getButtonBorderColor()));
+            }
+
+            sendTv.setVisibility(View.VISIBLE);
+
+            if(!StringUtils.isNullOrEmpty(widgetConfigModel.getButtonPlacementPosition()))
+            {
+                if(widgetConfigModel.getButtonPlacementPosition().equalsIgnoreCase(BundleConstants.POSITION_OUTSIDE))
+                {
+                    sendTvOutside.setVisibility(View.VISIBLE);
+                    sendTv.setVisibility(GONE);
+                }
+            }
+
+        }
+
+        if(interactionsConfigModel != null)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(!isEditTouched)
+                    {
+                        tvWelcomeMsg.setText(interactionsConfigModel.getWelcomeMsg());
+                        tvWelcomeMsg.setTextColor(Color.parseColor(interactionsConfigModel.getWelcomeMsgColor()));
+
+//                        if(!StringUtils.isNullOrEmpty(interactionsConfigModel.getWelcomeMsgEmoji()))
+//                            Picasso.get().load(interactionsConfigModel.getWelcomeMsgEmoji()).transform(roundedCornersTransform).into(ivWelcomeImage);
+
+                        llWelcomeMessage.setVisibility(View.VISIBLE);
+                    }
+                }
+            }, 2000);
+        }
+
+    }
+
+    public void saveSearchInterfaceInPref(Context context, SearchInterfaceModel searchInterfaceModel)
+    {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = gson.toJson(searchInterfaceModel);
+        editor.putString(BundleConstants.SEARCH_INTERFACE, json);
+        editor.putInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, searchInterfaceModel.getInteractionsConfig().getLiveSearchResultsLimit());
+        editor.commit();
+    }
+
     public boolean getLogin(Context context, String key)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -1209,17 +1966,31 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
                 arrTempAllResults = new ArrayList<>();
 
                 if(payloadOuter.getTemplate().getResults().getFaq() != null &&
-                        payloadOuter.getTemplate().getResults().getFaq().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFaq());
+                        payloadOuter.getTemplate().getResults().getFaq().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getFaq().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFaq().getData());
 
                 if(payloadOuter.getTemplate().getResults().getWeb() != null &&
-                        payloadOuter.getTemplate().getResults().getWeb().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getWeb());
+                        payloadOuter.getTemplate().getResults().getWeb().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getWeb().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getWeb().getData());
 
                 if(payloadOuter.getTemplate().getResults().getTask() != null &&
-                        payloadOuter.getTemplate().getResults().getTask().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getTask());
+                        payloadOuter.getTemplate().getResults().getTask().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getTask().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getTask().getData());
 
+                if(payloadOuter.getTemplate().getResults().getFile() != null &&
+                        payloadOuter.getTemplate().getResults().getFile().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getFile().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFile().getData());
+
+                if(payloadOuter.getTemplate().getResults().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getData());
+
+                payloadOuter.setPayload(new PayloadInner());
+                payloadOuter.getPayload().setTemplate_type(payloadOuter.getTemplateType());
                 payloadOuter.getPayload().setElements(arrTempAllResults);
                 payloadOuter.getPayload().setTitle(payloadOuter.getPayload().getTitle());
                 payloadOuter.getPayload().setText("Sure, please find the matched results below");
@@ -1235,5 +2006,124 @@ public class FindlyFragment extends KaBaseFragment implements InvokeGenericWebVi
 
     public void onEvent(BotResponse botResponse) {
         processPayload("", botResponse);
+    }
+
+    private ResultsViewAppearance getResultsViewAppearance(String type)
+    {
+        ResultsViewAppearance resultsViewAppearance = new ResultsViewAppearance();
+//        resultsViewAppearance.setType(type);
+        resultsViewAppearance.setTemplateId("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
+
+        ResultsViewTemplate template = new ResultsViewTemplate();
+        template.set_id("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
+//        template.setAppearanceType(type);
+        template.setCreatedOn("2021-05-31T07:25:44.364Z");
+        template.setStreamId("st-12466d46-dc91-5855-a301-b6ecd7a95d82");
+        template.setSearchIndexId("sidx-4c33c7cf-9561-58f2-b547-4745ce12b513");
+        template.setIndexPipelineId("fip-f3cef85c-efd0-5e1e-bdb0-4c5b52b288e7");
+        template.setlModifiedOn("2021-05-31T07:25:44.364Z");
+        template.setType("listTemplate1");
+
+        ResultsViewlayout resultsViewlayout = new ResultsViewlayout();
+        resultsViewlayout.setLayoutType("tileWithHeader");
+        resultsViewlayout.setIsClickable(true);
+        resultsViewlayout.setBehaviour("webpage");
+        resultsViewlayout.setTextAlignment("left");
+        template.setLayout(resultsViewlayout);
+
+        ResultsViewMapping resultsViewMapping = new ResultsViewMapping();
+        resultsViewMapping.setDescription("filePreview");
+        resultsViewMapping.setHeading("fileTitle");
+        resultsViewMapping.setUrl("fileUrl");
+        template.setMapping(resultsViewMapping);
+
+        resultsViewAppearance.setTemplate(template);
+
+        return resultsViewAppearance;
+    }
+
+    public void showCustomDataDialog(final Context context){
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.custom_data);
+
+        final EditText edtCustomData = (EditText) dialog.findViewById(R.id.edtCustomData);
+        TextView tvClear = (TextView) dialog.findViewById(R.id.tvClear);
+        TextView tvOk = (TextView) dialog.findViewById(R.id.tvOk);
+
+        if(sharedPreferences != null)
+        {
+            edtCustomData.setText(sharedPreferences.getString(BundleConstants.CUSTOM_DATA, ""));
+        }
+
+        tvClear.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                try
+                {
+                    if(sharedPreferences == null)
+                        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(BundleConstants.CUSTOM_DATA, "");
+                    editor.commit();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                dialog.dismiss();
+            }
+        });
+
+        tvOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(sharedPreferences == null)
+                    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                try
+                {
+                    JSONObject jsonObject = new JSONObject(edtCustomData.getText().toString());
+                    editor.putString(BundleConstants.CUSTOM_DATA, jsonObject.toString());
+                    editor.commit();
+                }
+                catch (Exception e)
+                {
+                    editor.putString(BundleConstants.CUSTOM_DATA, "");
+                    editor.commit();
+
+                    e.printStackTrace();
+                }
+
+
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            outRect.bottom = verticalSpaceHeight;
+            outRect.right = verticalSpaceHeight;
+        }
     }
 }

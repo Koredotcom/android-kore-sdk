@@ -3,80 +3,86 @@ package com.kore.findlysdk.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class LiveSearchFacetsModel
 {
-    private int faq;
-    private int page;
-    private int web;
-    private int file;
-    private int task;
-    private int document;
-    private int data;
-    @SerializedName("all results")
-    @Expose
-    private String all_results;
+    private ArrayList<SearchFacetsBucketsModel> buckets;
+    private String fieldName;
+    private boolean multiselect;
+    private String name;
+    private String subtype;
 
-    public int getFaq() {
-        return faq;
+    public String getFieldName() {
+        return fieldName;
     }
 
-    public int getPage() {
-        return page;
+    public String getName() {
+        return name;
     }
 
-    public int getTask() {
-        return task;
+    public String getSubtype() {
+        return subtype;
     }
 
-    public void setFaq(int faq) {
-        this.faq = faq;
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
     }
 
-    public void setPage(int page) {
-        this.page = page;
+    public void setMultiselect(boolean multiselect) {
+        this.multiselect = multiselect;
     }
 
-    public void setTask(int task) {
-        this.task = task;
+    public boolean getMultiSelect()
+    {
+        return multiselect;
     }
 
-    public int getDocument() {
-        return document;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setDocument(int document) {
-        this.document = document;
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
     }
 
-    public void setAll_results(String all_results) {
-        this.all_results = all_results;
+    public ArrayList<SearchFacetsBucketsModel> getBuckets() {
+        return buckets;
     }
 
-    public String getAll_results() {
-        return all_results;
+    public void setBuckets(ArrayList<SearchFacetsBucketsModel> buckets) {
+        this.buckets = buckets;
     }
 
-    public void setWeb(int web) {
-        this.web = web;
-    }
+    public class BucketsModel
+    {
+        private String key;
+        private int doc_count;
+        private boolean isChecked = false;
 
-    public void setFile(int file) {
-        this.file = file;
-    }
+        public void setDoc_count(int doc_count) {
+            this.doc_count = doc_count;
+        }
 
-    public void setData(int data) {
-        this.data = data;
-    }
+        public void setKey(String key) {
+            this.key = key;
+        }
 
-    public int getData() {
-        return data;
-    }
+        public int getDoc_count() {
+            return doc_count;
+        }
 
-    public int getFile() {
-        return file;
-    }
+        public String getKey() {
+            return key;
+        }
 
-    public int getWeb() {
-        return web;
+        public void setChecked(boolean checked) {
+            isChecked = checked;
+        }
+
+        public boolean getChecked()
+        {
+            return isChecked;
+        }
     }
 }

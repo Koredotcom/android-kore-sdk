@@ -45,15 +45,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
-        <service
-            android:name=".net.BotDemoRestService"
-            android:exported="false" />
-        <service
-            android:name=".net.BotRestService"
-            android:exported="false" />
-        <service
-            android:name=".net.BotLocalService"
-            android:exported="false" />
+        <activity
+            android:name=".activity.FindlyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

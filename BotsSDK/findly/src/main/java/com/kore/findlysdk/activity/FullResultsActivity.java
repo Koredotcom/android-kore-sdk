@@ -1,7 +1,11 @@
 package com.kore.findlysdk.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,18 +45,32 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kore.findlysdk.R;
 import com.kore.findlysdk.adapters.FacetsFilterAdapter;
+import com.kore.findlysdk.adapters.LiveSearchAdaper;
 import com.kore.findlysdk.adapters.LiveSearchCyclerAdapter;
+import com.kore.findlysdk.adapters.LiveSearchDynamicAdapter;
+import com.kore.findlysdk.adapters.LiveSearchListAdapter;
 import com.kore.findlysdk.adapters.SearchAssistCarouselAdapter;
+import com.kore.findlysdk.adapters.SearchResultsCarouselAdapter;
+import com.kore.findlysdk.adapters.TabFacetsAdapter;
 import com.kore.findlysdk.fragments.AllResultsFragment;
 import com.kore.findlysdk.fragments.FilterOptionsSheetFragment;
+import com.kore.findlysdk.fragments.FindlyFragment;
+import com.kore.findlysdk.listners.BotSocketConnectionManager;
+import com.kore.findlysdk.listners.ComposeFooterInterface;
 import com.kore.findlysdk.listners.FilterOptionsListner;
 import com.kore.findlysdk.listners.FilterResultsListner;
 import com.kore.findlysdk.listners.InvokeGenericWebViewInterface;
+import com.kore.findlysdk.listners.TabFacetClickListner;
+import com.kore.findlysdk.models.BotButtonModel;
 import com.kore.findlysdk.models.BotOptionModel;
 import com.kore.findlysdk.models.BotOptionsModel;
 import com.kore.findlysdk.models.BotResponse;
 import com.kore.findlysdk.models.BotResponseMessage;
+import com.kore.findlysdk.models.CalEventsTemplateModel;
 import com.kore.findlysdk.models.ComponentModel;
+import com.kore.findlysdk.models.FormActionTemplate;
+import com.kore.findlysdk.models.KnowledgeCollectionModel;
+import com.kore.findlysdk.models.LiveSearchResultsDataModel;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
 import com.kore.findlysdk.models.PayloadOuter;
 import com.kore.findlysdk.models.ResultsViewAppearance;
@@ -63,6 +81,7 @@ import com.kore.findlysdk.models.ResultsViewTemplate;
 import com.kore.findlysdk.models.ResultsViewlayout;
 import com.kore.findlysdk.models.SearchFacetsBucketsModel;
 import com.kore.findlysdk.models.SearchModel;
+import com.kore.findlysdk.models.TabFacetsModel;
 import com.kore.findlysdk.net.BotRestBuilder;
 import com.kore.findlysdk.net.SDKConfiguration;
 import com.kore.findlysdk.utils.BundleConstants;
@@ -82,18 +101,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
-public class FullResultsActivity extends AppCompatActivity implements View.OnClickListener, InvokeGenericWebViewInterface, FilterResultsListner, FilterOptionsListner
+public class FullResultsActivity extends AppCompatActivity implements View.OnClickListener, InvokeGenericWebViewInterface, FilterResultsListner, FilterOptionsListner, ComposeFooterInterface, TabFacetClickListner
 {
-    private ArrayList<LiveSearchResultsModel> arrLiveSearchResultsModels, arrFaqSearchResultsModels, arrPageSearchResultsModels, arrActionSearchResultsModels, arrDocumentSearchReultsModels, arrDataSearchReultsModels;
     private ViewPager vpAllResults;
     private TabLayout view_pager_tab;
     private TextView tvAllResults, tvFaqResults, tvPagesResults, tvActionsResults, tvDocumentsResults,tvClearAll, tvApply;
     private AllResultsFragment allResultsFragment;
-    private String originalQuery;
+    private String originalQuery, requestId;
     private SearchModel searchModel, filterSearchModel;
     private Gson gson = new Gson();
-    private ArrayList<LiveSearchResultsModel> arrTempAllResults;
     private PopupWindow popupWindow;
     private View popUpView;
     private RelativeLayout llFilters;
@@ -101,7 +119,6 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     private ListView alvFacetsName;
     private String messagePayload;
     private ResultsViewSetting searchSettings;
-    private MyResultsAdapter myResultsAdapter;
     private ArrayList<SearchFacetsBucketsModel> arrTempFilters = new ArrayList<>();
     private FacetsFilterAdapter facetsFilterAdapter;
     private FloatingActionButton fabFilters;
@@ -117,12 +134,18 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     private ResultsViewAppearance document;
     private ResultsViewAppearance task;
     private ResultsViewAppearance data;
-    private RecyclerView lvLiveSearch;
+    private ResultsViewTemplate defaultTemplate;
+    private RecyclerView lvLiveSearch, rvTabs;
     private int currentTab, currentPage = 0;
     private JsonArray jsonTotalArray = new JsonArray();
     private int faqPages, webPages, filePages, dataPages, taskPages;
     private ScrollView svResults;
-
+    private int from = 0;
+    private SharedPreferences sharedPreferences;
+    private TabFacetsModel tabFacetsModel;
+    private int allCount;
+    private boolean isFilterDataAvailable;
+    private String tabFacetSelected = "";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
@@ -167,11 +190,19 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         ivNextLast = (ImageView) findViewById(R.id.ivNextLast);
         svResults = (ScrollView) findViewById(R.id.svResults);
         tvPageNumber = (TextView) findViewById(R.id.tvPageNumber);
+        rvTabs = (RecyclerView) findViewById(R.id.rvTabs);
+        rvTabs.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         lvLiveSearch.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(FullResultsActivity.this);
         dp1 = Utility.convertDpToPixel(FullResultsActivity.this, 1);
 
-        setPageTitle(0);
+        String json = sharedPreferences.getString(BundleConstants.TAB_FACETS, "");
+        if(!StringUtils.isNullOrEmpty(json))
+        {
+            tabFacetsModel = gson.fromJson(json, TabFacetsModel.class);
+        }
+
+//        setPageTitle(0);
         getBundleInfo();
 
         llAllresults.setOnClickListener(this);
@@ -202,8 +233,8 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View v)
             {
-//                if(searchModel != null && searchModel.getTemplate() != null && searchModel.getTemplate().getSearchFacets() != null
-//                    && searchModel.getTemplate().getSearchFacets().size() > 0)
+//                if(searchModel != null && searchModel.getTemplate() != null && searchModel.getTemplate().getFacets() != null
+//                    && searchModel.getTemplate().getFacets().size() > 0)
 //                {
 //                    if(facetsFilterAdapter != null && arrTempFilters != null && arrTempFilters.size() > 0)
 //                        facetsFilterAdapter.refresh(arrTempFilters);
@@ -233,45 +264,10 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
             public void onClick(View view)
             {
                 if(searchModel != null && searchModel.getTemplate() != null
-                        && searchModel.getTemplate().getSearchFacets() != null && searchModel.getTemplate().getSearchFacets().size() > 0
+                        && searchModel.getTemplate().getFacets() != null && searchModel.getTemplate().getFacets().size() > 0
                         && arrTempFilters != null && arrTempFilters.size() > 0)
                 {
-                    for (int k = 0; k < searchModel.getTemplate().getSearchFacets().size(); k++)
-                    {
-                        String fldName = searchModel.getTemplate().getSearchFacets().get(k).getFieldName();
-                        searchModel.getTemplate().getSearchFacets().get(k).setArrSearchBucket(new ArrayList<SearchFacetsBucketsModel>());
-
-                        for(int j = 0; j < arrTempFilters.size(); j++)
-                        {
-                            if(fldName.equalsIgnoreCase(arrTempFilters.get(j).getFieldName()))
-                            {
-                                searchModel.getTemplate().getSearchFacets().get(k).getArrSearchBucket().add(arrTempFilters.get(j));
-                            }
-                        }
-                    }
-
-                    JsonArray jsonArray = new JsonArray();
-
-                    for(int i = 0; i < searchModel.getTemplate().getSearchFacets().size(); i++)
-                    {
-                        if(searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().size() > 0)
-                        {
-                            JsonObject jsonObject = new JsonObject();
-                            jsonObject.addProperty("fieldName", searchModel.getTemplate().getSearchFacets().get(i).getFieldName());
-                            jsonObject.addProperty("facetType", searchModel.getTemplate().getSearchFacets().get(i).getFacetType());
-
-                            JsonArray facetsValue = new JsonArray();
-
-                            for (int j = 0; j < searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().size(); j++)
-                            {
-                                facetsValue.add(searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().get(j).getKey());
-                            }
-                            jsonObject.add("facetValue", facetsValue);
-                            jsonArray.add(jsonObject);
-                        }
-                    }
-
-                    getFilterSearch(originalQuery, jsonArray, messagePayload);
+                    getFilterSearch(originalQuery, getFiltersArray(arrTempFilters), messagePayload, getTabFiltersObject(tabFacetSelected), 0);
                 }
                 else
                     onFilterClear();
@@ -309,38 +305,55 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                 switch (currentTab)
                 {
                     case 1:
-                        if(currentPage+1 < faqPages)
                         {
-                            currentPage++;
-                            setPageTitle(currentTab);
-                        }
-                        break;
-                    case 2:
-                        if(currentPage+1 < webPages)
-                        {
-                            currentPage++;
-                            setPageTitle(currentTab);
-                        }
-                        break;
-                    case 3:
-                        if(currentPage+1 < taskPages)
-                        {
-                            currentPage++;
-                            setPageTitle(currentTab);
-                        }
-                        break;
-                    case 4:
-                        if(currentPage+1 < filePages)
-                        {
-                            currentPage++;
-                            setPageTitle(currentTab);
-                        }
-                        break;
-                    case 5:
-                        if(currentPage+1 < dataPages)
-                        {
-                            currentPage++;
-                            setPageTitle(currentTab);
+                            switch ((String) tabFacetSelected)
+                            {
+                                case BundleConstants.FAQ:
+                                {
+                                    if(currentPage+1 < faqPages)
+                                    {
+                                        currentPage++;
+                                        getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(BundleConstants.FAQ), 1);
+                                    }
+                                }
+                                break;
+                                case BundleConstants.WEB:
+                                {
+                                    if(currentPage+1 < webPages)
+                                    {
+                                        currentPage++;
+                                        getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(BundleConstants.WEB), 1);
+                                    }
+                                }
+                                break;
+                                case BundleConstants.TASK:
+                                {
+                                    if(currentPage+1 < taskPages)
+                                    {
+                                        currentPage++;
+                                        getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(BundleConstants.TASK), 1);
+                                    }
+                                }
+                                break;
+                                case BundleConstants.FILE:
+                                {
+                                    if(currentPage+1 < filePages)
+                                    {
+                                        currentPage++;
+                                        getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(BundleConstants.FILE), 1);
+                                    }
+                                }
+                                break;
+                                case BundleConstants.DATA:
+                                {
+                                    if(currentPage+1 < dataPages)
+                                    {
+                                        currentPage++;
+                                        getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(BundleConstants.DATA), 1);
+                                    }
+                                }
+                                break;
+                            }
                         }
                         break;
                     default:
@@ -357,7 +370,8 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                 if(currentPage > 0)
                 {
                     currentPage--;
-                    setPageTitle(currentTab);
+                    getFilterSearch(originalQuery, jsonTotalArray, messagePayload, getTabFiltersObject(tabFacetSelected), 1);
+//                    setPageTitle(currentTab);
                 }
             }
         });
@@ -392,6 +406,9 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                     break;
                     case 4:
                         currentPage = filePages - 1;
+                        break;
+                    case 5:
+                        currentPage = dataPages - 1;
                     break;
                     default:
                         currentPage = 0;
@@ -404,92 +421,64 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
     private void getSortedInfo(ArrayList<LiveSearchResultsModel> arrAllResultsModels)
     {
-        arrFaqSearchResultsModels = new ArrayList<>();
-        arrPageSearchResultsModels = new ArrayList<>();
-        arrActionSearchResultsModels = new ArrayList<>();
-        arrDocumentSearchReultsModels = new ArrayList<>();
-        arrDataSearchReultsModels = new ArrayList<>();
-
         for (int i = 0; i < arrAllResultsModels.size(); i++)
         {
-            if(arrAllResultsModels.get(i).getSysContentType() != null)
+            if(arrAllResultsModels.get(i).getSys_content_type() != null)
             {
-                if(arrAllResultsModels.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.FAQ))
+                switch (arrAllResultsModels.get(i).getSys_content_type())
                 {
-                    arrAllResultsModels.get(i).setAppearance(faq);
-                    arrFaqSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
+                    case BundleConstants.FAQ:
+                        arrAllResultsModels.get(i).setAppearance(faq);
+                    break;
+                    case BundleConstants.WEB:
+                        arrAllResultsModels.get(i).setAppearance(page);
+                    break;
+                    case BundleConstants.TASK:
+                        arrAllResultsModels.get(i).setAppearance(task);
+                    break;
+                    case BundleConstants.FILE:
+                        arrAllResultsModels.get(i).setAppearance(document);
+                    break;
+                    case BundleConstants.DATA:
+                        arrAllResultsModels.get(i).setAppearance(data);
+                    break;
+                    default:
+                        break;
 
-                if(arrAllResultsModels.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.WEB))
-                {
-                    arrAllResultsModels.get(i).setAppearance(page);
-                    arrPageSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.TASK))
-                {
-                    if(task == null)
-                        task = getResultsViewAppearance(BundleConstants.TASK);
-
-                    arrAllResultsModels.get(i).setAppearance(task);
-                    arrActionSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.FILE))
-                {
-                    arrAllResultsModels.get(i).setAppearance(document);
-                    arrDocumentSearchReultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getSysContentType().equalsIgnoreCase(BundleConstants.DATA))
-                {
-                    arrAllResultsModels.get(i).setAppearance(data);
-                    arrDataSearchReultsModels.add(arrAllResultsModels.get(i));
-                }
-            }
-            else if(arrAllResultsModels.get(i).getContentType() != null)
-            {
-                if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.FAQ))
-                {
-                    arrAllResultsModels.get(i).setAppearance(faq);
-                    arrFaqSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.WEB))
-                {
-                    arrAllResultsModels.get(i).setAppearance(page);
-                    arrPageSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.TASK))
-                {
-                    if(task == null)
-                        task = getResultsViewAppearance(BundleConstants.TASK);
-
-                    arrAllResultsModels.get(i).setAppearance(task);
-                    arrActionSearchResultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.FILE))
-                {
-                    arrAllResultsModels.get(i).setAppearance(document);
-                    arrDocumentSearchReultsModels.add(arrAllResultsModels.get(i));
-                }
-
-                if(arrAllResultsModels.get(i).getContentType().equalsIgnoreCase(BundleConstants.DATA))
-                {
-                    arrAllResultsModels.get(i).setAppearance(data);
-                    arrDataSearchReultsModels.add(arrAllResultsModels.get(i));
                 }
             }
         }
+    }
 
-        arrLiveSearchResultsModels = new ArrayList<>();
-        arrLiveSearchResultsModels.addAll(arrActionSearchResultsModels);
-        arrLiveSearchResultsModels.addAll(arrPageSearchResultsModels);
-        arrLiveSearchResultsModels.addAll(arrFaqSearchResultsModels);
-        arrLiveSearchResultsModels.addAll(arrDocumentSearchReultsModels);
-        arrLiveSearchResultsModels.addAll(arrDataSearchReultsModels);
+    private void getDataSortedInfo(ArrayList<HashMap<String, Object>> arrAllResultsModels)
+    {
+        for (int i = 0; i < arrAllResultsModels.size(); i++)
+        {
+            if(arrAllResultsModels.get(i).get(BundleConstants.SYS_CONTENT_TYPE) != null)
+            {
+                switch ((String) arrAllResultsModels.get(i).get(BundleConstants.SYS_CONTENT_TYPE))
+                {
+                    case BundleConstants.FAQ:
+                        arrAllResultsModels.get(i).put(BundleConstants.APPEARANCE, faq);
+                        break;
+                    case BundleConstants.WEB:
+                        arrAllResultsModels.get(i).put(BundleConstants.APPEARANCE, page);
+                        break;
+                    case BundleConstants.TASK:
+                        arrAllResultsModels.get(i).put(BundleConstants.APPEARANCE, task);
+                    break;
+                    case BundleConstants.FILE:
+                        arrAllResultsModels.get(i).put(BundleConstants.APPEARANCE, document);
+                        break;
+                    case BundleConstants.DATA:
+                        arrAllResultsModels.get(i).put(BundleConstants.APPEARANCE, data);
+                        break;
+                    default:
+                        break;
+
+                }
+            }
+        }
     }
 
     private void getBundleInfo()
@@ -497,27 +486,90 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         originalQuery = getIntent().getExtras().getString("originalQuery");
         messagePayload = getIntent().getExtras().getString("messagePayload");
         searchSettings = (ResultsViewSetting) getIntent().getExtras().getSerializable("searchSetting");
+        requestId = getIntent().getExtras().getString("searchRequestId");
+        from = getIntent().getExtras().getInt("from");
 
-        if(searchSettings != null && searchSettings.getAppearance() != null
-                    && searchSettings.getAppearance().size() > 0)
+        if(searchSettings != null && searchSettings.getGroupSetting() != null
+            && searchSettings.getGroupSetting().getConditions() != null
+            && searchSettings.getGroupSetting().getConditions().size() > 0)
         {
-            for(int i = 0; i < searchSettings.getAppearance().size(); i++)
+            for(int i = 0; i < searchSettings.getGroupSetting().getConditions().size(); i++)
             {
-                if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.FAQ))
-                    faq = searchSettings.getAppearance().get(i);
-                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.PAGE))
-                    page = searchSettings.getAppearance().get(i);
-                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.DOCUMENT))
-                    document = searchSettings.getAppearance().get(i);
-                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.TASK))
-                    task = searchSettings.getAppearance().get(i);
-                else if(searchSettings.getAppearance().get(i).getType().equalsIgnoreCase(BundleConstants.STRUCTURE_DATA))
-                    data = searchSettings.getAppearance().get(i);
+                if(searchSettings.getGroupSetting().getConditions().get(i).getFieldValue().equalsIgnoreCase(BundleConstants.FAQ))
+                    faq = searchSettings.getGroupSetting().getConditions().get(i);
+                else if(searchSettings.getGroupSetting().getConditions().get(i).getFieldValue().equalsIgnoreCase(BundleConstants.WEB))
+                    page = searchSettings.getGroupSetting().getConditions().get(i);
+                else if(searchSettings.getGroupSetting().getConditions().get(i).getFieldValue().equalsIgnoreCase(BundleConstants.FILE))
+                    document = searchSettings.getGroupSetting().getConditions().get(i);
+                else if(searchSettings.getGroupSetting().getConditions().get(i).getFieldValue().equalsIgnoreCase(BundleConstants.TASK))
+                    task = searchSettings.getGroupSetting().getConditions().get(i);
+                else if(searchSettings.getGroupSetting().getConditions().get(i).getFieldValue().equalsIgnoreCase(BundleConstants.DATA))
+                    data = searchSettings.getGroupSetting().getConditions().get(i);
+            }
+
+            if(searchSettings.getDefaultTemplate() != null)
+                defaultTemplate = searchSettings.getDefaultTemplate();
+
+            if(faq == null)
+                faq = getDefaultApperence(BundleConstants.FAQ);
+
+            if(page == null)
+                page = getDefaultApperence(BundleConstants.WEB);
+
+            if(document == null)
+                document = getDefaultApperence(BundleConstants.FILE);
+
+            if(data == null)
+                data = getDefaultApperence(BundleConstants.DATA);
+
+            if(task == null)
+                task = getDefaultApperence(BundleConstants.TASK);
+        }
+
+        currentPage = 0;
+        tvPageNumber.setText("1");
+
+        switch (from)
+        {
+            case 1:
+                setPageTitle(1);
+            break;
+            case 2:
+                setPageTitle(2);
+            break;
+            case 3:
+                setPageTitle(3);
+            break;
+            case 4:
+                setPageTitle(4);
+            break;
+            case 5:
+                setPageTitle(5);
+            break;
+            default:
+            {
+                hsvOptionsFooter.scrollTo(0, 0);
+                setPageTitle(0);
             }
         }
 
-        if(!StringUtils.isNullOrEmpty(originalQuery))
-            getSearch(originalQuery);
+
+    }
+
+    private ResultsViewAppearance getDefaultApperence(String type)
+    {
+        ResultsViewAppearance resultsViewAppearance = new ResultsViewAppearance();
+        resultsViewAppearance.setOp("equals");
+        resultsViewAppearance.setFieldValue(type);
+
+        if(defaultTemplate != null)
+        {
+            resultsViewAppearance.setTemplateId(defaultTemplate.get_id());
+            resultsViewAppearance.setTemplate(defaultTemplate);
+            return resultsViewAppearance;
+        }
+
+        return null;
     }
 
 
@@ -613,7 +665,6 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
     {
         arrTempFilters = new ArrayList<>();
         jsonTotalArray = new JsonArray();
-//        getSearch(originalQuery);
         currentPage = 0;
         tvPageNumber.setText("1");
         tvClearAll.setVisibility(View.GONE);
@@ -623,21 +674,6 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
             case 0:
                 if(!StringUtils.isNullOrEmpty(originalQuery))
                     getSearch(originalQuery);
-                break;
-            case 1:
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.FAQ), messagePayload);
-                break;
-            case 2:
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.WEB), messagePayload);
-                break;
-            case 3:
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.TASK), messagePayload);
-                break;
-            case 4:
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.FILE), messagePayload);
-                break;
-            case 5:
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.DATA), messagePayload);
                 break;
             default:
                 break;
@@ -650,69 +686,49 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         this.arrTempFilters = arrTempFilters;
 
         if(searchModel != null && searchModel.getTemplate() != null
-                && searchModel.getTemplate().getSearchFacets() != null && searchModel.getTemplate().getSearchFacets().size() > 0
+                && searchModel.getTemplate().getFacets() != null && searchModel.getTemplate().getFacets().size() > 0
                 && arrTempFilters != null && arrTempFilters.size() > 0)
         {
-            for (int k = 0; k < searchModel.getTemplate().getSearchFacets().size(); k++)
+            for (int k = 0; k < searchModel.getTemplate().getFacets().size(); k++)
             {
-                String fldName = searchModel.getTemplate().getSearchFacets().get(k).getFieldName();
-                searchModel.getTemplate().getSearchFacets().get(k).setArrSearchBucket(new ArrayList<SearchFacetsBucketsModel>());
+                String fldName = searchModel.getTemplate().getFacets().get(k).getFieldName();
+                searchModel.getTemplate().getFacets().get(k).setArrSearchBucket(new ArrayList<SearchFacetsBucketsModel>());
 
                 for(int j = 0; j < arrTempFilters.size(); j++)
                 {
                     if(fldName.equalsIgnoreCase(arrTempFilters.get(j).getFieldName()))
                     {
-                        searchModel.getTemplate().getSearchFacets().get(k).getArrSearchBucket().add(arrTempFilters.get(j));
+                        searchModel.getTemplate().getFacets().get(k).getArrSearchBucket().add(arrTempFilters.get(j));
                     }
                 }
             }
 
             JsonArray jsonArray = new JsonArray();
 
-            for(int i = 0; i < searchModel.getTemplate().getSearchFacets().size(); i++)
+            for(int i = 0; i < searchModel.getTemplate().getFacets().size(); i++)
             {
-                if(searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().size() > 0)
+                if(searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().size() > 0)
                 {
                     JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("fieldName", searchModel.getTemplate().getSearchFacets().get(i).getFieldName());
-                    jsonObject.addProperty("facetType", searchModel.getTemplate().getSearchFacets().get(i).getFacetType());
-
+                    jsonObject.addProperty("fieldName", searchModel.getTemplate().getFacets().get(i).getFieldName());
+                    jsonObject.addProperty("subtype", searchModel.getTemplate().getFacets().get(i).getSubtype());
+                    jsonObject.addProperty("name", searchModel.getTemplate().getFacets().get(i).getName());
                     JsonArray facetsValue = new JsonArray();
 
-                    for (int j = 0; j < searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().size(); j++)
+                    for (int j = 0; j < searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().size(); j++)
                     {
-                        facetsValue.add(searchModel.getTemplate().getSearchFacets().get(i).getArrSearchBucket().get(j).getKey());
+                        facetsValue.add(searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().get(j).getKey());
                     }
                     jsonObject.add("facetValue", facetsValue);
                     jsonArray.add(jsonObject);
                 }
             }
-            jsonTotalArray.addAll(jsonArray);
 
-            switch (currentTab)
-            {
-                case 1:
-                    jsonArray.add(getFiltersObject(BundleConstants.FAQ));
-                    break;
-                case 2:
-                    jsonArray.add(getFiltersObject(BundleConstants.WEB));
-                    break;
-                case 3:
-                    jsonArray.add(getFiltersObject(BundleConstants.TASK));
-                    break;
-                case 4:
-                    jsonArray.add(getFiltersObject(BundleConstants.FILE));
-                    break;
-                case 5:
-                    jsonArray.add(getFiltersObject(BundleConstants.DATA));
-                    break;
-                default:
-                    break;
-            }
+            jsonTotalArray.addAll(jsonArray);
 
             currentPage = 0;
             tvPageNumber.setText("1");
-            getFilterSearch(originalQuery, jsonArray, messagePayload);
+            getFilterSearch(originalQuery, jsonArray, messagePayload, getTabFiltersObject(tabFacetSelected), 0);
         }
         else
             onFilterClear();
@@ -740,107 +756,70 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
-    public class MyResultsAdapter extends FragmentStatePagerAdapter
-    {
-        private int NUM_ITEMS = 5;
-        private boolean showCount = false;
+    @Override
+    public void onSendClick(String message, boolean isFromUtterance) {
 
-        public MyResultsAdapter(FragmentManager fragmentManager, boolean showCount)
-        {
-            super(fragmentManager);
-            this.showCount = showCount;
-        }
+    }
 
-        public void refresh(boolean showCount)
-        {
-            this.showCount = showCount;
-            this.notifyDataSetChanged();
-        }
+    @Override
+    public void onSendClick(String message, String payload, boolean isFromUtterance) {
+        BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+        finish();
+    }
 
-        @Override
-        public int getItemPosition(@NonNull Object object)
-        {
-            return POSITION_NONE;
-        }
+    @Override
+    public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
 
-        @NonNull
-        @Override
-        public Fragment getItem(int position)
-        {
-            switch (position) {
-                case 0:
-                    {
-                        allResultsFragment = AllResultsFragment.newInstance(arrLiveSearchResultsModels);
-                        allResultsFragment.setInvokeGenericWebViewInterface(FullResultsActivity.this);
-                        allResultsFragment.setFloatingActionButton(fabFilters);
-                        allResultsFragment.setFilterCountView(tvFilterCount);
-                        allResultsFragment.showFilterCount(showCount);
-                    }
-                    return allResultsFragment;
-                case 1:
-                    {
-                        allResultsFragment = AllResultsFragment.newInstance(arrFaqSearchResultsModels);
-                        allResultsFragment.setInvokeGenericWebViewInterface(FullResultsActivity.this);
-                        allResultsFragment.setFloatingActionButton(fabFilters);
-                        allResultsFragment.setFilterCountView(tvFilterCount);
-                        allResultsFragment.showFilterCount(showCount);
-                    }
-                    return allResultsFragment;
-                case 2:
-                    {
-                        allResultsFragment = AllResultsFragment.newInstance(arrPageSearchResultsModels);
-                        allResultsFragment.setInvokeGenericWebViewInterface(FullResultsActivity.this);
-                        allResultsFragment.setFloatingActionButton(fabFilters);
-                        allResultsFragment.setFilterCountView(tvFilterCount);
-                        allResultsFragment.showFilterCount(showCount);
-                    }
-                    return allResultsFragment;
-                case 3:
-                    {
-                        allResultsFragment = AllResultsFragment.newInstance(arrActionSearchResultsModels);
-                        allResultsFragment.setInvokeGenericWebViewInterface(FullResultsActivity.this);
-                        allResultsFragment.setFloatingActionButton(fabFilters);
-                        allResultsFragment.setFilterCountView(tvFilterCount);
-                        allResultsFragment.showFilterCount(showCount);
-                    }
-                    return allResultsFragment;
-                case 4:
-                    {
-                        allResultsFragment = AllResultsFragment.newInstance(arrDocumentSearchReultsModels);
-                        allResultsFragment.setInvokeGenericWebViewInterface(FullResultsActivity.this);
-                        allResultsFragment.setFloatingActionButton(fabFilters);
-                        allResultsFragment.setFilterCountView(tvFilterCount);
-                        allResultsFragment.showFilterCount(showCount);
-                    }
-                    return allResultsFragment;
-                default:
-                    return null;
-            }
-        }
+    }
 
-        @Override
-        public int getCount()
-        {
-            return NUM_ITEMS;
-        }
+    @Override
+    public void launchActivityWithBundle(String type, Bundle payload) {
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "All Results (" + arrLiveSearchResultsModels.size()+")";
-                case 1:
-                    return "FAQ's (" + arrFaqSearchResultsModels.size()+")";
-                case 2:
-                    return "Pages (" + arrPageSearchResultsModels.size()+")";
-                case 3:
-                    return "Actions (" + arrLiveSearchResultsModels.size()+")";
-                case 4:
-                    return "Documents (" + arrDocumentSearchReultsModels.size()+")";
-                default:
-                    return "Pages (" + arrLiveSearchResultsModels.size()+")";
-            }
-        }
+    }
+
+    @Override
+    public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded) {
+
+    }
+
+    @Override
+    public void copyMessageToComposer(String text, boolean isForOnboard) {
+
+    }
+
+    @Override
+    public void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd, boolean showOverlay, String templateType) {
+
+    }
+
+    @Override
+    public void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position) {
+
+    }
+
+    @Override
+    public void updateActionbar(boolean selected, String templateType, ArrayList<BotButtonModel> buttonModels) {
+
+    }
+
+    @Override
+    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
+
+    }
+
+    @Override
+    public void showAfterOnboard(boolean isDiscardClicked) {
+
+    }
+
+    @Override
+    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
+
+    }
+
+    @Override
+    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
+
     }
 
     private void setPageTitle(int position)
@@ -868,11 +847,10 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
                 llPagination.setVisibility(GONE);
                 currentTab = 0;
-//                vpAllResults.setCurrentItem(0);
 
                 if(jsonTotalArray != null && jsonTotalArray.size() > 0)
                 {
-                    getFilterSearch(originalQuery, jsonTotalArray, messagePayload);
+                    getFilterSearch(originalQuery, jsonTotalArray, messagePayload, null, 0);
                 }
                 else
                 {
@@ -881,184 +859,61 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 break;
-            case 1:
+            default:
                 tvAllResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
                 ivAllresults.setImageResource(R.mipmap.allresults_unselect);
 
-                tvFaqResults.setTextColor(getResources().getColor(R.color.txtFontBlack));
-                ivFaqs.setImageResource(R.mipmap.faq_select);
-
-                tvPagesResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivPages.setImageResource(R.mipmap.pages_unselect);
-
-                tvActionsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivActions.setImageResource(R.mipmap.actions_unselect);
-
-                tvDocumentsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivDocuments.setImageResource(R.mipmap.docs_unselect);
-
-                tvDataResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivData.setImageResource(R.mipmap.pages_unselect);
-
-//                vpAllResults.setCurrentItem(1);
                 currentTab = 1;
                 lvLiveSearch.setVisibility(View.GONE);
+                llPagination.setVisibility(GONE);
 
-                if(faqPages > 1)
-                {
-                    llPagination.setVisibility(View.VISIBLE);
-                    tvNoofPages.setText(""+faqPages);
-                    tvPageNumber.setText((currentPage+1)+"");
+                if(tabFacetSelected.equalsIgnoreCase(BundleConstants.FAQ)) {
+                    if(faqPages > 1)
+                    {
+                        llPagination.setVisibility(View.VISIBLE);
+                        tvNoofPages.setText(""+faqPages);
+                        tvPageNumber.setText((currentPage+1)+"");
+                    }
                 }
-                else
-                    llPagination.setVisibility(GONE);
-
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.FAQ), messagePayload);
-
-                break;
-            case 2:
-                tvAllResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivAllresults.setImageResource(R.mipmap.allresults_unselect);
-
-                tvFaqResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivFaqs.setImageResource(R.mipmap.faq_unselect);
-
-                tvPagesResults.setTextColor(getResources().getColor(R.color.txtFontBlack));
-                ivPages.setImageResource(R.mipmap.pages_select);
-
-                tvActionsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivActions.setImageResource(R.mipmap.actions_unselect);
-
-                tvDocumentsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivDocuments.setImageResource(R.mipmap.docs_unselect);
-
-                tvDataResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivData.setImageResource(R.mipmap.pages_unselect);
-
-//                vpAllResults.setCurrentItem(2);
-                currentTab = 2;
-                lvLiveSearch.setVisibility(View.GONE);
-
-                if(webPages > 1)
-                {
-                    llPagination.setVisibility(View.VISIBLE);
-                    tvNoofPages.setText(""+webPages);
-                    tvPageNumber.setText((currentPage+1)+"");
+                else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.WEB)) {
+                    if(webPages > 1)
+                    {
+                        llPagination.setVisibility(View.VISIBLE);
+                        tvNoofPages.setText(""+webPages);
+                        tvPageNumber.setText((currentPage+1)+"");
+                    }
                 }
-                else
-                    llPagination.setVisibility(GONE);
-
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.WEB), messagePayload);
-
-                break;
-            case 3:
-                tvAllResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivAllresults.setImageResource(R.mipmap.allresults_unselect);
-
-                tvFaqResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivFaqs.setImageResource(R.mipmap.faq_unselect);
-
-                tvPagesResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivPages.setImageResource(R.mipmap.pages_unselect);
-
-                tvActionsResults.setTextColor(getResources().getColor(R.color.txtFontBlack));
-                ivActions.setImageResource(R.mipmap.actions_select);
-
-                tvDocumentsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivDocuments.setImageResource(R.mipmap.docs_unselect);
-
-                tvDataResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivData.setImageResource(R.mipmap.pages_unselect);
-
-//                vpAllResults.setCurrentItem(3);
-                currentTab = 3;
-                lvLiveSearch.setVisibility(View.GONE);
-                if(taskPages > 1)
-                {
-                    llPagination.setVisibility(View.VISIBLE);
-                    tvNoofPages.setText(""+taskPages);
-                    tvPageNumber.setText((currentPage+1)+"");
+                else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.TASK)) {
+                    if(taskPages > 1)
+                    {
+                        llPagination.setVisibility(View.VISIBLE);
+                        tvNoofPages.setText(""+taskPages);
+                        tvPageNumber.setText((currentPage+1)+"");
+                    }
                 }
-                else
-                    llPagination.setVisibility(GONE);
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.TASK), messagePayload);
-
-
-                break;
-
-            case 4:
-                tvAllResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivAllresults.setImageResource(R.mipmap.allresults_unselect);
-
-                tvFaqResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivFaqs.setImageResource(R.mipmap.faq_unselect);
-
-                tvPagesResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivPages.setImageResource(R.mipmap.pages_unselect);
-
-                tvActionsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivActions.setImageResource(R.mipmap.actions_unselect);
-
-                tvDocumentsResults.setTextColor(getResources().getColor(R.color.txtFontBlack));
-                ivDocuments.setImageResource(R.mipmap.docs_select);
-
-                tvDataResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivData.setImageResource(R.mipmap.pages_unselect);
-
-//                vpAllResults.setCurrentItem(4);
-                currentTab = 4;
-                lvLiveSearch.setVisibility(View.GONE);
-                if(filePages > 1)
-                {
-                    llPagination.setVisibility(View.VISIBLE);
-                    tvNoofPages.setText(""+filePages);
-                    tvPageNumber.setText((currentPage+1)+"");
+                else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.FILE)) {
+                    if(filePages > 1)
+                    {
+                        llPagination.setVisibility(View.VISIBLE);
+                        tvNoofPages.setText(""+filePages);
+                        tvPageNumber.setText((currentPage+1)+"");
+                    }
                 }
-                else
-                    llPagination.setVisibility(GONE);
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.FILE), messagePayload);
-
-                break;
-
-             case 5:
-                tvAllResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivAllresults.setImageResource(R.mipmap.allresults_unselect);
-
-                tvFaqResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivFaqs.setImageResource(R.mipmap.faq_unselect);
-
-                tvPagesResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivPages.setImageResource(R.mipmap.pages_unselect);
-
-                tvActionsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivActions.setImageResource(R.mipmap.actions_unselect);
-
-                tvDocumentsResults.setTextColor(getResources().getColor(R.color.tabs_text_bg));
-                ivDocuments.setImageResource(R.mipmap.docs_unselect);
-
-                 tvDataResults.setTextColor(getResources().getColor(R.color.txtFontBlack));
-                 ivData.setImageResource(R.mipmap.pages_select);
-
-//                vpAllResults.setCurrentItem(4);
-                currentTab = 5;
-                lvLiveSearch.setVisibility(View.GONE);
-                if(dataPages > 1)
-                {
-                    llPagination.setVisibility(View.VISIBLE);
-                    tvNoofPages.setText(""+dataPages);
-                    tvPageNumber.setText((currentPage+1)+"");
+                else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.DATA)) {
+                    if(dataPages > 1)
+                    {
+                        llPagination.setVisibility(View.VISIBLE);
+                        tvNoofPages.setText(""+dataPages);
+                        tvPageNumber.setText((currentPage+1)+"");
+                    }
                 }
-                else
-                    llPagination.setVisibility(GONE);
-
-                getFilterSearch(originalQuery, getFiltersArray(BundleConstants.DATA), messagePayload);
-                break;
+            break;
         }
     }
 
     public void getSearch(String query)
     {
-        JsonObject jsonObject = getJsonBody(query, true, messagePayload);
+        JsonObject jsonObject = getJsonBody(query, true, messagePayload, requestId);
         Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(FullResultsActivity.this).getAccessToken(), jsonObject, SocketWrapper.getInstance(FullResultsActivity.this).getJWTToken());
         getJWTTokenService.enqueue(new Callback<SearchModel>() {
             @Override
@@ -1070,165 +925,85 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
                     if(searchModel != null && searchModel.getTemplate() != null)
                     {
-                        if(searchModel.getTemplate().getWebhookPayload() != null)
+                        if(searchModel.getTemplate().getResults() != null)
                         {
-                            if(searchModel.getTemplate().getWebhookPayload().getText() instanceof String)
+                            llAllresultsLayout.removeAllViews();
+                            rlData.setVisibility(View.VISIBLE);
+                            rlNoData.setVisibility(View.GONE);
+
+                            if(searchModel.getTemplate().getResults().getFaq() != null &&
+                                searchModel.getTemplate().getResults().getFaq().getData() != null &&
+                                searchModel.getTemplate().getResults().getFaq().getData().size() > 0)
                             {
-                                try
-                                {
-                                    Type carouselType = new TypeToken<PayloadOuter>() {
-                                    }.getType();
-                                    PayloadOuter carouselElements = gson.fromJson((String) searchModel.getTemplate().getWebhookPayload().getText(), carouselType);
-
-                                    ComponentModel componentModel = new ComponentModel();
-                                    componentModel.setType("template");
-                                    componentModel.setPayload(carouselElements);
-
-                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
-                                    botResponseMessage.setType("template");
-                                    botResponseMessage.setComponent(componentModel);
-
-                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                                    arrBotResponseMessages.add(botResponseMessage);
-
-                                    BotResponse botResponse = new BotResponse();
-                                    botResponse.setType("template");
-                                    botResponse.setMessage(arrBotResponseMessages);
-
-//                                    processPayload("", botResponse);
-                                }
-                                catch (JsonSyntaxException e)
-                                {
-                                }
+                                getSortedInfo(searchModel.getTemplate().getResults().getFaq().getData());
+                                addLayoutView(searchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
                             }
-                            else
+
+                            if(searchModel.getTemplate().getResults().getWeb() != null &&
+                                searchModel.getTemplate().getResults().getWeb().getData() != null &&
+                                searchModel.getTemplate().getResults().getWeb().getData().size() > 0)
                             {
-                                try
+                                getSortedInfo(searchModel.getTemplate().getResults().getWeb().getData());
+                                addLayoutView(searchModel.getTemplate().getResults().getWeb(), page,2, BundleConstants.WEB);
+                            }
+
+                            if(searchModel.getTemplate().getResults().getTask() != null &&
+                                searchModel.getTemplate().getResults().getTask().getData() != null &&
+                                searchModel.getTemplate().getResults().getTask().getData().size() > 0)
+                            {
+                                getSortedInfo(searchModel.getTemplate().getResults().getTask().getData());
+                                addLayoutView(searchModel.getTemplate().getResults().getTask(), task,3, BundleConstants.TASK);
+                            }
+
+                            if(searchModel.getTemplate().getResults().getFile() != null &&
+                                searchModel.getTemplate().getResults().getFile().getData() != null &&
+                                searchModel.getTemplate().getResults().getFile().getData().size() > 0)
+                            {
+                                getSortedInfo(searchModel.getTemplate().getResults().getFile().getData());
+                                addLayoutView(searchModel.getTemplate().getResults().getFile(), document,4, BundleConstants.FILE);
+                            }
+
+                            if(searchModel.getTemplate().getResults().getDefault_group() != null &&
+                                searchModel.getTemplate().getResults().getDefault_group().getData() != null &&
+                                searchModel.getTemplate().getResults().getDefault_group().getData().size() > 0)
+                            {
+                                getSortedInfo(searchModel.getTemplate().getResults().getDefault_group().getData());
+                                addLayoutView(searchModel.getTemplate().getResults().getDefault_group(), data,5, BundleConstants.DATA);
+                            }
+
+                            if(searchModel.getTemplate().getTabFacet() != null &&
+                                searchModel.getTemplate().getTabFacet().getBuckets() != null &&
+                                searchModel.getTemplate().getTabFacet().getBuckets().size() > 0)
+                            {
+
+                                for (int i = 0; i < tabFacetsModel.getTabs().size(); i++)
                                 {
-                                    ComponentModel componentModel = new ComponentModel();
-                                    componentModel.setType("template");
-
-                                    Type carouselType = new TypeToken<PayloadOuter>() {
-                                    }.getType();
-                                    PayloadOuter carouselElements = gson.fromJson(((ArrayList<String>)(searchModel.getTemplate().getWebhookPayload().getText())).get(0), carouselType);
-
-                                    componentModel.setPayload(carouselElements);
-
-                                    BotResponseMessage botResponseMessage = new BotResponseMessage();
-                                    botResponseMessage.setType("template");
-                                    botResponseMessage.setComponent(componentModel);
-
-                                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                                    arrBotResponseMessages.add(botResponseMessage);
-
-                                    BotResponse botResponse = new BotResponse();
-                                    botResponse.setType("template");
-                                    botResponse.setMessage(arrBotResponseMessages);
-
-//                                    processPayload("", botResponse);
+                                    for (int j = 0; j < searchModel.getTemplate().getTabFacet().getBuckets().size(); j++)
+                                    {
+                                        if(searchModel.getTemplate().getTabFacet().getBuckets().get(j).getKey().equalsIgnoreCase(tabFacetsModel.getTabs().get(i).getFieldValue()))
+                                        {
+                                            allCount += searchModel.getTemplate().getTabFacet().getBuckets().get(j).getDoc_count();
+                                            tabFacetsModel.getTabs().get(i).setBucketCount(searchModel.getTemplate().getTabFacet().getBuckets().get(j).getDoc_count());
+                                        }
+                                    }
                                 }
-                                catch (JsonSyntaxException e)
-                                {
-                                }
+
+                                rvTabs.setAdapter(new TabFacetsAdapter(FullResultsActivity.this, tabFacetsModel.getTabs(), FullResultsActivity.this));
+                            }
+
+                            tvAllResults.setText("All Results ("+ allCount +")");
+                            setPageCounts(searchModel);
+
+                            if(searchModel.getTemplate().getFacets() != null &&
+                                searchModel.getTemplate().getFacets().size() > 0)
+                            {
+                                alvFacetsName.setAdapter(facetsFilterAdapter = new FacetsFilterAdapter(FullResultsActivity.this, searchModel.getTemplate().getFacets(), FullResultsActivity.this, arrTempFilters));
                             }
                         }
                         else
                         {
-                            if(searchModel.getTemplate().getResults() != null)
-                            {
-                                llAllresultsLayout.removeAllViews();
-                                rlData.setVisibility(View.VISIBLE);
-                                rlNoData.setVisibility(View.GONE);
-
-                                arrTempAllResults = new ArrayList<>();
-
-                                if(searchModel.getTemplate().getResults().getFaq() != null &&
-                                        searchModel.getTemplate().getResults().getFaq().size() > 0)
-                                {
-                                    getSortedInfo(searchModel.getTemplate().getResults().getFaq());
-                                    addLayoutView(searchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFaq());
-                                }
-
-                                if(searchModel.getTemplate().getResults().getWeb() != null &&
-                                        searchModel.getTemplate().getResults().getWeb().size() > 0)
-                                {
-                                    getSortedInfo(searchModel.getTemplate().getResults().getWeb());
-                                    addLayoutView(searchModel.getTemplate().getResults().getWeb(), page,2, BundleConstants.WEB);
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getWeb());
-                                }
-
-                                if(searchModel.getTemplate().getResults().getTask() != null &&
-                                        searchModel.getTemplate().getResults().getTask().size() > 0)
-                                {
-                                    getSortedInfo(searchModel.getTemplate().getResults().getTask());
-                                    addLayoutView(searchModel.getTemplate().getResults().getTask(), task,3, BundleConstants.TASK);
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getTask());
-                                }
-
-                                if(searchModel.getTemplate().getResults().getFile() != null &&
-                                        searchModel.getTemplate().getResults().getFile().size() > 0)
-                                {
-                                    getSortedInfo(searchModel.getTemplate().getResults().getFile());
-                                    addLayoutView(searchModel.getTemplate().getResults().getFile(), document,4, BundleConstants.FILE);
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getFile());
-                                }
-
-                                if(searchModel.getTemplate().getResults().getData() != null &&
-                                        searchModel.getTemplate().getResults().getData().size() > 0)
-                                {
-                                    getSortedInfo(searchModel.getTemplate().getResults().getData());
-                                    addLayoutView(searchModel.getTemplate().getResults().getData(), data,5, BundleConstants.DATA);
-                                    arrTempAllResults.addAll(searchModel.getTemplate().getResults().getData());
-                                }
-
-//                                getSortedInfo(arrTempAllResults);
-
-//                                if(myResultsAdapter == null)
-//                                {
-//                                    vpAllResults.setAdapter(myResultsAdapter = new MyResultsAdapter(getSupportFragmentManager(), false));
-//                                    view_pager_tab.setupWithViewPager(vpAllResults);
-//                                }
-//                                else
-//                                    myResultsAdapter.refresh(false);
-
-//                                if(arrTempAllResults != null && arrTempAllResults.size() > 0)
-//                                {
-//                                    lvLiveSearch.setVisibility(View.VISIBLE);
-//                                    lvLiveSearch.setAdapter( new LiveSearchCyclerAdapter(FullResultsActivity.this, arrTempAllResults, 1, FullResultsActivity.this, null));
-
-//                                }
-
-//                                if(liveSearchModel.getTemplate().getResults().getFaq() != null && liveSearchModel.getTemplate().getResults().getFaq().size() > 0)
-//                                {
-//                                    addLayoutView(arrTempAllResults, faq,1, BundleConstants.FAQ);
-//                                }
-//
-//                                if(liveSearchModel.getTemplate().getResults().getWeb() != null && liveSearchModel.getTemplate().getResults().getWeb().size() > 0)
-//                                {
-//                                    addLayoutView(liveSearchModel.getTemplate().getResults().getWeb(), page, 2, BundleConstants.WEB);
-//                                }
-
-                                tvAllResults.setText("All Results ("+ searchModel.getTemplate().getFacets().getAll_results()+")");
-                                tvFaqResults.setText("FAQs ("+ searchModel.getTemplate().getFacets().getFaq()+")");
-                                tvPagesResults.setText("Web ("+ searchModel.getTemplate().getFacets().getWeb()+")");
-                                tvActionsResults.setText("Actions ("+ searchModel.getTemplate().getFacets().getTask()+")");
-                                tvDocumentsResults.setText("File ("+ searchModel.getTemplate().getFacets().getFile()+")");
-                                tvDataResults.setText("Data ("+ searchModel.getTemplate().getFacets().getData()+")");
-
-                                setPageCounts(searchModel);
-
-                                if(searchModel.getTemplate().getSearchFacets() != null &&
-                                    searchModel.getTemplate().getSearchFacets().size() > 0)
-                                {
-                                    alvFacetsName.setAdapter(facetsFilterAdapter = new FacetsFilterAdapter(FullResultsActivity.this, searchModel.getTemplate().getSearchFacets(), FullResultsActivity.this, arrTempFilters));
-                                }
-                            }
-                            else
-                            {
-                                rlData.setVisibility(View.GONE);
-                                rlNoData.setVisibility(View.VISIBLE);
-                            }
+                            rlData.setVisibility(View.GONE);
+                            rlNoData.setVisibility(View.VISIBLE);
                         }
                     }
                     else
@@ -1253,44 +1028,208 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
 
     private void setPageCounts(SearchModel searchModel)
     {
-        if(searchModel.getTemplate().getFacets().getFaq() > 0)
-            faqPages = (searchModel.getTemplate().getFacets().getFaq()/10) + (searchModel.getTemplate().getFacets().getFaq() % 10 > 0 ? 1 : 0);
-
-        if(searchModel.getTemplate().getFacets().getWeb() > 0)
-            webPages = (searchModel.getTemplate().getFacets().getWeb()/10) + (searchModel.getTemplate().getFacets().getWeb() % 10 > 0 ? 1 : 0);
-
-        if(searchModel.getTemplate().getFacets().getTask() > 0)
-            taskPages = (searchModel.getTemplate().getFacets().getTask()/10) + (searchModel.getTemplate().getFacets().getTask() % 10 > 0 ? 1 : 0);
-
-        if(searchModel.getTemplate().getFacets().getFile() > 0)
-            filePages = (searchModel.getTemplate().getFacets().getFile()/10) + (searchModel.getTemplate().getFacets().getFile() % 10 > 0 ? 1 : 0);
-
-        if(searchModel.getTemplate().getFacets().getData() > 0)
-            dataPages = (searchModel.getTemplate().getFacets().getData()/10) + (searchModel.getTemplate().getFacets().getData() % 10 > 0 ? 1 : 0);
-
-        switch (currentTab)
+        if(searchModel.getTemplate().getResults() != null)
         {
-            case 1:
-                tvNoofPages.setText(""+faqPages);
-                break;
-            case 2:
-                tvNoofPages.setText(""+webPages);
-                break;
-            case 3:
-                tvNoofPages.setText(""+taskPages);
-                break;
-            case 4:
-                tvNoofPages.setText(""+filePages);
-                break;
-            case 5:
-                tvNoofPages.setText(""+dataPages);
-            default:
-                break;
-        }
+            if(searchModel.getTemplate().getResults().getFaq() != null &&
+                searchModel.getTemplate().getResults().getFaq().getDoc_count() > 0)
+                faqPages = (searchModel.getTemplate().getResults().getFaq().getDoc_count()/10) + (searchModel.getTemplate().getResults().getFaq().getDoc_count() % 10 > 0 ? 1 : 0);
 
+            if(searchModel.getTemplate().getResults().getWeb() != null &&
+                searchModel.getTemplate().getResults().getWeb().getDoc_count() > 0)
+                webPages = (searchModel.getTemplate().getResults().getWeb().getDoc_count()/10) + (searchModel.getTemplate().getResults().getWeb().getDoc_count() % 10 > 0 ? 1 : 0);
+
+            if(searchModel.getTemplate().getResults().getTask() != null &&
+                searchModel.getTemplate().getResults().getTask().getDoc_count() > 0)
+                taskPages = (searchModel.getTemplate().getResults().getTask().getDoc_count()/10) + (searchModel.getTemplate().getResults().getTask().getDoc_count() % 10 > 0 ? 1 : 0);
+
+            if(searchModel.getTemplate().getResults().getFile() != null &&
+                searchModel.getTemplate().getResults().getFile().getDoc_count() > 0)
+                filePages = (searchModel.getTemplate().getResults().getFile().getDoc_count()/10) + (searchModel.getTemplate().getResults().getFile().getDoc_count() % 10 > 0 ? 1 : 0);
+
+            if(searchModel.getTemplate().getResults().getDefault_group() != null &&
+                    searchModel.getTemplate().getResults().getDefault_group().getDoc_count() > 0)
+                dataPages = (searchModel.getTemplate().getResults().getDefault_group().getDoc_count()/10) + (searchModel.getTemplate().getResults().getDefault_group().getDoc_count() % 10 > 0 ? 1 : 0);
+
+            if(tabFacetSelected.equalsIgnoreCase(BundleConstants.FAQ))
+                tvNoofPages.setText(""+faqPages);
+            else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.WEB))
+                tvNoofPages.setText(""+webPages);
+            else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.TASK))
+                tvNoofPages.setText(""+taskPages);
+            else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.FILE))
+                tvNoofPages.setText(""+filePages);
+            else if(tabFacetSelected.equalsIgnoreCase(BundleConstants.DATA))
+                tvNoofPages.setText(""+dataPages);
+        }
     }
 
-    private void addLayoutView(ArrayList<LiveSearchResultsModel> arrSearchResults, final ResultsViewAppearance appearance, int from, String constant)
+    private void addLayoutView(LiveSearchResultsDataModel liveSearchResultsDataModel, final ResultsViewAppearance appearance, int from, String constant)
+    {
+        if(liveSearchResultsDataModel.getData() != null && liveSearchResultsDataModel.getData().size() > 0)
+        {
+            LinearLayout llFaq = (LinearLayout) LayoutInflater.from(FullResultsActivity.this).inflate(R.layout.search_template_new_cell, null);
+            final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
+            final RelativeLayout rlTitle = (RelativeLayout) llFaq.findViewById(R.id.rlTitle);
+            final ImageButton ibResults = (ImageButton) llFaq.findViewById(R.id.ibResults);
+            final ImageButton ibResults2 = (ImageButton) llFaq.findViewById(R.id.ibResults2);
+            TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
+            final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
+            final AutoExpandListView lvResults = (AutoExpandListView) llFaq.findViewById(R.id.lvResults);
+            alResults.addItemDecoration(new VerticalSpaceItemDecoration((int)(10 * dp1)));
+            int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+            heightAdjustableViewPager.setPageMargin(pageMargin);
+
+            if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
+            {
+                heightAdjustableViewPager.setVisibility(GONE);
+                alResults.setVisibility(GONE);
+                lvResults.setVisibility(GONE);
+
+                if(appearance.getTemplate().getLayout() != null)
+                {
+                    if(appearance.getTemplate().getLayout().getRenderTitle())
+                        rlTitle.setVisibility(VISIBLE);
+                    else
+                        rlTitle.setVisibility(GONE);
+                }
+
+                if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                {
+                    alResults.setVisibility(VISIBLE);
+                    alResults.setLayoutManager(new GridLayoutManager(FullResultsActivity.this, 2));
+                    alResults.setAdapter(new LiveSearchCyclerAdapter(FullResultsActivity.this, liveSearchResultsDataModel.getData(), 0, FullResultsActivity.this, FullResultsActivity.this));
+                }
+                else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                {
+                    heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                    heightAdjustableViewPager.setAdapter(new SearchAssistCarouselAdapter(FullResultsActivity.this, liveSearchResultsDataModel.getData() , 0, FullResultsActivity.this, FullResultsActivity.this));
+                }
+                else
+                {
+                    lvResults.setVisibility(VISIBLE);
+
+                    if(!appearance.getTemplate().getLayout().getListType().equalsIgnoreCase(BundleConstants.PLAIN))
+                    {
+                        lvResults.setDivider(getResources().getDrawable(android.R.color.transparent));
+                        lvResults.setDividerHeight((int)(10 * dp1));
+                    }
+
+                    lvResults.setAdapter(new LiveSearchAdaper(FullResultsActivity.this, liveSearchResultsDataModel.getData(), 0, FullResultsActivity.this, FullResultsActivity.this));
+                }
+            }
+            else
+            {
+                heightAdjustableViewPager.setVisibility(GONE);
+                alResults.setVisibility(View.VISIBLE);
+                alResults.setAdapter(new LiveSearchCyclerAdapter(FullResultsActivity.this, liveSearchResultsDataModel.getData(), 0, FullResultsActivity.this, FullResultsActivity.this));
+            }
+
+            switch (from)
+            {
+                case 1:
+                {
+                    tvPageTitle.setText("FAQS");
+                    break;
+                }
+                case 2:
+                {
+                    tvPageTitle.setText("Web");
+                    break;
+                }
+                case 3:
+                {
+                    tvPageTitle.setText("Task");
+                    break;
+                }
+                case 4:
+                {
+                    tvPageTitle.setText("File");
+                    break;
+                }
+                case 5:
+                {
+                    tvPageTitle.setText("Data");
+
+                    switch ((String) tabFacetSelected)
+                    {
+                        case BundleConstants.FAQ:
+                            tvPageTitle.setText("FAQS");
+                            break;
+                        case BundleConstants.WEB:
+                            tvPageTitle.setText("Web");
+                            break;
+                        case BundleConstants.TASK:
+                            tvPageTitle.setText("Task");
+                            break;
+                        case BundleConstants.FILE:
+                            tvPageTitle.setText("File");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
+            }
+
+
+            ibResults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == GONE || heightAdjustableViewPager.getVisibility() == GONE
+                        || lvResults.getVisibility() == GONE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                        else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                            alResults.setVisibility(View.VISIBLE);
+                        else
+                            lvResults.setVisibility(View.VISIBLE);
+
+                        ibResults.setVisibility(GONE);
+                        ibResults2.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            ibResults2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE
+                        || lvResults.getVisibility() == VISIBLE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(GONE);
+                        else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                            alResults.setVisibility(GONE);
+                        else
+                            lvResults.setVisibility(GONE);
+
+                        ibResults2.setVisibility(GONE);
+                        ibResults.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            llAllresultsLayout.addView(llFaq);
+        }
+    }
+
+    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            outRect.bottom = verticalSpaceHeight;
+        }
+    }
+
+    private void addResultsView(ArrayList<HashMap<String, Object>> arrSearchResults, final ResultsViewAppearance appearance, int from, String constant)
     {
         LinearLayout llFaq = (LinearLayout) LayoutInflater.from(FullResultsActivity.this).inflate(R.layout.search_template_new_cell, null);
         final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
@@ -1298,7 +1237,8 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         final ImageButton ibResults2 = (ImageButton) llFaq.findViewById(R.id.ibResults2);
         TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
         final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
-        ResultsViewAppearance appearance1;
+        final AutoExpandListView lvResults = (AutoExpandListView) llFaq.findViewById(R.id.lvResults);
+
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
         ViewGroup.LayoutParams params= heightAdjustableViewPager.getLayoutParams();
         params.height = (int)(170 * dp1);    //500px
@@ -1308,16 +1248,18 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
         {
             heightAdjustableViewPager.setVisibility(GONE);
-            alResults.setVisibility(View.VISIBLE);
+            alResults.setVisibility(GONE);
+            lvResults.setVisibility(GONE);
 
             if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
             {
+                alResults.setVisibility(View.VISIBLE);
                 alResults.setLayoutManager(new GridLayoutManager(FullResultsActivity.this, 2));
+                alResults.setAdapter(new LiveSearchDynamicAdapter(FullResultsActivity.this, arrSearchResults, 0, FullResultsActivity.this, FullResultsActivity.this));
             }
             else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
             {
                 heightAdjustableViewPager.setVisibility(View.VISIBLE);
-                alResults.setVisibility(GONE);
 
                 if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_CENTERED_CONTENT))
                 {
@@ -1330,15 +1272,15 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                     heightAdjustableViewPager.setLayoutParams(params);
                 }
 
-                heightAdjustableViewPager.setAdapter(new SearchAssistCarouselAdapter(FullResultsActivity.this, arrSearchResults , 0, FullResultsActivity.this, null));
+                heightAdjustableViewPager.setAdapter(new SearchResultsCarouselAdapter(FullResultsActivity.this, arrSearchResults , 0, FullResultsActivity.this, FullResultsActivity.this));
             }
             else
             {
-                alResults.setLayoutManager(new LinearLayoutManager(FullResultsActivity.this));
+                lvResults.setVisibility(VISIBLE);
+                lvResults.setAdapter(new LiveSearchListAdapter(FullResultsActivity.this, arrSearchResults, 0, FullResultsActivity.this, FullResultsActivity.this));
             }
         }
 
-        alResults.setAdapter(new LiveSearchCyclerAdapter(FullResultsActivity.this, arrSearchResults, 0, FullResultsActivity.this, null));
         switch (from)
         {
             case 1:
@@ -1404,43 +1346,10 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         llAllresultsLayout.addView(llFaq);
     }
 
-    private ResultsViewAppearance getResultsViewAppearance(String type)
+    public void getFilterSearch(String query, JsonArray filters, String messagePayload, final JsonObject jsonFilterObject, int from)
     {
-        ResultsViewAppearance resultsViewAppearance = new ResultsViewAppearance();
-        resultsViewAppearance.setType(type);
-        resultsViewAppearance.setTemplateId("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
+        JsonObject  jsonObject = getJsonFilterBody(query, filters, jsonFilterObject,  messagePayload, from);
 
-        ResultsViewTemplate template = new ResultsViewTemplate();
-        template.set_id("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
-        template.setAppearanceType(type);
-        template.setCreatedOn("2021-05-31T07:25:44.364Z");
-        template.setStreamId("st-12466d46-dc91-5855-a301-b6ecd7a95d82");
-        template.setSearchIndexId("sidx-4c33c7cf-9561-58f2-b547-4745ce12b513");
-        template.setIndexPipelineId("fip-f3cef85c-efd0-5e1e-bdb0-4c5b52b288e7");
-        template.setlModifiedOn("2021-05-31T07:25:44.364Z");
-        template.setType("listTemplate1");
-
-        ResultsViewlayout resultsViewlayout = new ResultsViewlayout();
-        resultsViewlayout.setLayoutType("tileWithHeader");
-        resultsViewlayout.setIsClickable(true);
-        resultsViewlayout.setBehaviour("webpage");
-        resultsViewlayout.setTextAlignment("left");
-        template.setLayout(resultsViewlayout);
-
-        ResultsViewMapping resultsViewMapping = new ResultsViewMapping();
-        resultsViewMapping.setDescription("filePreview");
-        resultsViewMapping.setHeading("fileTitle");
-        resultsViewMapping.setUrl("fileUrl");
-        template.setMapping(resultsViewMapping);
-
-        resultsViewAppearance.setTemplate(template);
-
-        return resultsViewAppearance;
-    }
-
-    public void getFilterSearch(String query, JsonArray filters, String messagePayload)
-    {
-        JsonObject jsonObject = getJsonFilterBody(query, filters, messagePayload);
         Call<SearchModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(FullResultsActivity.this).getAccessToken(),  jsonObject, SocketWrapper.getInstance(FullResultsActivity.this).getJWTToken());
         getJWTTokenService.enqueue(new Callback<SearchModel>() {
             @Override
@@ -1449,6 +1358,7 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                 if (response.isSuccessful())
                 {
                     filterSearchModel = response.body();
+                    isFilterDataAvailable = false;
 
                     if(filterSearchModel != null && filterSearchModel.getTemplate() != null)
                     {
@@ -1458,65 +1368,98 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
                             rlData.setVisibility(View.VISIBLE);
                             rlNoData.setVisibility(View.GONE);
 
-                            arrTempAllResults = new ArrayList<>();
-
                             if(filterSearchModel.getTemplate().getResults().getFaq() != null &&
-                                    filterSearchModel.getTemplate().getResults().getFaq().size() > 0)
+                                filterSearchModel.getTemplate().getResults().getFaq().getData() != null &&
+                                filterSearchModel.getTemplate().getResults().getFaq().getData().size() > 0)
                             {
-                                getSortedInfo(filterSearchModel.getTemplate().getResults().getFaq());
+                                isFilterDataAvailable = true;
+                                getSortedInfo(filterSearchModel.getTemplate().getResults().getFaq().getData());
                                 addLayoutView(filterSearchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
-                                arrTempAllResults.addAll(filterSearchModel.getTemplate().getResults().getFaq());
                             }
 
                             if(filterSearchModel.getTemplate().getResults().getWeb() != null &&
-                                    filterSearchModel.getTemplate().getResults().getWeb().size() > 0)
+                                filterSearchModel.getTemplate().getResults().getWeb().getData() != null &&
+                                filterSearchModel.getTemplate().getResults().getWeb().getData().size() > 0)
                             {
-                                getSortedInfo(filterSearchModel.getTemplate().getResults().getWeb());
+                                isFilterDataAvailable = true;
+                                getSortedInfo(filterSearchModel.getTemplate().getResults().getWeb().getData());
                                 addLayoutView(filterSearchModel.getTemplate().getResults().getWeb(), page,2, BundleConstants.WEB);
-                                arrTempAllResults.addAll(filterSearchModel.getTemplate().getResults().getWeb());
                             }
 
                             if(filterSearchModel.getTemplate().getResults().getTask() != null &&
-                                    filterSearchModel.getTemplate().getResults().getTask().size() > 0)
+                                filterSearchModel.getTemplate().getResults().getTask().getData() != null &&
+                                filterSearchModel.getTemplate().getResults().getTask().getData().size() > 0)
                             {
-                                getSortedInfo(filterSearchModel.getTemplate().getResults().getTask());
+                                isFilterDataAvailable = true;
+                                getSortedInfo(filterSearchModel.getTemplate().getResults().getTask().getData());
                                 addLayoutView(filterSearchModel.getTemplate().getResults().getTask(), task,3, BundleConstants.TASK);
-                                arrTempAllResults.addAll(filterSearchModel.getTemplate().getResults().getTask());
                             }
 
                             if(filterSearchModel.getTemplate().getResults().getFile() != null &&
-                                    filterSearchModel.getTemplate().getResults().getFile().size() > 0)
+                                filterSearchModel.getTemplate().getResults().getFile().getData() != null &&
+                                filterSearchModel.getTemplate().getResults().getFile().getData().size() > 0)
                             {
-                                getSortedInfo(filterSearchModel.getTemplate().getResults().getFile());
+                                isFilterDataAvailable = true;
+                                getSortedInfo(filterSearchModel.getTemplate().getResults().getFile().getData());
                                 addLayoutView(filterSearchModel.getTemplate().getResults().getFile(), document,4, BundleConstants.FILE);
-                                arrTempAllResults.addAll(filterSearchModel.getTemplate().getResults().getFile());
                             }
 
                             if(filterSearchModel.getTemplate().getResults().getData() != null &&
-                                    filterSearchModel.getTemplate().getResults().getData().size() > 0)
+                                filterSearchModel.getTemplate().getResults().getData().size() > 0)
                             {
+                                isFilterDataAvailable = true;
                                 getSortedInfo(filterSearchModel.getTemplate().getResults().getData());
-                                addLayoutView(filterSearchModel.getTemplate().getResults().getData(), data,5, BundleConstants.DATA);
-                                arrTempAllResults.addAll(filterSearchModel.getTemplate().getResults().getData());
+                                LiveSearchResultsDataModel liveSearchResultsDataModel = new LiveSearchResultsDataModel();
+                                liveSearchResultsDataModel.setData(filterSearchModel.getTemplate().getResults().getData());
+                                liveSearchResultsDataModel.setDoc_count(filterSearchModel.getTemplate().getResults().getData().size());
+                                addLayoutView(liveSearchResultsDataModel , data,5, BundleConstants.DATA);
                             }
 
-                            if(arrTempAllResults.size() > 0)
-                                getSortedInfo(arrTempAllResults);
-                            else
+                            if(filterSearchModel.getTemplate().getResults().getDefault_group() != null)
                             {
-                                rlData.setVisibility(View.GONE);
-                                rlNoData.setVisibility(View.VISIBLE);
+                                if(filterSearchModel.getTemplate().getResults().getDefault_group().getData() != null &&
+                                        filterSearchModel.getTemplate().getResults().getDefault_group().getData().size() > 0)
+                                {
+                                    isFilterDataAvailable = true;
+                                    getSortedInfo(filterSearchModel.getTemplate().getResults().getDefault_group().getData());
+                                    addLayoutView(filterSearchModel.getTemplate().getResults().getDefault_group(), data,5, BundleConstants.DATA);
+                                }
                             }
 
-                            tvAllResults.setText("All Results ("+ filterSearchModel.getTemplate().getFacets().getAll_results()+")");
-                            tvFaqResults.setText("FAQs ("+ filterSearchModel.getTemplate().getFacets().getFaq()+")");
-                            tvPagesResults.setText("Web ("+ filterSearchModel.getTemplate().getFacets().getWeb()+")");
-                            tvActionsResults.setText("Actions ("+ filterSearchModel.getTemplate().getFacets().getTask()+")");
-                            tvDocumentsResults.setText("File ("+ filterSearchModel.getTemplate().getFacets().getFile()+")");
-                            tvDataResults.setText("Data ("+ filterSearchModel.getTemplate().getFacets().getData()+")");
+
+                            rlData.setVisibility(View.GONE);
+                            rlNoData.setVisibility(View.VISIBLE);
+
+                            if(isFilterDataAvailable)
+                            {
+                                rlData.setVisibility(View.VISIBLE);
+                                rlNoData.setVisibility(GONE);
+                            }
+
+
+                            if(filterSearchModel.getTemplate().getTabFacet() != null &&
+                                    filterSearchModel.getTemplate().getTabFacet().getBuckets() != null &&
+                                    filterSearchModel.getTemplate().getTabFacet().getBuckets().size() > 0)
+                            {
+
+                                for (int i = 0; i < tabFacetsModel.getTabs().size(); i++)
+                                {
+                                    for (int j = 0; j < filterSearchModel.getTemplate().getTabFacet().getBuckets().size(); j++)
+                                    {
+                                        if(filterSearchModel.getTemplate().getTabFacet().getBuckets().get(j).getKey().equalsIgnoreCase(tabFacetsModel.getTabs().get(i).getFieldValue()))
+                                        {
+                                            allCount += filterSearchModel.getTemplate().getTabFacet().getBuckets().get(j).getDoc_count();
+                                            tabFacetsModel.getTabs().get(i).setBucketCount(filterSearchModel.getTemplate().getTabFacet().getBuckets().get(j).getDoc_count());
+                                        }
+                                    }
+                                }
+
+                                rvTabs.setAdapter(new TabFacetsAdapter(FullResultsActivity.this, tabFacetsModel.getTabs(), FullResultsActivity.this));
+                            }
 
                             setPageCounts(filterSearchModel);
-
+                            if(jsonFilterObject != null)
+                                setPageTitle(1);
                             svResults.scrollTo(0, 0);
                         }
                         else
@@ -1545,30 +1488,39 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private JsonObject getJsonBody(String query, boolean smallTalk, String messagePayload)
+    private JsonObject getJsonBody(String query, boolean smallTalk, String messagePayload, String requestId)
     {
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
 
         jsonObject.addProperty("query", query.toLowerCase());
-        jsonObject.addProperty("maxNumOfResults", 16);
+        jsonObject.addProperty("maxNumOfResults", 5);
         jsonObject.addProperty("userId", SocketWrapper.getInstance(FullResultsActivity.this).getBotUserId());
         jsonObject.addProperty("streamId", SDKConfiguration.Client.bot_id);
         jsonObject.addProperty("lang", "en");
         jsonObject.addProperty("isDev", false);
         jsonObject.addProperty("pageNumber", 0);
         jsonObject.addProperty("messagePayload", messagePayload);
+        jsonObject.addProperty("searchRequestId", requestId);
 
         Log.e("JsonObject", jsonObject.toString());
         return jsonObject;
     }
 
-    private JsonObject getJsonFilterBody(String query, JsonArray filters, String messagePayload)
+    private JsonObject getJsonFilterBody(String query, JsonArray filters, JsonObject tabfilter, String messagePayload, int from)
     {
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
 
-        jsonObject.add("filters", filters);
+        if(filters != null)
+            jsonObject.add("filters", filters);
+
+        if(tabfilter != null)
+            jsonObject.add("tabConfig", tabfilter);
+
+        if(from == 1)
+            jsonObject.add("resultGroups", tabfilter);
+
         jsonObject.addProperty("query", query.toLowerCase());
         jsonObject.addProperty("maxNumOfResults", 10);
         jsonObject.addProperty("userId", SocketWrapper.getInstance(FullResultsActivity.this).getBotUserId());
@@ -1583,28 +1535,71 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         return jsonObject;
     }
 
-    private JsonArray getFiltersArray(String facetValue)
+    private JsonArray getFiltersArray(ArrayList<SearchFacetsBucketsModel> arrFilters)
     {
         JsonArray jsonArray = new JsonArray();
+
+        if(searchModel != null && searchModel.getTemplate() != null
+                && searchModel.getTemplate().getFacets() != null && searchModel.getTemplate().getFacets().size() > 0
+                && arrFilters != null && arrFilters.size() > 0)
+        {
+            for (int k = 0; k < searchModel.getTemplate().getFacets().size(); k++)
+            {
+                String fldName = searchModel.getTemplate().getFacets().get(k).getFieldName();
+                searchModel.getTemplate().getFacets().get(k).setArrSearchBucket(new ArrayList<SearchFacetsBucketsModel>());
+
+                for(int j = 0; j < arrFilters.size(); j++)
+                {
+                    if(fldName.equalsIgnoreCase(arrFilters.get(j).getFieldName()))
+                    {
+                        searchModel.getTemplate().getFacets().get(k).getArrSearchBucket().add(arrFilters.get(j));
+                    }
+                }
+            }
+
+
+
+            for(int i = 0; i < searchModel.getTemplate().getFacets().size(); i++)
+            {
+                if(searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().size() > 0)
+                {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("fieldName", searchModel.getTemplate().getFacets().get(i).getFieldName());
+                    jsonObject.addProperty("subtype", searchModel.getTemplate().getFacets().get(i).getSubtype());
+                    jsonObject.addProperty("name", searchModel.getTemplate().getFacets().get(i).getName());
+
+                    JsonArray facetsValue = new JsonArray();
+
+                    for (int j = 0; j < searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().size(); j++)
+                    {
+                        facetsValue.add(searchModel.getTemplate().getFacets().get(i).getArrSearchBucket().get(j).getKey());
+                    }
+                    jsonObject.add("facetValue", facetsValue);
+                    jsonArray.add(jsonObject);
+                }
+            }
+        }
+
+        return jsonArray;
+    }
+
+    private JsonObject getTabFiltersObject(String facetValue)
+    {
+        JsonObject jsonMainObject = new JsonObject();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("fieldName", "sysContentType");
-        jsonObject.addProperty("facetType", "value");
-        jsonObject.addProperty("facetName", "facetContentType");
+        jsonObject.addProperty("fieldName", "sys_content_type");
         JsonArray facetsValue = new JsonArray();
         facetsValue.add(facetValue);
         jsonObject.add("facetValue", facetsValue);
-        jsonArray.add(jsonObject);
+        jsonMainObject.add("filter", jsonObject);
 
-        if(jsonTotalArray != null && jsonTotalArray.size() > 0)
-            jsonArray.addAll(jsonTotalArray);
-
-        return jsonArray;
+        return jsonMainObject;
     }
 
     private JsonObject getFiltersObject(String facetValue)
     {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("fieldName", "sysContentType");
+        jsonObject.addProperty("fieldName", "sys_content_type");
         jsonObject.addProperty("facetType", "value");
         jsonObject.addProperty("facetName", "facetContentType");
         JsonArray facetsValue = new JsonArray();
@@ -1612,6 +1607,14 @@ public class FullResultsActivity extends AppCompatActivity implements View.OnCli
         jsonObject.add("facetValue", facetsValue);
 
         return jsonObject;
+    }
+
+    @Override
+    public void tabFacetClicked(String fieldValue)
+    {
+        currentPage = 0;
+        this.tabFacetSelected = fieldValue;
+        getFilterSearch(originalQuery, getFiltersArray(arrTempFilters), messagePayload, getTabFiltersObject(fieldValue), 0);
     }
 
     public class ScrollAwareFABBehavior extends FloatingActionButton.Behavior {

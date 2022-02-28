@@ -26,7 +26,7 @@ public class ProfileDrawable extends BaseDrawable {
         this.backgroundColor = color;
         this.initials = initials;
         backgroundPaint = getPaint(this.backgroundColor, Paint.Style.FILL);
-        mTextPaint = getPaint(Color.WHITE, Paint.Style.FILL_AND_STROKE);
+        mTextPaint = getPaint(Color.BLACK, Paint.Style.FILL_AND_STROKE);
         mTextPaint.setTextSize(textSize);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
     }

@@ -5,29 +5,39 @@ import java.util.ArrayList;
 public class SearchFacetsModel
 {
     private String fieldName;
-    private String facetName;
-    private String facetType;
+    private boolean multiselect;
+    private String name;
+    private String subtype;
     private ArrayList<SearchFacetsBucketsModel> buckets;
     private ArrayList<SearchFacetsBucketsModel> arrSearchBucket = new ArrayList<>();
 
-    public String getFacetName() {
-        return facetName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getFacetType() {
-        return facetType;
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
+    }
+
+    public void setMultiselect(boolean multiselect) {
+        this.multiselect = multiselect;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public boolean getMultiselect()
+    {
+        return multiselect;
     }
 
     public String getFieldName() {
         return fieldName;
-    }
-
-    public void setFacetName(String facetName) {
-        this.facetName = facetName;
-    }
-
-    public void setFacetType(String facetType) {
-        this.facetType = facetType;
     }
 
     public void setFieldName(String fieldName) {

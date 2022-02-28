@@ -9,19 +9,90 @@ import java.util.ArrayList;
 public class ResultsViewSetting implements Serializable
 {
     private String _id;
+    private FacetSettingsModel facetsSetting;
     private String view;
-    private ResultsViewResultClassification resultClassification;
-    private int maxResultsAllowed;
+    private boolean groupResults;
     @SerializedName("interface")
     @Expose
     private String myInterface;
-    private ArrayList<ResultsViewAppearance> appearance;
-    private String orderBasedOnRelevance;
-    private ResultsViewFacets facets;
-    private String createdOn;
+    private GroupSettingsModel groupSetting;
+    private String defaultTemplateId;
     private String streamId;
     private String searchIndexId;
     private String indexPipelineId;
+    private String createdBy;
+    private String createdOn;
+    private String lModifiedOn;
+    private String __v;
+    private ResultsViewTemplate defaultTemplate;
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void set__v(String __v) {
+        this.__v = __v;
+    }
+
+    public void setDefaultTemplate(ResultsViewTemplate defaultTemplate) {
+        this.defaultTemplate = defaultTemplate;
+    }
+
+    public void setDefaultTemplateId(String defaultTemplateId) {
+        this.defaultTemplateId = defaultTemplateId;
+    }
+
+    public void setFacetsSetting(FacetSettingsModel facetsSetting) {
+        this.facetsSetting = facetsSetting;
+    }
+
+    public void setGroupResults(boolean groupResults) {
+        this.groupResults = groupResults;
+    }
+
+    public void setGroupSetting(GroupSettingsModel groupSetting) {
+        this.groupSetting = groupSetting;
+    }
+
+    public void setlModifiedOn(String lModifiedOn) {
+        this.lModifiedOn = lModifiedOn;
+    }
+
+    public void setMyInterface(String myInterface) {
+        this.myInterface = myInterface;
+    }
+
+    public FacetSettingsModel getFacetsSetting() {
+        return facetsSetting;
+    }
+
+    public GroupSettingsModel getGroupSetting() {
+        return groupSetting;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public ResultsViewTemplate getDefaultTemplate() {
+        return defaultTemplate;
+    }
+
+    public String get__v() {
+        return __v;
+    }
+
+    public String getDefaultTemplateId() {
+        return defaultTemplateId;
+    }
+
+    public String getlModifiedOn() {
+        return lModifiedOn;
+    }
+
+    public String getMyInterface() {
+        return myInterface;
+    }
 
     public void setStreamId(String streamId) {
         this.streamId = streamId;
@@ -43,28 +114,8 @@ public class ResultsViewSetting implements Serializable
         this._id = _id;
     }
 
-    public void setAppearance(ArrayList<ResultsViewAppearance> appearance) {
-        this.appearance = appearance;
-    }
-
-    public void setFacets(ResultsViewFacets facets) {
-        this.facets = facets;
-    }
-
     public void setInterfaces(String interfaces) {
         this.myInterface = interfaces;
-    }
-
-    public void setMaxResultsAllowed(int maxResultsAllowed) {
-        this.maxResultsAllowed = maxResultsAllowed;
-    }
-
-    public void setOrderBasedOnRelevance(String orderBasedOnRelevance) {
-        this.orderBasedOnRelevance = orderBasedOnRelevance;
-    }
-
-    public void setResultClassification(ResultsViewResultClassification resultClassification) {
-        this.resultClassification = resultClassification;
     }
 
     public void setView(String view) {
@@ -79,10 +130,6 @@ public class ResultsViewSetting implements Serializable
         return searchIndexId;
     }
 
-    public String getOrderBasedOnRelevance() {
-        return orderBasedOnRelevance;
-    }
-
     public String getIndexPipelineId() {
         return indexPipelineId;
     }
@@ -95,27 +142,61 @@ public class ResultsViewSetting implements Serializable
         return _id;
     }
 
-    public int getMaxResultsAllowed() {
-        return maxResultsAllowed;
-    }
-
-    public ArrayList<ResultsViewAppearance> getAppearance() {
-        return appearance;
-    }
-
-    public ResultsViewFacets getFacets() {
-        return facets;
-    }
-
-    public ResultsViewResultClassification getResultClassification() {
-        return resultClassification;
-    }
-
-    public String getInterfaces() {
-        return myInterface;
-    }
-
     public String getView() {
         return view;
+    }
+
+    public class FacetSettingsModel implements Serializable
+    {
+        private boolean enabled;
+        private String aligned;
+
+        public String getAligned() {
+            return aligned;
+        }
+
+        public void setAligned(String aligned) {
+            this.aligned = aligned;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public boolean getEnabled()
+        {
+            return enabled;
+        }
+    }
+
+    public class GroupSettingsModel implements Serializable
+    {
+        private String fieldId;
+        private ArrayList<ResultsViewAppearance> conditions;
+        private String fieldName;
+
+        public String getFieldId() {
+            return fieldId;
+        }
+
+        public ArrayList<ResultsViewAppearance> getConditions() {
+            return conditions;
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public void setFieldId(String fieldId) {
+            this.fieldId = fieldId;
+        }
+
+        public void setConditions(ArrayList<ResultsViewAppearance> conditions) {
+            this.conditions = conditions;
+        }
+
+        public void setFieldName(String fieldName) {
+            this.fieldName = fieldName;
+        }
     }
 }

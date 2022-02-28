@@ -3,11 +3,13 @@ package com.kore.findlysdk.net;
 import com.kore.findlysdk.models.AutoSuggestionsModel;
 import com.kore.findlysdk.models.LiveSearchModel;
 import com.kore.findlysdk.models.PopularSearchModel;
+import com.kore.findlysdk.models.PopularSearchResultsModel;
 import com.kore.findlysdk.models.RecentSearchesModel;
 import com.kore.findlysdk.models.RestResponse;
 import com.kore.findlysdk.models.ResultsViewModel;
 import com.kore.findlysdk.models.SearchInterfaceModel;
 import com.kore.findlysdk.models.SearchModel;
+import com.kore.findlysdk.models.TabFacetsModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public interface BotRestAPI {
     })
     //@POST("/api/users/sts")
     @GET("{botid}/{sidx}/popularSearches")
-    Call<ArrayList<PopularSearchModel>> getPopularSearch(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken);
+    Call<PopularSearchResultsModel> getPopularSearch(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken);
 
     @GET("{botid}/{sidx}/recentSearches")
     Call<RecentSearchesModel> getRecentSearches(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken);
@@ -40,7 +42,7 @@ public interface BotRestAPI {
     @POST("{botid}/{sidx}/liveSearch")
     Call<LiveSearchModel> getLiveSearch(@Path("botid") String botId, @Path("sidx") String sidx,@Header("Authorization") String token, @Header("state") String state, @Body Object body, @Header("auth") String jwtToken);
 
-    @GET("{botid}/{sidx}/getresultviewsettings")
+    @GET("{botid}/{sidx}/resultTemplateSettings")
     Call<ResultsViewModel> getResultViewSettings(@Path("botid") String botId,@Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken);
 
     @GET("{botid}/{sidx}/searchInterface")
@@ -48,6 +50,10 @@ public interface BotRestAPI {
 
     @POST("{botid}/{sidx}/search")
     Call<SearchModel> getSearch(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Body Object body, @Header("auth") String jwtToken);
+
+    //@POST("/api/users/sts")
+    @POST("{botid}/{sidx}/unlockbot")
+    Call<ArrayList<PopularSearchModel>> doUnlock(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken, @Body Object body);
 
     // Get JWT Token
     @POST("/searchassistapi/users/sts")
@@ -59,6 +65,9 @@ public interface BotRestAPI {
 
     @POST("{botid}/{sidx}/autoSuggestions")
     Call<AutoSuggestionsModel> getAutoSuggestions(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Body Object body, @Header("auth") String jwtToken);
+
+    @GET("{botid}/{sidx}/tabfacet")
+    Call<TabFacetsModel> getTabFacets(@Path("botid") String botId, @Path("sidx") String sidx, @Header("Authorization") String token, @Header("auth") String jwtToken);
 
     //Getting jwt grant
     @POST("/searchassistapi/oAuth/token/jwtgrant")

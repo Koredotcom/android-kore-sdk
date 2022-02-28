@@ -5,10 +5,10 @@ import java.io.Serializable;
 public class ResultsViewTemplate implements Serializable
 {
     private String _id;
-    private String appearanceType;
     private String type;
     private String lModifiedOn;
     private String createdOn;
+    private String createdBy;
     private String streamId;
     private String searchIndexId;
     private String indexPipelineId;
@@ -17,10 +17,6 @@ public class ResultsViewTemplate implements Serializable
 
     public void set_id(String _id) {
         this._id = _id;
-    }
-
-    public void setAppearanceType(String appearanceType) {
-        this.appearanceType = appearanceType;
     }
 
     public void setCreatedOn(String createdOn) {
@@ -65,10 +61,6 @@ public class ResultsViewTemplate implements Serializable
 
     public String get_id() {
         return _id;
-    }
-
-    public String getAppearanceType() {
-        return appearanceType;
     }
 
     public String getCreatedOn() {

@@ -38,9 +38,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SnapHelper;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
@@ -49,15 +48,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.kore.findlysdk.R;
 import com.kore.findlysdk.adapters.AutoSuggestionsAdapter;
-import com.kore.findlysdk.adapters.ChatAdapterOld;
-import com.kore.findlysdk.adapters.ChatAutoListviewAdapter;
 import com.kore.findlysdk.adapters.LiveSearchCyclerAdapter;
+import com.kore.findlysdk.adapters.LiveSearchDynamicAdapter;
+import com.kore.findlysdk.adapters.LiveSearchListAdapter;
 import com.kore.findlysdk.adapters.PopularSearchAdapter;
 import com.kore.findlysdk.adapters.RecentlySearchAdapter;
 import com.kore.findlysdk.adapters.SearchAssistCarouselAdapter;
+import com.kore.findlysdk.adapters.SearchResultsCarouselAdapter;
 import com.kore.findlysdk.events.KoreEventCenter;
 import com.kore.findlysdk.events.SocketDataTransferModel;
 import com.kore.findlysdk.fragments.BotContentFindlyFragment;
+import com.kore.findlysdk.fragments.FindlyFragment;
 import com.kore.findlysdk.listners.BaseSocketConnectionManager;
 import com.kore.findlysdk.listners.BotContentFragmentUpdate;
 import com.kore.findlysdk.listners.BotSocketConnectionManager;
@@ -75,11 +76,12 @@ import com.kore.findlysdk.models.FormActionTemplate;
 import com.kore.findlysdk.models.InteractionsConfigModel;
 import com.kore.findlysdk.models.KnowledgeCollectionModel;
 import com.kore.findlysdk.models.LiveSearchModel;
+import com.kore.findlysdk.models.LiveSearchResultsDataModel;
 import com.kore.findlysdk.models.LiveSearchResultsModel;
-import com.kore.findlysdk.models.LiveSearchResultsOuterModel;
 import com.kore.findlysdk.models.PayloadInner;
 import com.kore.findlysdk.models.PayloadOuter;
 import com.kore.findlysdk.models.PopularSearchModel;
+import com.kore.findlysdk.models.PopularSearchResultsModel;
 import com.kore.findlysdk.models.RecentSearchesModel;
 import com.kore.findlysdk.models.RestResponse;
 import com.kore.findlysdk.models.ResultsViewAppearance;
@@ -116,6 +118,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class MainActivity extends BotAppCompactActivity implements View.OnTouchListener, InvokeGenericWebViewInterface, ComposeFooterInterface
 {
@@ -135,7 +138,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
     private ArrayList<LiveSearchResultsModel> arrTempResults;
     private PopularSearchAdapter popularSearchAdapter;
     private RecentlySearchAdapter recentlySearchAdapter;
-    private AutoExpandListView lvPopularSearch, lvRecentlyAsked;
+    private AutoExpandListView lvRecentlyAsked;
     private RecyclerView lvLiveSearch;
     private EditText edtTxtMessage;
     private LiveSearchModel liveSearchModel;
@@ -143,11 +146,9 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
     private SearchInterfaceModel searchInterfaceModel;
     private AutoSuggestionsModel autoSuggestionsModel;
     private SearchModel searchModel;
-    private ChatAdapterOld chatAdapterOld;
-    private ChatAutoListviewAdapter chatAutoListviewAdapter;
     ArrayList<SearchModel> arrLiveSearchModels = new ArrayList<>();
     private WebView wvLoadUrl;
-    private ArrayList<PopularSearchModel> arrPopularSearchModels;
+    private PopularSearchResultsModel popularSearchResultsModel;
     private RecentSearchesModel recentSearchesModel;
     private FragmentTransaction fragmentTransaction;
     private BotContentFindlyFragment botContentFragment;
@@ -176,6 +177,8 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
     private AutoExpandListView lvAutoSuggestions;
     private ImageView rec_audio_img;
     private String speakerIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAETSURBVHgBxVPbSsNAEN2d3XRVSvqQBwNNQwmpgn3xC/x7/0ETEpG2oGAeTKVJ3HXH3Qch1KQiKfTAsJc5c/YyM4QMBO1zhGEYAYwWdg6gn/I8T7p4rGtzPr/xOWcLKat7rdUzIXw5Hl+W2+1btc+FLgGA2kWUa4PKGmO4FuLT6+SSgTi9AG8voii6OkT+8bczctwnNA3stGYXTTMqzOVmQRCcW1OKzBDx3VBcANj1Cvj+5BWAepR+GBKsOD+7s0apk0spSzO6dV0X7ZhflTidxoEQcG2q79Gc/mL30jSdMCZuHYcmWZatDgpYxHHsSkmWjFFPa5SIpFSKJ5vNQ0H+A/vrf2WG9gWaNtkL/Er6GmoQvgHqBWZkE0i8BAAAAABJRU5ErkJggg==";
+    private RecyclerView lvPopularSearch;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -197,7 +200,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         closeBtnPanel = (TextView)  findViewById(R.id.closeBtnPanel);
         closeBtnPanel.setTypeface(getTypeFaceObj(this));
         panelDrag =  findViewById(R.id.panel_drag);
-        lvPopularSearch = (AutoExpandListView) findViewById(R.id.lvPopularSearch);
+        lvPopularSearch = (RecyclerView) findViewById(R.id.lvPopularSearch);
         lvRecentlyAsked = (AutoExpandListView) findViewById(R.id.lvRecentlyAsked);
         lvLiveSearch = (RecyclerView) findViewById(R.id.lvLiveSearch);
         llRecentlyAsked = (LinearLayout) findViewById(R.id.llRecentlyAsked);
@@ -460,16 +463,16 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
 
         setLogin(MainActivity.this, BotResponse.USER_LOGIN, false);
 
-        lvPopularSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
-            {
-                edtTxtMessage.setText(arrPopularSearchModels.get(i).get_id());
-                edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
-            }
-            }
-        });
+//        lvPopularSearch.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//            if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
+//            {
+//                edtTxtMessage.setText(popularSearchResultsModel.getResult().get(i).getQuery());
+//                edtTxtMessage.setSelection(edtTxtMessage.getText().toString().length());
+//            }
+//            }
+//        });
 
         lvRecentlyAsked.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -491,13 +494,6 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                         tvErrorLogin.setVisibility(GONE);
                         setLogin(MainActivity.this, BotResponse.USER_LOGIN, true);
 
-//                        if(searchModel != null && searchModel.getTemplate() != null && searchModel.getTemplate().getResults() != null
-//                            && searchModel.getTemplate().getResults().getTask() != null && searchModel.getTemplate().getResults().getTask().size() > 0)
-//                        {
-//                            getSearch(searchModel.getTemplate().getResults().getTask().get(0).getTaskName(), 1);
-//                            lockLiveSearch = true;
-//                        }
-//                        saveStringPreferences(edtTxtMessage.getText().toString());
                         sendMessageText(edtTxtMessage.getText().toString());
                         edtTxtMessage.setText("");
                     }
@@ -632,19 +628,19 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
 
     public void getPopularSearch()
     {
-        Call<ArrayList<PopularSearchModel>> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(MainActivity.this).getAccessToken(), SocketWrapper.getInstance(MainActivity.this).getJWTToken());
-        getJWTTokenService.enqueue(new Callback<ArrayList<PopularSearchModel>>() {
+        Call<PopularSearchResultsModel> getJWTTokenService = BotRestBuilder.getBotJWTRestAPI().getPopularSearch(SDKConfiguration.Client.bot_id, SDKConfiguration.getSDIX(), "bearer "+SocketWrapper.getInstance(MainActivity.this).getAccessToken(), SocketWrapper.getInstance(MainActivity.this).getJWTToken());
+        getJWTTokenService.enqueue(new Callback<PopularSearchResultsModel>() {
             @Override
-            public void onResponse(Call<ArrayList<PopularSearchModel>> call, Response<ArrayList<PopularSearchModel>> response) {
+            public void onResponse(Call<PopularSearchResultsModel> call, Response<PopularSearchResultsModel> response) {
                 if (response.isSuccessful())
                 {
-                    arrPopularSearchModels = response.body();
+                    popularSearchResultsModel = response.body();
 
-                    if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
+                    if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
                     {
                         llPlrSearch.setVisibility(View.VISIBLE);
                         llLiveSearch.setVisibility(GONE);
-                        popularSearchAdapter = new PopularSearchAdapter(MainActivity.this, arrPopularSearchModels);
+                        popularSearchAdapter = new PopularSearchAdapter(MainActivity.this, popularSearchResultsModel.getResult());
                         lvPopularSearch.setAdapter(popularSearchAdapter);
                     }
                 }
@@ -653,7 +649,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
             }
 
             @Override
-            public void onFailure(Call<ArrayList<PopularSearchModel>> call, Throwable t) {
+            public void onFailure(Call<PopularSearchResultsModel> call, Throwable t) {
                 Log.e("Popular Search Data", t.toString());
                 llPlrSearch.setVisibility(View.VISIBLE);
             }
@@ -726,33 +722,33 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                         llLiveSearch.setVisibility(View.VISIBLE);
                         llAllresults.removeAllViews();
 
-                        if(liveSearchModel.getTemplate().getResults().getFaq() != null && liveSearchModel.getTemplate().getResults().getFaq().size() > 0)
-                        {
-                            addLayoutView(liveSearchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
-                        }
-
-                        if(liveSearchModel.getTemplate().getResults().getWeb() != null && liveSearchModel.getTemplate().getResults().getWeb().size() > 0)
-                        {
-                            addLayoutView(liveSearchModel.getTemplate().getResults().getWeb(), page, 2, BundleConstants.WEB);
-                        }
-
-                        if(liveSearchModel.getTemplate().getResults().getTask() != null && liveSearchModel.getTemplate().getResults().getTask().size() > 0)
-                        {
-                            if(task == null)
-                                task = getResultsViewAppearance(BundleConstants.TASK);
-
-                            addLayoutView(liveSearchModel.getTemplate().getResults().getTask(), task, 3, BundleConstants.TASK);
-                        }
-
-                        if(liveSearchModel.getTemplate().getResults().getFile() != null && liveSearchModel.getTemplate().getResults().getFile().size() > 0)
-                        {
-                            addLayoutView(liveSearchModel.getTemplate().getResults().getFile(), document, 4, BundleConstants.FILE);
-                        }
-
-                        if(liveSearchModel.getTemplate().getResults().getData() != null && liveSearchModel.getTemplate().getResults().getData().size() > 0)
-                        {
-                            addLayoutView(liveSearchModel.getTemplate().getResults().getData(), data, 5, BundleConstants.DATA);
-                        }
+//                        if(liveSearchModel.getTemplate().getResults().getFaq() != null)
+//                        {
+//                            addLayoutView(liveSearchModel.getTemplate().getResults().getFaq(), faq,1, BundleConstants.FAQ);
+//                        }
+//
+//                        if(liveSearchModel.getTemplate().getResults().getWeb() != null)
+//                        {
+//                            addLayoutView(liveSearchModel.getTemplate().getResults().getWeb(), page, 2, BundleConstants.WEB);
+//                        }
+//
+//                        if(liveSearchModel.getTemplate().getResults().getTask() != null)
+//                        {
+//                            if(task == null)
+//                                task = getResultsViewAppearance(BundleConstants.TASK);
+//
+//                            addLayoutView(liveSearchModel.getTemplate().getResults().getTask(), task, 3, BundleConstants.TASK);
+//                        }
+//
+//                        if(liveSearchModel.getTemplate().getResults().getFile() != null)
+//                        {
+//                            addLayoutView(liveSearchModel.getTemplate().getResults().getFile(), document, 4, BundleConstants.FILE);
+//                        }
+//
+//                        if(liveSearchModel.getTemplate().getResults().getData() != null)
+//                        {
+//                            addLayoutView(liveSearchModel.getTemplate().getResults().getData(), data, 5, BundleConstants.DATA);
+//                        }
                     }
                     else
                     {
@@ -773,7 +769,131 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         });
     }
 
-    private void addLayoutView(ArrayList<LiveSearchResultsModel> arrSearchResults, final ResultsViewAppearance appearance, int from, String constant)
+    private void addLayoutView(LiveSearchResultsDataModel liveSearchResultsDataModel, final ResultsViewAppearance appearance, int from, String constant)
+    {
+        if(liveSearchResultsDataModel.getData() != null && liveSearchResultsDataModel.getData().size() > 0)
+        {
+
+            LinearLayout llFaq = (LinearLayout) LayoutInflater.from(MainActivity.this).inflate(R.layout.search_template_new_cell, null);
+            final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
+            final ImageButton ibResults = (ImageButton) llFaq.findViewById(R.id.ibResults);
+            final ImageButton ibResults2 = (ImageButton) llFaq.findViewById(R.id.ibResults2);
+            TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
+            final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
+            int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+            ViewGroup.LayoutParams params= heightAdjustableViewPager.getLayoutParams();
+            params.height = (int)(170 * dp1);    //500px
+            heightAdjustableViewPager.setLayoutParams(params);
+
+            heightAdjustableViewPager.setPageMargin(pageMargin);
+            if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
+            {
+                heightAdjustableViewPager.setVisibility(GONE);
+                alResults.setVisibility(View.VISIBLE);
+
+                if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+                    alResults.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+                else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                {
+                    heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                    alResults.setVisibility(GONE);
+
+                    if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_CENTERED_CONTENT))
+                    {
+                        params.height = (int)(300 * dp1);    //500px
+                        heightAdjustableViewPager.setLayoutParams(params);
+                    }
+                    else if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_HEADER))
+                    {
+                        params.height = (int)(100 * dp1);    //500px
+                        heightAdjustableViewPager.setLayoutParams(params);
+                    }
+
+                    heightAdjustableViewPager.setAdapter(new SearchAssistCarouselAdapter(MainActivity.this, getTopList(liveSearchResultsDataModel.getData(),  constant), 0, MainActivity.this, MainActivity.this));
+                    alResults.setLayoutManager(new LinearLayoutManager(MainActivity.this, RecyclerView.HORIZONTAL, false));
+                }
+                else
+                {
+                    alResults.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                }
+            }
+
+            alResults.setAdapter(new LiveSearchCyclerAdapter(MainActivity.this, getTopList(liveSearchResultsDataModel.getData(),  constant), 0, MainActivity.this, MainActivity.this));
+            switch (from)
+            {
+                case 1:
+                {
+                    tvPageTitle.setText("FAQS");
+                    break;
+                }
+                case 2:
+                {
+                    tvPageTitle.setText("Web");
+                    break;
+                }
+                case 3:
+                {
+                    tvPageTitle.setText("Task");
+                    break;
+                }
+                case 4:
+                {
+                    tvPageTitle.setText("File");
+                    break;
+                }
+                case 5:
+                {
+                    tvPageTitle.setText("Data");
+                    break;
+                }
+            }
+
+
+            ibResults.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == View.GONE || heightAdjustableViewPager.getVisibility() == GONE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(View.VISIBLE);
+                        else
+                            alResults.setVisibility(View.VISIBLE);
+
+                        ibResults.setVisibility(GONE);
+                        ibResults2.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            ibResults2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE)
+                    {
+                        if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
+                            heightAdjustableViewPager.setVisibility(GONE);
+                        else
+                            alResults.setVisibility(GONE);
+
+                        ibResults2.setVisibility(GONE);
+                        ibResults.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
+            llFaq.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent)
+                {
+                    llAutoSuggestions.setVisibility(GONE);
+                    return false;
+                }
+            });
+            llAllresults.addView(llFaq);
+        }
+    }
+
+    private void addResultsView(ArrayList<HashMap<String, Object>> arrSearchResults, final ResultsViewAppearance appearance, int from, String constant)
     {
         LinearLayout llFaq = (LinearLayout) LayoutInflater.from(MainActivity.this).inflate(R.layout.search_template_new_cell, null);
         final RecyclerView alResults = (RecyclerView) llFaq.findViewById(R.id.alResults);
@@ -782,6 +902,8 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         TextView tvPageTitle = (TextView) llFaq.findViewById(R.id.tvPageTitle);
         final HeightAdjustableViewPager heightAdjustableViewPager = (HeightAdjustableViewPager) llFaq.findViewById(R.id.carouselViewpager);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
+        final AutoExpandListView lvResults = (AutoExpandListView) llFaq.findViewById(R.id.lvResults);
+
         ViewGroup.LayoutParams params= heightAdjustableViewPager.getLayoutParams();
         params.height = (int)(170 * dp1);    //500px
         heightAdjustableViewPager.setLayoutParams(params);
@@ -790,14 +912,18 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         if(appearance != null && appearance.getTemplate() != null && appearance.getTemplate().getType() != null)
         {
             heightAdjustableViewPager.setVisibility(GONE);
-            alResults.setVisibility(View.VISIBLE);
+            alResults.setVisibility(GONE);
+            lvResults.setVisibility(GONE);
 
             if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
+            {
+                alResults.setVisibility(VISIBLE);
                 alResults.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+                alResults.setAdapter(new LiveSearchDynamicAdapter(MainActivity.this, getResultsTopList(arrSearchResults,  constant), 0, MainActivity.this, MainActivity.this));
+            }
             else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
             {
                 heightAdjustableViewPager.setVisibility(View.VISIBLE);
-                alResults.setVisibility(GONE);
 
                 if(appearance.getTemplate().getLayout().getLayoutType().equalsIgnoreCase(BundleConstants.TILE_WITH_CENTERED_CONTENT))
                 {
@@ -810,16 +936,15 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                     heightAdjustableViewPager.setLayoutParams(params);
                 }
 
-                heightAdjustableViewPager.setAdapter(new SearchAssistCarouselAdapter(MainActivity.this, getTopList(arrSearchResults,  constant), 0, MainActivity.this, MainActivity.this));
-                alResults.setLayoutManager(new LinearLayoutManager(MainActivity.this, RecyclerView.HORIZONTAL, false));
+                heightAdjustableViewPager.setAdapter(new SearchResultsCarouselAdapter(MainActivity.this, getResultsTopList(arrSearchResults,  constant), 0, MainActivity.this, MainActivity.this));
             }
             else
             {
-                alResults.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                lvResults.setVisibility(VISIBLE);
+                lvResults.setAdapter(new LiveSearchListAdapter(MainActivity.this, getResultsTopList(arrSearchResults,  constant), 0, MainActivity.this, MainActivity.this));
             }
         }
 
-        alResults.setAdapter(new LiveSearchCyclerAdapter(MainActivity.this, getTopList(arrSearchResults,  constant), 0, MainActivity.this, MainActivity.this));
         switch (from)
         {
             case 1:
@@ -853,12 +978,15 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         ibResults.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(alResults.getVisibility() == View.GONE || heightAdjustableViewPager.getVisibility() == GONE)
+                if(alResults.getVisibility() == View.GONE || heightAdjustableViewPager.getVisibility() == GONE
+                        || lvResults.getVisibility() == View.GONE)
                 {
                     if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
                         heightAdjustableViewPager.setVisibility(View.VISIBLE);
-                    else
+                    else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
                         alResults.setVisibility(View.VISIBLE);
+                    else
+                        lvResults.setVisibility(View.VISIBLE);
 
                     ibResults.setVisibility(GONE);
                     ibResults2.setVisibility(View.VISIBLE);
@@ -869,12 +997,15 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
         ibResults2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE)
+                if(alResults.getVisibility() == View.VISIBLE || heightAdjustableViewPager.getVisibility() == View.VISIBLE
+                        || lvResults.getVisibility() == View.VISIBLE)
                 {
                     if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_CAROUSEL))
                         heightAdjustableViewPager.setVisibility(GONE);
-                    else
+                    else if(appearance.getTemplate().getType().equalsIgnoreCase(BundleConstants.LAYOUT_TYPE_GRID))
                         alResults.setVisibility(GONE);
+                    else
+                        lvResults.setVisibility(GONE);
 
                     ibResults2.setVisibility(GONE);
                     ibResults.setVisibility(View.VISIBLE);
@@ -890,6 +1021,7 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                 return false;
             }
         });
+
         llAllresults.addView(llFaq);
     }
 
@@ -907,35 +1039,36 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                     {
                         for(int i = 0; i < resultsViewModel.getSettings().size(); i++)
                         {
-                            if(resultsViewModel.getSettings().get(i).getInterfaces().equalsIgnoreCase(BundleConstants.LIVE_SEARCH))
+                            if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.LIVE_SEARCH))
                             {
                                 liveSearchSetting = resultsViewModel.getSettings().get(i);
 
-                                if(liveSearchSetting != null && liveSearchSetting.getAppearance() != null
-                                    && liveSearchSetting.getAppearance().size() > 0)
+                                if(liveSearchSetting != null && liveSearchSetting.getGroupSetting() != null
+                                    && liveSearchSetting.getGroupSetting().getConditions() != null
+                                    && liveSearchSetting.getGroupSetting().getConditions().size() > 0)
                                 {
-                                    for(int k = 0; k < liveSearchSetting.getAppearance().size(); k++)
+                                    for(int k = 0; k < liveSearchSetting.getGroupSetting().getConditions().size(); k++)
                                     {
-                                        if(liveSearchSetting.getAppearance().get(k).getType().equalsIgnoreCase(BundleConstants.FAQ))
-                                            faq = liveSearchSetting.getAppearance().get(k);
-                                        else if(liveSearchSetting.getAppearance().get(k).getType().equalsIgnoreCase(BundleConstants.PAGE))
-                                            page = liveSearchSetting.getAppearance().get(k);
-                                        else if(liveSearchSetting.getAppearance().get(k).getType().equalsIgnoreCase(BundleConstants.DOCUMENT))
-                                            document = liveSearchSetting.getAppearance().get(k);
-                                        else if(liveSearchSetting.getAppearance().get(k).getType().equalsIgnoreCase(BundleConstants.TASK))
+                                        if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.FAQ))
+                                            faq = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.PAGE))
+                                            page = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.DOCUMENT))
+                                            document = liveSearchSetting.getGroupSetting().getConditions().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.TASK))
                                         {
-                                            task = liveSearchSetting.getAppearance().get(k);
+                                            task = liveSearchSetting.getGroupSetting().getConditions().get(k);
                                         }
-                                        else if(liveSearchSetting.getAppearance().get(k).getType().equalsIgnoreCase(BundleConstants.STRUCTURE_DATA))
-                                            data = liveSearchSetting.getAppearance().get(k);
+                                        else if(liveSearchSetting.getGroupSetting().getConditions().get(k).getFieldValue().equalsIgnoreCase(BundleConstants.DATA))
+                                            data = liveSearchSetting.getGroupSetting().getConditions().get(k);
                                     }
                                 }
                             }
-                            else if(resultsViewModel.getSettings().get(i).getInterfaces().equalsIgnoreCase(BundleConstants.SEARCH))
+                            else if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.SEARCH))
                             {
                                 searchSetting = resultsViewModel.getSettings().get(i);
                             }
-                            else if(resultsViewModel.getSettings().get(i).getInterfaces().equalsIgnoreCase(BundleConstants.FULL_SEARCH))
+                            else if(resultsViewModel.getSettings().get(i).getMyInterface().equalsIgnoreCase(BundleConstants.FULL_SEARCH))
                             {
                                 fullSearchSetting = resultsViewModel.getSettings().get(i);
                             }
@@ -953,6 +1086,46 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                 Log.e("Live Search Data", t.toString());
             }
         });
+    }
+
+    private ArrayList<HashMap<String, Object>> getResultsTopList(ArrayList<HashMap<String, Object>> results, String type)
+    {
+        ArrayList<HashMap<String, Object>> arrTempResults = new ArrayList<>();
+
+        if(sharedPreferences == null)
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        int maxValue = 0;
+
+        if(results != null && results.size() > 0)
+        {
+            if(results.size() > sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2))
+                maxValue = sharedPreferences.getInt(BundleConstants.LIVE_SEARCH_RESULTS_LIMIT, 2);
+            else
+                maxValue = results.size();
+
+            for (int i = 0; i < maxValue; i++)
+            {
+                if (type.equalsIgnoreCase(BundleConstants.FAQ))
+                    results.get(i).put("appearance", faq);
+                else if(type.equalsIgnoreCase(BundleConstants.WEB))
+                    results.get(i).put("appearance",page);
+                else if(type.equalsIgnoreCase(BundleConstants.TASK))
+                {
+                    if(task == null)
+                        task = getResultsViewAppearance(BundleConstants.TASK);
+
+                    results.get(i).put("appearance",task);
+                }
+                else if(type.equalsIgnoreCase(BundleConstants.FILE))
+                    results.get(i).put("appearance",document);
+                else if(type.equalsIgnoreCase(BundleConstants.DATA))
+                    results.get(i).put("appearance",data);
+
+                arrTempResults.add(results.get(i));
+            }
+        }
+
+        return arrTempResults;
     }
 
     public void getAutoSuggestions(final String query)
@@ -1040,76 +1213,6 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
             return false;
     }
 
-    private ArrayList<LiveSearchResultsModel> getTopFourList(LiveSearchResultsOuterModel results)
-    {
-        arrTempResults = new ArrayList<>();
-        if(results != null)
-        {
-            if(results.getFaq() != null && results.getFaq().size() > 0)
-            {
-                for (int i = 0; i < results.getFaq().size(); i++)
-                {
-                    results.getFaq().get(i).setAppearance(faq);
-                    arrTempResults.add(results.getFaq().get(i));
-                    if(arrTempResults.size() == 2)
-                        break;
-                }
-            }
-
-            if(results.getWeb() != null && results.getWeb().size() > 0)
-            {
-                if(arrTempResults.size() >= 1)
-                {
-                    int suntoAdd = arrTempResults.size()+2;
-                    for (int i = 0; i < results.getWeb().size(); i++)
-                    {
-                        results.getWeb().get(i).setAppearance(page);
-                        arrTempResults.add(results.getWeb().get(i));
-                        if(arrTempResults.size() == suntoAdd)
-                            break;
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < results.getWeb().size(); i++)
-                    {
-                        results.getWeb().get(i).setAppearance(page);
-                        arrTempResults.add(results.getWeb().get(i));
-                        if(arrTempResults.size() == 2)
-                            break;
-                    }
-                }
-            }
-        }
-
-        if(results.getFile() != null && results.getFile().size() > 0)
-        {
-            if(arrTempResults.size() >= 1)
-            {
-                int suntoAdd = arrTempResults.size()+2;
-                for (int i = 0; i < results.getFile().size(); i++)
-                {
-                    results.getFile().get(i).setAppearance(document);
-                    arrTempResults.add(results.getFile().get(i));
-                    if(arrTempResults.size() == suntoAdd)
-                        break;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < results.getFile().size(); i++)
-                {
-                    results.getFile().get(i).setAppearance(document);
-                    arrTempResults.add(results.getFile().get(i));
-                    if(arrTempResults.size() == 2)
-                        break;
-                }
-            }
-        }
-
-        return arrTempResults;
-    }
-
     private ArrayList<LiveSearchResultsModel> getTopList(ArrayList<LiveSearchResultsModel> results, String type)
     {
         ArrayList<LiveSearchResultsModel> arrTempResults = new ArrayList<>();
@@ -1160,7 +1263,8 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
             llPlrSearch.setVisibility(GONE);
             llAutoSuggestions.setVisibility(GONE);
             getRecentSearches();
-            if(arrPopularSearchModels != null && arrPopularSearchModels.size() > 0)
+
+            if(popularSearchResultsModel != null && popularSearchResultsModel.getResult() != null && popularSearchResultsModel.getResult().size() > 0)
                 llPlrSearch.setVisibility(View.VISIBLE);
 
             isEditTouched = true;
@@ -1575,20 +1679,24 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
                 arrTempAllResults = new ArrayList<>();
 
                 if(payloadOuter.getTemplate().getResults().getFaq() != null &&
-                        payloadOuter.getTemplate().getResults().getFaq().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFaq());
+                        payloadOuter.getTemplate().getResults().getFaq().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getFaq().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFaq().getData());
 
                 if(payloadOuter.getTemplate().getResults().getWeb() != null &&
-                        payloadOuter.getTemplate().getResults().getWeb().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getWeb());
+                        payloadOuter.getTemplate().getResults().getWeb().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getWeb().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getWeb().getData());
 
                 if(payloadOuter.getTemplate().getResults().getTask() != null &&
-                        payloadOuter.getTemplate().getResults().getTask().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getTask());
+                        payloadOuter.getTemplate().getResults().getTask().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getTask().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getTask().getData());
 
                 if(payloadOuter.getTemplate().getResults().getFile() != null &&
-                        payloadOuter.getTemplate().getResults().getFile().size() > 0)
-                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFile());
+                        payloadOuter.getTemplate().getResults().getFile().getData() != null &&
+                        payloadOuter.getTemplate().getResults().getFile().getData().size() > 0)
+                    arrTempAllResults.addAll(payloadOuter.getTemplate().getResults().getFile().getData());
 
                 if(payloadOuter.getTemplate().getResults().getData() != null &&
                         payloadOuter.getTemplate().getResults().getData().size() > 0)
@@ -1629,12 +1737,12 @@ public class MainActivity extends BotAppCompactActivity implements View.OnTouchL
     private ResultsViewAppearance getResultsViewAppearance(String type)
     {
         ResultsViewAppearance resultsViewAppearance = new ResultsViewAppearance();
-        resultsViewAppearance.setType(type);
+        resultsViewAppearance.setFieldValue(type);
         resultsViewAppearance.setTemplateId("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
 
         ResultsViewTemplate template = new ResultsViewTemplate();
         template.set_id("fsrt-c86f6f10-76b1-5161-88c3-b1d03b1c0de7");
-        template.setAppearanceType(type);
+//        template.setAppearanceType(type);
         template.setCreatedOn("2021-05-31T07:25:44.364Z");
         template.setStreamId("st-12466d46-dc91-5855-a301-b6ecd7a95d82");
         template.setSearchIndexId("sidx-4c33c7cf-9561-58f2-b547-4745ce12b513");

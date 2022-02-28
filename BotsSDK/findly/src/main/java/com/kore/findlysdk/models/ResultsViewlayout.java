@@ -4,10 +4,13 @@ import java.io.Serializable;
 
 public class ResultsViewlayout implements Serializable
 {
+    private boolean renderTitle;
     private String layoutType;
     private boolean isClickable;
     private String behaviour;
     private String textAlignment;
+    private String title;
+    private String listType;
 
     public void setBehaviour(String behaviour) {
         this.behaviour = behaviour;
@@ -39,5 +42,33 @@ public class ResultsViewlayout implements Serializable
 
     public String getTextAlignment() {
         return textAlignment;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getListType() {
+        return listType;
+    }
+
+    public boolean getRenderTitle() {
+        return renderTitle;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setClickable(boolean clickable) {
+        isClickable = clickable;
+    }
+
+    public void setListType(String listType) {
+        this.listType = listType;
+    }
+
+    public void setRenderTitle(boolean renderTitle) {
+        this.renderTitle = renderTitle;
     }
 }

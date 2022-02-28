@@ -41,7 +41,7 @@ public class AutoExpandListView extends ListView {
             super.onMeasure(widthMeasureSpec, expandSpec);
 
             android.view.ViewGroup.LayoutParams params = getLayoutParams();
-            params.height = getMeasuredHeight();
+            params.height = MeasureSpec.UNSPECIFIED;
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }

@@ -1,6 +1,10 @@
 package com.kore.findlysdk.utils;
 
+import android.util.Base64;
+import android.util.Log;
+
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -345,6 +349,25 @@ public final class StringUtils {
         } else {
             return str;
         }
+    }
+
+    public static String stringToBase64(String convertStr)
+    {
+        String base64 = "";
+        byte[] data;
+
+        try
+        {
+            data = ("Execute_"+convertStr.trim()).getBytes("UTF-8");
+            base64 = Base64.encodeToString(data, Base64.DEFAULT);
+
+            Log.i("Base 64 ", base64);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+
+        }
+
+        return base64;
     }
 
 

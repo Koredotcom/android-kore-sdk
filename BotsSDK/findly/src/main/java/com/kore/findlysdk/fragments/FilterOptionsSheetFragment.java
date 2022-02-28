@@ -47,10 +47,10 @@ public class FilterOptionsSheetFragment extends BottomSheetDialogFragment implem
             tvClearAll.setVisibility(View.VISIBLE);
         }
 
-        if(searchModel.getTemplate().getSearchFacets() != null &&
-                searchModel.getTemplate().getSearchFacets().size() > 0)
+        if(searchModel.getTemplate().getFacets() != null &&
+                searchModel.getTemplate().getFacets().size() > 0)
         {
-            alvFacetsName.setAdapter(facetsFilterAdapter = new FacetsFilterAdapter(getActivity(), searchModel.getTemplate().getSearchFacets(), FilterOptionsSheetFragment.this, arrTempFilters));
+            alvFacetsName.setAdapter(facetsFilterAdapter = new FacetsFilterAdapter(getActivity(), searchModel.getTemplate().getFacets(), FilterOptionsSheetFragment.this, arrTempFilters));
         }
 
         tvClearAll.setOnClickListener(new View.OnClickListener() {

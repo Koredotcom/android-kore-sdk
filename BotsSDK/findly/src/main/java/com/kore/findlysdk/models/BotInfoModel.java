@@ -54,4 +54,12 @@ public class BotInfoModel {
     public void setTaskBotId(String taskBotId) {
         this.taskBotId = taskBotId;
     }
+
+    public void setCustomData(HashMap<Object, Object> customData) {
+        this.customData = customData;
+    }
+
+    public HashMap<Object, Object> getCustomData() {
+        return customData;
+    }
 }

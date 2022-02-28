@@ -47,6 +47,7 @@ public class RecentlySearchAdapter extends BaseAdapter
             view = layoutInflater.inflate(R.layout.popular_search_findly_item, null);
             popularItemViewHolder = new RecentItemViewHolder();
             popularItemViewHolder.tvPopulatItem = view.findViewById(R.id.tvPopularItem);
+            view.setBackgroundColor(context.getResources().getColor(R.color.white));
             view.setTag(popularItemViewHolder);
         } else {
             popularItemViewHolder = (RecentItemViewHolder) view.getTag();

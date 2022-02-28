@@ -380,8 +380,9 @@ public class KaReceivedBubbleFindlyLayout extends KaBaseBubbleFindlyLayout {
                 else if(BotResponse.TEMPLATE_TYPE_RESULTS_LIST.equalsIgnoreCase(payInner.getTemplate_type()))
                 {
                     if(payInner.getTemplate() != null && payInner.getTemplate().getResults() != null
-                        && payInner.getTemplate().getResults() != null && (payInner.getTemplate().getResults().getFaq().size() > 0
-                            || payInner.getTemplate().getResults().getWeb().size() > 0 || payInner.getTemplate().getResults().getTask().size() > 0))
+                        && ((payInner.getTemplate().getResults().getFaq() != null && payInner.getTemplate().getResults().getFaq().getData() != null && payInner.getTemplate().getResults().getFaq().getData().size() > 0)
+                            || (payInner.getTemplate().getResults().getWeb() != null && payInner.getTemplate().getResults().getWeb().getData() != null && payInner.getTemplate().getResults().getWeb().getData().size() > 0)
+                            || (payInner.getTemplate().getResults().getTask() != null && payInner.getTemplate().getResults().getTask().getData() != null && payInner.getTemplate().getResults().getTask().getData().size() > 0)))
                     {
                         resultsTemplateView.setVisibility(VISIBLE);
                         resultsTemplateView.populateResultsTemplateView(payInner);

@@ -85,8 +85,8 @@ public class FacetsFilterAdapter extends BaseAdapter
     private void populateView(ViewHolder holder, int position) {
         SearchFacetsModel buttonTemplate = (SearchFacetsModel)getItem(position);
 
-        holder.tvFacetsFilterName.setText(buttonTemplate.getFacetName());
-        holder.alvFilters.setAdapter(new FacetsFilterBucketAdapter(mContext, buttonTemplate.getBuckets(), filterResultsListner, buttonTemplate.getFieldName(), buttonTemplate.getFacetType(), appliedFilters));
+        holder.tvFacetsFilterName.setText(buttonTemplate.getName());
+        holder.alvFilters.setAdapter(new FacetsFilterBucketAdapter(mContext, buttonTemplate.getBuckets(), filterResultsListner, buttonTemplate.getFieldName(), buttonTemplate.getName(), appliedFilters));
         holder.tvFacetsFilterName.setTypeface(null, Typeface.BOLD);
     }
 

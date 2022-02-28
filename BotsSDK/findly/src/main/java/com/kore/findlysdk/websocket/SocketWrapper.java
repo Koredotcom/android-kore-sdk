@@ -15,6 +15,7 @@ import com.kore.findlysdk.models.BotInfoModel;
 import com.kore.findlysdk.models.BotSocketOptions;
 import com.kore.findlysdk.models.RestResponse;
 import com.kore.findlysdk.net.BotRestBuilder;
+import com.kore.findlysdk.net.BotRestRTMBuilder;
 import com.kore.findlysdk.utils.Constants;
 
 import java.net.URISyntaxException;
@@ -147,7 +148,7 @@ public final class SocketWrapper {
             public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
                 try {
 
-                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
+                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestRTMBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
                     Response<RestResponse.JWTTokenResponse> jwtTokenResponseResponse = jwtTokenResponseCall.execute();
 
                     HashMap<String, Object> hsh = new HashMap<>();
@@ -156,13 +157,13 @@ public final class SocketWrapper {
 
 
 
-                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestRTMBuilder.getBotRestService().jwtGrant(hsh);
                     Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
 
                     auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
                     botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestRTMBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                     observableEmitter.onNext(rtmUrlResponse.body());
@@ -204,7 +205,7 @@ public final class SocketWrapper {
                     hsh.put(Constants.KEY_ASSERTION, sJwtGrant);
                     hsh.put(Constants.BOT_INFO, botInfoModel);
 
-                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestRTMBuilder.getBotRestService().jwtGrant(hsh);
                     Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
 
                     HashMap<String, Object> hsh1 = new HashMap<>();
@@ -213,7 +214,7 @@ public final class SocketWrapper {
                     botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
                     auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestRTMBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                     observableEmitter.onNext(rtmUrlResponse.body());
@@ -327,7 +328,7 @@ public final class SocketWrapper {
                         {
 
                             Log.e("Need to change here", rtmUrl.getUrl());
-                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai"),false);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://searchassist-qa.kore.ai"),false);
                         }
                         catch (URISyntaxException e) {
                             e.printStackTrace();
@@ -485,15 +486,15 @@ public final class SocketWrapper {
             @Override
             public void subscribe(ObservableEmitter<RestResponse.RTMUrl> observableEmitter) throws Exception {
                 try {
-                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
+                    Call<RestResponse.JWTTokenResponse> jwtTokenResponseCall = BotRestRTMBuilder.getBotRestService().getJWTToken("bearer " + accessToken);
                     Response<RestResponse.JWTTokenResponse> jwtTokenResponseResponse = jwtTokenResponseCall.execute();
                     HashMap<String, Object> hsh = new HashMap<>(1);
                     hsh.put(Constants.KEY_ASSERTION, jwtTokenResponseResponse.body().getJwt());
 
-                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestRTMBuilder.getBotRestService().jwtGrant(hsh);
                     Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo,true);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestRTMBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo,true);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                     /*Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
@@ -548,7 +549,7 @@ public final class SocketWrapper {
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai").concat("&isReconnect=true"), true);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://searchassist-qa.kore.ai").concat("&isReconnect=true"), true);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
@@ -576,7 +577,7 @@ public final class SocketWrapper {
                     hsh.put(Constants.KEY_ASSERTION, JWTToken);
                     hsh.put(Constants.BOT_INFO, botInfoModel);
 
-                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestBuilder.getBotRestService().jwtGrant(hsh);
+                    Call<RestResponse.BotAuthorization> botAuthorizationCall = BotRestRTMBuilder.getBotRestService().jwtGrant(hsh);
                     Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
                     HashMap<String, Object> hsh1 = new HashMap<>();
                     hsh1.put(Constants.BOT_INFO, botInfoModel);
@@ -584,7 +585,7 @@ public final class SocketWrapper {
                     auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
                     botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1,true);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestRTMBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1,true);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                     /*Call<JWTTokenResponse> jwtTokenResponseCall = KaRestBuilder.getKaRestAPI().getJWTToken(Utils.ah(accessToken),new HashMap<String, Object>());
@@ -652,7 +653,7 @@ public final class SocketWrapper {
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://dev.findly.ai").concat("&isReconnect=true"),true);
+                            connectToSocket(rtmUrl.getUrl().replace("ws://dummy.com:80", "wss://searchassist-qa.kore.ai").concat("&isReconnect=true"),true);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }

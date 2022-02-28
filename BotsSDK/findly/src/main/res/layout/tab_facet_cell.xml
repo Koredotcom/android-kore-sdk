@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llTabFacet"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:padding="@dimen/dimen_10dp"
+    android:background="@drawable/tabs_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivTabFacet"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:src="@mipmap/docs_unselect" />
+
+    <com.kore.findlysdk.view.CustomTextViewBold
+        android:id="@+id/tvTabFacetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="File (0)"
+        android:textColor="@color/tabs_text_bg"
+        android:textSize="@dimen/text_size_small" />
+</LinearLayout>

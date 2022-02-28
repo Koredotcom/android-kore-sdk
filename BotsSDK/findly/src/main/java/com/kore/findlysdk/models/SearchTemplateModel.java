@@ -7,17 +7,17 @@ public class SearchTemplateModel implements Serializable
 {
     private String originalQuery;
     private String cleanQuery;
-    private LiveSearchFacetsModel facets;
+    private ArrayList<SearchFacetsModel> facets;
     private SearchResultsModel results;
     private SearchWebHookPayloadModel webhookPayload;
-    private ArrayList<SearchFacetsModel> searchFacets;
+    private SearchFacetsModel tabFacet;
 
 
     public void setCleanQuery(String cleanQuery) {
         this.cleanQuery = cleanQuery;
     }
 
-    public void setFacets(LiveSearchFacetsModel facets) {
+    public void setFacets(ArrayList<SearchFacetsModel> facets) {
         this.facets = facets;
     }
 
@@ -25,7 +25,7 @@ public class SearchTemplateModel implements Serializable
         this.originalQuery = originalQuery;
     }
 
-    public LiveSearchFacetsModel getFacets() {
+    public ArrayList<SearchFacetsModel> getFacets() {
         return facets;
     }
 
@@ -53,11 +53,11 @@ public class SearchTemplateModel implements Serializable
         return webhookPayload;
     }
 
-    public void setSearchFacets(ArrayList<SearchFacetsModel> searchFacets) {
-        this.searchFacets = searchFacets;
+    public SearchFacetsModel getTabFacet() {
+        return tabFacet;
     }
 
-    public ArrayList<SearchFacetsModel> getSearchFacets() {
-        return searchFacets;
+    public void setTabFacet(SearchFacetsModel tabFacet) {
+        this.tabFacet = tabFacet;
     }
 }

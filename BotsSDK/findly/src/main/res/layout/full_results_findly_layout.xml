@@ -125,7 +125,7 @@
         android:id="@+id/rlData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/hsvOptionsFooter"
+        android:layout_above="@+id/llPagination"
         android:layout_below="@+id/view_pager_tab"
         android:visibility="visible">
 
@@ -155,98 +155,94 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/llAllresultsLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/llAllresultsLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical" />
-
-                <LinearLayout
-                    android:id="@+id/llPagination"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/dimen_10_dp"
-                    android:gravity="right|center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/ivPreviousFirst"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/ic_double_arrow_left" />
-
-                    <ImageView
-                        android:id="@+id/ivPrevious"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:rotation="180"
-                        app:srcCompat="@drawable/right_arrow_iconn" />
-
-                    <com.kore.findlysdk.view.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:layout_marginRight="@dimen/dimen_10_dp"
-                        android:text="@string/page" />
-
-                    <LinearLayout
-                        android:layout_width="45dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/rounded_rect_feedback"
-                        android:gravity="center">
-
-                        <com.kore.findlysdk.view.CustomTextView
-                            android:id="@+id/tvPageNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1" />
-
-                    </LinearLayout>
-
-                    <com.kore.findlysdk.view.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:text="of" />
-
-                    <com.kore.findlysdk.view.CustomTextView
-                        android:id="@+id/tvNoofPages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:layout_marginRight="@dimen/dimen_10_dp"
-                        android:text="8"
-                        android:textColor="@color/txtFontBlack"
-                        android:textSize="@dimen/text_size_sub_header" />
-
-                    <ImageView
-                        android:id="@+id/ivNext"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@drawable/right_arrow_iconn" />
-
-                    <ImageView
-                        android:id="@+id/ivNextLast"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dimen_10_dp"
-                        android:layout_marginRight="@dimen/dimen_10_dp"
-                        android:rotation="180"
-                        app:srcCompat="@drawable/ic_double_arrow_left" />
-
-
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:orientation="vertical" />
 
         </ScrollView>
+
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llPagination"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/hsvOptionsFooter"
+        android:layout_margin="@dimen/dimen_10_dp"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivPreviousFirst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_double_arrow_left" />
+
+        <ImageView
+            android:id="@+id/ivPrevious"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10_dp"
+            android:rotation="180"
+            app:srcCompat="@drawable/right_arrow_iconn" />
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10_dp"
+            android:layout_marginRight="@dimen/dimen_10_dp"
+            android:text="@string/page" />
+
+        <LinearLayout
+            android:layout_width="45dp"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_rect_feedback"
+            android:gravity="center">
+
+            <com.kore.findlysdk.view.CustomTextView
+                android:id="@+id/tvPageNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1" />
+
+        </LinearLayout>
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10_dp"
+            android:text="of" />
+
+        <com.kore.findlysdk.view.CustomTextView
+            android:id="@+id/tvNoofPages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10_dp"
+            android:layout_marginRight="@dimen/dimen_10_dp"
+            android:text="8"
+            android:textColor="@color/txtFontBlack"
+            android:textSize="@dimen/text_size_sub_header" />
+
+        <ImageView
+            android:id="@+id/ivNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/right_arrow_iconn" />
+
+        <ImageView
+            android:id="@+id/ivNextLast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10_dp"
+            android:layout_marginRight="@dimen/dimen_10_dp"
+            android:rotation="180"
+            app:srcCompat="@drawable/ic_double_arrow_left" />
+
+
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/hsvOptionsFooter"
@@ -294,7 +290,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/tabs_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivFaq"
@@ -318,7 +315,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/tabs_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivPages"
@@ -342,7 +340,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/tabs_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivActions"
@@ -366,7 +365,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/tabs_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivDocs"
@@ -390,7 +390,8 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/tabs_background"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivData"
@@ -407,6 +408,12 @@
                     android:textColor="@color/tabs_text_bg"
                     android:textSize="@dimen/text_size_small" />
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTabs"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
 
     </HorizontalScrollView>

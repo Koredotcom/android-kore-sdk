@@ -2,50 +2,62 @@ package com.kore.findlysdk.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SearchResultsModel implements Serializable
 {
-    private ArrayList<LiveSearchResultsModel> faq;
-    private ArrayList<LiveSearchResultsModel> web;
-    private ArrayList<LiveSearchResultsModel> task;
-    private ArrayList<LiveSearchResultsModel> file;
+    private LiveSearchResultsDataModel faq;
+    private LiveSearchResultsDataModel web;
+    private LiveSearchResultsDataModel task;
+    private LiveSearchResultsDataModel file;
     private ArrayList<LiveSearchResultsModel> data;
+    private LiveSearchResultsDataModel default_group;
 
-    public ArrayList<LiveSearchResultsModel> getFaq() {
-        return faq;
+    public ArrayList<LiveSearchResultsModel> getData() {
+        return data;
     }
 
-    public ArrayList<LiveSearchResultsModel> getWeb() { return web; }
-
-    public void setWeb(ArrayList<LiveSearchResultsModel> web) {
-        this.web = web;
+    public LiveSearchResultsDataModel getWeb() {
+        return web;
     }
 
-    public void setFaq(ArrayList<LiveSearchResultsModel> faq) {
-        this.faq = faq;
-    }
-
-    public void setTask(ArrayList<LiveSearchResultsModel> task) {
-        this.task = task;
-    }
-
-    public ArrayList<LiveSearchResultsModel> getTask() {
-        return task;
-    }
-
-    public ArrayList<LiveSearchResultsModel> getFile() {
+    public LiveSearchResultsDataModel getFile() {
         return file;
     }
 
-    public void setFile(ArrayList<LiveSearchResultsModel> file) {
-        this.file = file;
+    public LiveSearchResultsDataModel getFaq() {
+        return faq;
+    }
+
+    public LiveSearchResultsDataModel getTask() {
+        return task;
     }
 
     public void setData(ArrayList<LiveSearchResultsModel> data) {
         this.data = data;
     }
 
-    public ArrayList<LiveSearchResultsModel> getData() {
-        return data;
+    public void setWeb(LiveSearchResultsDataModel web) {
+        this.web = web;
+    }
+
+    public void setTask(LiveSearchResultsDataModel task) {
+        this.task = task;
+    }
+
+    public void setFile(LiveSearchResultsDataModel file) {
+        this.file = file;
+    }
+
+    public void setFaq(LiveSearchResultsDataModel faq) {
+        this.faq = faq;
+    }
+
+    public LiveSearchResultsDataModel getDefault_group() {
+        return default_group;
+    }
+
+    public void setDefault_group(LiveSearchResultsDataModel default_group) {
+        this.default_group = default_group;
     }
 }
