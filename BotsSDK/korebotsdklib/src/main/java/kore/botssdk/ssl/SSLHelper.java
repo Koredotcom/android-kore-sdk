@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 import javax.net.ssl.SSLContext;
@@ -85,9 +86,27 @@ public class SSLHelper {
     public static SSLContext getSSLContextWithCertificate(Context mContext, String serverUrl){
         SSLContext context = null;
         try {
-            TrustManagerFactory tmf = getTrustManagerFactoryWithCertificate(mContext, serverUrl);
+//            TrustManagerFactory tmf = getTrustManagerFactoryWithCertificate(mContext, serverUrl);
+
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            X509Certificate[] myTrustedAnchors = new X509Certificate[0];
+                            return myTrustedAnchors;
+                        }
+
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+
             context = SSLContext.getInstance("TLS");
-            context.init(null, tmf.getTrustManagers(), null);
+            context.init(null, trustAllCerts, null);
         } catch (NoSuchAlgorithmException e){
             e.printStackTrace();
         } catch (KeyManagementException e) {
@@ -98,7 +117,8 @@ public class SSLHelper {
 
     public static X509TrustManager systemDefaultTrustManager() {
 
-        try {
+        try
+        {
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init((KeyStore) null);
             TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();

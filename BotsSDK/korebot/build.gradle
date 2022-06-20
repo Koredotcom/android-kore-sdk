@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 32
+    buildToolsVersion '30.0.3'
 
     dataBinding{
         enabled = true
@@ -10,7 +10,7 @@ android {
     defaultConfig {
            applicationId "kore.botssdk"
         minSdkVersion 23
-        targetSdkVersion 29
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

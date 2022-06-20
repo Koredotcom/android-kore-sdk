@@ -2,16 +2,12 @@ apply plugin: 'com.android.library'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 29
-    buildToolsVersion '29.0.2'
-
+    compileSdkVersion 32
 
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 32
 
     }
 
@@ -31,8 +27,8 @@ android {
 dependencies {
 
     api fileTree(include: ['*.jar'], dir: 'libs')
-    api 'androidx.appcompat:appcompat:1.1.0'
+    api 'androidx.appcompat:appcompat:1.4.2'
     api files('libs/httpmime-4.2.5.jar')
-    api 'com.google.code.gson:gson:2.8.5'
+    api 'com.google.code.gson:gson:2.9.0'
 
 }
