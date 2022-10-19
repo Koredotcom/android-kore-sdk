@@ -80,6 +80,8 @@ public static final String JWT_SERVER_URL = "<jwt-token-server-url>";
 *	Run the app.
 
 ## Integrating into your app
+Copy "korebotsdklib" module available in this repository into your application and follow the below steps
+
 1. Create BotClient object providing context
 ```
 BotClient botClient = new BotClient(this);
