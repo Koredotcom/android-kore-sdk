@@ -245,32 +245,14 @@ public class KaMediaUtils {
         return stringID.hashCode();
     }
 
-    /*public static String getTimestamp(){
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-   	 return timeStamp;
-   }*/
-
-    public static void copySourceToDestination(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
-
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-        }
-        in.close();
-        out.close();
-    }
-
-
     public static String saveFileToKoreWithStream(Context mContext,Uri uri,String fileName,String extn){
+        InputStream inputStream = null;
+        OutputStream out = null;
         try{
             ContentResolver contentResolver = mContext.getContentResolver();
             File file =  KaMediaUtils.getOutputMediaFile(BitmapUtils.obtainMediaTypeOfExtn(extn),fileName);
-            InputStream inputStream = contentResolver.openInputStream(uri);
-            OutputStream out = new FileOutputStream(file);
+            inputStream = contentResolver.openInputStream(uri);
+            out = new FileOutputStream(file);
 
             int read = 0;
             byte[] bytes = new byte[1024];
@@ -278,14 +260,20 @@ public class KaMediaUtils {
             while ((read = inputStream.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
-
-            inputStream.close();
-            out.close();
             Log.d("file create","success scenario"+fileName+extn);
             return file.getAbsolutePath();
         }catch (Exception e){
             Log.d("file create","fail scenario");
             e.printStackTrace();
+        }
+        finally {
+            try {
+                //Closing output stream
+                if (out != null) out.close();
+                //Closing input stream
+                if (inputStream != null) inputStream.close();
+            }
+            catch (Exception e){e.printStackTrace();}
         }
         return null;
     }
@@ -306,6 +294,7 @@ public class KaMediaUtils {
             do {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
+            bos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -391,24 +380,6 @@ public class KaMediaUtils {
 
         cursor.close();
         return photoId;
-
-    }
-
-    public static int getThumbnailIdForGallery(Context context, String path) {
-
-        try {
-            Cursor ca = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns._ID}, MediaStore.MediaColumns.DATA + "=?", new String[]{new File(path).getAbsolutePath()}, null);
-            if (ca != null && ca.moveToFirst()) {
-                int id = ca.getInt(ca.getColumnIndex(MediaStore.MediaColumns._ID));
-                ca.close();
-                return id;
-            }
-
-            ca.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
 
     }
 
@@ -681,6 +652,8 @@ public class KaMediaUtils {
         @Override
         protected String doInBackground(String... f_url) {
             int count;
+            OutputStream output = null;
+            InputStream input = null;
             try {
                 URL url = new URL(f_url[0]);
                 URLConnection conection = url.openConnection();
@@ -689,10 +662,10 @@ public class KaMediaUtils {
                 int lenghtOfFile = conection.getContentLength();
 
                 // input stream to read file - with 8k buffer
-                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                input = new BufferedInputStream(url.openStream(), 8192);
 
                 // Output stream to write file
-                OutputStream output = new FileOutputStream(KaMediaUtils.getAppDir() + File.separator + StringUtils.getFileNameFromUrl(url.toString()));
+                output = new FileOutputStream(KaMediaUtils.getAppDir() + File.separator + StringUtils.getFileNameFromUrl(url.toString()));
                 byte data[] = new byte[1024];
 
                 long total = 0;
@@ -709,13 +682,17 @@ public class KaMediaUtils {
 
                 // flushing output
                 output.flush();
-
-                // closing streams
-                output.close();
-                input.close();
-
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
+            }
+            finally {
+                try {
+                    //Closing output Stream
+                    if(output != null) output.close();
+                    //Closing input stream
+                    if(input != null) input.close();
+                }
+                catch (Exception e){e.printStackTrace();}
             }
 
             return null;

@@ -21,6 +21,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.github.zagum.speechrecognitionview.RecognitionBar;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 public class BarRmsAnimator implements BarParamsAnimator {
@@ -64,10 +65,10 @@ public class BarRmsAnimator implements BarParamsAnimator {
         if (rmsdB < QUIT_RMSDB_MAX) {
             newHeightPart = 0.2f;
         } else if (rmsdB >= QUIT_RMSDB_MAX && rmsdB <= MEDIUM_RMSDB_MAX) {
-            newHeightPart = 0.3f + new Random().nextFloat();
+            newHeightPart = 0.3f + new SecureRandom().nextFloat();
             if (newHeightPart > 0.6f) newHeightPart = 0.6f;
         } else {
-            newHeightPart = 0.7f + new Random().nextFloat();
+            newHeightPart = 0.7f + new SecureRandom().nextFloat();
             if (newHeightPart > 1f) newHeightPart = 1f;
 
         }

@@ -99,7 +99,7 @@
                         android:id="@+id/ivVideoMore"
                         android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_25dp"
-                        android:layout_marginRight="@dimen/dimen_10_dp"
+                        android:layout_marginRight="@dimen/dimen_10dp"
                         android:layout_weight="0"
                         android:src="@drawable/ic_more_vert_white_24dp" />
 
@@ -127,7 +127,7 @@
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/audio_template_bg"
             android:orientation="vertical"
-            android:padding="@dimen/dimen_15_dp"
+            android:padding="@dimen/dimen_15dp"
             android:visibility="gone">
 
             <LinearLayout

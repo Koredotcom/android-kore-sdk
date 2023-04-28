@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -696,7 +697,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             mAttemptCount = -1;
             mIsAttemptNeeded = false;
         }
-        Random rint = new Random();
+        SecureRandom rint = new SecureRandom();
         int delay = (rint.nextInt(5) + 1) * mAttemptCount * 2500;
         if (delay < 3000) delay = 5000;
         return delay;

@@ -28,21 +28,23 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.kore.ai.widgetsdk.models.PanelBaseModel;
-import com.kore.ai.widgetsdk.models.PanelResponseData;
-import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
+//import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
+//import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
+//import com.kore.ai.widgetsdk.models.PanelBaseModel;
+//import com.kore.ai.widgetsdk.models.PanelResponseData;
+//import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,7 +110,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
-import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
+import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 
 /**
@@ -117,7 +119,7 @@ import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUND
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface/*, WidgetComposeFooterInterface*/, ThemeChangeListener/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -141,10 +143,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     //For Bottom Panel
     private String packageName = "com.kore.koreapp";
     private String appName = "Kore";
-    private CustomBottomSheetBehavior mBottomSheetBehavior;
+//    private CustomBottomSheetBehavior mBottomSheetBehavior;
     //Fragment Approch
     private FrameLayout composerView;
-    private BottomPanelFragment composerFragment;
+//    private BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
     private String chatBgColor, chatTextColor;
     private ImageView ivChaseBackground, ivChaseLogo;
@@ -202,7 +204,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
-        attachFragments();
+//        attachFragments();
 
         if(!SDKConfiguration.Client.isWebHook)
         {
@@ -241,9 +243,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     };
 
     public void buttonClick(View view){
-        int red= new Random().nextInt(255);
-        int green= new Random().nextInt(255);
-        int blue= new Random().nextInt(255);
+        int red= new SecureRandom().nextInt(255);
+        int green= new SecureRandom().nextInt(255);
+        int blue= new SecureRandom().nextInt(255);
         ThemeColors.setNewThemeColor(BotChatActivity.this, red, green, blue);
     }
 
@@ -417,15 +419,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST)
-        {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
 
-                if(!StringUtils.isNullOrEmpty(fileUrl))
+                if (!StringUtils.isNullOrEmpty(fileUrl))
                     KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
             }
         }
@@ -928,54 +928,54 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void attachFragments() {
-
-        if(SDKConfiguration.Client.enablePanel)
-        {
-            composerView = findViewById(R.id.chatLayoutPanelContainer);
-            composerView.setVisibility(VISIBLE);
-            composerFragment = new BottomPanelFragment();
-            composerFragment.setArguments(getIntent().getExtras());
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
-        }
-    }
-
-    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
-        PanelBaseModel model = null;
-        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
-            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
-                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
-                    model = new PanelBaseModel();
-                    panel.setItemClicked(true);
-                    model.setData(panel);
-                    return model;
-                }
-            }
-
-        }
-
-        return model;
-    }
-
-    @Override
-    public void onPanelSendClick(String message, boolean isFromUtterance)
-    {
-        BotSocketConnectionManager.getInstance().sendMessage(message, null);
-    }
-
-    @Override
-    public void onPanelSendClick(String message, String payload, boolean isFromUtterance)
-    {
-        if(payload != null){
-            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-        }else{
-            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
-        }
-
-        toggleQuickRepliesVisiblity(false);
-    }
+//    private void attachFragments() {
+//
+//        if(SDKConfiguration.Client.enablePanel)
+//        {
+//            composerView = findViewById(R.id.chatLayoutPanelContainer);
+//            composerView.setVisibility(VISIBLE);
+//            composerFragment = new BottomPanelFragment();
+//            composerFragment.setArguments(getIntent().getExtras());
+//            getSupportFragmentManager().beginTransaction()
+//                    .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+//            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
+//        }
+//    }
+//
+//    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
+//        PanelBaseModel model = null;
+//        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
+//            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
+//                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
+//                    model = new PanelBaseModel();
+//                    panel.setItemClicked(true);
+//                    model.setData(panel);
+//                    return model;
+//                }
+//            }
+//
+//        }
+//
+//        return model;
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, boolean isFromUtterance)
+//    {
+//        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, String payload, boolean isFromUtterance)
+//    {
+//        if(payload != null){
+//            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+//        }else{
+//            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+//        }
+//
+//        toggleQuickRepliesVisiblity(false);
+//    }
 
     @Override
     public void onThemeChangeClicked(String message)
@@ -1025,6 +1025,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         protected String doInBackground(String... params) {
             android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
             String extn = null;
+            OutputStream fOut = null;
+
             if (filePath != null) {
                 extn = filePath.substring(filePath.lastIndexOf(".") + 1);
                 Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
@@ -1032,7 +1034,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 if (thePic != null) {
                     try {
                         // compress the image
-                        OutputStream fOut = null;
                         File _file = new File(filePath);
 
                         Log.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
@@ -1045,6 +1046,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         fOut.close();
                     } catch (Exception e) {
                         Log.e(LOG_TAG, e.toString());
+                    }
+                    finally {
+                        try {
+                            assert fOut != null;
+                            fOut.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -1131,7 +1140,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
 
-                hideBottomSheet();
+//                hideBottomSheet();
                 composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
                 messageHandler.postDelayed(new Runnable() {
                     public void run() {
@@ -1165,7 +1174,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void mediaAttachment(HashMap<String, String> attachmentKey)
     {
-        hideBottomSheet();
+//        hideBottomSheet();
         composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
         messageHandler.postDelayed(new Runnable() {
             public void run() {
@@ -1178,11 +1187,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }, 400);
     }
 
-    public void hideBottomSheet() {
-        if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
-    }
+//    public void hideBottomSheet() {
+//        if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
+//            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//        }
+//    }
 
     private int getFileLimit() {
         attachment = SharedPreferenceUtils.getInstance(this).getAttachmentPref("");

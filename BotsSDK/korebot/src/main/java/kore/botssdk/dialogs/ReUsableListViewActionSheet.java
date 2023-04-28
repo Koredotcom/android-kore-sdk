@@ -10,12 +10,15 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.utils.DimensionUtil;
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
-import com.kore.ai.widgetsdk.utils.Utility;
+//import com.kora.ai.widgetsdk.R;
+//import com.kore.ai.widgetsdk.utils.DimensionUtil;
+//import com.kore.ai.widgetsdk.utils.KaFontUtils;
+//import com.kore.ai.widgetsdk.utils.Utility;
 
+import kore.botssdk.R;
 import kore.botssdk.utils.AppUtils;
+import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.Utility;
 
 /**
  * Created by Shiva Krishna on 1/22/2018.

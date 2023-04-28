@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/syncDialogRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFFFF"
+        android:clickable="false" />
+
+    <RelativeLayout
+        android:id= "@+id/syncCentralContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#FFFFFFFF">
+        <ImageView
+            android:id= "@+id/syncDialogCompanyDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="kore_login_icon"
+        app:srcCompat= "@mipmap/ic_notification" />
+
+
+        <TextView
+            android:id= "@+id/syncDialogPreparingDeviceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below= "@+id/syncDialogCompanyDialog"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:tag="medium"
+        android:text="Loading data..."
+        android:textColor= "#4741fa"
+        android:textSize="20dp" />
+
+
+        <TextView
+            android:id= "@+id/syncDialogLoadingTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below= "@+id/syncDialogPreparingDeviceTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="7dp"
+        android:tag="regular"
+        android:text=""
+        android:textColor= "#4741fa"
+        android:textSize="16dp" />
+
+
+        <include
+            android:id= "@+id/progressBarForMainLayout"
+        layout= "@layout/uniform_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below= "@id/syncDialogLoadingTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
+
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFFFF"
+        android:clickable="false" />
+
+</LinearLayout>

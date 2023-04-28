@@ -94,6 +94,7 @@ public class FileTokenManager{
           String text = "";
           BufferedReader reader=null;
           URLConnection conn = null;
+          OutputStreamWriter wr = null;
           // Send data
         try {
 
@@ -105,7 +106,7 @@ public class FileTokenManager{
             if (header != null) conn.addRequestProperty("Authorization", "bearer " + header);
             conn.addRequestProperty("User-Agent", Constants.getUserAgent());
             System.out.println(" The userAgent in FileToken Service is " + Constants.getUserAgent());
-            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr = new OutputStreamWriter(conn.getOutputStream());
             if (data != null) {
                 wr.write(data);
                 wr.flush();
@@ -129,6 +130,7 @@ public class FileTokenManager{
         finally{
             try{
                 reader.close();
+                wr.close();
             }
             catch(Exception ex) {}
         }

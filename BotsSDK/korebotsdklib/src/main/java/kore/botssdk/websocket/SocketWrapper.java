@@ -7,6 +7,7 @@ import android.util.Log;
 
 
 import java.net.URISyntaxException;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Timer;
@@ -739,7 +740,7 @@ public final class SocketWrapper{
         mReconnectionCount++;
         Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
         if (mReconnectionCount > 6) mReconnectionCount = 1;
-        Random rint = new Random();
+        SecureRandom rint = new SecureRandom();
         return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
     }
     /**

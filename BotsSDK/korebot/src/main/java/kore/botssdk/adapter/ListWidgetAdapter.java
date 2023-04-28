@@ -1,5 +1,8 @@
 package kore.botssdk.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -36,7 +39,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.squareup.picasso.Picasso;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -62,13 +64,8 @@ import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.WidgetViewMoreEnum;
-import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
@@ -139,7 +136,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     Drawable errorIcon;
     String trigger;
     private boolean isLoginNeeded;
-    private WidgetComposeFooterInterface widgetComposeFooterInterface;
 
     public ListWidgetAdapter(Context mContext, String type, String trigger) {
         this.mContext = mContext;

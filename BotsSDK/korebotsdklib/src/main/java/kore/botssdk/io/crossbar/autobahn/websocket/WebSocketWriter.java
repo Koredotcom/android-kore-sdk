@@ -21,6 +21,7 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
@@ -52,7 +53,7 @@ class WebSocketWriter extends Handler {
     private final static String CRLF = "\r\n";
 
     /// Random number generator for handshake key and frame mask generation.
-    private final Random mRng = new Random();
+    private final SecureRandom mRng = new SecureRandom();
 
     /// Connection master.
     private final Handler mMaster;

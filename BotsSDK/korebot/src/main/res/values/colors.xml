@@ -197,4 +197,5 @@
     <color name="color_38c9e1">#38c9e1</color>
     <color name="color_3E3E51">#3e3e51</color>
     <color name="listview_cost">#008000</color>
+    <color name="txtFontBlack">#000000</color>
 </resources>

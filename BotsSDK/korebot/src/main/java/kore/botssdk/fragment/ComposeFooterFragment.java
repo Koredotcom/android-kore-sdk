@@ -4,7 +4,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS;
 import static android.speech.RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
-import static com.kore.ai.widgetsdk.utils.BundleUtils.THUMBNAIL_FILE_PATH;
+import static kore.botssdk.activity.KaCaptureImageActivity.THUMBNAIL_FILE_PATH;
 import static kore.botssdk.utils.BitmapUtils.getBufferSize;
 import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
@@ -59,7 +59,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
-//import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -98,8 +97,6 @@ import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.exceptions.NoExternalStorageException;
-import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -987,10 +984,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
             Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
 //                    compressImage(filePath);
+            OutputStream fOut = null;
             if (thePic != null) {
                 try {
                     // compress the image
-                    OutputStream fOut = null;
                     File _file = new File(filePath);
 
                     Log.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
@@ -1000,9 +997,15 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     thePic = rotateIfNecessary(filePath, thePic);
                     orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
                     fOut.flush();
-                    fOut.close();
                 } catch (Exception e) {
                     Log.e(LOG_TAG, e.toString());
+                }
+                finally {
+                    try {
+                        assert fOut != null;
+                        fOut.close();
+                    }
+                    catch (Exception e){e.printStackTrace();}
                 }
             }
             long fileLimit =  getFileMaxSize();
@@ -1145,10 +1148,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (filePath != null && mContext.get() != null) {
 //                    compressImage(filePath);
                 FileOutputStream fOut = null;
+                BufferedOutputStream out = null;
                 try {
 
                     fOut = new FileOutputStream(filePath);
-                    BufferedOutputStream out = new BufferedOutputStream(fOut);
+                    out = new BufferedOutputStream(fOut);
                     InputStream in = mContext.get().getContentResolver().openInputStream(fileUri);
                     byte[] buffer = new byte[8192];
                     int len = 0;
@@ -1163,10 +1167,16 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     if (fOut != null) {
                         try {
                             fOut.getFD().sync();
+                            fOut.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
+
+                    try {
+                        assert out != null;
+                        out.close();
+                    }catch (Exception e){e.printStackTrace();}
                 }
             }
             return filePath;

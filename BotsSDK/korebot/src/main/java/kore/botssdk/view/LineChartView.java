@@ -25,6 +25,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -166,7 +167,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     }
     private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, List<String> headers){
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        Random randomGenerator = new Random();
+        SecureRandom randomGenerator = new SecureRandom();
         String[] colors = this.getResources().getStringArray(R.array.color_set);
 
         int size = dataModels != null && dataModels.size() > 0 ? dataModels.get(0).getValues() != null ? dataModels.get(0).getValues().size() : 0 :0;

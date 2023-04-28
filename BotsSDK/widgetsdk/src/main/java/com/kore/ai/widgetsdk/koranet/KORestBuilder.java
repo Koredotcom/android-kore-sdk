@@ -42,12 +42,6 @@ public final class KORestBuilder {
         }
     }
 
-    public static KORestAPI getKoraRestService(String URL){
-            if(serviceKora == null)
-                serviceKora =  getBuilder(BUILDER_TYPE_KORA_REST,URL).create(KORestAPI.class);
-            return serviceKora;
-    }
-
     public static void init(Context mContext){
         KORestBuilder.mContext = mContext;
     }

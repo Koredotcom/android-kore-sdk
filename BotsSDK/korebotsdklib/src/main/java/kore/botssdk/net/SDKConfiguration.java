@@ -126,11 +126,17 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "Zf/sPAMUgD4Hl/y6nUELodw6DJu9cuzaytcAyqL5gO8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "Zf/sPAMUgD4Hl/y6nUELodw6DJu9cuzaytcAyqL5gO8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+
+        public static String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
         public static String identity = "anilkumar.routhu@kore.com";
-        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+        public static String bot_name = "SDKBot";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
         public static String tenant_id = "605da1dbb5f6f00badadb665";
         public static boolean enablePanel = false;
         public static boolean isWebHook = false;

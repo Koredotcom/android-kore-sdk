@@ -6,20 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import io.socket.client.On;
 import kore.botssdk.R;
 import kore.botssdk.listener.FeedbackExperienceUpdateListner;
 import kore.botssdk.models.FeedbackExperienceContentModel;
-import kore.botssdk.models.FeedbackListModel;
 import kore.botssdk.utils.KaFontUtils;
 
 public class BankingFeedbackTemplateAdapter extends BaseAdapter

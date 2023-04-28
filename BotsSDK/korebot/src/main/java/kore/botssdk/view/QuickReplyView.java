@@ -19,6 +19,7 @@ import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -63,7 +64,7 @@ public class QuickReplyView extends ViewGroup {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         addView(recyclerView);
 
-        maxWidth = (int) AppControl.getInstance().getDimensionUtil().screenWidth;
+        maxWidth = (int) new DimensionUtil(getContext()).screenWidth;
         listViewHeight = (int) getResources().getDimension(R.dimen.quick_reply_layout_height);
     }
 

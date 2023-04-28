@@ -21,9 +21,9 @@ import java.net.URLConnection;
 
 public class MarkdownImageTagHandler implements Html.ImageGetter {
 
-    private Context context;
-    private TextView htmlTextViewRemote;
-    private String htmlStringRemote;
+    private final Context context;
+    private final TextView htmlTextViewRemote;
+    private final String htmlStringRemote;
 
     public MarkdownImageTagHandler(Context context, TextView htmlTextViewRemote, String htmlStringRemote) {
         this.context = context;
@@ -41,12 +41,12 @@ public class MarkdownImageTagHandler implements Html.ImageGetter {
 
 class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
 
-    private Context context;
-    private TextView taskTextView;
-    private String taskHtmlString;
+    private final Context context;
+    private final TextView taskTextView;
+    private final String taskHtmlString;
     private int dp1;
 
-    HttpGetDrawableTask(Context context, TextView v, String s) {
+    public HttpGetDrawableTask(Context context, TextView v, String s) {
         this.context = context;
         taskTextView = v;
         taskHtmlString = s;
@@ -58,6 +58,8 @@ class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
         Drawable drawable = null;
         URL sourceURL;
         String base64;
+        BufferedInputStream bufferedInputStream = null;
+        InputStream inputStream = null;
         try
         {
             if(params[0].contains("base64,"))
@@ -76,23 +78,23 @@ class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
                 sourceURL = new URL(params[0]);
                 URLConnection urlConnection = sourceURL.openConnection();
                 urlConnection.connect();
-                InputStream inputStream = urlConnection.getInputStream();
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(
-                        inputStream);
+                inputStream = urlConnection.getInputStream();
+                bufferedInputStream = new BufferedInputStream(inputStream);
                 Bitmap bm = BitmapFactory.decodeStream(bufferedInputStream);
 
                 // convert Bitmap to Drawable
                 drawable = new BitmapDrawable(context.getResources(), bm);
-
                 drawable.setBounds(0, 0, bm.getWidth(), bm.getHeight());
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        finally {
+            try {
+                if(inputStream != null) inputStream.close();
+                if(bufferedInputStream != null) bufferedInputStream.close();
+            }catch (Exception e){e.printStackTrace();}
         }
 
         return drawable;

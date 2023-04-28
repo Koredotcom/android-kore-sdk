@@ -165,19 +165,20 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
-            if (KaPermissionsHelper.hasPermission(this,Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
-        } else if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
-            if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        } else if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
-        }else if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST){
-            if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
+        } else if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
                 openImageIntent(imagePickType);
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void openImageIntent(String imagePickType) {
@@ -608,9 +609,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     }
 
     private void getImageForGalleryFooter(Uri imageUri, int resultCode) {
+        OutputStream fOut = null;
 
         try {
-
             Bitmap highResBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri); //Todo: OOM encountered over here
             Bitmap bitmapPic = BitmapUtils.getScaledBitmap(highResBitmap);
             Log.d(LOG_TAG, "getImageForGalleryFooter() :: ***** picture height ::" + bitmapPic.getHeight() + " and width::" + bitmapPic.getWidth());
@@ -624,13 +625,11 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             }catch (Exception e){
                 e.printStackTrace();
             }
-            OutputStream fOut = null;
 
             File file = KaMediaUtils.getOutputMediaFile(MEDIA_TYPE,fileName);
             fOut = new FileOutputStream(file);
             bitmapPic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
             fOut.flush();
-            fOut.close();
 
             MEDIA_FILE_PATH = file.getAbsolutePath();
             Log.d(LOG_TAG, " file absolute path::" + MEDIA_FILE_PATH);
@@ -649,6 +648,14 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                assert fOut != null;
+                fOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         //display the returned cropped image
@@ -679,10 +686,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         Log.d(LOG_TAG, "getFullImage() :: full image file absolute path::" + MEDIA_FILE_PATH);
 
         Bitmap thePic = BitmapUtils.decodeBitmapFromFile(file, 800, 600);
+        OutputStream fOut = null;
 
         try {
             // compress the image
-            OutputStream fOut = null;
             File _file = new File(MEDIA_FILE_PATH);
 
             Log.d(LOG_TAG, "getFullImage() :: file.exists() ---------------------------------------- " + _file.exists());
@@ -690,10 +697,16 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
             thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
             fOut.flush();
-            fOut.close();
             thePic = rotateIfNecessary(file.getAbsolutePath(), thePic);
         } catch (Exception e) {
             Log.e(LOG_TAG, e.toString());
+        }
+        finally {
+            try {
+                assert fOut != null;
+                fOut.close();
+            }
+            catch (Exception e){}
         }
 
         MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
@@ -823,6 +836,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
         scaledBitmap = Bitmap.createScaledBitmap(finalMap, target_W, target_H, true);
         extBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, target_W, target_H, matrix, true);
+        FileOutputStream out = null;
         try {
 
             Log.d(LOG_TAG, "createImageThumbnail() :: target width" + target_W);
@@ -840,10 +854,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             File thumbNailfile = new File(thumbnailFilePath);//MediaUtil.getOutputMediaFile(AppConstants.MEDIA_TYPE_IMAGE);
             Log.d(LOG_TAG, "createImageThumbnail() :: thumbnailFileName & path::::::::::::::" + thumbNailfile.getAbsolutePath());
 
-            FileOutputStream out = new FileOutputStream(thumbNailfile);
+            out = new FileOutputStream(thumbNailfile);
             extBitmap.compress(Bitmap.CompressFormat.PNG, compressQualityInt, out);
             out.flush();
-            out.close();
             extBitmap = rotateIfNecessary(thumbNailfile.getAbsolutePath(), extBitmap);
             //			MediaRecordingStatus.setThumbnailFilePath(thumbnailFilePath);
             //		thumbNail = ImageToBitmap.convertImageToBase64String(thumbnailFilePath);
@@ -859,9 +872,13 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             if (extBitmap != null) {
                 extBitmap.recycle();
             }
-            /*if(finalMap != null){
-				finalMap.recycle();
-			}*/
+            if(out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

@@ -35,7 +35,6 @@ android {
         api 'androidx.appcompat:appcompat:1.4.2'
         api 'de.greenrobot:eventbus:2.4.0'
         api files('libs/commons-lang3-3.2.1.jar')
-        api project(':MPAndroidChart-3.1.0')
         //For jwt
         api 'io.jsonwebtoken:jjwt-api:0.10.5'
         api 'io.jsonwebtoken:jjwt-impl:0.10.5'

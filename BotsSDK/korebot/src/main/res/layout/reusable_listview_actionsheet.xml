@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLayoutFileManagerFilterRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/temp_sel_headerLabel"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:tag="regular"
+        android:text="Choose"
+        android:textColor="@color/color_8b93a0"
+        android:textSize="18dp" />
+
+    <ScrollView
+        android:id="@+id/scrollViewTasks"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/temp_sel_headerLabel"
+        android:fadeScrollbars="false">
+
+        <RelativeLayout
+            android:id="@+id/dialogContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/temp_sele_list_Holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ListView
+                    android:id="@+id/template_selection_tasksListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:footerDividersEnabled="false"
+                    android:headerDividersEnabled="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/template_empty_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="50dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:gravity="center_horizontal"
+                android:tag="regular"
+                android:text="No Options"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="@dimen/dimen_20dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+</RelativeLayout>

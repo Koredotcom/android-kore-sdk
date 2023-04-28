@@ -54,7 +54,7 @@
                 android:layout_height="@dimen/dimen_25dp"
                 android:layout_above="@+id/sbVideo"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/dimen_15_dp"
+                android:layout_marginRight="@dimen/dimen_15dp"
                 android:src="@drawable/ic_exit_fullscreen_icon" />
 
             <ImageView

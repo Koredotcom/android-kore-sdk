@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 //import com.kore.ai.widgetsdk.activities.PanelMainActivity;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.UUID;
 
@@ -60,9 +61,9 @@ public class BotHomeActivity extends BotAppCompactActivity {
     }
 
     public void buttonClick(View view){
-        int red= new Random().nextInt(255);
-        int green= new Random().nextInt(255);
-        int blue= new Random().nextInt(255);
+        int red= new SecureRandom().nextInt(255);
+        int green= new SecureRandom().nextInt(255);
+        int blue= new SecureRandom().nextInt(255);
         ThemeColors.setNewThemeColor(BotHomeActivity.this, "F26666");
     }
 

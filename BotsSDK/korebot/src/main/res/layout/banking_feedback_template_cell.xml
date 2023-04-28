@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/dimen_10_dp">
+    android:padding="@dimen/dimen_10dp">
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/rbSelect"
         android:layout_width="@dimen/dimen_40dp"
         android:layout_height="@dimen/dimen_40dp"
-        android:src="@drawable/ic_check_off"
+        android:src="@mipmap/checkbox_off"
         style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"/>
 
 

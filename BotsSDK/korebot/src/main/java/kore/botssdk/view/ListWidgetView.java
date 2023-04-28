@@ -1,5 +1,7 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,12 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.ListWidgetAdapter;
 import kore.botssdk.dialogs.ListWidgetActionSheetFragment;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
@@ -37,8 +39,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
-
-import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
 
 public class ListWidgetView extends LinearLayout {
     private float dp1;
@@ -211,7 +211,7 @@ public class ListWidgetView extends LinearLayout {
                         btnTitle = model.getHeaderOptions().getButton().getTitle();
                     else
                         btnTitle = model.getHeaderOptions().getText();
-                    if(!com.kore.ai.widgetsdk.utils.StringUtils.isNullOrEmpty(btnTitle))
+                    if(!StringUtils.isNullOrEmpty(btnTitle))
                         tvButton.setText(btnTitle);
                     else
                         tvButtonParent.setVisibility(GONE);
@@ -278,7 +278,7 @@ public class ListWidgetView extends LinearLayout {
                             if(model.getHeaderOptions().getUrl().getLink() != null) {
                                 Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
                                 intent.putExtra("url", model.getHeaderOptions().getUrl().getLink());
-                                intent.putExtra("header", getContext().getResources().getString(com.kora.ai.widgetsdk.R.string.app_name));
+                                intent.putExtra("header", getContext().getResources().getString(R.string.app_name));
                                 getContext().startActivity(intent);
                             }
                         }

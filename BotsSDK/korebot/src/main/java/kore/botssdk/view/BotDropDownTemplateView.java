@@ -2,28 +2,24 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.socket.client.On;
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 
@@ -183,7 +179,7 @@ public class BotDropDownTemplateView extends LinearLayout {
     public static void hideSpinnerDropDown(Spinner spinner) {
         try {
             Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
-            method.setAccessible(true);
+            AccessibleObject.setAccessible(new AccessibleObject[] {method}, true);
             method.invoke(spinner);
         } catch (Exception e) {
             e.printStackTrace();

@@ -248,8 +248,8 @@ public class BitmapUtils {
 
     private static Bitmap decodeBitmap(File file, BitmapFactory.Options options, float rotationAngle){
         Bitmap bitmap = null, bm = null;
+        FileInputStream fis = null;
         try {
-            FileInputStream fis;
             fis = new FileInputStream(file);
             options.inJustDecodeBounds = false;
             bm = BitmapFactory.decodeStream(fis,null, options);
@@ -262,6 +262,12 @@ public class BitmapUtils {
             bitmap = decodeBitmap(file, options, rotationAngle);
         } finally {
             if(bm != null && !bm.equals(bitmap)) bm.recycle();
+            if(fis != null)
+            {
+                try {
+                    fis.close();
+                }catch (Exception e){e.printStackTrace();}
+            }
         }
 
         return bitmap;
@@ -501,26 +507,24 @@ public class BitmapUtils {
 
         File thumbnailFile = new File(thumbPath);
         Log.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.getAbsolutePath());
+        FileOutputStream fos = null;
 
         try {
-            FileOutputStream fos = new FileOutputStream(thumbnailFile);
-            OutputStream outputStream = null;
-
+            fos = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.PNG, compressQualityInt, fos);
             thumbnail = rotateIfNecessary(thumbPath, thumbnail);
-            if(outputStream != null){
-                outputStream.flush();
-                outputStream.close();
-            }
             fos.flush();
-            fos.close();
-
         } catch (IOException e) {
             Log.e("BitmapUtils", "createImageThumbnailForBulk() - Excep: = " + e.getMessage(), e);
-
         } finally {
             if (thumbnail != null) {
                 thumbnail.recycle();
+            }
+            if( fos != null)
+            {
+                try {
+                    fos.close();
+                }catch (Exception e){e.printStackTrace();}
             }
         }
 

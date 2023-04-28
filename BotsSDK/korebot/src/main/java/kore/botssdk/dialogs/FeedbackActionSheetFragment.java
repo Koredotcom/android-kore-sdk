@@ -195,11 +195,11 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     }
 
     private void resetAll() {
-        icon_1.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_1);
-        icon_2.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_2);
-        icon_3.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_3);
-        icon_4.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_4);
-        icon_5.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_5);
+        icon_1.setImageResource(R.drawable.feedback_icon_1);
+        icon_2.setImageResource(R.drawable.feedback_icon_2);
+        icon_3.setImageResource(R.drawable.feedback_icon_3);
+        icon_4.setImageResource(R.drawable.feedback_icon_4);
+        icon_5.setImageResource(R.drawable.feedback_icon_5);
     }
 
     @Override

@@ -3,6 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/drawable/checkbox_drawable.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/drawable/rounded_compose.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/attachment_options_view.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/banking_feedback_template.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/banking_feedback_template_cell.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/image_template.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/progress_bar.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/reusable_listview_actionsheet.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/video_full_screen.xml" value="0.1" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_image_photo.xml" value="0.19166666666666668" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_raster_image.xml" value="0.19166666666666668" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_video_icon.xml" value="0.19166666666666668" />
@@ -65,7 +74,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

@@ -1,5 +1,8 @@
 package kore.botssdk.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +23,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.kore.ai.widgetsdk.utils.AppUtils;
 
 import java.util.List;
 
@@ -35,9 +37,6 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder>{
     private String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
