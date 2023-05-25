@@ -3,15 +3,10 @@
 buildscript {
     repositories {
         google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
-        google()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.2.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -21,14 +16,29 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-            name 'Google'
-        }
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+//        maven {
+//            def propsFile = rootProject.file('github.properties')
+//            def props = new Properties()
+//            props.load(new FileInputStream(propsFile))
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/SudheerJa-Kore/lib-korebotsdk")
+//            credentials {
+//                username props['username']
+//                password props['token']
+//            }
+//        }
+//        maven {
+//            def propsFile = rootProject.file('github.properties')
+//            def props = new Properties()
+//            props.load(new FileInputStream(propsFile))
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/SudheerJa-Kore/sawidget-sdk")
+//            credentials {
+//                username props['username']
+//                password props['token']
+//            }
+//        }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
