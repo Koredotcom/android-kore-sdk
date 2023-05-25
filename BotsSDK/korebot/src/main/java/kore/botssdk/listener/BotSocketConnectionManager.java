@@ -617,20 +617,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
-/*            if(botCustomData == null) {
-                botCustomData = new RestResponse.BotCustomData();
-            }
-            botCustomData.put("kmUId", userId);
-            botCustomData.put("kmToken", accessToken);*/
             botClient = new BotClient(mContext, botCustomData);
-            if(isFirstTime){
-                if(chatListener != null ){
-                    chatListener.onConnectionStateChanged(CONNECTING,false);
-                }
-                initiateConnection();
-            }else {
-                refreshJwtToken();
-            }
+            refreshJwtToken();
             return;
         }
         if (connection_state == DISCONNECTED)
@@ -639,42 +627,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             refreshJwtToken();
         }
     }
-    public void checkConnectionAndRetryForSignify(Context mContext, boolean isFirstTime) {
-        ///here going to refresh jwt token from chat activity and it should not
-        if (botClient == null) {
-            this.mContext = mContext;
-            if(botCustomData == null) {
-                final String IDENTITY = "identity";
-                final String USERNAME = "userName";
-                SharedPreferences preferences = mContext.getSharedPreferences("signify_preferences", MODE_PRIVATE);
-                final String identity = preferences.getString(IDENTITY, "");
-                final String userName = preferences.getString(USERNAME, "");
-
-                botCustomData = new RestResponse.BotCustomData();
-                botCustomData.put(USERNAME, userName);
-                botCustomData.put(IDENTITY, identity);
-                botCustomData.put("userAgent", System.getProperty("http.agent"));
-            }
-            /*botCustomData.put("kmUId", userId);
-            botCustomData.put("kmToken", accessToken);*/
-            botClient = new BotClient(mContext, botCustomData);
-            if(!isFirstTime){
-                if(chatListener != null){
-                    chatListener.onConnectionStateChanged(CONNECTING,false);
-                }
-                initiateConnection();
-            }else {
-                refreshJwtToken();
-            }
-            return;
-        }
-        if (connection_state == DISCONNECTED)
-            initiateConnection();
-        else if (connection_state == CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED) {
-            refreshJwtToken();
-        }
-    }
-
 
     /**
      * initial reconnection count

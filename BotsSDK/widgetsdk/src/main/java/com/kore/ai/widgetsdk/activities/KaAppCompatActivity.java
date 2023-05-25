@@ -209,7 +209,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity{
     }
 
     protected final void showToast(String message){
-        if(message != null && !message.equals("INVALID_ACCESS_TOKEN"))
+        if(!message.equals("INVALID_ACCESS_TOKEN"))
             ToastUtils.showToast(this,message);
     }
     protected final void showToast(String msg, int length) {

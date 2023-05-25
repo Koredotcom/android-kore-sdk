@@ -155,14 +155,6 @@ public class CircularProfileView extends RoundedImageView {
     }
 
     public void setProfileImageUrl(String url, boolean applyRoundTransform, int profileColor, String initials) {
-        if (profileColor != -1) {
-            this.profileColor = profileColor;
-        }
-
-        if (initials != null) {
-            this.initials = initials;
-        }
-
         if (applyRoundTransform) {
             if (url.startsWith(StringConstants.HTTP_SCHEME)) {
                 Picasso.get()
@@ -231,18 +223,7 @@ public class CircularProfileView extends RoundedImageView {
 
         setDefaultBackground(color, ""); // draw initials only if there is no image drawable
 
-        if (filePath != null && !filePath.isEmpty()) {
-            if (applyRoundTransform) {
-                Picasso.get()
-                        .load(new File(filePath))
-                        .transform(getRoundTransformation())
-                        .into(viewTarget);
-            } else {
-                Picasso.get()
-                        .load(new File(filePath))
-                        .into(viewTarget);
-            }
-        } else if (imageResource != -1) {
+        if (imageResource != -1) {
             setDefaultBackground(color, "");
             setImageResource(imageResource);
         } else if (d != null) {

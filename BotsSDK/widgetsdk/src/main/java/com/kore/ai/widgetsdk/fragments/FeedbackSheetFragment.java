@@ -68,9 +68,6 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
         this.position = position;
         this.id = id;
         this.context = context;
-        if (position == -1) {
-            this.position = 4;
-        }
     }
 
 
@@ -406,10 +403,10 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
 
         submit_button.setClickable(buttonState);
         submit_button.setEnabled(buttonState);
-        if (buttonState)
+//        if (buttonState)
             submit_button.setAlpha(1F);
-        else
-            submit_button.setAlpha(0.6F);
+//        else
+//            submit_button.setAlpha(0.6F);
 
     }
 

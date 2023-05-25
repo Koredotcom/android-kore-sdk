@@ -8,10 +8,21 @@
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/attachment_options_view.xml" value="0.1" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/banking_feedback_template.xml" value="0.1" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/banking_feedback_template_cell.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/bot_chat_layout.xml" value="0.17552083333333332" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/contact_card_list_item.xml" value="0.17552083333333332" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/contact_info_view.xml" value="0.17552083333333332" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/image_template.xml" value="0.1" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/progress_bar.xml" value="0.1" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/reusable_listview_actionsheet.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/universal_search_view.xml" value="0.17552083333333332" />
         <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/layout/video_full_screen.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/korebot/src/main/res/xml/network_security_config.xml" value="0.17552083333333332" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/drawable/list_view_template_bg.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/drawable/meeting_dot.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/drawable/task_view_background.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/layout/announcement_card_layout.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/layout/bot_table_list_inner_cell.xml" value="0.1" />
+        <entry key="..\:/BotSdkGit25_04_2023/BotsSDK/widgetsdk/src/main/res/layout/listwidget_view.xml" value="0.1" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_image_photo.xml" value="0.19166666666666668" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_raster_image.xml" value="0.19166666666666668" />
         <entry key="..\:/WebHook_Integration/BotsSDK/korebot/src/main/res/drawable/ic_video_icon.xml" value="0.19166666666666668" />

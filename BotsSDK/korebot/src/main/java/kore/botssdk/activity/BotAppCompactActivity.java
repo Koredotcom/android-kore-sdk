@@ -2,14 +2,12 @@ package kore.botssdk.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-//import com.kore.ai.widgetsdk.utils.ToastUtils;
+import androidx.appcompat.app.AppCompatActivity;
 
 import kore.botssdk.R;
-import kore.botssdk.drawables.ThemeColors;
 
 /**
  * Created by Ramachandra Pradeep on 27-Mar-18.

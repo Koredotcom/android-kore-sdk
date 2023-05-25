@@ -55,7 +55,7 @@ public class TTSSynthesizer {
         }
     }
 
-    public TextToSpeech initNative(Context context) {
+    public final void initNative(Context context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
 
             @Override
@@ -66,7 +66,6 @@ public class TTSSynthesizer {
             }
         });
 
-        return textToSpeech;
     }
 
     public void speak(String textualMessage,String accessToken) {

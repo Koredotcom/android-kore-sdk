@@ -22,7 +22,7 @@ public class PanelResponseData implements Serializable {
     }
 
 
-    public class Panel implements Serializable,Cloneable {
+    public static class Panel implements Serializable,Cloneable {
 
         @Override
         public Panel clone() throws CloneNotSupportedException {
@@ -174,13 +174,8 @@ public class PanelResponseData implements Serializable {
             return clone;
         }
 
-        public void setWidgets(List<WidgetsModel> widgets) {
+        public final void setWidgets(List<WidgetsModel> widgets) {
             this.widgets = widgets;
         }
-
-
     }
-
-
-
 }

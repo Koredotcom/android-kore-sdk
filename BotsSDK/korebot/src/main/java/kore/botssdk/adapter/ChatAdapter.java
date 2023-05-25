@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
-import io.jsonwebtoken.lang.Collections;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -125,7 +125,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position));
         holder.textView.setText(getItem(position).getFormattedDate());
 
-        if(Collections.isEmpty(headersMap)) {
+        if(headersMap.isEmpty()) {
             prepareHeaderMap();
         }
         //TODO Need to re visit : Handled crash in a bad way(if you change time zone and come back app crashing)

@@ -35,7 +35,7 @@ public class SkillSwitchDialog extends Dialog {
         _context = context;
         this.extras = extra;
         userId = extras.getString(BundleConstants.USER_ID);
-        accessToken = extras.getString(BundleConstants.ACCESS_TOKEN);
+        accessToken = extras.getString(BundleConstants.ACCESS_TKN);
         data = _ssm;
         layoutInflater = LayoutInflater.from(context);
     }

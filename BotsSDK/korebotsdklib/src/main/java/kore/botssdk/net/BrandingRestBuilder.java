@@ -15,7 +15,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
-import kore.botssdk.ssl.SSLHelper;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -58,29 +57,29 @@ public class BrandingRestBuilder {
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);
 
-        if(SDKConfiguration.SSLConfig.isSSLEnable)
-        {
+//        if(SDKConfiguration.SSLConfig.isSSLEnable)
+//        {
+//            return new OkHttpClient.Builder()
+//                    .connectTimeout(60, TimeUnit.SECONDS)
+//                    .readTimeout(60, TimeUnit.SECONDS)
+//                    .addInterceptor(interceptor)
+//                    .dispatcher(dispatcher)
+//                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.Branding_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
+//                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+//                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+//                    .build();
+//        }
+//        else
+//        {
             return new OkHttpClient.Builder()
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(interceptor)
                     .dispatcher(dispatcher)
-                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.Branding_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
                     //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
                     //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
                     .build();
-        }
-        else
-        {
-            return new OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .addInterceptor(interceptor)
-                    .dispatcher(dispatcher)
-                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-                    .build();
-        }
+//        }
     }
 
     private static GsonConverterFactory createConverter() {

@@ -19,19 +19,12 @@ public class MediaFormatFactory {
             //format.setString(MediaFormat.KEY_FRAME_RATE, null);
             format.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
             format.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-            if (type == Type.AAC) {
-                format.setString(MediaFormat.KEY_MIME, "audio/mp4a-latm");
-                format.setInteger(MediaFormat.KEY_AAC_PROFILE, 2); // TODO: or 39?
-                format.setInteger(MediaFormat.KEY_BIT_RATE, 64000);
-            } else if (type == Type.FLAC) {
+            if (type == Type.FLAC) {
                 //format.setString(MediaFormat.KEY_MIME, MediaFormat.MIMETYPE_AUDIO_FLAC); // API=21
                 format.setString(MediaFormat.KEY_MIME, "audio/flac");
                 format.setInteger(MediaFormat.KEY_BIT_RATE, 64000);
                 //TODO: use another bit rate, does not seem to have effect always
                 //format.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
-            } else {
-                format.setString(MediaFormat.KEY_MIME, "audio/amr-wb");
-                format.setInteger(MediaFormat.KEY_BIT_RATE, 23050);
             }
             return format;
         }

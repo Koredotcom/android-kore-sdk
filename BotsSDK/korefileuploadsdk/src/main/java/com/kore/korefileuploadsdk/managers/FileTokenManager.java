@@ -42,22 +42,22 @@ public class FileTokenManager{
         if (isAnonymousUser)
         {
             if(!isWebHook)
-                _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TOKEN);
+                _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TKN);
             else
-                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TOKEN, botId, "ivr");
+                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TKN, botId, "ivr");
         }
         else
         {
             if(!isWebHook)
-                _Url = host + String.format(FileUploadEndPoints.FILE_TOKEN, userOrTeamId);
+                _Url = host + String.format(FileUploadEndPoints.FILE_TKN, userOrTeamId);
             else
-                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TOKEN, botId, "ivr");
+                _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TKN, botId, "ivr");
         }
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
 
             try {
-                String resp = getFileToken(null, _Url, _accessToken);
+                String resp = getFileToken(_Url, _accessToken);
                 System.out.println("The Final resp is " + resp);
                 JSONObject _json1 = new JSONObject(resp);
                 final String fileToken = _json1.getString("fileToken");
@@ -89,7 +89,7 @@ public class FileTokenManager{
     }
 
 
-    private  String  getFileToken(String data,String Url, String header)  throws  UnsupportedEncodingException{
+    private  String  getFileToken(String Url, String header)  throws  UnsupportedEncodingException{
           
           String text = "";
           BufferedReader reader=null;
@@ -107,10 +107,6 @@ public class FileTokenManager{
             conn.addRequestProperty("User-Agent", Constants.getUserAgent());
             System.out.println(" The userAgent in FileToken Service is " + Constants.getUserAgent());
             wr = new OutputStreamWriter(conn.getOutputStream());
-            if (data != null) {
-                wr.write(data);
-                wr.flush();
-            }
 
        // Get the server response
         reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -120,7 +116,7 @@ public class FileTokenManager{
         // Read Server Response
         while((line = reader.readLine()) != null){
                    // Append server response in string
-                   sb.append(line + "\n");
+                   sb.append(line).append("\n");
             }
             text = sb.toString();
         }
@@ -129,10 +125,12 @@ public class FileTokenManager{
         }
         finally{
             try{
+                assert reader != null;
                 reader.close();
                 wr.close();
             }
-            catch(Exception ex) {}
+            catch(Exception ex) {
+                ex.printStackTrace();}
         }
               
       return text;

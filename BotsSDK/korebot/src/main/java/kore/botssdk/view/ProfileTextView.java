@@ -60,7 +60,7 @@ public class ProfileTextView extends AppCompatTextView {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }*/
-    void init(){
+    public final void init(){
         paint = new Paint();
         tPaint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);

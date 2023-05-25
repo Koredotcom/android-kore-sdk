@@ -86,7 +86,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public final void setDuration(Duration duration) {
         this.duration = duration;
     }
 
@@ -176,7 +176,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         this.reqTextToDisplayForDetails = reqTextToDisplayForDetails;
     }
 
-    public class Duration  implements Serializable,Cloneable{
+    public static class Duration  implements Serializable,Cloneable{
 
         private double start;
         private double end;
@@ -203,7 +203,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         }
     }
 
-    public class Attendee implements Serializable{
+    public static class Attendee implements Serializable{
 
         private boolean optional;
         private boolean resource;
@@ -312,7 +312,7 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
 
     }
 
-    public class Action implements Serializable {
+    public static class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;

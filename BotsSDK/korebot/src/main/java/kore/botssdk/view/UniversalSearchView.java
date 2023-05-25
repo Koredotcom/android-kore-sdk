@@ -58,7 +58,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     View view_more;
     ComposeFooterInterface composeFooterInterface;
     boolean viewAllVisiblity=false;
-    public void initView() {
+    public final void initView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.universal_search_view, this, true);
         recycler_view = view.findViewById(R.id.recycler_view);
         root_layout = findViewById(R.id.root_layout);

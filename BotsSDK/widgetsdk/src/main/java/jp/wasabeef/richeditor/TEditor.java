@@ -132,13 +132,9 @@ public class TEditor extends WebView {
                 return true;
             }
         });
-        setWebViewClient(createWebviewClient());
+        setWebViewClient(new EditorWebViewClient());
         loadUrl(SETUP_HTML);
         applyAttributes(context, attrs);
-    }
-
-    protected EditorWebViewClient createWebviewClient() {
-        return new EditorWebViewClient();
     }
 
     public void setOnTextChangeListener(OnTextChangeListener listener) {
@@ -541,7 +537,7 @@ public class TEditor extends WebView {
         }
     }*/
 
-    protected class EditorWebViewClient extends WebViewClient {
+    protected final class EditorWebViewClient extends WebViewClient {
         @Override public void onPageFinished(WebView view, String url) {
             isReady = url.equalsIgnoreCase(SETUP_HTML);
             if (mLoadListener != null) {

@@ -232,20 +232,6 @@ public class BitmapUtils {
     public static final int TYPE_OTHER_ATTACHMENT = 109;
     public static final int TYPE_TEXT = 113;
 
-    public static final String DOC_TEXT = "Document";
-    public static final String PPT_TEXT = "Presentation";
-    public static final String XLX_TEXT = "Excel";
-    public static final String PDF_TEXT = "Pdf";
-    public static final String AUDIO_TEXT = "Audio";
-    public static final String VIDEO_TEXT = "Video";
-    public static final String IMAGE_TEXT = "Image";
-    public static final String ZIP_TEXT = "Zip";
-    public static final String AI_TEXT = "Adobe Illustrator Artwork";
-    public static final String PS_TEXT = "PostScript";
-    public static final String EPS_TEXT = "Encapsulated PostScript";
-    public static final String OTHER_TEXT = "Other";
-
-
     private static Bitmap decodeBitmap(File file, BitmapFactory.Options options, float rotationAngle){
         Bitmap bitmap = null, bm = null;
         FileInputStream fis = null;

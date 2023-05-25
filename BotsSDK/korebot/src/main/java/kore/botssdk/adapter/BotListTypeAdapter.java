@@ -71,7 +71,7 @@ public class BotListTypeAdapter extends BaseAdapter {
 
         BotCustomListModel option = getItem(position);
         if (option != null) {
-            if (!isInExpandedMode && showMore()) {
+            if (showMore()) {
                 if (position == OPTIONS_LIST_LIMIT) {
                     convertView = getShowMoreView(convertView, parent);
                 } else {

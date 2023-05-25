@@ -71,35 +71,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="CustomActionBarThemeBackground" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionBarOverlay">false</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="windowActionModeOverlay">false</item>
-        <item name="actionBarTabStyle">@style/MyActionBarTabs</item>
-        <item name="android:actionBarTabStyle">@style/MyActionBarTabs</item>
-        <item name="android:actionBarTabTextStyle">@style/NoCaps</item>
-        <item name="android:windowBackground">@color/white</item>
-        <item name="android:buttonStyle">@style/ButtonNoCaps</item>
-        <item name="android:actionBarStyle">@style/MyActionBarBgColorSplash</item>
-        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
-        <item name="android:actionModeBackground">@color/splash_background_color</item>
-        <item name="actionMenuTextColor">@drawable/default_text_color</item>
-        <item name="actionButtonStyle">@style/ActionButtonTheme</item>
-        <item name="android:actionMenuTextAppearance">@style/ActionMenuText</item>
-        <item name="actionMenuTextAppearance">@style/ActionMenuText</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_5258bd</item>
-        <item name="android:actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
-        <item name="actionModeCloseDrawable">@drawable/ic_arrow_back_white_24dp</item>
-        <!--   <item name="actionModeCloseButtonStyle">@style/CloseButtonWhite</item>-->
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
-        <!--<item name="android:icon">@android:color/transparent</item>-->
-        <item name="android:actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
-        <item name="actionOverflowButtonStyle">@style/OverflowActionBarSplash</item>
-        <item name="autoCompleteTextViewStyle">@style/cursorColor</item>
-    </style>
-
     <style name="CloseButtonWhite" parent="@style/Widget.AppCompat.Light.ActionButton.CloseMode">
         <item name="android:tint">@color/white</item> <!-- whatever color -->
     </style>
@@ -129,7 +100,7 @@
         <item name="android:actionBarStyle">@style/MyActionBarBgColor</item>
         <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
         <item name="android:windowBackground">@color/white</item>
-        <item name="android:colorEdgeEffect" tools:targetApi="lollipop">@color/black</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="lollipop">@color/txtFontBlack</item>
         <item name="android:actionMenuTextAppearance">@style/ActionMenuText</item>
         <item name="actionMenuTextAppearance">@style/ActionMenuText</item>
         <item name="android:fontFamily">@font/latoregular</item><!--
@@ -201,7 +172,7 @@
     <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
         <item name="background">@color/color_e7edf4</item>
         <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
-        <item name="android:tint">@color/black</item>
+        <item name="android:tint">@color/txtFontBlack</item>
     </style>
 
     <style name="ActionModeStyleWhite" parent="@style/Widget.AppCompat.ActionMode">
@@ -354,11 +325,6 @@
         <item name="android:actionModeBackground">@color/white</item>
         <item name="actionModeBackground">@color/white</item>
     </style>
-
-    <style name="SwitchCompatStyleGreen">
-        <item name="colorControlActivated">@color/readReceiptGreen</item>
-    </style>
-
     <style name="SwitchCompatStyleDefault">
         <item name="colorControlActivated">@color/splash_background_color</item>
     </style>
@@ -473,16 +439,9 @@
         <item name="tabIndicatorHeight">3dp</item>
     </style>
 
-    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textStyle">bold</item>
-        <item name="navigationIcon">@drawable/ic_arrow_back_white_24dp</item>
-    </style>
-
     <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/txtFontBlack</item>
         <item name="android:textStyle">normal</item>
         <item name="navigationIcon">@drawable/ic_arrow_back_black_24dp</item>
     </style>

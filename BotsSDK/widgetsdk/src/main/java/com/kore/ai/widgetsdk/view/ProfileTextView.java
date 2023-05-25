@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
 /**
  * Created by Shiva Krishna on 2/22/2018.
  */
 
-public class ProfileTextView extends TextView {
+public class ProfileTextView extends AppCompatTextView {
     private Paint paint;
     private Paint tPaint;
     private int color;
@@ -54,11 +56,7 @@ public class ProfileTextView extends TextView {
         init();
     }
 
-    public ProfileTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-    void init(){
+    public final void init(){
         paint = new Paint();
         tPaint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);
@@ -95,8 +93,7 @@ public class ProfileTextView extends TextView {
             canvas.drawCircle(diameter / 2 , diameter / 2, radius, paint);
 
         }else{
-            Path path = RoundedRect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+getMeasuredWidth() , getPaddingTop()+getMeasuredHeight() , (float) (8 * dp1),(float) (8 * dp1),
-                    true, true,true,true);
+            Path path = RoundedRect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+getMeasuredWidth() , getPaddingTop()+getMeasuredHeight() , (float) (8 * dp1),(float) (8 * dp1));
             canvas.drawPath(path, paint);
         }
         super.onDraw(canvas);
@@ -110,8 +107,7 @@ public class ProfileTextView extends TextView {
         this.color = color;
     }
     public static Path RoundedRect(
-            float left, float top, float right, float bottom, float rx, float ry,
-            boolean tl, boolean tr, boolean br, boolean bl
+            float left, float top, float right, float bottom, float rx, float ry
     ){
         Path path = new Path();
         if (rx < 0) rx = 0;
@@ -124,38 +120,14 @@ public class ProfileTextView extends TextView {
         float heightMinusCorners = (height - (2 * ry));
 
         path.moveTo(right, top + ry);
-        if (tr)
-            path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
-        else{
-            path.rLineTo(0, -ry);
-            path.rLineTo(-rx,0);
-        }
+        path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
         path.rLineTo(-widthMinusCorners, 0);
-        if (tl)
-            path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
-        else{
-            path.rLineTo(-rx, 0);
-            path.rLineTo(0,ry);
-        }
+        path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
         path.rLineTo(0, heightMinusCorners);
-
-        if (bl)
-            path.rQuadTo(0, ry, rx, ry);//bottom-left corner
-        else{
-            path.rLineTo(0, ry);
-            path.rLineTo(rx,0);
-        }
-
+        path.rQuadTo(0, ry, rx, ry);//bottom-left corner
         path.rLineTo(widthMinusCorners, 0);
-        if (br)
-            path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
-        else{
-            path.rLineTo(rx,0);
-            path.rLineTo(0, -ry);
-        }
-
+        path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
         path.rLineTo(0, -heightMinusCorners);
-
         path.close();//Given close, last lineto can be removed.
 
         return path;

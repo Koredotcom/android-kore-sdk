@@ -253,7 +253,6 @@ public class BitmapUtils {
             matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
             bitmap = Bitmap.createBitmap(bm, 0, 0, options.outWidth, options.outHeight, matrix, true);
         } catch (OutOfMemoryError | FileNotFoundException oom){
-            if(bm != null) bm.recycle();
             options.inSampleSize *= 2;
             bitmap = decodeBitmap(file, options, rotationAngle);
         } finally {

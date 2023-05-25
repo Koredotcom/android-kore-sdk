@@ -133,7 +133,7 @@ public class RichEditor extends WebView {
                 return true;
             }
         });
-        setWebViewClient(createWebviewClient());
+        setWebViewClient(new EditorWebViewClient());
         loadUrl(SETUP_HTML);
         applyAttributes(context, attrs);
     }
@@ -542,7 +542,7 @@ public class RichEditor extends WebView {
         }
     }*/
 
-    protected class EditorWebViewClient extends WebViewClient {
+    protected final class EditorWebViewClient extends WebViewClient {
         @Override public void onPageFinished(WebView view, String url) {
             isReady = url.equalsIgnoreCase(SETUP_HTML);
             if (mLoadListener != null) {

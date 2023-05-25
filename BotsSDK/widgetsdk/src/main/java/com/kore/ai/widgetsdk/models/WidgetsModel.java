@@ -275,7 +275,7 @@ public class WidgetsModel implements Serializable,Cloneable {
     }
 
 
-    public class AutoRefresh implements Serializable{
+    public static class AutoRefresh implements Serializable{
 
         private boolean enabled;
         private int interval;
@@ -298,7 +298,7 @@ public class WidgetsModel implements Serializable,Cloneable {
 
     }
 
-    public class Source implements Serializable{
+    public static class Source implements Serializable{
 
         private String type;
         private String resource;
@@ -321,7 +321,7 @@ public class WidgetsModel implements Serializable,Cloneable {
 
     }
 
-    public class Param implements Serializable
+    public static class Param implements Serializable
     {
         private String from = identity;
 //        private String from = UUID.randomUUID().toString();
@@ -345,7 +345,7 @@ public class WidgetsModel implements Serializable,Cloneable {
         }
     }
 
-    public class Visibility implements Serializable{
+    public static class Visibility implements Serializable{
 
         private String namespace;
         private String[] namespaceIds;

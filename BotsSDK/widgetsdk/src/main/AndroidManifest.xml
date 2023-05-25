@@ -3,29 +3,23 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-        android:hardwareAccelerated="true"
-        android:largeHeap="true">
+        android:hardwareAccelerated="true">
         <activity
             android:name="com.kore.ai.widgetsdk.activities.PanelMainActivity"
             android:screenOrientation="portrait"
-            android:label=""
             android:theme="@style/CustomActionBarThemeWhiteSub"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.kore.ai.widgetsdk.activities.FullViewActivity"
             android:screenOrientation="portrait"
-            android:label=""
             android:theme="@style/CustomActionBarThemeWhiteSub"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name="com.kore.ai.widgetsdk.activities.GenericWebViewActivity"
             android:screenOrientation="portrait"
-            android:label=""
             android:theme="@style/CustomActionBarThemeWhiteSub"
             android:windowSoftInputMode="stateHidden" />
-
-
     </application>
 </manifest>

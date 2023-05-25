@@ -23,19 +23,14 @@ public class NetworkUtility {
     }
 
     public static boolean isNetworkConnectionAvailable(Context context, boolean showMessage) {
-        boolean isNetworkConnectionAvailable = false;
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null) {
-            isNetworkConnectionAvailable = activeNetworkInfo.isConnected();
+            return activeNetworkInfo.isConnected();
         }
-
-        if (!isNetworkConnectionAvailable && showMessage) {
-            Toast.makeText(context, "No network available",Toast.LENGTH_LONG).show();
-
-        }
-        return isNetworkConnectionAvailable;
+        else
+            return false;
     }
 }

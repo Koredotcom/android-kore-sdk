@@ -174,7 +174,7 @@ public class KaUserProfileModel implements Serializable, Cloneable {
         return nPrefs;
     }
 
-    public void setNPrefs(NPrefs nPrefs) {
+    public final void setNPrefs(NPrefs nPrefs) {
         this.nPrefs = nPrefs;
     }
 
@@ -336,7 +336,7 @@ public class KaUserProfileModel implements Serializable, Cloneable {
 
 
 
-    public static class Onboarding  implements Serializable, Cloneable{
+    public static class Onboarding  implements Serializable{
 
         @SerializedName("android")
         @Expose

@@ -61,18 +61,18 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
             public void onClick(View v) {
 
                 if (Utility.checkIsSkillKora()) {
-                    postAction(position,false);
+                    postAction(position);
                 } else {
                     if(!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
                         DialogCaller.showDialog(context, skillName, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postAction(position, false);
+                                postAction(position);
                                 dialog.dismiss();
                             }
                         });
                     }else{
-                        postAction(position, false);
+                        postAction(position);
                     }
 
                 }
@@ -82,9 +82,9 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
         });
     }
 
-    private void postAction(int position,boolean append_uttrance)
+    private void postAction(int position)
     {
-        ((ChildToActivityActions) context).shootUtterance((append_uttrance?Constants.SKILL_UTTERANCE:"")+model.get(position).getUtterance(), model.get(position).getPayload(), null,true);
+        ((ChildToActivityActions) context).shootUtterance(""+model.get(position).getUtterance(), model.get(position).getPayload(), null,true);
         KoreEventCenter.post(new DissMissBaseSheet());
     }
     @Override

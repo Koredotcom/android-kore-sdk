@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
 
     dataBinding{
         enabled = true
@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 32
+        targetSdkVersion 33
     }
     buildTypes {
         release {
@@ -20,19 +20,12 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    buildscript {
-        repositories {
-            maven { url 'https://jitpack.io' }
-        }
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     dependencies {
-
-        api 'androidx.appcompat:appcompat:1.4.2'
+        api 'androidx.appcompat:appcompat:1.6.1'
         api 'de.greenrobot:eventbus:2.4.0'
         api files('libs/commons-lang3-3.2.1.jar')
         //For jwt
@@ -41,22 +34,12 @@ android {
         api('io.jsonwebtoken:jjwt-orgjson:0.10.5') {
             exclude group: 'org.json', module: 'json' //provided by Android natively
         }
-        // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
-        //runtimeOnly 'org.bouncycastle:bcprov-jdk15on:1.60'
-        api 'com.squareup.retrofit2:retrofit:2.4.0'
-        api 'com.squareup.okhttp3:logging-interceptor:4.4.1'
+        api 'com.squareup.retrofit2:retrofit:2.9.0'
+        api 'com.squareup.okhttp3:logging-interceptor:4.7.2'
         api 'com.google.code.gson:gson:2.9.0'
         api group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.2'
-        api 'com.squareup.retrofit2:converter-gson:2.4.0'
-        api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+        api 'com.squareup.retrofit2:converter-gson:2.9.0'
+        api 'io.reactivex.rxjava2:rxandroid:2.1.1'
         api 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
-        api 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
-    }
-}
-
-allprojects {
-    repositories {
-        mavenCentral();
-        maven { url 'https://www.jitpack.io' }
     }
 }

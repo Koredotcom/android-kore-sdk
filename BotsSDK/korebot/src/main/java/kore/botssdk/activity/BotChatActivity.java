@@ -1,5 +1,9 @@
 package kore.botssdk.activity;
 
+import static android.view.View.VISIBLE;
+import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -24,35 +28,25 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-//import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
-//import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-//import com.kore.ai.widgetsdk.models.PanelBaseModel;
-//import com.kore.ai.widgetsdk.models.PanelResponseData;
-//import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fragment.BotContentFragment;
@@ -109,17 +103,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.view.View.VISIBLE;
-import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface/*, WidgetComposeFooterInterface*/, ThemeChangeListener/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface, /*WidgetComposeFooterInterface,*/ ThemeChangeListener/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -143,12 +133,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     //For Bottom Panel
     private String packageName = "com.kore.koreapp";
     private String appName = "Kore";
-//    private CustomBottomSheetBehavior mBottomSheetBehavior;
     //Fragment Approch
     private FrameLayout composerView;
+//    private CustomBottomSheetBehavior mBottomSheetBehavior;
 //    private BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
-    private String chatBgColor, chatTextColor;
     private ImageView ivChaseBackground, ivChaseLogo;
     protected int compressQualityInt = 100;
     protected Attachment attachment;
@@ -241,13 +230,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
         }
     };
-
-    public void buttonClick(View view){
-        int red= new SecureRandom().nextInt(255);
-        int green= new SecureRandom().nextInt(255);
-        int blue= new SecureRandom().nextInt(255);
-        ThemeColors.setNewThemeColor(BotChatActivity.this, red, green, blue);
-    }
 
     @Override
     protected void onDestroy() {
@@ -499,7 +481,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
         }
 
-        toggleQuickRepliesVisiblity(false);
+        toggleQuickRepliesVisiblity();
     }
 
     @Override
@@ -577,7 +559,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             Log.d(LOG_TAG, payload);
-            boolean resolved = true;
             PayloadOuter payOuter = null;
 //            PayloadInner payInner = null;
             if (!botResponse.getMessage().isEmpty()) {
@@ -606,21 +587,19 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
             }
-            if (resolved) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
-                        if(botResponse.getMessageId() != null)
-                            lastMsgId = botResponse.getMessageId();
+                    if(botResponse.getMessageId() != null)
+                        lastMsgId = botResponse.getMessageId();
 
-                        botContentFragment.addMessageToBotChatAdapter(botResponse);
-                        textToSpeech(botResponse);
-                        botContentFragment.setQuickRepliesIntoFooter(botResponse);
-                        botContentFragment.showCalendarIntoFooter(botResponse);
-                    }
-                }, BundleConstants.TYPING_STATUS_TIME);
-            }
+                    botContentFragment.addMessageToBotChatAdapter(botResponse);
+                    textToSpeech(botResponse);
+                    botContentFragment.setQuickRepliesIntoFooter(botResponse);
+                    botContentFragment.showCalendarIntoFooter(botResponse);
+                }
+            }, BundleConstants.TYPING_STATUS_TIME);
         } catch (Exception e) {
             /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
@@ -901,12 +880,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
 
 
-    private void toggleQuickRepliesVisiblity(boolean visible){
-        if (visible) {
-            quickReplyFragment.toggleQuickReplyContainer(View.VISIBLE);
-        } else {
-            quickReplyFragment.toggleQuickReplyContainer(View.GONE);
-        }
+    private void toggleQuickRepliesVisiblity(){
+        quickReplyFragment.toggleQuickReplyContainer(View.GONE);
     }
 
 
@@ -958,7 +933,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 //
 //        return model;
 //    }
-//
+
 //    @Override
 //    public void onPanelSendClick(String message, boolean isFromUtterance)
 //    {
@@ -974,7 +949,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 //            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
 //        }
 //
-//        toggleQuickRepliesVisiblity(false);
+//        toggleQuickRepliesVisiblity();
 //    }
 
     @Override

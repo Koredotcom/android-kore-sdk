@@ -32,7 +32,7 @@ public class CalenderEventData implements Serializable, Cloneable {
         return duration;
     }
 
-    public void setDuration(CalEventsTemplateModel.Duration duration) {
+    public final void setDuration(CalEventsTemplateModel.Duration duration) {
         this.duration = duration;
     }
 

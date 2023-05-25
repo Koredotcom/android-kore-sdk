@@ -1,13 +1,12 @@
 package com.kore.ai.widgetsdk.adapters;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -15,14 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.KaMessengerUpdate;
 import com.kore.ai.widgetsdk.interfaces.PanelInterface;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
@@ -31,21 +28,9 @@ import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHoldeer> {
+public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHoldeer> {
 
     private Context context;
-
-    public PanelResponseData getPanelResponseData() {
-        return panelResponseData;
-    }
-
-    public void setPanelResponseData(PanelResponseData panelResponseData) {
-        this.panelResponseData = panelResponseData;
-    }
-
     private PanelResponseData panelResponseData;
     private PanelInterface panelInterface;
     private KaMessengerUpdate _msgUpdate;
@@ -55,31 +40,16 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
         return isExpanded;
     }
 
-    public void setExpanded(boolean expanded,boolean isFromScrolling) {
-//        isExpanded = expanded;
-//        isScrolling=isFromScrolling;
-//        notifyDataSetChanged();
-    }
-
     private boolean isExpanded = false;
     private boolean isScrolling=false;
-
-    public void resetAll() {
-        for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
-            panel.setItemClicked(false);
-        }
-        notifyDataSetChanged();
-    }
-
 
     public PannelAdapter(Context mainActivity, PanelResponseData panelResponseData, PanelInterface panelInterface) {
         context = mainActivity;
         //this.panelResponseData = panelResponseData;
-        setPanelResponseData(panelResponseData);
+        this.panelResponseData = panelResponseData;
         this.panelInterface = panelInterface;
         dp1 = (int) Utility.convertDpToPixel(context, 1);;
     }
-
 
     @NonNull
     @Override
@@ -92,33 +62,14 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
     public void onBindViewHolder(@NonNull final RViewHoldeer holder, int position) {
         final PanelResponseData.Panel data = panelResponseData.getPanels().get(position);
 
-//        StateListDrawable gradientDrawable = (StateListDrawable) holder.item.getBackground();
-//        if(gradientDrawable == null){
-//            gradientDrawable = (StateListDrawable) context.getResources().getDrawable(R.drawable.pannel_item_background_root);
-//        }
-//        DrawableContainer.DrawableContainerState drawableContainerState = (DrawableContainer.DrawableContainerState) gradientDrawable.getConstantState();
-//        Drawable[] children = drawableContainerState.getChildren();
-//        GradientDrawable selectedItem = (GradientDrawable) children[0];
-//        GradientDrawable unselectedItem = (GradientDrawable) children[1];
         if(data != null && data.getIcon() != null && data.getIcon().toLowerCase().equals("url")) {
             holder.img_skill.setVisibility(View.GONE);
             holder.img_icon.setVisibility(View.VISIBLE);
 
-//            if(data.getTheme() != null) {
-//                selectedItem.setColor(Color.parseColor(data.getTheme()));
-//                unselectedItem.setColor(Color.parseColor(data.getTheme()));
-//            }
             holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
             holder.item.setSelected(data.isItemClicked() ? true : false);
         }else {
             holder.img_icon.setVisibility(View.GONE);
-//            holder.img_skill.setVisibility(View.VISIBLE);
-//            CustomRoundedTransform c=new CustomRoundedTransform(0,98,98);
-//            Picasso.get().load(SDKConfiguration.Server.SERVER_URL + "/" + data.getIcon())
-//                    .transform(c)
-//                    .resize(98, 62).
-//                    error(context.getResources().getDrawable(R.drawable.ic_search_help)).
-//                    into(holder.img_skill);
 
             if (data.getIcon() != null) {
 
@@ -141,11 +92,6 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
             } else {
                 holder.img_skill.setVisibility(GONE);
             }
-
-//            unselectedItem.setColor(context.getResources().getColor(android.R.color.transparent));
-//            if(data.getTheme() != null) {
-//                selectedItem.setColor(Color.parseColor(data.getTheme()));
-//            }
 
             if(data.isItemClicked())
             {
@@ -177,49 +123,6 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
         }
         holder.img_icon.setTypeface(KaUtility.getTypeFaceObj(context));
         holder.unreadIcon.setVisibility(View.GONE);
-//        switch (data.getIconId()) {
-//            case "meetings":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_2d));
-//                break;
-//            case "tasks":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e96c));
-//                break;
-//            case "files":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e94e));
-//                break;
-//            case "knowledge":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e959));
-//                break;
-//            case "announcement":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_33));
-//                break;
-//            case "home":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e935));
-//                break;
-//            case "koreChat":
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e995));
-//
-//                if(_msgUpdate!= null && _msgUpdate.isMsgUpdate()){
-//                    holder.unreadIcon.setVisibility(View.VISIBLE);
-//                }else{
-//                    holder.unreadIcon.setVisibility(View.GONE);
-//                }
-//                break;
-//            case "koreTeams":
-//               /* if(!StringUtils.isNullOrEmpty(_msgUpdate.getTeamId()))
-//                    data.setTeamId(_msgUpdate.getTeamId());*/
-//
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e996));
-//                if(_msgUpdate!= null && _msgUpdate.isTeamUpdate()){
-//                    holder.unreadIcon.setVisibility(View.VISIBLE);
-//                }else{
-//                    holder.unreadIcon.setVisibility(View.GONE);
-//                }
-//                break;
-//            default:
-//                holder.img_icon.setText(context.getResources().getString(R.string.icon_e94f));
-//                break;
-//        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,10 +132,8 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
                     panelResponseData.getPanels().get(index).setItemClicked((tempiconID.equals(panelResponseData.getPanels().get(index).get_id()) &&
                             !tempiconID.equalsIgnoreCase("")) ? true : false);
                 }
-//                ToastUtils.showToast(context, data.getName());
                 PanelBaseModel panelBaseModel = new PanelBaseModel();
                 panelBaseModel.setData(data);
-//                showPanelDialog(panelBaseModel);
                 if(panelInterface != null){
                     panelInterface.onPanelClicked(panelBaseModel);
                 }
@@ -240,24 +141,8 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
 
             }
         });
-        /*holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Toast.makeText(context,holder.itemView.getTooltipText(),Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            }
-        });*/
     }
 
-    /*private void showPanelDialog(PanelBaseModel panelBaseModel) {
-        BasePanelDialogFragment bottomSheetDialog = new BasePanelDialogFragment();
-        bottomSheetDialog.setData(panelBaseModel);
-//        bottomSheetDialog.setChildToActivityActions(context);
-        bottomSheetDialog.show(((FragmentActivity)context).getSupportFragmentManager(), "add_tags");
-    }
-*/
     @Override
     public int getItemCount() {
         if (panelResponseData != null && panelResponseData.getPanels() != null) {
@@ -271,8 +156,6 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
         ImageView img_skill;
         ViewGroup item;
         ImageView unreadIcon;
-        LinearLayout panel_bg;
-//        ViewGroup panel_root;
 
         public RViewHoldeer(@NonNull View itemView) {
             super(itemView);
@@ -281,14 +164,6 @@ public class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolde
             img_skill = itemView.findViewById(R.id.img_skill);
             item = itemView.findViewById(R.id.panel_root);
             unreadIcon = itemView.findViewById(R.id.unreadImg);
-
-//            panel_root = itemView.findViewById(R.id.panel_root);
         }
-    }
-
-    public void updateMessengerItems(KaMessengerUpdate msgUpdate){
-        _msgUpdate = msgUpdate;
-        this.notifyDataSetChanged();
-
     }
 }
