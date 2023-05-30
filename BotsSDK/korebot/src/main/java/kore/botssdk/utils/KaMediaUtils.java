@@ -72,7 +72,7 @@ public class KaMediaUtils {
 //                KoreLogger.debugLog(LOG_TAG, "Storage available for read write");
                 String path = "";
                 if(Build.VERSION.SDK_INT  > Build.VERSION_CODES.M){
-                    path = KaEnvironment.getExternalStoragePublicDirectory(/*"/" + Constants.MEDIA_APP_FOLDER + */"/" + userId).getPath();
+                    path = KaEnvironment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
                 }else {
                     path = KaEnvironment.getExternalStorageDirectory() + "/" + MEDIA_APP_FOLDER + "/" + userId;
 

@@ -59,6 +59,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
+import androidx.core.content.PermissionChecker;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -97,6 +99,8 @@ import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.exceptions.NoExternalStorageException;
+import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -592,27 +596,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             Speech.getInstance().stopListening();
         } else {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-//                editTextMessage.setHint("Start talking...");
+                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PermissionChecker.PERMISSION_GRANTED) {
                     onRecordAudioPermissionGranted();
-
                 } else {
                     requestMicrophonePermission();
                 }
             } else {
-//            editTextMessage.setHint("Start talking...");
-//                showTapToSpeakFragment();
                 onRecordAudioPermissionGranted();
             }
-            /*RxPermissions.getInstance(this)
-                    .request(Manifest.permission.RECORD_AUDIO)
-                    .subscribe(granted -> {
-                        if (granted) { // Always true pre-M
-                            onRecordAudioPermissionGranted();
-                        } else {
-                            Toast.makeText(MainActivity.this, R.string.permission_required, Toast.LENGTH_LONG);
-                        }
-                    });*/
         }
     }
     private void onRecordAudioPermissionGranted() {
@@ -1107,24 +1098,20 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
             processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
         }
-//        else {
-//            try {
-//                DocumentFile pickFile = DocumentFile.fromSingleUri(getActivity(), selectedImage);
-//                String name = pickFile.getName();
-//                String type = pickFile.getType();
-//                if (type != null && type.contains("video")) {
-//                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
-//                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
-//                    new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                }
-//            } catch (NoExternalStorageException e) {
-//                e.printStackTrace();
-//            } catch (NoWriteAccessException e) {
-//                e.printStackTrace();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+        else {
+            try {
+                DocumentFile pickFile = DocumentFile.fromSingleUri(getActivity(), selectedImage);
+                String name = pickFile.getName();
+                String type = pickFile.getType();
+                if (type != null && type.contains("video")) {
+                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
+                    new SaveVideoTask(filePath, name, selectedImage, getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private class SaveVideoTask extends AsyncTask<String, String, String> {
