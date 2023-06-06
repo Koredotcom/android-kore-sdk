@@ -540,7 +540,7 @@ public class KaUtility {
         View searchplate = (View) searchView.findViewById(androidx.appcompat.R.id.search_plate);
         searchplate.setBackgroundResource(android.R.color.transparent);
 
-        ImageView closeButton = (ImageView) searchView.findViewById(R.id.search_close_btn);
+        ImageView closeButton = (ImageView) searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         closeButton.setImageResource(R.drawable.ic_close_black_24dp);
         //  setCursorColorAsTextColor(searchAutoComplete);
 

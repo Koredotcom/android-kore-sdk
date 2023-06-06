@@ -1094,11 +1094,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             }
 
             if (thumbnail == null) {
-                thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
+                thumbnail = BitmapFactory.decodeResource(getResources(), com.kora.ai.widgetsdk.R.drawable.videoplaceholder_left);
 
             }
 
-            Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
+            Bitmap hover = BitmapFactory.decodeResource(getResources(), com.kora.ai.widgetsdk.R.drawable.btn_video_play_irc);
             thumbnail = overlay(thumbnail, hover);
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
@@ -1192,10 +1192,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 } catch (SecurityException se) {
                 }
 //            Bitmap bitMap = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
-                Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
+                Bitmap hover = BitmapFactory.decodeResource(getResources(), com.kora.ai.widgetsdk.R.drawable.btn_video_play_irc);
                 Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(getActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
                 if (thumbnail == null) {
-                    thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
+                    thumbnail = BitmapFactory.decodeResource(getResources(), com.kora.ai.widgetsdk.R.drawable.videoplaceholder_left);
 
                 }
                 thumbnail = overlay(thumbnail, hover);

@@ -1,19 +1,19 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 32
     buildToolsVersion '30.0.3'
+    namespace 'kore.botssdk'
 
     dataBinding{
         enabled = true
     }
     defaultConfig {
-           applicationId "kore.botssdk"
         minSdkVersion 23
         targetSdkVersion 32
-        versionCode 1
-        versionName "1.0"
-        multiDexEnabled true
+//        versionCode 1
+//        versionName "1.0"
+//        multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -22,21 +22,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-       flavorDimensions 'asana'
-       productFlavors {
-           asana {
-               applicationId 'kore.botssdk.asana'
-               dimension "asana"
-           }
-           shopbot2{
-               applicationId 'kore.botssdk.shopbot2'
-               dimension "asana"
-           }
-           sales_ot{
-               applicationId 'kore.botssdk.salesot'
-               dimension "asana"
-           }
-       }
+//       flavorDimensions 'asana'
+//       productFlavors {
+//           asana {
+//               applicationId 'kore.botssdk.asana'
+//               dimension "asana"
+//           }
+//           shopbot2{
+//               applicationId 'kore.botssdk.shopbot2'
+//               dimension "asana"
+//           }
+//           sales_ot{
+//               applicationId 'kore.botssdk.salesot'
+//               dimension "asana"
+//           }
+//       }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -45,8 +45,8 @@ android {
 
 allprojects {
     repositories {
-        jcenter();
-        maven { url 'https://www.jitpack.io' }
+//        jcenter();
+//        maven { url 'https://www.jitpack.io' }
     }
 }
 

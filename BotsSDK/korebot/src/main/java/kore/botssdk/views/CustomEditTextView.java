@@ -27,7 +27,7 @@ public class CustomEditTextView extends AppCompatEditText {
 
     private void style(Context context, AttributeSet attrs) {
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
+        TypedArray a = context.obtainStyledAttributes(attrs, androidx.appcompat.R.styleable.ActionBar);
         Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latomedium);
         setTypeface(tfRegular);
         a.recycle();

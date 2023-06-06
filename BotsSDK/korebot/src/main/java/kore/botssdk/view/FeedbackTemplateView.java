@@ -35,15 +35,14 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
-public class FeedbackTemplateView extends LinearLayout implements View.OnClickListener
-{
+public class FeedbackTemplateView extends LinearLayout implements View.OnClickListener {
     private float dp1;
     private TextView tvfeedback_template_title;
     private ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
     private LinearLayout multiSelectLayout;
     private Context mContext;
     private int position;
-    private  PayloadInner payloadInner;
+    private PayloadInner payloadInner;
     private RatingBar rbFeedback;
     private LinearLayout emojis;
 
@@ -114,7 +113,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
                 position = (int) rating;
                 payloadInner.setEmojiPosition(position);
 
-                if(fromUser)
+                if (fromUser)
                     updateData();
             }
         });
@@ -123,31 +122,26 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
 
     public void populateData(final PayloadInner payloadInner, boolean isEnabled) {
 
-        if (payloadInner != null)
-        {
+        if (payloadInner != null) {
             this.payloadInner = payloadInner;
             tvfeedback_template_title.setText(payloadInner.getText());
 
-            if(payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR))
-            {
+            if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR)) {
                 emojis.setVisibility(GONE);
                 rbFeedback.setVisibility(VISIBLE);
                 rbFeedback.setRating(payloadInner.getEmojiPosition());
 //                rbFeedback.setOnRatingBarChangeListener(onRatingBarChangeListener);
-            }
-            else
-            {
+            } else {
                 emojis.setVisibility(VISIBLE);
                 rbFeedback.setVisibility(GONE);
                 resetAll();
                 loademojis(payloadInner.getEmojiPosition());
             }
 
-            if(payloadInner.getSliderView() && !payloadInner.getDialogCancel())
-            {
+            if (payloadInner.getSliderView() && !payloadInner.getDialogCancel()) {
                 payloadInner.setDialogCancel(true);
                 FeedbackActionSheetFragment bottomSheetDialog = new FeedbackActionSheetFragment();
-                bottomSheetDialog.setSkillName("skillName","trigger");
+                bottomSheetDialog.setSkillName("skillName", "trigger");
                 bottomSheetDialog.setData(payloadInner);
                 bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                 bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -157,57 +151,38 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.icon_1:
-            {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(0);
-                position = 1;
-                updateData();
-            }
-            break;
-            case R.id.icon_2:
-            {
-                resetAll();
-                loademojis(1);
-                position = 2;
-                updateData();
-            }
-            break;
-            case R.id.icon_3:
-            {
-                resetAll();
-                loademojis(2);
-                position = 3;
-                updateData();
-            }
-            break;
-            case R.id.icon_4:
-            {
-                resetAll();
-                loademojis(3);
-                position = 4;
-                updateData();
-            }
-            break;
-            case R.id.icon_5:
-            {
-                resetAll();
-                loademojis(4);
-                position = 5;
-                updateData();
-            }
-            break;
+    public void onClick(View v) {
+        if (v.getId() == R.id.icon_1) {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(0);
+            position = 1;
+            updateData();
+        } else if (v.getId() == R.id.icon_2) {
+            resetAll();
+            loademojis(1);
+            position = 2;
+            updateData();
+        } else if (v.getId() == R.id.icon_3) {
+            resetAll();
+            loademojis(2);
+            position = 3;
+            updateData();
+        } else if (v.getId() == R.id.icon_4) {
+            resetAll();
+            loademojis(3);
+            position = 4;
+            updateData();
+        } else if (v.getId() == R.id.icon_5) {
+            resetAll();
+            loademojis(4);
+            position = 5;
+            updateData();
         }
     }
 
-    private void updateData()
-    {
-        composeFooterInterface.onSendClick((position)+"", (position)+"", false);
+    private void updateData() {
+        composeFooterInterface.onSendClick((position) + "", (position) + "", false);
     }
 
     private void resetAll() {

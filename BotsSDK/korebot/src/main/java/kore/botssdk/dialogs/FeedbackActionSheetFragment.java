@@ -36,7 +36,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 
-public class FeedbackActionSheetFragment extends BottomSheetDialogFragment implements View.OnClickListener{
+public class FeedbackActionSheetFragment extends BottomSheetDialogFragment implements View.OnClickListener {
 
     private View view;
     private VerticalListViewActionHelper verticalListViewActionHelper;
@@ -45,9 +45,11 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     private boolean isFromListMenu = false;
     private int dp1;
     private LinearLayout llCloseBottomSheet, llFeedbackComment;
+
     public String getSkillName() {
         return skillName;
     }
+
     private BottomSheetDialog bottomSheetDialog;
     private TextView tvfeedback_template_title;
     private ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
@@ -68,12 +70,13 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
 
     private String skillName;
     private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.feedback_template_view, container,false);
+        view = inflater.inflate(R.layout.feedback_template_view, container, false);
         this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
         multiSelectLayout = view.findViewById(R.id.multiSelectLayout);
         tvfeedback_template_title = view.findViewById(R.id.tvfeedback_template_title);
@@ -100,17 +103,13 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         icon_5.setOnClickListener(this);
 
         llCloseBottomSheet.setVisibility(View.VISIBLE);
-        if(payloadInner != null && payloadInner.getView() != null)
-        {
-            if(payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR))
-            {
+        if (payloadInner != null && payloadInner.getView() != null) {
+            if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR)) {
                 emojis.setVisibility(View.GONE);
                 rbFeedback.setVisibility(View.VISIBLE);
                 rbFeedback.setRating(payloadInner.getEmojiPosition());
 //                rbFeedback.setOnRatingBarChangeListener(onRatingBarChangeListener);
-            }
-            else
-            {
+            } else {
                 emojis.setVisibility(View.VISIBLE);
                 rbFeedback.setVisibility(View.GONE);
                 resetAll();
@@ -123,7 +122,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bottomSheetDialog != null)
+                if (bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
             }
         });
@@ -132,13 +131,13 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
             @Override
             public void onClick(View v) {
 
-                if(bottomSheetDialog != null)
+                if (bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
 
-                if(!StringUtils.isNullOrEmpty(etFeedbackComment.getText().toString()))
-                    composeFooterInterface.onSendClick(position+":"+etFeedbackComment.getText().toString(), position+":"+etFeedbackComment.getText().toString(), false);
+                if (!StringUtils.isNullOrEmpty(etFeedbackComment.getText().toString()))
+                    composeFooterInterface.onSendClick(position + ":" + etFeedbackComment.getText().toString(), position + ":" + etFeedbackComment.getText().toString(), false);
                 else
-                    composeFooterInterface.onSendClick(position+"", position+"", false);
+                    composeFooterInterface.onSendClick(position + "", position + "", false);
             }
         });
 
@@ -148,7 +147,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
                 position = (int) rating;
                 payloadInner.setEmojiPosition(position);
 
-                if(fromUser)
+                if (fromUser)
                     updateData();
             }
         });
@@ -189,7 +188,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         this.payloadInner = payloadInner;
     }
 
-    public void setData(PayloadInner payloadInner, boolean isFromListMenu){
+    public void setData(PayloadInner payloadInner, boolean isFromListMenu) {
         this.payloadInner = payloadInner;
         this.isFromListMenu = isFromListMenu;
     }
@@ -203,67 +202,46 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
-            case R.id.icon_1:
-            {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(0);
-                position = 1;
-                updateData();
-            }
-            break;
-            case R.id.icon_2:
-            {
-                resetAll();
-                loademojis(1);
-                position = 2;
-                updateData();
-            }
-            break;
-            case R.id.icon_3:
-            {
-                resetAll();
-                loademojis(2);
-                position = 3;
-                updateData();
-            }
-            break;
-            case R.id.icon_4:
-            {
-                resetAll();
-                loademojis(3);
-                position = 4;
-                updateData();
-            }
-            break;
-            case R.id.icon_5:
-            {
-                resetAll();
-                loademojis(4);
-                position = 5;
-                updateData();
-            }
-            break;
+    public void onClick(View v) {
+        if (v.getId() == R.id.icon_1) {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(0);
+            position = 1;
+            updateData();
+        } else if (v.getId() == R.id.icon_2) {
+            resetAll();
+            loademojis(1);
+            position = 2;
+            updateData();
+        } else if (v.getId() == R.id.icon_3) {
+            resetAll();
+            loademojis(2);
+            position = 3;
+            updateData();
+        } else if (v.getId() == R.id.icon_4) {
+            resetAll();
+            loademojis(3);
+            position = 4;
+            updateData();
+        } else if (v.getId() == R.id.icon_5) {
+            resetAll();
+            loademojis(4);
+            position = 5;
+            updateData();
         }
     }
 
-    private void updateData()
-    {
+    private void updateData() {
         llFeedbackComment.setVisibility(View.VISIBLE);
 
-        if(position == 5) {
+        if (position == 5) {
             tvGlad.setVisibility(View.VISIBLE);
             tvGlad.setText(payloadInner.getMessageTodisplay());
             rlCommentBox.setVisibility(View.GONE);
             tvCommentTitle.setVisibility(View.GONE);
             bottomSheetBehavior.setPeekHeight((int) (300 * dp1));
-        }
-        else
-        {
+        } else {
             tvGlad.setVisibility(View.GONE);
             tvCommentTitle.setVisibility(View.VISIBLE);
             rlCommentBox.setVisibility(View.VISIBLE);
@@ -294,6 +272,6 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 }

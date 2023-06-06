@@ -3,6 +3,7 @@ apply plugin: 'com.android.library'
 android {
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 32
+    namespace 'com.kora.ai.widgetsdk'
     //    dataBinding {
 //        enabled = true
 //    }

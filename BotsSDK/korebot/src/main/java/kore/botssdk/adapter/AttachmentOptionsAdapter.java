@@ -46,10 +46,10 @@ public class AttachmentOptionsAdapter extends BaseAdapter {
         ListItemViewHolder holder;
         if (view == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-            view = layoutInflater.inflate(R.layout.attachment_options_view, null);
+            view = layoutInflater.inflate(com.kora.ai.widgetsdk.R.layout.attachment_options_view, null);
             KaFontUtils.applyCustomFont(mContext, view);
             holder = new ListItemViewHolder();
-            holder.title = view.findViewById(R.id.hash_text_view);
+            holder.title = view.findViewById(com.kora.ai.widgetsdk.R.id.hash_text_view);
             view.setTag(holder);
         } else {
             holder = (ListItemViewHolder) view.getTag();
