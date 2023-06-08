@@ -2,33 +2,28 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.charts.charts.BarChart;
+import kore.botssdk.charts.components.Legend;
+import kore.botssdk.charts.components.XAxis;
+import kore.botssdk.charts.components.YAxis;
+import kore.botssdk.charts.data.BarData;
+import kore.botssdk.charts.data.BarDataSet;
+import kore.botssdk.charts.data.BarEntry;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.formatter.LargeValueFormatter;
+import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
+import kore.botssdk.charts.listener.OnChartValueSelectedListener;
+import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;

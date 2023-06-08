@@ -3,12 +3,12 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.utils.MPPointF;
-import com.github.mikephil.charting.utils.Utils;
+import kore.botssdk.charts.components.MarkerView;
+import kore.botssdk.charts.data.CandleEntry;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.utils.MPPointF;
+import kore.botssdk.charts.utils.Utils;
 
 import kore.botssdk.R;
 

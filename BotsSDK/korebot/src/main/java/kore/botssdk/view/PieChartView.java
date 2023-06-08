@@ -6,22 +6,21 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.charts.charts.PieChart;
+import kore.botssdk.charts.components.Description;
+import kore.botssdk.charts.components.Legend;
+import kore.botssdk.charts.components.LegendEntry;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.data.PieData;
+import kore.botssdk.charts.data.PieDataSet;
+import kore.botssdk.charts.data.PieEntry;
+import kore.botssdk.charts.formatter.PercentFormatter;
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.listener.OnChartValueSelectedListener;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 

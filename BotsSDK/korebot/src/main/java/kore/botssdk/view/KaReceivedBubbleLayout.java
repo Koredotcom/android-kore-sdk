@@ -1,12 +1,10 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-
-import androidx.fragment.app.FragmentActivity;
-
-import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.dialogs.FeedbackActionSheetFragment;
+import kore.botssdk.charts.data.PieEntry;
 import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.BaseBotMessage;
@@ -39,8 +37,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
 
 /**
