@@ -14,10 +14,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -36,8 +38,6 @@ import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
-import com.kore.korefileuploadsdk.core.KoreWorker;
-import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,6 +54,8 @@ import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
+import kore.botssdk.fileupload.core.KoreWorker;
+import kore.botssdk.fileupload.core.UploadBulkFile;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
@@ -263,6 +265,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         RestBuilder.setContext(BotChatActivity.this);
         WebHookRestBuilder.setContext(BotChatActivity.this);
         BrandingRestBuilder.setContext(BotChatActivity.this);
+
+//        if (Build.VERSION.SDK_INT >= 30){
+//            if (!Environment.isExternalStorageManager()){
+//                Intent getpermission = new Intent();
+//                getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                startActivity(getpermission);
+//            }
+//        }
     }
 
     private void updateTitleBar() {

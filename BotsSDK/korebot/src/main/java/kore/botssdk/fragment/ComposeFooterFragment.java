@@ -55,6 +55,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -65,9 +69,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.kore.korefileuploadsdk.core.KoreWorker;
-import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
 import net.gotev.speech.GoogleVoiceTypingDisabledException;
 import net.gotev.speech.Speech;
@@ -90,6 +91,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
@@ -99,6 +101,8 @@ import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
+import kore.botssdk.fileupload.core.KoreWorker;
+import kore.botssdk.fileupload.core.UploadBulkFile;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -752,36 +756,34 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void launchVideoRecorder() {
-        if (KaPermissionsHelper.hasPermission(getActivity(), Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
-
-
+        if (KaPermissionsHelper.hasPermission(getActivity(), Manifest.permission.CAMERA, Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
             Intent profilePicEditIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             profilePicEditIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
-            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                try {
-                    Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                            getActivity().getPackageName() + ".provider",
-                            createVideoFile());
-                    profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                Uri photoURI = FileProvider.getUriForFile(requireActivity(),
+                        requireActivity().getPackageName() + ".provider",
+                        Objects.requireNonNull(createVideoFile()));
+                profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            } else {
-                profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
-            }
             //profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
-            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                profilePicEditIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                profilePicEditIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            }
+            profilePicEditIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            profilePicEditIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
             startActivityForResult(profilePicEditIntent, REQ_VIDEO_CAPTURE);
         } else {
-            KaPermissionsHelper.requestForPermission(getActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                KaPermissionsHelper.requestForPermission(getActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
+                        Manifest.permission.MANAGE_EXTERNAL_STORAGE);
+            }
+            else
+            {
+                KaPermissionsHelper.requestForPermission(getActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
         }
     }
 
@@ -839,8 +841,64 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         photoPickerIntent.putExtra("pickType", choosetype);
         photoPickerIntent.putExtra("fileContext", BundleConstants.FOR_MESSAGE);
         photoPickerIntent.putExtra("mediaType", mediaType);
-        startActivityForResult(photoPickerIntent, reqCode);
+
+        switch (reqCode)
+        {
+            case REQ_CAMERA:
+            case REQ_IMAGE:
+                activityImageResultLaunch.launch(photoPickerIntent);
+            break;
+            case REQ_VIDEO:
+                activityVideoResultLaunch.launch(photoPickerIntent);
+                break;
+            default:
+                startActivityForResult(photoPickerIntent, reqCode);
+        }
     }
+
+    ActivityResultLauncher<Intent> activityImageResultLaunch = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>()
+            {
+                @Override
+                public void onActivityResult(ActivityResult result)
+                {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String filePath = result.getData().getStringExtra("filePath");
+                        String fileName = result.getData().getStringExtra("fileName");
+                        String filePathThumbnail = result.getData().getStringExtra(THUMBNAIL_FILE_PATH);
+                        ((BotChatActivity) getActivity()).sendImage(filePath, fileName, filePathThumbnail);
+                    }
+                }
+            });
+
+    ActivityResultLauncher<Intent> activityVideoResultLaunch = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>()
+            {
+                @Override
+                public void onActivityResult(ActivityResult result)
+                {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        String fileExtn = result.getData().getStringExtra("fileExtn");
+                        if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
+                            processVideoResponse((Uri) result.getData().getParcelableExtra("fileUri"), false, result.getData());
+                        } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
+                            processImageResponse(result.getData());
+                        } else {
+                            String filePath = result.getData().getStringExtra("filePath");
+                            if (filePath == null) {
+                                ToastUtils.showToast(getActivity(), "Unable to attach file!");
+                                return;
+                            }
+                            String fileName = result.getData().getStringExtra("fileName");
+                            String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
+                            String mediaType = BitmapUtils.obtainMediaTypeOfExtn(extn);
+                            processFileUpload(fileName, filePath, extn, mediaType, null, null);
+                        }
+                    }
+                }
+            });
 
     @Override
     public void onActivityResult(int reqCode, int resCode, Intent data) {
@@ -1073,19 +1131,18 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 fileName = realPath.substring(startInd, endInd);
             }
 
-            Bitmap thumbnail;
+            Bitmap thumbnail = null;
             String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-            if (!isCapturedVideo) {
-                int videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(getActivity(), selectedImage);
-                thumbnail = MediaStore.Video.Thumbnails.getThumbnail(getActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
-            } else {
-                thumbnail = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
-            }
+//            if (!isCapturedVideo) {
+//                int videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(requireActivity(), selectedImage);
+//                thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
+//            } else {
+//                thumbnail = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
+//            }
 
-            if (thumbnail == null) {
+//            if (thumbnail == null) {
                 thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
-
-            }
+//            }
 
             Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
             thumbnail = overlay(thumbnail, hover);
@@ -1095,9 +1152,15 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
         else {
             try {
-                DocumentFile pickFile = DocumentFile.fromSingleUri(getActivity(), selectedImage);
-                String name = pickFile.getName();
-                String type = pickFile.getType();
+                DocumentFile pickFile = DocumentFile.fromSingleUri(requireActivity(), selectedImage);
+                String name = null;
+                String type = null;
+
+                if (pickFile != null) {
+                    name = pickFile.getName();
+                    type = pickFile.getType();
+                }
+
                 if (type != null && type.contains("video")) {
                     KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
@@ -1156,8 +1219,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     }
 
                     try {
-                        assert out != null;
-                        out.close();
+                        if(out != null)
+                            out.close();
                     }catch (Exception e){e.printStackTrace();}
                 }
             }
@@ -1176,16 +1239,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
                 int videoThumbnailIndexId = 0;
                 String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    }*/
                 try {
                     videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(mContext.get(), fileUri);
                 } catch (SecurityException se) {
+                    se.printStackTrace();
                 }
 //            Bitmap bitMap = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
                 Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
-                Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(getActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
+                Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
                 if (thumbnail == null) {
                     thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
 
