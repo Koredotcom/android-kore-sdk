@@ -1,7 +1,5 @@
 package kore.botssdk.models;
 
-import java.util.List;
-
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */

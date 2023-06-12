@@ -23,8 +23,8 @@ public class TTSSynthesizer {
 
     private TextToSpeech textToSpeech;
 
-    private Context context;
-    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private final Context context;
+    private final MediaPlayer mediaPlayer = new MediaPlayer();
     public static String LOG_TAG = TTSSynthesizer.class.getSimpleName();
     public ArrayList<String> que = new ArrayList<>();
     public boolean ttsEnabled = true;
@@ -123,7 +123,7 @@ public class TTSSynthesizer {
             textToSpeech.stop();
         }
     }
-    private SocketConnectionListener sListener = new SocketConnectionListener() {
+    private final SocketConnectionListener sListener = new SocketConnectionListener() {
         @Override
         public void onOpen(boolean isReconnection) {
             Log.d(LOG_TAG, "Connection opened");

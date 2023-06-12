@@ -8,6 +8,8 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.buffer.BarBuffer;
 import kore.botssdk.charts.data.BarData;
@@ -18,13 +20,10 @@ import kore.botssdk.charts.highlight.Range;
 import kore.botssdk.charts.interfaces.dataprovider.BarDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.model.GradientColor;
-import kore.botssdk.charts.renderer.BarLineScatterCandleBubbleRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.List;
 
 public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
     protected BarDataProvider mChart;
@@ -32,7 +31,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
     protected BarBuffer[] mBarBuffers;
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
-    private RectF mBarShadowRectBuffer = new RectF();
+    private final RectF mBarShadowRectBuffer = new RectF();
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

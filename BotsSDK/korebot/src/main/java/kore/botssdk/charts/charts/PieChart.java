@@ -20,7 +20,7 @@ import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 
 public class PieChart extends PieRadarChartBase<PieData> {
-    private RectF mCircleBox = new RectF();
+    private final RectF mCircleBox = new RectF();
     private boolean mDrawEntryLabels = true;
     private float[] mDrawAngles = new float[1];
     private float[] mAbsoluteAngles = new float[1];
@@ -29,7 +29,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
     private boolean mUsePercentValues = false;
     private boolean mDrawRoundedSlices = false;
     private CharSequence mCenterText = "";
-    private MPPointF mCenterTextOffset = MPPointF.getInstance(0.0F, 0.0F);
+    private final MPPointF mCenterTextOffset = MPPointF.getInstance(0.0F, 0.0F);
     private float mHoleRadiusPercent = 50.0F;
     protected float mTransparentCircleRadiusPercent = 55.0F;
     private boolean mDrawCenterText = true;

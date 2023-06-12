@@ -11,19 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
-import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 import com.kore.ai.widgetsdk.views.viewutils.LayoutUtils;
 import com.kore.ai.widgetsdk.views.viewutils.MeasureUtils;
@@ -33,7 +29,7 @@ public class SkillWidgetView extends ViewGroup {
     private RecyclerView recycler_root;
     private Widget mWidget;
     private float dp1;
-    private String name;
+    private final String name;
     private TextView header;
     private RelativeLayout rootView;
     WidgetViewMoreEnum widgetViewMoreEnum;
@@ -97,7 +93,7 @@ public class SkillWidgetView extends ViewGroup {
 
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.skill_widget_layout, this, true);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         pin_view = view.findViewById(R.id.pin_view);
         panel_name_view.findViewById(R.id.panel_name_view);
         userData = UserDataManager.getUserData();

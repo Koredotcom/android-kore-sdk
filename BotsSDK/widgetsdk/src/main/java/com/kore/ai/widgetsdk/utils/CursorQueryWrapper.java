@@ -9,7 +9,7 @@ import android.util.Log;
 public class CursorQueryWrapper {
 
     private final String tag;
-    private QueryInterface queryInterface;
+    private final QueryInterface queryInterface;
 
     public static class CursorIteratonInterrupt extends Exception {
         private static final long serialVersionUID = -1124533346986767621L;

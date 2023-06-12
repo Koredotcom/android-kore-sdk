@@ -2,11 +2,10 @@ package kore.botssdk.charts.components;
 
 import android.graphics.Paint;
 
-import kore.botssdk.charts.components.AxisBase;
 import kore.botssdk.charts.utils.Utils;
 
 public class YAxis extends AxisBase {
-    private boolean mDrawBottomYLabelEntry = true;
+    private final boolean mDrawBottomYLabelEntry = true;
     private boolean mDrawTopYLabelEntry = true;
     protected boolean mInverted = false;
     protected boolean mDrawZeroLine = false;
@@ -17,7 +16,7 @@ public class YAxis extends AxisBase {
     protected float mSpacePercentTop = 10.0F;
     protected float mSpacePercentBottom = 10.0F;
     private kore.botssdk.charts.components.YAxis.YAxisLabelPosition mPosition;
-    private kore.botssdk.charts.components.YAxis.AxisDependency mAxisDependency;
+    private final kore.botssdk.charts.components.YAxis.AxisDependency mAxisDependency;
     protected float mMinWidth;
     protected float mMaxWidth;
 
@@ -203,19 +202,19 @@ public class YAxis extends AxisBase {
         this.mAxisRange = Math.abs(this.mAxisMinimum - this.mAxisMaximum);
     }
 
-    public static enum AxisDependency {
+    public enum AxisDependency {
         LEFT,
         RIGHT;
 
-        private AxisDependency() {
+        AxisDependency() {
         }
     }
 
-    public static enum YAxisLabelPosition {
+    public enum YAxisLabelPosition {
         OUTSIDE_CHART,
         INSIDE_CHART;
 
-        private YAxisLabelPosition() {
+        YAxisLabelPosition() {
         }
     }
 }

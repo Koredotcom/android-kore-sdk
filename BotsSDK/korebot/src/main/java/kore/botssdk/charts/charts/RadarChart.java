@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import kore.botssdk.charts.charts.PieRadarChartBase;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.RadarData;
 import kore.botssdk.charts.highlight.RadarHighlighter;

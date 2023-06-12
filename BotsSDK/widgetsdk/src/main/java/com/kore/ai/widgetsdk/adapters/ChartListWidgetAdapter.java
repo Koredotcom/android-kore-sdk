@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.adapters;
 
+import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,8 +39,6 @@ import com.kore.ai.widgetsdk.viewholder.EmptyWidgetViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
-
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
@@ -49,12 +49,12 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
 
     ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private Context mContext;
+    private final Context mContext;
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
-    private int MESSAGE = 2;
-    private int REPORTS = 3;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
+    private final int MESSAGE = 2;
+    private final int REPORTS = 3;
 
     public String getType() {
         return type;

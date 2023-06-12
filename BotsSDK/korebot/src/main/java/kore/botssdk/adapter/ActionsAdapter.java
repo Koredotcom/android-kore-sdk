@@ -6,21 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.databinding.ActionItemLayoutBinding;
-import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.BotButtonModel;
 
 public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<BotButtonModel> botButtonModels;
-    private Drawable drawable;
-    private ActionHelper actionHelper;
+    private final Context context;
+    private final ArrayList<BotButtonModel> botButtonModels;
+    private final Drawable drawable;
+    private final ActionHelper actionHelper;
 
     public ActionsAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, Drawable drawable,ActionHelper actionHelper) {
         this.context = context;
@@ -64,6 +64,6 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
     }
 
     public interface ActionHelper{
-        public void actionItemClicked(Object botButtonModel);
+        void actionItemClicked(Object botButtonModel);
     }
 }

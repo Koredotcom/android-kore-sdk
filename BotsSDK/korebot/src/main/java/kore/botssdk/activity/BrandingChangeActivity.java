@@ -30,11 +30,10 @@ import kore.botssdk.models.BrandingDependenciesModel;
 import kore.botssdk.models.BrandingEntitiesModel;
 import kore.botssdk.models.BrandingSubEntitiesModel;
 import kore.botssdk.models.BrandingWidgetThemeModel;
-import kore.botssdk.net.SDKConfiguration;
 
 public class BrandingChangeActivity extends BotAppCompactActivity
 {
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private ListView lvThemeProperties;
     private Spinner spWidgetThemes;
     private BrandingWidgetThemeModel brandingWidgetThemeModel;
@@ -173,7 +172,7 @@ public class BrandingChangeActivity extends BotAppCompactActivity
     private class EntitiesAdapter extends BaseAdapter
     {
         private LayoutInflater ownLayoutInflater = null;
-        private BrandingWidgetThemeModel brandingWidgetThemeModel;
+        private final BrandingWidgetThemeModel brandingWidgetThemeModel;
 
         public EntitiesAdapter(Context context, BrandingWidgetThemeModel brandingWidgetThemeModel) {
             ownLayoutInflater = LayoutInflater.from(context);
@@ -262,8 +261,8 @@ public class BrandingChangeActivity extends BotAppCompactActivity
 
     private class SpinnerAdapter extends BaseAdapter
     {
-        private Context context;
-        private ArrayList<BrandingSubEntitiesModel> arrBrandingSubEntitiesModels;
+        private final Context context;
+        private final ArrayList<BrandingSubEntitiesModel> arrBrandingSubEntitiesModels;
 
         public SpinnerAdapter(Context context, ArrayList<BrandingSubEntitiesModel> arrBrandingSubEntitiesModels)
         {

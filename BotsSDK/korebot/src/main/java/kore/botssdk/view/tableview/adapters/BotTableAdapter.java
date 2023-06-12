@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -31,10 +30,10 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     private static final int TEXT_SIZE = 14;
-    private String[] alignment;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private Gson gson = new Gson();
+    private final String[] alignment;
+    private final ComposeFooterInterface composeFooterInterface;
+    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final Gson gson = new Gson();
     private Dialog dialog;
 
     public BotTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface)

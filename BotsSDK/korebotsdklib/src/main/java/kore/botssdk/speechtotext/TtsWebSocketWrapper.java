@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.net.URI;
 import java.util.HashMap;
 
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
@@ -33,7 +32,7 @@ public final class TtsWebSocketWrapper {
 //    private String accessToken;
 
 
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Restricting outside object creation
@@ -194,11 +193,7 @@ public final class TtsWebSocketWrapper {
     }
 
     public boolean isConnected() {
-        if (mConnection != null && mConnection.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return mConnection != null && mConnection.isConnected();
     }
 
     /*@Override

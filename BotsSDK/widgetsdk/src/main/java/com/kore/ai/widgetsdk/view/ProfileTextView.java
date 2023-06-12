@@ -1,14 +1,13 @@
 package com.kore.ai.widgetsdk.view;
 
+import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.widget.TextView;
-
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
 import androidx.appcompat.widget.AppCompatTextView;
 

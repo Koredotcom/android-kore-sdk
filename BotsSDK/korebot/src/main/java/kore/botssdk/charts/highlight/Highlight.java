@@ -8,7 +8,7 @@ public class Highlight {
     private float mXPx;
     private float mYPx;
     private int mDataIndex;
-    private int mDataSetIndex;
+    private final int mDataSetIndex;
     private int mStackIndex;
     private YAxis.AxisDependency axis;
     private float mDrawX;

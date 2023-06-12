@@ -349,7 +349,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         } else {
             IDataSet dataSet = (IDataSet)this.mDataSets.get(dataSetIndex);
             Entry e = dataSet.getEntryForXValue(xValue, 0.0F / 0.0F);
-            return e == null ? false : this.removeEntry(e, dataSetIndex);
+            return e != null && this.removeEntry(e, dataSetIndex);
         }
     }
 

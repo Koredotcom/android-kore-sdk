@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import kore.botssdk.R;
@@ -41,8 +40,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 //    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
     Context context;
     private Activity activityContext;
-    private LayoutInflater ownLayoutInflater;
-    private HashMap<String, Integer> headersMap = new HashMap<>();
+    private final LayoutInflater ownLayoutInflater;
+    private final HashMap<String, Integer> headersMap = new HashMap<>();
     private boolean isAlpha = false;
     private int selectedItem = -1;
 
@@ -65,15 +64,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int BUBBLE_CONTENT_LAYOUT_WIDTH;
-    private int BUBBLE_CONTENT_LAYOUT_HEIGHT;
+    private final int BUBBLE_CONTENT_LAYOUT_WIDTH;
+    private final int BUBBLE_CONTENT_LAYOUT_HEIGHT;
 
 
     public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
         return baseBotMessageArrayList;
     }
 
-    private ArrayList<BaseBotMessage> baseBotMessageArrayList;
+    private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
     private static final int BUBBLE_LEFT_LAYOUT = 0;
     private static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;

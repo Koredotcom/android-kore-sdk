@@ -27,7 +27,6 @@ import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.StringUtils;
@@ -38,11 +37,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
-    private LayoutInflater inflater;
-    private ArrayList<Widget.Button> buttons;
-    private Context mContext;
+    private final LayoutInflater inflater;
+    private final ArrayList<Widget.Button> buttons;
+    private final Context mContext;
     private String skillName;
-    private String trigger;
+    private final String trigger;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
@@ -96,12 +95,8 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 
 //                buttonAction(utterance);
                 if(!holder.tvBtnText.getText().equals("More...")) {
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                        buttonAction(utterance, true);
-                    } else {
-                        buttonAction(utterance, false);
-                    }
+                    buttonAction(utterance, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
 
 //                    if(widgetComposeFooterInterface != null)
 //                        widgetComposeFooterInterface.onPanelSendClick(utterance, "", true);
@@ -157,7 +152,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -27,7 +27,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 @Deprecated
 public class CustomTableView extends ViewGroup {
-    private Context mContext;
+    private final Context mContext;
     TableLayout mTable;
     int dp1;
     public CustomTableView(Context context) {
@@ -38,7 +38,7 @@ public class CustomTableView extends ViewGroup {
 
     private void init(){
         LayoutInflater.from(mContext).inflate(R.layout.bot_table_view, this, true);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mTable = (TableLayout) findViewById(R.id.tableView);
 //        setBackgroundColor(Color.BLUE);
     }

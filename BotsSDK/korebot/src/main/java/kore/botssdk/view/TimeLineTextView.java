@@ -16,6 +16,7 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -54,7 +55,7 @@ public class TimeLineTextView extends ViewGroup {
     private void createView(Context context) {
 
         if (!isInEditMode()) {
-            dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = (int) DimensionUtil.dp1;
             DARK_TIMELINE_COLOR = getResources().getColor(R.color.color_B0B0B0);
             TIMELINE_DIVIDER_COLOR = getResources().getColor(R.color.color_B0B0B0);
            // UNREAD_TIMELINE_TEXT = getResources().getString(R.string.unread_timeline_text);

@@ -1,8 +1,6 @@
 package kore.botssdk.models;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Ramachandra Pradeep on 30-Oct-17.

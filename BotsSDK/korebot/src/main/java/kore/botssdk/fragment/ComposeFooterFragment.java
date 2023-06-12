@@ -99,8 +99,6 @@ import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.exceptions.NoExternalStorageException;
-import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
@@ -154,7 +152,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
-    private String TapToSpeakFragmentTag = "TapToSpeakFragment";
+    private final String TapToSpeakFragmentTag = "TapToSpeakFragment";
 //    private TapToSpeakFragment tapToSpeakFragment;
     private TTSUpdate ttsUpdate;
     private LinearLayout linearLayoutProgress;
@@ -173,7 +171,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     RecyclerView attachment_recycler;
     private Attachment attachment;
     private static long totalFileSize;
-    private int compressQualityInt = 100;
+    private final int compressQualityInt = 100;
     private String jwt;
 
     @Override
@@ -238,10 +236,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             @Override
             public void onRemoveAttachment() {
 
-                if(composebarAttachmentAdapter.getItemCount()>0|| !TextUtils.isEmpty(editTextMessage.getText().toString().trim()))
-                    enableOrDisableSendButton(true);
-                else
-                    enableOrDisableSendButton(false);
+                enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
             }
         });
             attachment_recycler.setAdapter(composebarAttachmentAdapter);
@@ -1116,10 +1111,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private class SaveVideoTask extends AsyncTask<String, String, String> {
 
-        private String filePath;
+        private final String filePath;
         private String fileName;
-        private Uri fileUri;
-        private WeakReference<Context> mContext;
+        private final Uri fileUri;
+        private final WeakReference<Context> mContext;
 
         SaveVideoTask(String filePath, String fileName, Uri fileUri, Context mContext) {
             this.filePath = filePath;
@@ -1240,7 +1235,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String componentType = reply.getString("componentType");
                 String thumbnailURL = reply.getString("thumbnailURL");
                 String orientation = reply.getString(BundleConstants.ORIENTATION);
-                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription").toString() : null;
+                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription") : null;
                 HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
                 String fileSize = reply.getString("fileSize");
                 KoreComponentModel koreMedia = new KoreComponentModel();

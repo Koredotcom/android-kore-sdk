@@ -1,11 +1,9 @@
 package kore.botssdk.charts.utils;
 
-import kore.botssdk.charts.utils.ObjectPool;
-
 import java.util.List;
 
 public class MPPointD extends ObjectPool.Poolable {
-    private static ObjectPool<MPPointD> pool = ObjectPool.create(64, new MPPointD(0.0D, 0.0D));
+    private static final ObjectPool<MPPointD> pool = ObjectPool.create(64, new MPPointD(0.0D, 0.0D));
     public double x;
     public double y;
 

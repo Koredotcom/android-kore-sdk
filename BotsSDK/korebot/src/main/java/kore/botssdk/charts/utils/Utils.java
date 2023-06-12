@@ -18,11 +18,10 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 
+import java.util.List;
+
 import kore.botssdk.charts.formatter.DefaultValueFormatter;
 import kore.botssdk.charts.formatter.ValueFormatter;
-import kore.botssdk.charts.utils.FSize;
-
-import java.util.List;
 
 public abstract class Utils {
     private static DisplayMetrics mMetrics;
@@ -32,14 +31,14 @@ public abstract class Utils {
     public static final float FDEG2RAD = 0.017453292F;
     public static final double DOUBLE_EPSILON = Double.longBitsToDouble(1L);
     public static final float FLOAT_EPSILON = Float.intBitsToFloat(1);
-    private static Rect mCalcTextHeightRect = new Rect();
-    private static Paint.FontMetrics mFontMetrics = new Paint.FontMetrics();
-    private static Rect mCalcTextSizeRect = new Rect();
+    private static final Rect mCalcTextHeightRect = new Rect();
+    private static final Paint.FontMetrics mFontMetrics = new Paint.FontMetrics();
+    private static final Rect mCalcTextSizeRect = new Rect();
     private static final int[] POW_10 = new int[]{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000};
-    private static ValueFormatter mDefaultValueFormatter = generateDefaultValueFormatter();
-    private static Rect mDrawableBoundsCache = new Rect();
-    private static Rect mDrawTextRectBuffer = new Rect();
-    private static Paint.FontMetrics mFontMetricsBuffer = new Paint.FontMetrics();
+    private static final ValueFormatter mDefaultValueFormatter = generateDefaultValueFormatter();
+    private static final Rect mDrawableBoundsCache = new Rect();
+    private static final Rect mDrawTextRectBuffer = new Rect();
+    private static final Paint.FontMetrics mFontMetricsBuffer = new Paint.FontMetrics();
 
     public Utils() {
     }
@@ -146,10 +145,7 @@ public abstract class Utils {
         if (number == 0.0F) {
             return "0";
         } else {
-            boolean zero = false;
-            if (number < 1.0F && number > -1.0F) {
-                zero = true;
-            }
+            boolean zero = number < 1.0F && number > -1.0F;
 
             if (number < 0.0F) {
                 neg = true;

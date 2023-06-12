@@ -1,10 +1,6 @@
 package kore.botssdk.charts.charts;
 
-import static kore.botssdk.charts.components.Legend.LegendHorizontalAlignment.LEFT;
-import static kore.botssdk.charts.components.Legend.LegendHorizontalAlignment.RIGHT;
-import static kore.botssdk.charts.components.Legend.LegendOrientation.VERTICAL;
 import static kore.botssdk.charts.components.Legend.LegendVerticalAlignment.BOTTOM;
-import static kore.botssdk.charts.components.Legend.LegendVerticalAlignment.CENTER;
 import static kore.botssdk.charts.components.Legend.LegendVerticalAlignment.TOP;
 
 import android.annotation.SuppressLint;
@@ -19,7 +15,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import kore.botssdk.charts.charts.Chart;
 import kore.botssdk.charts.components.XAxis;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
@@ -69,7 +64,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     protected XAxisRenderer mXAxisRenderer;
     private long totalTime = 0L;
     private long drawCycles = 0L;
-    private RectF mOffsetsBuffer = new RectF();
+    private final RectF mOffsetsBuffer = new RectF();
     protected Matrix mZoomMatrixBuffer = new Matrix();
     protected Matrix mFitScreenMatrixBuffer = new Matrix();
     private boolean mCustomViewPortEnabled = false;
@@ -390,7 +385,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         if (this.mChartTouchListener != null && this.mData != null) {
-            return !this.mTouchEnabled ? false : this.mChartTouchListener.onTouch(this, event);
+            return this.mTouchEnabled && this.mChartTouchListener.onTouch(this, event);
         } else {
             return false;
         }

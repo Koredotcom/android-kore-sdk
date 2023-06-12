@@ -1,6 +1,5 @@
 package kore.botssdk.charts.components;
 
-import kore.botssdk.charts.components.AxisBase;
 import kore.botssdk.charts.utils.Utils;
 
 public class XAxis extends AxisBase {
@@ -41,14 +40,14 @@ public class XAxis extends AxisBase {
         return this.mAvoidFirstLastClipping;
     }
 
-    public static enum XAxisPosition {
+    public enum XAxisPosition {
         TOP,
         BOTTOM,
         BOTH_SIDED,
         TOP_INSIDE,
         BOTTOM_INSIDE;
 
-        private XAxisPosition() {
+        XAxisPosition() {
         }
     }
 }

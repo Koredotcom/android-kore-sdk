@@ -6,22 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
-import kore.botssdk.databinding.ActionItemLayoutBinding;
 import kore.botssdk.databinding.WactionItemLayoutBinding;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.MultiAction;
 
 public class WActionsAdapter extends RecyclerView.Adapter<WActionsAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<MultiAction> botButtonModels;
-    private Drawable drawable;
-    private ActionsAdapter.ActionHelper actionHelper;
+    private final Context context;
+    private final ArrayList<MultiAction> botButtonModels;
+    private final Drawable drawable;
+    private final ActionsAdapter.ActionHelper actionHelper;
 
     public WActionsAdapter(Context context, ArrayList<MultiAction> botButtonModels, Drawable drawable, ActionsAdapter.ActionHelper actionHelper) {
         this.context = context;

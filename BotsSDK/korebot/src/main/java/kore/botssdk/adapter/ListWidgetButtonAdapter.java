@@ -7,10 +7,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -27,26 +24,23 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget.Button;
-import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
-    private LayoutInflater inflater;
-    private ArrayList<Button> buttons;
-    private Context mContext;
+    private final LayoutInflater inflater;
+    private final ArrayList<Button> buttons;
+    private final Context mContext;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
     private String skillName;
-    private String trigger;
+    private final String trigger;
     private BottomSheetDialog bottomSheetDialog;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Button> buttons, String trigger) {
@@ -111,7 +105,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv;
+        private final TextView tv;
 //        private LinearLayout ll;
 
         public ButtonViewHolder(@NonNull View itemView) {
@@ -133,7 +127,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)

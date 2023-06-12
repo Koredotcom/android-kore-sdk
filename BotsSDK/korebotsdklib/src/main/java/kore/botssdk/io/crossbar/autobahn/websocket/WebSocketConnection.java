@@ -42,6 +42,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.messages.CannotConnect;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.ClientHandshake;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.Close;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.ConnectionLost;
+import kore.botssdk.io.crossbar.autobahn.websocket.messages.Error;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.Ping;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.Pong;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.ProtocolViolation;
@@ -52,7 +53,6 @@ import kore.botssdk.io.crossbar.autobahn.websocket.messages.ServerHandshake;
 import kore.botssdk.io.crossbar.autobahn.websocket.messages.TextMessage;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.ConnectionResponse;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
-import kore.botssdk.io.crossbar.autobahn.websocket.messages.Error;
 
 
 public class WebSocketConnection implements IWebSocket {

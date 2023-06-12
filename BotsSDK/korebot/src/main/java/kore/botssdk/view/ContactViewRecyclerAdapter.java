@@ -25,7 +25,7 @@ import kore.botssdk.utils.StringUtils;
 public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactViewRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     private ArrayList<ContactViewListModel> dataModelList;
-    private Context context;
+    private final Context context;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
     public ContactViewRecyclerAdapter(Context ctx) {

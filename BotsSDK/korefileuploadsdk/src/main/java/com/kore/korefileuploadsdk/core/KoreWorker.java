@@ -34,7 +34,7 @@ public final class KoreWorker implements Runnable {
         return task;  
     }  
   
-   private FileUploadedListener fileUploaded = new FileUploadedListener() {
+   private final FileUploadedListener fileUploaded = new FileUploadedListener() {
 		@Override
 		public void fileUploaded() {
 			synchronized (_instance) {

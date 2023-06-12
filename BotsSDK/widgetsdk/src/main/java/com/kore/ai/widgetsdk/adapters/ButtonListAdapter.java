@@ -28,12 +28,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonListAdapter.ButtonViewHolder> {
-    private LayoutInflater inflater;
-    private List<Widget.Button> buttons;
-    private Context mContext;
+    private final LayoutInflater inflater;
+    private final List<Widget.Button> buttons;
+    private final Context mContext;
 
     private String skillName;
-    private String trigger;
+    private final String trigger;
 
     public ButtonListAdapter(Context context, List<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
@@ -76,12 +76,8 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonListAdapter.Bu
 
 //                buttonAction(utterance);
 
-                if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                    buttonAction(btn,true);
-                }else{
-                    buttonAction(btn,false);
-                }
+                buttonAction(btn, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
             }
         });
     }
@@ -97,7 +93,7 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonListAdapter.Bu
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private TextView tv;
+        private final TextView tv;
 //        private LinearLayout ll;
 
         public ButtonViewHolder(@NonNull View itemView) {
@@ -136,7 +132,7 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonListAdapter.Bu
             utterance = btn.getUtterance();
         }
                 EntityEditEvent event = new EntityEditEvent();
-                StringBuffer msg = new StringBuffer("");
+                StringBuffer msg = new StringBuffer();
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("refresh", Boolean.TRUE);
                 if (appendUtterance && trigger != null)

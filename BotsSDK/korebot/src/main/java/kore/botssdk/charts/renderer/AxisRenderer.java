@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import kore.botssdk.charts.components.AxisBase;
-import kore.botssdk.charts.renderer.Renderer;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;

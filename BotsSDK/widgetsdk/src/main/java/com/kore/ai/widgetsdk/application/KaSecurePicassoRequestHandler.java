@@ -17,10 +17,7 @@ public class KaSecurePicassoRequestHandler extends RequestHandler {
     @Override public boolean canHandleRequest(Request data) {
         if(data.uri.toString().contains("http")){
             return false;
-        }else if(!(new File(data.uri.getPath()).exists()) ){
-            return false;
-        }
-        return true;
+        }else return new File(data.uri.getPath()).exists();
     }
 
     @Override

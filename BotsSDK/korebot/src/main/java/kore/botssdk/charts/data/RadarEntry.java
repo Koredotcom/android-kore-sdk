@@ -3,8 +3,6 @@ package kore.botssdk.charts.data;
 
 import android.annotation.SuppressLint;
 
-import kore.botssdk.charts.data.Entry;
-
 @SuppressLint({"ParcelCreator"})
 public class RadarEntry extends Entry {
     public RadarEntry(float value) {

@@ -1,5 +1,8 @@
 package com.kore.ai.widgetsdk.adapters;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -47,9 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
  */
@@ -76,7 +76,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private Context mContext;
+    private final Context mContext;
 
     private String skillName;
 
@@ -91,10 +91,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private LoginModel loginModel;
 
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
-    private int MESSAGE = 2;
-    private int REPORTS = 3;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
+    private final int MESSAGE = 2;
+    private final int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -291,12 +291,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                             ex.printStackTrace();
                         }
                     }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
-                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                            defaultAction(model.getDefaultAction().getPayload(),true);
-                        }else{
-                            defaultAction(model.getDefaultAction().getPayload(),false);
-                        }
+                        defaultAction(model.getDefaultAction().getPayload(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                     }
                 }
             });
@@ -308,7 +304,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     public void defaultAction(String utterance, boolean appendUtterance){
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)

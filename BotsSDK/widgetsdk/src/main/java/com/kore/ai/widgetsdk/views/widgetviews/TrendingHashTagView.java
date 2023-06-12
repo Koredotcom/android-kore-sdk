@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.HashTagWidgetAdapter;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.cache.PanelDataLRUCache;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.events.NewHashTagEvent;
@@ -25,6 +26,7 @@ import com.kore.ai.widgetsdk.models.TrendingHashTagModel;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.net.KaRestBuilder;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
@@ -39,11 +41,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
-
 public class TrendingHashTagView extends ViewGroup {
 
-    private UpdateRefreshItem listener;
+    private final UpdateRefreshItem listener;
     private View rootView;
     private RecyclerView recycler_hash_tag;
     public TextView view_more,tv_hashtag_title;
@@ -60,7 +60,7 @@ public class TrendingHashTagView extends ViewGroup {
     }
 
     private Widget widget;
-    private String name;
+    private final String name;
     WidgetViewMoreEnum widgetViewMoreEnum;
     public TrendingHashTagView(Context context, UpdateRefreshItem listener, String name,WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
@@ -101,7 +101,7 @@ public class TrendingHashTagView extends ViewGroup {
         hAdapter = new HashTagWidgetAdapter((FragmentActivity) getContext(), null);
         hAdapter.setFullView(false);
         hAdapter.setViewMoreEnum(widgetViewMoreEnum);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
     }
 
     private void getHashSuggestions() {

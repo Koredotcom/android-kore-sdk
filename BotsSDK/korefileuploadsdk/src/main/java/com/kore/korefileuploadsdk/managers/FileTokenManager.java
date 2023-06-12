@@ -22,12 +22,12 @@ import java.util.Hashtable;
 
 public class FileTokenManager{
 
-	private FileTokenListener _listener;
-	private String _Url;
-	private String _accessToken;
-	private Context _mContext;
-	private boolean isWebHook;
-	private String botId;
+	private final FileTokenListener _listener;
+	private final String _Url;
+	private final String _accessToken;
+	private final Context _mContext;
+	private final boolean isWebHook;
+	private final String botId;
 
     public FileTokenManager(String host, FileTokenListener listener, String accessToken,
                             Context context, String userOrTeamId, boolean isAnonymousUser,

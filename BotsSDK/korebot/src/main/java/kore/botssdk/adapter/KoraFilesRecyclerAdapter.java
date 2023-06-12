@@ -1,29 +1,23 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.internal.LinkedTreeMap;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.databinding.KoraFileLookupViewBinding;
-import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.KaFileLookupModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
@@ -35,13 +29,13 @@ import kore.botssdk.view.viewUtils.FileUtils;
 
 public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
-    private Context context;
+    private final Context context;
     private ArrayList<KaFileLookupModel> kaFileLookupModels;
     private boolean isExpanded;
     private VerticalListViewActionHelper verticalListViewActionHelper;
-    private boolean from_widget = false;
-    private int NO_DATA = 0;
-    private int DATA_FOUND = 1;
+    private final boolean from_widget = false;
+    private final int NO_DATA = 0;
+    private final int DATA_FOUND = 1;
 
     public boolean isFrom_widget() {
         return from_widget;

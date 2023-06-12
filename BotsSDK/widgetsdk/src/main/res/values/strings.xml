@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Kore Assistant </string>
 
     <!-- Strings related to login -->

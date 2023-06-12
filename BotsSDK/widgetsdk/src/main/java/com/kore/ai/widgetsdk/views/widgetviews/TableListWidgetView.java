@@ -1,5 +1,8 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -61,9 +64,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
-import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
-
 public class TableListWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private float dp1;
     public ImageView menu_btn,icon_image_load;
@@ -100,7 +100,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
     }
 
     private WidgetsModel mWidget;
-    private String name;
+    private final String name;
     private String trigger;
     WidgetViewMoreEnum widgetViewMoreEnum;
     Context context;
@@ -412,7 +412,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -439,7 +439,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -485,12 +485,8 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
                     tvButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                    (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                buttonAction(model.getData().get(0).getHeaderOptions().getButton(), true);
-                            } else {
-                                buttonAction(model.getData().get(0).getHeaderOptions().getButton(), false);
-                            }
+                            buttonAction(model.getData().get(0).getHeaderOptions().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                    (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                         }
                     });
 
@@ -560,16 +556,10 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
                             public void onClick(View v) {
 
 
-                                if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                        (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                    // buttonAction(model.getHeaderOptions().getButton(), true);
-                                    buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"",true);
-
-                                } else {
-                                    //buttonAction(model.getHeaderOptions().getButton(), false);
-                                    buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"",false);
-
-                                }
+                                // buttonAction(model.getHeaderOptions().getButton(), true);
+                                //buttonAction(model.getHeaderOptions().getButton(), false);
+                                buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                        (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                             }
                             //       }
                         });

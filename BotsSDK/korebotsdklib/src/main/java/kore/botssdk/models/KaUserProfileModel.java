@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import static kore.botssdk.utils.DateUtils.getCorrectedTimeZone;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,8 +11,6 @@ import java.util.List;
 
 import kore.botssdk.models.limits.LimitAccount;
 import kore.botssdk.models.limits.UsageLimit;
-
-import static kore.botssdk.utils.DateUtils.getCorrectedTimeZone;
 
 public class KaUserProfileModel implements Serializable, Cloneable {
     private String id;

@@ -6,6 +6,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 
+import java.util.Iterator;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.charts.RadarChart;
 import kore.botssdk.charts.data.RadarData;
@@ -13,13 +15,10 @@ import kore.botssdk.charts.data.RadarEntry;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.datasets.IRadarDataSet;
-import kore.botssdk.charts.renderer.LineRadarRenderer;
 import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.Iterator;
 
 public class RadarChartRenderer extends LineRadarRenderer {
     protected RadarChart mChart;

@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class UserDataManager {
     private static UserData userData;
     private static AuthData authData;
 
-    private static AppExecutors executor = new AppExecutors();
+    private static final AppExecutors executor = new AppExecutors();
 
     public static void persistUserData(final Context mContext, final KORestResponse.KOLoginResponse response, final String type, final KOTask callback) {
         executor.diskIO().execute(new Runnable() {
@@ -182,7 +183,7 @@ public class UserDataManager {
                     byte[] buffer = new byte[size];
                     is.read(buffer);
                     is.close();
-                    json = new String(buffer, "UTF-8");
+                    json = new String(buffer, StandardCharsets.UTF_8);
                     ArrayList<TimeZoneModel> arrayList = null;
                     if (!StringUtils.isNullOrEmpty(json)) {
                         arrayList = new ArrayList<>();

@@ -1,7 +1,8 @@
 package kore.botssdk.listener;
 
+import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
+
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
@@ -12,14 +13,12 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
-import java.util.Random;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import kore.botssdk.BotDb.BotDataPersister;
+import kore.botssdk.botdb.BotDataPersister;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
@@ -29,26 +28,19 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
+import kore.botssdk.models.UserNameModel;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
-import kore.botssdk.models.UserNameModel;
-import kore.botssdk.net.BotJWTRestAPI;
-import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.Context.MODE_PRIVATE;
-import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.CONNECTING;
-import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
 
 /**
  * Created by Ramachandra Pradeep on 03-Jan-18.
@@ -74,7 +66,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
     private final String LOG_TAG = getClass().getSimpleName();
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private boolean isWithAuth;
 
     public CONNECTION_STATE getConnection_state() {
@@ -579,7 +571,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void startSpeak(String text) {
         if (text != null && !text.isEmpty() && isSubscribed) {
-            ttsSynthesizer.speak(text.replaceAll("\\<.*?>", ""), botClient.getAccessToken());
+            ttsSynthesizer.speak(text.replaceAll("<.*?>", ""), botClient.getAccessToken());
         }
     }
 
@@ -686,11 +678,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             };
             _handler.postDelayed(r, mDelay);
         } catch (Exception e) {
-            Log.d("KoraSocketConnection", ":: The Exception is " + e.toString());
+            Log.d("KoraSocketConnection", ":: The Exception is " + e);
         }
     }
-    private static Handler alertHandler = new Handler();
-    private Runnable alertRunnable = new Runnable() {
+    private static final Handler alertHandler = new Handler();
+    private final Runnable alertRunnable = new Runnable() {
 
         @Override
         public void run() {
@@ -713,7 +705,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
             alertHandler.postDelayed(alertRunnable, mDelay);
         } catch (Exception e) {
-            Log.d("KoraSocketConnection", ":: The Exception is " + e.toString());
+            Log.d("KoraSocketConnection", ":: The Exception is " + e);
         }
     }
 

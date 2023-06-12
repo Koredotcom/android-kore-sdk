@@ -22,7 +22,6 @@ import android.view.animation.DecelerateInterpolator;
 import com.github.zagum.speechrecognitionview.RecognitionBar;
 
 import java.security.SecureRandom;
-import java.util.Random;
 
 public class BarRmsAnimator implements BarParamsAnimator {
 

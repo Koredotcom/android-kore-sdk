@@ -15,14 +15,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.Random;
 
 import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
 import kore.botssdk.io.crossbar.autobahn.utils.IABLogger;
@@ -65,10 +64,10 @@ class WebSocketWriter extends Handler {
     private final WebSocketOptions mOptions;
 
     /// The send buffer that holds data to send on socket.
-    private BufferedOutputStream mBufferedOutputStream;
+    private final BufferedOutputStream mBufferedOutputStream;
 
     /// The tcp socket
-    private Socket mSocket;
+    private final Socket mSocket;
 
     /// Is Active.
     private boolean mActive;
@@ -99,7 +98,7 @@ class WebSocketWriter extends Handler {
 
     private void write(String stringToWrite) {
         try {
-            mBufferedOutputStream.write(stringToWrite.getBytes("UTF-8"));
+            mBufferedOutputStream.write(stringToWrite.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -243,7 +242,7 @@ class WebSocketWriter extends Handler {
             byte[] payload;
 
             if (message.mReason != null && !message.mReason.equals("")) {
-                byte[] pReason = message.mReason.getBytes("UTF-8");
+                byte[] pReason = message.mReason.getBytes(StandardCharsets.UTF_8);
                 payload = new byte[2 + pReason.length];
                 for (int i = 0; i < pReason.length; ++i) {
                     payload[i + 2] = pReason[i];
@@ -307,7 +306,7 @@ class WebSocketWriter extends Handler {
      * Send WebSockets text message.
      */
     private void sendTextMessage(TextMessage message) throws IOException, WebSocketException {
-        byte[] payload = message.mPayload.getBytes("UTF-8");
+        byte[] payload = message.mPayload.getBytes(StandardCharsets.UTF_8);
         if (payload.length > mOptions.getMaxMessagePayloadSize()) {
             throw new WebSocketException("message payload exceeds payload limit");
         }
@@ -393,7 +392,7 @@ class WebSocketWriter extends Handler {
                     (byte) (len & 0xff)});
         }
 
-        byte mask[] = null;
+        byte[] mask = null;
         if (mOptions.getMaskClientFrames()) {
             // a mask is always needed, even without payload
             mask = newFrameMask();
@@ -448,7 +447,7 @@ class WebSocketWriter extends Handler {
 
         } catch (SocketException e) {
 
-            LOGGER.d("run() : SocketException (" + e.toString() + ")");
+            LOGGER.d("run() : SocketException (" + e + ")");
 
             // wrap the exception and notify master
             notify(new ConnectionLost(null));

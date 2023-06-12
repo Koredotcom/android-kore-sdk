@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Locale;
 
@@ -156,7 +157,7 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 		emailId = source.readString();
 		phoneNo = source.readString();
 		activationStatus = source.readString();
-		isFavourite = (source.readInt() == 0) ? false : true;
+		isFavourite = source.readInt() != 0;
 		profileImage = source.readString();
 		profileColor = source.readString();
 //		isOnline = (source.readInt() == 0) ? false : true;

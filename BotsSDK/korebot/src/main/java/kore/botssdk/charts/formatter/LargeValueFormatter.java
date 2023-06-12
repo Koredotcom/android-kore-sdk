@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 public class LargeValueFormatter extends ValueFormatter {
     private String[] mSuffix;
     private int mMaxLength;
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
     private String mText;
 
     public LargeValueFormatter() {

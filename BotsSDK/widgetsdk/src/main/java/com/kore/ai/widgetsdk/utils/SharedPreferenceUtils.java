@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.utils;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -9,14 +11,12 @@ import com.kore.ai.widgetsdk.applicationcontrol.ACMModel;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.content.Context.MODE_PRIVATE;
-
 
 public class SharedPreferenceUtils {
     private static SharedPreferenceUtils sharedPreferenceUtils;
     private static Context context;
     private static SharedPreferences sharedPreferences;
-    private String IS_PERSONAL_ANNOUNCEMENT="IS_PERSONAL_ANNOUNCEMENT";
+    private final String IS_PERSONAL_ANNOUNCEMENT="IS_PERSONAL_ANNOUNCEMENT";
     public static final String SHARED_PREFERENCE_NAME = "kora_shared_preferences";
     public static final String APP_CONTROLS_EDITOR_KEY = "APP_CONTROLS_EDITOR_KEY";
     public static final String KORA_APP_UPGRADE_SHARED_PREFERENCES = "com.kore.ai.koreassistant.upgrade.shared.preferences";

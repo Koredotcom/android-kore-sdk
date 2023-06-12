@@ -16,7 +16,7 @@
     <style name="CustomTextAppearanceTab" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -222,7 +222,7 @@
     <style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/color_485260</item>
         <item name="android:textSize">18dp</item>
-        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
     </style>
 
     <style name="ActionBarTitleTextWhite" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -274,12 +274,12 @@
         <item name="android:textColor">@color/color_485260</item>
         <item name="android:textSize">12dp</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
     </style>
     <!-- ActionBar white subtitle text -->
     <style name="ActionMenuText" parent="@style/TextAppearance.AppCompat.Menu">
         <item name="android:ellipsize">end</item>
-        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -288,7 +288,7 @@
         <item name="android:minWidth">1dip</item>
         <item name="android:paddingLeft">8dip</item>
         <item name="android:paddingRight">8dip</item>
-        <item name="android:fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
     </style>
 
     <style name="OverflowActionBarSplash" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -371,22 +371,22 @@
     </style>
 
     <style name="WindowTitleStyleChild" parent="@style/TextAppearance.AppCompat.Title">
-        <item name="android:fontFamily">@font/latomedium</item>
-        <item name="fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
         <item name="android:textSize">@dimen/dimen_18_dp</item>
         <item name="android:textColor">@color/color_485260</item>
     </style>
 
 
     <style name="MyTextAppearanceMedium" parent="@android:style/TextAppearance.Holo.Medium">
-        <item name="android:fontFamily">@font/latomedium</item>
-        <item name="fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
         <item name="android:textSize">@dimen/dimen_14dp</item>
         <item name="android:textColor">@color/color_485260</item>
     </style>
     <style name="MyTextAppearanceNormal" parent="@android:style/TextAppearance.Holo.Small">
-        <item name="android:fontFamily">@font/latomedium</item>
-        <item name="fontFamily">@font/latomedium</item>
+        <item name="android:fontFamily">@font/latoregular</item>
+        <item name="fontFamily">@font/latoregular</item>
         <item name="fontStyle">normal</item>
         <item name="android:textSize">@dimen/dimen_14dp</item>
         <item name="android:textColor">@color/color_485260</item>

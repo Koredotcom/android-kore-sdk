@@ -1,9 +1,8 @@
 package kore.botssdk.charts.data;
 
-import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
-import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
-
 import java.util.List;
+
+import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
 
 public class CandleData extends BarLineScatterCandleBubbleData<ICandleDataSet> {
     public CandleData() {

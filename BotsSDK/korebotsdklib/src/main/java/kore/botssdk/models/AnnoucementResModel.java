@@ -9,8 +9,6 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-import kore.botssdk.models.CalEventsTemplateModel;
-
 public class AnnoucementResModel implements Serializable {
 
     @SerializedName("creator")

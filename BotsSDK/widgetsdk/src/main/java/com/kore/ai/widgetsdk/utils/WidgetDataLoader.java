@@ -2,7 +2,6 @@ package com.kore.ai.widgetsdk.utils;
 
 import android.location.Location;
 
-import com.kore.ai.widgetsdk.models.BotTableListTemplateModel;
 import com.kore.ai.widgetsdk.models.Header;
 import com.kore.ai.widgetsdk.models.SummaryViewResponseModel;
 import com.kore.ai.widgetsdk.models.WUpcomingFilesModel;

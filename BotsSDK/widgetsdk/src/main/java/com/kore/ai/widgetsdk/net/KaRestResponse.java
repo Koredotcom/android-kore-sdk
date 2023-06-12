@@ -8,8 +8,6 @@ import com.kore.ai.widgetsdk.models.KnowledgeDetailModel;
 import com.kore.ai.widgetsdk.models.MeetingRequestModel;
 import com.kore.ai.widgetsdk.models.TrendingHashTagModel;
 import com.kore.ai.widgetsdk.models.User;
-//import com.kore.korelib.koradbmodels.KoraTeam;
-//import com.kore.korelib.models.KoreContact;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -369,7 +367,7 @@ public class KaRestResponse {
 
 
         private BotMessage message;
-        private String resourceid = "/bot.message";
+        private final String resourceid = "/bot.message";
         private BotInfoModel botInfo;
         private int clientMessageId = (int)System.currentTimeMillis();
         private Meta meta;

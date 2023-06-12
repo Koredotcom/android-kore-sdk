@@ -5,11 +5,10 @@ import android.graphics.Path;
 
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.interfaces.datasets.ILineScatterCandleRadarDataSet;
-import kore.botssdk.charts.renderer.BarLineScatterCandleBubbleRenderer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public abstract class LineScatterCandleRadarRenderer extends BarLineScatterCandleBubbleRenderer {
-    private Path mHighlightLinePath = new Path();
+    private final Path mHighlightLinePath = new Path();
 
     public LineScatterCandleRadarRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

@@ -60,7 +60,7 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
     private RecyclerView actionsContainer;
     //    private View footerContainer;
     private boolean loading;
-    private boolean hasMore = true;
+    private final boolean hasMore = true;
     private AuthData authData;
     private RecyclerView.Adapter adapter;
     boolean fromWidget;

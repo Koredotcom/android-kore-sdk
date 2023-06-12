@@ -83,7 +83,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     public void setSelectedIds(ArrayList<String> selectedIds) {
         this.selectedIds = selectedIds;
     }
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
     ArrayList<String> selectedIds = null;
 
     public ArrayList<WidgetListElementModel> getEventList() {
@@ -94,7 +94,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     private ArrayList<WidgetListElementModel> items = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private Context mContext;
+    private final Context mContext;
 
     private String skillName;
 
@@ -109,10 +109,10 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     private LoginModel loginModel;
 
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
-    private int MESSAGE = 2;
-    private int REPORTS = 3;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
+    private final int MESSAGE = 2;
+    private final int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -313,12 +313,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                         holder.tvButton.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                    buttonAction(model.getValue().getButton(), true);
-                                } else {
-                                    buttonAction(model.getValue().getButton(), false);
-                                }
+                                buttonAction(model.getValue().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                             }
                         });
                         String btnTitle = "";
@@ -401,15 +397,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                                 public void onClick(View v) {
                                  //   defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
 
-                                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                        defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
-
-
-                                    } else {
-                                        defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",false);
-
-                                    }
+                                    defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                                 }
                             });
                         }
@@ -471,12 +460,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                             ex.printStackTrace();
                         }
                     }else if(model.getDefault_action() != null && model.getDefault_action().getType() != null && model.getDefault_action().getType().equals("postback")){
-                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                            defaultAction(model.getDefault_action().getPayload(),true);
-                        }else{
-                            defaultAction(model.getDefault_action().getPayload(),false);
-                        }
+                        defaultAction(model.getDefault_action().getPayload(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                     }
                 }
             });
@@ -488,7 +473,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
 
     public void defaultAction(String utterance, boolean appendUtterance){
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -527,7 +512,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)

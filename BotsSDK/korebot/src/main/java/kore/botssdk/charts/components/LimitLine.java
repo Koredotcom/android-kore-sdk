@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import kore.botssdk.charts.components.ComponentBase;
 import kore.botssdk.charts.utils.Utils;
 
 public class LimitLine extends ComponentBase {
@@ -101,13 +100,13 @@ public class LimitLine extends ComponentBase {
         return this.mLabel;
     }
 
-    public static enum LimitLabelPosition {
+    public enum LimitLabelPosition {
         LEFT_TOP,
         LEFT_BOTTOM,
         RIGHT_TOP,
         RIGHT_BOTTOM;
 
-        private LimitLabelPosition() {
+        LimitLabelPosition() {
         }
     }
 }

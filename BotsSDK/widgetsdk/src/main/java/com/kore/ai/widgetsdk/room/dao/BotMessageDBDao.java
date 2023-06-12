@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.room.dao;
 
+import static androidx.room.OnConflictStrategy.REPLACE;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -9,8 +11,6 @@ import androidx.room.Update;
 import com.kore.ai.widgetsdk.room.models.BotDBMessage;
 
 import java.util.List;
-
-import static androidx.room.OnConflictStrategy.REPLACE;
 
 /**
  * Created by Ramachandra Pradeep on 26-Oct-18.

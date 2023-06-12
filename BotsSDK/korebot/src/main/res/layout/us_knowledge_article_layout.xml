@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -31,7 +30,6 @@
             android:layout_marginEnd="10dp"
             android:layout_toLeftOf="@+id/count_view"
             android:layout_toEndOf="@+id/icon_view"
-            android:fontFamily="@font/latomedium"
             android:gravity="center|start"
             android:letterSpacing="0.04"
             android:textAllCaps="true"
@@ -82,7 +80,6 @@
                 android:layout_marginEnd="10dp"
                 android:layout_toStartOf="@+id/link_image"
                 android:ellipsize="end"
-                android:fontFamily="@font/latomedium"
                 android:maxLines="1"
                 android:textColor="@color/color_465360"
                 android:textSize="21sp" />

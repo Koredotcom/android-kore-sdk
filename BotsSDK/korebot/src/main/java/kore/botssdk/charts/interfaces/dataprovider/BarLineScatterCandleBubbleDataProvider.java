@@ -2,7 +2,6 @@ package kore.botssdk.charts.interfaces.dataprovider;
 
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
-import kore.botssdk.charts.interfaces.dataprovider.ChartInterface;
 import kore.botssdk.charts.utils.Transformer;
 
 public interface BarLineScatterCandleBubbleDataProvider extends ChartInterface {

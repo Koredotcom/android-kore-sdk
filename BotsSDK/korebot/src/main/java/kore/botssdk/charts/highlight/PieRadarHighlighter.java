@@ -1,12 +1,10 @@
 package kore.botssdk.charts.highlight;
 
-import kore.botssdk.charts.charts.PieChart;
-import kore.botssdk.charts.charts.PieRadarChartBase;
-import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.highlight.IHighlighter;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.charts.charts.PieChart;
+import kore.botssdk.charts.charts.PieRadarChartBase;
 
 public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter {
     protected T mChart;

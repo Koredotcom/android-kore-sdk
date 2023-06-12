@@ -19,7 +19,7 @@ public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAn
         super(viewPortHandler, xValue, yValue, trans, v);
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
-        this.animator = ObjectAnimator.ofFloat(this, "phase", new float[]{0.0F, 1.0F});
+        this.animator = ObjectAnimator.ofFloat(this, "phase", 0.0F, 1.0F);
         this.animator.setDuration(duration);
         this.animator.addUpdateListener(this);
         this.animator.addListener(this);

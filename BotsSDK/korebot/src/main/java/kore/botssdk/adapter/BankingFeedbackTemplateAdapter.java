@@ -18,10 +18,10 @@ import kore.botssdk.utils.KaFontUtils;
 
 public class BankingFeedbackTemplateAdapter extends BaseAdapter
 {
-    private Context context;
+    private final Context context;
     private ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels;
-    private FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
-    private boolean isEnabled;
+    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    private final boolean isEnabled;
 
     public BankingFeedbackTemplateAdapter(Context context, ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled)
     {
@@ -100,10 +100,7 @@ public class BankingFeedbackTemplateAdapter extends BaseAdapter
         holder.tvExperience.setText(dataObj.getValue());
         holder.rbSelect.setTag(dataObj);
 
-        if(dataObj.getChecked())
-            holder.rbSelect.setChecked(true);
-        else
-            holder.rbSelect.setChecked(false);
+        holder.rbSelect.setChecked(dataObj.getChecked());
 
         return convertView;
     }

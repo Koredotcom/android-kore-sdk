@@ -28,6 +28,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
@@ -74,7 +75,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
             botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, 0);

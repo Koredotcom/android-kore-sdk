@@ -17,19 +17,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotDropDownTemplateView extends LinearLayout {
     private float dp1;
     private TextView tvDropDownTitle;
     private Spinner snrSplitList;
     private LinearLayout llSpinner;
-    private Context mContext;
-    private List<String> categories = new ArrayList<String>();
+    private final Context mContext;
+    private final List<String> categories = new ArrayList<String>();
     private int selectionCurrent;
     private PopupWindow popupWindow;
     private View popUpView;
@@ -81,7 +81,7 @@ public class BotDropDownTemplateView extends LinearLayout {
         snrSplitList = view.findViewById(R.id.snrSplitList);
         llSpinner = view.findViewById(R.id.llSpinner);
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         selectionCurrent = snrSplitList.getSelectedItemPosition();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -118,8 +118,8 @@ public class BotDropDownTemplateView extends LinearLayout {
     public class SpinnerAdapter extends BaseAdapter
     {
         private LayoutInflater inflater = null;
-        private List<String> arrDropDownElementsModels;
-        private Context context;
+        private final List<String> arrDropDownElementsModels;
+        private final Context context;
 
         public SpinnerAdapter(Context context, List<String> arrDropDownElementsModels) {
             this.context = context;

@@ -153,7 +153,7 @@ public class PayloadHeaderModel {
         public void setFocus(String focus) {
             this.focus = focus;
         }
-        private Gson gson = new Gson();
+        private final Gson gson = new Gson();
         public boolean shouldHideComposeBar() {
             return hideComposeBar;
         }
@@ -622,7 +622,7 @@ public class PayloadHeaderModel {
         private CalEventsTemplateModel.Duration cursor = null;
         //    private Object columns = null;
         private String elementsAsString;
-        private String color = "#000000";
+        private final String color = "#000000";
 
         //    private final String INVALID_JSON = "Invalid JSON";
         private String speech_hint;

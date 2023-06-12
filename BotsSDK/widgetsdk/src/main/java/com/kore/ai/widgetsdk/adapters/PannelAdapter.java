@@ -30,25 +30,25 @@ import com.squareup.picasso.Picasso;
 
 public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHoldeer> {
 
-    private Context context;
-    private PanelResponseData panelResponseData;
-    private PanelInterface panelInterface;
+    private final Context context;
+    private final PanelResponseData panelResponseData;
+    private final PanelInterface panelInterface;
     private KaMessengerUpdate _msgUpdate;
-    private int dp1;
+    private final int dp1;
 
     public boolean isExpanded() {
         return isExpanded;
     }
 
-    private boolean isExpanded = false;
-    private boolean isScrolling=false;
+    private final boolean isExpanded = false;
+    private final boolean isScrolling=false;
 
     public PannelAdapter(Context mainActivity, PanelResponseData panelResponseData, PanelInterface panelInterface) {
         context = mainActivity;
         //this.panelResponseData = panelResponseData;
         this.panelResponseData = panelResponseData;
         this.panelInterface = panelInterface;
-        dp1 = (int) Utility.convertDpToPixel(context, 1);;
+        dp1 = (int) Utility.convertDpToPixel(context, 1);
     }
 
     @NonNull
@@ -62,12 +62,12 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
     public void onBindViewHolder(@NonNull final RViewHoldeer holder, int position) {
         final PanelResponseData.Panel data = panelResponseData.getPanels().get(position);
 
-        if(data != null && data.getIcon() != null && data.getIcon().toLowerCase().equals("url")) {
+        if(data != null && data.getIcon() != null && data.getIcon().equalsIgnoreCase("url")) {
             holder.img_skill.setVisibility(View.GONE);
             holder.img_icon.setVisibility(View.VISIBLE);
 
             holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
-            holder.item.setSelected(data.isItemClicked() ? true : false);
+            holder.item.setSelected(data.isItemClicked());
         }else {
             holder.img_icon.setVisibility(View.GONE);
 
@@ -97,7 +97,7 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
             {
                 holder.img_skill.setPadding(3*dp1,3*dp1,3*dp1,3*dp1);
                 holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
-                holder.item.setSelected(data.isItemClicked() ? true : false);
+                holder.item.setSelected(data.isItemClicked());
 
             }
             else {
@@ -129,8 +129,8 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
             public void onClick(View view) {
                 String tempiconID = data.get_id();
                 for (int index = 0; index < panelResponseData.getPanels().size();index ++){
-                    panelResponseData.getPanels().get(index).setItemClicked((tempiconID.equals(panelResponseData.getPanels().get(index).get_id()) &&
-                            !tempiconID.equalsIgnoreCase("")) ? true : false);
+                    panelResponseData.getPanels().get(index).setItemClicked(tempiconID.equals(panelResponseData.getPanels().get(index).get_id()) &&
+                            !tempiconID.equalsIgnoreCase(""));
                 }
                 PanelBaseModel panelBaseModel = new PanelBaseModel();
                 panelBaseModel.setData(data);

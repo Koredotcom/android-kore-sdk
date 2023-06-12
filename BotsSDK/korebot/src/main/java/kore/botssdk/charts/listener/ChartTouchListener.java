@@ -6,7 +6,6 @@ import android.view.View;
 
 import kore.botssdk.charts.charts.Chart;
 import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.listener.OnChartGestureListener;
 
 public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
     protected kore.botssdk.charts.listener.ChartTouchListener.ChartGesture mLastGesture;
@@ -74,7 +73,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
         return (float)Math.sqrt((double)(dx * dx + dy * dy));
     }
 
-    public static enum ChartGesture {
+    public enum ChartGesture {
         NONE,
         DRAG,
         X_ZOOM,
@@ -86,7 +85,7 @@ public abstract class ChartTouchListener<T extends Chart<?>> extends GestureDete
         LONG_PRESS,
         FLING;
 
-        private ChartGesture() {
+        ChartGesture() {
         }
     }
 }

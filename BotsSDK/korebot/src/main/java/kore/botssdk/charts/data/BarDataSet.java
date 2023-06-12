@@ -2,13 +2,10 @@ package kore.botssdk.charts.data;
 
 import android.graphics.Color;
 
-import kore.botssdk.charts.data.BarEntry;
-import kore.botssdk.charts.data.BarLineScatterCandleBubbleDataSet;
-import kore.botssdk.charts.data.DataSet;
-import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 
 public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> implements IBarDataSet {
     private int mStackSize = 1;

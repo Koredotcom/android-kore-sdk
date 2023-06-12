@@ -28,7 +28,6 @@ import java.util.Date;
 
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
-import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 
 /**
@@ -495,7 +494,7 @@ public class KaMediaUtils {
      * */
     static class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
-        private Context context;
+        private final Context context;
 
         public DownloadFileFromURL(Context context)
         {
@@ -533,7 +532,7 @@ public class KaMediaUtils {
 
                 // Output stream to write file
                 output = new FileOutputStream(KaMediaUtils.getAppDir() + File.separator + StringUtils.getFileNameFromUrl(url.toString()));
-                byte data[] = new byte[1024];
+                byte[] data = new byte[1024];
 
                 long total = 0;
 

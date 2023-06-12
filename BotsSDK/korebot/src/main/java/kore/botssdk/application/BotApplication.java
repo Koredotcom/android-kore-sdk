@@ -3,7 +3,6 @@ package kore.botssdk.application;
 import android.app.Application;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import androidx.multidex.MultiDex;
 
 import kore.botssdk.listener.NetworkStateReceiver;
 

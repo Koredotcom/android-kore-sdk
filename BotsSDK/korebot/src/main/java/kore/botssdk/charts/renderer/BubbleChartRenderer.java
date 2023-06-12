@@ -5,6 +5,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.data.BubbleData;
 import kore.botssdk.charts.data.BubbleEntry;
@@ -12,20 +15,16 @@ import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.BubbleDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBubbleDataSet;
-import kore.botssdk.charts.renderer.BarLineScatterCandleBubbleRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
-import java.util.Iterator;
-import java.util.List;
-
 public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
     protected BubbleDataProvider mChart;
-    private float[] sizeBuffer = new float[4];
-    private float[] pointBuffer = new float[2];
-    private float[] _hsvBuffer = new float[3];
+    private final float[] sizeBuffer = new float[4];
+    private final float[] pointBuffer = new float[2];
+    private final float[] _hsvBuffer = new float[3];
 
     public BubbleChartRenderer(BubbleDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

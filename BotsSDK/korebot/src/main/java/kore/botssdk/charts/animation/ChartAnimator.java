@@ -22,7 +22,7 @@ public class ChartAnimator {
 
     @RequiresApi(11)
     private ObjectAnimator xAnimator(int duration, Easing.EasingFunction easing) {
-        ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "phaseX", new float[]{0.0F, 1.0F});
+        ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "phaseX", 0.0F, 1.0F);
         animatorX.setInterpolator(easing);
         animatorX.setDuration((long)duration);
         return animatorX;
@@ -30,7 +30,7 @@ public class ChartAnimator {
 
     @RequiresApi(11)
     private ObjectAnimator yAnimator(int duration, Easing.EasingFunction easing) {
-        ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "phaseY", new float[]{0.0F, 1.0F});
+        ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "phaseY", 0.0F, 1.0F);
         animatorY.setInterpolator(easing);
         animatorY.setDuration((long)duration);
         return animatorY;

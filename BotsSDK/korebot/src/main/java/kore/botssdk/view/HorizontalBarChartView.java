@@ -6,8 +6,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import kore.botssdk.R;
 import kore.botssdk.charts.charts.HorizontalBarChart;
-import kore.botssdk.charts.components.AxisBase;
 import kore.botssdk.charts.components.Legend;
 import kore.botssdk.charts.components.XAxis;
 import kore.botssdk.charts.components.YAxis;
@@ -15,7 +18,6 @@ import kore.botssdk.charts.data.BarData;
 import kore.botssdk.charts.data.BarDataSet;
 import kore.botssdk.charts.data.BarEntry;
 import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.formatter.IAxisValueFormatter;
 import kore.botssdk.charts.formatter.LargeValueFormatter;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
@@ -23,21 +25,16 @@ import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.listener.OnChartValueSelectedListener;
 import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.charts.utils.MPPointF;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class HorizontalBarChartView extends ViewGroup implements OnChartValueSelectedListener {
     private HorizontalBarChart mChart;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
     int labelCount = 0;
 
@@ -49,7 +46,7 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
 
     private void init() {
         labelCount = 0;
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mChart = new HorizontalBarChart(mContext);
         mChart.setTouchEnabled(true);
         mChart.setPinchZoom(false);
@@ -108,9 +105,9 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
         labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
+        ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-        BarDataSet dataSet[];
+        BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
         if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {

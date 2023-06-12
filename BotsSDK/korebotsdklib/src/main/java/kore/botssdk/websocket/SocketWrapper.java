@@ -1,15 +1,12 @@
 package kore.botssdk.websocket;
 
 import android.content.Context;
-import android.net.Network;
 import android.os.Handler;
 import android.util.Log;
-
 
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,11 +16,6 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.event.RTMConnectionEvent;
@@ -34,17 +26,9 @@ import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.io.crossbar.autobahn.websocket.types.WebSocketOptions;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotSocketOptions;
-import kore.botssdk.net.RestBuilder;
-import kore.botssdk.net.RestResponse;
-import kore.botssdk.net.RestResponse.BotAuthorization;
-import kore.botssdk.net.RestResponse.JWTTokenResponse;
-import kore.botssdk.net.RestResponse.RTMUrl;
 import kore.botssdk.net.BotRestBuilder;
-import kore.botssdk.net.RestAPI;
 import kore.botssdk.net.RestResponse;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
-import kore.botssdk.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -83,7 +67,7 @@ public final class SocketWrapper{
     private String accessToken;
     private String userAccessToken = null;
 
-    private String anonymousUserAccessToken = null;
+    private final String anonymousUserAccessToken = null;
     private String JWTToken;
     private String auth;
     private String botUserId;
@@ -99,7 +83,7 @@ public final class SocketWrapper{
     private BotInfoModel botInfoModel;
     private BotSocketOptions options;
 
-    private Context mContext;
+    private final Context mContext;
     /**
      * initial reconnection delay 1 Sec
      */
@@ -727,7 +711,7 @@ public final class SocketWrapper{
             };
                 _handler.postDelayed(r, mReconnectDelay);
         } catch (Exception e) {
-            Log.d(LOG_TAG, ":: The Exception is " + e.toString());
+            Log.d(LOG_TAG, ":: The Exception is " + e);
         }
     }
 
@@ -783,11 +767,7 @@ public final class SocketWrapper{
      * @return boolean indicating the connection presence.
      */
     public boolean isConnected() {
-        if (mConnection != null && mConnection.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return mConnection != null && mConnection.isConnected();
     }
 
     public String getBotUserId() {

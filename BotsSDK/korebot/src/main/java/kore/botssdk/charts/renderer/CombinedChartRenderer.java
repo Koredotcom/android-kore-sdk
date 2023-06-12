@@ -3,24 +3,18 @@ package kore.botssdk.charts.renderer;
 import android.graphics.Canvas;
 import android.util.Log;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.charts.Chart;
 import kore.botssdk.charts.charts.CombinedChart;
 import kore.botssdk.charts.data.ChartData;
 import kore.botssdk.charts.data.CombinedData;
 import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.renderer.BarChartRenderer;
-import kore.botssdk.charts.renderer.BubbleChartRenderer;
-import kore.botssdk.charts.renderer.CandleStickChartRenderer;
-import kore.botssdk.charts.renderer.DataRenderer;
-import kore.botssdk.charts.renderer.LineChartRenderer;
-import kore.botssdk.charts.renderer.ScatterChartRenderer;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class CombinedChartRenderer extends DataRenderer {
     protected List<DataRenderer> mRenderers = new ArrayList(5);

@@ -29,11 +29,11 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
     boolean isCheckBoxRequired;
 //    boolean isAllSwitchSelected;
 
-    private HashMap<String, CalEventsTemplateModel.Attendee> initialSharedAttendeesList = new HashMap<>();
-    private HashMap<String, CalEventsTemplateModel.Attendee> initialUnSharedAttendeesList = new HashMap<>();
+    private final HashMap<String, CalEventsTemplateModel.Attendee> initialSharedAttendeesList = new HashMap<>();
+    private final HashMap<String, CalEventsTemplateModel.Attendee> initialUnSharedAttendeesList = new HashMap<>();
 
-    private HashMap<String, CalEventsTemplateModel.Attendee> newSharedAttendeesList = new HashMap<>();
-    private HashMap<String, CalEventsTemplateModel.Attendee> newUnSharedAttendeesList = new HashMap<>();
+    private final HashMap<String, CalEventsTemplateModel.Attendee> newSharedAttendeesList = new HashMap<>();
+    private final HashMap<String, CalEventsTemplateModel.Attendee> newUnSharedAttendeesList = new HashMap<>();
 
 
     public ShareMeetingAdapter(KaShareMeetingActivity activity, List<CalEventsTemplateModel.Attendee> attendeesList, boolean isCheckBoxRequired) {
@@ -71,11 +71,7 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
                 }
         }
 
-        if (count == attendeesList.size()) {
-            activity.doAttendeeSwitchAction(true);
-        } else {
-            activity.doAttendeeSwitchAction(false);
-        }
+        activity.doAttendeeSwitchAction(count == attendeesList.size());
 
         doDoneAction();
     }
@@ -102,11 +98,7 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
     }
 
     private void doDoneAction(){
-        if(newSharedAttendeesList != null && newSharedAttendeesList.values().size()>0 ||newUnSharedAttendeesList != null && newUnSharedAttendeesList.values().size()>0 ){
-            activity.menuDoneVisibility(true);
-        }else{
-            activity.menuDoneVisibility(false);
-        }
+        activity.menuDoneVisibility(newSharedAttendeesList != null && newSharedAttendeesList.values().size() > 0 || newUnSharedAttendeesList != null && newUnSharedAttendeesList.values().size() > 0);
     }
 
     public HashMap<String, ArrayList> getAllInvitees() {
@@ -149,7 +141,7 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ShareViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ShareViewHolder holder, int position) {
 
         String name = attendeesList.get(position).getName();
         String email = attendeesList.get(position).getEmail();
@@ -170,12 +162,12 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
                     public void onClick(View view) {
                         boolean isChecked = holder.check_user.isChecked();
                         if (isChecked) {
-                            attendeesList.get(position).setCheckState(true);
-                            updateNewSharedOrUnShared(attendeesList.get(position), true);
+                            attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(true);
+                            updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), true);
 
                         } else {
-                            attendeesList.get(position).setCheckState(false);
-                            updateNewSharedOrUnShared(attendeesList.get(position), false);
+                            attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(false);
+                            updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), false);
                         }
                         doAllInviteeAction();
                     }

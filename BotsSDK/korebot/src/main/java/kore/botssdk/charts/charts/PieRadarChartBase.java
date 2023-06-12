@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import kore.botssdk.charts.animation.Easing;
-import kore.botssdk.charts.charts.Chart;
-import kore.botssdk.charts.charts.RadarChart;
 import kore.botssdk.charts.components.Legend;
 import kore.botssdk.charts.components.XAxis;
 import kore.botssdk.charts.data.ChartData;
@@ -287,7 +285,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
     @SuppressLint({"NewApi"})
     public void spin(int durationmillis, float fromangle, float toangle, Easing.EasingFunction easing) {
         this.setRotationAngle(fromangle);
-        ObjectAnimator spinAnimator = ObjectAnimator.ofFloat(this, "rotationAngle", new float[]{fromangle, toangle});
+        ObjectAnimator spinAnimator = ObjectAnimator.ofFloat(this, "rotationAngle", fromangle, toangle);
         spinAnimator.setDuration((long)durationmillis);
         spinAnimator.setInterpolator(easing);
         spinAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

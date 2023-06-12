@@ -32,7 +32,6 @@
             android:layout_marginEnd="10dp"
             android:layout_toLeftOf="@+id/count_view"
             android:layout_toEndOf="@+id/icon_view"
-            android:fontFamily="@font/latomedium"
             android:gravity="center|start"
             android:letterSpacing="0.04"
             android:text=""
@@ -99,7 +98,6 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
             android:gravity="center|start"
             android:letterSpacing="0.1"
             android:maxLines="1"
@@ -117,7 +115,6 @@
             android:layout_toLeftOf="@+id/count_view"
             android:layout_toEndOf="@+id/icon_view"
             android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
             android:maxLines="3"
             android:textColor="@color/color_161620"
             android:textSize="17sp" />

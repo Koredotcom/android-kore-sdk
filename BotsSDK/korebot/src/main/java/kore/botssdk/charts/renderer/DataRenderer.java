@@ -8,7 +8,6 @@ import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.ChartInterface;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
-import kore.botssdk.charts.renderer.Renderer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 

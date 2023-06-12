@@ -2,11 +2,11 @@ package kore.botssdk.charts.data;
 
 import android.graphics.Paint;
 
-import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
-import kore.botssdk.charts.utils.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
+import kore.botssdk.charts.utils.Utils;
 
 public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> implements ICandleDataSet {
     private float mShadowWidth = 3.0F;

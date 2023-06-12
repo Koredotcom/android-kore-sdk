@@ -12,7 +12,6 @@ import android.util.Base64;
 import android.widget.TextView;
 
 import java.io.BufferedInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,7 +43,7 @@ class HttpGetDrawableTask extends AsyncTask<String, Void, Drawable> {
     private final Context context;
     private final TextView taskTextView;
     private final String taskHtmlString;
-    private int dp1;
+    private final int dp1;
 
     public HttpGetDrawableTask(Context context, TextView v, String s) {
         this.context = context;

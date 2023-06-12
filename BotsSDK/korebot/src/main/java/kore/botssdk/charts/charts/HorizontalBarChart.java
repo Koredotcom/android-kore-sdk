@@ -5,7 +5,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import kore.botssdk.charts.charts.BarChart;
 import kore.botssdk.charts.components.XAxis;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.BarData;
@@ -23,7 +22,7 @@ import kore.botssdk.charts.utils.TransformerHorizontalBarChart;
 import kore.botssdk.charts.utils.Utils;
 
 public class HorizontalBarChart extends BarChart {
-    private RectF mOffsetsBuffer = new RectF();
+    private final RectF mOffsetsBuffer = new RectF();
     protected float[] mGetPositionBuffer = new float[2];
 
     public HorizontalBarChart(Context context) {

@@ -3,7 +3,6 @@ package kore.botssdk.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 import kore.botssdk.models.Authorization;
 import kore.botssdk.models.BotInfoModel;
@@ -156,7 +155,7 @@ public class RestResponse {
 
 
         private BotMessage message;
-        private String resourceid = "/bot.message";
+        private final String resourceid = "/bot.message";
         private BotInfoModel botInfo;
         private int clientMessageId = (int)System.currentTimeMillis();
         private Meta meta;

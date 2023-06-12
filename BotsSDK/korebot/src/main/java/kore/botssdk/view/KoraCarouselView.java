@@ -6,15 +6,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.KoraCarousalAdapter;
 import kore.botssdk.adapter.KoraMiniTableAdapter;
-import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.EmailModel;
@@ -22,6 +19,7 @@ import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.models.KoraSearchResultsModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -87,7 +85,7 @@ public class KoraCarouselView extends ViewGroup {
     }
 
     private void init() {
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
         carousalView = (HeightAdjustableViewPager) view.findViewById(R.id.carouselViewpager);
 //        carousalView.setAddExtraHeight(true);

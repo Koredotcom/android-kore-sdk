@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,21 +30,19 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 public class BotListViewTemplateAdapter extends BaseAdapter {
 
-    private String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
+    private final String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     private ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private LayoutInflater ownLayoutInflator;
-    private Context context;
-    private RoundedCornersTransform roundedCornersTransform;
-    private ListView parentListView;
+    private final LayoutInflater ownLayoutInflator;
+    private final Context context;
+    private final RoundedCornersTransform roundedCornersTransform;
+    private final ListView parentListView;
     private GradientDrawable bgDrawable;
     private int count = 0;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);

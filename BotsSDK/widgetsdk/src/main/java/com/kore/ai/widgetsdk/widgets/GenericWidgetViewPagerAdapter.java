@@ -18,12 +18,12 @@ import com.kore.ai.widgetsdk.views.widgetviews.GenericWidgetView;
 
 public class GenericWidgetViewPagerAdapter extends PagerAdapter {
   //  private String tabTitles[] = {"Shared with you", "Created by you"};
-    private VerticalListViewActionHelper listener;
-    private Activity mContext;
+    private final VerticalListViewActionHelper listener;
+    private final Activity mContext;
     private final SparseArray<View> instantiatedFragments = new SparseArray<>();
     private GenericWidgetView itemLayout;
-    private WidgetsModel widget;
-    private String name;
+    private final WidgetsModel widget;
+    private final String name;
     boolean isPaaginationRequired;
     WidgetViewMoreEnum widgetViewMoreEnum;
     public GenericWidgetViewPagerAdapter(Activity context,

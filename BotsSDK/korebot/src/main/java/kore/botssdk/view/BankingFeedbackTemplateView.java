@@ -2,17 +2,12 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +27,6 @@ import kore.botssdk.models.FeedbackExperienceContentModel;
 import kore.botssdk.models.FeedbackListModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
 public class BankingFeedbackTemplateView extends LinearLayout implements FeedbackExperienceUpdateListner
@@ -112,7 +106,7 @@ public class BankingFeedbackTemplateView extends LinearLayout implements Feedbac
     }
 
     public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;
+        private final int space;
 
         public SpacesItemDecoration(int space) {
             this.space = space;

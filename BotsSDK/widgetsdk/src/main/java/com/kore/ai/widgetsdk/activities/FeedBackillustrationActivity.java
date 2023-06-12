@@ -114,20 +114,20 @@ public class FeedBackillustrationActivity extends KaAppCompatActivity {
 
         switch (position) {
             case 0:
-                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedbac_ic_emo_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
+                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
                 break;
             case 1:
-                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedbac_ic_emo_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
+                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
                 break;
             case 2:
-                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedbac_ic_emo_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
+                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedback_icon_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
                 break;
             case 3:
                 // sub_text.setText("Thank you..");
-                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedbac_ic_emo_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
+                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedback_icon_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
                 break;
             case 4:
-                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedbacon_emo_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
+                Glide.with(FeedBackillustrationActivity.this).load(R.drawable.feedback_icon_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
                 break;
 
         }

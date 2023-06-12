@@ -19,18 +19,16 @@ import java.util.ArrayList;
 
 import kore.botssdk.BR;
 import kore.botssdk.R;
-import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.databinding.WelcomeSummaryListItemBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
 public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
-    private Context context;
+    private final Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isEnabled;
@@ -39,9 +37,9 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
     public WelcomeSummaryRecyclerAdapter(Context context) {
         this.context = context;
     }
-    private int DATA_CARD_FLAG = 1;
-    private int MESSAGE = 2;
-    private int EMPTY_CARD_FLAG = 0;
+    private final int DATA_CARD_FLAG = 1;
+    private final int MESSAGE = 2;
+    private final int EMPTY_CARD_FLAG = 0;
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

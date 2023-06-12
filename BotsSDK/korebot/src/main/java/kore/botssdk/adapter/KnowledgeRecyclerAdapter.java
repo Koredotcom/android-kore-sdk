@@ -8,11 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,8 +15,11 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.KnowledgeItemViewBinding;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -30,6 +28,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
 
 
@@ -39,23 +38,23 @@ import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
 
 public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
-    private Context context;
+    private final Context context;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
-    private int EMPTY_CARD_FLAG = 0;
+    private final int EMPTY_CARD_FLAG = 0;
     String msg;
     Drawable errorIcon;
-    private int DATA_CARD_FLAG = 1;
-    private int MESSAGE = 2;
+    private final int DATA_CARD_FLAG = 1;
+    private final int MESSAGE = 2;
 
     private VerticalListViewActionHelper verticalListViewActionHelper;
-    private static KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
+    private static final KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
     private static int dp1;
 
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         notifyDataSetChanged();
         setHasStableIds(true);
     }

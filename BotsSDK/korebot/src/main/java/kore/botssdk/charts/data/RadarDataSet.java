@@ -1,12 +1,9 @@
 package kore.botssdk.charts.data;
 
-import kore.botssdk.charts.data.DataSet;
-import kore.botssdk.charts.data.LineRadarDataSet;
-import kore.botssdk.charts.data.RadarEntry;
-import kore.botssdk.charts.interfaces.datasets.IRadarDataSet;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.charts.interfaces.datasets.IRadarDataSet;
 
 public class RadarDataSet extends LineRadarDataSet<RadarEntry> implements IRadarDataSet {
     protected boolean mDrawHighlightCircleEnabled = false;

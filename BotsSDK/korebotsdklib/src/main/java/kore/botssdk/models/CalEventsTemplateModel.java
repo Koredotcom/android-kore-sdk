@@ -2,10 +2,10 @@ package kore.botssdk.models;
 
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.

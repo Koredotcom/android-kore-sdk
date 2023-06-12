@@ -1,5 +1,7 @@
 package kore.botssdk.dialogs;
 
+import static android.os.Looper.getMainLooper;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -26,8 +28,6 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WidgetDialogModel;
 
-import static android.os.Looper.getMainLooper;
-
 
 public class WidgetDialogActivity extends Dialog {
 
@@ -39,7 +39,7 @@ public class WidgetDialogActivity extends Dialog {
     RecyclerView recycler_actions;
     WCalEventsTemplateModel model;
     Context mContext;
-    private boolean isFromFullView;
+    private final boolean isFromFullView;
     Handler someHandler;
     VerticalListViewActionHelper verticalListViewActionHelper;
     WidgetCancelActionsAdapter adapter;

@@ -63,12 +63,12 @@ public class Approximator {
     }
 
     private class Line {
-        private float[] points;
-        private float sxey;
-        private float exsy;
-        private float dx;
-        private float dy;
-        private float length;
+        private final float[] points;
+        private final float sxey;
+        private final float exsy;
+        private final float dx;
+        private final float dy;
+        private final float length;
 
         public Line(float x1, float y1, float x2, float y2) {
             this.dx = x1 - x2;

@@ -5,7 +5,6 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import kore.botssdk.charts.charts.BarLineChartBase;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.BarData;
 import kore.botssdk.charts.data.BarEntry;

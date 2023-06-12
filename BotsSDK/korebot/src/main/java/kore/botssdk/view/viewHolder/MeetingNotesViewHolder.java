@@ -1,6 +1,5 @@
 package kore.botssdk.view.viewHolder;
 
-import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -8,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
-import kore.botssdk.utils.Utility;
 
 public class MeetingNotesViewHolder extends RecyclerView.ViewHolder {
         public View header;

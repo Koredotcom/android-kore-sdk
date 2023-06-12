@@ -33,7 +33,6 @@
             android:gravity="start|center_vertical"
             android:maxLines="1"
             android:tag="medium"
-            android:fontFamily="@font/latomedium"
             android:text="9:00 AM to 10:15 AM"
             android:textColor="@color/color_465360"
             android:textSize="13sp" />

@@ -4,13 +4,14 @@ import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.RectF;
 
+import java.util.List;
+
 import kore.botssdk.charts.data.CandleEntry;
 import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.interfaces.datasets.IBubbleDataSet;
 import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
 import kore.botssdk.charts.interfaces.datasets.ILineDataSet;
 import kore.botssdk.charts.interfaces.datasets.IScatterDataSet;
-import java.util.List;
 
 public class Transformer {
     protected Matrix mMatrixValueToPx = new Matrix();
@@ -22,8 +23,8 @@ public class Transformer {
     protected float[] valuePointsForGenerateTransformedValuesCandle = new float[1];
     protected Matrix mPixelToValueMatrixBuffer = new Matrix();
     float[] ptsBuffer = new float[2];
-    private Matrix mMBuffer1 = new Matrix();
-    private Matrix mMBuffer2 = new Matrix();
+    private final Matrix mMBuffer1 = new Matrix();
+    private final Matrix mMBuffer2 = new Matrix();
 
     public Transformer(ViewPortHandler viewPortHandler) {
         this.mViewPortHandler = viewPortHandler;

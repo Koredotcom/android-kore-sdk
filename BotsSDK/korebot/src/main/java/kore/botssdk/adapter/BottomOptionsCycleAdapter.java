@@ -39,9 +39,9 @@ import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder>{
-    private String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
+    private final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
     private List<BotOptionModel> model;
-    private RoundedCornersTransform roundedCornersTransform;
+    private final RoundedCornersTransform roundedCornersTransform;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private BottomSheetDialog bottomSheetDialog;

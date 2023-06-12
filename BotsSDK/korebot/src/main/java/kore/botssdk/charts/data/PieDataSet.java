@@ -159,11 +159,11 @@ public class PieDataSet extends kore.botssdk.charts.data.DataSet<PieEntry> imple
         this.mValueLineVariableLength = valueLineVariableLength;
     }
 
-    public static enum ValuePosition {
+    public enum ValuePosition {
         INSIDE_SLICE,
         OUTSIDE_SLICE;
 
-        private ValuePosition() {
+        ValuePosition() {
         }
     }
 }

@@ -23,7 +23,7 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class HorizontalBarChartRenderer extends BarChartRenderer {
-    private RectF mBarShadowRectBuffer = new RectF();
+    private final RectF mBarShadowRectBuffer = new RectF();
 
     public HorizontalBarChartRenderer(BarDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(chart, animator, viewPortHandler);

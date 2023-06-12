@@ -54,12 +54,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListener {
-    private static DecimalFormat df2 = new DecimalFormat("###.##");
+    private static final DecimalFormat df2 = new DecimalFormat("###.##");
 	public static final String error_msz_key="error_msz_key";
 	public static final String isFileSizeMore_key="isFileSizeMore";
 	public  static final String fileSizeBytes_key="fileSizeBytes";
-	private String LOG_TAG = getClass().getSimpleName();
-	private String fileName;
+	private final String LOG_TAG = getClass().getSimpleName();
+	private final String fileName;
 	private String outFilePath=null;
 	private String accessToken =null;
 //	private String userId = null;
@@ -68,31 +68,31 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
 	private String fileToken = null;
 	private String fileExtn = null;
 	private String orientation = null;
-	private int BUFFER_SIZE;
-	private Messenger messenger;
+	private final int BUFFER_SIZE;
+	private final Messenger messenger;
 
 //	private int chunkCount = 0;
-	private String thumbnailFilePath;
-	private String messageId;
+	private final String thumbnailFilePath;
+	private final String messageId;
 //	private boolean isTeam;
-	private Context context;
+	private final Context context;
 	private FileUploadedListener listener;
-	private String componentType;
+	private final String componentType;
 	private int noOfMergeAttempts;
-	private String host;
+	private final String host;
 
 	BotDBManager helper;
 //	KoreBaseDao<FileUploadInfo, String> fileDao;
-	FileUploadInfo uploadInfo = new FileUploadInfo();;
-	public static final long FILE_SIZE_20MB = 20 * 1024*1024;
+	FileUploadInfo uploadInfo = new FileUploadInfo();
+    public static final long FILE_SIZE_20MB = 20 * 1024*1024;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
 	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
     private ProgressDialog pDialog;
-	private boolean isAnonymousUser;
-	private boolean isWebHook;
-	private String botId;
+	private final boolean isAnonymousUser;
+	private final boolean isWebHook;
+	private final String botId;
 	
 	public UploadBulkFile(String fileName,String outFilePath, String accessToken, String userId, String fileContext,
 						String fileExtn,int BUFFER_SIZE, Messenger messenger,
@@ -522,7 +522,7 @@ public class UploadBulkFile implements Work, FileTokenListener,ChunkUploadListen
     					 try {
     						 messenger.send(msg);
     					 } catch (RemoteException e) {
-    						 Log.d("error", "error"+e.toString());
+    						 Log.d("error", "error"+ e);
     					 }
         				if(listener !=null)
         					listener.fileUploaded(/*comp, messageId, fileExtn,messenger*/);

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Ramachandra Pradeep on 9/14/2016.
  */
 public final class KoreFileUploadServiceExecutor {
-    private int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+    private final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     private ThreadPoolExecutor executor;
 
     private static KoreFileUploadServiceExecutor mInstance;

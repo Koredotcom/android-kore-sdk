@@ -1,9 +1,6 @@
 package kore.botssdk.view.tableview;
 
-import android.animation.Animator;
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -30,7 +27,6 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.BotCustomTableView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.tableview.colorizers.TableDataRowColorizer;
 import kore.botssdk.view.tableview.listeners.OnScrollListener;
@@ -65,7 +61,7 @@ public class TableCustomView<T> extends LinearLayout {
     private TableHeaderAdapter tableHeaderAdapter;
     private LinearLayout llTableDataView;
     private TextView botTableShowMoreButton;
-    private float dp1;
+    private final float dp1;
     private PayloadInner payloadInner;
     private int headerElevation;
     private Dialog dialog;

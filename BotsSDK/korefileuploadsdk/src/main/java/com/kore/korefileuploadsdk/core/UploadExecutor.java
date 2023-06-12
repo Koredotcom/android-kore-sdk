@@ -26,18 +26,18 @@ public class UploadExecutor implements Runnable{
     public final String LOG_TAG="UploadExecutor";
 
     /*Intent params*/
-    private String fileName;
-    private String accessToken;
-    private String fileToken;
-    private String userOrTeamId;
+    private final String fileName;
+    private final String accessToken;
+    private final String fileToken;
+    private final String userOrTeamId;
     private byte[] dataToSet = null;
     private int chunkNo = 0;
-    private Context context;
+    private final Context context;
     private ChunkUploadListener mListener = null;
-    private String host;
-    private boolean isAnonymousUser;
-    private boolean isWebhook;
-    private String botId;
+    private final String host;
+    private final boolean isAnonymousUser;
+    private final boolean isWebhook;
+    private final String botId;
 
     public UploadExecutor(Context context, String fileName, String fileToken, String accessToken,String userOrTeamId,byte[] dataToPost,
                           int chunkNo, ChunkUploadListener listener, String host, boolean isAnonymousUser, boolean isWebHook, String botId) {
@@ -134,7 +134,7 @@ public class UploadExecutor implements Runnable{
 
 
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Exception in uploading chunk " + e.toString());
+            Log.e(LOG_TAG, "Exception in uploading chunk " + e);
             e.printStackTrace();
 //            if(!(e instanceof NoNetworkException)){
                 if(mListener != null)

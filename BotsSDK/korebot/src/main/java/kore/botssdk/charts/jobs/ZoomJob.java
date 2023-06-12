@@ -10,7 +10,7 @@ import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class ZoomJob extends ViewPortJob {
-    private static ObjectPool<ZoomJob> pool = ObjectPool.create(1, new ZoomJob((ViewPortHandler)null, 0.0F, 0.0F, 0.0F, 0.0F, (Transformer)null, (YAxis.AxisDependency)null, (View)null));
+    private static final ObjectPool<ZoomJob> pool = ObjectPool.create(1, new ZoomJob((ViewPortHandler)null, 0.0F, 0.0F, 0.0F, 0.0F, (Transformer)null, (YAxis.AxisDependency)null, (View)null));
     protected float scaleX;
     protected float scaleY;
     protected YAxis.AxisDependency axisDependency;

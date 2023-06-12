@@ -13,9 +13,9 @@ import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 
 public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChartBase<?>> {
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0.0F, 0.0F);
+    private final MPPointF mTouchStartPoint = MPPointF.getInstance(0.0F, 0.0F);
     private float mStartAngle = 0.0F;
-    private ArrayList<PieRadarChartTouchListener.AngularVelocitySample> _velocitySamples = new ArrayList();
+    private final ArrayList<PieRadarChartTouchListener.AngularVelocitySample> _velocitySamples = new ArrayList();
     private long mDecelerationLastTime = 0L;
     private float mDecelerationAngularVelocity = 0.0F;
 

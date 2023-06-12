@@ -1,7 +1,6 @@
 package kore.botssdk.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -341,10 +340,7 @@ public class DateUtils {
         } else {
             Date current = new Date();
             Date other = new Date(when);
-            if (other.before(current))
-                return true;
-            else
-                return false;
+            return other.before(current);
         }
     }
 

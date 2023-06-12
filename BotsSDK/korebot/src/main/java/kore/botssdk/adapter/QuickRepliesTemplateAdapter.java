@@ -2,14 +2,9 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,25 +17,24 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
 
     private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
     Context context;
-    private LayoutInflater layoutInflater;
-    private RecyclerView parentRecyclerView;
+    private final LayoutInflater layoutInflater;
+    private final RecyclerView parentRecyclerView;
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int quickWidgetColor,fillColor,quickReplyFontColor;
-    private int dp1;
+    private final int quickWidgetColor;
+    private final int fillColor;
+    private final int quickReplyFontColor;
+    private final int dp1;
 
     public QuickRepliesTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;

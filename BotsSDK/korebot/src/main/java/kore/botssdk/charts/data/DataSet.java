@@ -1,8 +1,5 @@
 package kore.botssdk.charts.data;
 
-import kore.botssdk.charts.data.BaseDataSet;
-import kore.botssdk.charts.data.Entry;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -307,12 +304,12 @@ public abstract class DataSet<T extends Entry> extends BaseDataSet<T> {
         return entries;
     }
 
-    public static enum Rounding {
+    public enum Rounding {
         UP,
         DOWN,
         CLOSEST;
 
-        private Rounding() {
+        Rounding() {
         }
     }
 }

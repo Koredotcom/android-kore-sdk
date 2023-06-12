@@ -1,16 +1,15 @@
 package kore.botssdk.models;
 
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
+
 import android.view.View;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import kore.botssdk.utils.DateUtils;
-
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 public class MeetingConfirmationModel {
     private String title;

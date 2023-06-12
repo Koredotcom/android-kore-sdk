@@ -3,14 +3,12 @@ package kore.botssdk.charts.components;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
-import kore.botssdk.charts.components.ComponentBase;
-import kore.botssdk.charts.components.LegendEntry;
+import java.util.ArrayList;
+import java.util.List;
+
 import kore.botssdk.charts.utils.FSize;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Legend extends ComponentBase {
     private LegendEntry[] mEntries;
@@ -35,9 +33,9 @@ public class Legend extends ComponentBase {
     public float mTextHeightMax;
     public float mTextWidthMax;
     private boolean mWordWrapEnabled;
-    private List<FSize> mCalculatedLabelSizes;
-    private List<Boolean> mCalculatedLabelBreakPoints;
-    private List<FSize> mCalculatedLineSizes;
+    private final List<FSize> mCalculatedLabelSizes;
+    private final List<Boolean> mCalculatedLabelBreakPoints;
+    private final List<FSize> mCalculatedLineSizes;
 
     public Legend() {
         this.mEntries = new LegendEntry[0];
@@ -450,41 +448,41 @@ public class Legend extends ComponentBase {
         this.mNeededWidth += this.mXOffset;
     }
 
-    public static enum LegendDirection {
+    public enum LegendDirection {
         LEFT_TO_RIGHT,
         RIGHT_TO_LEFT;
 
-        private LegendDirection() {
+        LegendDirection() {
         }
     }
 
-    public static enum LegendOrientation {
+    public enum LegendOrientation {
         HORIZONTAL,
         VERTICAL;
 
-        private LegendOrientation() {
+        LegendOrientation() {
         }
     }
 
-    public static enum LegendVerticalAlignment {
+    public enum LegendVerticalAlignment {
         TOP,
         CENTER,
         BOTTOM;
 
-        private LegendVerticalAlignment() {
+        LegendVerticalAlignment() {
         }
     }
 
-    public static enum LegendHorizontalAlignment {
+    public enum LegendHorizontalAlignment {
         LEFT,
         CENTER,
         RIGHT;
 
-        private LegendHorizontalAlignment() {
+        LegendHorizontalAlignment() {
         }
     }
 
-    public static enum LegendForm {
+    public enum LegendForm {
         NONE,
         EMPTY,
         DEFAULT,
@@ -492,7 +490,7 @@ public class Legend extends ComponentBase {
         CIRCLE,
         LINE;
 
-        private LegendForm() {
+        LegendForm() {
         }
     }
 }

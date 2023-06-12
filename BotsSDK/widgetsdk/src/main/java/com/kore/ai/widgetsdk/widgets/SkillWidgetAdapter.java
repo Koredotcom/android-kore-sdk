@@ -52,7 +52,7 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SkillWidgetViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull SkillWidgetViewHolder holder, int position) {
 
         holder.item_text.setText(model.get(position).getTitle());
 
@@ -61,18 +61,18 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
             public void onClick(View v) {
 
                 if (Utility.checkIsSkillKora()) {
-                    postAction(position);
+                    postAction(holder.getBindingAdapterPosition());
                 } else {
                     if(!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
                         DialogCaller.showDialog(context, skillName, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postAction(position);
+                                postAction(holder.getBindingAdapterPosition());
                                 dialog.dismiss();
                             }
                         });
                     }else{
-                        postAction(position);
+                        postAction(holder.getBindingAdapterPosition());
                     }
 
                 }

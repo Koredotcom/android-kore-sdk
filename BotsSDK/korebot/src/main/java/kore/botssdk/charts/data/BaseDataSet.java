@@ -5,18 +5,17 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kore.botssdk.charts.components.Legend;
 import kore.botssdk.charts.components.YAxis;
-import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.model.GradientColor;
 import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     protected List<Integer> mColors;

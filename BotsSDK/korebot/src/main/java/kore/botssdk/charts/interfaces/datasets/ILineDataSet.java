@@ -5,7 +5,6 @@ import android.graphics.DashPathEffect;
 import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.data.LineDataSet;
 import kore.botssdk.charts.formatter.IFillFormatter;
-import kore.botssdk.charts.interfaces.datasets.ILineRadarDataSet;
 
 public interface ILineDataSet extends ILineRadarDataSet<Entry> {
     LineDataSet.Mode getMode();

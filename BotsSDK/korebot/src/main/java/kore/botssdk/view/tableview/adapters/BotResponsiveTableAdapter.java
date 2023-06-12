@@ -17,10 +17,10 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 public class BotResponsiveTableAdapter extends TableResponsiveDataAdapter<MiniTableModel> {
 
     private static final int TEXT_SIZE = 14;
-    private String[] alignment;
-    private String[]  headers;
+    private final String[] alignment;
+    private final String[]  headers;
     int dp1;
-    private PayloadInner payloadInner;
+    private final PayloadInner payloadInner;
 
 
     public BotResponsiveTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, String[]  headers,  PayloadInner payloadInner) {

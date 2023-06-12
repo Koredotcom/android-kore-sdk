@@ -3,6 +3,7 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.widget.TextView;
 
+import kore.botssdk.R;
 import kore.botssdk.charts.components.MarkerView;
 import kore.botssdk.charts.data.CandleEntry;
 import kore.botssdk.charts.data.Entry;
@@ -10,15 +11,13 @@ import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 
-import kore.botssdk.R;
-
 /**
  * Created by Shiva Krishna on 11/7/2017.
  */
 
 public class CustomMarkerView extends MarkerView {
 
-    private TextView tvContent;
+    private final TextView tvContent;
     public CustomMarkerView (Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview

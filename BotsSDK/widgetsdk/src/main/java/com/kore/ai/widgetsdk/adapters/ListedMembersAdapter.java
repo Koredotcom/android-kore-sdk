@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class ListedMembersAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private final Context mContext;
     private String userId;
     private ArrayList<ContactsTeamsHolder> contactsTeamsHolders;
     // private HashMap<String, KoreContact> contactHashMap;

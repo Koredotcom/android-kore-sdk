@@ -1,38 +1,24 @@
 package kore.botssdk.view.viewUtils;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.google.gson.internal.LinkedTreeMap;
-import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.EmailModel;
-import kore.botssdk.models.KaFileLookupModel;
-import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.DateUtils;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Shiva Krishna on 2/8/2018.

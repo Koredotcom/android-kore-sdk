@@ -19,7 +19,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.TableCustomView;
-import kore.botssdk.view.tableview.TableView;
 import kore.botssdk.view.tableview.adapters.BotTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;

@@ -8,13 +8,12 @@ import android.view.View;
 
 import kore.botssdk.charts.charts.BarLineChartBase;
 import kore.botssdk.charts.components.YAxis;
-import kore.botssdk.charts.jobs.AnimatedViewPortJob;
 import kore.botssdk.charts.utils.ObjectPool;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.AnimatorListener {
-    private static ObjectPool<AnimatedZoomJob> pool = ObjectPool.create(8, new AnimatedZoomJob((ViewPortHandler)null, (View)null, (Transformer)null, (YAxis)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L));
+    private static final ObjectPool<AnimatedZoomJob> pool = ObjectPool.create(8, new AnimatedZoomJob((ViewPortHandler)null, (View)null, (Transformer)null, (YAxis)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L));
     protected float zoomOriginX;
     protected float zoomOriginY;
     protected float zoomCenterX;

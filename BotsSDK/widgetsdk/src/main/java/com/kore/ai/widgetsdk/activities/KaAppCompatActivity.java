@@ -36,7 +36,7 @@ import okhttp3.ResponseBody;
 
 public abstract class KaAppCompatActivity extends AppCompatActivity{
 
-    private String TAG = "KoreAppCompatActivity";
+    private final String TAG = "KoreAppCompatActivity";
     AlertDialog alertDialog;
 
     protected final String LOG_TAG = getClass().getSimpleName();
@@ -241,7 +241,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity{
         snackbar.show();
     }
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private String getHeader(String code) {
         switch (code.trim()) {
             case "QuestionAlreadyExist":

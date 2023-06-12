@@ -29,17 +29,17 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotListWidgetTemplateAdapter extends BaseAdapter {
 
-    private String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
+    private final String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     private ArrayList<BotListWidgetModel> botListModelArrayList = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private LayoutInflater ownLayoutInflator;
-    private Context context;
-    private RoundedCornersTransform roundedCornersTransform;
-    private ListView parentListView;
+    private final LayoutInflater ownLayoutInflator;
+    private final Context context;
+    private final RoundedCornersTransform roundedCornersTransform;
+    private final ListView parentListView;
     private GradientDrawable bgDrawable;
     private int count = 0;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public BotListWidgetTemplateAdapter(Context context, ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);

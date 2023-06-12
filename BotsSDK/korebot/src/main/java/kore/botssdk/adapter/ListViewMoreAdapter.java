@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -10,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,10 +27,8 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder>{
-    private ArrayList<BotListModel> model;
+    private final ArrayList<BotListModel> model;
     RoundedCornersTransform roundedCornersTransform;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;

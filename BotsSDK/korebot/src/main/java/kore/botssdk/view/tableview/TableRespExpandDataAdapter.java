@@ -10,10 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,23 +21,20 @@ import java.util.Arrays;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
-import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAdapter {
 
     private static final String LOG_TAG = TableDataAdapter.class.getName();
     private final List<T> data;
-    private PayloadInner payloadInner;
+    private final PayloadInner payloadInner;
     private TableColumnModel columnModel;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
     private static final int TEXT_SIZE = 14;
     private Dialog dialog;
@@ -88,7 +82,7 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
         this.columnModel = columnModel;
         this.data = data;
         this.mContext = context;
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         this.payloadInner = payloadInner;
     }
 

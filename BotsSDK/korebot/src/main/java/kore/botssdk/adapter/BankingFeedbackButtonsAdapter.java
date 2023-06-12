@@ -19,11 +19,11 @@ import kore.botssdk.utils.Utility;
 
 public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingFeedbackButtonsAdapter.ViewHolder>
 {
-    private Context context;
-    private ArrayList<BotButtonModel> botButtonModels;
+    private final Context context;
+    private final ArrayList<BotButtonModel> botButtonModels;
     private float dp1;
-    private FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
-    private boolean isEnabled;
+    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    private final boolean isEnabled;
 
     public BankingFeedbackButtonsAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled) {
         this.context = context;

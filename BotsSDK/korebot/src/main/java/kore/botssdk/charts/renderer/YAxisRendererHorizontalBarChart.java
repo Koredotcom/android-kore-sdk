@@ -6,15 +6,14 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
 
+import java.util.List;
+
 import kore.botssdk.charts.components.LimitLine;
 import kore.botssdk.charts.components.YAxis;
-import kore.botssdk.charts.renderer.YAxisRenderer;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.List;
 
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     protected Path mDrawZeroLinePathBuffer = new Path();

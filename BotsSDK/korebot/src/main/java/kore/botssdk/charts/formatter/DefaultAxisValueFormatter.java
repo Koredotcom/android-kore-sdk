@@ -18,7 +18,7 @@ public class DefaultAxisValueFormatter extends ValueFormatter {
             b.append("0");
         }
 
-        this.mFormat = new DecimalFormat("###,###,###,##0" + b.toString());
+        this.mFormat = new DecimalFormat("###,###,###,##0" + b);
     }
 
     public String getFormattedValue(float value) {

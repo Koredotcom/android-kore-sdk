@@ -40,7 +40,7 @@ public class KaAuthenticationErrorEvents {
     }
 
     public static class PasswordChangeEvent {
-        public PasswordChangeEvent(){};
+        public PasswordChangeEvent(){}
     }
 
     public static class NetWorkIPError{

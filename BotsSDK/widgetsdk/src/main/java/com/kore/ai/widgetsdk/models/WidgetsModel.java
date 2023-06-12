@@ -1,14 +1,12 @@
 package com.kore.ai.widgetsdk.models;
 
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kore.ai.widgetsdk.net.SDKConfiguration;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
-
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 
 public class WidgetsModel implements Serializable,Cloneable {
 

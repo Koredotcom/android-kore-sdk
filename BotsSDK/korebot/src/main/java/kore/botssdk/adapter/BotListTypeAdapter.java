@@ -22,7 +22,7 @@ import kore.botssdk.models.BotCustomListModel;
  * Created by Anil Kumar on 12/20/2016.
  */
 public class BotListTypeAdapter extends BaseAdapter {
-    private Context mContext;
+    private final Context mContext;
 
     private ArrayList<BotCustomListModel> optionsList;
 
@@ -144,7 +144,7 @@ public class BotListTypeAdapter extends BaseAdapter {
 
     private boolean showMore() {
         if (optionsList != null && !optionsList.isEmpty()) {
-            return (optionsList.size() > OPTIONS_LIST_LIMIT) ? true : false;
+            return optionsList.size() > OPTIONS_LIST_LIMIT;
         }
         return false;
     }

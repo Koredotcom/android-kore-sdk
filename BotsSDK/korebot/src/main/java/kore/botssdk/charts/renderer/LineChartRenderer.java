@@ -7,6 +7,11 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.drawable.Drawable;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.data.LineData;
@@ -16,17 +21,11 @@ import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.LineDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.interfaces.datasets.ILineDataSet;
-import kore.botssdk.charts.renderer.LineRadarRenderer;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 public class LineChartRenderer extends LineRadarRenderer {
     protected LineDataProvider mChart;
@@ -38,8 +37,8 @@ public class LineChartRenderer extends LineRadarRenderer {
     protected Path cubicFillPath;
     private float[] mLineBuffer;
     protected Path mGenerateFilledPathBuffer;
-    private HashMap<IDataSet, LineChartRenderer.DataSetImageCache> mImageCaches;
-    private float[] mCirclesBuffer;
+    private final HashMap<IDataSet, LineChartRenderer.DataSetImageCache> mImageCaches;
+    private final float[] mCirclesBuffer;
 
     public LineChartRenderer(LineDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -526,7 +525,7 @@ public class LineChartRenderer extends LineRadarRenderer {
     }
 
     private class DataSetImageCache {
-        private Path mCirclePathBuffer;
+        private final Path mCirclePathBuffer;
         private Bitmap[] circleBitmaps;
 
         private DataSetImageCache() {

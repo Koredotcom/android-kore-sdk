@@ -6,6 +6,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Typeface;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import kore.botssdk.charts.components.Legend;
 import kore.botssdk.charts.components.LegendEntry;
 import kore.botssdk.charts.data.ChartData;
@@ -14,14 +18,9 @@ import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.interfaces.datasets.IPieDataSet;
-import kore.botssdk.charts.renderer.Renderer;
 import kore.botssdk.charts.utils.FSize;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class LegendRenderer extends Renderer {
     protected Paint mLegendLabelPaint;
@@ -29,7 +28,7 @@ public class LegendRenderer extends Renderer {
     protected Legend mLegend;
     protected List<LegendEntry> computedEntries = new ArrayList(16);
     protected Paint.FontMetrics legendFontMetrics = new Paint.FontMetrics();
-    private Path mLineFormPath = new Path();
+    private final Path mLineFormPath = new Path();
 
     public LegendRenderer(ViewPortHandler viewPortHandler, Legend legend) {
         super(viewPortHandler);

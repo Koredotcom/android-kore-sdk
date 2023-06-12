@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:layout_marginStart="20dp"
-            android:fontFamily="@font/latomedium"
             android:lineSpacingExtra="5dp"
             android:textColor="@color/color_404051"
             android:textSize="13sp" />
@@ -65,7 +64,6 @@
             android:drawableStart="@drawable/vector_location_icon"
             android:drawablePadding="5dp"
             android:gravity="center|start"
-            android:fontFamily="@font/latomedium"
             android:textColor="#485260"
             android:textSize="13sp" />
 

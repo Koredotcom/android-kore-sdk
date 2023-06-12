@@ -12,8 +12,8 @@ import javax.net.ssl.HttpsURLConnection;
 public class KoreHttpsUrlConnectionBuilder {
 
     private HttpsURLConnection httpsURLConnection;
-    private String uri;
-    private Context mContext;
+    private final String uri;
+    private final Context mContext;
 
     public KoreHttpsUrlConnectionBuilder(Context context, String uri){
         this.uri = uri;

@@ -7,22 +7,22 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 
+import java.lang.ref.WeakReference;
+
 import kore.botssdk.charts.charts.Chart;
 import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.utils.FSize;
 import kore.botssdk.charts.utils.MPPointF;
 
-import java.lang.ref.WeakReference;
-
 public class MarkerImage implements IMarker {
-    private Context mContext;
-    private Drawable mDrawable;
+    private final Context mContext;
+    private final Drawable mDrawable;
     private MPPointF mOffset = new MPPointF();
-    private MPPointF mOffset2 = new MPPointF();
+    private final MPPointF mOffset2 = new MPPointF();
     private WeakReference<Chart> mWeakChart;
     private FSize mSize = new FSize();
-    private Rect mDrawableBoundsCache = new Rect();
+    private final Rect mDrawableBoundsCache = new Rect();
 
     public MarkerImage(Context context, int drawableResourceId) {
         this.mContext = context;

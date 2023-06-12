@@ -3,11 +3,12 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
@@ -31,13 +31,15 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
 
     private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
     Context context;
-    private LayoutInflater layoutInflater;
-    private RecyclerView parentRecyclerView;
+    private final LayoutInflater layoutInflater;
+    private final RecyclerView parentRecyclerView;
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int quickWidgetColor,fillColor,quickReplyFontColor;
-    private int dp1;
+    private final int quickWidgetColor;
+    private final int fillColor;
+    private final int quickReplyFontColor;
+    private final int dp1;
 
     public QuickRepliesAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;

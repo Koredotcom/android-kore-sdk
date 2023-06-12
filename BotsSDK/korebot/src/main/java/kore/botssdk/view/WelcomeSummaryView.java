@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.WelcomeChatSummaryBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -34,6 +33,7 @@ import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -45,8 +45,8 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     private float dp1;
     private RecyclerView welcomeChatSummaryList;
     private boolean isWeatherDesc = true;
-    private String skillName;
-    private Context context;
+    private final String skillName;
+    private final Context context;
 
     public WelcomeSummaryView(Context context, String skillName) {
         super(context);
@@ -128,7 +128,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     private void init() {
         welcomeChatSummaryViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.welcome_chat_summary, this, true);
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         welcomeChatSummaryViewBinding.setViewBase(this);
 
         welcomeChatSummaryList = ((RecyclerView)findViewById(R.id.weather_chat_LV));

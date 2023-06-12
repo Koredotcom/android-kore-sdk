@@ -3,14 +3,12 @@ package kore.botssdk.charts.components;
 import android.graphics.DashPathEffect;
 import android.util.Log;
 
-import kore.botssdk.charts.components.ComponentBase;
-import kore.botssdk.charts.components.LimitLine;
+import java.util.ArrayList;
+import java.util.List;
+
 import kore.botssdk.charts.formatter.DefaultAxisValueFormatter;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AxisBase extends ComponentBase {
     protected ValueFormatter mAxisValueFormatter;

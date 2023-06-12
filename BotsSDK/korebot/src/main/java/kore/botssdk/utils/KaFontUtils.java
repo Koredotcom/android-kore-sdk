@@ -7,12 +7,13 @@ package kore.botssdk.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.core.content.res.ResourcesCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import kore.botssdk.R;
 import kore.botssdk.net.SDKConfiguration;
@@ -63,13 +64,13 @@ public class KaFontUtils {
         if (tag instanceof String) {
             if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT)) {
                 if (robotoLight == null) {
-                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latoregular);
                     //robotoLight = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
                 }
                 myview.setTypeface(robotoLight);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_LIGHT_ITALICS)) {
                 if (robotoLightItalic == null) {
-                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 myview.setTypeface(robotoLightItalic);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR)) {
@@ -79,17 +80,17 @@ public class KaFontUtils {
                 myview.setTypeface(robotoRegular);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_REGULAR_ITALICS)) {
                 if (robotoRegularItalic == null) {
-                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 myview.setTypeface(robotoRegularItalic);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM)) {
                 if (robotoMedium == null) {
-                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 myview.setTypeface(robotoMedium);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_MEDIUM_ITALICS)) {
                 if (robotoMediumItalic == null) {
-                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 myview.setTypeface(robotoMediumItalic);
             }  else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD)) {
@@ -99,7 +100,7 @@ public class KaFontUtils {
                 myview.setTypeface(robotoBold);
             } else if (((String) tag).equalsIgnoreCase(ROBOTO_BOLD_ITALICS)) {
                 if (robotoBoldItalic == null) {
-                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 myview.setTypeface(robotoBoldItalic);
             }else if(((String) tag).equalsIgnoreCase(ROBOTO_EXTRA_BOLD)){
@@ -123,32 +124,27 @@ public class KaFontUtils {
         switch (tag) {
             case ROBOTO_LIGHT:
                 if (robotoLight == null) {
-                    robotoLight = ResourcesCompat.getFont(context,R.font.latolight);
+                    robotoLight = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoLight;
             case ROBOTO_LIGHT_ITALICS:
                 if (robotoLightItalic == null) {
-                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latolightitalic);
+                    robotoLightItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoLightItalic;
-            case ROBOTO_REGULAR:
-                if (robotoRegular == null) {
-                    robotoRegular = ResourcesCompat.getFont(context,R.font.latoregular);
-                }
-                return robotoRegular;
             case ROBOTO_REGULAR_ITALICS:
                 if (robotoRegularItalic == null) {
-                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoitalic);
+                    robotoRegularItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoRegularItalic;
             case ROBOTO_MEDIUM:
                 if (robotoMedium == null) {
-                    robotoMedium = ResourcesCompat.getFont(context,R.font.latomedium);
+                    robotoMedium = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoMedium;
             case ROBOTO_MEDIUM_ITALICS:
                 if (robotoMediumItalic == null) {
-                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latomediumitalic);
+                    robotoMediumItalic = ResourcesCompat.getFont(context,R.font.latoregular);
                 }
                 return robotoMediumItalic;
             case ROBOTO_BOLD:
@@ -158,7 +154,7 @@ public class KaFontUtils {
                 return robotoBold;
             case ROBOTO_BOLD_ITALICS:
                 if (robotoBoldItalic == null) {
-                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobolditalic);
+                    robotoBoldItalic = ResourcesCompat.getFont(context,R.font.latobold);
                 }
                 return robotoBoldItalic;
             case ROBOTO_EXTRA_BOLD:

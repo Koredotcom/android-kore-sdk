@@ -135,7 +135,7 @@ public class ListWidgetView extends LinearLayout {
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         msg.append(utterance);
@@ -161,7 +161,7 @@ public class ListWidgetView extends LinearLayout {
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
 //        if(appendUtterance && trigger!= null)

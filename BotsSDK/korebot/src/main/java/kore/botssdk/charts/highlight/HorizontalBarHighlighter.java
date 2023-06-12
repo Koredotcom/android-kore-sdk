@@ -1,18 +1,16 @@
 package kore.botssdk.charts.highlight;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.data.BarData;
 import kore.botssdk.charts.data.DataSet;
 import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.highlight.BarHighlighter;
-import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.BarDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.utils.MPPointD;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 public class HorizontalBarHighlighter extends BarHighlighter {
     public HorizontalBarHighlighter(BarDataProvider chart) {

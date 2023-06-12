@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.charts.charts.PieChart;
 import kore.botssdk.charts.components.Description;
 import kore.botssdk.charts.components.Legend;
@@ -21,6 +20,7 @@ import kore.botssdk.charts.data.PieEntry;
 import kore.botssdk.charts.formatter.PercentFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.listener.OnChartValueSelectedListener;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -30,7 +30,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class PieChartView extends ViewGroup {
     private PieChart mChart;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
     private float holeRadius;
     private float transparentCircleRadius;
@@ -46,7 +46,7 @@ public class PieChartView extends ViewGroup {
     }
 
     private void init(){
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mChart = new PieChart(mContext);
         addView(mChart);
         setBackgroundColor(mContext.getResources().getColor(R.color.bgLightBlue));

@@ -26,11 +26,13 @@ import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
 import com.github.zagum.speechrecognitionview.animators.BarParamsAnimator;
 import com.github.zagum.speechrecognitionview.animators.IdleAnimator;
 import com.github.zagum.speechrecognitionview.animators.RmsAnimator;
 import com.github.zagum.speechrecognitionview.animators.RotatingAnimator;
 import com.github.zagum.speechrecognitionview.animators.TransformAnimator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -438,7 +440,7 @@ public class RecognitionProgressView extends View implements RecognitionListener
     }*/
   }
   private String getPartialResultsAsString() {
-    final StringBuilder out = new StringBuilder("");
+    final StringBuilder out = new StringBuilder();
 
     for (final String partial : mPartialData) {
       out.append(partial).append(" ");

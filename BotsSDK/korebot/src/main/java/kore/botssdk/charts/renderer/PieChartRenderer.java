@@ -12,6 +12,10 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import java.lang.ref.WeakReference;
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.charts.PieChart;
 import kore.botssdk.charts.data.Entry;
@@ -21,31 +25,26 @@ import kore.botssdk.charts.data.PieEntry;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.datasets.IPieDataSet;
-import kore.botssdk.charts.renderer.DataRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.List;
 
 public class PieChartRenderer extends DataRenderer {
     protected PieChart mChart;
     protected Paint mHolePaint;
     protected Paint mTransparentCirclePaint;
     protected Paint mValueLinePaint;
-    private TextPaint mCenterTextPaint;
-    private Paint mEntryLabelsPaint;
+    private final TextPaint mCenterTextPaint;
+    private final Paint mEntryLabelsPaint;
     private StaticLayout mCenterTextLayout;
     private CharSequence mCenterTextLastValue;
-    private RectF mCenterTextLastBounds = new RectF();
-    private RectF[] mRectBuffer = new RectF[]{new RectF(), new RectF(), new RectF()};
+    private final RectF mCenterTextLastBounds = new RectF();
+    private final RectF[] mRectBuffer = new RectF[]{new RectF(), new RectF(), new RectF()};
     protected WeakReference<Bitmap> mDrawBitmap;
     protected Canvas mBitmapCanvas;
-    private Path mPathBuffer = new Path();
-    private RectF mInnerRectBuffer = new RectF();
-    private Path mHoleCirclePath = new Path();
+    private final Path mPathBuffer = new Path();
+    private final RectF mInnerRectBuffer = new RectF();
+    private final Path mHoleCirclePath = new Path();
     protected Path mDrawCenterTextPathBuffer = new Path();
     protected RectF mDrawHighlightedRectF = new RectF();
 

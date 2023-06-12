@@ -26,7 +26,6 @@ import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 
 public class AnnouncementAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {

@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.UniversalSearchViewAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -31,6 +30,7 @@ import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraUniversalSearchModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -63,7 +63,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
         recycler_view = view.findViewById(R.id.recycler_view);
         root_layout = findViewById(R.id.root_layout);
         view_more = findViewById(R.id.view_more);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutManager = new LinearLayoutManager(this.getContext());
         recycler_view.setLayoutManager(layoutManager);
         adapter = new UniversalSearchViewAdapter(this);

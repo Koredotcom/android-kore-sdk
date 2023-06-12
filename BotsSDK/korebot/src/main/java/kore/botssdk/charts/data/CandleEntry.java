@@ -3,8 +3,6 @@ package kore.botssdk.charts.data;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 
-import kore.botssdk.charts.data.Entry;
-
 @SuppressLint({"ParcelCreator"})
 public class CandleEntry extends Entry {
     private float mShadowHigh = 0.0F;

@@ -5,8 +5,6 @@ import android.text.Html;
 
 import org.xml.sax.XMLReader;
 
-import kore.botssdk.utils.markdown.MarkdownConstant;
-
 /**
  * Created by AmitYadav on 1/12/2017.
  */

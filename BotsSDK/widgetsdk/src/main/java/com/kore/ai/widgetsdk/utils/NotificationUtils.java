@@ -42,7 +42,7 @@ public class NotificationUtils {
 
 
 
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);;
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     static {
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -52,7 +52,7 @@ public class NotificationUtils {
         return announcementList;
     }
 
-    private static ArrayList<String> announcementList = new ArrayList<>();
+    private static final ArrayList<String> announcementList = new ArrayList<>();
     private static boolean isFromProfile = false;
 
     public static void addAnnouncementToList(String announcementId){

@@ -79,7 +79,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         BUBBLE_LEFT_PROFILE_PIC = cpvSenderImage.getMeasuredWidth();
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? (int) (10 * dp1) : 0;
-        BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? 0 : 0;
+        BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = 0;
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) dp1;
         } else {

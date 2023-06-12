@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,13 +19,10 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.DefaultWidgetAdapter;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
@@ -35,16 +34,14 @@ import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.WidgetsWidgetModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
-import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
@@ -60,7 +57,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 public class DefaultWidgetView extends ViewGroup implements VerticalListViewActionHelper {
     private float dp1;
@@ -96,7 +92,7 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
     }
 
     private WidgetsModel mWidget;
-    private String name;
+    private final String name;
     private String trigger;
     WidgetViewMoreEnum widgetViewMoreEnum;
     Context context;
@@ -151,7 +147,7 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
         });
         meeting_header = view.findViewById(R.id.meeting_header);
         meeting_progress = view.findViewById(R.id.meeting_progress);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         defaultWidgetAdapter = new DefaultWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, trigger);
         defaultWidgetAdapter.setSkillName(name);
 //        defaultWidgetAdapter.setTrigger(trigger);

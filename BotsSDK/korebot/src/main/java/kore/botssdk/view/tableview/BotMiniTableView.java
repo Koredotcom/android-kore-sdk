@@ -1,5 +1,7 @@
 package kore.botssdk.view.tableview;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,9 +24,6 @@ import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single

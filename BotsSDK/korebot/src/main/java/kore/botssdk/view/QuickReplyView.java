@@ -1,21 +1,19 @@
 package kore.botssdk.view;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.QuickRepliesAdapter;
-import kore.botssdk.application.AppControl;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
@@ -101,9 +99,7 @@ public class QuickReplyView extends ViewGroup {
     }
 
     public boolean getRecyclerVisibility(){
-        if(recyclerView != null && recyclerView.getAdapter() != null)
-            return false;
-        return true;
+        return recyclerView == null || recyclerView.getAdapter() == null;
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

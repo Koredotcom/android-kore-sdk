@@ -1,10 +1,8 @@
 package kore.botssdk.view.viewUtils;
 
-import android.content.res.Resources;
-
-import kore.botssdk.application.AppControl;
-
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
+import android.content.res.Resources;
 
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
@@ -42,7 +40,7 @@ public class BubbleViewUtil {
      */
     public static int getBubbleContentHeight() {
         //This is bad... would be rectified based on the % of space available
-        int dp81 = (int) (81 * AppControl.getInstance().getDimensionUtil().dp1);
+        int dp81 = (int) (81 * dp1);
         return dp81;
     }
 

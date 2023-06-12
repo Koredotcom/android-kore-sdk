@@ -5,15 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.databinding.EmailLookupViewBinding;
-import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotCaourselButtonModel;
@@ -25,7 +24,7 @@ import kore.botssdk.models.EmailModel;
 
 public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
 
-    private Context context;
+    private final Context context;
     private ArrayList<EmailModel> emailModels;
     private boolean isExpanded;
     private VerticalListViewActionHelper verticalListViewActionHelper;

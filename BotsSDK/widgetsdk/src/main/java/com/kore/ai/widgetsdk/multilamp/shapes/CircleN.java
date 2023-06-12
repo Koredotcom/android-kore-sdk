@@ -19,7 +19,7 @@ import com.kore.ai.widgetsdk.multilamp.model.Target;
 public class CircleN implements Shape {
 
 
-    private float radius;
+    private final float radius;
 
     public CircleN(float radius) {
 

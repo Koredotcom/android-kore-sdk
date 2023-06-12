@@ -3,7 +3,6 @@ package kore.botssdk.charts.charts;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import kore.botssdk.charts.charts.BarLineChartBase;
 import kore.botssdk.charts.data.CandleData;
 import kore.botssdk.charts.interfaces.dataprovider.CandleDataProvider;
 import kore.botssdk.charts.renderer.CandleStickChartRenderer;

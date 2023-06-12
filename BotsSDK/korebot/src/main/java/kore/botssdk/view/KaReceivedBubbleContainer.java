@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -41,7 +41,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
         receivedBubbleLayout = (KaReceivedBubbleLayout) findViewById(R.id.receivedBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
         headerLayout.setVisibility(VISIBLE);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
     }
 
 

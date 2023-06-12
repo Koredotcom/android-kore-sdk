@@ -3,22 +3,21 @@ package kore.botssdk.charts.renderer;
 import android.graphics.Canvas;
 import android.graphics.Path;
 
+import java.util.List;
+
 import kore.botssdk.charts.charts.RadarChart;
 import kore.botssdk.charts.components.LimitLine;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.RadarData;
 import kore.botssdk.charts.interfaces.datasets.IRadarDataSet;
-import kore.botssdk.charts.renderer.YAxisRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
-import java.util.List;
-
 public class YAxisRendererRadarChart extends YAxisRenderer {
-    private RadarChart mChart;
-    private Path mRenderLimitLinesPathBuffer = new Path();
+    private final RadarChart mChart;
+    private final Path mRenderLimitLinesPathBuffer = new Path();
 
     public YAxisRendererRadarChart(ViewPortHandler viewPortHandler, YAxis yAxis, RadarChart chart) {
         super(viewPortHandler, yAxis, (Transformer)null);

@@ -12,12 +12,13 @@ import retrofit2.Callback;
 public class GetContactsRequest {
 
     protected String userId;
-    private String resourceId;
-    private int limit,offSet;
-    private String query;
-    private boolean isEntities;
-    private String accessToken;
-    private Callback<KaRestResponse.ContactList> callback;
+    private final String resourceId;
+    private final int limit;
+    private final int offSet;
+    private final String query;
+    private final boolean isEntities;
+    private final String accessToken;
+    private final Callback<KaRestResponse.ContactList> callback;
 
     public Call<KaRestResponse.ContactList> getContactsReq() {
         return contactsReq;

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class MPPointF extends ObjectPool.Poolable {
-    private static ObjectPool<kore.botssdk.charts.utils.MPPointF> pool = ObjectPool.create(32, new MPPointF(0.0F, 0.0F));
+    private static final ObjectPool<kore.botssdk.charts.utils.MPPointF> pool = ObjectPool.create(32, new MPPointF(0.0F, 0.0F));
     public float x;
     public float y;
     public static final Parcelable.Creator<MPPointF> CREATOR;

@@ -12,9 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;

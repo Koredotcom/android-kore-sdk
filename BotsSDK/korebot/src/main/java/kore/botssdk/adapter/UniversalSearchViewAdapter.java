@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,12 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.w3c.dom.Text;
 
-import java.io.File;
-import java.io.PipedReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.RecyclerViewDataAccessor;

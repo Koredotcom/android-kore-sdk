@@ -1,12 +1,13 @@
 package kore.botssdk.adapter;
 
 import android.app.Activity;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.cardview.widget.CardView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.cardview.widget.CardView;
+import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 
@@ -24,10 +25,10 @@ import kore.botssdk.view.viewUtils.CarouselItemViewHelper;
 public class BotCarouselAdapter extends PagerAdapter {
 
     private ArrayList<? extends BotCarouselModel> botCarouselModels = new ArrayList<>();
-    private Activity activityContext;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private LayoutInflater ownLayoutInflater;
+    private final Activity activityContext;
+    private final ComposeFooterInterface composeFooterInterface;
+    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final LayoutInflater ownLayoutInflater;
     private float pageWidth = 0.8f;
     private String type;
 

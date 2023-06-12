@@ -7,7 +7,7 @@ import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class MoveViewJob extends ViewPortJob {
-    private static ObjectPool<MoveViewJob> pool = ObjectPool.create(2, new MoveViewJob((ViewPortHandler)null, 0.0F, 0.0F, (Transformer)null, (View)null));
+    private static final ObjectPool<MoveViewJob> pool = ObjectPool.create(2, new MoveViewJob((ViewPortHandler)null, 0.0F, 0.0F, (Transformer)null, (View)null));
 
     public static MoveViewJob getInstance(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v) {
         MoveViewJob result = (MoveViewJob)pool.get();

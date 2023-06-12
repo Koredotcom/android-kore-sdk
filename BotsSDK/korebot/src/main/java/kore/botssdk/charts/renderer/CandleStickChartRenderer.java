@@ -4,6 +4,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.data.CandleData;
 import kore.botssdk.charts.data.CandleEntry;
@@ -11,23 +14,19 @@ import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.CandleDataProvider;
 import kore.botssdk.charts.interfaces.datasets.ICandleDataSet;
-import kore.botssdk.charts.renderer.LineScatterCandleRadarRenderer;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
-import java.util.Iterator;
-import java.util.List;
-
 public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
     protected CandleDataProvider mChart;
-    private float[] mShadowBuffers = new float[8];
-    private float[] mBodyBuffers = new float[4];
-    private float[] mRangeBuffers = new float[4];
-    private float[] mOpenBuffers = new float[4];
-    private float[] mCloseBuffers = new float[4];
+    private final float[] mShadowBuffers = new float[8];
+    private final float[] mBodyBuffers = new float[4];
+    private final float[] mRangeBuffers = new float[4];
+    private final float[] mOpenBuffers = new float[4];
+    private final float[] mCloseBuffers = new float[4];
 
     public CandleStickChartRenderer(CandleDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

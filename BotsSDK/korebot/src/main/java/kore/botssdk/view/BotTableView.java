@@ -1,12 +1,11 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -19,7 +18,6 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.ListClickListner;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.TableView;
@@ -29,8 +27,6 @@ import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single

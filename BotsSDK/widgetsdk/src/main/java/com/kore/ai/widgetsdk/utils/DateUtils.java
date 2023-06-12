@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -244,10 +243,7 @@ public class DateUtils {
         } else {
             Date current = new Date();
             Date other = new Date(when);
-            if (other.before(current))
-                return true;
-            else
-                return false;
+            return other.before(current);
         }
     }
 

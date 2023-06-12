@@ -1,33 +1,27 @@
 package kore.botssdk.utils;
 
+import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_IMAGE;
+import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_VIDEO;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import kore.botssdk.models.KoreMedia;
-
-import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_IMAGE;
-import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_VIDEO;
 
 
 /**

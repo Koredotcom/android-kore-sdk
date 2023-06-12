@@ -6,17 +6,16 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
 
+import java.util.List;
+
 import kore.botssdk.charts.components.LimitLine;
 import kore.botssdk.charts.components.XAxis;
-import kore.botssdk.charts.renderer.AxisRenderer;
 import kore.botssdk.charts.utils.FSize;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.List;
 
 public class XAxisRenderer extends AxisRenderer {
     protected XAxis mXAxis;
@@ -26,7 +25,7 @@ public class XAxisRenderer extends AxisRenderer {
     protected float[] mRenderLimitLinesBuffer = new float[2];
     protected RectF mLimitLineClippingRect = new RectF();
     float[] mLimitLineSegmentsBuffer = new float[4];
-    private Path mLimitLinePath = new Path();
+    private final Path mLimitLinePath = new Path();
 
     public XAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
         super(viewPortHandler, trans, xAxis);

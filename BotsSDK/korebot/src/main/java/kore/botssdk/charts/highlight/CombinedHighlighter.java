@@ -1,19 +1,15 @@
 package kore.botssdk.charts.highlight;
 
+import java.util.Iterator;
+import java.util.List;
+
 import kore.botssdk.charts.data.BarData;
 import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
 import kore.botssdk.charts.data.ChartData;
 import kore.botssdk.charts.data.DataSet;
-import kore.botssdk.charts.highlight.BarHighlighter;
-import kore.botssdk.charts.highlight.ChartHighlighter;
-import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.highlight.IHighlighter;
 import kore.botssdk.charts.interfaces.dataprovider.BarDataProvider;
 import kore.botssdk.charts.interfaces.dataprovider.CombinedDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
-
-import java.util.Iterator;
-import java.util.List;
 
 public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> implements IHighlighter {
     protected kore.botssdk.charts.highlight.BarHighlighter barHighlighter;

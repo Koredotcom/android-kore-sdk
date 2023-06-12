@@ -1,8 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.utils.Utils;
-
 import java.io.Serializable;
 
 public class UserNameModel implements Serializable {

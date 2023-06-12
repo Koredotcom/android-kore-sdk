@@ -1,7 +1,5 @@
 package kore.botssdk.models;
 
-import java.util.ArrayList;
-
 public class BrandingWidgetThemeModel
 {
     private BrandingResponseModel brandingwidgetdesktop;

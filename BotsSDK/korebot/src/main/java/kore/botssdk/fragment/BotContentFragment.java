@@ -108,7 +108,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private boolean fetching = false;
     private boolean hasMore = true;
     private TextView headerView, tvTheme1, tvTheme2;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private SwipeRefreshLayout swipeRefreshLayout;
     private LinearLayoutManager mLayoutManager;
     private int offset = 0;
@@ -482,7 +482,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
 
-    private int limit = 10;
+    private final int limit = 10;
 
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
         botsChatAdapter.addBaseBotMessages(list);

@@ -14,18 +14,19 @@ import android.os.Looper;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.AttributeSet;
-import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import kore.korebotsdklib.R;
 
 
-public class DotsTextView extends TextView {
+public class DotsTextView extends AppCompatTextView {
 
     private JumpingSpan dotOne;
     private JumpingSpan dotTwo;
     private JumpingSpan dotThree;
 
-    private int showSpeed = 700;
+    private final int showSpeed = 700;
 
     private int jumpHeight;
     private boolean autoPlay;
@@ -41,7 +42,7 @@ public class DotsTextView extends TextView {
 
 
     private Handler handler;
-    private AnimatorSet mAnimatorSet = new AnimatorSet();
+    private final AnimatorSet mAnimatorSet = new AnimatorSet();
     private float textWidth;
 
 

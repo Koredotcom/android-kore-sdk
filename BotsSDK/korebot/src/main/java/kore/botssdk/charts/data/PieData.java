@@ -8,7 +8,7 @@ public class PieData extends ChartData<IPieDataSet> {
     }
 
     public PieData(IPieDataSet dataSet) {
-        super(new IPieDataSet[]{dataSet});
+        super(dataSet);
     }
 
     public void setDataSet(IPieDataSet dataSet) {

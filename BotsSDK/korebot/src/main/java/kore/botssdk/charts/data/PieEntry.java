@@ -3,8 +3,6 @@ package kore.botssdk.charts.data;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
-import kore.botssdk.charts.data.Entry;
-
 public class PieEntry extends Entry {
     private String label;
 

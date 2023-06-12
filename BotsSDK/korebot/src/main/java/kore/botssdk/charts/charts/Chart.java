@@ -21,6 +21,12 @@ import android.view.ViewParent;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.animation.Easing;
 import kore.botssdk.charts.components.Description;
@@ -44,12 +50,6 @@ import kore.botssdk.charts.renderer.LegendRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Entry>>> extends ViewGroup implements ChartInterface {
     public static final String LOG_TAG = "MPAndroidChart";
@@ -306,7 +306,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             this.mIndicesToHighlight = null;
         } else {
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "Highlighted: " + high.toString());
+                Log.i("MPAndroidChart", "Highlighted: " + high);
             }
 
             e = this.mData.getEntryForHighlight(high);

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.ContactInfoViewBinding;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.ProfileColorUpdateEvent;
@@ -38,6 +37,7 @@ import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -103,7 +103,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
 
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         splashColor = getContext().getResources().getColor(R.color.splash_color);
         contactInfoViewBinding.setViewBase(this);
 
@@ -230,7 +230,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
                 list.add(cvlmA);
             }
             if(!StringUtils.isNullOrEmpty(contactInfoModel.getSource())) {
-                if (contactInfoModel.getSource().toLowerCase().equals("device"))
+                if (contactInfoModel.getSource().equalsIgnoreCase("device"))
                     sourceIcon.setText(getResources().getText(R.string.icon_e94f));
                 else
                     sourceIcon.setText(getResources().getText(R.string.icon_e94e));
@@ -283,7 +283,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
     public String getSourceIcon(ContactInfoModel model){
         if(model!=null) {
-            if (model.getSource() != null && model.getSource().toLowerCase().equals("device")) {
+            if (model.getSource() != null && model.getSource().equalsIgnoreCase("device")) {
                 return String.valueOf(getResources().getText(R.string.icon_e94f));
             } else {
                 return String.valueOf(getResources().getText(R.string.icon_e94e));

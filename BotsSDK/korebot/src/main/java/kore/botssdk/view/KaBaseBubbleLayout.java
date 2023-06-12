@@ -1,5 +1,7 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -32,8 +34,6 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.DimensionUtil;
-
-import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
 
 /**

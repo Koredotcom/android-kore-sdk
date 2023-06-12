@@ -5,9 +5,9 @@ import java.text.DecimalFormat;
 import kore.botssdk.charts.data.BarEntry;
 
 public class StackedValueFormatter extends ValueFormatter {
-    private boolean mDrawWholeStack;
-    private String mSuffix;
-    private DecimalFormat mFormat;
+    private final boolean mDrawWholeStack;
+    private final String mSuffix;
+    private final DecimalFormat mFormat;
 
     public StackedValueFormatter(boolean drawWholeStack, String suffix, int decimals) {
         this.mDrawWholeStack = drawWholeStack;
@@ -22,7 +22,7 @@ public class StackedValueFormatter extends ValueFormatter {
             b.append("0");
         }
 
-        this.mFormat = new DecimalFormat("###,###,###,##0" + b.toString());
+        this.mFormat = new DecimalFormat("###,###,###,##0" + b);
     }
 
     public String getBarStackedLabel(float value, BarEntry entry) {

@@ -1,13 +1,11 @@
 package kore.botssdk.charts.utils;
 
-import kore.botssdk.charts.utils.ObjectPool;
-
 import java.util.List;
 
 public final class FSize extends ObjectPool.Poolable {
     public float width;
     public float height;
-    private static ObjectPool<FSize> pool = ObjectPool.create(256, new FSize(0.0F, 0.0F));
+    private static final ObjectPool<FSize> pool = ObjectPool.create(256, new FSize(0.0F, 0.0F));
 
     protected ObjectPool.Poolable instantiate() {
         return new FSize(0.0F, 0.0F);

@@ -139,7 +139,7 @@ public class ViewProvider {
     public static void drawRoundRect(Canvas canvas, RectF rect, Paint paint,
                                     int leftTop, int rightTop, int leftBottom,
                                      int rightBottom) {
-        float roundRadius[] = new float[8];
+        float[] roundRadius = new float[8];
         roundRadius[0] = leftTop;
         roundRadius[1] = leftTop;
         roundRadius[2] = rightTop;

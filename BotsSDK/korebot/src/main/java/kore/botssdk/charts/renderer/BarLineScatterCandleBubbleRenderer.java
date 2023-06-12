@@ -6,7 +6,6 @@ import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.interfaces.dataprovider.BarLineScatterCandleBubbleDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
-import kore.botssdk.charts.renderer.DataRenderer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {

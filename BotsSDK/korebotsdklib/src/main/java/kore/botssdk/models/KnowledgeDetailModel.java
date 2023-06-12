@@ -1,13 +1,8 @@
 package kore.botssdk.models;
 
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -15,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.databinding.BindingAdapter;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 

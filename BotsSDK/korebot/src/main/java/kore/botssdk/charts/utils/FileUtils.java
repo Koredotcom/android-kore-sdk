@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +63,7 @@ public class FileUtils {
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(am.open(path), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(am.open(path), StandardCharsets.UTF_8));
 
             for(String line = reader.readLine(); line != null; line = reader.readLine()) {
                 String[] split = line.split("#");
@@ -127,7 +128,7 @@ public class FileUtils {
         BufferedReader reader = null;
 
         try {
-            reader = new BufferedReader(new InputStreamReader(am.open(path), "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(am.open(path), StandardCharsets.UTF_8));
 
             for(String line = reader.readLine(); line != null; line = reader.readLine()) {
                 String[] split = line.split("#");

@@ -250,13 +250,13 @@ public class LineDataSet extends LineRadarDataSet<kore.botssdk.charts.data.Entry
         return this.mFillFormatter;
     }
 
-    public static enum Mode {
+    public enum Mode {
         LINEAR,
         STEPPED,
         CUBIC_BEZIER,
         HORIZONTAL_BEZIER;
 
-        private Mode() {
+        Mode() {
         }
     }
 }

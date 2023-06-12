@@ -1,5 +1,9 @@
 package kore.botssdk.activity;
 
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -49,21 +53,15 @@ import java.util.Date;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.exceptions.InvalidMediaIDException;
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KoreContact;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
-
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 
 /**
@@ -93,18 +91,18 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private String imagePickType = null;
     private String fileContext = null;
     private static boolean NORMAL_PORTRAIT;
-    private int compressQualityInt = 100;
+    private final int compressQualityInt = 100;
     private OrientationEventListener mOrientationEventListener;
 //    private UserData userData;
-    private int cropXInt = 128;
-    private int cropYInt = 128;
+    private final int cropXInt = 128;
+    private final int cropYInt = 128;
     private String MEDIA_TYPE = MEDIA_TYPE_IMAGE;
     private String MEDIA_FILENAME;
     private String MEDIA_FILE_PATH;
     private String MEDIA_FILE_TOKEN;
     private String MEDIA_EXTENSION;
     private String thumbnailFilePath;
-    private String Cookie = "";
+    private final String Cookie = "";
     private Intent resultIntent = null;
     private Uri outputUri;
     LinearLayout enableCaptureImageContainer;
@@ -275,7 +273,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 startActivityForResult(videoPickerIntent, CHOOSE_VIDEO);
             } else if(imagePickType.equals(CHOOSE_TYPE_FILE)) {
                 Intent videoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                String mime[] = {"text/plain",
+                String[] mime = {"text/plain",
                         "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 "application/vnd.ms-excel", "application/vnd.ms-excel.sheet.binary.macroenabled.12","application/rtf",
                 "application/vnd.ms-excel.sheet.macroenabled.12","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -395,7 +393,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                         MEDIA_FILE_PATH = file.getAbsolutePath();
                         Log.d(LOG_TAG, "onActivityResult() :: file absolute path::" + MEDIA_FILE_PATH);
 
-                        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+                        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
                         MEDIA_FILENAME = MEDIA_FILENAME.substring(0, MEDIA_FILENAME.lastIndexOf("."));
                         MEDIA_EXTENSION = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf(".") + 1);
                         //display the returned video
@@ -432,7 +430,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                     String realFileName = "";
                     if (realPath != null) {
                         try {
-                            realFileName = realPath.substring(realPath.lastIndexOf("/") + 1, realPath.length());
+                            realFileName = realPath.substring(realPath.lastIndexOf("/") + 1);
                         } catch (Exception e) {
                             Toast.makeText(KaCaptureImageActivity.this, "Could not attach a file there was a problem", Toast.LENGTH_SHORT).show();
                             finishAndCancelOperation();
@@ -452,7 +450,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                         if (!fileExtn.equals(BitmapUtils.EXT_VIDEO))
                             KaMediaUtils.saveFileToKorePath(realPath, MEDIA_FILE_PATH);
 
-                        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+                        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
                         finishOperation(selectedFile, fileExtn, resultCode);
 
                     } else {
@@ -490,7 +488,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         String filepath = "";//default fileName
         //Uri filePathUri = uri;
         File file;
-        if (uri.getScheme().toString().compareTo("content") == 0)
+        if (uri.getScheme().compareTo("content") == 0)
         {
             Cursor cursor = context.getContentResolver().query(uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.ORIENTATION }, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -635,7 +633,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             super.onPostExecute(s);
             dismissProgress();
             if(MEDIA_FILE_PATH != null) {
-                MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+                MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
             }
             finishOperation(null,fileExtn,resultCode);
         }
@@ -655,7 +653,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     }
 
     class FetchImageDataAndCrop extends AsyncTask<Void, Void, String>{
-        private Uri selectedImage;
+        private final Uri selectedImage;
 
         public FetchImageDataAndCrop(Uri selectedImage){
             this.selectedImage = selectedImage;
@@ -725,7 +723,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             MEDIA_FILE_PATH = file.getAbsolutePath();
             Log.d(LOG_TAG, " file absolute path::" + MEDIA_FILE_PATH);
 
-            MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+            MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
             MEDIA_FILENAME = MEDIA_FILENAME.substring(0, MEDIA_FILENAME.lastIndexOf("."));
             MEDIA_EXTENSION = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf(".") + 1);
 
@@ -795,7 +793,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             catch (Exception e){}
         }
 
-        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+        MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
         MEDIA_FILENAME = MEDIA_FILENAME.substring(0, MEDIA_FILENAME.lastIndexOf("."));
         MEDIA_EXTENSION = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf(".") + 1);
         /**
@@ -845,7 +843,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 // Make sure the Pictures directory exists.
                 path.mkdirs();
                 File destinationFilePath = new File(path, userImageFileName);
-                croppedImageFilePath = "file://"+destinationFilePath.toString(); //Prefix of file:// is required to make sure FileNotFound is not thrown by Android OS.
+                croppedImageFilePath = "file://"+ destinationFilePath; //Prefix of file:// is required to make sure FileNotFound is not thrown by Android OS.
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1168,9 +1166,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
      * @return Whether the Uri authority is Google Photos.
      */
     private boolean isGooglePhotosUri(Uri uri) {
-        if(uri.getAuthority()!=null)
-            return true;
-        return false;
+        return uri.getAuthority() != null;
     }
 
     /**

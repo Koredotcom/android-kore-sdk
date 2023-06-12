@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -22,17 +21,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
-import kore.botssdk.adapter.ListViewMoreAdapter;
 import kore.botssdk.adapter.ListWidgetAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
 
@@ -49,7 +46,7 @@ public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
-    private boolean showHeader = true;
+    private final boolean showHeader = true;
     private int count;
     private RecyclerView rvViewMore;
     private TextView tvOptionsTitle;
@@ -78,7 +75,7 @@ public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
 
 
         if(model != null)

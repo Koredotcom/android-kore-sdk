@@ -3,6 +3,8 @@ package kore.botssdk.charts.interfaces.datasets;
 import android.graphics.DashPathEffect;
 import android.graphics.Typeface;
 
+import java.util.List;
+
 import kore.botssdk.charts.components.Legend;
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.data.DataSet;
@@ -10,8 +12,6 @@ import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.model.GradientColor;
 import kore.botssdk.charts.utils.MPPointF;
-
-import java.util.List;
 
 public interface IDataSet<T extends Entry> {
     float getYMin();

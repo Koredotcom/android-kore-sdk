@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 
 public class KaFileLookupModel {
-    private static DecimalFormat df2 = new DecimalFormat("###.##");
+    private static final DecimalFormat df2 = new DecimalFormat("###.##");
     private String fileName;
     private String fileId;
     private String sharedBy;

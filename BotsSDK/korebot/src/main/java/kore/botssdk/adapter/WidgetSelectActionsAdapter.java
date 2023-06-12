@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -44,13 +46,10 @@ import kore.botssdk.models.Widget.Action;
 import kore.botssdk.models.Widget.Element;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.models.WidgetListModel;
-import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
-
-import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
@@ -62,8 +61,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
 
     private String skillName;
-    private String trigger;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
+    private final String trigger;
+    private final VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
@@ -253,12 +252,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     public void onClick(View view) {
                         (widgetDialogActivity).dismiss();
 
-                        if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                            buttonAction(act.getUtterance(), true);
-                        } else {
-                            buttonAction(act.getUtterance(), false);
-                        }
+                        buttonAction(act.getUtterance(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                         /*if (Utility.checkIsSkillKora()) {
                             EntityEditEvent event = new EntityEditEvent();
                             event.setMessage("" + act.getUtterance());
@@ -295,14 +290,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 @Override
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-
-
-                        buttonClick(finalButton, true) ;
-                    } else {
-                        buttonClick(finalButton, false) ;
-                    }
+                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
                 }
             });
         }
@@ -316,14 +305,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 @Override
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-
-
-                        buttonClick(finalButton, true) ;
-                    } else {
-                        buttonClick(finalButton, false) ;
-                    }
+                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
                 }
             });
 
@@ -338,14 +321,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 @Override
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-
-
-                        buttonClick(finalButton, true) ;
-                    } else {
-                        buttonClick(finalButton, false) ;
-                    }
+                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
                 }
             });
         }
@@ -359,14 +336,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 @Override
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
-                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-
-
-                        buttonClick(finalButton, true) ;
-                    } else {
-                        buttonClick(finalButton, false) ;
-                    }
+                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
                 }
             });
         }
@@ -425,7 +396,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
 
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if (appendUtterance && trigger != null)

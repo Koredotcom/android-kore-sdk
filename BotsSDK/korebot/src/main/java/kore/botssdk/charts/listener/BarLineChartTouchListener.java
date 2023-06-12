@@ -15,27 +15,25 @@ import kore.botssdk.charts.data.Entry;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
-import kore.botssdk.charts.listener.ChartTouchListener;
-import kore.botssdk.charts.listener.OnChartGestureListener;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<? extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {
     private Matrix mMatrix = new Matrix();
-    private Matrix mSavedMatrix = new Matrix();
-    private MPPointF mTouchStartPoint = MPPointF.getInstance(0.0F, 0.0F);
-    private MPPointF mTouchPointCenter = MPPointF.getInstance(0.0F, 0.0F);
+    private final Matrix mSavedMatrix = new Matrix();
+    private final MPPointF mTouchStartPoint = MPPointF.getInstance(0.0F, 0.0F);
+    private final MPPointF mTouchPointCenter = MPPointF.getInstance(0.0F, 0.0F);
     private float mSavedXDist = 1.0F;
     private float mSavedYDist = 1.0F;
     private float mSavedDist = 1.0F;
     private IDataSet mClosestDataSetToTouch;
     private VelocityTracker mVelocityTracker;
     private long mDecelerationLastTime = 0L;
-    private MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0.0F, 0.0F);
-    private MPPointF mDecelerationVelocity = MPPointF.getInstance(0.0F, 0.0F);
+    private final MPPointF mDecelerationCurrentPoint = MPPointF.getInstance(0.0F, 0.0F);
+    private final MPPointF mDecelerationVelocity = MPPointF.getInstance(0.0F, 0.0F);
     private float mDragTriggerDist;
-    private float mMinScalePointerDistance;
+    private final float mMinScalePointerDistance;
 
     public BarLineChartTouchListener(BarLineChartBase<? extends BarLineScatterCandleBubbleData<? extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>> chart, Matrix touchMatrix, float dragTriggerDistance) {
         super(chart);

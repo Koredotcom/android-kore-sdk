@@ -5,13 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 
-import kore.botssdk.application.AppControl;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class TopGravityDrawable extends BitmapDrawable {
-    private int dp1;
+    private final int dp1;
     public TopGravityDrawable(Resources res, Bitmap bitmap) {
         super(res, bitmap);
-        dp1 = (int)AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
     }
 
     @Override

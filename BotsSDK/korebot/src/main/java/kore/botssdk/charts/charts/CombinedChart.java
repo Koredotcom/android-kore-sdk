@@ -140,14 +140,14 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
         }
     }
 
-    public static enum DrawOrder {
+    public enum DrawOrder {
         BAR,
         BUBBLE,
         LINE,
         CANDLE,
         SCATTER;
 
-        private DrawOrder() {
+        DrawOrder() {
         }
     }
 }

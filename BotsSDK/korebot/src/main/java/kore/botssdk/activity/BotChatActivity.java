@@ -31,6 +31,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
+import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
+import com.kore.ai.widgetsdk.models.PanelBaseModel;
+import com.kore.ai.widgetsdk.models.PanelResponseData;
+import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
@@ -109,7 +114,7 @@ import retrofit2.Response;
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, /*WidgetComposeFooterInterface,*/ ThemeChangeListener/*, PanelInterface,
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
                                         VerticalListViewActionHelper, UpdateRefreshItem*/
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
@@ -129,14 +134,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     //For Bottom Panel
-    private String packageName = "com.kore.koreapp";
-    private String appName = "Kore";
+    private final String packageName = "com.kore.koreapp";
+    private final String appName = "Kore";
     //Fragment Approch
     private FrameLayout composerView;
-//    private CustomBottomSheetBehavior mBottomSheetBehavior;
-//    private BottomPanelFragment composerFragment;
+    private CustomBottomSheetBehavior mBottomSheetBehavior;
+    private BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
     private ImageView ivChaseBackground, ivChaseLogo;
     protected int compressQualityInt = 100;
@@ -147,9 +152,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private ArrayList<BrandingNewModel> arrBrandingNewDos;
     private WebHookResponseDataModel webHookResponseDataModel;
     private BotMetaModel botMetaModel;
-    private Handler pollHandler = new Handler();
+    private final Handler pollHandler = new Handler();
     private Runnable runnable;
-    private int poll_delay = 2000;
+    private final int poll_delay = 2000;
     private String lastMsgId = "";
 
     @Override
@@ -193,7 +198,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
-//        attachFragments();
+        attachFragments();
 
         if(!SDKConfiguration.Client.isWebHook)
         {
@@ -896,61 +901,57 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
+        return netInfo != null && netInfo.isConnected();
+    }
+
+    private void attachFragments() {
+
+        if(SDKConfiguration.Client.enablePanel)
+        {
+            composerView = findViewById(R.id.chatLayoutPanelContainer);
+            composerView.setVisibility(VISIBLE);
+            composerFragment = new BottomPanelFragment();
+            composerFragment.setArguments(getIntent().getExtras());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
         }
     }
 
-//    private void attachFragments() {
-//
-//        if(SDKConfiguration.Client.enablePanel)
-//        {
-//            composerView = findViewById(R.id.chatLayoutPanelContainer);
-//            composerView.setVisibility(VISIBLE);
-//            composerFragment = new BottomPanelFragment();
-//            composerFragment.setArguments(getIntent().getExtras());
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-//            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
-//        }
-//    }
-//
-//    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
-//        PanelBaseModel model = null;
-//        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
-//            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
-//                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
-//                    model = new PanelBaseModel();
-//                    panel.setItemClicked(true);
-//                    model.setData(panel);
-//                    return model;
-//                }
-//            }
-//
-//        }
-//
-//        return model;
-//    }
+    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
+        PanelBaseModel model = null;
+        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
+            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
+                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
+                    model = new PanelBaseModel();
+                    panel.setItemClicked(true);
+                    model.setData(panel);
+                    return model;
+                }
+            }
 
-//    @Override
-//    public void onPanelSendClick(String message, boolean isFromUtterance)
-//    {
-//        BotSocketConnectionManager.getInstance().sendMessage(message, null);
-//    }
-//
-//    @Override
-//    public void onPanelSendClick(String message, String payload, boolean isFromUtterance)
-//    {
-//        if(payload != null){
-//            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-//        }else{
-//            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
-//        }
-//
-//        toggleQuickRepliesVisiblity();
-//    }
+        }
+
+        return model;
+    }
+
+    @Override
+    public void onPanelSendClick(String message, boolean isFromUtterance)
+    {
+        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+    }
+
+    @Override
+    public void onPanelSendClick(String message, String payload, boolean isFromUtterance)
+    {
+        if(payload != null){
+            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+        }else{
+            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+        }
+
+        toggleQuickRepliesVisiblity();
+    }
 
     @Override
     public void onThemeChangeClicked(String message)
@@ -984,9 +985,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
 
-        private String filePath;
-        private String fileName;
-        private String filePathThumbnail;
+        private final String filePath;
+        private final String fileName;
+        private final String filePathThumbnail;
         private String orientation;
 
         public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
@@ -1098,7 +1099,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 String componentType = reply.getString("componentType");
                 String thumbnailURL = reply.getString("thumbnailURL");
                 String orientation = reply.getString(BundleConstants.ORIENTATION);
-                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription").toString() : null;
+                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription") : null;
                 HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
                 String fileSize = reply.getString("fileSize");
                 KoreComponentModel koreMedia = new KoreComponentModel();

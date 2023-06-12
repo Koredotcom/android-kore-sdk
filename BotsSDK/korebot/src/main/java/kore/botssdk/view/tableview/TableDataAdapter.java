@@ -1,5 +1,7 @@
 package kore.botssdk.view.tableview;
 
+import static android.widget.LinearLayout.LayoutParams;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
@@ -20,8 +22,6 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
-
-import static android.widget.LinearLayout.LayoutParams;
 
 
 /**

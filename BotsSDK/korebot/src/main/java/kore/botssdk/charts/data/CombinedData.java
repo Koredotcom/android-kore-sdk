@@ -2,20 +2,12 @@ package kore.botssdk.charts.data;
 
 import android.util.Log;
 
-import kore.botssdk.charts.data.BarData;
-import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
-import kore.botssdk.charts.data.BubbleData;
-import kore.botssdk.charts.data.CandleData;
-import kore.botssdk.charts.data.ChartData;
-import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.data.LineData;
-import kore.botssdk.charts.data.ScatterData;
-import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.interfaces.datasets.IBarLineScatterCandleBubbleDataSet;
 
 public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatterCandleBubbleDataSet<? extends Entry>> {
     private LineData mLineData;

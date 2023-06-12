@@ -24,9 +24,9 @@ import kore.botssdk.utils.Utility;
 
 public class QuickActionWidgetAdapter extends RecyclerView.Adapter<QuickActionWidgetAdapter.QuickActionViewHolder>  {
 
-    private Context context;
+    private final Context context;
     private List<Action> quickReplyTemplateList;
-    private String skillName;
+    private final String skillName;
 
 //    private VerticalListViewActionHelper verticalListViewActionHelper;
 

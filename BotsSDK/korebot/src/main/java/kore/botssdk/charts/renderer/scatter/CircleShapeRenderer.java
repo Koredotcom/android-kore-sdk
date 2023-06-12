@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 
 import kore.botssdk.charts.interfaces.datasets.IScatterDataSet;
-import kore.botssdk.charts.renderer.scatter.IShapeRenderer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 

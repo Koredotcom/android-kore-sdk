@@ -6,18 +6,17 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.RectF;
 
+import java.util.List;
+
 import kore.botssdk.charts.charts.BarChart;
 import kore.botssdk.charts.components.LimitLine;
 import kore.botssdk.charts.components.XAxis;
-import kore.botssdk.charts.renderer.XAxisRenderer;
 import kore.botssdk.charts.utils.FSize;
 import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
-
-import java.util.List;
 
 public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
     protected BarChart mChart;

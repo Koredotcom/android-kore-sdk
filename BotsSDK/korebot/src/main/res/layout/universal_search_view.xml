@@ -41,7 +41,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
-                    android:fontFamily="@font/latomedium"
                     android:gravity="center_vertical"
                     android:paddingStart="7dp"
                     android:text="See All Results"

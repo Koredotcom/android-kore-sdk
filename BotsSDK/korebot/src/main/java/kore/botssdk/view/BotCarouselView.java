@@ -12,10 +12,10 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -53,7 +53,7 @@ public class BotCarouselView extends ViewGroup {
     }
 
     private void init() {
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
         carouselViewpager = (HeightAdjustableViewPager) inflatedView.findViewById(R.id.carouselViewpager);
         carouselViewpager.setAddExtraHeight(true);

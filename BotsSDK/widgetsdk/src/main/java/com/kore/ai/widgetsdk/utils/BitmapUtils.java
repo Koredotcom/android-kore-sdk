@@ -1,20 +1,11 @@
 package com.kore.ai.widgetsdk.utils;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.service.autofill.UserData;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.models.KoreMedia;
@@ -22,9 +13,7 @@ import com.kore.ai.widgetsdk.models.KoreMedia;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Created by Shiva Krishna on 4/5/2018.

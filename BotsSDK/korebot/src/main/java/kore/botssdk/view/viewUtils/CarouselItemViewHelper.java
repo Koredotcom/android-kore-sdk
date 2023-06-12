@@ -1,13 +1,13 @@
 package kore.botssdk.view.viewUtils;
 
+import static android.view.View.GONE;
+
 import android.content.Context;
-import androidx.cardview.widget.CardView;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StrikethroughSpan;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
@@ -16,11 +16,11 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-
-import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
@@ -30,12 +30,9 @@ import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotListDefaultModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
-
-import static android.view.View.GONE;
 
 /**
  * Created by Pradeep Mahato on 19/7/17.
@@ -128,7 +125,7 @@ public class CarouselItemViewHelper {
             ssBuilder.setSpan(
                     strikethroughSpan, // Span to add
                     text.indexOf(price), // Start of the span (inclusive)
-                    text.indexOf(price) + String.valueOf(price).length(), // End of the span (exclusive)
+                    text.indexOf(price) + price.length(), // End of the span (exclusive)
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE // Do not extend the span when text add later
             );
 

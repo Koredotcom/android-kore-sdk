@@ -29,7 +29,6 @@ import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.adapter.KoraEmailRecyclerAdapter;
 import kore.botssdk.adapter.KoraFilesRecyclerAdapter;
 import kore.botssdk.adapter.TasksListAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -50,6 +49,7 @@ import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -75,7 +75,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     public VerticalListView(Context mContext) {
 
@@ -114,7 +114,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             }
         });
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 
     }
 

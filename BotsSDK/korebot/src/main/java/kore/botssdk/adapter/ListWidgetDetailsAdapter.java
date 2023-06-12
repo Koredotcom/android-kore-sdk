@@ -23,10 +23,10 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListWidgetDetailsAdapter extends BaseAdapter
 {
-    private Context context;
-    private ArrayList<ContentModel> contentModels;
-    private LayoutInflater layoutInflater;
-    private SharedPreferences sharedPreferences;
+    private final Context context;
+    private final ArrayList<ContentModel> contentModels;
+    private final LayoutInflater layoutInflater;
+    private final SharedPreferences sharedPreferences;
 
     protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {

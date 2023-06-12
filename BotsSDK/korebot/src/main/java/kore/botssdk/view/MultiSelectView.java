@@ -1,30 +1,21 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
 import kore.botssdk.adapter.MultiSelectButtonAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.MeetingSlotModel;
-import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -77,7 +68,7 @@ public class MultiSelectView extends ViewGroup {
         autoExpandListView.setVerticalScrollBarEnabled(false);
         KaFontUtils.applyCustomFont(getContext(), view);
         multiSelectLayout = view.findViewById(R.id.multi_select_layout);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
     }
 
 

@@ -14,10 +14,10 @@ public class BotDBManager {
 
     private volatile static BotDBManager botDBManager;
 
-    private static Map<String, FileUploadInfo> fileUploadInfoMap = new HashMap<>();
+    private static final Map<String, FileUploadInfo> fileUploadInfoMap = new HashMap<>();
 
 
-    private static Map<String, Map<Integer, ChunkInfo>> chunkInfoMap = new HashMap<>();
+    private static final Map<String, Map<Integer, ChunkInfo>> chunkInfoMap = new HashMap<>();
 
     private BotDBManager(){}
 

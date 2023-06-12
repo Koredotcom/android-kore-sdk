@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.TableExpandView;
@@ -23,6 +22,7 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 
 public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel> {
@@ -35,7 +35,7 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
     public BotResponsiveExpandTableView(final Context context) {
         this(context, null);
         this.context = context;
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
 //        setBackgroundColor(0xffff0000);
 
     }

@@ -3,7 +3,6 @@ package kore.botssdk.charts.charts;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import kore.botssdk.charts.charts.BarLineChartBase;
 import kore.botssdk.charts.data.ScatterData;
 import kore.botssdk.charts.interfaces.dataprovider.ScatterDataProvider;
 import kore.botssdk.charts.renderer.ScatterChartRenderer;
@@ -32,7 +31,7 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
         return (ScatterData)this.mData;
     }
 
-    public static enum ScatterShape {
+    public enum ScatterShape {
         SQUARE("SQUARE"),
         CIRCLE("CIRCLE"),
         TRIANGLE("TRIANGLE"),
@@ -43,7 +42,7 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
 
         private final String shapeIdentifier;
 
-        private ScatterShape(String shapeIdentifier) {
+        ScatterShape(String shapeIdentifier) {
             this.shapeIdentifier = shapeIdentifier;
         }
 

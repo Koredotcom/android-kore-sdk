@@ -6,14 +6,13 @@ import kore.botssdk.charts.charts.RadarChart;
 import kore.botssdk.charts.components.XAxis;
 import kore.botssdk.charts.data.RadarData;
 import kore.botssdk.charts.interfaces.datasets.IRadarDataSet;
-import kore.botssdk.charts.renderer.XAxisRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class XAxisRendererRadarChart extends XAxisRenderer {
-    private RadarChart mChart;
+    private final RadarChart mChart;
 
     public XAxisRendererRadarChart(ViewPortHandler viewPortHandler, XAxis xAxis, RadarChart chart) {
         super(viewPortHandler, xAxis, (Transformer)null);

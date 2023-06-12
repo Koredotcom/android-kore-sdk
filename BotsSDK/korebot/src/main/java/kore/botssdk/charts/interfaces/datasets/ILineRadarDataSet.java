@@ -3,7 +3,6 @@ package kore.botssdk.charts.interfaces.datasets;
 import android.graphics.drawable.Drawable;
 
 import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.interfaces.datasets.ILineScatterCandleRadarDataSet;
 
 public interface ILineRadarDataSet<T extends Entry> extends ILineScatterCandleRadarDataSet<T> {
     int getFillColor();
