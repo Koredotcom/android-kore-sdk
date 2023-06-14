@@ -23,7 +23,6 @@ public class SDKConfiguration {
     private static boolean APPLY_FONT_STYLE = true;
 
 
-
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
     }
@@ -65,7 +64,7 @@ public class SDKConfiguration {
         }
 
 
-        static  String JWT_SERVER_URL = "https://demo.kore.net";
+        static String JWT_SERVER_URL = "https://demo.kore.net";
     }
 
     //Server related configurations
@@ -79,28 +78,28 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        public static void setServerIp(String serverIp){
+        public static void setServerIp(String serverIp) {
             SERVER_IP = serverIp;
         }
 
-        public static void setServerPort(String serverPort){
+        public static void setServerPort(String serverPort) {
             SERVER_PORT = serverPort;
         }
 
-        public static void setIsPresenceSsl(boolean isPresenceSsl){
+        public static void setIsPresenceSsl(boolean isPresenceSsl) {
             IS_PRESENCE_SSL = isPresenceSsl;
         }
 
-        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai/";//https://qa-bots.kore.ai";
+        static String KORE_BOT_SERVER_URL = "https://bots.kore.ai/";//https://qa-bots.kore.ai";
         public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/stream/kore/decode";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static   String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
+        public static String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
         public static String SERVER_IP = "qa.kore.ai";
         public static String SERVER_PORT = "443";
         public static Boolean IS_PRESENCE_SSL = true;
-        public static String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
-        public static String Branding_SERVER_URL ="https://bankingassistant-qa-bots.kore.ai/";
+        public static String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
+        public static String Branding_SERVER_URL = "https://bankingassistant-qa-bots.kore.ai/";
         public static String koreAPIUrl = "https://qa1-bots.kore.ai/";
     }
 
@@ -126,11 +125,25 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "Zf/sPAMUgD4Hl/y6nUELodw6DJu9cuzaytcAyqL5gO8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        //        public static String client_id = "cs-3dd6a21c-70ef-5d52-b742-7b9dcf6a6a89";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String client_secret = "Zf/sPAMUgD4Hl/y6nUELodw6DJu9cuzaytcAyqL5gO8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
+//        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";
+//        public static String client_id = "cs-0fb7946e-900a-507d-93d7-e7be63b79e65";
+
+        // Retail Employee assist
+        public static String client_id = "cs-0fb7946e-900a-507d-93d7-e7be63b79e65";
+        public static String client_secret = "q+sUQ78uINELkQgEx44PGqMtuE2O/hWgCr/8WUPuqo0=";
         public static String identity = "anilkumar.routhu@kore.com";
-        public static String bot_name = "CanCan";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-05303785-9992-526c-a83c-be3252fd478e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+        public static String bot_name = "Retail Employee Assist";
+        public static String bot_id = "st-786711e4-ca1f-594e-ba49-23dcfb5a6667";
+
+//        public static String client_id = "cs-57153166-5b96-5f3b-b7fd-f1d4e47138e7";
+//        public static String client_secret = "1SsQ5l4LtbOSwLpO2w+a+oKs1Ef6syhd66GicheJKrg=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "Retail Employee Assist";
+//        public static String bot_id = "st-bac69742-5e17-5d8a-917f-2901b3dd2f9d";
         public static String tenant_id = "605da1dbb5f6f00badadb665";
         public static boolean enablePanel = false;
         public static boolean isWebHook = false;
@@ -150,14 +163,13 @@ public class SDKConfiguration {
         //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
     }
 
-    public static class SSLConfig
-    {
+    public static class SSLConfig {
         public static String sslCertificatePath = "kore-qa1.cer";
         public static boolean isSSLEnable = false;
     }
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected = APP_REQ_COLOR;
+        public static String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -200,15 +212,15 @@ public class SDKConfiguration {
         }
 
 
-        public static  String rightBubbleUnSelected=APP_REQ_COLOR;
-        public static  String leftBubbleSelected="#D3D3D3";
-        public static  String leftBubbleUnSelected="#f8f9f8";
-        public static  String leftBubbleTextColor="#404051";
-        public static  String rightBubbleTextColor="#161628";//"#757587";
-        public static  String whiteColor="#FFFFFF";
-        public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor=APP_REQ_COLOR;
-        public static  String leftLinkColor = APP_REQ_COLOR;
+        public static String rightBubbleUnSelected = APP_REQ_COLOR;
+        public static String leftBubbleSelected = "#D3D3D3";
+        public static String leftBubbleUnSelected = "#f8f9f8";
+        public static String leftBubbleTextColor = "#404051";
+        public static String rightBubbleTextColor = "#161628";//"#757587";
+        public static String whiteColor = "#FFFFFF";
+        public static String leftBubbleBorderColor = "#eeeef2";
+        public static String rightLinkColor = APP_REQ_COLOR;
+        public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = false;
 
@@ -245,8 +257,8 @@ public class SDKConfiguration {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#EEEEF0";
-        public static  String quickReplyTextColor = "#000000";
+        public static String quickReplyColor = "#EEEEF0";
+        public static String quickReplyTextColor = "#000000";
 
     }
 

@@ -1,15 +1,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_deails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/rounded_rect_feedback"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvborder"
+    <LinearLayout
+        android:id="@+id/layout_stock_availability"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/stock_availability"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_stock_availability"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:fontFamily="@font/latoblack"
+            tools:text="Available" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/top_rated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_top_rated"
+            android:gravity="center"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="4dp"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:fontFamily="@font/latoblack"
+            tools:text="Top Rated" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/inset_widget_divider"
         android:visibility="gone" />
 
     <LinearLayout
@@ -18,57 +56,63 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp">
+        android:paddingVertical="5dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="84dp"
+            android:layout_height="110dp"
             android:layout_gravity="top"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginStart="10dp"
+            tools:src="@tools:sample/avatars" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/view_in"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_toStartOf="@+id/view_out"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:paddingBottom="10dp">
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latobold"
-                    android:gravity="start|top"
+                    android:maxLines="1"
                     android:minHeight="26dp"
-                    android:singleLine="false"
                     android:textColor="#485260"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:text="LG top load" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latosemibold"
-                    android:gravity="center|start"
-                    android:text=""
                     android:textColor="#485260"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:textSize="14sp"
+                    tools:text="$1234.67" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:fontFamily="@font/latomedium"
+                    android:textColor="#485260"
+                    android:textSize="12sp"
+                    tools:text="SKU 123456789" />
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/view_out"
@@ -79,7 +123,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/icon_image_load"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -89,7 +133,7 @@
                     android:padding="5dp"
                     android:visibility="gone" />
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/icon_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -115,7 +159,7 @@
                     android:paddingEnd="5dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -129,7 +173,7 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -144,7 +188,7 @@
                     android:textSize="14sp"
                     android:visibility="gone" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_url"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -166,9 +210,9 @@
         android:id="@+id/alDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="@dimen/dimen_0"
         android:divider="@color/white"
-        android:visibility="gone"/>
+        android:dividerHeight="@dimen/dimen_0"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -180,7 +224,7 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_up_down"
             android:layout_width="24dp"
             android:layout_height="24dp"
@@ -204,13 +248,7 @@
             android:id="@+id/buttonsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="12dp"
             android:layout_marginBottom="10dp" />
     </net.cachapa.expandablelayout.ExpandableLayout>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/inset_widget_divider" />
 </LinearLayout>

@@ -39,7 +39,11 @@ public class BotListWidgetModel implements Serializable {
 
     public BotTableListValueModel getValue()
     {
-        return value;
+        if(value == null){
+            return new BotTableListValueModel();
+        }else{
+            return value;
+        }
     }
 
     public void setColor(String color)

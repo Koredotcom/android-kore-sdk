@@ -805,12 +805,12 @@ public class PayloadInner {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
                     }
-                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
-                        listWidgetModels = new ArrayList<>();
-                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
-                        }.getType();
-                        listWidgetModels = gson.fromJson(elementsAsString, listType);
-                    }
+//                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
+//                        listWidgetModels = new ArrayList<>();
+//                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
+//                        }.getType();
+//                        listWidgetModels = gson.fromJson(elementsAsString, listType);
+//                    }
                     else if(BotResponse.TEMPLATE_DROPDOWN.equals(template_type))
                     {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
