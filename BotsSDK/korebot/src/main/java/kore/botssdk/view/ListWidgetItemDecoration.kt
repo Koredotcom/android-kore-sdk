@@ -14,7 +14,6 @@ class ListWidgetItemDecoration(context: Context) : RecyclerView.ItemDecoration()
         val position = parent.getChildAdapterPosition(view)
         val adapter = parent.adapter ?: return
         if (position !in 0 until adapter.itemCount) return
-        outRect.bottom = itemBottomMargin
-
+        if (position != adapter.itemCount - 1) outRect.bottom = itemBottomMargin
     }
 }

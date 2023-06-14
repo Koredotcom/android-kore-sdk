@@ -318,7 +318,11 @@ public class ListWidgetView extends LinearLayout {
             botCustomListView.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setComposeFooterInterface(composeFooterInterface);
             listWidgetAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            listWidgetAdapter.setPreviewLength(DEFAULT_PREVIEW_LENGTH);
+            if(!isShowMore) {
+                listWidgetAdapter.setPreviewLength(DEFAULT_PREVIEW_LENGTH);
+            } else {
+                listWidgetAdapter.setPreviewLength(model.getWidgetlistElements().size());
+            }
             listWidgetAdapter.notifyDataSetChanged();
         } else {
             listWidgetAdapter.setData(null);

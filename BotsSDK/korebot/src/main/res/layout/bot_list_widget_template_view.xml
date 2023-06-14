@@ -168,6 +168,7 @@
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_30dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/action_button_bg"
         android:gravity="center"
         android:text="@string/show_more"
