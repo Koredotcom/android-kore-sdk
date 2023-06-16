@@ -78,14 +78,16 @@ public class DotsTextView extends TextView {
         dotTwo = new JumpingSpan();
         dotThree = new JumpingSpan();
 
-        SpannableString spannable = new SpannableString("...");
+        String text = getText().toString().trim();
+        if (text.isEmpty()) text = ".";
+        SpannableString spannable = new SpannableString(text + text + text);
         spannable.setSpan(dotOne, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(dotTwo, 1, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannable.setSpan(dotThree, 2, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         setText(spannable, BufferType.SPANNABLE);
 
 
-        textWidth = getPaint().measureText(".", 0, 1);
+        textWidth = getPaint().measureText(text, 0, 1);
 
 
         ObjectAnimator dotOneJumpAnimator = createDotJumpAnimator(dotOne, 0);

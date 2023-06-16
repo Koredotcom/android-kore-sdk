@@ -123,6 +123,7 @@
                 android:textColor="@color/left_bubble_text_color"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:text="@string/dot_regular"
                 dots:autoplay="true"
                 dots:period="1000" />
         </LinearLayout>
