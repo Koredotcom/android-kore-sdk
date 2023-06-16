@@ -142,7 +142,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BankingFeedbackTemplateView bankingFeedbackTemplateView;
     protected BotContactTemplateView botContactTemplateView;
     protected BotCustomTableView botCustomTableView;
-
     //    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
@@ -289,89 +288,89 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);
 
-        botButtonView = ViewProvider.getBotButtonView(context,null);
-        addView(botButtonView);
+//        botButtonView = ViewProvider.getBotButtonView(context,null);
+//        addView(botButtonView);
 
-        meetingSlotsView = ViewProvider.getMeetingSlotsView(context);
-        meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
-        //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
-        addView(meetingSlotsView);
+//        meetingSlotsView = ViewProvider.getMeetingSlotsView(context);
+//        meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
+//        //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
+//        addView(meetingSlotsView);
 
-        botContactTemplateView = ViewProvider.getBotContactView(context,null);
-        addView(botContactTemplateView);
+//        botContactTemplateView = ViewProvider.getBotContactView(context,null);
+//        addView(botContactTemplateView);
 
-        multiSelectView = ViewProvider.getMultiSelectView(context);
-        multiSelectView.setComposeFooterInterface(composeFooterInterface);
-        addView(multiSelectView);
+//        multiSelectView = ViewProvider.getMultiSelectView(context);
+//        multiSelectView.setComposeFooterInterface(composeFooterInterface);
+//        addView(multiSelectView);
 
-        contactInfoView = ViewProvider.getContactInfoView(context);
-        contactInfoView.setComposeFooterInterface(composeFooterInterface);
-        contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        addView(contactInfoView);
+//        contactInfoView = ViewProvider.getContactInfoView(context);
+//        contactInfoView.setComposeFooterInterface(composeFooterInterface);
+//        contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+//        addView(contactInfoView);
 
-        welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
-        welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
-        addView(welcomeSummaryView);
+//        welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
+//        welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
+//        addView(welcomeSummaryView);
 
 
-        universalSearchView = ViewProvider.getUniversalSearchView(context);
-        universalSearchView.setComposeFooterInterface(composeFooterInterface);
-        universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        addView(universalSearchView);
+//        universalSearchView = ViewProvider.getUniversalSearchView(context);
+//        universalSearchView.setComposeFooterInterface(composeFooterInterface);
+//        universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+//        addView(universalSearchView);
 
-        koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
-        koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
-        addView(koraSummaryHelpView);
+//        koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
+//        koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
+//        addView(koraSummaryHelpView);
 
-        meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
-        meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
-        //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
-        addView(meetingConfirmationView);
+//        meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
+//        meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
+//        //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
+//        addView(meetingConfirmationView);
 
-        attendeeSlotSelectionView = ViewProvider.getAttendeeSlotSelectionView(context);
-        attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
-        addView(attendeeSlotSelectionView);
+//        attendeeSlotSelectionView = ViewProvider.getAttendeeSlotSelectionView(context);
+//        attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
+//        addView(attendeeSlotSelectionView);
 
-        botListTemplateView = ViewProvider.getBotListTempleteView(context);
-        addView(botListTemplateView);
+//        botListTemplateView = ViewProvider.getBotListTempleteView(context);
+//        addView(botListTemplateView);
 
-        botCarouselView = ViewProvider.getBotCarousalView(context);
-        botCarouselView.setComposeFooterInterface(composeFooterInterface);
-        addView(botCarouselView);
+//        botCarouselView = ViewProvider.getBotCarousalView(context);
+//        botCarouselView.setComposeFooterInterface(composeFooterInterface);
+//        addView(botCarouselView);
 
-        botPieChartView = ViewProvider.getPieChartView(context);
-        addView(botPieChartView);
+//        botPieChartView = ViewProvider.getPieChartView(context);
+//        addView(botPieChartView);
 
-        tableView = ViewProvider.getTableView(context);
-        tableView.setComposeFooterInterface(composeFooterInterface);
-        addView(tableView);
+//        tableView = ViewProvider.getTableView(context);
+//        tableView.setComposeFooterInterface(composeFooterInterface);
+//        addView(tableView);
 
-        botCustomTableView = ViewProvider.getCustomTableView(context);
-        botCustomTableView.setComposeFooterInterface(composeFooterInterface);
-        addView(botCustomTableView);
+//        botCustomTableView = ViewProvider.getCustomTableView(context);
+//        botCustomTableView.setComposeFooterInterface(composeFooterInterface);
+//        addView(botCustomTableView);
 
-        responsiveExpandTableView = ViewProvider.getResponsiveExpandTableView(context);
-        addView(responsiveExpandTableView);
+//        responsiveExpandTableView = ViewProvider.getResponsiveExpandTableView(context);
+//        addView(responsiveExpandTableView);
 
         responsiveTableView = ViewProvider.getResponsiveTableView(context);
         addView(responsiveTableView);
 
-        lineChartView = ViewProvider.getLineChartView(context);
-        addView(lineChartView);
+//        lineChartView = ViewProvider.getLineChartView(context);
+//        addView(lineChartView);
 
-        barChartView = ViewProvider.getBarChartView(context);
-        addView(barChartView);
+//        barChartView = ViewProvider.getBarChartView(context);
+//        addView(barChartView);
 
-        stackedBarChatView = ViewProvider.getStackedBarChartView(context);
-        addView(stackedBarChatView);
+//        stackedBarChatView = ViewProvider.getStackedBarChartView(context);
+//        addView(stackedBarChatView);
 
-        koraCarouselView = ViewProvider.getKoraCarouselView(context);
-        addView(koraCarouselView);
+//        koraCarouselView = ViewProvider.getKoraCarouselView(context);
+//        addView(koraCarouselView);
 
-        verticalListView = ViewProvider.getVerticalListView(context);
-        addView(verticalListView);
-        verticalListView.setComposeFooterInterface(composeFooterInterface);
-        verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+//        verticalListView = ViewProvider.getVerticalListView(context);
+//        addView(verticalListView);
+//        verticalListView.setComposeFooterInterface(composeFooterInterface);
+//        verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
         timeStampsTextView = ViewProvider.getTimeStampTextView(context);
         timeStampsTextView.setPadding(0,(int)dp1*3  ,0,0);
@@ -382,16 +381,16 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         addView(timeLineView);
 
         //Added by Sudheer
-        horizontalBarChartView = ViewProvider.getHorizontalBarChartView(context);
-        addView(horizontalBarChartView);
+//        horizontalBarChartView = ViewProvider.getHorizontalBarChartView(context);
+//        addView(horizontalBarChartView);
 
-        botFormTemplateView = ViewProvider.getBotFormTemplateView(context);
-        botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
-        addView(botFormTemplateView);
+//        botFormTemplateView = ViewProvider.getBotFormTemplateView(context);
+//        botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
+//        addView(botFormTemplateView);
 
-        botListViewTemplateView = ViewProvider.getBotListViewTempleteView(context);
-        botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
-        addView(botListViewTemplateView);
+//        botListViewTemplateView = ViewProvider.getBotListViewTempleteView(context);
+//        botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
+//        addView(botListViewTemplateView);
 
         botListWidgetTemplateView = ViewProvider.getBotListWidgetTempleteView(context);
         botListWidgetTemplateView.setComposeFooterInterface(composeFooterInterface);
@@ -413,9 +412,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(feedbackTemplateView);
 
-        listWidgetView = ViewProvider.getListWidgetTemplateView(context);
-        listWidgetView.setComposeFooterInterface(composeFooterInterface);
-        addView(listWidgetView);
+//        listWidgetView = ViewProvider.getListWidgetTemplateView(context);
+//        listWidgetView.setComposeFooterInterface(composeFooterInterface);
+//        addView(listWidgetView);
 
         botDropDownTemplateView = ViewProvider.getDropDownTemplateView(context);
         botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
@@ -625,18 +624,19 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
         int rectBottom = 0;
-        if (botButtonView.getMeasuredHeight() > 0) {
+        if (botButtonView !=null && botButtonView.getMeasuredHeight() > 0) {
             rectBottom = (int)(botButtonView.getBottom()+ dp1);
-        }else if(meetingSlotsView.getMeasuredHeight() > 0){
+        }else if(meetingSlotsView!= null && meetingSlotsView.getMeasuredHeight() > 0){
             rectBottom = (int) (meetingSlotsView.getBottom() + dp1);
-        } else if(meetingConfirmationView.getMeasuredHeight() > 0){
+        } else if(meetingConfirmationView != null && meetingConfirmationView.getMeasuredHeight() > 0){
             rectBottom = (meetingConfirmationView.getBottom());
         } else {
             rectBottom = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         }
+
         int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
-                botButtonView.getRight(),
-                meetingSlotsView.getRight()+ (int)dp2,meetingConfirmationView.getRight()));
+                botButtonView !=null?botButtonView.getRight():0,
+                (meetingSlotsView != null?meetingSlotsView.getRight():0) + (int)dp2,meetingConfirmationView!=null?meetingConfirmationView.getRight():0));
 
         GradientDrawable gradientDrawable = getGradientBubble();
         gradientDrawable.setBounds(new Rect(rectLeft,rectTop,rectRight,rectBottom));
