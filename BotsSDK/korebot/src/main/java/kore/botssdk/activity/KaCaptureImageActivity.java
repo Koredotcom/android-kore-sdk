@@ -70,7 +70,6 @@ import kore.botssdk.utils.KaPermissionsHelper;
 
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
 
-    private static boolean restrictMultipleInitialisation = false;
     //keep track of camera capture intent
     private final int CAMERA_CAPTURE = 1;
     public static final int THUMBNAIL_WIDTH=320;
@@ -101,7 +100,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ka_capture_image);
-        restrictMultipleInitialisation = false;
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             imagePickType = extras.getString(BundleConstants.PICK_TYPE);
@@ -111,14 +109,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             MEDIA_TYPE = extras.containsKey("mediaType") ? extras.getString("mediaType") : MEDIA_TYPE_IMAGE;
         }
 
-//        requestForFolderAccess(KaCaptureImageActivity.this);
         checkForPermissionAccessAndRequest();
-    }
-
-    public void requestForFolderAccess(Context activity) {
-        ActivityResultLauncher<Intent> launcher = ((AppCompatActivity) activity).registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), KaCaptureImageActivity.this);
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        launcher.launch(intent);
     }
 
     private void checkForPermissionAccessAndRequest() {
