@@ -35,7 +35,6 @@ import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
-import kore.botssdk.view.BotTypingStatusView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
@@ -409,11 +408,6 @@ public class ViewProvider {
         AgentTransferTemplateView agentTransferTemplateView = new AgentTransferTemplateView(context);
         agentTransferTemplateView.setId(BubbleConstants.AGENT_TRANSFER_TEMPLATE_ID);
         return agentTransferTemplateView;
-    }
-
-    public static BotTypingStatusView getBotReplyWaitView(Context context){
-        BotTypingStatusView botReplyWaitView = new BotTypingStatusView(context);
-        return botReplyWaitView;
     }
 
 }

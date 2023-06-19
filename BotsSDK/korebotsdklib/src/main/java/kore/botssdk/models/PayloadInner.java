@@ -805,12 +805,12 @@ public class PayloadInner {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
                     }
-//                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
-//                        listWidgetModels = new ArrayList<>();
-//                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
-//                        }.getType();
-//                        listWidgetModels = gson.fromJson(elementsAsString, listType);
-//                    }
+                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
+                        listWidgetModels = new ArrayList<>();
+                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
+                        }.getType();
+                        listWidgetModels = gson.fromJson(elementsAsString, listType);
+                    }
                     else if(BotResponse.TEMPLATE_DROPDOWN.equals(template_type))
                     {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
@@ -1116,5 +1116,100 @@ public class PayloadInner {
         public void setTrigger(String trigger) {
             this.trigger = trigger;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PayloadInner{" +
+                "template_type='" + template_type + '\'' +
+                ", featureId='" + featureId + '\'' +
+                ", text='" + text + '\'' +
+                ", pie_type='" + pie_type + '\'' +
+                ", Auto_adjust_X_axis='" + Auto_adjust_X_axis + '\'' +
+                ", X_axis=" + X_axis +
+                ", direction='" + direction + '\'' +
+                ", stacked=" + stacked +
+                ", layout='" + layout + '\'' +
+                ", skill=" + skill +
+                ", composeText='" + composeText + '\'' +
+                ", focus='" + focus + '\'' +
+                ", heading='" + heading + '\'' +
+                ", title='" + title + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", format='" + format + '\'' +
+                ", boxShadow='" + boxShadow + '\'' +
+                ", seeMore='" + seeMore + '\'' +
+                ", moreCount=" + moreCount +
+                ", subtitle='" + subtitle + '\'' +
+                ", image_url='" + image_url + '\'' +
+                ", is_end=" + is_end +
+                ", emojiPosition=" + emojiPosition +
+                ", view='" + view + '\'' +
+                ", messageTodisplay='" + messageTodisplay + '\'' +
+                ", sliderView=" + sliderView +
+                ", description='" + description + '\'' +
+                ", headerOptions=" + headerOptions +
+                ", fieldButton=" + fieldButton +
+                ", url='" + url + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                ", audioUrl='" + audioUrl + '\'' +
+                ", videoCurrentPosition=" + videoCurrentPosition +
+                ", feedbackListHeading='" + feedbackListHeading + '\'' +
+                ", userSuggestion='" + userSuggestion + '\'' +
+                ", experienceContent=" + experienceContent +
+                ", feedbackList=" + feedbackList +
+                ", text_message='" + text_message + '\'' +
+                ", isNewVolley=" + isNewVolley +
+                ", hideComposeBar=" + hideComposeBar +
+                ", action_type='" + action_type + '\'' +
+                ", placeholder_text='" + placeholder_text + '\'' +
+                ", auto_suggestions=" + auto_suggestions +
+                ", columns=" + columns +
+                ", tableDataModel=" + tableDataModel +
+                ", buttons=" + buttons +
+                ", quick_replies=" + quick_replies +
+                ", form_actions=" + form_actions +
+                ", contactInfoModels=" + contactInfoModels +
+                ", welcomeSummaryModel=" + welcomeSummaryModel +
+                ", koraSummaryHelpModel=" + koraSummaryHelpModel +
+                ", narratorTextModel=" + narratorTextModel +
+                ", universalSearchModels=" + universalSearchModels +
+                ", formFields=" + formFields +
+                ", smileyArrays=" + smileyArrays +
+                ", starArrays=" + starArrays +
+                ", cards=" + cards +
+                ", dialogCancel=" + dialogCancel +
+                ", multiSelectModels=" + multiSelectModels +
+                ", listWidgetModels=" + listWidgetModels +
+                ", carouselElements=" + carouselElements +
+                ", listElements=" + listElements +
+                ", lineChartDataModels=" + lineChartDataModels +
+                ", knowledgeDetailModels=" + knowledgeDetailModels +
+                ", tableListElements=" + tableListElements +
+                ", widgetlistElements=" + widgetlistElements +
+                ", dropDownElementsModels=" + dropDownElementsModels +
+                ", announcementResModels=" + announcementResModels +
+                ", headers=" + headers +
+                ", koraSearchResultsModel=" + koraSearchResultsModel +
+                ", barChartDataModels=" + barChartDataModels +
+                ", meetingTemplateModels=" + meetingTemplateModels +
+                ", pickerTemplateModels=" + pickerTemplateModels +
+                ", attendeeSlotTemplateModels=" + attendeeSlotTemplateModels +
+                ", calEventsTemplateModels=" + calEventsTemplateModels +
+                ", meetingConfirmationModels=" + meetingConfirmationModels +
+                ", taskTemplateModels=" + taskTemplateModels +
+                ", fileLookupModels=" + fileLookupModels +
+                ", miniTableDataModels=" + miniTableDataModels +
+                ", pieChartElements=" + pieChartElements +
+                ", data=" + data +
+                ", table_design='" + table_design + '\'' +
+                ", elements=" + elements +
+                ", moreData=" + moreData +
+                ", cursor=" + cursor +
+                ", elementsAsString='" + elementsAsString + '\'' +
+                ", color='" + color + '\'' +
+                ", speech_hint='" + speech_hint + '\'' +
+                ", childTemplate=" + childTemplate +
+                '}';
     }
 }

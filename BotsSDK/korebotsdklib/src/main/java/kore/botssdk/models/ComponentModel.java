@@ -26,4 +26,11 @@ public class ComponentModel {
         this.payload = payload;
     }
 
+    @Override
+    public String toString() {
+        return "ComponentModel{" +
+                "type='" + type + '\'' +
+                ", payload=" + payload +
+                '}';
+    }
 }

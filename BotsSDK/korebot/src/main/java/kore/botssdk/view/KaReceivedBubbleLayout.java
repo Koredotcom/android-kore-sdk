@@ -1,11 +1,10 @@
 package kore.botssdk.view;
 
-import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
-
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.github.mikephil.charting.data.PieEntry;
 
@@ -15,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.dialogs.FeedbackActionSheetFragment;
 import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.BaseBotMessage;
@@ -36,10 +36,11 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
+
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
 
 /**
@@ -101,7 +102,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         if (isContinuousMessage) {
             BUBBLE_TOP_BORDER = 0;
         } else {
-            BUBBLE_TOP_BORDER = (int) (7 * dp1);
+            BUBBLE_TOP_BORDER = (int) (10 * dp1);
         }
         BUBBLE_LEFT_BORDER = (int) ((!isGroupMessage) ? BubbleUI ? dp4 : 0 : dp1);
         BUBBLE_RIGHT_BORDER = (int) dp1;
@@ -111,7 +112,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         BUBBLE_RIGHT_ARROW_WIDTH = 0;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0) {
             BUBBLE_CONTENT_TOP_MARGIN = 0;
-            BUBBLE_CONTENT_BOTTOM_MARGIN = BubbleUI ? (int) (10 * dp1) : (int) (5 * dp1);
+            BUBBLE_CONTENT_BOTTOM_MARGIN = (int) (BubbleUI ? 8 * dp1 : 21 * dp1);
         } else {
             BUBBLE_CONTENT_TOP_MARGIN = 0;
             BUBBLE_CONTENT_BOTTOM_MARGIN = 0;
@@ -134,62 +135,50 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         // headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView != null ? botCarouselView.getMeasuredWidth() : 0, verticalListView != null ? verticalListView.getMeasuredWidth() : 0, timeStampsTextView.getMeasuredWidth(), timeLineView.getMeasuredWidth(),
-                meetingSlotsView != null ? meetingSlotsView.getMeasuredWidth() : 0, multiSelectView != null ? multiSelectView.getMeasuredWidth() : 0, attendeeSlotSelectionView != null ? attendeeSlotSelectionView.getMeasuredWidth() : 0, meetingConfirmationView != null ? meetingConfirmationView.getMeasuredWidth() : 0, botButtonView != null ? botButtonView.getMeasuredWidth() : 0, tableView != null ? tableView.getMeasuredWidth() : 0, responsiveTableView.getMeasuredWidth(), responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredWidth() : 0,
-                lineChartView != null ? lineChartView.getMeasuredWidth() : 0, barChartView != null ? barChartView.getMeasuredWidth() : 0, (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredWidth() : 0), stackedBarChatView != null ? stackedBarChatView.getMeasuredWidth() : 0, (koraCarouselView != null ? koraCarouselView.getMeasuredWidth() : 0), botListViewTemplateView != null ? botListViewTemplateView.getMeasuredWidth() : 0, botCustomTableView != null ? botCustomTableView.getMeasuredWidth() : 0,
-                botListTemplateView != null ? botListTemplateView.getMeasuredWidth() : 0, contactInfoView != null ? contactInfoView.getMeasuredWidth() : 0, botPieChartView != null ? botPieChartView.getMeasuredWidth() : 0, welcomeSummaryView != null ? welcomeSummaryView.getMeasuredWidth() : 0, (botFormTemplateView != null ? botFormTemplateView.getMeasuredWidth() : 0), botTableListTemplateView.getMeasuredWidth(), botQuickRepliesTemplateView.getMeasuredWidth(),
-                agentTransferTemplateView.getMeasuredWidth(), feedbackTemplateView.getMeasuredWidth(), listWidgetView != null ? listWidgetView.getMeasuredWidth() : 0, botDropDownTemplateView.getMeasuredWidth(), botListWidgetTemplateView.getMeasuredWidth(), imageTemplateView.getMeasuredWidth(), bankingFeedbackTemplateView.getMeasuredWidth(),
-                (koraSummaryHelpView != null ? koraSummaryHelpView.getMeasuredWidth() : 0), universalSearchView != null ? universalSearchView.getMeasuredWidth() : 0, botContactTemplateView != null ? botContactTemplateView.getMeasuredWidth() : 0)) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView.getMeasuredWidth(), verticalListView.getMeasuredWidth(), timeStampsTextView.getMeasuredWidth(), timeLineView.getMeasuredWidth(),
+                meetingSlotsView.getMeasuredWidth(),multiSelectView.getMeasuredWidth(), attendeeSlotSelectionView.getMeasuredWidth(), meetingConfirmationView.getMeasuredWidth(), botButtonView.getMeasuredWidth(), tableView.getMeasuredWidth(),responsiveTableView.getMeasuredWidth(),responsiveExpandTableView.getMeasuredWidth(),
+                lineChartView.getMeasuredWidth(),barChartView.getMeasuredWidth(),horizontalBarChartView.getMeasuredWidth(), stackedBarChatView.getMeasuredWidth(),koraCarouselView.getMeasuredWidth(),botListViewTemplateView.getMeasuredWidth(), botCustomTableView.getMeasuredWidth(),
+                botListTemplateView.getMeasuredWidth(), contactInfoView.getMeasuredWidth(), botPieChartView.getMeasuredWidth(), welcomeSummaryView.getMeasuredWidth(),botFormTemplateView.getMeasuredWidth(),botTableListTemplateView.getMeasuredWidth(),botQuickRepliesTemplateView.getMeasuredWidth(),
+                agentTransferTemplateView.getMeasuredWidth(),feedbackTemplateView.getMeasuredWidth(),listWidgetView.getMeasuredWidth(), botDropDownTemplateView.getMeasuredWidth(),botListWidgetTemplateView.getMeasuredWidth(),imageTemplateView.getMeasuredWidth(),bankingFeedbackTemplateView.getMeasuredWidth(),
+                koraSummaryHelpView.getMeasuredWidth(),universalSearchView.getMeasuredWidth(),botContactTemplateView.getMeasuredWidth())) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
 
         // headerLayoutDimen[1] = headerLayout.getMeasuredHeight();
         maxBubbleDimen[0] = maxContentDimen[0];
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                textMediaDimen[1] + (botCarouselView != null ? botCarouselView.getMeasuredHeight() : 0) + (meetingSlotsView != null ? meetingSlotsView.getMeasuredHeight() : 0) + (multiSelectView != null ? multiSelectView.getMeasuredHeight() : 0) + (verticalListView != null ? verticalListView.getMeasuredHeight() : 0) + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() +
-                (meetingConfirmationView != null ? meetingConfirmationView.getMeasuredHeight() : 0) + (attendeeSlotSelectionView != null ? attendeeSlotSelectionView.getMeasuredHeight() : 0) + (botPieChartView != null ? botPieChartView.getMeasuredHeight() : 0) + (tableView != null ? tableView.getMeasuredHeight() : 0) + responsiveTableView.getMeasuredHeight() + (responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredHeight() : 0) +
-                (lineChartView != null ? lineChartView.getMeasuredHeight() : 0) + (barChartView != null ? barChartView.getMeasuredHeight() : 0) + (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredHeight() : 0) + (stackedBarChatView != null ? stackedBarChatView.getMeasuredHeight() : 0) + (koraCarouselView != null ? koraCarouselView.getMeasuredHeight() : 0) + (botCustomTableView != null ? botCustomTableView.getMeasuredHeight() : 0)
-                + (botListViewTemplateView != null ? botListViewTemplateView.getMeasuredHeight() : 0) + botTableListTemplateView.getMeasuredHeight() + botQuickRepliesTemplateView.getMeasuredHeight() + agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight() + (botContactTemplateView != null ? botContactTemplateView.getMeasuredHeight() : 0)
-                + (botButtonView != null ? botButtonView.getMeasuredHeight() : 0) + (botListTemplateView != null ? botListTemplateView.getMeasuredHeight() : 0) + (contactInfoView != null ? contactInfoView.getMeasuredHeight() : 0) + (listWidgetView != null ? listWidgetView.getMeasuredHeight() : 0) + botListWidgetTemplateView.getMeasuredHeight() +
-                (welcomeSummaryView != null ? welcomeSummaryView.getMeasuredHeight() : 0) + (universalSearchView != null ? universalSearchView.getMeasuredHeight() : 0) + (koraSummaryHelpView != null ? koraSummaryHelpView.getMeasuredHeight() : 0) + (botFormTemplateView != null ? botFormTemplateView.getMeasuredHeight() : 0) + botDropDownTemplateView.getMeasuredHeight() + imageTemplateView.getMeasuredHeight() + bankingFeedbackTemplateView.getMeasuredHeight()
-                + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) ((botButtonView != null && botButtonView.getMeasuredHeight() != 0) ||
-                meetingSlotsView != null && meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
+                textMediaDimen[1] + botCarouselView.getMeasuredHeight() + meetingSlotsView.getMeasuredHeight() +multiSelectView.getMeasuredHeight()+ verticalListView.getMeasuredHeight() + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() +
+                meetingConfirmationView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() + tableView.getMeasuredHeight() + responsiveTableView.getMeasuredHeight() + responsiveExpandTableView.getMeasuredHeight() +
+                lineChartView.getMeasuredHeight()+barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+koraCarouselView.getMeasuredHeight() + botCustomTableView.getMeasuredHeight()
+                + botListViewTemplateView.getMeasuredHeight()+botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight() + botContactTemplateView.getMeasuredHeight()
+                + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + contactInfoView.getMeasuredHeight() + listWidgetView.getMeasuredHeight() + botListWidgetTemplateView.getMeasuredHeight() +
+                welcomeSummaryView.getMeasuredHeight() +universalSearchView.getMeasuredHeight()+ koraSummaryHelpView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight() + botDropDownTemplateView.getMeasuredHeight() + imageTemplateView.getMeasuredHeight() + bankingFeedbackTemplateView.getMeasuredHeight()
+                + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
+                meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
         }
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + (botCarouselView != null ? botCarouselView.getMeasuredHeight() : 0) + (verticalListView != null ? verticalListView.getMeasuredHeight() : 0)
-                + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + (botButtonView != null ? botButtonView.getMeasuredHeight() : 0) + (botListTemplateView != null ? botListTemplateView.getMeasuredHeight() : 0) + (botPieChartView != null ? botPieChartView.getMeasuredHeight() : 0) +
-                (tableView != null ? tableView.getMeasuredHeight() : 0) + responsiveTableView.getMeasuredHeight() + (responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredHeight() : 0) + (lineChartView != null ? lineChartView.getMeasuredHeight() : 0) + (botCustomTableView != null ? botCustomTableView.getMeasuredHeight() : 0)
-                + (barChartView != null ? barChartView.getMeasuredHeight() : 0) + (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredHeight() : 0) + (stackedBarChatView != null ? stackedBarChatView.getMeasuredHeight() : 0) + (koraCarouselView != null ? koraCarouselView.getMeasuredHeight() : 0) + agentTransferTemplateView.getMeasuredHeight() + (botContactTemplateView != null ? botContactTemplateView.getMeasuredHeight() : 0) +
-                (meetingSlotsView != null ? meetingSlotsView.getMeasuredHeight() : 0) + (attendeeSlotSelectionView != null ? attendeeSlotSelectionView.getMeasuredHeight() : 0) + (multiSelectView != null ? multiSelectView.getMeasuredHeight() : 0) + (botFormTemplateView != null ? botFormTemplateView.getMeasuredHeight() : 0) + (botListViewTemplateView != null ? botListViewTemplateView.getMeasuredHeight() : 0) + imageTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight()
-                + (meetingConfirmationView != null ? meetingConfirmationView.getMeasuredHeight() : 0) + (contactInfoView != null ? contactInfoView.getMeasuredHeight() : 0) + (welcomeSummaryView != null ? welcomeSummaryView.getMeasuredHeight() : 0) + botTableListTemplateView.getMeasuredHeight() + botQuickRepliesTemplateView.getMeasuredHeight() + botListWidgetTemplateView.getMeasuredHeight() +
-                +feedbackTemplateView.getMeasuredHeight() + (listWidgetView != null ? listWidgetView.getMeasuredHeight() : 0) + (universalSearchView != null ? universalSearchView.getMeasuredHeight() : 0) + (koraSummaryHelpView != null ? koraSummaryHelpView.getMeasuredHeight() : 0) + botDropDownTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + botCarouselView.getMeasuredHeight() + verticalListView.getMeasuredHeight()
+                + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + botButtonView.getMeasuredHeight() + botListTemplateView.getMeasuredHeight() + botPieChartView.getMeasuredHeight() +
+                tableView.getMeasuredHeight() + responsiveTableView.getMeasuredHeight() + responsiveExpandTableView.getMeasuredHeight() + lineChartView.getMeasuredHeight() + botCustomTableView.getMeasuredHeight()
+                +barChartView.getMeasuredHeight()+horizontalBarChartView.getMeasuredHeight()+stackedBarChatView.getMeasuredHeight()+koraCarouselView.getMeasuredHeight()+agentTransferTemplateView.getMeasuredHeight()+ botContactTemplateView.getMeasuredHeight() +
+                meetingSlotsView.getMeasuredHeight() + attendeeSlotSelectionView.getMeasuredHeight() +multiSelectView.getMeasuredHeight() + botFormTemplateView.getMeasuredHeight()+botListViewTemplateView.getMeasuredHeight() + imageTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight()
+                +meetingConfirmationView.getMeasuredHeight() + contactInfoView.getMeasuredHeight()+ welcomeSummaryView.getMeasuredHeight()+ botTableListTemplateView.getMeasuredHeight()+botQuickRepliesTemplateView.getMeasuredHeight()+ botListWidgetTemplateView.getMeasuredHeight() +
+                +feedbackTemplateView.getMeasuredHeight()+listWidgetView.getMeasuredHeight()+universalSearchView.getMeasuredHeight()+koraSummaryHelpView.getMeasuredHeight() + botDropDownTemplateView.getMeasuredHeight() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         if (bubbleTextMediaLayout.getMeasuredHeight() != 0 && isTemplatePresent()) {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
         }
     }
 
     private boolean isTemplatePresent() {
-        if ((contactInfoView != null && contactInfoView.getMeasuredHeight() > 0) || (botListTemplateView != null && botListTemplateView.getMeasuredHeight() > 0) /*|| botButtonView.getMeasuredHeight() > 0*/
-                || (botCarouselView != null && botCarouselView.getMeasuredHeight() > 0) || (attendeeSlotSelectionView != null && attendeeSlotSelectionView.getMeasuredHeight() > 0) ||
-                (meetingConfirmationView != null && meetingConfirmationView.getMeasuredHeight() > 0) || (verticalListView != null && verticalListView.getMeasuredHeight() > 0) ||
-                (meetingSlotsView != null && meetingSlotsView.getMeasuredHeight() > 0) || (botPieChartView != null && botPieChartView.getMeasuredHeight() > 0) || (botFormTemplateView != null && botFormTemplateView.getMeasuredHeight() > 0) || (botListViewTemplateView != null && botListViewTemplateView.getMeasuredHeight() > 0) || botTableListTemplateView.getMeasuredHeight() > 0 || (botCustomTableView != null && botCustomTableView.getMeasuredHeight() > 0) ||
-                (lineChartView != null && lineChartView.getMeasuredHeight() > 0) || (barChartView != null && barChartView.getMeasuredHeight() > 0) || (horizontalBarChartView != null && horizontalBarChartView.getMeasuredHeight() > 0) || (stackedBarChatView != null && stackedBarChatView.getMeasuredHeight() > 0) || (koraCarouselView != null && koraCarouselView.getMeasuredHeight() > 0) /*|| listWidgetView.getMeasuredHeight() > 0*/ ||
-                (tableView != null && tableView.getMeasuredHeight() > 0) || responsiveTableView.getMeasuredHeight() > 0 || (responsiveExpandTableView != null && responsiveExpandTableView.getMeasuredHeight() > 0) || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 || botListWidgetTemplateView.getMeasuredHeight() > 0 ||
-                (welcomeSummaryView != null && welcomeSummaryView.getMeasuredHeight() > 0) || (koraSummaryHelpView != null && koraSummaryHelpView.getMeasuredHeight() > 0) || (universalSearchView != null && universalSearchView.getMeasuredHeight() > 0) || (multiSelectView != null && multiSelectView.getMeasuredHeight() > 0) || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || botDropDownTemplateView.getMeasuredHeight() > 0 ||
-                imageTemplateView.getMeasuredHeight() > 0 || bankingFeedbackTemplateView.getMeasuredHeight() > 0 || (botContactTemplateView != null && botContactTemplateView.getMeasuredHeight() > 0)) {
-            return true;
-        }
-
-        if (listWidgetView != null && listWidgetView.getMeasuredHeight() > 0) {
-            return true;
-        }
-        if (botButtonView != null && botButtonView.getMeasuredHeight() > 0) {
-            return true;
-        }
-
-        return false;
-
+        return contactInfoView.getMeasuredHeight() > 0 || botListTemplateView.getMeasuredHeight() > 0 || botButtonView.getMeasuredHeight() > 0
+                || botCarouselView.getMeasuredHeight() > 0 || attendeeSlotSelectionView.getMeasuredHeight() > 0 ||
+                meetingConfirmationView.getMeasuredHeight() > 0 || verticalListView.getMeasuredHeight() > 0 ||
+                meetingSlotsView.getMeasuredHeight() > 0 || botPieChartView.getMeasuredHeight() > 0 || botFormTemplateView.getMeasuredHeight() > 0 || botListViewTemplateView.getMeasuredHeight() > 0 || botTableListTemplateView.getMeasuredHeight() > 0 || botCustomTableView.getMeasuredHeight()  > 0 ||
+                lineChartView.getMeasuredHeight() > 0 ||barChartView.getMeasuredHeight() > 0||horizontalBarChartView.getMeasuredHeight() > 0||stackedBarChatView.getMeasuredHeight() > 0|| koraCarouselView.getMeasuredHeight()>0 || listWidgetView.getMeasuredHeight() > 0 ||
+                tableView.getMeasuredHeight() > 0 ||responsiveTableView.getMeasuredHeight() > 0 ||responsiveExpandTableView.getMeasuredHeight() > 0 || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 || botListWidgetTemplateView.getMeasuredHeight() > 0 ||
+                welcomeSummaryView.getMeasuredHeight()>0 || koraSummaryHelpView.getMeasuredHeight()>0 || universalSearchView.getMeasuredHeight()>0||multiSelectView.getMeasuredHeight() > 0 || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || botDropDownTemplateView.getMeasuredHeight() > 0 ||
+                imageTemplateView.getMeasuredHeight() > 0 || bankingFeedbackTemplateView.getMeasuredHeight() > 0 || botContactTemplateView.getMeasuredHeight() > 0;
     }
 
     @Override
@@ -201,144 +190,73 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
     private void resetAll() {
         arrayList.clear();
-        if (botButtonView != null) {
-            botButtonView.setVisibility(View.GONE);
-            botButtonView.populateButtonList(null, false);
-        }
-        if (botCarouselView != null) {
-            botCarouselView.populateCarouselView(null);
-            botCarouselView.setVisibility(View.GONE);
-        }
-        if (verticalListView != null) {
-            verticalListView.prepareDataSetAndPopulate(null, null, false);
-            verticalListView.setVisibility(GONE);
-        }
-        if (meetingSlotsView != null) {
-            meetingSlotsView.populateData(null, false);
-            meetingSlotsView.setVisibility(GONE);
-        }
-        if (botContactTemplateView != null) {
-            botContactTemplateView.setVisibility(View.GONE);
-            botContactTemplateView.populateContactTemplateView(null, "");
-        }
-        if (multiSelectView != null) {
-            multiSelectView.populateData(null, false);
-            multiSelectView.setVisibility(GONE);
-        }
-        if (attendeeSlotSelectionView != null) {
-            attendeeSlotSelectionView.populateData(-1, null, false);
-            attendeeSlotSelectionView.setVisibility(GONE);
-        }
-        if (meetingConfirmationView != null) {
-            meetingConfirmationView.populateData(null);
-            meetingConfirmationView.setVisibility(GONE);
-        }
-        if (contactInfoView != null) {
-            contactInfoView.populateData(null);
-            contactInfoView.setVisibility(GONE);
-        }
-        if (welcomeSummaryView != null) {
-            welcomeSummaryView.populateData(null, false);
-            welcomeSummaryView.setVisibility(GONE);
-        }
-        if (universalSearchView != null) {
-            universalSearchView.populateData(null);
-            universalSearchView.setVisibility(GONE);
-        }
-        if (koraSummaryHelpView != null) {
-            koraSummaryHelpView.populateData(null);
-            koraSummaryHelpView.setVisibility(GONE);
-        }
-        if (botListTemplateView != null) {
-            botListTemplateView.setVisibility(View.GONE);
-            botListTemplateView.populateListTemplateView(null, null);
-        }
-        if (botPieChartView != null) {
-            botPieChartView.setVisibility(View.GONE);
-        }
-        if (tableView != null) {
-            tableView.setData(null);
-            tableView.setVisibility(View.GONE);
-        }
-        if (botCustomTableView != null) {
-            botCustomTableView.setData(null);
-            botCustomTableView.setVisibility(View.GONE);
-        }
-        if (responsiveTableView != null) {
-            responsiveTableView.setData(null);
-            responsiveTableView.setVisibility(View.GONE);
-        }
-        if (responsiveExpandTableView != null) {
-            responsiveExpandTableView.setData(null);
-            responsiveExpandTableView.setVisibility(View.GONE);
-            responsiveExpandTableView.setData(null);
-        }
-        if (lineChartView != null) {
-            lineChartView.setVisibility(GONE);
-        }
-        if (barChartView != null) {
-            barChartView.setVisibility(GONE);
-        }
-        if (horizontalBarChartView != null) {
-            horizontalBarChartView.setVisibility(GONE);
-        }
-        if (stackedBarChatView != null) {
-            stackedBarChatView.setVisibility(GONE);
-        }
-        if (koraCarouselView != null) {
-            koraCarouselView.populateMiniTable(null, null);
-            koraCarouselView.setVisibility(View.GONE);
-        }
-        if (timeLineView != null) {
-            timeLineView.setVisibility(GONE);
-            timeLineView.setText("");
-        }
+        botButtonView.setVisibility(View.GONE);
+        botButtonView.populateButtonList(null,false);
+        botCarouselView.populateCarouselView(null);
+        botCarouselView.setVisibility(View.GONE);
+        verticalListView.prepareDataSetAndPopulate(null, null, false);
+        verticalListView.setVisibility(GONE);
+        meetingSlotsView.populateData(null, false);
+        meetingSlotsView.setVisibility(GONE);
+        botContactTemplateView.setVisibility(View.GONE);
+        botContactTemplateView.populateContactTemplateView(null,"");
+        multiSelectView.populateData(null,false);
+        multiSelectView.setVisibility(GONE);
+        attendeeSlotSelectionView.populateData(-1, null, false);
+        attendeeSlotSelectionView.setVisibility(GONE);
+        meetingConfirmationView.populateData(null);
+        meetingConfirmationView.setVisibility(GONE);
+        contactInfoView.populateData(null);
+        contactInfoView.setVisibility(GONE);
+        welcomeSummaryView.populateData(null, false);
+        welcomeSummaryView.setVisibility(GONE);
+        universalSearchView.populateData(null);
+        universalSearchView.setVisibility(GONE);
+        koraSummaryHelpView.populateData(null);
+        koraSummaryHelpView.setVisibility(GONE);
+        botListTemplateView.setVisibility(View.GONE);
+        botListTemplateView.populateListTemplateView(null, null);
+        botPieChartView.setVisibility(View.GONE);
+        tableView.setData(null);
+        tableView.setVisibility(View.GONE);
+        botCustomTableView.setData(null);
+        botCustomTableView.setVisibility(View.GONE);
+        responsiveTableView.setData(null);
+        responsiveTableView.setVisibility(View.GONE);
+        responsiveExpandTableView.setData(null);
+        responsiveExpandTableView.setVisibility(View.GONE);
+        responsiveExpandTableView.setData(null);
+        lineChartView.setVisibility(GONE);
+        barChartView.setVisibility(GONE);
+        horizontalBarChartView.setVisibility(GONE);
+        stackedBarChatView.setVisibility(GONE);
+        koraCarouselView.populateMiniTable(null,null);
+        koraCarouselView.setVisibility(View.GONE);
+        timeLineView.setVisibility(GONE);
+        timeLineView.setText("");
 
-        if (botFormTemplateView != null) {
-            botFormTemplateView.populateData(null, false);
-            botFormTemplateView.setVisibility(GONE);
-        }
-        if (botListViewTemplateView != null) {
-            botListViewTemplateView.setVisibility(View.GONE);
-            botListViewTemplateView.populateListTemplateView(null, null, null, null, 0, null);
-        }
-
-        if (botListWidgetTemplateView != null) {
-            botListWidgetTemplateView.setVisibility(View.GONE);
-            botListWidgetTemplateView.populateListWidgetTemplateView(null, null, null, null, 0, null);
-        }
-        if (botTableListTemplateView != null) {
-            botTableListTemplateView.setVisibility(View.GONE);
-            botTableListTemplateView.populateListTemplateView(null);
-        }
-        if (botQuickRepliesTemplateView != null) {
-            botQuickRepliesTemplateView.setVisibility(View.GONE);
-            botQuickRepliesTemplateView.populateQuickReplyView(null);
-        }
-        if (agentTransferTemplateView != null) {
-            agentTransferTemplateView.setVisibility(View.GONE);
-            agentTransferTemplateView.populateAgentTemplateView(null);
-        }
-        if (feedbackTemplateView != null) {
-            feedbackTemplateView.setVisibility(View.GONE);
-            feedbackTemplateView.populateData(null, false);
-        }
-        if (listWidgetView != null) {
-            listWidgetView.setVisibility(GONE);
-            listWidgetView.populateListWidgetData(null);
-        }
-        if (botDropDownTemplateView != null) {
-            botDropDownTemplateView.setVisibility(GONE);
-            botDropDownTemplateView.populateData(null);
-        }
-        if (imageTemplateView != null) {
-            imageTemplateView.setVisibility(GONE);
-            imageTemplateView.populateData(null, null);
-        }
-        if (bankingFeedbackTemplateView != null) {
-            bankingFeedbackTemplateView.setVisibility(GONE);
-            bankingFeedbackTemplateView.populateData(null, false);
-        }
+        botFormTemplateView.populateData(null,false);
+        botFormTemplateView.setVisibility(GONE);
+        botListViewTemplateView.setVisibility(View.GONE);
+        botListViewTemplateView.populateListTemplateView(null, null,null, null, 0, null);
+        botListWidgetTemplateView.setVisibility(View.GONE);
+        botListWidgetTemplateView.populateListWidgetTemplateView(null, null,null, null, 0, null);
+        botTableListTemplateView.setVisibility(View.GONE);
+        botTableListTemplateView.populateListTemplateView(null);
+        botQuickRepliesTemplateView.setVisibility(View.GONE);
+        botQuickRepliesTemplateView.populateQuickReplyView(null);
+        agentTransferTemplateView.setVisibility(View.GONE);
+        agentTransferTemplateView.populateAgentTemplateView(null);
+        feedbackTemplateView.setVisibility(View.GONE);
+        feedbackTemplateView.populateData(null, false);
+        listWidgetView.setVisibility(GONE);
+        listWidgetView.populateListWidgetData(null);
+        botDropDownTemplateView.setVisibility(GONE);
+        botDropDownTemplateView.populateData(null);
+        imageTemplateView.setVisibility(GONE);
+        imageTemplateView.populateData(null, null);
+        bankingFeedbackTemplateView.setVisibility(GONE);
+        bankingFeedbackTemplateView.populateData(null, false);
     }
 
     @Override
@@ -357,13 +275,14 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             cpvSenderImage.setVisibility(GONE);
         }*/
         String icon = ((BotResponse) baseBotMessage).getIcon();
-        if (SDKConfiguration.BubbleColors.showIcon) {
-            if (!StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+        if(SDKConfiguration.BubbleColors.showIcon)
+        {
+            if(!StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
                 cpvSenderImage.populateLayout(" ", null, SDKConfiguration.BubbleColors.getIcon_url(), null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
             else
                 cpvSenderImage.populateLayout(" ", null, null, null, SDKConfiguration.BubbleColors.getIcon(), R.color.white, true, BUBBLE_LEFT_PROFILE_PIC, BUBBLE_LEFT_PROFILE_PIC);
             cpvSenderImage.setVisibility(StringUtils.isNullOrEmptyWithTrim(timeStampsTextView.getText()) ? GONE : VISIBLE);
-        } else {
+        }else{
             cpvSenderImage.setVisibility(GONE);
         }
     }
@@ -376,7 +295,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             //composeFooterInterface.showMentionNarratorContainer(false, "","" ,null);
 
             PayloadOuter payOuter = compModel.getPayload();
-            if (payOuter == null) return;
+            if(payOuter == null) return;
             PayloadInner payInner;
             if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
 //                Gson gson = new Gson();
@@ -388,16 +307,11 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 payInner.convertElementToAppropriate();
 
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
-                Log.i("TemplateType", "payInner.getTemplate_type() --->:" + payInner.getTemplate_type());
                 checkBubbleVisibilityAndHideCpv(payInner);
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botButtonView == null) {
-                        botButtonView = ViewProvider.getBotButtonView(context, null);
-                        addView(botButtonView);
-                    }
                     botButtonView.setVisibility(View.VISIBLE);
-                    botButtonView.setRestrictedMaxWidth(screenWidth - 28 * dp1);
-                    botButtonView.populateButtonList(payInner.getButtons(), isLastItem);
+                    botButtonView.setRestrictedMaxWidth(screenWidth - 28 * dp1 );
+                    botButtonView.populateButtonList(payInner.getButtons(),isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.setClicable(isLastItem);
@@ -406,28 +320,15 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         timeStampsTextView.setText("");
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botCarouselView == null) {
-                        botCarouselView = ViewProvider.getBotCarousalView(context);
-                        botCarouselView.setComposeFooterInterface(composeFooterInterface);
-                        addView(botCarouselView);
-                    }
                     botCarouselView.setVisibility(View.VISIBLE);
                     botCarouselView.populateCarouselView(payInner.getCarouselElements(), payInner.getTemplate_type());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botListTemplateView == null) {
-                        botListTemplateView = ViewProvider.getBotListTempleteView(context);
-                        addView(botListTemplateView);
-                    }
                     botListTemplateView.setVisibility(View.VISIBLE);
                     botListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() + BUBBLE_CONTENT_RIGHT_MARGIN);
                     botListTemplateView.populateListTemplateView(payInner.getListElements(), payInner.getButtons());
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botPieChartView == null) {
-                        botPieChartView = ViewProvider.getPieChartView(context);
-                        addView(botPieChartView);
-                    }
                     botPieChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<BotPieChartElementModel> elementModels = payInner.getPieChartElements();
@@ -439,9 +340,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         for (int i = 0; i < elementModels.size(); i++) {
                             xVal.add(elementModels.get(i).getTitle());
                             yVal.add(new PieEntry((float) elementModels.get(i).getValue(), " "));
-                            arrLables.add(elementModels.get(i).getTitle() + " " + elementModels.get(i).getValue());
+                            arrLables.add(elementModels.get(i).getTitle()+" "+elementModels.get(i).getValue());
                         }
-                        botPieChartView.populatePieChart("", payInner.getPie_type(), xVal, yVal, arrLables);
+                        botPieChartView.populatePieChart("", payInner.getPie_type(), xVal, yVal,arrLables);
                     }
 
                 }/*else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -449,163 +350,129 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     tableView.setData(payInner);
 
-                }*/ else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (payInner.getTableDesign() != null && (payInner.getTableDesign().equalsIgnoreCase(BotResponse.TABLE_VIEW_RESPONSIVE) ||
-                            payInner.getTableDesign().equalsIgnoreCase(""))) {
-                        if (responsiveExpandTableView == null) {
-                            responsiveExpandTableView = ViewProvider.getResponsiveExpandTableView(context);
-                            addView(responsiveExpandTableView);
-                        }
+                }*/else if (BotResponse.TEMPLATE_TYPE_TABLE.equalsIgnoreCase(payInner.getTemplate_type())                           )
+                {
+                    if(payInner.getTableDesign() != null && (payInner.getTableDesign().equalsIgnoreCase(BotResponse.TABLE_VIEW_RESPONSIVE) ||
+                            payInner.getTableDesign().equalsIgnoreCase("")))
+                    {
                         responsiveExpandTableView.setVisibility(View.VISIBLE);
                         bubbleTextMediaLayout.populateText(payInner.getText());
                         responsiveExpandTableView.setData(payInner);
-                    } else {
-                        if (tableView == null) {
-                            tableView = ViewProvider.getTableView(context);
-                            tableView.setComposeFooterInterface(composeFooterInterface);
-                            addView(tableView);
-                        }
+                    }
+                    else
+                    {
                         tableView.setVisibility(View.VISIBLE);
                         bubbleTextMediaLayout.populateText(payInner.getText());
                         tableView.setData(payInner);
                     }
-                } else if (BotResponse.CUSTOM_TABLE_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botCustomTableView == null) {
-                        botCustomTableView = ViewProvider.getCustomTableView(context);
-                        botCustomTableView.setComposeFooterInterface(composeFooterInterface);
-                        addView(botCustomTableView);
-
-                    }
+                }
+                else if(BotResponse.CUSTOM_TABLE_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
                     botCustomTableView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     botCustomTableView.setData(payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (koraCarouselView == null) {
-                        koraCarouselView = ViewProvider.getKoraCarouselView(context);
-                        addView(koraCarouselView);
-                    }
+                }
+                else if(BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraCarouselView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     koraCarouselView.populateMiniTable(payInner.getTemplate_type(), payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_MULTI_SELECT.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (multiSelectView == null) {
-                        multiSelectView = ViewProvider.getMultiSelectView(context);
-                        multiSelectView.setComposeFooterInterface(composeFooterInterface);
-                        addView(multiSelectView);
-                    }
+                } else if(BotResponse.TEMPLATE_TYPE_MULTI_SELECT.equalsIgnoreCase(payInner.getTemplate_type())){
                     multiSelectView.setVisibility(View.VISIBLE);
                     multiSelectView.populateData(payInner, isLastItem);
 
-                    if (!StringUtils.isNullOrEmpty(payInner.getText()))
+                    if(!StringUtils.isNullOrEmpty(payInner.getText()))
                         bubbleTextMediaLayout.populateText(payInner.getText());
-                    else if (!StringUtils.isNullOrEmpty(payInner.getHeading()))
+                    else if(!StringUtils.isNullOrEmpty(payInner.getHeading()))
                         bubbleTextMediaLayout.populateText(payInner.getHeading());
 
-                } else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (lineChartView == null) {
-                        lineChartView = ViewProvider.getLineChartView(context);
-                        addView(lineChartView);
-                    }
+                }else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(payInner.getTemplate_type())) {
                     lineChartView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     lineChartView.setData(payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(payInner.getTemplate_type())){
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    if (!payInner.isStacked()) {
-                        if (!BotResponse.BAR_CHART_DIRECTION_VERTICAL.equalsIgnoreCase(payInner.getDirection())) {
-                            if (barChartView == null) {
-                                barChartView = ViewProvider.getBarChartView(context);
-                                addView(barChartView);
-                            }
+                    if(!payInner.isStacked())
+                    {
+                        if(!BotResponse.BAR_CHART_DIRECTION_VERTICAL.equalsIgnoreCase(payInner.getDirection()))
+                        {
                             barChartView.setVisibility(View.VISIBLE);
                             barChartView.setData(payInner);
-                        } else {
-                            if (horizontalBarChartView == null) {
-                                horizontalBarChartView = ViewProvider.getHorizontalBarChartView(context);
-                                addView(horizontalBarChartView);
-                            }
+                        }
+                        else
+                        {
                             horizontalBarChartView.setVisibility(VISIBLE);
                             horizontalBarChartView.setData(payInner);
                         }
-                    } else {
-                        if (stackedBarChatView == null) {
-                            stackedBarChatView = ViewProvider.getStackedBarChartView(context);
-                            addView(stackedBarChatView);
-                        }
+                    }else{
                         stackedBarChatView.setVisibility(View.VISIBLE);
                         stackedBarChatView.setData(payInner);
                     }
-                } else if (BotResponse.TEMPLATE_TYPE_FORM.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botFormTemplateView == null) {
-                        botFormTemplateView = ViewProvider.getBotFormTemplateView(context);
-                        botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
-                        addView(botFormTemplateView);
-                    }
+                }
+                else if(BotResponse.TEMPLATE_TYPE_FORM.equalsIgnoreCase(payInner.getTemplate_type())){
                     botFormTemplateView.setVisibility(View.VISIBLE);
                     botFormTemplateView.populateData(payInner, isLastItem);
-
 //                    bubbleTextMediaLayout.populateText(payInner.getHeading());
-                } else if (BotResponse.TEMPLATE_TYPE_LIST_VIEW.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botListViewTemplateView == null) {
-                        botListViewTemplateView = ViewProvider.getBotListViewTempleteView(context);
-                        botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
-                        addView(botListViewTemplateView);
-                    }
-
+                }
+                else if(BotResponse.TEMPLATE_TYPE_LIST_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     botListViewTemplateView.setVisibility(View.VISIBLE);
                     botListViewTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
                     botListViewTemplateView.populateListTemplateView(payInner.getText(), payInner.getMoreData(), payInner.getListElements(), payInner.getButtons(), payInner.getMoreCount(), payInner.getSeeMore());
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                } else if (BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_TABLE_LIST.equalsIgnoreCase(payInner.getTemplate_type())){
                     botTableListTemplateView.setVisibility(View.VISIBLE);
                     botTableListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
                     botTableListTemplateView.populateListTemplateView(payInner.getTableListElements());
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                } else if (BotResponse.TEMPLATE_TYPE_WELCOME_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_WELCOME_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())){
                     botQuickRepliesTemplateView.setVisibility(View.VISIBLE);
                     botQuickRepliesTemplateView.populateQuickReplyView(payInner.getQuick_replies());
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                } else if (BotResponse.TEMPLATE_TYPE_NOTIFICATIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_NOTIFICATIONS.equalsIgnoreCase(payInner.getTemplate_type())){
                     agentTransferTemplateView.setVisibility(View.VISIBLE);
                     agentTransferTemplateView.populateAgentTemplateView(payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_FEEDBACK.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_FEEDBACK.equalsIgnoreCase(payInner.getTemplate_type())){
                     feedbackTemplateView.setVisibility(View.VISIBLE);
                     feedbackTemplateView.populateData(payInner, true);
-                } else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (listWidgetView == null) {
-                        listWidgetView = ViewProvider.getListWidgetTemplateView(context);
-                        listWidgetView.setComposeFooterInterface(composeFooterInterface);
-                        addView(listWidgetView);
-                    }
+                }
+                else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(payInner.getTemplate_type())){
                     listWidgetView.setVisibility(View.VISIBLE);
                     listWidgetView.populateListWidgetData(payInner);
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                } else if (BotResponse.TEMPLATE_DROPDOWN.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }
+                else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
+                    botListWidgetTemplateView.setVisibility(View.VISIBLE);
+                    botListWidgetTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
+                    botListWidgetTemplateView.populateListWidgetTemplateView(payInner.getTitle(), payInner.getMoreData(), payInner.getListWidgetElements(), payInner.getButtons(), payInner.getMoreCount(), payInner.getSeeMore());
+                }
+                else if(BotResponse.TEMPLATE_DROPDOWN.equalsIgnoreCase(payInner.getTemplate_type())){
                     botDropDownTemplateView.setVisibility(View.VISIBLE);
                     botDropDownTemplateView.populateData(payInner);
-                } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equals(payInner.getTemplate_type())) {
+                }
+                else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL.equals(payInner.getTemplate_type()) ) {
                     ArrayList<KnowledgeDetailModel> knowledgeData = payInner.getKnowledgeDetailModels();
-                    initVerticalListView();
                     verticalListView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     verticalListView.prepareDataSetAndPopulate(knowledgeData, payInner.getTemplate_type(), isLastItem);
-                } else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(payInner.getTemplate_type())) {
+                }else if (BotResponse.TEMPLATE_TYPE_KORA_ANNOUNCEMENT_CAROUSAL.equals(payInner.getTemplate_type()) ) {
                     //announcement carousal
                     List<AnnoucementResModel> annoucementResModelsData = payInner.getAnnouncementResModels();
-                    initVerticalListView();
                     verticalListView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     verticalListView.prepareDataSetAndPopulate((ArrayList) annoucementResModelsData, payInner.getTemplate_type(), isLastItem);
-                } else if (BotResponse.CONTACT_CARD_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (botContactTemplateView == null) {
-                        botContactTemplateView = ViewProvider.getBotContactView(context, null);
-                        addView(botContactTemplateView);
-                    }
+                }
+                else if(BotResponse.CONTACT_CARD_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
                     botContactTemplateView.setVisibility(View.VISIBLE);
                     botContactTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
                     botContactTemplateView.populateContactTemplateView(payInner.getCards(), payInner.getTitle());
-                } else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    initVerticalListView();
+                }
+                else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     verticalListView.setVisibility(View.VISIBLE);
                     if (payInner.getKoraSearchResultsModel() != null)
                         verticalListView.prepareDataSetAndPopulate(payInner.getKoraSearchResultsModel().get(0).getEmails(), BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL, isLastItem);
@@ -625,12 +492,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 } else if (BotResponse.TEMPLATE_TYPE_MEETING_CONFIRM.equalsIgnoreCase(payInner.getTemplate_type())) {
                     ArrayList<MeetingConfirmationModel> meetingTemplateModels = payInner.getMeetingConfirmationModels();
                     if (meetingTemplateModels != null && meetingTemplateModels.size() > 0) {
-                        if (meetingConfirmationView == null) {
-                            meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
-                            meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
-                            //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
-                            addView(meetingConfirmationView);
-                        }
                         meetingConfirmationView.setVisibility(View.VISIBLE);
                         meetingConfirmationView.populateData(meetingTemplateModels.get(0));
                         // BUBBLE_CONTENT_RIGHT_MARGIN = 0;
@@ -640,7 +501,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<TaskTemplateResponse> taskTemplateModels = payInner.getTaskTemplateModels();
                     if (taskTemplateModels != null && taskTemplateModels.size() > 0) {
                         TaskTemplateResponse taskTemplateModel = taskTemplateModels.get(0);
-                        initVerticalListView();
                         verticalListView.setVisibility(VISIBLE);
                         verticalListView.prepareDataToTasks(taskTemplateModel, BotResponse.TEMPLATE_TYPE_TASK_VIEW, isLastItem && (taskTemplateModel.getButtons() != null && taskTemplateModel.getButtons().size() > 0));
                     }
@@ -648,11 +508,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 } else if (BotResponse.TEMPLATE_TYPE_ATTENDEE_SLOTS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     ArrayList<AttendeeSlotTemplateModel> meetingTemplateModels = payInner.getAttendeeSlotTemplateModels();
                     if (meetingTemplateModels != null && meetingTemplateModels.size() > 0) {
-                        if (attendeeSlotSelectionView == null) {
-                            attendeeSlotSelectionView = ViewProvider.getAttendeeSlotSelectionView(context);
-                            attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
-                            addView(attendeeSlotSelectionView);
-                        }
                         attendeeSlotSelectionView.setVisibility(View.VISIBLE);
                         attendeeSlotSelectionView.populateData(position, meetingTemplateModels.get(0), isLastItem);
                     }
@@ -660,7 +515,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(payInner.getTemplate_type())) {
                     ArrayList<CalEventsTemplateModel> calList = payInner.getCalEventsTemplateModels();
                     if (calList != null && !calList.isEmpty()) {
-                        initVerticalListView();
                         verticalListView.setVisibility(View.VISIBLE);
                         verticalListView.setCursorDuration(payInner.getCursor());
                         verticalListView.prepareDataSetAndPopulate(calList, payInner.getTemplate_type(), isLastItem);
@@ -668,67 +522,44 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_FILES_LOOKUP.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
-                    initVerticalListView();
                     verticalListView.setVisibility(View.VISIBLE);
                     ArrayList<KaFileLookupModel> fileList = payInner.getFileLookupModels();
                     if (fileList != null)
                         verticalListView.prepareDataSetAndPopulate(fileList, BotResponse.TEMPLATE_TYPE_FILES_LOOKUP, isLastItem);
                 } else if (BotResponse.KA_CONTACT_VIEW.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (contactInfoView == null) {
-                        contactInfoView = ViewProvider.getContactInfoView(context);
-                        contactInfoView.setComposeFooterInterface(composeFooterInterface);
-                        contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        addView(contactInfoView);
-                    }
                     contactInfoView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<ContactInfoModel> contactInfoModels = payInner.getContactInfoModels();
                     if (contactInfoModels != null && contactInfoModels.size() > 0)
                         contactInfoView.populateData(contactInfoModels.get(0));
-                } else if (BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (welcomeSummaryView == null) {
-                        welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
-                        welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
-                        addView(welcomeSummaryView);
-                    }
+                }else if(BotResponse.WELCOME_SUMMARY_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     welcomeSummaryView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<WelcomeSummaryModel> welcomeSummaryModels = payInner.getWelcomeSummaryModel();
-                    if (welcomeSummaryModels != null && welcomeSummaryModels.size() > 0)
-                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0), isLastItem);
+                    if (welcomeSummaryModels != null && welcomeSummaryModels.size()>0)
+                        welcomeSummaryView.populateData(welcomeSummaryModels.get(0),isLastItem);
 
-                } else if (BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (universalSearchView == null) {
-                        universalSearchView = ViewProvider.getUniversalSearchView(context);
-                        universalSearchView.setComposeFooterInterface(composeFooterInterface);
-                        universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        addView(universalSearchView);
-                    }
+                }else if(BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equalsIgnoreCase(payInner.getTemplate_type())){
                     universalSearchView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     universalSearchView.populateData(payInner.getUniversalSearchModels());
-
-                } else if (BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    if (koraSummaryHelpView == null) {
-                        koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
-                        koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
-                        addView(koraSummaryHelpView);
-                    }
+                }else if(BotResponse.KORA_SUMMARY_HELP_VIEW.equalsIgnoreCase(payInner.getTemplate_type())){
                     koraSummaryHelpView.setVisibility(View.VISIBLE);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     ArrayList<KoraSummaryHelpModel> summaryModels = payInner.getKoraSummaryHelpModel();
                     if (summaryModels != null && summaryModels.size() > 0)
                         koraSummaryHelpView.populateData(summaryModels.get(0));
-                } else if (BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG.equalsIgnoreCase(payInner.getTemplate_type())){
 //                    hiddenDialog.setVisibility(View.VISIBLE);
                     timeStampsTextView.setText("");
                     bubbleTextMediaLayout.populateText("");
-                } else if (BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
 //                    bubbleTextMediaLayout.populateText(payInner.getText());
 //                    ArrayList<NarratorTextModel> narratorModels = payInner.getNarratorTextModel();
 //                    if (narratorModels != null){}
 
-                } else if (BotResponse.TEMPLATE_BANKING_FEEDBACK.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }else if(BotResponse.TEMPLATE_BANKING_FEEDBACK.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
                     bankingFeedbackTemplateView.setVisibility(View.VISIBLE);
                     bankingFeedbackTemplateView.populateData(payInner, isLastItem);
                 }/*else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
@@ -742,7 +573,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     }else {
                         composeFooterInterface.showMentionNarratorContainer(true, narrateText,composeText,null);
                     }
-                }*/ else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
+                }*/
+
+                else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
                     timeLineView.setText(String.format("%s %s", getContext().getString(R.string.conversation_end), DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())));
@@ -754,38 +587,49 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                 } else if (BotResponse.TEMPLATE_TYPE_SESSION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
-                } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    bubbleTextMediaLayout.populateErrorText(payInner.getText(), payInner.getColor());
+                }else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())){
+                    bubbleTextMediaLayout.populateErrorText(payInner.getText(),payInner.getColor());
                 } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
-                    if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                    if(!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
                         bubbleTextMediaLayout.populateText(payInner.getText());
                     else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
                         bubbleTextMediaLayout.populateText(payInner.getText_message());
-                } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
+                }
+                else if(!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
                     bubbleTextMediaLayout.populateText(payInner.getTemplate_type());
                 else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
                     timeStampsTextView.setText("");
                 }
 
-            } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
-                Log.i("TemplateType", "payOuter.getType() --->:" + payOuter.getType());
-                if (!StringUtils.isNullOrEmpty(payInner.getVideoUrl())) {
+            }
+            else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
+
+                if(!StringUtils.isNullOrEmpty(payInner.getVideoUrl()))
+                {
                     imageTemplateView.setVisibility(View.VISIBLE);
                     imageTemplateView.populateData(payInner, BotResponse.COMPONENT_TYPE_VIDEO);
-                } else if (!StringUtils.isNullOrEmpty(payInner.getAudioUrl())) {
+                }
+                else if(!StringUtils.isNullOrEmpty(payInner.getAudioUrl()))
+                {
                     imageTemplateView.setVisibility(View.VISIBLE);
                     imageTemplateView.populateData(payInner, BotResponse.COMPONENT_TYPE_AUDIO);
-                } else if (!StringUtils.isNullOrEmpty(payInner.getText()))
+                }
+                else if(!StringUtils.isNullOrEmpty(payInner.getText()))
                     bubbleTextMediaLayout.populateText(payInner.getText());
 
-            } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
+            }
+            else if(BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType()) && payInner != null){
                 bubbleTextMediaLayout.populateText(payInner.getText());
-            } else if ((BotResponse.COMPONENT_TYPE_IMAGE.equalsIgnoreCase(payOuter.getType())
-                    || BotResponse.COMPONENT_TYPE_AUDIO.equalsIgnoreCase(payOuter.getType())
-                    || BotResponse.COMPONENT_TYPE_VIDEO.equalsIgnoreCase(payOuter.getType())) && payInner != null) {
+            }
+            else if((BotResponse.COMPONENT_TYPE_IMAGE.equalsIgnoreCase(payOuter.getType())
+                || BotResponse.COMPONENT_TYPE_AUDIO.equalsIgnoreCase(payOuter.getType())
+                || BotResponse.COMPONENT_TYPE_VIDEO.equalsIgnoreCase(payOuter.getType())) && payInner != null)
+            {
                 imageTemplateView.setVisibility(View.VISIBLE);
                 imageTemplateView.populateData(payInner, payOuter.getType());
-            } else {
+            }
+            else
+            {
                 bubbleTextMediaLayout.populateText(payOuter.getText());
             }
 
@@ -797,15 +641,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         //setDoDrawBubbleBackground(!(payloadInner.getText() == null || payloadInner.getText().isEmpty()));
         if (!isDoDrawBubbleBackground()) {
             cpvSenderImage.setVisibility(GONE);
-        }
-    }
-
-    private void initVerticalListView() {
-        if (verticalListView == null) {
-            verticalListView = ViewProvider.getVerticalListView(context);
-            verticalListView.setComposeFooterInterface(composeFooterInterface);
-            verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            addView(verticalListView);
         }
     }
 
@@ -829,37 +664,25 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
         int fullWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
-        if (bubbleTextMediaLayout != null) {
-            MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
         // MeasureUtils.measure(meetingSlotsView, childWidthSpec, wrapSpec);
-        if (timeStampsTextView != null) {
-            MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
-        }
-        if (timeLineView != null) {
-            MeasureUtils.measure(timeLineView, fullWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
+        MeasureUtils.measure(timeLineView, fullWidthSpec, wrapSpec);
 
         /*
          * For Sender icon [CPV]
          */
-        if (cpvSenderImage != null) {
-            float cpvSenderImageDimen = dp1 * 21;
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
-            cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
-            MeasureUtils.measure(cpvSenderImage, childWidthSpec, childHeightSpec);
-        }
+        float cpvSenderImageDimen = dp1 * 21;
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
+        cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
+        MeasureUtils.measure(cpvSenderImage, childWidthSpec, childHeightSpec);
 
         /*
          * For List Templates
          */
-        if (botListTemplateView != null) {
-            MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
-        }
-        if (botContactTemplateView != null) {
-            MeasureUtils.measure(botContactTemplateView, wrapSpec, wrapSpec);
-        }
+        MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
+        MeasureUtils.measure(botContactTemplateView, wrapSpec, wrapSpec);
         /*
          * For List View Templates
          */
@@ -870,30 +693,23 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /**
          * For PieChart
          */
-        if (botPieChartView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(botPieChartView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botPieChartView, childWidthSpec, childHeightSpec);
 
         /*
          * For List View Templates
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
-        if (botListViewTemplateView != null) {
-            MeasureUtils.measure(botListViewTemplateView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(botListViewTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For List Widget Templates
          */
-
-        if (botListWidgetTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(botListWidgetTemplateView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(botListWidgetTemplateView, childWidthSpec, wrapSpec);
 
         /**
          * For TableViev
@@ -901,182 +717,122 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (tableHeight), MeasureSpec.EXACTLY);
-        if (tableView != null) {
-            MeasureUtils.measure(tableView, childWidthSpec, wrapSpec);
-        }
-        if (botCustomTableView != null) {
-            MeasureUtils.measure(botCustomTableView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(tableView, childWidthSpec,wrapSpec);
+        MeasureUtils.measure(botCustomTableView, childWidthSpec,wrapSpec);
 
         /**
          * For Responsive TableViev
          */
 
-        if (responsiveTableView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (respTableViewHeight), MeasureSpec.EXACTLY);
 //        MeasureUtils.measure(responsiveTableView, childWidthSpec,childHeightSpec);
-            MeasureUtils.measure(responsiveTableView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(responsiveTableView, childWidthSpec,wrapSpec);
 
         /**
          * For Responsive TableViev
          */
 
-        if (botFormTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (respTableViewHeight), MeasureSpec.EXACTLY);
 //        MeasureUtils.measure(responsiveTableView, childWidthSpec,childHeightSpec);
-            MeasureUtils.measure(botFormTemplateView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(botFormTemplateView, childWidthSpec,wrapSpec);
 
         /**
          * For Bot Form TableViev
          */
 
-        if (responsiveExpandTableView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (respTableViewHeight), MeasureSpec.EXACTLY);
 //        MeasureUtils.measure(responsiveExpandTableView, childWidthSpec,childHeightSpec);
-            MeasureUtils.measure(responsiveExpandTableView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(responsiveExpandTableView, childWidthSpec,wrapSpec);
 
         /**
          * For minitable
          */
-        if (koraCarouselView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth , MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (koraCarouselView.getMeasuredHeight()), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(koraCarouselView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(koraCarouselView, childWidthSpec, wrapSpec);
 
         /**
          * for line chart
          */
 
-        if (lineChartView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) lineHeight, MeasureSpec.EXACTLY);
-            MeasureUtils.measure(lineChartView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) lineHeight, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(lineChartView, childWidthSpec, childHeightSpec);
 
         /**
          * For BarChart
          */
-        if (barChartView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(barChartView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(barChartView, childWidthSpec, childHeightSpec);
 
         /**
          * For Horizontal BarChart
          */
-        if (horizontalBarChartView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(horizontalBarChartView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(horizontalBarChartView, childWidthSpec,childHeightSpec);
 
         /**
          * For stacked BarChart
          */
-        if (stackedBarChatView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-            childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(stackedBarChatView, childWidthSpec, childHeightSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(stackedBarChatView, childWidthSpec,childHeightSpec);
 
         /*
          * For Table List Templates
          */
-        if (botTableListTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
-            MeasureUtils.measure(botTableListTemplateView, childWidthSpec, wrapSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(botTableListTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Agent Transfer Templates
          */
-        if (agentTransferTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
-            MeasureUtils.measure(agentTransferTemplateView, childWidthSpec, wrapSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(agentTransferTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Table List Templates
          */
-        if (botQuickRepliesTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
 //        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(botQuickRepliesTemplateView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(botQuickRepliesTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Widget List Templates
          */
-        if (listWidgetView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
-            MeasureUtils.measure(listWidgetView, childWidthSpec, wrapSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(listWidgetView, childWidthSpec, wrapSpec);
 
         /*
          * For Banking feedback Templates
          */
-        if (bankingFeedbackTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
-            MeasureUtils.measure(bankingFeedbackTemplateView, childWidthSpec, wrapSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 70 * (int) dp1, MeasureSpec.EXACTLY);
+        MeasureUtils.measure(bankingFeedbackTemplateView, childWidthSpec, wrapSpec);
 
-        if (meetingSlotsView != null) {
-            MeasureUtils.measure(meetingSlotsView, childWidthSpec, wrapSpec);
-        }
-        if (multiSelectView != null) {
-            MeasureUtils.measure(multiSelectView, childWidthSpec, wrapSpec);
-        }
-        if (botButtonView != null) {
-            MeasureUtils.measure(botButtonView, childWidthSpec, wrapSpec);
-        }
-        if (botCarouselView != null) {
-            MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
-        }
-        if (meetingConfirmationView != null) {
-            MeasureUtils.measure(meetingConfirmationView, childWidthSpec, wrapSpec);
-        }
-        if (verticalListView != null) {
-            MeasureUtils.measure(verticalListView, childWidthSpec, wrapSpec);
-        }
-        if (attendeeSlotSelectionView != null) {
-            MeasureUtils.measure(attendeeSlotSelectionView, childWidthSpec, wrapSpec);
-        }
-        if (contactInfoView != null) {
-            MeasureUtils.measure(contactInfoView, childWidthSpec, wrapSpec);
-        }
-        if (welcomeSummaryView != null) {
-            MeasureUtils.measure(welcomeSummaryView, childWidthSpec, wrapSpec);
-        }
-
-        if (universalSearchView != null) {
-            MeasureUtils.measure(universalSearchView, childWidthSpec, wrapSpec);
-        }
-
-        if (koraSummaryHelpView != null) {
-            MeasureUtils.measure(koraSummaryHelpView, childWidthSpec, wrapSpec);
-        }
-        if (feedbackTemplateView != null) {
-            MeasureUtils.measure(feedbackTemplateView, childWidthSpec, wrapSpec);
-        }
-        if (botDropDownTemplateView != null) {
-            MeasureUtils.measure(botDropDownTemplateView, childWidthSpec, wrapSpec);
-        }
+        MeasureUtils.measure(meetingSlotsView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(multiSelectView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(botButtonView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(meetingConfirmationView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(verticalListView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(attendeeSlotSelectionView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(contactInfoView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(welcomeSummaryView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(universalSearchView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(koraSummaryHelpView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(feedbackTemplateView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(botDropDownTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Widget List Templates
          */
-        if (imageTemplateView != null) {
-            childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - (50 * (int) dp1), MeasureSpec.EXACTLY);
-            MeasureUtils.measure(imageTemplateView, childWidthSpec, wrapSpec);
-        }
+        childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - (50 * (int) dp1), MeasureSpec.EXACTLY);
+        MeasureUtils.measure(imageTemplateView, childWidthSpec, wrapSpec);
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
 
@@ -1115,108 +871,40 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) dp15 : minimumTop;
         left = bubbleTextMediaLayout.getLeft() - (BubbleUI ? BUBBLE_CONTENT_LEFT_MARGIN : 0);
 
-        if (botButtonView != null) {
-            layoutView(botButtonView, top, left, arrayList);
-        }
-        if (meetingSlotsView != null) {
-            layoutView(meetingSlotsView, top, left, arrayList);
-        }
-        if (multiSelectView != null) {
-            layoutView(multiSelectView, top, left, arrayList);
-        }
-        if (attendeeSlotSelectionView != null) {
-            layoutView(attendeeSlotSelectionView, top, (int) (left - dp1), arrayList);
-        }
-        if (meetingConfirmationView != null) {
-            layoutView(meetingConfirmationView, top, (int) (left - dp1), arrayList);
-        }
-        if (botCarouselView != null) {
-            layoutView(botCarouselView, top, left, arrayList);
-        }
-        if (verticalListView != null) {
-            layoutView(verticalListView, top, (int) (left - dp1), arrayList);
-        }
-        if (botListTemplateView != null) {
-            layoutView(botListTemplateView, top, left, arrayList);
-        }
-        if (botPieChartView != null) {
-            layoutView(botPieChartView, top, left, arrayList);
-        }
-        if (tableView != null) {
-            layoutView(tableView, top, left, arrayList);
-        }
-        if (botCustomTableView != null) {
-            layoutView(botCustomTableView, top, left, arrayList);
-        }
-        if (responsiveTableView != null) {
-            layoutView(responsiveTableView, top, left, arrayList);
-        }
-        if (responsiveExpandTableView != null) {
-            layoutView(responsiveExpandTableView, top, left, arrayList);
-        }
-        if (lineChartView != null) {
-            layoutView(lineChartView, top, left, arrayList);
-        }
-        if (barChartView != null) {
-            layoutView(barChartView, top, left, arrayList);
-        }
-        if (horizontalBarChartView != null) {
-            layoutView(horizontalBarChartView, top, left, arrayList);
-        }
-        if (stackedBarChatView != null) {
-            layoutView(stackedBarChatView, top, left, arrayList);
-        }
-        if (contactInfoView != null) {
-            layoutView(contactInfoView, top, left, arrayList);
-        }
-        if (welcomeSummaryView != null) {
-            layoutView(welcomeSummaryView, top, left, arrayList);
-        }
-        if (universalSearchView != null) {
-            layoutView(universalSearchView, top, left, arrayList);
-        }
-        if (koraSummaryHelpView != null) {
-            layoutView(koraSummaryHelpView, top, left, arrayList);
-        }
-        if (koraCarouselView != null) {
-            layoutView(koraCarouselView, top, left, arrayList);
-        }
-        if (botFormTemplateView != null) {
-            layoutView(botFormTemplateView, top, left, arrayList);
-        }
-        if (botListViewTemplateView != null) {
-            layoutView(botListViewTemplateView, top, left, arrayList);
-        }
-        if (botListWidgetTemplateView != null) {
-            layoutView(botListWidgetTemplateView, top, left, arrayList);
-        }
-        if (botTableListTemplateView != null) {
-            layoutView(botTableListTemplateView, top, left, arrayList);
-        }
-        if (botQuickRepliesTemplateView != null) {
-            layoutView(botQuickRepliesTemplateView, top, left, arrayList);
-        }
-        if (agentTransferTemplateView != null) {
-            layoutView(agentTransferTemplateView, top, left, arrayList);
-        }
-        if (feedbackTemplateView != null) {
-            layoutView(feedbackTemplateView, top, left, arrayList);
-        }
-        if (listWidgetView != null) {
-            layoutView(listWidgetView, top, left, arrayList);
-        }
-        if (botDropDownTemplateView != null) {
-            layoutView(botDropDownTemplateView, top, left, arrayList);
-        }
-        if (imageTemplateView != null) {
-            layoutView(imageTemplateView, top, left, arrayList);
-        }
-        if (bankingFeedbackTemplateView != null) {
-            layoutView(bankingFeedbackTemplateView, top, left, arrayList);
-        }
-        if (botContactTemplateView != null) {
-            layoutView(botContactTemplateView, top, left, arrayList);
-        }
+        layoutView(botButtonView, top, left, arrayList);
+        layoutView(meetingSlotsView, top, left, arrayList);
+        layoutView(multiSelectView, top, left, arrayList);
+        layoutView(attendeeSlotSelectionView, top, (int) (left - dp1), arrayList);
+        layoutView(meetingConfirmationView, top, (int) (left - dp1), arrayList);
+        layoutView(botCarouselView, top, left, arrayList);
+        layoutView(verticalListView, top, (int) (left - dp1), arrayList);
+        layoutView(botListTemplateView, top, left, arrayList);
+        layoutView(botPieChartView, top, left, arrayList);
+        layoutView(tableView, top, left, arrayList);
+        layoutView(botCustomTableView, top, left, arrayList);
+        layoutView(responsiveTableView, top, left, arrayList);
+        layoutView(responsiveExpandTableView, top, left, arrayList);
+        layoutView(lineChartView, top, left, arrayList);
+        layoutView(barChartView, top, left, arrayList);
+        layoutView(horizontalBarChartView, top, left, arrayList);
+        layoutView(stackedBarChatView, top, left, arrayList);
+        layoutView(contactInfoView, top, left, arrayList);
+        layoutView(welcomeSummaryView, top, left, arrayList);
+        layoutView(universalSearchView, top, left, arrayList);
+        layoutView(koraSummaryHelpView, top, left, arrayList);
+        layoutView(koraCarouselView, top, left, arrayList);
+        layoutView(botFormTemplateView, top, left, arrayList);
+        layoutView(botListViewTemplateView, top, left, arrayList);
+        layoutView(botListWidgetTemplateView, top, left, arrayList);
+        layoutView(botTableListTemplateView, top, left, arrayList);
+        layoutView(botQuickRepliesTemplateView, top, left, arrayList);
+        layoutView(agentTransferTemplateView, top, left, arrayList);
+        layoutView(feedbackTemplateView, top, left, arrayList);
+        layoutView(listWidgetView, top, left, arrayList);
+        layoutView(botDropDownTemplateView, top, left, arrayList);
+        layoutView(imageTemplateView, top, left, arrayList);
+        layoutView(bankingFeedbackTemplateView, top, left, arrayList);
+        layoutView(botContactTemplateView, top, left, arrayList);
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);
@@ -1230,9 +918,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         LayoutUtils.layoutChild(timeLineView, 0, top);
 
-        if (botCarouselView != null) {
-            botCarouselView.bringToFront();
-        }
+        botCarouselView.bringToFront();
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
 
     }

@@ -31,4 +31,13 @@ public class PayloadOuter {
     public void setPayload(PayloadInner payload) {
         this.payload = payload;
     }
+
+    @Override
+    public String toString() {
+        return "PayloadOuter{" +
+                "type='" + type + '\'' +
+                ", payload=" + payload +
+                ", text='" + text + '\'' +
+                '}';
+    }
 }

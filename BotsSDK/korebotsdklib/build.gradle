@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 32
@@ -63,8 +61,4 @@ allprojects {
 //        mavenCentral();
 //        maven { url 'https://www.jitpack.io' }
     }
-}
-
-kapt {
-    correctErrorTypes true
 }

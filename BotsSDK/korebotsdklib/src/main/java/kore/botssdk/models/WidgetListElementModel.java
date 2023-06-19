@@ -3,30 +3,6 @@ package kore.botssdk.models;
 import java.util.ArrayList;
 
 public class WidgetListElementModel {
-    private ImageModel image;
-    private String title;
-    private String subtitle;
-    private String description;
-    private HeaderOptionsModel value;
-
-    private String stockAvailability = "";
-
-    private String topRated = "";
-
-    private ViewStyles templateStyles;
-
-    private ViewStyles availabilityStyles;
-
-    private ViewStyles topRatedStyles;
-
-    private Object buttonsLayout;
-    private String icon;
-    private String theme;
-    private ArrayList<ContentModel> content = null;
-    private boolean hasMore;
-    private ArrayList<ContentModel> details = null;
-    private Widget.DefaultAction default_action;
-    private ArrayList<Widget.Button> buttons = null;
 
     public ImageModel getImage() {
         return image;
@@ -84,6 +60,11 @@ public class WidgetListElementModel {
         this.buttons = buttons;
     }
 
+    private ImageModel image;
+    private String title;
+    private String subtitle;
+    private HeaderOptionsModel value;
+
     public Object getButtonsLayout() {
         return buttonsLayout;
     }
@@ -91,6 +72,8 @@ public class WidgetListElementModel {
     public void setButtonsLayout(Object buttonsLayout) {
         this.buttonsLayout = buttonsLayout;
     }
+
+    private Object buttonsLayout;
 
     public String getIcon() {
         return icon;
@@ -104,17 +87,12 @@ public class WidgetListElementModel {
         return theme;
     }
 
-    public String getStockAvailability() {
-        return stockAvailability;
-    }
-
-    public String getTopRated() {
-        return topRated;
-    }
-
     public void setTheme(String theme) {
         this.theme = theme;
     }
+
+    private String icon;
+    private String theme;
 
     public boolean isHasMore() {
         return hasMore;
@@ -124,9 +102,8 @@ public class WidgetListElementModel {
         this.hasMore = hasMore;
     }
 
-    public void setTopRated(String topRated) {
-        this.topRated = topRated;
-    }
+    private boolean hasMore;
+    private ArrayList<ContentModel> content = null;
 
     public ArrayList<ContentModel> getDetails() {
         return details;
@@ -136,39 +113,7 @@ public class WidgetListElementModel {
         this.details = details;
     }
 
-    public ViewStyles getTemplateStyles() {
-        return templateStyles;
-    }
-
-    public ViewStyles getAvailabilityStyles() {
-        return availabilityStyles;
-    }
-
-    public ViewStyles getTopRatedStyles() {
-        return topRatedStyles;
-    }
-
-    public void setStockAvailability(String stockAvailability) {
-        this.stockAvailability = stockAvailability;
-    }
-
-    public void setTemplateStyles(ViewStyles templateStyles) {
-        this.templateStyles = templateStyles;
-    }
-
-    public void setAvailabilityStyles(ViewStyles availabilityStyles) {
-        this.availabilityStyles = availabilityStyles;
-    }
-
-    public void setTopRatedStyles(ViewStyles topRatedStyles) {
-        this.topRatedStyles = topRatedStyles;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    private ArrayList<ContentModel> details = null;
+    private Widget.DefaultAction default_action;
+    private ArrayList<Widget.Button> buttons = null;
 }

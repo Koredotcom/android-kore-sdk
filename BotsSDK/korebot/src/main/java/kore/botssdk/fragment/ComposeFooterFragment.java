@@ -68,12 +68,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
-import net.gotev.speech.GoogleVoiceTypingDisabledException;
-import net.gotev.speech.Speech;
-import net.gotev.speech.SpeechDelegate;
-import net.gotev.speech.SpeechRecognitionNotAvailable;
-import net.gotev.speech.SpeechUtil;
-import net.gotev.speech.ui.SpeechProgressView;
+//import net.gotev.speech.GoogleVoiceTypingDisabledException;
+//import net.gotev.speech.Speech;
+//import net.gotev.speech.SpeechDelegate;
+//import net.gotev.speech.SpeechRecognitionNotAvailable;
+//import net.gotev.speech.SpeechUtil;
+//import net.gotev.speech.ui.SpeechProgressView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -125,7 +125,7 @@ import kore.botssdk.websocket.SocketWrapper;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
+public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate {
 
     private static final int REQ_CODE_SPEECH_INPUT = 1;
     String LOG_TAG = ComposeFooterFragment.class.getName();
@@ -139,7 +139,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     protected ImageView audio_speak_tts;
     protected  ImageView keyboard_img;
     protected ImageView newMenuLogo;
-    private SpeechProgressView progress;
+    //private SpeechProgressView progress;
     private TextView text_view_speech;
     private static final int REQUEST_RECORD_AUDIO = 13;
 
@@ -178,7 +178,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Speech.init(getContext(), getContext().getPackageName());
+        //Speech.init(getContext(), getContext().getPackageName());
     }
 
     @Nullable
@@ -202,7 +202,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     @Override
     public void onDestroy() {
         KoreEventCenter.unregister(this);
-        Speech.getInstance().shutdown();
+       // Speech.getInstance().shutdown();
         super.onDestroy();
     }
 
@@ -218,7 +218,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         audio_speak_tts = (ImageView) view.findViewById(R.id.audio_speak_tts);
         linearLayoutProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
         newMenuLogo = (ImageView)view.findViewById(R.id.newMenuLogo);
-        progress = (SpeechProgressView) view.findViewById(R.id.progress);
+      //  progress = (SpeechProgressView) view.findViewById(R.id.progress);
         attachemnt= (ImageView) view.findViewById(R.id.attachemnt);
         attachment_recycler=view.findViewById(R.id.attachment_recycler);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -229,7 +229,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 getContext().getResources().getColor(android.R.color.holo_orange_dark),
                 getContext().getResources().getColor(android.R.color.holo_red_dark)
         };
-        progress.setColors(colors);
+       // progress.setColors(colors);
 
         text_view_speech = (TextView) view.findViewById(R.id.text_view_speech);
         if(composebarAttachmentAdapter==null)
@@ -591,32 +591,24 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void onButtonClick() {
-        if (Speech.getInstance().isListening()) {
-            Speech.getInstance().stopListening();
-        } else {
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-//                editTextMessage.setHint("Start talking...");
-                    onRecordAudioPermissionGranted();
-
-                } else {
-                    requestMicrophonePermission();
-                }
-            } else {
-//            editTextMessage.setHint("Start talking...");
-//                showTapToSpeakFragment();
-                onRecordAudioPermissionGranted();
-            }
-            /*RxPermissions.getInstance(this)
-                    .request(Manifest.permission.RECORD_AUDIO)
-                    .subscribe(granted -> {
-                        if (granted) { // Always true pre-M
-                            onRecordAudioPermissionGranted();
-                        } else {
-                            Toast.makeText(MainActivity.this, R.string.permission_required, Toast.LENGTH_LONG);
-                        }
-                    });*/
-        }
+//        if (Speech.getInstance().isListening()) {
+//            Speech.getInstance().stopListening();
+//        } else {
+//            if (Build.VERSION.SDK_INT >= 23) {
+//                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+////                editTextMessage.setHint("Start talking...");
+//                    onRecordAudioPermissionGranted();
+//
+//                } else {
+//                    requestMicrophonePermission();
+//                }
+//            } else {
+////            editTextMessage.setHint("Start talking...");
+////                showTapToSpeakFragment();
+//                onRecordAudioPermissionGranted();
+//            }
+//
+//        }
     }
     private void onRecordAudioPermissionGranted() {
         stopTTS();
@@ -629,79 +621,79 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         text_view_speech.setVisibility(View.VISIBLE);
         text_view_speech.setText("");
 
-        try {
-            Speech.getInstance().stopTextToSpeech();
-            Speech.getInstance().startListening(progress, ComposeFooterFragment.this);
-
-        } catch (SpeechRecognitionNotAvailable exc) {
-            showSpeechNotSupportedDialog();
-
-        } catch (GoogleVoiceTypingDisabledException exc) {
-            showEnableGoogleVoiceTyping();
-        }
+//        try {
+//            Speech.getInstance().stopTextToSpeech();
+//            Speech.getInstance().startListening(progress, ComposeFooterFragment.this);
+//
+//        } catch (SpeechRecognitionNotAvailable exc) {
+//            showSpeechNotSupportedDialog();
+//
+//        } catch (GoogleVoiceTypingDisabledException exc) {
+//            showEnableGoogleVoiceTyping();
+//        }
     }
-    @Override
-    public void onStartOfSpeech() {
-    }
-
-    @Override
-    public void onSpeechRmsChanged(float value) {
-    }
-
-    @Override
-    public void onSpeechPartialResults(List<String> results) {
-
-        text_view_speech.setText(results.toString());
-        for (String partial : results) {
-            text_view_speech.append(partial + " ");
-        }
-    }
-
-    @Override
-    public void onSpeechResult(String result) {
-        speakerText.setVisibility(View.VISIBLE);
-        linearLayoutProgress.setVisibility(View.GONE);
-        text_view_speech.setText(result);
-
-        if (result.isEmpty()) {
-            Speech.getInstance().say(getString(R.string.repeat));
-
-        }else{
-            if (composeFooterInterface != null) {
-                composeFooterInterface.onSendClick(result,false);
-                editTextMessage.setText("");
-            } else {
-                Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
-            }
-            /*else {
-            Speech.getInstance().say(result);
-        }*/
-        }
-        text_view_speech.setVisibility(View.GONE);
-
-    }
-    private void showSpeechNotSupportedDialog() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        SpeechUtil.redirectUserToGoogleAppOnPlayStore(getActivity());
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.speech_not_available)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener)
-                .show();
-    }
+//    @Override
+//    public void onStartOfSpeech() {
+//    }
+//
+//    @Override
+//    public void onSpeechRmsChanged(float value) {
+//    }
+//
+//    @Override
+//    public void onSpeechPartialResults(List<String> results) {
+//
+//        text_view_speech.setText(results.toString());
+//        for (String partial : results) {
+//            text_view_speech.append(partial + " ");
+//        }
+//    }
+//
+//    @Override
+//    public void onSpeechResult(String result) {
+//        speakerText.setVisibility(View.VISIBLE);
+//        linearLayoutProgress.setVisibility(View.GONE);
+//        text_view_speech.setText(result);
+//
+//        if (result.isEmpty()) {
+//            Speech.getInstance().say(getString(R.string.repeat));
+//
+//        }else{
+//            if (composeFooterInterface != null) {
+//                composeFooterInterface.onSendClick(result,false);
+//                editTextMessage.setText("");
+//            } else {
+//                Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+//            }
+//            /*else {
+//            Speech.getInstance().say(result);
+//        }*/
+//        }
+//        text_view_speech.setVisibility(View.GONE);
+//
+//    }
+//    private void showSpeechNotSupportedDialog() {
+//        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                switch (which){
+//                    case DialogInterface.BUTTON_POSITIVE:
+//                        SpeechUtil.redirectUserToGoogleAppOnPlayStore(getActivity());
+//                        break;
+//
+//                    case DialogInterface.BUTTON_NEGATIVE:
+//                        break;
+//                }
+//            }
+//        };
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setMessage(R.string.speech_not_available)
+//                .setCancelable(false)
+//                .setPositiveButton(R.string.yes, dialogClickListener)
+//                .setNegativeButton(R.string.no, dialogClickListener)
+//                .show();
+//    }
 
     private void showEnableGoogleVoiceTyping() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -38,4 +38,13 @@ public class BotResponseMessage {
     public BotResponseMessageComponentInfo getcInfo() {
         return cInfo;
     }
+
+    @Override
+    public String toString() {
+        return "BotResponseMessage{" +
+                "type='" + type + '\'' +
+                ", component=" + component +
+                ", cInfo=" + cInfo +
+                '}';
+    }
 }

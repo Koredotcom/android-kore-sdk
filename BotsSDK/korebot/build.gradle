@@ -1,6 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 32
@@ -43,10 +41,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    buildFeatures {
-        viewBinding true
-    }
 }
 
 allprojects {
@@ -77,9 +71,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation ('net.gotev:speech:1.3.1'){
-        exclude module: 'support-v4'
-    }
+//    implementation ('net.gotev:speech:1.3.1'){
+//        exclude module: 'support-v4'
+//    }
 //    implementation project(path: ':stickyListHeaders')
     implementation 'com.j256.ormlite:ormlite-android:4.48'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
@@ -89,8 +83,4 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.github.emojione:emojione-android:3.1.0'
-}
-
-kapt {
-    correctErrorTypes true
 }
