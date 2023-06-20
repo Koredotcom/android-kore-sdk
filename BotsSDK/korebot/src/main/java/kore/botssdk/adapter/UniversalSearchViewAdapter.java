@@ -129,8 +129,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
 
     private void bindMeetingNotes(MeetingNotesViewHolder holder, final int position) {
-
-
         final CalEventsTemplateModel model = koraUniversalSearchModel.get(position).getMeetingNotes().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
@@ -165,8 +163,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     }
 
     public void bindEmailData(EmailViewHolder holder, final int position) {
-
-
         final EmailModel model = koraUniversalSearchModel.get(position).getEmails().get(0);
         String title = koraUniversalSearchModel.get(position).getTitle();
         int count = koraUniversalSearchModel.get(position).getCount();
@@ -377,7 +373,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         switch (koraUniversalSearchModel.get(position).getType()) {
             case BotResponse.US_EMAIL_TYPE:
                 return EMAIl;
-
             case BotResponse.US_FILES_TYPE:
                 return FILES;
             case BotResponse.US_KNOWLEDGE_TYPE:

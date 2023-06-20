@@ -60,7 +60,7 @@ public class TableView<T> extends LinearLayout {
     private final float dp1;
     private PayloadInner payloadInner;
     private int headerElevation;
-    private Dialog dialog;
+    private String propertyName = "y";
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 //    private int headerColor;
@@ -144,7 +144,7 @@ public class TableView<T> extends LinearLayout {
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", 0));
+                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
                 moveInAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
                 setLayoutTransition(layoutTransition);
@@ -154,7 +154,7 @@ public class TableView<T> extends LinearLayout {
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", -tableHeaderView.getHeight()));
+                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
                 moveOutAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
                 setLayoutTransition(layoutTransition);

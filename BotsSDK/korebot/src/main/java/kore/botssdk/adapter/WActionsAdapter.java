@@ -43,7 +43,7 @@ public class WActionsAdapter extends RecyclerView.Adapter<WActionsAdapter.ViewHo
         holder.actionItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionHelper.actionItemClicked(botButtonModels.get(position));
+                actionHelper.actionItemClicked(botButtonModels.get(holder.getBindingAdapterPosition()));
             }
         });
     }

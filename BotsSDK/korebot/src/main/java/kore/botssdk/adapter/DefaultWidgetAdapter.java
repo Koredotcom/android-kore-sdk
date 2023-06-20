@@ -43,7 +43,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.Widget.Element;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
@@ -69,13 +69,13 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     ArrayList<String> selectedIds = null;
 
-    public ArrayList<Element> getEventList() {
+    public ArrayList<Widget.Element> getEventList() {
         return eventList;
     }
 
 //    private Duration _cursor;
 
-    ArrayList<Element> eventList = new ArrayList<>();
+    ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
     private final Context mContext;
 
@@ -135,7 +135,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         selectedIds.clear();
     }
 
-    public Element getItem(int position) {
+    public Widget.Element getItem(int position) {
         if (position < eventList.size())
             return eventList.get(position);
         else return null;
@@ -217,7 +217,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
             ViewHolder holder = (ViewHolder) holderData;
 
-            final Element model = eventList.get(position);
+            final Widget.Element model = eventList.get(position);
 
             if (StringUtils.isNullOrEmpty(model.getTitle())) {
                 holder.txtTitle.setVisibility(GONE);
@@ -361,8 +361,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     }
 
-    public void setWidgetData(List<Element> data) {
-        this.eventList = (ArrayList<Element>) data;
+    public void setWidgetData(List<Widget.Element> data) {
+        this.eventList = (ArrayList<Widget.Element>) data;
         notifyDataSetChanged();
     }
 

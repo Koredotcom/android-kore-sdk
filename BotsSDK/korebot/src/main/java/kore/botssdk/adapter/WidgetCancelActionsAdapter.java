@@ -72,21 +72,21 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
             @Override
             public void onClick(View view) {
 
-                String type = actionList.get(position).getType();
-                if (actionList.get(position).getType().equalsIgnoreCase("view_details")) {
+                String type = actionList.get(holder.getBindingAdapterPosition()).getType();
+                if (actionList.get(holder.getBindingAdapterPosition()).getType().equalsIgnoreCase("view_details")) {
                     //view meeting
                     verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, model);
                     (widgetDialogActivity).dismiss();
-                } else if (type.equalsIgnoreCase("url") && actionList.get(position).getCustom_type().equalsIgnoreCase("url")) {
+                } else if (type.equalsIgnoreCase("url") && actionList.get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("url")) {
                     //join meeting
-                    verticalListViewActionHelper.navigationToDialAndJoin("url", actionList.get(position).getUrl());
+                    verticalListViewActionHelper.navigationToDialAndJoin("url", actionList.get(holder.getBindingAdapterPosition()).getUrl());
                     (widgetDialogActivity).dismiss();
 
-                } else if (type.equalsIgnoreCase("dial") && actionList.get(position).getCustom_type().equalsIgnoreCase("dial")) {
-                    verticalListViewActionHelper.navigationToDialAndJoin("dial", actionList.get(position).getDial());
+                } else if (type.equalsIgnoreCase("dial") && actionList.get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("dial")) {
+                    verticalListViewActionHelper.navigationToDialAndJoin("dial", actionList.get(holder.getBindingAdapterPosition()).getDial());
                     (widgetDialogActivity).dismiss();
-                } else if (type.equalsIgnoreCase("url") && actionList.get(position).getCustom_type().equalsIgnoreCase("meetingUrl")) {
-                    verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", actionList.get(position).getUrl());
+                } else if (type.equalsIgnoreCase("url") && actionList.get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("meetingUrl")) {
+                    verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", actionList.get(holder.getBindingAdapterPosition()).getUrl());
                     (widgetDialogActivity).dismiss();
 
                 } else if (type.equalsIgnoreCase(BotResponse.TAKE_NOTES)) {
@@ -95,13 +95,13 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
 
                 } else {
                     if(Utility.checkIsSkillKora()){
-                        postAction(position,false);
+                        postAction(holder.getBindingAdapterPosition(),false);
                     } else {
 
                         DialogCaller.showDialog(mainContext,null,new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postAction(position,true);
+                                postAction(holder.getBindingAdapterPosition(),true);
                                 dialog.dismiss();
                             }
                         });

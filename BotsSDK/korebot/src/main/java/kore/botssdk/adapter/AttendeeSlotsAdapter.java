@@ -123,7 +123,7 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
                         addOrRemoveSelectedSlot(slot);
                         SelectionUtils.setSelectedSlots(selectedSlots);
                         slotSelectionListener.onSlotSelectionChanged();
-                        notifyItemChanged(position);
+                        notifyItemChanged(holder.getBindingAdapterPosition());
                     }
                 }
             });

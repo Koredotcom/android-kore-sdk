@@ -53,9 +53,9 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
         holder.emailLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EmailModel emailModel = emailModels.get(position);
+                EmailModel emailModel = emailModels.get(holder.getBindingAdapterPosition());
                 if (emailModel.getButtons() == null || emailModel.getButtons().size() == 0) return;
-                BotCaourselButtonModel botCaourselButtonModel = emailModels.get(position).getButtons().get(0);
+                BotCaourselButtonModel botCaourselButtonModel = emailModels.get(holder.getBindingAdapterPosition()).getButtons().get(0);
                 verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(),botCaourselButtonModel.getCustomData());
             }
         });

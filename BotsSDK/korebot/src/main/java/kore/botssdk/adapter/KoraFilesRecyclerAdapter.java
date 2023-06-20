@@ -86,7 +86,7 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements Re
             holder.koraFileLookupViewBinding.rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    KaFileLookupModel kaFileLookupModel = kaFileLookupModels.get(position);
+                    KaFileLookupModel kaFileLookupModel = kaFileLookupModels.get(holder.getBindingAdapterPosition());
                     if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
                         verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
                     }else if(kaFileLookupModel.getWebViewLink() != null){

@@ -32,7 +32,7 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.Widget.Element;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
@@ -47,7 +47,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
-    ArrayList<Element> eventList = new ArrayList<>();
+    ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
     private final Context mContext;
 
@@ -92,7 +92,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         notifyDataSetChanged();
     }
 
-    public Element getItem(int position) {
+    public Widget.Element getItem(int position) {
         if (position < eventList.size())
             return eventList.get(position);
         else return null;
@@ -168,7 +168,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         else {
 
             ViewHolder holder = (ViewHolder) holderData;
-            final Element model = eventList.get(position);
+            final Widget.Element model = eventList.get(position);
 
             int dp80 = (int) dp1 * 80;
 
@@ -205,8 +205,8 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         }
     }
 
-    public void setCalData(List<Element> data) {
-        this.eventList = (ArrayList<Element>) data;
+    public void setCalData(List<Widget.Element> data) {
+        this.eventList = (ArrayList<Widget.Element>) data;
         notifyDataSetChanged();
     }
     public ArrayList getData(){

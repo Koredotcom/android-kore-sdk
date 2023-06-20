@@ -43,7 +43,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
         holder.actionItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionHelper.actionItemClicked(botButtonModels.get(position));
+                actionHelper.actionItemClicked(botButtonModels.get(holder.getBindingAdapterPosition()));
             }
         });
     }

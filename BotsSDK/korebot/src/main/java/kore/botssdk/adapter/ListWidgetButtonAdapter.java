@@ -30,12 +30,12 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.Widget.Button;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
-    private final ArrayList<Button> buttons;
+    private final ArrayList<Widget.Button> buttons;
     private final Context mContext;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
@@ -43,7 +43,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     private final String trigger;
     private BottomSheetDialog bottomSheetDialog;
 
-    public ListWidgetButtonAdapter(Context context, ArrayList<Button> buttons, String trigger) {
+    public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
@@ -59,7 +59,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
-        Button btn = buttons.get(i);
+        Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
 
         holder.tv.setOnClickListener(new View.OnClickListener(){

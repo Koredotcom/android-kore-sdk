@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.kore.ai.widgetsdk.models.BotTableListDefaultActionsModel;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -21,7 +22,6 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotTableListDefaultActionsModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.tableview.TableDataAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;

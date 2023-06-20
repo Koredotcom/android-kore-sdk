@@ -24,20 +24,20 @@ import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.ButtonListAdapter.ButtonViewHolder;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
-import kore.botssdk.models.Widget.Button;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
 
 public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private final LayoutInflater inflater;
-    private final List<Button> buttons;
+    private final List<Widget.Button> buttons;
     private final Context mContext;
 
     private String skillName;
     private final String trigger;
 
-    public ButtonListAdapter(Context context, List<Button> buttons, String trigger) {
+    public ButtonListAdapter(Context context, List<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
@@ -54,7 +54,7 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
 //        holder.ll.setVisibility(View.VISIBLE);
-        Button btn = buttons.get(i);
+        Widget.Button btn = buttons.get(i);
 
         holder.tv.setText(btn.getTitle());
         try {
@@ -107,7 +107,7 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     }
 
 
-    public void buttonAction(Button btn, boolean appendUtterance){
+    public void buttonAction(Widget.Button btn, boolean appendUtterance){
         if(btn != null) {
             if(btn.getType()!=null  && btn.getType().equals("url")){
                 String url = btn.getUrl();

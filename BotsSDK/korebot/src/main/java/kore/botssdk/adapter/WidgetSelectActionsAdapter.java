@@ -42,8 +42,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
 import kore.botssdk.models.Widget;
-import kore.botssdk.models.Widget.Action;
-import kore.botssdk.models.Widget.Element;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.models.WidgetListModel;
 import kore.botssdk.utils.Constants;
@@ -77,8 +75,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((WTaskTemplateModel) model).getActions();
         } else if (model instanceof WCalEventsTemplateModel) {
             this.actionList = ((WCalEventsTemplateModel) model).getActions();
-        } else if (model instanceof Element) {
-            this.actionList = ((Element) model).getActions();
+        } else if (model instanceof Widget.Element) {
+            this.actionList = ((Widget.Element) model).getActions();
         } else if (model instanceof WidgetListElementModel) {
             WidgetListElementModel elementModel = (WidgetListElementModel) model;
             if(isFromListMenu)
@@ -152,13 +150,13 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 public void onClick(View view) {
 
                     if (Utility.checkIsSkillKora()) {
-                        startActions(position, false);
+                        startActions(holder.getBindingAdapterPosition(), false);
 
                     } else {
                         DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActions(position, true);
+                                startActions(holder.getBindingAdapterPosition(), true);
                                 dialog.dismiss();
                             }
                         });
@@ -174,13 +172,13 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(position);
-                    String type = ((WCalEventsTemplateModel) model).getActions().get(position).getType();
-                    if (((WCalEventsTemplateModel) model).getActions().get(position).getType().equalsIgnoreCase("view_details")) {
+                    WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition());
+                    String type = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType();
+                    if (((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType().equalsIgnoreCase("view_details")) {
                         //view meeting
                         verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
                         (widgetDialogActivity).dismiss();
-                    } else if (type.equalsIgnoreCase("url") && ((WCalEventsTemplateModel) model).getActions().get(position).getCustom_type().equalsIgnoreCase("url")) {
+                    } else if (type.equalsIgnoreCase("url") && ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("url")) {
                         //join meeting
                         verticalListViewActionHelper.navigationToDialAndJoin("url", action.getUrl());
                         (widgetDialogActivity).dismiss();
@@ -198,13 +196,13 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
                     } else {
                         if (Utility.checkIsSkillKora()) {
-                            postAction(position, false);
+                            postAction(holder.getBindingAdapterPosition(), false);
                         } else {
 
                             DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    postAction(position, true);
+                                    postAction(holder.getBindingAdapterPosition(), true);
                                     dialog.dismiss();
                                 }
                             });
@@ -223,8 +221,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             holder.tv_actions.setText(text);
 
 
-        } else if (model instanceof Element) {
-            Action act = ((Element) model).getActions().get(position);
+        } else if (model instanceof Widget.Element) {
+            Widget.Action act = ((Widget.Element) model).getActions().get(position);
             String text;
 
             if (act.getType().equalsIgnoreCase("url")) {
@@ -435,8 +433,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             return actionList != null ? ((List<CalEventsTemplateModel.Action>) actionList).size() : 0;
         } else if (model instanceof WCalEventsTemplateModel) {
             return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
-        } else if (model instanceof Element) {
-            return model != null && actionList != null ? ((Element) model).getActions().size() : 0;
+        } else if (model instanceof Widget.Element) {
+            return model != null && actionList != null ? ((Widget.Element) model).getActions().size() : 0;
         } else if (model instanceof WidgetListElementModel) {
             if(!isFromListMenu)
                 return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;

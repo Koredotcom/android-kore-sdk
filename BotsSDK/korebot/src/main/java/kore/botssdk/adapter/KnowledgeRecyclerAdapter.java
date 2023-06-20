@@ -82,7 +82,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
                 @Override
                 public void onClick(View v) {
                     Bundle extras = new Bundle();
-                    extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(position).getId());
+                    extras.putString(BundleConstants.KNOWLEDGE_ID, knowledgeDetailModels.get(holder.getBindingAdapterPosition()).getId());
                     if (verticalListViewActionHelper != null)
                         verticalListViewActionHelper.knowledgeItemClicked(extras, true);
                 }

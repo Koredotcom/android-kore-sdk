@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
+import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.KnowledgeCollectionModel;
 
@@ -35,7 +35,7 @@ public interface ComposeFooterInterface {
 
     void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd, boolean showOverlay, String templateType);
 
-    void openFullView(String templateType, String data, Duration duration, int position);
+    void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position);
 
     void updateActionbar(boolean selected, String templateType, ArrayList<BotButtonModel> buttonModels);
 

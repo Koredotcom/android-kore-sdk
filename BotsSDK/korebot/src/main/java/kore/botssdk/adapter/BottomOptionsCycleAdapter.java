@@ -113,9 +113,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
                     context.startActivity(intent);
                 }
                 else
-                {
-                    sendMessageText(model.get(position).getPostback().getTitle(), model.get(position).getPostback().getValue());
-                }
+                    sendMessageText(model.get(holder.getBindingAdapterPosition()).getPostback().getTitle(), model.get(holder.getBindingAdapterPosition()).getPostback().getValue());
             }
         });
     }

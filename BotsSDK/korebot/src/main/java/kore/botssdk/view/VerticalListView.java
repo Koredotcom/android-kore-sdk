@@ -41,7 +41,6 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.TaskTemplateResponse;
@@ -62,7 +61,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     private View rootLayout;
     private int dp1;
     private TextView viewMore;
-    private Duration _cursor;
+    private CalEventsTemplateModel.Duration _cursor;
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -141,7 +140,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             if(composeFooterInterface != null)
                 composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null, 0);
         } else {
-            Duration _duration = null;
+            CalEventsTemplateModel.Duration _duration = null;
             if(adapter instanceof CalendarEventsAdapter){
                 _duration = ((CalendarEventsAdapter) adapter).getCursorDuration();
             }
@@ -229,7 +228,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
       //  prepareDataSetAndPopulate(data,templateType);
     }*/
 
-    public void setCursorDuration(Duration cursor){
+    public void setCursorDuration(CalEventsTemplateModel.Duration cursor){
         _cursor = cursor;
     }
     public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
@@ -259,7 +258,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         adapter.notifyDataSetChanged();
     }
 
-    public void setAdapterByData(ArrayList data, String type, boolean isEnabled, Duration _cursor) {
+    public void setAdapterByData(ArrayList data, String type, boolean isEnabled, CalEventsTemplateModel.Duration _cursor) {
         switch (type) {
             case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                 setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));

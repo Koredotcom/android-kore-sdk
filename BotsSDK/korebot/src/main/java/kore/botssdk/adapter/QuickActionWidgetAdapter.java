@@ -16,7 +16,8 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
-import kore.botssdk.models.Widget.Action;
+import kore.botssdk.models.WCalEventsTemplateModel;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DialogCaller;
 import kore.botssdk.utils.StringUtils;
@@ -25,7 +26,7 @@ import kore.botssdk.utils.Utility;
 public class QuickActionWidgetAdapter extends RecyclerView.Adapter<QuickActionWidgetAdapter.QuickActionViewHolder>  {
 
     private final Context context;
-    private List<Action> quickReplyTemplateList;
+    private List<Widget.Action> quickReplyTemplateList;
     private final String skillName;
 
 //    private VerticalListViewActionHelper verticalListViewActionHelper;
@@ -52,23 +53,19 @@ public class QuickActionWidgetAdapter extends RecyclerView.Adapter<QuickActionWi
         holder.tv_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!StringUtils.isNullOrEmpty(quickReplyTemplateList.get(position).getType()) && quickReplyTemplateList.get(position).getType().equals("postback") && !StringUtils.isNullOrEmpty(quickReplyTemplateList.get(position).getPayload())){
+                if(!StringUtils.isNullOrEmpty(quickReplyTemplateList.get(holder.getBindingAdapterPosition()).getType()) && quickReplyTemplateList.get(holder.getBindingAdapterPosition()).getType().equals("postback") && !StringUtils.isNullOrEmpty(quickReplyTemplateList.get(holder.getBindingAdapterPosition()).getPayload())){
                 if (Utility.checkIsSkillKora()) {
-                    postAction(position,false);
+                    postAction(holder.getBindingAdapterPosition(),false);
                 } else {
 
                         DialogCaller.showDialog(context, null, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postAction(position,true);
+                                postAction(holder.getBindingAdapterPosition(),true);
                                 dialog.dismiss();
                             }
                         });
-
-
                 }
-
-
                 }
             }
         });
@@ -85,7 +82,7 @@ public class QuickActionWidgetAdapter extends RecyclerView.Adapter<QuickActionWi
         return quickReplyTemplateList != null ? quickReplyTemplateList.size() : 0;
     }
 
-    public void setData(List<Action> quickReplyTemplateList) {
+    public void setData(List<Widget.Action> quickReplyTemplateList) {
         this.quickReplyTemplateList = quickReplyTemplateList;
         notifyDataSetChanged();
     }

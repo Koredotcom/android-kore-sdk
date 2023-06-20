@@ -55,8 +55,7 @@ public class TableExpandView<T> extends LinearLayout {
     private TableHeaderAdapter tableHeaderAdapter;
     private int lastPosition = -1;
     private int headerElevation;
-//    private int headerColor;
-
+    private String propertyName = "y";
 
     /**
      * Creates a new TableView with the given context.\n
@@ -135,7 +134,7 @@ public class TableExpandView<T> extends LinearLayout {
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", 0));
+                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
                 moveInAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
                 setLayoutTransition(layoutTransition);
@@ -145,7 +144,7 @@ public class TableExpandView<T> extends LinearLayout {
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", -tableHeaderView.getHeight()));
+                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
                 moveOutAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
                 setLayoutTransition(layoutTransition);
