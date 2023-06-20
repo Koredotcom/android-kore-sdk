@@ -14,10 +14,12 @@ import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,7 +56,7 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class TextMediaLayout extends ViewGroup {
+public class TextMediaLayout extends LinearLayout {
 
     private TextView botContentTextView;
     private float restrictedLayoutWidth;
@@ -86,6 +88,12 @@ public class TextMediaLayout extends ViewGroup {
 
     public TextMediaLayout(Context context) {
         super(context);
+        this.mContext = context;
+        init();
+    }
+
+    public TextMediaLayout(Context context, AttributeSet attributeSet){
+        super(context, attributeSet);
         this.mContext = context;
         init();
     }
