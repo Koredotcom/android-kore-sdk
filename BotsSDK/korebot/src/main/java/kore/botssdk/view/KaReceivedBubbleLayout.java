@@ -558,19 +558,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 {
                     bankingFeedbackTemplateView.setVisibility(View.VISIBLE);
                     bankingFeedbackTemplateView.populateData(payInner, isLastItem);
-                }/*else if(BotResponse.NARRATOR_TEXT.equalsIgnoreCase(payInner.getTemplate_type())){
-                    String narrateText = payInner.getText();
-                    String composeText = payInner.getComposeText();
-                    if(payInner.getChildTemplate()!=null){
-                        ((BotResponse) baseBotMessage).getMessage().get(0).getComponent().getPayload().setPayload(payInner.getChildTemplate().getPayload());
-                        BotResponse botRes = (BotResponse) baseBotMessage;
-
-                        composeFooterInterface.showMentionNarratorContainer(true, narrateText, composeText, botRes);
-                    }else {
-                        composeFooterInterface.showMentionNarratorContainer(true, narrateText,composeText,null);
-                    }
-                }*/
-
+                }
                 else if (BotResponse.TEMPLATE_TYPE_CONVERSATION_END.equalsIgnoreCase(payInner.getTemplate_type())) {
                     timeStampsTextView.setText("");
                     timeLineView.setVisibility(VISIBLE);
@@ -679,12 +667,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          */
         MeasureUtils.measure(botListTemplateView, wrapSpec, wrapSpec);
         MeasureUtils.measure(botContactTemplateView, wrapSpec, wrapSpec);
-        /*
-         * For List View Templates
-         */
-//        MeasureUtils.measure(botListViewTemplateView, wrapSpec, wrapSpec);
-
-        /*For calendar events*/
 
         /**
          * For PieChart

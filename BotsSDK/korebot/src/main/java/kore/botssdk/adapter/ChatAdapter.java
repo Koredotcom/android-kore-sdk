@@ -130,22 +130,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         //TODO Need to re visit : Handled crash in a bad way(if you change time zone and come back app crashing)
         boolean fDate = false;
         try {
-            fDate = headersMap.get(getItem(position).getFormattedDate()) == position;
+            fDate = headersMap.get(getItem(holder.getBindingAdapterPosition()).getFormattedDate()) == holder.getBindingAdapterPosition();
         }catch (Exception e){
             e.printStackTrace();
         }
-        holder.headerView.setVisibility(getItem(position) != null && fDate ? View.VISIBLE : View.GONE);
-        if(selectedItem == position){
+        holder.headerView.setVisibility(getItem(holder.getBindingAdapterPosition()) != null && fDate ? View.VISIBLE : View.GONE);
+        if(selectedItem == holder.getBindingAdapterPosition()){
             holder.baseBubbleLayout.setTimeStampVisible();
         }
-        if(getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
+        if(getItemViewType(holder.getBindingAdapterPosition()) == BUBBLE_RIGHT_LAYOUT) {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if(selectedItem != -1){
                         notifyItemChanged(selectedItem);
                     }
-                    selectedItem = position;
+                    selectedItem = holder.getBindingAdapterPosition();
                     holder.baseBubbleLayout.setTimeStampVisible();
                     return true;
                 }
@@ -153,8 +153,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
             holder.baseBubbleLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BotRequest botRequest = (BotRequest) getItem(position);
-//                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
+                    BotRequest botRequest = (BotRequest) getItem(holder.getBindingAdapterPosition());
+                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
                 }
             });
         }

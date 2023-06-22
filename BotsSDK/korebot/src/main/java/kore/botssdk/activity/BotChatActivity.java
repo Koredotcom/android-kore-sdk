@@ -573,7 +573,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             Log.d(LOG_TAG, payload);
             PayloadOuter payOuter = null;
-//            PayloadInner payInner = null;
             if (!botResponse.getMessage().isEmpty()) {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
                 if (compModel != null) {
@@ -614,7 +613,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
             }, BundleConstants.TYPING_STATUS_TIME);
         } catch (Exception e) {
-            /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
                 try {
@@ -627,7 +625,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
                 catch (Exception e1)
                 {
-//                    e1.printStackTrace();
                     try
                     {
                         final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
