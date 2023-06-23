@@ -124,9 +124,11 @@ public class FileTokenManager{
         }
         finally{
             try{
-                assert reader != null;
-                reader.close();
-                wr.close();
+                if(reader != null)
+                    reader.close();
+
+                if(wr != null)
+                    wr.close();
             }
             catch(Exception ex) {
                 ex.printStackTrace();}

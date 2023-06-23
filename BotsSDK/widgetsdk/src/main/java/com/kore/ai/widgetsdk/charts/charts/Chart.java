@@ -726,10 +726,16 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                 Bitmap b = this.getChartBitmap();
                 b.compress(format, quality, out);
                 out.flush();
-                out.close();
             } catch (IOException var16) {
                 var16.printStackTrace();
                 return false;
+            }
+            finally {
+                try {
+                    //Closing output stream
+                    if (out != null) out.close();
+                }
+                catch (Exception e){e.printStackTrace();}
             }
 
             long size = (new File(filePath)).length();

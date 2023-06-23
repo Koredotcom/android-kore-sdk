@@ -1,8 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application
-        android:hardwareAccelerated="true">
+    <application>
         <activity
             android:name="com.kore.ai.widgetsdk.activities.PanelMainActivity"
             android:screenOrientation="portrait"

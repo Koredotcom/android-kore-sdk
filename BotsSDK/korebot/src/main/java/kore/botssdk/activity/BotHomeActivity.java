@@ -1,14 +1,19 @@
 package kore.botssdk.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.UUID;
 
@@ -22,21 +27,22 @@ import kore.botssdk.utils.StringUtils;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotHomeActivity extends BotAppCompactActivity {
+public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
 
     private Button launchBotBtn;
     private EditText etIdentity;
-
+    private static final int ERROR_DIALOG_REQUEST_CODE = 1;
+    private boolean retryProviderInstall;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        new ThemeColors(this);
         setContentView(R.layout.bot_home_activity_layout);
+        ProviderInstaller.installIfNeededAsync(this, this);
 
+//        appPermissionCheck();
         findViews();
         setListeners();
-//        getJWTToken();
     }
 
     private void findViews() {
@@ -45,31 +51,17 @@ public class BotHomeActivity extends BotAppCompactActivity {
         etIdentity = (EditText) findViewById(R.id.etIdentity);
         launchBotBtn.setText(getResources().getString(R.string.get_started));
         etIdentity.setText(SDKConfiguration.Client.identity);
-        if(etIdentity.getText().toString() != null && etIdentity.getText().toString().length() > 0)
+        if(etIdentity.getText().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
     }
 
     private void setListeners() {
         launchBotBtn.setOnClickListener(launchBotBtnOnClickListener);
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     /**
      * START of : Listeners
      */
-
     View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -123,4 +115,98 @@ public class BotHomeActivity extends BotAppCompactActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
+
+    /**
+     * This method is called if updating fails. The error code indicates
+     * whether the error is recoverable.
+     */
+    @Override
+    public void onProviderInstallFailed(int errorCode, Intent recoveryIntent) {
+        GoogleApiAvailability availability = GoogleApiAvailability.getInstance();
+        if (availability.isUserResolvableError(errorCode)) {
+            // Recoverable error. Show a dialog prompting the user to
+            // install/update/enable Google Play services.
+            availability.showErrorDialogFragment(
+                    this,
+                    errorCode,
+                    ERROR_DIALOG_REQUEST_CODE,
+                    new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            // The user chose not to take the recovery action.
+                            onProviderInstallerNotAvailable();
+                        }
+                    });
+        } else {
+            // Google Play services isn't available.
+            onProviderInstallerNotAvailable();
+        }
+    }
+
+    private void onProviderInstallerNotAvailable() {
+        // This is reached if the provider can't be updated for some reason.
+        // App should consider all HTTP communication to be vulnerable and take
+        // appropriate action.
+        Log.e(LOG_TAG, "No Installer is Available");
+    }
+
+    @Override
+    public void onProviderInstalled() {
+        Log.e(LOG_TAG, "Installer is Available or installed");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ERROR_DIALOG_REQUEST_CODE) {
+            // Adding a fragment via GoogleApiAvailability.showErrorDialogFragment
+            // before the instance state is restored throws an error. So instead,
+            // set a flag here, which causes the fragment to delay until
+            // onPostResume.
+            retryProviderInstall = true;
+        }
+    }
+
+    /**
+     * On resume, check whether a flag indicates that the provider needs to be
+     * reinstalled.
+     */
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (retryProviderInstall) {
+            // It's safe to retry installation.
+            ProviderInstaller.installIfNeededAsync(this, this);
+        }
+        retryProviderInstall = false;
+    }
+
+//    private void appPermissionCheck()
+//    {
+//        Log.d("TAG", "Check requestAllPermissions");
+//        PermissionRequest permissionRequest =  new PermissionRequest()
+//        {
+//            @Override
+//            public void granted()
+//            {
+//                Log.d(LOG_TAG, " PermissionRequest: granted");
+////                initStartApp();
+//            }
+//
+//
+//            @Override
+//            public void revoked()
+//            {
+//                //Can close app if not all permission is approved
+//                Log.d(LOG_TAG, " PermissionRequest: revoked");
+//            }
+//
+//            @Override
+//            public void allResults(boolean allGranted) {
+//            }
+//        };
+//
+//        PermissionManager.getInstance().requestAllPermissions(BotHomeActivity.this, permissionRequest);
+//    }
 }

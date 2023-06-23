@@ -748,6 +748,13 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                 var16.printStackTrace();
                 return false;
             }
+            finally {
+                try {
+                    //Closing output stream
+                    if (out != null) out.close();
+                }
+                catch (Exception e){e.printStackTrace();}
+            }
 
             long size = (new File(filePath)).length();
             ContentValues values = new ContentValues(8);

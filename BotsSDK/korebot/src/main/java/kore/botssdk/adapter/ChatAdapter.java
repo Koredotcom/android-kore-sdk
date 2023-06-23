@@ -127,7 +127,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         if(headersMap.isEmpty()) {
             prepareHeaderMap();
         }
-        //TODO Need to re visit : Handled crash in a bad way(if you change time zone and come back app crashing)
         boolean fDate = false;
         try {
             fDate = headersMap.get(getItem(holder.getBindingAdapterPosition()).getFormattedDate()) == holder.getBindingAdapterPosition();

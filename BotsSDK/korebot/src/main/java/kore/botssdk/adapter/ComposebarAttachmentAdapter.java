@@ -60,7 +60,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         holder.close_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataList.remove(position);
+                dataList.remove(holder.getBindingAdapterPosition());
                 notifyDataSetChanged();
                 attachmentListner.onRemoveAttachment();
             }
