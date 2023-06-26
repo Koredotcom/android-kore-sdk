@@ -392,7 +392,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 checkBubbleVisibilityAndHideCpv(payInner);
                 if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
                     if (botButtonView == null) {
-                        botButtonView = ViewProvider.getBotButtonView(context, null);
+                        botButtonView = ViewProvider.getBotButtonView(context, composeFooterInterface);
+                        botButtonView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                         addView(botButtonView);
                     }
                     botButtonView.setVisibility(View.VISIBLE);
@@ -598,7 +599,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     verticalListView.prepareDataSetAndPopulate((ArrayList) annoucementResModelsData, payInner.getTemplate_type(), isLastItem);
                 } else if (BotResponse.CONTACT_CARD_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())) {
                     if (botContactTemplateView == null) {
-                        botContactTemplateView = ViewProvider.getBotContactView(context, null);
+                        botContactTemplateView = ViewProvider.getBotContactView(context, composeFooterInterface);
+                        botContactTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                         addView(botContactTemplateView);
                     }
                     botContactTemplateView.setVisibility(View.VISIBLE);
