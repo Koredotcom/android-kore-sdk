@@ -85,7 +85,6 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
         if (holder instanceof HashViewHolder) {
 
             ((HashViewHolder) holder).tv_hashtag.setText(hashList.get(position).getName());
-            int count = hashList.get(position).getCount();
             ((HashViewHolder) holder).tv_numberofviews.setText(hashList.get(position).getTitle_right());
             ((HashViewHolder) holder).rootView.setOnClickListener(new View.OnClickListener() {
                 @Override

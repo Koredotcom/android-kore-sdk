@@ -170,8 +170,6 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             ChartListWidgetAdapter.ViewHolder holder = (ChartListWidgetAdapter.ViewHolder) holderData;
             final Widget.Element model = eventList.get(position);
 
-            int dp80 = (int) dp1 * 80;
-
             String title = model.getTitle();
             String text = model.getText();
             String color = model.getTheme();

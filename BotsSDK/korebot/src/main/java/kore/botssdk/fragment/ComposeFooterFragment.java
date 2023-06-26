@@ -196,8 +196,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListenerExplicitly();
         toggleTTSButton();
         initialSetUp();
-        keyboard_img.performClick();
-//        KoreEventCenter.register(this);
+//        keyboard_img.performClick();
         return view;
     }
 
@@ -438,12 +437,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
                 animateLayoutVisible(mainContentLayout);
-//                animateLayoutVisible(newMenuLogo);
                 animateLayoutGone(defaultFooterLayout);
-                editTextMessage.requestFocus();
-                Utility.showVirtualKeyboard(getActivity(),editTextMessage);
         }
     };
 

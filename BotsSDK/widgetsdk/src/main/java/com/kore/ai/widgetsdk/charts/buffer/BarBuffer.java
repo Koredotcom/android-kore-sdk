@@ -51,10 +51,8 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                 if (this.mContainsStacks && vals != null) {
                     posY = 0.0F;
                     negY = -e.getNegativeSum();
-                    yStart = 0.0F;
 
-                    for(int k = 0; k < vals.length; ++k) {
-                        float value = vals[k];
+                    for (float value : vals) {
                         if (value == 0.0F && (posY == 0.0F || negY == 0.0F)) {
                             y = value;
                             yStart = value;
@@ -73,11 +71,11 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                         float bottom;
                         float top;
                         if (this.mInverted) {
-                            bottom = y >= yStart ? y : yStart;
-                            top = y <= yStart ? y : yStart;
+                            bottom = Math.max(y, yStart);
+                            top = Math.min(y, yStart);
                         } else {
-                            top = y >= yStart ? y : yStart;
-                            bottom = y <= yStart ? y : yStart;
+                            top = Math.max(y, yStart);
+                            bottom = Math.min(y, yStart);
                         }
 
                         top *= this.phaseY;
@@ -89,11 +87,11 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
                     negY = x + barWidthHalf;
                     float top;
                     if (this.mInverted) {
-                        yStart = y >= 0.0F ? y : 0.0F;
-                        top = y <= 0.0F ? y : 0.0F;
+                        yStart = Math.max(y, 0.0F);
+                        top = Math.min(y, 0.0F);
                     } else {
-                        top = y >= 0.0F ? y : 0.0F;
-                        yStart = y <= 0.0F ? y : 0.0F;
+                        top = Math.max(y, 0.0F);
+                        yStart = Math.min(y, 0.0F);
                     }
 
                     if (top > 0.0F) {

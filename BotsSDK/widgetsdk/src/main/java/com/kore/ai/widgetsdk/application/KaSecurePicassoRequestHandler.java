@@ -10,21 +10,20 @@ import com.squareup.picasso.RequestHandler;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Objects;
 
 public class KaSecurePicassoRequestHandler extends RequestHandler {
 
     @Override public boolean canHandleRequest(Request data) {
         if(data.uri.toString().contains("http")){
             return false;
-        }else return new File(data.uri.getPath()).exists();
+        }else return new File(Objects.requireNonNull(data.uri.getPath())).exists();
     }
 
     @Override
     public Result load(Request request, int networkPolicy) throws IOException {
-        File file = new File(request.uri.getPath());
+        File file = new File(Objects.requireNonNull(request.uri.getPath()));
         FileInputStream fis = null;
-        InputStream cis = null;
         if(file.exists()){
             fis = new FileInputStream(file);
             //cis = AppSandboxUtils.getCipheredInputStream(fis);

@@ -3,7 +3,6 @@ package com.kore.ai.widgetsdk.charts.animation;
 import android.animation.TimeInterpolator;
 
 public class Easing {
-    private static final float DOUBLE_PI = 6.2831855F;
     public static final  EasingFunction Linear = new  EasingFunction() {
         public float getInterpolation(float input) {
             return input;
@@ -167,13 +166,11 @@ public class Easing {
     };
     public static final  EasingFunction EaseInBack = new  EasingFunction() {
         public float getInterpolation(float input) {
-            float s = 1.70158F;
             return input * input * (2.70158F * input - 1.70158F);
         }
     };
     public static final  EasingFunction EaseOutBack = new  EasingFunction() {
         public float getInterpolation(float input) {
-            float s = 1.70158F;
             --input;
             return input * input * (2.70158F * input + 1.70158F) + 1.0F;
         }

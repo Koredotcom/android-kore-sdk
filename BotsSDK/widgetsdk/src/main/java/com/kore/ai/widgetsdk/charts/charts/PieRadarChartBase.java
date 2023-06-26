@@ -132,7 +132,6 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
                             }
                     }
                 case HORIZONTAL:
-                    yLegendOffset = 0.0F;
                     if (this.mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.TOP || this.mLegend.getVerticalAlignment() == Legend.LegendVerticalAlignment.BOTTOM) {
                         spacing = this.getRequiredLegendOffset();
                         yLegendOffset = Math.min(this.mLegend.mNeededHeight + spacing, this.mViewPortHandler.getChartHeight() * this.mLegend.getMaxSizePercent());

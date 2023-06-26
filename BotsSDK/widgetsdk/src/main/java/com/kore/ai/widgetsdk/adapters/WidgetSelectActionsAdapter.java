@@ -298,7 +298,6 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
         if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
             for (String s : permission)
                 shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
                         ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;

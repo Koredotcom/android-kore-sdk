@@ -89,7 +89,6 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int templateType) {
-        View view = null;
         switch (templateType) {
             case WidgetConstants.MEETINGS_TEMPLATE:
                 MeetingWidgetView mView = new MeetingWidgetView(parent.getContext(), this, widget.getData().getName(), widgetViewMoreEnum);

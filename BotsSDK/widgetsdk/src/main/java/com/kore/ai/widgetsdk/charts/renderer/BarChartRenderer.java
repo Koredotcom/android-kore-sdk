@@ -80,14 +80,12 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             this.mShadowPaint.setColor(dataSet.getBarShadowColor());
             BarData barData = this.mChart.getBarData();
             float barWidth = barData.getBarWidth();
-            float barWidthHalf = barWidth / 2.0F;
             int i = 0;
 
             for(int count = Math.min((int)Math.ceil((double)((float)dataSet.getEntryCount() * phaseX)), dataSet.getEntryCount()); i < count; ++i) {
                 BarEntry e = (BarEntry)dataSet.getEntryForIndex(i);
-                float x = e.getX();
-                this.mBarShadowRectBuffer.left = x - barWidthHalf;
-                this.mBarShadowRectBuffer.right = x + barWidthHalf;
+                this.mBarShadowRectBuffer.left = e.getX() - barWidth / 2.0F;
+                this.mBarShadowRectBuffer.right = e.getX() + barWidth / 2.0F;
                 trans.rectValueToPixel(this.mBarShadowRectBuffer);
                 if (this.mViewPortHandler.isInBoundsLeft(this.mBarShadowRectBuffer.right)) {
                     if (!this.mViewPortHandler.isInBoundsRight(this.mBarShadowRectBuffer.left)) {

@@ -51,15 +51,12 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
         if (this.mChart.isDrawBarShadowEnabled()) {
             this.mShadowPaint.setColor(dataSet.getBarShadowColor());
             BarData barData = this.mChart.getBarData();
-            float barWidth = barData.getBarWidth();
-            float barWidthHalf = barWidth / 2.0F;
             int i = 0;
 
             for(int count = Math.min((int)Math.ceil((double)((float)dataSet.getEntryCount() * phaseX)), dataSet.getEntryCount()); i < count; ++i) {
                 BarEntry e = (BarEntry)dataSet.getEntryForIndex(i);
-                float x = e.getX();
-                this.mBarShadowRectBuffer.top = x - barWidthHalf;
-                this.mBarShadowRectBuffer.bottom = x + barWidthHalf;
+                this.mBarShadowRectBuffer.top = e.getX() - (barData.getBarWidth() / 2.0F);
+                this.mBarShadowRectBuffer.bottom = e.getX() + (barData.getBarWidth() / 2.0F);
                 trans.rectValueToPixel(this.mBarShadowRectBuffer);
                 if (this.mViewPortHandler.isInBoundsTop(this.mBarShadowRectBuffer.bottom)) {
                     if (!this.mViewPortHandler.isInBoundsBottom(this.mBarShadowRectBuffer.top)) {

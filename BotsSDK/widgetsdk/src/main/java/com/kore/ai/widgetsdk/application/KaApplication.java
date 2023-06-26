@@ -27,21 +27,16 @@ public class KaApplication extends Application {
     //Reference from  https://stackoverflow.com/questions/39988422/okhttpclient-cannot-resolve-method-setcache
     private void setUpPicasso() {
         if (picassoDiskCache == null) {
-            File httpCacheDirectory = new File(getCacheDir(), "responses");
-            int cacheSize = 10*1024*1024;
-            picassoDiskCache = new Cache(httpCacheDirectory, cacheSize);
+            picassoDiskCache = new Cache(new File(getCacheDir(), "responses"), (10*1024*1024));
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addNetworkInterceptor(new KaCacheInterceptor())
                     .cache(picassoDiskCache)
                     .build();
-            //Picasso picasso = new Picasso.Builder(context).downloader(new OkHttpDownloader(okClient)).build();
             Picasso picasso =  new Picasso.Builder(this).addRequestHandler(new KaSecurePicassoRequestHandler()).downloader(new OkHttp3Downloader(client)).build();
             Picasso.setSingletonInstance(picasso);
         }
-
     }
-
 
     public static void invalidatePicassoCache(String url) {
         try {

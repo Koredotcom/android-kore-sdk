@@ -45,21 +45,14 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
 
 
     public void refreshButtonState() {
-        boolean enableButton = false;
         if (options != null) {
             for (FeedbackDataResponse.Option opt : options) {
                 if (opt.isUserAction()) {
-                    enableButton = true;
                     break;
                 }
             }
         }
-        if (options == null || options.size() < 1) {
-            enableButton = true;
-        }
-
         feedBackButtonState.notify(true);
-
     }
 
     @NonNull
@@ -70,6 +63,7 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
         return new FeedBackViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull FeedBackViewHolder holder, int position) {
 
@@ -119,10 +113,9 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
             public boolean onTouch(View v, MotionEvent event) {
                 if (holder.edt_freetext.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_SCROLL:
-                            v.getParent().requestDisallowInterceptTouchEvent(false);
-                            return true;
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL) {
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
                     }
                 }
                 return false;

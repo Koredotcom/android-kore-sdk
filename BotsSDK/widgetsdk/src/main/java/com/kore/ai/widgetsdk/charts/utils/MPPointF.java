@@ -9,8 +9,6 @@ public class MPPointF extends ObjectPool.Poolable {
     private static final ObjectPool<com.kore.ai.widgetsdk.charts.utils.MPPointF> pool = ObjectPool.create(32, new MPPointF(0.0F, 0.0F));
     public float x;
     public float y;
-    public static final Parcelable.Creator<MPPointF> CREATOR;
-
     public MPPointF() {
     }
 
@@ -64,16 +62,5 @@ public class MPPointF extends ObjectPool.Poolable {
 
     static {
         pool.setReplenishPercentage(0.5F);
-        CREATOR = new Parcelable.Creator<MPPointF>() {
-            public MPPointF createFromParcel(Parcel in) {
-                MPPointF r = new MPPointF(0.0F, 0.0F);
-                r.my_readFromParcel(in);
-                return r;
-            }
-
-            public MPPointF[] newArray(int size) {
-                return new MPPointF[size];
-            }
-        };
     }
 }

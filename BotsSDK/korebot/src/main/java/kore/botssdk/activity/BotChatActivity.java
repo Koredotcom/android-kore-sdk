@@ -165,7 +165,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getBundleInfo();
         getDataFromTxt();
 
-//        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -263,14 +262,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         RestBuilder.setContext(BotChatActivity.this);
         WebHookRestBuilder.setContext(BotChatActivity.this);
         BrandingRestBuilder.setContext(BotChatActivity.this);
-
-//        if (Build.VERSION.SDK_INT >= 30){
-//            if (!Environment.isExternalStorageManager()){
-//                Intent getpermission = new Intent();
-//                getpermission.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-//                startActivity(getpermission);
-//            }
-//        }
     }
 
     private void updateTitleBar() {

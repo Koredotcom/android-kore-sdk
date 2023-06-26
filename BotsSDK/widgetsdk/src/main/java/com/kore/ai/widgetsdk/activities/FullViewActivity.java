@@ -101,8 +101,6 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
           _duration =   ((CalEventsTemplateModel.Duration) getIntent().getExtras().get(BundleConstants.DURATION));
         }
 
-        String calendarMultiCation = getIntent().getStringExtra(BundleConstants.DATA_CALENDER_MULTICATION);
-        String multiActions = getIntent().getStringExtra(BundleConstants.MULTI_ACTIONS);
         try {
             fromWidget = getIntent().getBooleanExtra(BundleConstants.FROM_WIDGET, false);
         } catch (Exception e) {

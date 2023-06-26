@@ -81,7 +81,6 @@ public class LegendRenderer extends Renderer {
                         }
                     } else {
                         if (dataSet instanceof ICandleDataSet && ((ICandleDataSet)dataSet).getDecreasingColor() != 1122867) {
-                            j = ((ICandleDataSet)dataSet).getDecreasingColor();
                             j = ((ICandleDataSet)dataSet).getIncreasingColor();
                             this.computedEntries.add(new LegendEntry((String)null, dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), j));
                             this.computedEntries.add(new LegendEntry(dataSet.getLabel(), dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), j));

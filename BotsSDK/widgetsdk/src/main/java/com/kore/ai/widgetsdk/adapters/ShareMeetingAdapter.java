@@ -78,14 +78,12 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
 
     public void setSelectedUsers(ArrayList<KaRestResponse.SharedList> resp) {
         if(resp != null && resp.size() >0) {
-            for(KaRestResponse.SharedList list:resp){
-                for (int i = 0; i < attendeesList.size(); i++) {
-                    if(isInSharedList(resp,attendeesList.get(i).getEmail())) {
-                        attendeesList.get(i).setCheckState(true);
-                        initialSharedAttendeesList.put(attendeesList.get(i).getEmail(), attendeesList.get(i));
-                    }else{
-                        initialUnSharedAttendeesList.put(attendeesList.get(i).getEmail(),attendeesList.get(i));
-                    }
+            for (int i = 0; i < attendeesList.size(); i++) {
+                if(isInSharedList(resp,attendeesList.get(i).getEmail())) {
+                    attendeesList.get(i).setCheckState(true);
+                    initialSharedAttendeesList.put(attendeesList.get(i).getEmail(), attendeesList.get(i));
+                }else{
+                    initialUnSharedAttendeesList.put(attendeesList.get(i).getEmail(),attendeesList.get(i));
                 }
             }
         }else{

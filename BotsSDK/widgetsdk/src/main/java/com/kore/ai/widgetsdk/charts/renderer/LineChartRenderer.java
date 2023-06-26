@@ -150,7 +150,6 @@ public class LineChartRenderer extends LineRadarRenderer {
             float curDx = 0.0F;
             float curDy = 0.0F;
             int firstIndex = this.mXBounds.min + 1;
-            int var10000 = this.mXBounds.min + this.mXBounds.range;
             Entry prev = dataSet.getEntryForIndex(Math.max(firstIndex - 2, 0));
             Entry cur = dataSet.getEntryForIndex(Math.max(firstIndex - 1, 0));
             Entry next = cur;
