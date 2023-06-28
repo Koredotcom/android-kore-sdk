@@ -133,7 +133,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onTextMessage(String payload) {
 //        socketUpdateListener.onMessageUpdate(payload, false, null);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null));
-        persistBotMessage(payload,false,null);
+//        persistBotMessage(payload,false,null);
         if(chatListener != null){
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_TEXT_MESSAGE,payload,null,false));
         }
@@ -427,7 +427,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
-        persistBotMessage(null,true,botRequest);
+//        persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
@@ -459,7 +459,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
-        persistBotMessage(null,true,botRequest);
+//        persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
@@ -487,7 +487,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest));
-        persistBotMessage(null,true,botRequest);
+//        persistBotMessage(null,true,botRequest);
         if(chatListener != null ){
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE ,message,botRequest,false));
         }
@@ -510,7 +510,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 //        socketUpdateListener.onMessageUpdate(message, true, botRequest);
 //        KoreEventCenter.post(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest));
-        persistBotMessage(null,true,botRequest);
+//        persistBotMessage(null,true,botRequest);
         if(chatListener != null){
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE,message,botRequest,false));
         }

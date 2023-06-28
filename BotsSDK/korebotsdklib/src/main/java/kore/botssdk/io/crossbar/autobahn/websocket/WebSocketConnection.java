@@ -615,7 +615,7 @@ public class WebSocketConnection implements IWebSocket {
                         mWsHandler.onPong(pong.mPayload);
                     }
 
-                    LOGGER.d("WebSockets Pong received");
+//                    LOGGER.d("WebSockets Pong received");
 
                 } else if (msg.obj instanceof Close) {
 
