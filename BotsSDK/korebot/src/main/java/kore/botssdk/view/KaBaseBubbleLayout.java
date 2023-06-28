@@ -151,6 +151,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected TextView timeStampsTextView;
     protected TimeLineTextView timeLineView;
 
+    protected NearByStockAvailableStoreListView nearByStockAvailableStoreListView;
+
     public KaBaseBubbleLayout(Context context) {
         super(context);
         this.context = getContext();
@@ -552,6 +554,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         if(bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if (nearByStockAvailableStoreListView != null) {
+            nearByStockAvailableStoreListView.setComposeFooterInterface(composeFooterInterface);
         }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {

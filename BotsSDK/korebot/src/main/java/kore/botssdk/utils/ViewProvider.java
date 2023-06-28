@@ -48,6 +48,7 @@ import kore.botssdk.view.ListWidgetView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
+import kore.botssdk.view.NearByStockAvailableStoreListView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.StackedBarChatView;
@@ -84,6 +85,7 @@ public class ViewProvider {
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
     public static final int TASK_VIEW_ID = 1981234;
     private static final int TABLE_RESPONSIVE_VIEW_ID = 19800350;
+    private static final int NEAR_BY_STOCK_AVAILABLE_STORES_VIEW_ID = 19800351;
 
 
     public static Path RoundedRect(
@@ -416,4 +418,9 @@ public class ViewProvider {
         return botReplyWaitView;
     }
 
+    public static NearByStockAvailableStoreListView getNearByStockAvailableStoreListView(Context context) {
+        NearByStockAvailableStoreListView storesView = new NearByStockAvailableStoreListView(context);
+        storesView.setId(NEAR_BY_STOCK_AVAILABLE_STORES_VIEW_ID);
+        return storesView;
+    }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="widthHint" format="integer" />
+    <attr name="heightHint" format="integer" />
     <declare-styleable name="CircularProfileView">
         <attr name="badge_padding" format="dimension" />
-        <attr name="text_size" format="dimension"/>
+        <attr name="text_size" format="dimension" />
         <attr name="font_style" format="enum">
             <enum name="roboto_light" value="0" />
             <enum name="roboto_light_italics" value="1" />
@@ -13,23 +15,23 @@
             <enum name="roboto_bold" value="6" />
             <enum name="roboto_bold_italics" value="7" />
         </attr>
-        <attr name="profile_drawable_padding" format="dimension"/>
-        <attr name="border_width" format="dimension"/>
-        <attr name="border_color" format="color"/>
-        <attr name="has_border" format="boolean"/>
-        <attr name="publish_events" format="boolean"/>
+        <attr name="profile_drawable_padding" format="dimension" />
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="has_border" format="boolean" />
+        <attr name="publish_events" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="RippleView">
         <attr name="rv_alpha" format="integer" />
-        <attr name="rv_framerate" format="integer"/>
-        <attr name="rv_rippleDuration" format="integer"/>
+        <attr name="rv_framerate" format="integer" />
+        <attr name="rv_rippleDuration" format="integer" />
         <attr name="rv_zoomDuration" format="integer" />
         <attr name="rv_color" format="color" />
         <attr name="rv_centered" format="boolean" />
         <attr name="rv_type" format="enum">
-            <enum name="simpleRipple" value="0"/>
-            <enum name="doubleRipple" value="1"/>
+            <enum name="simpleRipple" value="0" />
+            <enum name="doubleRipple" value="1" />
             <enum name="rectangle" value="2" />
         </attr>
         <attr name="rv_ripplePadding" format="dimension" />
@@ -39,9 +41,13 @@
     </declare-styleable>
 
     <declare-styleable name="TableView">
-        <attr name="tableView_columnCount" format="integer"/>
-        <attr name="tableView_headerElevation" format="integer"/>
-        <attr name="tableView_headerColor" format="color"/>
+        <attr name="tableView_columnCount" format="integer" />
+        <attr name="tableView_headerElevation" format="integer" />
+        <attr name="tableView_headerColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="RatioFixedImageView">
+        <attr name="widthHint" />
+        <attr name="heightHint" />
+    </declare-styleable>
 </resources>

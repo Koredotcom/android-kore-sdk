@@ -416,6 +416,7 @@ public class PayloadInner {
     private ArrayList<BotTableListModel> tableListElements;
     private ArrayList<WidgetListElementModel> widgetlistElements;
     private ArrayList<DropDownElementsModel> dropDownElementsModels;
+    private ArrayList<NearByStockAvailableStoreModel> nearByStockAvailableStores;
 
     public void setWidgetlistElements(ArrayList<WidgetListElementModel> widgetlistElements) {
         this.widgetlistElements = widgetlistElements;
@@ -676,6 +677,10 @@ public class PayloadInner {
         return moreData;
     }
 
+    public ArrayList<NearByStockAvailableStoreModel> getNearByStockAvailableStores() {
+        return nearByStockAvailableStores;
+    }
+
     public void convertElementToAppropriate() {
 
         try {
@@ -816,6 +821,11 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
+                    }
+                    else if (BotResponse.NEAR_BY_STOCK_AVAILABLE_STORES.equals(template_type)){
+                        Type listType = new TypeToken<ArrayList<NearByStockAvailableStoreModel>>() {
+                        }.getType();
+                        nearByStockAvailableStores = gson.fromJson(elementsAsString, listType);
                     }
                 }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
