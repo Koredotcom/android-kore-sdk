@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 import io.reactivex.Observer;
@@ -31,14 +30,11 @@ import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.models.UserNameModel;
-import kore.botssdk.net.BotJWTRestAPI;
-import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.NetworkUtility;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import retrofit2.Call;
@@ -68,6 +64,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.chatListener = chatListener;
     }
 
+    public void setSpeechListener(VoiceSpeechListener speechListener) {
+        this.speechListener = speechListener;
+
+        if(ttsSynthesizer!=null){
+            ttsSynthesizer.setSpeechListener(this.speechListener);
+        }
+    }
+    VoiceSpeechListener speechListener;
     private SocketChatListener chatListener;
     private RestResponse.BotCustomData botCustomData;
 

@@ -4,13 +4,16 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Base64;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
+import kore.botssdk.listener.VoiceSpeechListener;
 import kore.botssdk.speechtotext.TtsWebSocketWrapper;
 import kore.botssdk.websocket.SocketConnectionListener;
 
@@ -33,6 +36,7 @@ public class TTSSynthesizer {
 
     public TTSSynthesizer(Context context) {
         this.context = context;
+
         if(!Constants.ENABLE_SDK) {
             initNative(context);
         }else {
@@ -54,7 +58,40 @@ public class TTSSynthesizer {
             });
         }
     }
+    VoiceSpeechListener speechListener;
 
+public void  setSpeechListener(VoiceSpeechListener speechListener){
+    this.speechListener=speechListener;
+    subscribeListener();
+
+}
+
+private void  subscribeListener(){
+    textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+        @Override
+        public void onStart(String s) {
+            if(speechListener!=null){
+                speechListener.onSpeechStart();
+            }
+        }
+
+        @Override
+        public void onDone(String s) {
+            if(speechListener!=null){
+                //new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    speechListener.onSpeechDone();
+              //  },500);
+            }
+        }
+
+        @Override
+        public void onError(String s) {
+            if(speechListener!=null){
+                speechListener.onSpeechError();
+            }
+        }
+    });
+}
     public TextToSpeech initNative(Context context) {
         textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
 
@@ -64,7 +101,13 @@ public class TTSSynthesizer {
                     textToSpeech.setLanguage(Locale.US);
                 }
             }
+
+
+
+
+
         });
+
 
         return textToSpeech;
     }
@@ -96,8 +139,9 @@ public class TTSSynthesizer {
 
     private void speakViaNative(String textualMessage) {
        // stopTextToSpeechNative();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
+            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID);
         } else {
             textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null);
         }
