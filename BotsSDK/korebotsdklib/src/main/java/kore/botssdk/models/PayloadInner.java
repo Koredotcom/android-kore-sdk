@@ -677,6 +677,10 @@ public class PayloadInner {
         return moreData;
     }
 
+    public void setNearByStockAvailableStores(ArrayList<NearByStockAvailableStoreModel> nearByStockAvailableStores) {
+        this.nearByStockAvailableStores = nearByStockAvailableStores;
+    }
+
     public ArrayList<NearByStockAvailableStoreModel> getNearByStockAvailableStores() {
         return nearByStockAvailableStores;
     }

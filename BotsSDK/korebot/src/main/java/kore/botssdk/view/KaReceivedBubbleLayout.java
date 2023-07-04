@@ -762,13 +762,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateErrorText(payInner.getText(), payInner.getColor());
-                } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
-                    if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
-                        bubbleTextMediaLayout.populateText(payInner.getText());
-                    else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
-                        bubbleTextMediaLayout.populateText(payInner.getText_message());
-                } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
-                    bubbleTextMediaLayout.populateText(payInner.getTemplate_type());
                 } else if (BotResponse.NEAR_BY_STOCK_AVAILABLE_STORES.equalsIgnoreCase(payInner.getTemplate_type())) {
                     if (nearByStockAvailableStoreListView == null) {
                         nearByStockAvailableStoreListView = ViewProvider.getNearByStockAvailableStoreListView(context);
@@ -779,6 +772,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     nearByStockAvailableStoreListView.setVisibility(View.VISIBLE);
                     nearByStockAvailableStoreListView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
                     nearByStockAvailableStoreListView.populateNearByStockAvailableStores(payInner.getNearByStockAvailableStores());
+                } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
+                    if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                        bubbleTextMediaLayout.populateText(payInner.getText());
+                    else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+                        bubbleTextMediaLayout.populateText(payInner.getText_message());
+                } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
+                    bubbleTextMediaLayout.populateText(payInner.getTemplate_type());
                 } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
                     timeStampsTextView.setText("");
                 }

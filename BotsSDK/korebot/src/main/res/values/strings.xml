@@ -101,7 +101,8 @@
     <string name="add_suggestions">Add Suggestions</string>
     <string name="get_started">Get Started</string>
     <string name="dot_regular">.</string>
-    <string name="items_left_only">%d items left only</string>
+    <string name="items_left_only">Only %d left</string>
+    <string name="store_info">Store info</string>
 
     <string-array name="attachments_strings">
         <item>Take Photo</item>
