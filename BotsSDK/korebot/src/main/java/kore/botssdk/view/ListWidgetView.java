@@ -35,6 +35,7 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
@@ -198,8 +199,10 @@ public class ListWidgetView extends LinearLayout {
                     meeting_desc.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
             }
 
-            if(model.getHeaderOptions() != null && model.getHeaderOptions().getType()!=null ) {
-                switch (model.getHeaderOptions().getType()){
+            if(model.getHeaderOptions() != null && model.getHeaderOptions() instanceof HeaderOptionsModel && ((HeaderOptionsModel)model.getHeaderOptions()).getType()!=null ) {
+                HeaderOptionsModel headerOptionsModel = ((HeaderOptionsModel)model.getHeaderOptions());
+                switch (headerOptionsModel.getType())
+                {
                 case "button":
                     icon_image_load.setVisibility(GONE);
                     imgMenu.setVisibility(GONE);
@@ -207,10 +210,10 @@ public class ListWidgetView extends LinearLayout {
                     tvUrl.setVisibility(GONE);
                     tvButtonParent.setVisibility(VISIBLE);
                     String btnTitle = "";
-                    if(model.getHeaderOptions().getButton() != null && model.getHeaderOptions().getButton().getTitle() != null)
-                        btnTitle = model.getHeaderOptions().getButton().getTitle();
+                    if(headerOptionsModel.getButton() != null && headerOptionsModel.getButton().getTitle() != null)
+                        btnTitle = headerOptionsModel.getButton().getTitle();
                     else
-                        btnTitle = model.getHeaderOptions().getText();
+                        btnTitle = headerOptionsModel.getText();
                     if(!StringUtils.isNullOrEmpty(btnTitle))
                         tvButton.setText(btnTitle);
                     else
@@ -220,10 +223,10 @@ public class ListWidgetView extends LinearLayout {
                     tvButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (model != null && model.getHeaderOptions() != null && model.getHeaderOptions().getButton() != null
-                                && model.getHeaderOptions().getButton().getPayload() != null)
+                            if (model != null && model.getHeaderOptions() != null && headerOptionsModel.getButton() != null
+                                && headerOptionsModel.getButton().getPayload() != null)
                             {
-                                buttonAction(model.getHeaderOptions().getButton().getPayload(), true);
+                                buttonAction(headerOptionsModel.getButton().getPayload(), true);
                             }
                         }
                     });
@@ -239,7 +242,7 @@ public class ListWidgetView extends LinearLayout {
                     imgMenu.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if ( model.getHeaderOptions()!= null &&  model.getHeaderOptions().getMenu()!= null && model.getHeaderOptions().getMenu().size() > 0) {
+                            if ( model.getHeaderOptions()!= null &&  headerOptionsModel.getMenu()!= null && headerOptionsModel.getMenu().size() > 0) {
 
                                 WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                                 bottomSheetDialog.setisFromFullView(false);
@@ -259,7 +262,7 @@ public class ListWidgetView extends LinearLayout {
                     icon_image_load.setVisibility(GONE);
                     imgMenu.setVisibility(GONE);
                     tvText.setVisibility(VISIBLE);
-                    tvText.setText(model.getHeaderOptions().getText());
+                    tvText.setText(headerOptionsModel.getText());
                     tvButtonParent.setVisibility(GONE);
                     tvUrl.setVisibility(GONE);
                     break;
@@ -267,7 +270,7 @@ public class ListWidgetView extends LinearLayout {
                     icon_image_load.setVisibility(GONE);
                     imgMenu.setVisibility(GONE);
                     tvText.setVisibility(GONE);
-                    SpannableString content = new SpannableString(model.getHeaderOptions().getUrl().getTitle()!=null?model.getHeaderOptions().getUrl().getTitle():model.getHeaderOptions().getUrl().getLink());
+                    SpannableString content = new SpannableString(headerOptionsModel.getUrl().getTitle()!=null?headerOptionsModel.getUrl().getTitle():headerOptionsModel.getUrl().getLink());
                     content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                     tvUrl.setText(content);
                     tvButtonParent.setVisibility(GONE);
@@ -275,9 +278,9 @@ public class ListWidgetView extends LinearLayout {
                     tvUrl.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(model.getHeaderOptions().getUrl().getLink() != null) {
+                            if(headerOptionsModel.getUrl().getLink() != null) {
                                 Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
-                                intent.putExtra("url", model.getHeaderOptions().getUrl().getLink());
+                                intent.putExtra("url", headerOptionsModel.getUrl().getLink());
                                 intent.putExtra("header", getContext().getResources().getString(R.string.app_name));
                                 getContext().startActivity(intent);
                             }
@@ -287,15 +290,14 @@ public class ListWidgetView extends LinearLayout {
 
                 case "image":
                     icon_image_load.setVisibility(VISIBLE);
-                    if(model.getHeaderOptions().getImage()!=null&&model.getHeaderOptions().getImage().getImage_src()!=null) {
-                        Picasso.get().load(model.getHeaderOptions().getImage().getImage_src()).into(icon_image_load);
+                    if(headerOptionsModel.getImage()!=null&&headerOptionsModel.getImage().getImage_src()!=null) {
+                        Picasso.get().load(headerOptionsModel.getImage().getImage_src()).into(icon_image_load);
                         icon_image_load.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (model != null && model.getHeaderOptions() != null && model.getHeaderOptions().getImage() != null
-                                        && model.getHeaderOptions().getImage().getPayload() != null)
+                                if (model.getHeaderOptions() != null && headerOptionsModel.getImage() != null && headerOptionsModel.getImage().getPayload() != null)
                                 {
-                                    buttonAction(model.getHeaderOptions().getImage().getPayload(), true);
+                                    buttonAction(headerOptionsModel.getImage().getPayload(), true);
                                 }
                             }
                         });
@@ -303,7 +305,7 @@ public class ListWidgetView extends LinearLayout {
                     break;
                 }
             }
-            if (model != null && model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > 0 && !model.getTemplate_type().equals("loginURL")) {
+            if (model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > 0 && !model.getTemplate_type().equals("loginURL")) {
 
                 if (model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > 3) {
                     botCustomListViewButton.setVisibility(View.VISIBLE);

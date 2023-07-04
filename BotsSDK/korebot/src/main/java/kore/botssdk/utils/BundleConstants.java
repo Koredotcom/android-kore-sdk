@@ -22,6 +22,11 @@ public class BundleConstants {
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
     public final static String SHOW_PIC = "showPic";
+
+    public static final String ICON = "icon";
+
+    public static final String BUTTON = "button";
+
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";

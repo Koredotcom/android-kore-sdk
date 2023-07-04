@@ -17,6 +17,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.view.AdvancedListTemplateView;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BankingFeedbackTemplateView;
@@ -43,6 +44,7 @@ import kore.botssdk.view.ImageTemplateView;
 import kore.botssdk.view.KoraCarouselView;
 import kore.botssdk.view.KoraSummaryHelpView;
 import kore.botssdk.view.LineChartView;
+import kore.botssdk.view.LinkTemplateView;
 import kore.botssdk.view.ListWidgetView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
@@ -410,4 +412,14 @@ public class ViewProvider {
         return agentTransferTemplateView;
     }
 
+    public static LinkTemplateView getLinkTemplateView(Context context) {
+        LinkTemplateView linkTemplateView = new LinkTemplateView(context);
+        linkTemplateView.setId(BubbleConstants.LIST_ID);
+        return linkTemplateView;
+    }
+    public static AdvancedListTemplateView getAdvancedListTemplateView(Context context){
+        AdvancedListTemplateView feedbackTemplateView = new AdvancedListTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
+        return  feedbackTemplateView;
+    }
 }

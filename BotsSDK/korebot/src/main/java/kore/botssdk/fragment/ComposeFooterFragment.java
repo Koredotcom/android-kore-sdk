@@ -196,7 +196,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListenerExplicitly();
         toggleTTSButton();
         initialSetUp();
-//        keyboard_img.performClick();
+        keyboard_img.performClick();
         return view;
     }
 

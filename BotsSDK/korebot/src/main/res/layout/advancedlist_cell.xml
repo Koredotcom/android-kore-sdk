@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/advanced_cell_bg"
+    android:orientation="vertical"
+    android:padding="7dp">
+
+    <!-- Item image -->
+    <ImageView
+        android:id="@+id/bot_list_item_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="5dp"
+        android:clickable="false"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/bot_list_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="Title"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/bot_list_item_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bot_list_item_title"
+        android:layout_toRightOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="Subtitle"
+        android:textColor="@color/footer_color_dark_grey"
+        android:textSize="@dimen/text_size_small"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/rlAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivAction"
+            android:layout_width="@dimen/dimen_10dp"
+            android:layout_height="@dimen/dimen_10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/tvAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textSize="@dimen/text_size_small"
+            android:background="@drawable/advanced_list_bt_bg"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/bot_list_item_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bot_list_item_subtitle"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/rounded_image_bg_blue"
+        android:textColor="@android:color/white"
+        android:textSize="12dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

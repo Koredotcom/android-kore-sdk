@@ -38,6 +38,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BaseChartModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
+import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.WCalEventsTemplateModel;
 import kore.botssdk.models.WTaskTemplateModel;
@@ -97,7 +98,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         else if(model instanceof PayloadInner)
         {
             PayloadInner payloadInner = (PayloadInner)model;
-            this.actionList=payloadInner.getHeaderOptions().getMenu();
+            if(payloadInner.getHeaderOptions() instanceof HeaderOptionsModel)
+                this.actionList=((HeaderOptionsModel)payloadInner.getHeaderOptions()).getMenu();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -327,9 +329,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         else if(model instanceof PayloadInner)
         {
             PayloadInner ba= (PayloadInner)model;
-            //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
-            holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
-            Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
+            if(ba.getHeaderOptions() instanceof HeaderOptionsModel)
+                holder.tv_actions.setText(((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().get(position).getTitle());
+
+            Widget.Button finalButton = ((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().get(position);
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -453,7 +456,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         else if(model instanceof PayloadInner)
         {
             PayloadInner ba=(PayloadInner)model;
-            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            if(ba.getHeaderOptions() instanceof HeaderOptionsModel)
+                return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&((HeaderOptionsModel)ba.getHeaderOptions()).getMenu()!=null)?((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().size():0;
         }
         return 0;
     }

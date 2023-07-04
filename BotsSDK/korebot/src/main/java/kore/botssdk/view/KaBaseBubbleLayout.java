@@ -142,6 +142,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BankingFeedbackTemplateView bankingFeedbackTemplateView;
     protected BotContactTemplateView botContactTemplateView;
     protected BotCustomTableView botCustomTableView;
+    protected LinkTemplateView linkTemplateView;
+    protected AdvancedListTemplateView advancedListTemplateView;
+
 
     //    protected int[] dimens;
     protected int textColor;
@@ -428,6 +431,13 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bankingFeedbackTemplateView = ViewProvider.getBankingFeedbackTemplateView(context);
         bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(bankingFeedbackTemplateView);
+
+        linkTemplateView = ViewProvider.getLinkTemplateView(context);
+        addView(linkTemplateView);
+
+        advancedListTemplateView = ViewProvider.getAdvancedListTemplateView(context);
+        advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(advancedListTemplateView);
     }
 
 
