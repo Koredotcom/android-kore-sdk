@@ -22,6 +22,8 @@ import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BankingFeedbackTemplateView;
 import kore.botssdk.view.BarChartView;
+import kore.botssdk.view.BotBeneficiaryTemplateView;
+import kore.botssdk.view.BotButtonLinkTemplateView;
 import kore.botssdk.view.BotButtonView;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotContactTemplateView;
@@ -36,6 +38,7 @@ import kore.botssdk.view.BotResponsiveExpandTableView;
 import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
+import kore.botssdk.view.ButtonDeepLinkTemplateView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
@@ -49,8 +52,10 @@ import kore.botssdk.view.ListWidgetView;
 import kore.botssdk.view.MeetingConfirmationView;
 import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
+import kore.botssdk.view.PdfDownloadView;
 import kore.botssdk.view.PieChartView;
 import kore.botssdk.view.QuickReplyView;
+import kore.botssdk.view.ResultsTemplateView;
 import kore.botssdk.view.StackedBarChatView;
 import kore.botssdk.view.TextMediaLayout;
 import kore.botssdk.view.TimeLineTextView;
@@ -422,4 +427,32 @@ public class ViewProvider {
         feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
         return  feedbackTemplateView;
     }
+    public static ResultsTemplateView getResultsTemplateView(Context context){
+        ResultsTemplateView resultsTemplateView = new ResultsTemplateView(context);
+        resultsTemplateView.setId(MULTI_SELECT_VIEW_ID);
+        return resultsTemplateView;
+    }
+    public static PdfDownloadView getPdfListView(Context context){
+        PdfDownloadView multiSelectView = new PdfDownloadView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
+    }
+    public static BotButtonLinkTemplateView getBotButtonLinkView(Context context, ComposeFooterInterface listener) {
+        BotButtonLinkTemplateView botButtonView = new BotButtonLinkTemplateView(context);
+        botButtonView.setId(BUTTON_VIEW_ID);
+        botButtonView.setComposeFooterInterface(listener);
+        return botButtonView;
+    }
+    public static BotBeneficiaryTemplateView getBotBeneficiaryTemplateView(Context context){
+        BotBeneficiaryTemplateView botListTemplateView = new BotBeneficiaryTemplateView(context);
+        botListTemplateView.setId(LIST_ID);
+        return botListTemplateView;
+    }
+
+    public static ButtonDeepLinkTemplateView getButtonDeepLinkTemplateView(Context context){
+        ButtonDeepLinkTemplateView multiSelectView = new ButtonDeepLinkTemplateView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
+    }
+
 }

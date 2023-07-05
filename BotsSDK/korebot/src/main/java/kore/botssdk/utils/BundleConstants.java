@@ -8,6 +8,7 @@ public class BundleConstants {
 
     public static final String KNOWLEDGE_ID = "knowledgeId";
     public static final String SHOW_SHARE ="show_share" ;
+    public static final String FAQ = "faq";
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
     public static String RESOURCE_ID = "resource_id";

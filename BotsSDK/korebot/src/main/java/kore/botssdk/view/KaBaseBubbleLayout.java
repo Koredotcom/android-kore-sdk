@@ -144,6 +144,11 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotCustomTableView botCustomTableView;
     protected LinkTemplateView linkTemplateView;
     protected AdvancedListTemplateView advancedListTemplateView;
+    protected BotBeneficiaryTemplateView botBeneficiaryTemplateView;
+    protected ButtonDeepLinkTemplateView buttonDeepLinkTemplateView;
+    protected PdfDownloadView pdfDownloadView;
+    protected ResultsTemplateView resultsTemplateView;
+    protected BotButtonLinkTemplateView botButtonLinkTemplateView;
 
 
     //    protected int[] dimens;
@@ -438,6 +443,23 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         advancedListTemplateView = ViewProvider.getAdvancedListTemplateView(context);
         advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(advancedListTemplateView);
+
+        resultsTemplateView = ViewProvider.getResultsTemplateView(context);
+        resultsTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(resultsTemplateView);
+
+        pdfDownloadView = ViewProvider.getPdfListView(context);
+        addView(pdfDownloadView);
+
+        botButtonLinkTemplateView = ViewProvider.getBotButtonLinkView(context,null);
+        addView(botButtonLinkTemplateView);
+
+        botBeneficiaryTemplateView = ViewProvider.getBotBeneficiaryTemplateView(context);
+        addView(botBeneficiaryTemplateView);
+
+        buttonDeepLinkTemplateView = ViewProvider.getButtonDeepLinkTemplateView(context);
+        buttonDeepLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(buttonDeepLinkTemplateView);
     }
 
 
@@ -564,6 +586,18 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(resultsTemplateView != null) {
+            resultsTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if (botButtonLinkTemplateView != null) {
+            botButtonLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if (botBeneficiaryTemplateView != null) {
+            botBeneficiaryTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+        if(buttonDeepLinkTemplateView != null){
+            buttonDeepLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -628,6 +662,18 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         if(bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if(resultsTemplateView != null) {
+            resultsTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botButtonLinkTemplateView != null) {
+            botButtonLinkTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botBeneficiaryTemplateView != null) {
+            botBeneficiaryTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (buttonDeepLinkTemplateView != null) {
+            buttonDeepLinkTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 
