@@ -129,6 +129,9 @@ public class FileTokenManager{
 
                 if(wr != null)
                     wr.close();
+
+                if(conn != null && conn.getInputStream() != null)
+                    conn.getInputStream().close();
             }
             catch(Exception ex) {
                 ex.printStackTrace();}

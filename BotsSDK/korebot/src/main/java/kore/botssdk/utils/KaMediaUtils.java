@@ -241,15 +241,18 @@ public class KaMediaUtils {
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
+        FileOutputStream fos = null;
+        FileInputStream fis = null;
 
         if (sourceFilePath == null)
             return;
 
         try {
-            bis = new BufferedInputStream(new FileInputStream(new File(sourceFilePath)));
-            bos = new BufferedOutputStream(new FileOutputStream(destinationFilePath, false));
+            fis = new FileInputStream(sourceFilePath);
+            bis = new BufferedInputStream(fis);
+            fos = new FileOutputStream(destinationFilePath, false);
+            bos = new BufferedOutputStream(fos);
             byte[] buf = new byte[1024];
-            bis.read(buf);
             do {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
@@ -260,6 +263,8 @@ public class KaMediaUtils {
             try {
                 if (bis != null) bis.close();
                 if (bos != null) bos.close();
+                if (fos != null) fos.close();
+                if (fis != null) fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -275,13 +280,8 @@ public class KaMediaUtils {
         String audio_extn = null;
         String video_extn = null;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1) {
-            audio_extn = ".m4a";
-            video_extn = ".mp4";
-        } else {
-            audio_extn = ".amr";
-            video_extn = ".3gp";
-        }
+        audio_extn = ".m4a";
+        video_extn = ".mp4";
         if (MEDIA_TYPE.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
             return video_extn;
         } else if (MEDIA_TYPE.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
@@ -292,11 +292,8 @@ public class KaMediaUtils {
     }
 
     public static String getRealPath(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -306,10 +303,7 @@ public class KaMediaUtils {
                 if ("primary".equalsIgnoreCase(type)) {
                     return KaEnvironment.getExternalStorageDirectory() + "/" + split[1];
                 }
-
-                // TODO handle non-primary volumes
             }
-            // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
@@ -326,13 +320,13 @@ public class KaMediaUtils {
                     };
 
                     for (String contentUriPrefix : contentUriPrefixesToTry) {
-                        Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                        Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.parseLong(id));
                         try {
                             String path = getDataColumn(context, contentUri, null, null);
                             if (path != null) {
                                 return path;
                             }
-                        } catch (Exception e) {}
+                        } catch (Exception e) {e.printStackTrace();}
                     }
                 }
             }

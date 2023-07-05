@@ -368,6 +368,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		HttpsURLConnection httpsURLConnection = null;
 		InputStream fis = null;
 		ByteArrayOutputStream thumbBaos = null;
+		BufferedReader input = null;
 
 		try {
 			KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder;
@@ -457,13 +458,13 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		reqEntity.writeTo(dataOutputStream);
 		dataOutputStream.close();
 
-		BufferedReader input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+		input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
 
 		String serverResponse = "";
 		for( int c = input.read(); c != -1; c = input.read() ) {
 			serverResponse = serverResponse + (char)c;
 		}
-		input.close();
+
 		httpsURLConnection.disconnect();
 		upLoadProgressState(100,false);
 		Log.d(LOG_TAG, "Got serverResponse for merge " + serverResponse);
@@ -536,11 +537,15 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 				if(httpsURLConnection != null)
 					httpsURLConnection.disconnect();
 				helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+
 				if(fis != null)
 					fis.close();
 
 				if(thumbBaos != null)
 					thumbBaos.close();
+
+				if(input != null)
+					input.close();
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -554,7 +559,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		}else	return df2.format((double) file.length() / (1024 * 1024)) + "mb";
 	}
 
-	private void handleErr404(InputStream errorStream , String fileName) {
+	private void handleErr404(InputStream errorStream , String fileName) throws IOException {
 		Log.d(LOG_TAG,"Starting upload failed chunks");
 		String response="";
 		String line;
@@ -575,6 +580,9 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			br.close();
 		}
 	}
 

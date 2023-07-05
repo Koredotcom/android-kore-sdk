@@ -91,10 +91,6 @@ public class BotBeneficiaryTemplateView extends ViewGroup implements ListClickab
         quickReplyFontColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, quickReplyFontColor);
 
         botCustomListViewButton.setTextColor(Color.parseColor(fillColor));
-        GradientDrawable gradientDrawable = (GradientDrawable)view.findViewById(R.id.botCustomListViewButton).getBackground();
-        gradientDrawable.setStroke((int) (2 * dp1), Color.parseColor(fillColor));
-        gradientDrawable.setColor(Color.parseColor(quickWidgetColor));
-        botCustomListViewButton.setBackground(gradientDrawable);
     }
 
     public void populateListTemplateView(BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotBeneficiaryModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore, PayloadInner payloadInner) {

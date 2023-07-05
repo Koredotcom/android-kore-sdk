@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -58,7 +59,7 @@ public class UploadExecutor implements Runnable{
     @Override
     public void run() {
         String serverResponse = null;
-
+        BufferedReader input = null;
         try {
 
             Log.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
@@ -100,7 +101,7 @@ public class UploadExecutor implements Runnable{
 
             //Real upload starting here -->>
             Log.d("upload new", "good so far");
-            BufferedReader input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+            input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
 
             serverResponse = "";
             for( int c = input.read(); c != -1; c = input.read() ) {
@@ -141,7 +142,14 @@ public class UploadExecutor implements Runnable{
 //            }
             Log.e(LOG_TAG, "Failed to post message for chunk no:: " + this.chunkNo);
         }
-
+        finally {
+            try {
+                if(input != null)
+                    input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
