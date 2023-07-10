@@ -104,6 +104,8 @@ public class BotResponse extends BaseBotMessage {
 
     //Theme Properties
     public static final String THEME_NAME = "THEME_NAME";
+    public static final String THEME_BG_COLOR = "THEME_BG_COLOR";
+    public static final String THEME_TXT_COLOR = "THEME_TXT_COLOR";
     public static final String BUBBLE_LEFT_BG_COLOR = "BUBBLE_LEFT_BG_COLOR";
     public static final String BUBBLE_RIGHT_BG_COLOR = "BUBBLE_RIGHT_BG_COLOR";
     public static final String BUBBLE_LEFT_TEXT_COLOR = "BUBBLE_LEFT_TEXT_COLOR";
