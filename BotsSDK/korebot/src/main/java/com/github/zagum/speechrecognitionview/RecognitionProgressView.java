@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.speech.SpeechListener;
+import kore.botssdk.utils.LogUtils;
 
 public class RecognitionProgressView extends View implements RecognitionListener {
 
@@ -393,7 +394,7 @@ public class RecognitionProgressView extends View implements RecognitionListener
             && results.get(0) != null && !results.get(0).isEmpty()) {
       result = results.get(0);
     } else {
-      Log.d(RecognitionProgressView.class.getSimpleName(), "No speech results, getting partial");
+      LogUtils.d(RecognitionProgressView.class.getSimpleName(), "No speech results, getting partial");
       result = getPartialResultsAsString();
     }
 
@@ -404,8 +405,8 @@ public class RecognitionProgressView extends View implements RecognitionListener
         recognitionListener.onSpeechResult(result.trim());
       }
     } catch (final Throwable exc) {
-      Log.d(RecognitionProgressView.class.getSimpleName(),
-              "Unhandled exception in delegate onSpeechResult", exc);
+      LogUtils.d(RecognitionProgressView.class.getSimpleName(),
+              "Unhandled exception in delegate onSpeechResult");
     }
   }
 
@@ -427,8 +428,8 @@ public class RecognitionProgressView extends View implements RecognitionListener
           mLastPartialResults = partialResults;
         }
       } catch (final Throwable exc) {
-        Log.d(RecognitionProgressView.class.getSimpleName(),
-                "Unhandled exception in delegate onSpeechPartialResults", exc);
+        LogUtils.d(RecognitionProgressView.class.getSimpleName(),
+                "Unhandled exception in delegate onSpeechPartialResults");
       }
     }
   }

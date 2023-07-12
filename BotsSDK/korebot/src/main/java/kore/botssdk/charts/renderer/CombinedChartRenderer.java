@@ -15,6 +15,7 @@ import kore.botssdk.charts.data.ChartData;
 import kore.botssdk.charts.data.CombinedData;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.utils.ViewPortHandler;
+import kore.botssdk.utils.LogUtils;
 
 public class CombinedChartRenderer extends DataRenderer {
     protected List<DataRenderer> mRenderers = new ArrayList(5);
@@ -89,7 +90,7 @@ public class CombinedChartRenderer extends DataRenderer {
     }
 
     public void drawValue(Canvas c, String valueText, float x, float y, int color) {
-        Log.e("MPAndroidChart", "Erroneous call to drawValue() in CombinedChartRenderer!");
+        LogUtils.e("MPAndroidChart", "Erroneous call to drawValue() in CombinedChartRenderer!");
     }
 
     public void drawValues(Canvas c) {

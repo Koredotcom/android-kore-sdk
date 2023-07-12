@@ -41,6 +41,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
@@ -188,7 +189,7 @@ public class TextMediaLayout extends ViewGroup {
 
             String replaceText = str.substring(_start,_end);
             String _payload = replaceText.substring(2,replaceText.length()-2);
-            Log.d("!@#$% getReqText(", _payload);
+            LogUtils.d("!@#$% getReqText(", _payload);
             _payload = _payload.substring(_payload.indexOf("{"));
             EntityEditModel model = gson.fromJson(_payload, EntityEditModel.class);
             String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
@@ -221,9 +222,9 @@ public class TextMediaLayout extends ViewGroup {
             boolean isPencilSpanClick = false;
 
             if(textualContent.indexOf("%%{")>0){
-                Log.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
+                LogUtils.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
                 textualContent = getReqText(textualContent);
-                Log.d("!@#$% AFTER ", textualContent);
+                LogUtils.d("!@#$% AFTER ", textualContent);
                 strBuilder = new SpannableStringBuilder(textualContent);
             }
             Matcher matcher = pattern.matcher(textualContent);
@@ -237,7 +238,7 @@ public class TextMediaLayout extends ViewGroup {
                 String reqText = textualContent.substring(_start+2, _end-2);
                 reqText = reqText.substring(reqText.indexOf("{"));
 
-                Log.d("!@#$% REQ_TEXT while", reqText);
+                LogUtils.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = gson.fromJson(reqText, EntityEditModel.class);
                 String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";

@@ -1,10 +1,17 @@
 package kore.botssdk.activity;
 
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
+
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,15 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.UUID;
 
+import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 
 /**
@@ -28,7 +39,6 @@ import kore.botssdk.utils.StringUtils;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
-
     private Button launchBotBtn;
     private EditText etIdentity;
     private static final int ERROR_DIALOG_REQUEST_CODE = 1;
@@ -40,7 +50,6 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
         setContentView(R.layout.bot_home_activity_layout);
         ProviderInstaller.installIfNeededAsync(this, this);
 
-//        appPermissionCheck();
         findViews();
         setListeners();
     }
@@ -53,6 +62,16 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
         etIdentity.setText(SDKConfiguration.Client.identity);
         if(etIdentity.getText().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.e("Has Permission", "true");
+            } else
+            {
+                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
+                        Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     private void setListeners() {
@@ -111,9 +130,11 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
     }
 
     protected boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     /**
@@ -182,31 +203,13 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
         retryProviderInstall = false;
     }
 
-//    private void appPermissionCheck()
-//    {
-//        Log.d("TAG", "Check requestAllPermissions");
-//        PermissionRequest permissionRequest =  new PermissionRequest()
-//        {
-//            @Override
-//            public void granted()
-//            {
-//                Log.d(LOG_TAG, " PermissionRequest: granted");
-////                initStartApp();
-//            }
-//
-//
-//            @Override
-//            public void revoked()
-//            {
-//                //Can close app if not all permission is approved
-//                Log.d(LOG_TAG, " PermissionRequest: revoked");
-//            }
-//
-//            @Override
-//            public void allResults(boolean allGranted) {
-//            }
-//        };
-//
-//        PermissionManager.getInstance().requestAllPermissions(BotHomeActivity.this, permissionRequest);
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
+                Log.e("Has Permission", "true");
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }

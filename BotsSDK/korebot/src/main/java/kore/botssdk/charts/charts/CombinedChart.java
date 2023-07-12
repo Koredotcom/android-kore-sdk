@@ -17,6 +17,7 @@ import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.CombinedDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.renderer.CombinedChartRenderer;
+import kore.botssdk.utils.LogUtils;
 
 public class CombinedChart extends BarLineChartBase<CombinedData> implements CombinedDataProvider {
     private boolean mDrawValueAboveBar = true;
@@ -57,7 +58,7 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
 
     public Highlight getHighlightByTouchPoint(float x, float y) {
         if (this.mData == null) {
-            Log.e("MPAndroidChart", "Can't select by touch. No data set.");
+            LogUtils.e("MPAndroidChart", "Can't select by touch. No data set.");
             return null;
         } else {
             Highlight h = this.getHighlighter().getHighlight(x, y);

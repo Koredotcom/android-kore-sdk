@@ -35,6 +35,7 @@ import kore.botssdk.charts.utils.MPPointD;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
+import kore.botssdk.utils.LogUtils;
 
 @SuppressLint({"RtlHardcoded"})
 public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<? extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>> extends Chart<T> implements BarLineScatterCandleBubbleDataProvider {
@@ -206,7 +207,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
                 this.totalTime += drawtime;
                 ++this.drawCycles;
                 long average = this.totalTime / this.drawCycles;
-                Log.i("MPAndroidChart", "Drawtime: " + drawtime + " ms, average: " + average + " ms, cycles: " + this.drawCycles);
+                LogUtils.i("MPAndroidChart", "Drawtime: " + drawtime + " ms, average: " + average + " ms, cycles: " + this.drawCycles);
             }
 
         }
@@ -219,7 +220,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
 
     protected void prepareValuePxMatrix() {
         if (this.mLogEnabled) {
-            Log.i("MPAndroidChart", "Preparing Value-Px Matrix, xmin: " + this.mXAxis.mAxisMinimum + ", xmax: " + this.mXAxis.mAxisMaximum + ", xdelta: " + this.mXAxis.mAxisRange);
+            LogUtils.i("MPAndroidChart", "Preparing Value-Px Matrix, xmin: " + this.mXAxis.mAxisMinimum + ", xmax: " + this.mXAxis.mAxisMaximum + ", xdelta: " + this.mXAxis.mAxisRange);
         }
 
         this.mRightAxisTransformer.prepareMatrixValuePx(this.mXAxis.mAxisMinimum, this.mXAxis.mAxisRange, this.mAxisRight.mAxisRange, this.mAxisRight.mAxisMinimum);
@@ -234,12 +235,12 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
     public void notifyDataSetChanged() {
         if (this.mData == null) {
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "Preparing... DATA NOT SET.");
+                LogUtils.i("MPAndroidChart", "Preparing... DATA NOT SET.");
             }
 
         } else {
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "Preparing...");
+                LogUtils.i("MPAndroidChart", "Preparing...");
             }
 
             if (this.mRenderer != null) {
@@ -358,8 +359,8 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             xLabelHeight = Utils.convertDpToPixel(this.mMinOffset);
             this.mViewPortHandler.restrainViewPort(Math.max(xLabelHeight, offsetLeft), Math.max(xLabelHeight, offsetTop), Math.max(xLabelHeight, offsetRight), Math.max(xLabelHeight, offsetBottom));
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
-                Log.i("MPAndroidChart", "Content: " + this.mViewPortHandler.getContentRect().toString());
+                LogUtils.i("MPAndroidChart", "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
+                LogUtils.i("MPAndroidChart", "Content: " + this.mViewPortHandler.getContentRect().toString());
             }
         }
 

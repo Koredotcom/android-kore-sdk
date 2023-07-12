@@ -50,6 +50,7 @@ import kore.botssdk.charts.renderer.LegendRenderer;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
+import kore.botssdk.utils.LogUtils;
 
 public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Entry>>> extends ViewGroup implements ChartInterface {
     public static final String LOG_TAG = "MPAndroidChart";
@@ -126,7 +127,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         this.mInfoPaint.setTextAlign(Paint.Align.CENTER);
         this.mInfoPaint.setTextSize(Utils.convertDpToPixel(12.0F));
         if (this.mLogEnabled) {
-            Log.i("", "Chart.init()");
+            LogUtils.i("", "Chart.init()");
         }
 
     }
@@ -144,7 +145,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
                     if (!var2.hasNext()) {
                         this.notifyDataSetChanged();
                         if (this.mLogEnabled) {
-                            Log.i("MPAndroidChart", "Data is set.");
+                            LogUtils.i("MPAndroidChart", "Data is set.");
                         }
 
                         return;
@@ -306,7 +307,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
             this.mIndicesToHighlight = null;
         } else {
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "Highlighted: " + high);
+                LogUtils.i("MPAndroidChart", "Highlighted: " + high);
             }
 
             e = this.mData.getEntryForHighlight(high);
@@ -332,7 +333,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     public Highlight getHighlightByTouchPoint(float x, float y) {
         if (this.mData == null) {
-            Log.e("MPAndroidChart", "Can't select by touch. No data set.");
+            LogUtils.e("MPAndroidChart", "Can't select by touch. No data set.");
             return null;
         } else {
             return this.getHighlighter().getHighlight(x, y);
@@ -814,17 +815,17 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         if (this.mLogEnabled) {
-            Log.i("MPAndroidChart", "OnSizeChanged()");
+            LogUtils.i("MPAndroidChart", "OnSizeChanged()");
         }
 
         if (w > 0 && h > 0 && w < 10000 && h < 10000) {
             if (this.mLogEnabled) {
-                Log.i("MPAndroidChart", "Setting chart dimens, width: " + w + ", height: " + h);
+                LogUtils.i("MPAndroidChart", "Setting chart dimens, width: " + w + ", height: " + h);
             }
 
             this.mViewPortHandler.setChartDimens((float)w, (float)h);
         } else if (this.mLogEnabled) {
-            Log.w("MPAndroidChart", "*Avoiding* setting chart dimens! width: " + w + ", height: " + h);
+            LogUtils.w("MPAndroidChart", "*Avoiding* setting chart dimens! width: " + w + ", height: " + h);
         }
 
         this.notifyDataSetChanged();

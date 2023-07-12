@@ -11,6 +11,7 @@ import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.datasets.IDataSet;
+import kore.botssdk.utils.LogUtils;
 
 public abstract class ChartData<T extends IDataSet<? extends Entry>> {
     protected float mYMax = -3.4028235E38F;
@@ -246,7 +247,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
             this.calcMinMax(e,set.getAxisDependency());
         } else {
-            Log.e("addEntry", "Cannot add Entry because dataSetIndex too high or too low.");
+            LogUtils.e("addEntry", "Cannot add Entry because dataSetIndex too high or too low.");
         }
 
     }

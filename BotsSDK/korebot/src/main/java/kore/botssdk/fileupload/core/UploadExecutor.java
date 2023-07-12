@@ -1,7 +1,6 @@
 package kore.botssdk.fileupload.core;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -19,6 +18,7 @@ import kore.botssdk.fileupload.configurations.Constants;
 import kore.botssdk.fileupload.configurations.FileUploadEndPoints;
 import kore.botssdk.fileupload.listeners.ChunkUploadListener;
 import kore.botssdk.fileupload.ssl.KoreHttpsUrlConnectionBuilder;
+import kore.botssdk.utils.LogUtils;
 
 
 public class UploadExecutor implements Runnable{
@@ -62,7 +62,7 @@ public class UploadExecutor implements Runnable{
         BufferedReader input = null;
         try {
 
-            Log.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
+            LogUtils.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
             String FULL_URL = null;
             if(isAnonymousUser)
             {
@@ -100,7 +100,7 @@ public class UploadExecutor implements Runnable{
             dataOutputStream.close();
 
             //Real upload starting here -->>
-            Log.d("upload new", "good so far");
+            LogUtils.d("upload new", "good so far");
             input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
 
             serverResponse = "";
@@ -109,9 +109,9 @@ public class UploadExecutor implements Runnable{
             }
             input.close();
             httpsURLConnection.disconnect();
-            Log.d(LOG_TAG,"Got serverResponse for chunk upload"+ serverResponse);
+            LogUtils.d(LOG_TAG,"Got serverResponse for chunk upload"+ serverResponse);
             int statusCode = httpsURLConnection.getResponseCode();
-            Log.e(LOG_TAG,"status code for chunks"+chunkNo+ "is"+statusCode);
+            LogUtils.e(LOG_TAG,"status code for chunks"+chunkNo+ "is"+statusCode);
 
             String chunkNo = null;
 
@@ -123,7 +123,7 @@ public class UploadExecutor implements Runnable{
                     chunkNo = (String) jsonObject.get("chunkNo");
                     if(mListener != null)
                         mListener.notifyChunkUploadCompleted(chunkNo, fileName);
-                    Log.e(LOG_TAG,"Response for chunk ::::"+chunkNo + "for file"+fileName);
+                    LogUtils.e(LOG_TAG,"Response for chunk ::::"+chunkNo + "for file"+fileName);
                 }
 
             } else {
@@ -134,13 +134,13 @@ public class UploadExecutor implements Runnable{
 
 
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Exception in uploading chunk " + e);
+            LogUtils.e(LOG_TAG, "Exception in uploading chunk " + e);
             e.printStackTrace();
 //            if(!(e instanceof NoNetworkException)){
                 if(mListener != null)
                     mListener.notifyChunkUploadCompleted(chunkNo+"", fileName);
 //            }
-            Log.e(LOG_TAG, "Failed to post message for chunk no:: " + this.chunkNo);
+            LogUtils.e(LOG_TAG, "Failed to post message for chunk no:: " + this.chunkNo);
         }
         finally {
             try {

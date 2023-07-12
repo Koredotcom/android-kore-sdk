@@ -24,6 +24,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotListWidgetModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
@@ -76,7 +77,7 @@ public class BotListWidgetTemplateView extends ViewGroup {
     public void populateListWidgetTemplateView(String title, BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListWidgetModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore) {
 
         if(botListViewMoreDataModel != null)
-            Log.e("More Data", botListViewMoreDataModel.getTab1().toString());
+            LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
         if(!StringUtils.isNullOrEmpty(title))
         {

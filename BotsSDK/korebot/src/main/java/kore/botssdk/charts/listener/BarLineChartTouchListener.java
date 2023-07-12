@@ -18,6 +18,7 @@ import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
+import kore.botssdk.utils.LogUtils;
 
 public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBase<? extends BarLineScatterCandleBubbleData<? extends IBarLineScatterCandleBubbleDataSet<? extends Entry>>>> {
     private Matrix mMatrix = new Matrix();
@@ -321,7 +322,7 @@ public class BarLineChartTouchListener extends ChartTouchListener<BarLineChartBa
             MPPointF trans = this.getTrans(e.getX(), e.getY());
             ((BarLineChartBase)this.mChart).zoom(((BarLineChartBase)this.mChart).isScaleXEnabled() ? 1.4F : 1.0F, ((BarLineChartBase)this.mChart).isScaleYEnabled() ? 1.4F : 1.0F, trans.x, trans.y);
             if (((BarLineChartBase)this.mChart).isLogEnabled()) {
-                Log.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: " + trans.y);
+                LogUtils.i("BarlineChartTouch", "Double-Tap, Zooming In, x: " + trans.x + ", y: " + trans.y);
             }
 
             MPPointF.recycleInstance(trans);

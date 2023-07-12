@@ -23,7 +23,6 @@ import kore.botssdk.utils.StringUtils;
 
 public class LinkTemplateView extends LinearLayout {
     private ImageView ivPdfDownload;
-    private TextView tvPdfName;
     private Context context;
     private ProgressBar pbDownload;
 
@@ -45,7 +44,6 @@ public class LinkTemplateView extends LinearLayout {
     private void init(Context context) {
         this.context = context;
         View view = LayoutInflater.from(getContext()).inflate(R.layout.pdf_download_view, this, true);
-        tvPdfName = view.findViewById(R.id.tv_pdf_item_title);
         ivPdfDownload = view.findViewById(R.id.ivPdfDownload);
         pbDownload = view.findViewById(R.id.pbDownload);
 
@@ -55,7 +53,6 @@ public class LinkTemplateView extends LinearLayout {
     public void populatePdfView(PayloadInner payloadInner) {
         if (payloadInner != null)
         {
-            tvPdfName.setText(payloadInner.getFileName());
             ivPdfDownload.setOnClickListener(v -> {
                 File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + payloadInner.getFileName());
                 if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
@@ -80,18 +77,28 @@ public class LinkTemplateView extends LinearLayout {
     }
 
     private boolean writeBase64ToDisk(String fileData, File fileLocation) {
+        FileOutputStream os = null;
         try {
             fileData = fileData.substring(fileData.indexOf(",") + 1);
             byte[] pdfAsBytes = Base64.decode(String.valueOf(fileData), 0);
-            FileOutputStream os;
             os = new FileOutputStream(fileLocation, false);
             os.write(pdfAsBytes);
             os.flush();
-            os.close();
+
             return true;
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+        finally {
+            try {
+                if(os != null)
+                    os.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

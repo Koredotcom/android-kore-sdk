@@ -40,7 +40,6 @@ import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,6 +117,7 @@ import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
@@ -319,7 +319,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 editTextMessage.setText("");
             }*/
         } else {
-            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+            LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
     }
 
@@ -328,7 +328,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(),dataList, false);
         } else {
-            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+            LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
     }
 
@@ -513,10 +513,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }*/
 
     private void requestMicrophonePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            AppPermissionsHelper.requestForPermission(getActivity(), new String[]{
-                    Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
-        }
+        AppPermissionsHelper.requestForPermission(requireActivity(), new String[]{
+                Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
     }
 
     @Override
@@ -524,9 +522,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_RECORD_AUDIO && grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            rec_audio_img.setImageResource(R.drawable.mic_btn_active);
-//            mRecordingThread.startRecording();
-//            editTextMessage.setHint("Start talking...");
             onRecordAudioPermissionGranted();
         }
     }
@@ -588,14 +583,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         if (Speech.getInstance().isListening()) {
             Speech.getInstance().stopListening();
         } else {
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PermissionChecker.PERMISSION_GRANTED) {
-                    onRecordAudioPermissionGranted();
-                } else {
-                    requestMicrophonePermission();
-                }
-            } else {
+            if (checkSelfPermission(getActivity(), Manifest.permission.RECORD_AUDIO) == PermissionChecker.PERMISSION_GRANTED) {
                 onRecordAudioPermissionGranted();
+            } else {
+                requestMicrophonePermission();
             }
         }
     }
@@ -652,7 +643,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 composeFooterInterface.onSendClick(result,false);
                 editTextMessage.setText("");
             } else {
-                Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+                LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
             }
             /*else {
             Speech.getInstance().say(result);
@@ -796,7 +787,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 cameraVideoUri1 = Uri.fromFile(actualImageFile);
             }
 
-            Log.d(LOG_TAG, "actual file image path" + actualImageFile);
+            LogUtils.d(LOG_TAG, "actual file image path" + actualImageFile);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -811,7 +802,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.e("Camera", "Oops! Failed create "
+                LogUtils.e("Camera", "Oops! Failed create "
                         + "Camera" + " directory");
                 return null;
             }
@@ -924,15 +915,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 // ensuring a 100 millisecond delay so that thumbnail image name is different than the camera captured image name
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                Log.e(LOG_TAG, "onActivityResult() - Excep: = " + e.getMessage(), e);
+                LogUtils.e(LOG_TAG, "onActivityResult() - Excep: = " + e.getMessage());
             }
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                String path = mCurrentPhotoPath;
-                cameraVideoUri1 = Uri.parse(path);
-            } else {
-//                path = cameraVideoUri1.getPath();
-            }
-//            cameraVideoUri1 = Uri.parse(data.getStringExtra("uriString"));
+            String path = mCurrentPhotoPath;
+            cameraVideoUri1 = Uri.parse(path);
             processVideoResponse(cameraVideoUri1, true, data);
         } else if (reqCode == REQ_FILE && resCode == RESULT_OK) {
             String fileExtn = data.getStringExtra("fileExtn");
@@ -1028,7 +1014,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     // compress the image
                     File _file = new File(filePath);
 
-                    Log.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
+                    LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
                     fOut = new FileOutputStream(_file);
 
                     thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
@@ -1036,7 +1022,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
                     fOut.flush();
                 } catch (Exception e) {
-                    Log.e(LOG_TAG, e.toString());
+                    LogUtils.e(LOG_TAG, e.toString());
                 }
                 finally {
                     try {
@@ -1200,7 +1186,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     }
                     out.flush();
                 } catch (Exception e) {
-                    Log.e(LOG_TAG, e.toString());
+                    LogUtils.e(LOG_TAG, e.toString());
                     return null;
                 } finally {
                     if (fOut != null) {

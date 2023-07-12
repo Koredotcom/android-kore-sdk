@@ -20,6 +20,7 @@ import kore.botssdk.charts.utils.HorizontalViewPortHandler;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.TransformerHorizontalBarChart;
 import kore.botssdk.charts.utils.Utils;
+import kore.botssdk.utils.LogUtils;
 
 public class HorizontalBarChart extends BarChart {
     private final RectF mOffsetsBuffer = new RectF();
@@ -86,8 +87,8 @@ public class HorizontalBarChart extends BarChart {
         float minOffset = Utils.convertDpToPixel(this.mMinOffset);
         this.mViewPortHandler.restrainViewPort(Math.max(minOffset, offsetLeft), Math.max(minOffset, offsetTop), Math.max(minOffset, offsetRight), Math.max(minOffset, offsetBottom));
         if (this.mLogEnabled) {
-            Log.i("MPAndroidChart", "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
-            Log.i("MPAndroidChart", "Content: " + this.mViewPortHandler.getContentRect().toString());
+            LogUtils.i("MPAndroidChart", "offsetLeft: " + offsetLeft + ", offsetTop: " + offsetTop + ", offsetRight: " + offsetRight + ", offsetBottom: " + offsetBottom);
+            LogUtils.i("MPAndroidChart", "Content: " + this.mViewPortHandler.getContentRect().toString());
         }
 
         this.prepareOffsetMatrix();
@@ -135,7 +136,7 @@ public class HorizontalBarChart extends BarChart {
     public Highlight getHighlightByTouchPoint(float x, float y) {
         if (this.mData == null) {
             if (this.mLogEnabled) {
-                Log.e("MPAndroidChart", "Can't select by touch. No data set.");
+                LogUtils.e("MPAndroidChart", "Can't select by touch. No data set.");
             }
 
             return null;

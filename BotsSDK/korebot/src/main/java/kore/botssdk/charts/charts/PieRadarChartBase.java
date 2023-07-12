@@ -18,6 +18,7 @@ import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.listener.PieRadarChartTouchListener;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
+import kore.botssdk.utils.LogUtils;
 
 public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<? extends Entry>>> extends Chart<T> {
     private float mRotationAngle = 270.0F;
@@ -170,7 +171,7 @@ public abstract class PieRadarChartBase<T extends ChartData<? extends IDataSet<?
         legendHeight = Math.max(fullLegendWidth, Math.max(this.getRequiredBaseOffset(), legendBottom));
         this.mViewPortHandler.restrainViewPort(yLegendOffset, spacing, legendWidth, legendHeight);
         if (this.mLogEnabled) {
-            Log.i("MPAndroidChart", "offsetLeft: " + yLegendOffset + ", offsetTop: " + spacing + ", offsetRight: " + legendWidth + ", offsetBottom: " + legendHeight);
+            LogUtils.i("MPAndroidChart", "offsetLeft: " + yLegendOffset + ", offsetTop: " + spacing + ", offsetRight: " + legendWidth + ", offsetBottom: " + legendHeight);
         }
 
     }

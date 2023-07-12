@@ -13,6 +13,7 @@ import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.interfaces.dataprovider.BarDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.renderer.BarChartRenderer;
+import kore.botssdk.utils.LogUtils;
 
 public class BarChart extends BarLineChartBase<BarData> implements BarDataProvider {
     protected boolean mHighlightFullBarEnabled = false;
@@ -53,7 +54,7 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
     public Highlight getHighlightByTouchPoint(float x, float y) {
         if (this.mData == null) {
-            Log.e("MPAndroidChart", "Can't select by touch. No data set.");
+            LogUtils.e("MPAndroidChart", "Can't select by touch. No data set.");
             return null;
         } else {
             Highlight h = this.getHighlighter().getHighlight(x, y);

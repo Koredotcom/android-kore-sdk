@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 
+import kore.botssdk.FCM.FCMWrapper;
 import kore.botssdk.listener.NetworkStateReceiver;
 
 /**
@@ -20,7 +21,7 @@ public class BotApplication extends Application {
         super.onCreate();
         appControl = new AppControl(getApplicationContext());
         globalContext = this;
-
+        FCMWrapper.getInstance().init();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(new NetworkStateReceiver(), filter);
     }

@@ -70,12 +70,7 @@ public class KaMediaUtils {
             if (mExternalStorageAvailable && mExternalStorageWriteable) {
 //                KoreLogger.debugLog(LOG_TAG, "Storage available for read write");
                 String path = "";
-                if(Build.VERSION.SDK_INT  > Build.VERSION_CODES.M){
-                    path = KaEnvironment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
-                }else {
-                    path = KaEnvironment.getExternalStorageDirectory() + "/" + MEDIA_APP_FOLDER + "/" + userId;
-
-                } //File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.KORE_APP_FOLDER);
+                path = KaEnvironment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
                 if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_AUDIO))
                     mediaStorageDir = new File(path, DOWNLOADED_AUDIO_FOLDER);
                 else if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO))
@@ -91,17 +86,6 @@ public class KaMediaUtils {
                 // Create the storage directory if it does not exist
                 if (!mediaStorageDir.exists()) {
                     mediaStorageDir.mkdirs();
-                    if (!mediaStorageDir.mkdirs()) {
-//                        KoreLogger.debugLog(LOG_TAG, "failed to create Kore.ai App directory");
-                    }
-                }
-
-                // Create the storage directory if it does not exist
-                if (!mediaStorageDir.exists()) {
-                    mediaStorageDir.mkdirs();
-                    if (!mediaStorageDir.mkdirs()) {
-//                        KoreLogger.debugLog(LOG_TAG, "failed to create Kore.ai App directory");
-                    }
                 }
             }
         } catch (Exception e) {
@@ -216,13 +200,13 @@ public class KaMediaUtils {
             int read = 0;
             byte[] bytes = new byte[1024];
 
-            while ((read = inputStream.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
+            if(inputStream != null) {
+                while ((read = inputStream.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
             }
-            Log.d("file create","success scenario"+fileName+extn);
             return file.getAbsolutePath();
         }catch (Exception e){
-            Log.d("file create","fail scenario");
             e.printStackTrace();
         }
         finally {
@@ -261,10 +245,10 @@ public class KaMediaUtils {
             e.printStackTrace();
         } finally {
             try {
-                if (bis != null) bis.close();
-                if (bos != null) bos.close();
-                if (fos != null) fos.close();
                 if (fis != null) fis.close();
+                if (bis != null) bis.close();
+                if (fos != null) fos.close();
+                if (bos != null) bos.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -543,7 +527,7 @@ public class KaMediaUtils {
                 // flushing output
                 output.flush();
             } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
+                LogUtils.e("Error: ", e.getMessage());
             }
             finally {
                 try {

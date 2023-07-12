@@ -22,6 +22,7 @@ import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnModel;
@@ -99,7 +100,7 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
     @Override
     public int getChildrenCount(int groupPosition) {
         MiniTableModel miniTableModel = (MiniTableModel)data.get(groupPosition);
-        Log.e("Child Count", miniTableModel.getElements().size()+"");
+        LogUtils.e("Child Count", miniTableModel.getElements().size()+"");
         return 1 ;
     }
 

@@ -126,18 +126,18 @@ public class TTSSynthesizer {
     private final SocketConnectionListener sListener = new SocketConnectionListener() {
         @Override
         public void onOpen(boolean isReconnection) {
-            Log.d(LOG_TAG, "Connection opened");
+            LogUtils.d(LOG_TAG, "Connection opened");
 
         }
 
         @Override
         public void onClose(int code, String reason) {
-            Log.d(LOG_TAG, "Connection closed reason " + reason);
+            LogUtils.d(LOG_TAG, "Connection closed reason " + reason);
         }
 
         @Override
         public void onTextMessage(String payload) {
-            Log.d(LOG_TAG, "Message received is 1 " + payload);
+            LogUtils.d(LOG_TAG, "Message received is 1 " + payload);
         }
 
         @Override
@@ -147,12 +147,12 @@ public class TTSSynthesizer {
 
         @Override
         public void onRawTextMessage(byte[] payload) {
-            Log.d(LOG_TAG, "Message received is 2 " + payload);
+            LogUtils.d(LOG_TAG, "Message received is 2 " + payload);
         }
 
         @Override
         public void onBinaryMessage(byte[] payload) {
-            Log.d(LOG_TAG, "Message received is 3 " + payload);
+            LogUtils.d(LOG_TAG, "Message received is 3 " + payload);
             String audio = Base64.encodeToString(payload,
                     Base64.NO_WRAP);
             que.add(audio);

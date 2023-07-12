@@ -1,22 +1,26 @@
 package kore.botssdk.fileupload.managers;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLConnection;
 import java.util.Hashtable;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import kore.botssdk.fileupload.configurations.Constants;
 import kore.botssdk.fileupload.configurations.FileUploadEndPoints;
 import kore.botssdk.fileupload.listeners.FileTokenListener;
 import kore.botssdk.fileupload.ssl.KoreHttpsUrlConnectionBuilder;
 import kore.botssdk.fileupload.utils.NetworkUtility;
+import kore.botssdk.utils.LogUtils;
 
 
 public class FileTokenManager{
@@ -72,7 +76,7 @@ public class FileTokenManager{
                             _listener.fileTokenRecievedWithFailure(Constants.SERVER_ERROR, "Unable to reach server");
                     }
                 } catch (Exception e) {
-                    Log.e("FILE_TOKEN_SERVICE", e.toString());
+                    LogUtils.e("FILE_TOKEN_SERVICE", e.toString());
                 }
             } catch (Exception ex) {
                 if (_listener != null)
@@ -89,14 +93,14 @@ public class FileTokenManager{
 
 
     private  String  getFileToken(String Url, String header)  throws  UnsupportedEncodingException{
-          
-          String text = "";
-          BufferedReader reader=null;
-          URLConnection conn = null;
-          OutputStreamWriter wr = null;
-          // Send data
-        try {
 
+        String text = "";
+        BufferedReader reader = null;
+        HttpsURLConnection conn = null;
+        InputStreamReader inputStreamReader = null;
+        InputStream inputStream = null;
+        // Send data
+        try {
             // Send POST data request
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(_mContext, Url);
 //            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
@@ -105,39 +109,42 @@ public class FileTokenManager{
             if (header != null) conn.addRequestProperty("Authorization", "bearer " + header);
             conn.addRequestProperty("User-Agent", Constants.getUserAgent());
             System.out.println(" The userAgent in FileToken Service is " + Constants.getUserAgent());
-            wr = new OutputStreamWriter(conn.getOutputStream());
 
-       // Get the server response
-        reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        
-        // Read Server Response
-        while((line = reader.readLine()) != null){
-                   // Append server response in string
-                   sb.append(line).append("\n");
+            inputStream = conn.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+
+            // Get the server response
+            reader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+
+            // Read Server Response
+            while ((line = reader.readLine()) != null) {
+                // Append server response in string
+                sb.append(line).append("\n");
             }
             text = sb.toString();
-        }
-        catch(Exception ex){
-             Log.d("FileTokenService", ex.toString());
-        }
-        finally{
-            try{
-                if(reader != null)
+        } catch (Exception ex) {
+            LogUtils.d("FileTokenService", ex.toString());
+        } finally {
+            try {
+                if(conn != null)
+                    conn.disconnect();
+
+                if (reader != null)
                     reader.close();
 
-                if(wr != null)
-                    wr.close();
+                if (inputStream != null)
+                    inputStream.close();
 
-                if(conn != null && conn.getInputStream() != null)
-                    conn.getInputStream().close();
+                if (inputStreamReader != null)
+                    inputStreamReader.close();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            catch(Exception ex) {
-                ex.printStackTrace();}
         }
-              
-      return text;
+
+        return text;
         
     }
 

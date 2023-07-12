@@ -1,7 +1,6 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.Base64;
@@ -157,7 +156,7 @@ public class PdfDownloadView extends LinearLayout {
         if (body.containsKey("AccountNumber")) {
             if (body.get("AccountNumber") instanceof Double) {
                 double aDouble = (Double) body.get("AccountNumber");
-                LogUtils.error("Changed Value", BigDecimal.valueOf(aDouble) + "");
+                LogUtils.e("Changed Value", BigDecimal.valueOf(aDouble) + "");
                 body.put("AccountNumber", BigDecimal.valueOf(aDouble));
             }
         }
@@ -186,8 +185,12 @@ public class PdfDownloadView extends LinearLayout {
                     if (pdfDownloadBaseModel != null) {
                         File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + pdfDownloadModel.getTitle().replace(" ", "-") + "-"+DateUtils.getCurrentDateTime()+ ".pdf");
 
-                        if (response.body() != null && writeBase64ToDisk(pdfDownloadBaseModel.getData(), fileLocation)) {
-                            Toast.makeText(context, "Statement saved successfully under Downloads", Toast.LENGTH_SHORT).show();
+                        try {
+                            if (response.body() != null && writeBase64ToDisk(pdfDownloadBaseModel.getData(), fileLocation)) {
+                                Toast.makeText(context, "Statement saved successfully under Downloads", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 } else {
@@ -212,10 +215,11 @@ public class PdfDownloadView extends LinearLayout {
         });
     }
 
-    private boolean writeBase64ToDisk(String fileData, File fileLocation) {
+    private boolean writeBase64ToDisk(String fileData, File fileLocation) throws IOException {
+        FileOutputStream os = null;
+
         try {
             byte[] pdfAsBytes = Base64.decode(String.valueOf(fileData), 0);
-            FileOutputStream os;
             os = new FileOutputStream(fileLocation, false);
             os.write(pdfAsBytes);
             os.flush();
@@ -225,42 +229,46 @@ public class PdfDownloadView extends LinearLayout {
             e.printStackTrace();
             return false;
         }
+        finally {
+            if(os != null)
+                os.close();
+        }
     }
 
     private boolean writeResponseBodyToDisk(ResponseBody body, File fileLocation) {
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+
         try {
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
+            byte[] fileReader = new byte[4096];
 
-            try {
-                byte[] fileReader = new byte[4096];
+            long fileSize = body.contentLength();
+            long fileSizeDownloaded = 0;
 
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
+            inputStream = body.byteStream();
+            outputStream = new FileOutputStream(fileLocation);
 
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(fileLocation);
+            while (true) {
+                int read = inputStream.read(fileReader);
 
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                    LogUtils.debug("Downloading file", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                if (read == -1) {
+                    break;
                 }
 
-                outputStream.flush();
+                outputStream.write(fileReader, 0, read);
 
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
+                fileSizeDownloaded += read;
+
+                LogUtils.d("Downloading file", "file download: " + fileSizeDownloaded + " of " + fileSize);
+            }
+
+            outputStream.flush();
+
+            return true;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            try {
                 if (inputStream != null) {
                     inputStream.close();
                 }
@@ -269,8 +277,10 @@ public class PdfDownloadView extends LinearLayout {
                     outputStream.close();
                 }
             }
-        } catch (IOException e) {
-            return false;
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

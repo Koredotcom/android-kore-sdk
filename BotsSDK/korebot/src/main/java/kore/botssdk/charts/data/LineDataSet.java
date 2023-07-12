@@ -13,6 +13,7 @@ import kore.botssdk.charts.formatter.IFillFormatter;
 import kore.botssdk.charts.interfaces.datasets.ILineDataSet;
 import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.charts.utils.Utils;
+import kore.botssdk.utils.LogUtils;
 
 public class LineDataSet extends LineRadarDataSet<kore.botssdk.charts.data.Entry> implements ILineDataSet {
     private Mode mMode;
@@ -100,7 +101,7 @@ public class LineDataSet extends LineRadarDataSet<kore.botssdk.charts.data.Entry
         if (radius >= 1.0F) {
             this.mCircleRadius = Utils.convertDpToPixel(radius);
         } else {
-            Log.e("LineDataSet", "Circle radius cannot be < 1");
+            LogUtils.e("LineDataSet", "Circle radius cannot be < 1");
         }
 
     }
@@ -113,7 +114,7 @@ public class LineDataSet extends LineRadarDataSet<kore.botssdk.charts.data.Entry
         if (holeRadius >= 0.5F) {
             this.mCircleHoleRadius = Utils.convertDpToPixel(holeRadius);
         } else {
-            Log.e("LineDataSet", "Circle radius cannot be < 0.5");
+            LogUtils.e("LineDataSet", "Circle radius cannot be < 0.5");
         }
 
     }

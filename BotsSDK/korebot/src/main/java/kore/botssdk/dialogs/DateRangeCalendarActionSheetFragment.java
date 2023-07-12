@@ -31,6 +31,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class DateRangeCalendarActionSheetFragment extends BottomSheetDialogFragment
@@ -119,7 +120,7 @@ public class DateRangeCalendarActionSheetFragment extends BottomSheetDialogFragm
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(),false);
         } else {
-            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+            LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
     }
 

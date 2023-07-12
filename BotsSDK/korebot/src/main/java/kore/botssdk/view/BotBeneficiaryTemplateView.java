@@ -3,8 +3,6 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotBeneficiaryTemplateAdapter;
@@ -34,7 +31,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -96,7 +92,7 @@ public class BotBeneficiaryTemplateView extends ViewGroup implements ListClickab
     public void populateListTemplateView(BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotBeneficiaryModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore, PayloadInner payloadInner) {
 
         if(botListViewMoreDataModel != null)
-            LogUtils.error("More Data", botListViewMoreDataModel.getTab1().toString());
+            LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
         if (botListModelArrayList != null && botListModelArrayList.size() > 0)
         {

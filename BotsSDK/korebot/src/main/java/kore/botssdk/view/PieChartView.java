@@ -20,6 +20,7 @@ import kore.botssdk.charts.data.PieEntry;
 import kore.botssdk.charts.formatter.PercentFormatter;
 import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.listener.OnChartValueSelectedListener;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -79,14 +80,14 @@ public class PieChartView extends ViewGroup {
 
                 if (e == null)
                     return;
-                Log.i("VAL SELECTED",
+                LogUtils.i("VAL SELECTED",
                         "Value: " + e.getY() + ", index: " + h.getX()
                                 + ", DataSet index: " + h.getDataSetIndex());
             }
 
             @Override
             public void onNothingSelected() {
-                Log.i("PieChart", "nothing selected");
+                LogUtils.i("PieChart", "nothing selected");
             }
         });
 

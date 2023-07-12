@@ -20,6 +20,7 @@ import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
+import kore.botssdk.utils.LogUtils;
 
 public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
     protected ScatterDataProvider mChart;
@@ -53,7 +54,7 @@ public class ScatterChartRenderer extends LineScatterCandleRadarRenderer {
             float phaseY = this.mAnimator.getPhaseY();
             IShapeRenderer renderer = dataSet.getShapeRenderer();
             if (renderer == null) {
-                Log.i("MISSING", "There's no IShapeRenderer specified for ScatterDataSet");
+                LogUtils.i("MISSING", "There's no IShapeRenderer specified for ScatterDataSet");
             } else {
                 int max = (int)Math.min(Math.ceil((double)((float)dataSet.getEntryCount() * this.mAnimator.getPhaseX())), (double)((float)dataSet.getEntryCount()));
 

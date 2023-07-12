@@ -11,7 +11,6 @@ import java.util.TimeZone;
  */
 
 public class NotificationUtils {
-    public final static String GROUP_KEY_NOTIFICATIONS = "group_key_notifications";
 
     public static final String SHORT_TYPE_APP_CONTROL_CHANGED = "er";
     public static final String SHORT_TYPE_KORA_REMINDER     = "kr";

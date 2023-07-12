@@ -28,6 +28,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.security.ProviderInstaller;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -100,6 +103,7 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
@@ -114,8 +118,7 @@ import retrofit2.Response;
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
-                                        VerticalListViewActionHelper, UpdateRefreshItem*/
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
     FrameLayout chatLayoutFooterContainer;
@@ -161,6 +164,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
+
         findViews();
         getBundleInfo();
         getDataFromTxt();
@@ -245,7 +249,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            jwt = bundle.getString(BundleUtils.JWT_TOKEN, "");
+            jwt = bundle.getString(BundleUtils.JWT_TKN, "");
         }
         chatBot = SDKConfiguration.Client.bot_name;
         taskBotId = SDKConfiguration.Client.bot_id;
@@ -520,7 +524,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void sendWithSomeDelay(String message, String payload,long time,boolean isScrollupNeeded) {
-        Log.e("Message", message);
+        LogUtils.e("Message", message);
     }
 
     @Override
@@ -567,7 +571,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 return;
             }
 
-            Log.d(LOG_TAG, payload);
+            LogUtils.d(LOG_TAG, payload);
             PayloadOuter payOuter = null;
             if (!botResponse.getMessage().isEmpty()) {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
@@ -627,7 +631,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                             return;
                         }
-                        Log.d(LOG_TAG, payload);
+                        LogUtils.d(LOG_TAG, payload);
                         boolean resolved = true;
                         if (!botResponse.getMessage().isEmpty()) {
                             ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
@@ -677,7 +681,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             InputStream is = getResources().openRawResource(R.raw.option);
             Reader reader = new InputStreamReader(is);
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
-            Log.e("Options Size", botOptionsModel.getTasks().size() + "" );
+            LogUtils.e("Options Size", botOptionsModel.getTasks().size() + "" );
         }
         catch (Exception e)
         {
@@ -829,7 +833,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         if (composeFooterFragment != null) {
             return composeFooterFragment.isTTSEnabled();
         } else {
-            Log.e(BotChatActivity.class.getSimpleName(), "ComposeFooterFragment not found");
+            LogUtils.e(BotChatActivity.class.getSimpleName(), "ComposeFooterFragment not found");
             return false;
         }
     }
@@ -1013,7 +1017,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         // compress the image
                         File _file = new File(filePath);
 
-                        Log.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
+                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
                         fOut = new FileOutputStream(_file);
 
                         thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
@@ -1022,7 +1026,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         fOut.flush();
                         fOut.close();
                     } catch (Exception e) {
-                        Log.e(LOG_TAG, e.toString());
+                        LogUtils.e(LOG_TAG, e.toString());
                     }
                     finally {
                         try {
@@ -1083,7 +1087,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         @Override
         public synchronized void handleMessage(Message msg) {
             Bundle reply = msg.getData();
-            Log.d("shri", reply + "------------------------------");
+            LogUtils.e("shri", reply + "------------------------------");
           /*  if (reply.getBoolean(UploadBulkFile.isFileSizeMore_key, false)) {
                 showFreemiumDialog();
                 return;
@@ -1142,7 +1146,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
-                    Log.i("File upload error", errorMsg);
+                    LogUtils.i("File upload error", errorMsg);
                     showToast(errorMsg);
                 }
             }
@@ -1230,7 +1234,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             @Override
             public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
             {
-                Log.e("getBrandingDetails", t.toString());
+                LogUtils.e("getBrandingDetails", t.toString());
 
                 if(isItFirstConnect)
                 {

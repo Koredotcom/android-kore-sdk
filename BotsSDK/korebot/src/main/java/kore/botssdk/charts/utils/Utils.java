@@ -22,6 +22,7 @@ import java.util.List;
 
 import kore.botssdk.charts.formatter.DefaultValueFormatter;
 import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.utils.LogUtils;
 
 public abstract class Utils {
     private static DisplayMetrics mMetrics;
@@ -47,7 +48,7 @@ public abstract class Utils {
         if (context == null) {
             mMinimumFlingVelocity = ViewConfiguration.getMinimumFlingVelocity();
             mMaximumFlingVelocity = ViewConfiguration.getMaximumFlingVelocity();
-            Log.e("MPChartLib-Utils", "Utils.init(...) PROVIDED CONTEXT OBJECT IS NULL");
+            LogUtils.e("MPChartLib-Utils", "Utils.init(...) PROVIDED CONTEXT OBJECT IS NULL");
         } else {
             ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
             mMinimumFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
@@ -68,7 +69,7 @@ public abstract class Utils {
 
     public static float convertDpToPixel(float dp) {
         if (mMetrics == null) {
-            Log.e("MPChartLib-Utils", "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertDpToPixel(...). Otherwise conversion does not take place.");
+            LogUtils.e("MPChartLib-Utils", "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertDpToPixel(...). Otherwise conversion does not take place.");
             return dp;
         } else {
             return dp * mMetrics.density;
@@ -77,7 +78,7 @@ public abstract class Utils {
 
     public static float convertPixelsToDp(float px) {
         if (mMetrics == null) {
-            Log.e("MPChartLib-Utils", "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertPixelsToDp(...). Otherwise conversion does not take place.");
+            LogUtils.e("MPChartLib-Utils", "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before calling Utils.convertPixelsToDp(...). Otherwise conversion does not take place.");
             return px;
         } else {
             return px / mMetrics.density;

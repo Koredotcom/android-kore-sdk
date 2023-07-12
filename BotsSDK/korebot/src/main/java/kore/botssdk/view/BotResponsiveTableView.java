@@ -17,6 +17,7 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.tableview.TableResponsiveView;
 import kore.botssdk.view.tableview.adapters.BotResponsiveTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
@@ -181,7 +182,7 @@ public class BotResponsiveTableView extends TableResponsiveView<MiniTableModel> 
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
             totalHeight += listItem.getMeasuredHeight();
-            Log.e("Child Height", listItem.getMeasuredHeight()+"");
+            LogUtils.e("Child Height", listItem.getMeasuredHeight()+"");
         }
 
         return totalHeight;
