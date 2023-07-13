@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
 import kore.botssdk.adapter.PdfDownloadAdapter;
 import kore.botssdk.models.PdfDownloadModel;
@@ -48,7 +49,6 @@ public class PdfDownloadView extends LinearLayout {
     private Context context;
     private final Gson gson = new Gson();
     private ProgressBar pbDownload;
-    private View view;
 
     public PdfDownloadView(Context context) {
         super(context);
@@ -67,7 +67,7 @@ public class PdfDownloadView extends LinearLayout {
 
     private void init(Context context) {
         this.context = context;
-        view = LayoutInflater.from(getContext()).inflate(R.layout.pdf_download_view, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.pdf_download_view, this, true);
         lvPdfs = view.findViewById(R.id.lvPdfs);
         ivPdfDownload = view.findViewById(R.id.ivPdfDownload);
         pbDownload = view.findViewById(R.id.pbDownload);
@@ -76,8 +76,7 @@ public class PdfDownloadView extends LinearLayout {
     }
 
     public void populatePdfView(ArrayList<PdfDownloadModel> arrPdfDownloadModels) {
-        if (arrPdfDownloadModels != null && arrPdfDownloadModels.size() > 0)
-        {
+        if (arrPdfDownloadModels != null && arrPdfDownloadModels.size() > 0) {
             lvPdfs.setAdapter(new PdfDownloadAdapter(getContext(), arrPdfDownloadModels));
 
             lvPdfs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -123,18 +122,21 @@ public class PdfDownloadView extends LinearLayout {
         Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getPDfAPI().getPdfDetails(url, header, jsonObject);
         getBankingConfigService.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
 
-                    File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + DateUtils.getCurrentDateTime() + "_" + pdfDownloadModel.getTitle().replace(" ", "-")+"."+pdfDownloadModel.getFormat().toLowerCase(Locale.ROOT));
+                    File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + DateUtils.getCurrentDateTime() + "_" + pdfDownloadModel.getTitle().replace(" ", "-") + "." + pdfDownloadModel.getFormat().toLowerCase(Locale.ROOT));
 
                     if (response.body() != null && writeResponseBodyToDisk(response.body(), fileLocation)) {
                         Toast.makeText(context, "Statement saved successfully under Downloads", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Toast.makeText(getContext(), jObjError.getString("errorMessage"), Toast.LENGTH_LONG).show();
+                    try
+                    {
+                        if(response.errorBody() != null) {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            Toast.makeText(getContext(), jObjError.getString("errorMessage"), Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         Toast.makeText(context, "Statement download failed", Toast.LENGTH_SHORT).show();
                     }
@@ -145,32 +147,36 @@ public class PdfDownloadView extends LinearLayout {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Toast.makeText(context, "Statement download failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getPdfBase64(PdfDownloadModel pdfDownloadModel, String url, HashMap<String, String> header, HashMap<String, Object> body) {
-
         if (body.containsKey("AccountNumber")) {
             if (body.get("AccountNumber") instanceof Double) {
-                double aDouble = (Double) body.get("AccountNumber");
-                LogUtils.e("Changed Value", BigDecimal.valueOf(aDouble) + "");
-                body.put("AccountNumber", BigDecimal.valueOf(aDouble));
+                try {
+                    double aDouble = (Double) body.get("AccountNumber");
+                    LogUtils.e("Changed Value", BigDecimal.valueOf(aDouble) + "");
+                    body.put("AccountNumber", BigDecimal.valueOf(aDouble));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
 
-//        header.put("Authorization", header.get("Authorization").replace("Bearer", "bearer"));
-
         if (header.containsKey("X-CORRELATION-ID")) {
-            if(!StringUtils.isNullOrEmpty(header.get("X-CORRELATION-ID"))) {
+            if (!StringUtils.isNullOrEmpty(header.get("X-CORRELATION-ID"))) {
 
                 try {
                     double xcrid = Double.parseDouble(Objects.requireNonNull(header.get("X-CORRELATION-ID")));
                     header.put("X-CORRELATION-ID", ((int) xcrid) + "");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                catch (Exception e){e.printStackTrace();}
             }
         }
 
@@ -179,11 +185,11 @@ public class PdfDownloadView extends LinearLayout {
         Call<PdfResponseModel> getBankingConfigService = BrandingRestBuilder.getPDfAPI().getPdfBaseDetails(url, header, jsonObject);
         getBankingConfigService.enqueue(new Callback<PdfResponseModel>() {
             @Override
-            public void onResponse(Call<PdfResponseModel> call, Response<PdfResponseModel> response) {
+            public void onResponse(@NonNull Call<PdfResponseModel> call, @NonNull Response<PdfResponseModel> response) {
                 if (response.isSuccessful()) {
                     PdfResponseModel pdfDownloadBaseModel = response.body();
                     if (pdfDownloadBaseModel != null) {
-                        File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + pdfDownloadModel.getTitle().replace(" ", "-") + "-"+DateUtils.getCurrentDateTime()+ ".pdf");
+                        File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + pdfDownloadModel.getTitle().replace(" ", "-") + "-" + DateUtils.getCurrentDateTime() + ".pdf");
 
                         try {
                             if (response.body() != null && writeBase64ToDisk(pdfDownloadBaseModel.getData(), fileLocation)) {
@@ -195,8 +201,10 @@ public class PdfDownloadView extends LinearLayout {
                     }
                 } else {
                     try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        Toast.makeText(getContext(), jObjError.getString("errorMessage"), Toast.LENGTH_LONG).show();
+                        if(response.errorBody() != null) {
+                            JSONObject jObjError = new JSONObject(response.errorBody().string());
+                            Toast.makeText(getContext(), jObjError.getString("errorMessage"), Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         Toast.makeText(context, "Statement download failed", Toast.LENGTH_SHORT).show();
                     }
@@ -207,7 +215,7 @@ public class PdfDownloadView extends LinearLayout {
             }
 
             @Override
-            public void onFailure(Call<PdfResponseModel> call, Throwable t) {
+            public void onFailure(@NonNull Call<PdfResponseModel> call, @NonNull Throwable t) {
                 ivPdfDownload.setVisibility(VISIBLE);
                 pbDownload.setVisibility(GONE);
                 Toast.makeText(context, "Statement download failed", Toast.LENGTH_SHORT).show();
@@ -228,9 +236,8 @@ public class PdfDownloadView extends LinearLayout {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        }
-        finally {
-            if(os != null)
+        } finally {
+            if (os != null)
                 os.close();
         }
     }
@@ -276,9 +283,7 @@ public class PdfDownloadView extends LinearLayout {
                 if (outputStream != null) {
                     outputStream.close();
                 }
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

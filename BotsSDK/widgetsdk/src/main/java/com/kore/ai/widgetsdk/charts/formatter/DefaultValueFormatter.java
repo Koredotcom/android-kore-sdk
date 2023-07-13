@@ -4,14 +4,8 @@ import java.text.DecimalFormat;
 
 public class DefaultValueFormatter extends ValueFormatter {
     protected DecimalFormat mFormat;
-    protected int mDecimalDigits;
 
     public DefaultValueFormatter(int digits) {
-        this.setup(digits);
-    }
-
-    public void setup(int digits) {
-        this.mDecimalDigits = digits;
         StringBuffer b = new StringBuffer();
 
         for(int i = 0; i < digits; ++i) {
@@ -27,9 +21,5 @@ public class DefaultValueFormatter extends ValueFormatter {
 
     public String getFormattedValue(float value) {
         return this.mFormat.format((double)value);
-    }
-
-    public int getDecimalDigits() {
-        return this.mDecimalDigits;
     }
 }

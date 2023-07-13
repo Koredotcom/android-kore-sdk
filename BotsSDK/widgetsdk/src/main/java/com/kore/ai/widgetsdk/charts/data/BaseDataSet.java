@@ -16,6 +16,7 @@ import com.kore.ai.widgetsdk.charts.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
     protected List<Integer> mColors;
@@ -342,7 +343,7 @@ public abstract class BaseDataSet<T extends Entry> implements IDataSet<T> {
 
     public boolean contains(T e) {
         for(int i = 0; i < this.getEntryCount(); ++i) {
-            if (this.getEntryForIndex(i).equals(e)) {
+            if (Objects.equals(this.getEntryForIndex(i), e)) {
                 return true;
             }
         }

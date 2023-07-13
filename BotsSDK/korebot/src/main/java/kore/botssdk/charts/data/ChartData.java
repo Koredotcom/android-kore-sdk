@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.charts.components.YAxis;
 import kore.botssdk.charts.formatter.ValueFormatter;
@@ -537,7 +538,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             }
 
             set = (IDataSet)var2.next();
-        } while(!set.equals(dataSet));
+        } while(!Objects.equals(set, dataSet));
 
         return true;
     }

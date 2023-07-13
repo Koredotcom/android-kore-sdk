@@ -27,6 +27,7 @@ import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class PieChartRenderer extends DataRenderer {
     protected PieChart mChart;
@@ -495,7 +496,7 @@ public class PieChartRenderer extends DataRenderer {
             }
 
             float layoutHeight;
-            if (!centerText.equals(this.mCenterTextLastValue) || !boundingRect.equals(this.mCenterTextLastBounds)) {
+            if (!Objects.equals(centerText, this.mCenterTextLastValue) || !Objects.equals(boundingRect, this.mCenterTextLastBounds)) {
                 this.mCenterTextLastBounds.set(boundingRect);
                 this.mCenterTextLastValue = centerText;
                 layoutHeight = this.mCenterTextLastBounds.width();

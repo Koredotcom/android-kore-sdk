@@ -7,14 +7,13 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.charts.animation.ChartAnimator;
 import kore.botssdk.charts.charts.PieChart;
@@ -101,16 +100,14 @@ public class PieChartRenderer extends DataRenderer {
             }
 
             drawBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
-            this.mDrawBitmap = new WeakReference(drawBitmap);
+            this.mDrawBitmap = new WeakReference<>(drawBitmap);
             this.mBitmapCanvas = new Canvas(drawBitmap);
         }
 
         drawBitmap.eraseColor(0);
         PieData pieData = (PieData)this.mChart.getData();
-        Iterator var6 = pieData.getDataSets().iterator();
 
-        while(var6.hasNext()) {
-            IPieDataSet set = (IPieDataSet)var6.next();
+        for (IPieDataSet set : pieData.getDataSets()) {
             if (set.isVisible() && set.getEntryCount() > 0) {
                 this.drawDataSet(c, set);
             }
@@ -137,8 +134,7 @@ public class PieChartRenderer extends DataRenderer {
         } else {
             float spaceSizeRatio = dataSet.getSliceSpace() / this.mViewPortHandler.getSmallestContentExtension();
             float minValueRatio = dataSet.getYMin() / ((PieData)this.mChart.getData()).getYValueSum() * 2.0F;
-            float sliceSpace = spaceSizeRatio > minValueRatio ? 0.0F : dataSet.getSliceSpace();
-            return sliceSpace;
+            return spaceSizeRatio > minValueRatio ? 0.0F : dataSet.getSliceSpace();
         }
     }
 
@@ -395,7 +391,7 @@ public class PieChartRenderer extends DataRenderer {
                             if (j < data.getEntryCount() && entryLabel != null) {
                                 this.drawEntryLabel(c, entryLabel, labelPtx, labelPty + lineHeight / 2.0F);
                             }
-                        } else if (drawYOutside) {
+                        } else {
                             this.drawValue(c, formattedValue, labelPtx, labelPty + lineHeight / 2.0F, dataSet.getValueTextColor(j));
                         }
                     }
@@ -413,7 +409,7 @@ public class PieChartRenderer extends DataRenderer {
                             if (j < data.getEntryCount() && entryLabel != null) {
                                 this.drawEntryLabel(c, entryLabel, x, y + lineHeight / 2.0F);
                             }
-                        } else if (drawYInside) {
+                        } else {
                             this.drawValue(c, formattedValue, x, y + lineHeight / 2.0F, dataSet.getValueTextColor(j));
                         }
                     }
@@ -498,7 +494,7 @@ public class PieChartRenderer extends DataRenderer {
             }
 
             float layoutHeight;
-            if (!centerText.equals(this.mCenterTextLastValue) || !boundingRect.equals(this.mCenterTextLastBounds)) {
+            if (!Objects.equals(centerText, this.mCenterTextLastValue) || !Objects.equals(boundingRect, this.mCenterTextLastBounds)) {
                 this.mCenterTextLastBounds.set(boundingRect);
                 this.mCenterTextLastValue = centerText;
                 layoutHeight = this.mCenterTextLastBounds.width();
@@ -507,12 +503,10 @@ public class PieChartRenderer extends DataRenderer {
 
             layoutHeight = (float)this.mCenterTextLayout.getHeight();
             c.save();
-            if (Build.VERSION.SDK_INT >= 18) {
-                Path path = this.mDrawCenterTextPathBuffer;
-                path.reset();
-                path.addOval(holeRect, Path.Direction.CW);
-                c.clipPath(path);
-            }
+            Path path = this.mDrawCenterTextPathBuffer;
+            path.reset();
+            path.addOval(holeRect, Path.Direction.CW);
+            c.clipPath(path);
 
             c.translate(boundingRect.left, boundingRect.top + (boundingRect.height() - layoutHeight) / 2.0F);
             this.mCenterTextLayout.draw(c);
@@ -537,16 +531,16 @@ public class PieChartRenderer extends DataRenderer {
             RectF highlightedCircleBox = this.mDrawHighlightedRectF;
             highlightedCircleBox.set(0.0F, 0.0F, 0.0F, 0.0F);
 
-            for(int i = 0; i < indices.length; ++i) {
-                int index = (int)indices[i].getX();
+            for (Highlight highlight : indices) {
+                int index = (int) highlight.getX();
                 if (index < drawAngles.length) {
-                    IPieDataSet set = ((PieData)this.mChart.getData()).getDataSetByIndex(indices[i].getDataSetIndex());
+                    IPieDataSet set = ((PieData) this.mChart.getData()).getDataSetByIndex(highlight.getDataSetIndex());
                     if (set != null && set.isHighlightEnabled()) {
                         int entryCount = set.getEntryCount();
                         int visibleAngleCount = 0;
 
-                        for(int j = 0; j < entryCount; ++j) {
-                            if (Math.abs(((PieEntry)set.getEntryForIndex(j)).getY()) > Utils.FLOAT_EPSILON) {
+                        for (int j = 0; j < entryCount; ++j) {
+                            if (Math.abs(((PieEntry) set.getEntryForIndex(j)).getY()) > Utils.FLOAT_EPSILON) {
                                 ++visibleAngleCount;
                             }
                         }
@@ -585,13 +579,13 @@ public class PieChartRenderer extends DataRenderer {
                         if (sweepAngleOuter >= 360.0F && sweepAngleOuter % 360.0F <= Utils.FLOAT_EPSILON) {
                             this.mPathBuffer.addCircle(center.x, center.y, highlightedRadius, Path.Direction.CW);
                         } else {
-                            this.mPathBuffer.moveTo(center.x + highlightedRadius * (float)Math.cos((double)(startAngleShifted * 0.017453292F)), center.y + highlightedRadius * (float)Math.sin((double)(startAngleShifted * 0.017453292F)));
+                            this.mPathBuffer.moveTo(center.x + highlightedRadius * (float) Math.cos((double) (startAngleShifted * 0.017453292F)), center.y + highlightedRadius * (float) Math.sin((double) (startAngleShifted * 0.017453292F)));
                             this.mPathBuffer.arcTo(highlightedCircleBox, startAngleShifted, sweepAngleShifted);
                         }
 
                         float sliceSpaceRadius = 0.0F;
                         if (accountForSliceSpacing) {
-                            sliceSpaceRadius = this.calculateMinimumRadiusForSpacedSlice(center, radius, sliceAngle * phaseY, center.x + radius * (float)Math.cos((double)(startAngleOuter * 0.017453292F)), center.y + radius * (float)Math.sin((double)(startAngleOuter * 0.017453292F)), startAngleOuter, sweepAngleOuter);
+                            sliceSpaceRadius = this.calculateMinimumRadiusForSpacedSlice(center, radius, sliceAngle * phaseY, center.x + radius * (float) Math.cos((double) (startAngleOuter * 0.017453292F)), center.y + radius * (float) Math.sin((double) (startAngleOuter * 0.017453292F)), startAngleOuter, sweepAngleOuter);
                         }
 
                         this.mInnerRectBuffer.set(center.x - userInnerRadius, center.y - userInnerRadius, center.x + userInnerRadius, center.y + userInnerRadius);
@@ -619,14 +613,14 @@ public class PieChartRenderer extends DataRenderer {
                             if (sweepAngleOuter >= 360.0F && sweepAngleOuter % 360.0F <= Utils.FLOAT_EPSILON) {
                                 this.mPathBuffer.addCircle(center.x, center.y, innerRadius, Path.Direction.CCW);
                             } else {
-                                this.mPathBuffer.lineTo(center.x + innerRadius * (float)Math.cos((double)(endAngleInner * 0.017453292F)), center.y + innerRadius * (float)Math.sin((double)(endAngleInner * 0.017453292F)));
+                                this.mPathBuffer.lineTo(center.x + innerRadius * (float) Math.cos((double) (endAngleInner * 0.017453292F)), center.y + innerRadius * (float) Math.sin((double) (endAngleInner * 0.017453292F)));
                                 this.mPathBuffer.arcTo(this.mInnerRectBuffer, endAngleInner, -sweepAngleInner);
                             }
                         } else if (sweepAngleOuter % 360.0F > Utils.FLOAT_EPSILON) {
                             if (accountForSliceSpacing) {
                                 angleMiddle = startAngleOuter + sweepAngleOuter / 2.0F;
-                                arcEndPointX = center.x + sliceSpaceRadius * (float)Math.cos((double)(angleMiddle * 0.017453292F));
-                                sweepAngleInner = center.y + sliceSpaceRadius * (float)Math.sin((double)(angleMiddle * 0.017453292F));
+                                arcEndPointX = center.x + sliceSpaceRadius * (float) Math.cos((double) (angleMiddle * 0.017453292F));
+                                sweepAngleInner = center.y + sliceSpaceRadius * (float) Math.sin((double) (angleMiddle * 0.017453292F));
                                 this.mPathBuffer.lineTo(arcEndPointX, sweepAngleInner);
                             } else {
                                 this.mPathBuffer.lineTo(center.x, center.y);
@@ -640,36 +634,6 @@ public class PieChartRenderer extends DataRenderer {
             }
 
             MPPointF.recycleInstance(center);
-        }
-    }
-
-    protected void drawRoundedSlices(Canvas c) {
-        if (this.mChart.isDrawRoundedSlicesEnabled()) {
-            IPieDataSet dataSet = ((PieData)this.mChart.getData()).getDataSet();
-            if (dataSet.isVisible()) {
-                float phaseX = this.mAnimator.getPhaseX();
-                float phaseY = this.mAnimator.getPhaseY();
-                MPPointF center = this.mChart.getCenterCircleBox();
-                float r = this.mChart.getRadius();
-                float circleRadius = (r - r * this.mChart.getHoleRadius() / 100.0F) / 2.0F;
-                float[] drawAngles = this.mChart.getDrawAngles();
-                float angle = this.mChart.getRotationAngle();
-
-                for(int j = 0; j < dataSet.getEntryCount(); ++j) {
-                    float sliceAngle = drawAngles[j];
-                    Entry e = dataSet.getEntryForIndex(j);
-                    if (Math.abs(e.getY()) > Utils.FLOAT_EPSILON) {
-                        float x = (float)((double)(r - circleRadius) * Math.cos(Math.toRadians((double)((angle + sliceAngle) * phaseY))) + (double)center.x);
-                        float y = (float)((double)(r - circleRadius) * Math.sin(Math.toRadians((double)((angle + sliceAngle) * phaseY))) + (double)center.y);
-                        this.mRenderPaint.setColor(dataSet.getColor(j));
-                        this.mBitmapCanvas.drawCircle(x, y, circleRadius, this.mRenderPaint);
-                    }
-
-                    angle += sliceAngle * phaseX;
-                }
-
-                MPPointF.recycleInstance(center);
-            }
         }
     }
 
