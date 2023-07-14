@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kore.botssdk.R
 import kore.botssdk.extensions.clearItemDecorations
@@ -42,6 +43,7 @@ class NearByStockAvailableStoresAdapter(
         holder.distance.text = model.distanceToStore
         holder.storeAddress.text = model.storeAddress
         holder.actionButton.text = model.action
+        holder.storeTimings.layoutManager = LinearLayoutManager(context)
         model.storeTimings?.let {
             holder.storeTimings.adapter = StoreTimingsAdapter(it)
             holder.storeTimings.addItemDecoration(StoreTimingItemDecoration(context))

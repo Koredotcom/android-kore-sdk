@@ -9,7 +9,7 @@ public class WidgetListElementModel {
     private String description;
     private HeaderOptionsModel value;
 
-    private String stockAvailability = "";
+    private String stock_availability = "";
 
     private String topRated = "";
 
@@ -105,7 +105,7 @@ public class WidgetListElementModel {
     }
 
     public String getStockAvailability() {
-        return stockAvailability;
+        return stock_availability;
     }
 
     public String getTopRated() {
@@ -148,8 +148,8 @@ public class WidgetListElementModel {
         return topRatedStyles;
     }
 
-    public void setStockAvailability(String stockAvailability) {
-        this.stockAvailability = stockAvailability;
+    public void setStockAvailability(String stock_availability) {
+        this.stock_availability = stock_availability;
     }
 
     public void setTemplateStyles(ViewStyles templateStyles) {

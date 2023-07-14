@@ -1,5 +1,6 @@
 package kore.botssdk.adapter
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,10 @@ class StoreTimingsAdapter(
         val (dayOfWeek, storeTiming) = botStoreTimings[position]
         holder.dayOfWeek.text = dayOfWeek
         holder.storeTiming.text = storeTiming
+        if (position == 0) {
+            holder.dayOfWeek.setTypeface(holder.dayOfWeek.typeface, Typeface.BOLD)
+            holder.storeTiming.setTypeface(holder.storeTiming.typeface, Typeface.BOLD)
+        }
     }
 
     override fun getItemCount(): Int {
