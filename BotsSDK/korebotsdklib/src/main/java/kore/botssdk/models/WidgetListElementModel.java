@@ -9,13 +9,13 @@ public class WidgetListElementModel {
     private String description;
     private HeaderOptionsModel value;
 
-    private String stock_availability = "";
+    private String stockAvailability;
 
-    private String topRated = "";
+    private String topRated;
 
     private ViewStyles templateStyles;
 
-    private ViewStyles availabilityStyles;
+    private ViewStyles stockAvailabilityStyles;
 
     private ViewStyles topRatedStyles;
 
@@ -105,7 +105,7 @@ public class WidgetListElementModel {
     }
 
     public String getStockAvailability() {
-        return stock_availability;
+        return stockAvailability;
     }
 
     public String getTopRated() {
@@ -140,24 +140,24 @@ public class WidgetListElementModel {
         return templateStyles;
     }
 
-    public ViewStyles getAvailabilityStyles() {
-        return availabilityStyles;
+    public ViewStyles getStockAvailabilityStyles() {
+        return stockAvailabilityStyles;
     }
 
     public ViewStyles getTopRatedStyles() {
         return topRatedStyles;
     }
 
-    public void setStockAvailability(String stock_availability) {
-        this.stock_availability = stock_availability;
+    public void setStockAvailability(String stockAvailability) {
+        this.stockAvailability = stockAvailability;
     }
 
     public void setTemplateStyles(ViewStyles templateStyles) {
         this.templateStyles = templateStyles;
     }
 
-    public void setAvailabilityStyles(ViewStyles availabilityStyles) {
-        this.availabilityStyles = availabilityStyles;
+    public void setStockAvailabilityStyles(ViewStyles stockAvailabilityStyles) {
+        this.stockAvailabilityStyles = stockAvailabilityStyles;
     }
 
     public void setTopRatedStyles(ViewStyles topRatedStyles) {

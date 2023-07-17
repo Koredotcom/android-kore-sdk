@@ -826,7 +826,7 @@ public class PayloadInner {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
                     }
-                    else if (BotResponse.NEAR_BY_STOCK_AVAILABLE_STORES.equals(template_type)){
+                    else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET_LOCATION.equals(template_type)){
                         Type listType = new TypeToken<ArrayList<NearByStockAvailableStoreModel>>() {
                         }.getType();
                         nearByStockAvailableStores = gson.fromJson(elementsAsString, listType);

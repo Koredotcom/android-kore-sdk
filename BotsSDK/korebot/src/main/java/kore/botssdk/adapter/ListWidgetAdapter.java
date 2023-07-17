@@ -227,11 +227,11 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         } else {
             final ListWidgetAdapter.ViewHolder holder = (ListWidgetAdapter.ViewHolder) holderData;
             final WidgetListElementModel model = items.get(position);
-            applyStyles(holder.stockAvailability, model.getAvailabilityStyles(), R.id.bg_stock_availability);
+            applyStyles(holder.stockAvailability, model.getStockAvailabilityStyles(), R.id.bg_stock_availability);
             applyStyles(holder.topRated, model.getTopRatedStyles(), R.id.bg_top_rated);
 
-            holder.stockAvailability.setText(model.getStockAvailability());
-            holder.topRated.setText(model.getTopRated());
+            updateHeaderViews(model.getStockAvailability(), holder.stockAvailability);
+            updateHeaderViews(model.getTopRated(), holder.topRated);
 
             if (StringUtils.isNullOrEmpty(model.getTitle())) {
                 holder.txtTitle.setVisibility(GONE);
@@ -242,7 +242,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                     holder.txtTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
                 }
             }
-
             if (StringUtils.isNullOrEmpty(model.getSubtitle())) {
                 holder.txtSubTitle.setVisibility(GONE);
             } else {
@@ -469,6 +468,15 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         }
     }
 
+    private void updateHeaderViews(String text, TextView view) {
+        if (text != null && !text.isEmpty()) {
+            view.setVisibility(VISIBLE);
+        } else {
+            view.setVisibility(GONE);
+        }
+        view.setText(text);
+    }
+
     private void applyStyles(TextView textView, ViewStyles style, int drawableId) {
         if (style == null) {
             textView.setVisibility(GONE);
@@ -666,8 +674,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
         public TextView stockAvailability;
         public TextView topRated;
 
-        public LinearLayout layoutStockAvailability;
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -689,7 +695,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             alDetails = itemView.findViewById(R.id.alDetails);
             stockAvailability = itemView.findViewById(R.id.stock_availability);
             topRated = itemView.findViewById(R.id.top_rated);
-            layoutStockAvailability = itemView.findViewById(R.id.layout_stock_availability);
         }
     }
 

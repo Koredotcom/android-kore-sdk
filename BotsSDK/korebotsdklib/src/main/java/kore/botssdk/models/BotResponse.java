@@ -70,13 +70,13 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_FEEDBACK = "feedbackTemplate";
     public static final String TEMPLATE_TYPE_LIST_WIDGET = "listWidget";
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
+    public static final String TEMPLATE_TYPE_LIST_WIDGET_LOCATION = "listWidgetLocation";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_DROPDOWN = "dropdown_template";
-    public static final String TEMPLATE_IMAGE = "image";
+    public static final String TEMPLATlE_IMAGE = "image";
     public static final String TEMPLATE_BANKING_FEEDBACK = "bankingFeedbackTemplate";
     public static final String CONTACT_CARD_TEMPLATE = "contactCardTemplate";
     public static final String CUSTOM_TABLE_TEMPLATE = "custom_table";
-    public static final String NEAR_BY_STOCK_AVAILABLE_STORES = "near_by_stock_available_stores";
 
 
     //widgets

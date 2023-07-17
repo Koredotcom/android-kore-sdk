@@ -762,7 +762,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     timeStampsTextView.setText("");
                 } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateErrorText(payInner.getText(), payInner.getColor());
-                } else if (BotResponse.NEAR_BY_STOCK_AVAILABLE_STORES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                } else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET_LOCATION.equalsIgnoreCase(payInner.getTemplate_type())) {
                     if (nearByStockAvailableStoreListView == null) {
                         nearByStockAvailableStoreListView = ViewProvider.getNearByStockAvailableStoreListView(context);
                         nearByStockAvailableStoreListView.setComposeFooterInterface(composeFooterInterface);

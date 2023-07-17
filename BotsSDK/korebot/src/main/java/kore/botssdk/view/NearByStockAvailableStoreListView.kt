@@ -2,7 +2,6 @@ package kore.botssdk.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,9 +57,6 @@ class NearByStockAvailableStoreListView : ViewGroup {
             recyclerView?.isVisible = true
         } else {
             recyclerView?.isVisible = false
-        }
-        post {
-            Log.e("isVisible", "$isVisible")
         }
     }
 

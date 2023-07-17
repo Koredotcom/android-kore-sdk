@@ -19,6 +19,7 @@
         android:paddingHorizontal="12dp"
         android:paddingVertical="4dp"
         android:textAllCaps="true"
+        android:textColor="#121212"
         tools:text="Next Closes in Stock" />
 
     <androidx.appcompat.widget.AppCompatTextView

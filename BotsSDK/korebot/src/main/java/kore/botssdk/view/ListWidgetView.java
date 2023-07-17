@@ -31,12 +31,10 @@ import kore.botssdk.adapter.ListWidgetAdapter;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
-import kore.botssdk.extensions.ResourcesExtensionsKt;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.models.ViewStyles;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
 
@@ -177,32 +175,6 @@ public class ListWidgetView extends LinearLayout {
         this.model = model;
         if (model == null) return;
 
-        // This is temporary. Need to remove later: @Kishore
-        if (model.getWidgetlistElements() != null)
-            for (int i = 0; i < model.getWidgetlistElements().size(); i++) {
-                model.getWidgetlistElements().get(i).setDescription("SKU 123456789");
-                if (i == 0) {
-                    model.getWidgetlistElements().get(i).setTopRated("Top Rated");
-                    model.getWidgetlistElements().get(i).setStockAvailability("Available");
-                    model.getWidgetlistElements().get(i).setAvailabilityStyles(new ViewStyles(
-                            null, null, null, null, null, "#212121", "#88AF67", null, ResourcesExtensionsKt.dpToPx(6, context), null
-                    ));
-                    model.getWidgetlistElements().get(i).setTopRatedStyles(new ViewStyles(
-                            null, null, null, null, null, "#212121", "#B7B8FE", null, ResourcesExtensionsKt.dpToPx(6, context), null
-                    ));
-                } else if (i % 2 == 0) {
-                    model.getWidgetlistElements().get(i).setStockAvailability("Available");
-                    model.getWidgetlistElements().get(i).setAvailabilityStyles(new ViewStyles(
-                            null, null, null, null, null, "#212121", "#88AF67", null, ResourcesExtensionsKt.dpToPx(6, context), null
-                    ));
-                } else {
-                    model.getWidgetlistElements().get(i).setStockAvailability("Out of Stock");
-                    model.getWidgetlistElements().get(i).setAvailabilityStyles(new ViewStyles(
-                            null, null, null, null, null, "#212121", "#DFE165", null, ResourcesExtensionsKt.dpToPx(6, context), null
-                    ));
-                }
-            }
-        //-----------
         if (!StringUtils.isNullOrEmpty(model.getTitle())) {
             widget_header.setVisibility(VISIBLE);
             widget_header.setText(model.getTitle());
@@ -318,7 +290,7 @@ public class ListWidgetView extends LinearLayout {
             botCustomListView.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setComposeFooterInterface(composeFooterInterface);
             listWidgetAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            if(!isShowMore) {
+            if (!isShowMore) {
                 listWidgetAdapter.setPreviewLength(DEFAULT_PREVIEW_LENGTH);
             } else {
                 listWidgetAdapter.setPreviewLength(model.getWidgetlistElements().size());
