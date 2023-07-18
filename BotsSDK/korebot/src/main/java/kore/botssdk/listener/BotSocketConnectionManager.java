@@ -412,7 +412,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void sendMessage(String message, String payLoad) {
+
         stopTextToSpeech();
+        if(botClient==null){
+            return;
+        }
         if (payLoad != null)
             botClient.sendMessage(payLoad);
         else
