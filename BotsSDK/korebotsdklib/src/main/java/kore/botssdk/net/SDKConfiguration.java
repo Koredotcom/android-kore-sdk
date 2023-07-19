@@ -74,6 +74,9 @@ public class SDKConfiguration {
         public static void setKoreBotServerUrl(String koreBotServerUrl) {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
         }
+        public static String getKoreBotServerUrl() {
+           return KORE_BOT_SERVER_URL;
+        }
 
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
