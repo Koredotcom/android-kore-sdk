@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 data class NearByStockAvailableStoreModel(
+    @SerializedName("id")
+    val id: String?,
+
     @SerializedName("next_closest_in_stock")
     val nextClosestInStock: String?,
 

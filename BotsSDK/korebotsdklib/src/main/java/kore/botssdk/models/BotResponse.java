@@ -71,6 +71,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_LIST_WIDGET = "listWidget";
     public static final String TEMPLATE_TYPE_UNIVERSAL_SEARCH = "kora_universal_search";
     public static final String TEMPLATE_TYPE_LIST_WIDGET_LOCATION = "listWidgetLocation";
+    public static final String TEMPLATE_PROD_INVENTORY_ACTION_FORM = "productInventoryActionForm";
     public static final String WELCOME_SUMMARY_VIEW_NOTIFICAION = "welcome_summary_view_notification";
     public static final String TEMPLATE_DROPDOWN = "dropdown_template";
     public static final String TEMPLATlE_IMAGE = "image";

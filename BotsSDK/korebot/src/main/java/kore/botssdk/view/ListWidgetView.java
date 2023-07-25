@@ -284,6 +284,8 @@ public class ListWidgetView extends LinearLayout {
 
             if (!isShowMore && model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > DEFAULT_PREVIEW_LENGTH) {
                 botCustomListViewButton.setVisibility(View.VISIBLE);
+            } else {
+                botCustomListViewButton.setVisibility(View.GONE);
             }
 
             listWidgetAdapter.setWidgetData(model.getWidgetlistElements());

@@ -10,7 +10,9 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kore.botssdk.R
+import kore.botssdk.customviews.RatioFixedImageView
 import kore.botssdk.extensions.clearItemDecorations
 import kore.botssdk.itemdecorators.StoreTimingItemDecoration
 import kore.botssdk.listener.ComposeFooterInterface
@@ -22,9 +24,16 @@ class NearByStockAvailableStoresAdapter(
     private var nearByStockAvailableStoreModels: List<NearByStockAvailableStoreModel>
 ) : RecyclerView.Adapter<NearByStockAvailableStoresAdapter.ViewHolder>() {
 
+    companion object {
+        private const val GOOGLE_URL =
+            "https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&key=AIzaSyCj4bW9JL4fppO1tJbM9jrSwG2tRfgR-nQ"
+    }
+
     private var composeFooterInterface: ComposeFooterInterface? = null
 
     private var invokeGenericWebViewInterface: InvokeGenericWebViewInterface? = null
+
+    private var isLastItem = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -44,17 +53,27 @@ class NearByStockAvailableStoresAdapter(
         holder.storeAddress.text = model.storeAddress
         holder.actionButton.text = model.action
         holder.storeTimings.layoutManager = LinearLayoutManager(context)
+        Picasso.get().load(GOOGLE_URL)
+            .placeholder(R.drawable.edit_btn_blue_bg)
+            .error(R.drawable.conection_error)
+            .into(holder.googleMap)
         model.storeTimings?.let {
             holder.storeTimings.adapter = StoreTimingsAdapter(it)
             holder.storeTimings.addItemDecoration(StoreTimingItemDecoration(context))
             holder.storeTimings.clearItemDecorations()
         }
-        holder.actionButton.setOnClickListener {
-            composeFooterInterface?.onSendClick(model.action, false)
-        }
         holder.storeInfo.setOnClickListener {
             holder.layoutStoreInfo.isVisible = !holder.layoutStoreInfo.isVisible
             it.isSelected = !it.isSelected
+        }
+        holder.actionButton.setOnClickListener {
+            composeFooterInterface?.onSendClick(model.id, false)
+        }
+        if (!isLastItem) {
+            holder.actionButton.alpha = 0.3f
+            holder.actionButton.setOnClickListener(null)
+        } else {
+            holder.actionButton.alpha = 1.0f
         }
     }
 
@@ -74,6 +93,7 @@ class NearByStockAvailableStoresAdapter(
         val storeTimings: RecyclerView
         val storeInfo: ImageView
         val layoutStoreInfo: LinearLayoutCompat
+        val googleMap: RatioFixedImageView
 
         init {
             root = itemView
@@ -87,6 +107,7 @@ class NearByStockAvailableStoresAdapter(
             storeTimings = itemView.findViewById(R.id.store_timings)
             storeInfo = itemView.findViewById(R.id.store_info)
             layoutStoreInfo = itemView.findViewById(R.id.layout_store_info)
+            googleMap = itemView.findViewById(R.id.google_map)
         }
     }
 
@@ -98,8 +119,9 @@ class NearByStockAvailableStoresAdapter(
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface
     }
 
-    fun updateList(models: List<NearByStockAvailableStoreModel>) {
+    fun updateList(models: List<NearByStockAvailableStoreModel>, isLastItem: Boolean) {
         nearByStockAvailableStoreModels = models
+        this.isLastItem = isLastItem
         notifyDataSetChanged()
     }
 }

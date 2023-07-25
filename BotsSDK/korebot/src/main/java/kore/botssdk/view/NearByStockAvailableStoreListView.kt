@@ -40,7 +40,7 @@ class NearByStockAvailableStoreListView : ViewGroup {
         addView(recyclerView)
     }
 
-    fun populateNearByStockAvailableStores(models: List<NearByStockAvailableStoreModel>?) {
+    fun populateNearByStockAvailableStores(models: List<NearByStockAvailableStoreModel>?, isLastItem: Boolean) {
         if (!models.isNullOrEmpty()) {
             val adapter: NearByStockAvailableStoresAdapter?
             if (recyclerView?.adapter == null) {
@@ -53,7 +53,7 @@ class NearByStockAvailableStoreListView : ViewGroup {
             } else {
                 adapter = recyclerView?.adapter as NearByStockAvailableStoresAdapter
             }
-            adapter.updateList(models)
+            adapter.updateList(models ,isLastItem)
             recyclerView?.isVisible = true
         } else {
             recyclerView?.isVisible = false

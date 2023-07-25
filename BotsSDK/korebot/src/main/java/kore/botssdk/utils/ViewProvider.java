@@ -50,6 +50,7 @@ import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.NearByStockAvailableStoreListView;
 import kore.botssdk.view.PieChartView;
+import kore.botssdk.view.ProductInventoryActionFormView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.StackedBarChatView;
 import kore.botssdk.view.TextMediaLayout;
@@ -86,12 +87,13 @@ public class ViewProvider {
     public static final int TASK_VIEW_ID = 1981234;
     private static final int TABLE_RESPONSIVE_VIEW_ID = 19800350;
     private static final int NEAR_BY_STOCK_AVAILABLE_STORES_VIEW_ID = 19800351;
+    private static final int PRODUCT_INVENTORY_ACTION_FORM_VIEW_ID = 19800352;
 
 
     public static Path RoundedRect(
             float left, float top, float right, float bottom, float rx, float ry,
             boolean tl, boolean tr, boolean br, boolean bl
-    ){
+    ) {
         Path path = new Path();
         if (rx < 0) rx = 0;
         if (ry < 0) ry = 0;
@@ -105,31 +107,31 @@ public class ViewProvider {
         path.moveTo(right, top + ry);
         if (tr)
             path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
-        else{
+        else {
             path.rLineTo(0, -ry);
-            path.rLineTo(-rx,0);
+            path.rLineTo(-rx, 0);
         }
         path.rLineTo(-widthMinusCorners, 0);
         if (tl)
             path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
-        else{
+        else {
             path.rLineTo(-rx, 0);
-            path.rLineTo(0,ry);
+            path.rLineTo(0, ry);
         }
         path.rLineTo(0, heightMinusCorners);
 
         if (bl)
             path.rQuadTo(0, ry, rx, ry);//bottom-left corner
-        else{
+        else {
             path.rLineTo(0, ry);
-            path.rLineTo(rx,0);
+            path.rLineTo(rx, 0);
         }
 
         path.rLineTo(widthMinusCorners, 0);
         if (br)
             path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
-        else{
-            path.rLineTo(rx,0);
+        else {
+            path.rLineTo(rx, 0);
             path.rLineTo(0, -ry);
         }
 
@@ -139,8 +141,9 @@ public class ViewProvider {
 
         return path;
     }
+
     public static void drawRoundRect(Canvas canvas, RectF rect, Paint paint,
-                                    int leftTop, int rightTop, int leftBottom,
+                                     int leftTop, int rightTop, int leftBottom,
                                      int rightBottom) {
         float roundRadius[] = new float[8];
         roundRadius[0] = leftTop;
@@ -190,144 +193,154 @@ public class ViewProvider {
         return botButtonView;
     }
 
-    public static TextMediaLayout getTextMediaLayout(Context context, int linkColors){
-        TextMediaLayout bubbleTextMediaLayout = new TextMediaLayout(context,linkColors);
+    public static TextMediaLayout getTextMediaLayout(Context context, int linkColors) {
+        TextMediaLayout bubbleTextMediaLayout = new TextMediaLayout(context, linkColors);
         bubbleTextMediaLayout.setId(BubbleConstants.TEXT_MEDIA_LAYOUT_ID);
         return bubbleTextMediaLayout;
     }
-    public static BotListTemplateView getBotListTempleteView(Context context){
+
+    public static BotListTemplateView getBotListTempleteView(Context context) {
         BotListTemplateView botListTemplateView = new BotListTemplateView(context);
         botListTemplateView.setId(LIST_ID);
         return botListTemplateView;
     }
 
-    public static BotCarouselView getBotCarousalView(Context context){
+    public static BotCarouselView getBotCarousalView(Context context) {
         BotCarouselView botCarouselView = new BotCarouselView(context);
         botCarouselView.setId(CAROUSEL_VIEW_ID);
         return botCarouselView;
     }
-    public static KoraCarouselView getKoraCarouselView(Context context){
+
+    public static KoraCarouselView getKoraCarouselView(Context context) {
         KoraCarouselView koraCarouselView = new KoraCarouselView(context);
         koraCarouselView.setId(KORA_CAROUSEL_VIEW_ID);
         return koraCarouselView;
     }
-    public static PieChartView getPieChartView(Context context){
+
+    public static PieChartView getPieChartView(Context context) {
         PieChartView botPieChartView = new PieChartView(context);
         botPieChartView.setId(PIECHART_VIEW_ID);
         return botPieChartView;
     }
-    public static BotTableView getTableView(Context context){
+
+    public static BotTableView getTableView(Context context) {
         BotTableView tableView = new BotTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }
-    public static BotCustomTableView getCustomTableView(Context context){
+
+    public static BotCustomTableView getCustomTableView(Context context) {
         BotCustomTableView tableView = new BotCustomTableView(context);
         tableView.setId(TABLE_VIEW_ID);
         return tableView;
     }
-    public static BotResponsiveExpandTableView getResponsiveExpandTableView(Context context){
+
+    public static BotResponsiveExpandTableView getResponsiveExpandTableView(Context context) {
         BotResponsiveExpandTableView tableView = new BotResponsiveExpandTableView(context);
         tableView.setId(TABLE_RESPONSIVE_VIEW_ID);
         return tableView;
     }
-    public static BotResponsiveTableView getResponsiveTableView(Context context){
+
+    public static BotResponsiveTableView getResponsiveTableView(Context context) {
         BotResponsiveTableView tableView = new BotResponsiveTableView(context);
         tableView.setId(TABLE_RESPONSIVE_VIEW_ID);
         return tableView;
     }
-    public static LineChartView getLineChartView(Context context){
+
+    public static LineChartView getLineChartView(Context context) {
         LineChartView lineChartView = new LineChartView(context);
         lineChartView.setId(LINECHART_VIEW_ID);
         return lineChartView;
     }
 
-    public static BarChartView getBarChartView(Context context){
+    public static BarChartView getBarChartView(Context context) {
         BarChartView barChartView = new BarChartView(context);
         barChartView.setId(BubbleConstants.BARCHART_VIEW_ID);
-       return  barChartView;
+        return barChartView;
     }
 
-    public static StackedBarChatView getStackedBarChartView(Context context){
+    public static StackedBarChatView getStackedBarChartView(Context context) {
         StackedBarChatView barChartView = new StackedBarChatView(context);
         barChartView.setId(BubbleConstants.STACK_BARCHAT_VIEW_ID);
-        return  barChartView;
+        return barChartView;
     }
 
-    public static MeetingSlotsView getMeetingSlotsView(Context context){
+    public static MeetingSlotsView getMeetingSlotsView(Context context) {
         MeetingSlotsView meetingSlotsView = new MeetingSlotsView(context);
         meetingSlotsView.setId(MEETING_SLOTS_VIEW_ID);
         return meetingSlotsView;
     }
+
     public static BotContactTemplateView getBotContactView(Context context, ComposeFooterInterface listener) {
         BotContactTemplateView botButtonView = new BotContactTemplateView(context);
         botButtonView.setId(BUTTON_VIEW_ID);
         botButtonView.setComposeFooterInterface(listener);
         return botButtonView;
     }
-    public static MultiSelectView getMultiSelectView(Context context){
+
+    public static MultiSelectView getMultiSelectView(Context context) {
         MultiSelectView multiSelectView = new MultiSelectView(context);
         multiSelectView.setId(MULTI_SELECT_VIEW_ID);
         return multiSelectView;
     }
-    public static MeetingConfirmationView getMeetingConfirmationView(Context context){
+
+    public static MeetingConfirmationView getMeetingConfirmationView(Context context) {
         MeetingConfirmationView meetingConfirmationView = new MeetingConfirmationView(context);
         meetingConfirmationView.setId(MEETING_CONFIRMATION_VIEW_ID);
         return meetingConfirmationView;
     }
 
 
-    public static AttendeeSlotSelectionView getAttendeeSlotSelectionView(Context context){
+    public static AttendeeSlotSelectionView getAttendeeSlotSelectionView(Context context) {
         AttendeeSlotSelectionView attendeeSlotSelectionView = new AttendeeSlotSelectionView(context);
         attendeeSlotSelectionView.setId(ATTENDEE_SLOT_VIEW_ID);
         return attendeeSlotSelectionView;
     }
 
-    public static ContactInfoView getContactInfoView(Context context){
+    public static ContactInfoView getContactInfoView(Context context) {
         ContactInfoView contactInfoView = new ContactInfoView(context);
         contactInfoView.setId(CONTACT_VIEW_ID);
         return contactInfoView;
     }
 
-    public static WelcomeSummaryView getWelcomeSummaryView(Context context){
-        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context,"");
+    public static WelcomeSummaryView getWelcomeSummaryView(Context context) {
+        WelcomeSummaryView welcomeSummaryView = new WelcomeSummaryView(context, "");
         welcomeSummaryView.setId(WELCOME_SUMMARY_VIEW_ID);
         return welcomeSummaryView;
     }
 
 
-
-    public static UniversalSearchView getUniversalSearchView(Context context){
+    public static UniversalSearchView getUniversalSearchView(Context context) {
         UniversalSearchView universalSearchView = new UniversalSearchView(context);
         universalSearchView.setId(UNIVERSAL_SEARCH_VIEW_ID);
         return universalSearchView;
     }
 
-    public static KoraSummaryHelpView getKoraSummaryHelpView(Context context){
+    public static KoraSummaryHelpView getKoraSummaryHelpView(Context context) {
         KoraSummaryHelpView koraSummaryHelpView = new KoraSummaryHelpView(context);
         koraSummaryHelpView.setId(KORA_SUMMARY_HELP_VIEW_ID);
         return koraSummaryHelpView;
     }
 
-    public static VerticalListView getVerticalListView(Context context){
+    public static VerticalListView getVerticalListView(Context context) {
         VerticalListView koraCarouselView = new VerticalListView(context);
         koraCarouselView.setId(FILES_CAROUSAL_VIEW_ID);
         return koraCarouselView;
     }
 
-    public static TextView getTimeStampTextView(Context context){
+    public static TextView getTimeStampTextView(Context context) {
         TextView textView = new TextView(context);
         textView.setId(TEXTVIEW_ID);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(layoutParams);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
         textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-        KaFontUtils.setCustomTypeface(textView, KaFontUtils.ROBOTO_MEDIUM,context);
+        KaFontUtils.setCustomTypeface(textView, KaFontUtils.ROBOTO_MEDIUM, context);
         return textView;
     }
 
-    public static TimeLineTextView getTimeLineView(Context context){
+    public static TimeLineTextView getTimeLineView(Context context) {
         TimeLineTextView textView = new TimeLineTextView(context);
         textView.setId(TIMELINE_VIEW_ID);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -335,85 +348,85 @@ public class ViewProvider {
         //textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
         //textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-      //  KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
+        //  KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
     }
 
     //Added by Sudheer
 
-    public static HorizontalBarChartView getHorizontalBarChartView(Context context){
+    public static HorizontalBarChartView getHorizontalBarChartView(Context context) {
         HorizontalBarChartView horizontalBarChartView = new HorizontalBarChartView(context);
         horizontalBarChartView.setId(BubbleConstants.HORIZONTAL_BARCHART_VIEW_ID);
-        return  horizontalBarChartView;
+        return horizontalBarChartView;
     }
 
-    public static BotFormTemplateView getBotFormTemplateView(Context context){
+    public static BotFormTemplateView getBotFormTemplateView(Context context) {
         BotFormTemplateView botFormTemplateView = new BotFormTemplateView(context);
         botFormTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
-        return  botFormTemplateView;
+        return botFormTemplateView;
     }
 
-    public static FeedbackTemplateView getFeedbackTemplateView(Context context){
+    public static FeedbackTemplateView getFeedbackTemplateView(Context context) {
         FeedbackTemplateView feedbackTemplateView = new FeedbackTemplateView(context);
         feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
-        return  feedbackTemplateView;
+        return feedbackTemplateView;
     }
 
-    public static ListWidgetView getListWidgetTemplateView(Context context){
+    public static ListWidgetView getListWidgetTemplateView(Context context) {
         ListWidgetView feedbackTemplateView = new ListWidgetView(context);
         feedbackTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
-        return  feedbackTemplateView;
+        return feedbackTemplateView;
     }
 
-    public static BotDropDownTemplateView getDropDownTemplateView(Context context){
+    public static BotDropDownTemplateView getDropDownTemplateView(Context context) {
         BotDropDownTemplateView botDropDownTemplateView = new BotDropDownTemplateView(context);
         botDropDownTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
-        return  botDropDownTemplateView;
+        return botDropDownTemplateView;
     }
 
-    public static ImageTemplateView getImageTemplateView(Context context){
+    public static ImageTemplateView getImageTemplateView(Context context) {
         ImageTemplateView imageTemplateView = new ImageTemplateView(context);
         imageTemplateView.setId(BubbleConstants.FORM_TEMPLATE_ID);
-        return  imageTemplateView;
+        return imageTemplateView;
     }
 
-    public static BankingFeedbackTemplateView getBankingFeedbackTemplateView(Context context){
+    public static BankingFeedbackTemplateView getBankingFeedbackTemplateView(Context context) {
         BankingFeedbackTemplateView feedbackTemplateView = new BankingFeedbackTemplateView(context);
         feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
-        return  feedbackTemplateView;
+        return feedbackTemplateView;
     }
 
-    public static BotListViewTemplateView getBotListViewTempleteView(Context context){
+    public static BotListViewTemplateView getBotListViewTempleteView(Context context) {
         BotListViewTemplateView botListTemplateView = new BotListViewTemplateView(context);
         botListTemplateView.setId(LIST_ID);
         return botListTemplateView;
     }
 
-    public static BotListWidgetTemplateView getBotListWidgetTempleteView(Context context){
+    public static BotListWidgetTemplateView getBotListWidgetTempleteView(Context context) {
         BotListWidgetTemplateView botListTemplateView = new BotListWidgetTemplateView(context);
         botListTemplateView.setId(LIST_ID);
         return botListTemplateView;
     }
 
-    public static BotTableListTemplateView getBotTableListTempleteView(Context context){
+    public static BotTableListTemplateView getBotTableListTempleteView(Context context) {
         BotTableListTemplateView botTableListTemplateView = new BotTableListTemplateView(context);
         botTableListTemplateView.setId(BubbleConstants.TABLE_LIST_TEMPLATE_ID);
         return botTableListTemplateView;
     }
 
-    public static BotQuickRepliesTemplateView getBotQuickRepliesTemplateView(Context context){
+    public static BotQuickRepliesTemplateView getBotQuickRepliesTemplateView(Context context) {
         BotQuickRepliesTemplateView botTableListTemplateView = new BotQuickRepliesTemplateView(context);
         botTableListTemplateView.setId(BubbleConstants.QUICK_REPLY_TEMPLATE_ID);
         return botTableListTemplateView;
     }
 
-    public static AgentTransferTemplateView getAgentTransferTemplateView(Context context){
+    public static AgentTransferTemplateView getAgentTransferTemplateView(Context context) {
         AgentTransferTemplateView agentTransferTemplateView = new AgentTransferTemplateView(context);
         agentTransferTemplateView.setId(BubbleConstants.AGENT_TRANSFER_TEMPLATE_ID);
         return agentTransferTemplateView;
     }
 
-    public static BotTypingStatusView getBotReplyWaitView(Context context){
+    public static BotTypingStatusView getBotReplyWaitView(Context context) {
         BotTypingStatusView botReplyWaitView = new BotTypingStatusView(context);
         return botReplyWaitView;
     }
@@ -422,5 +435,11 @@ public class ViewProvider {
         NearByStockAvailableStoreListView storesView = new NearByStockAvailableStoreListView(context);
         storesView.setId(NEAR_BY_STOCK_AVAILABLE_STORES_VIEW_ID);
         return storesView;
+    }
+
+    public static ProductInventoryActionFormView getProductInventoryActionFormView(Context context) {
+        ProductInventoryActionFormView actionFormView = new ProductInventoryActionFormView(context);
+        actionFormView.setId(PRODUCT_INVENTORY_ACTION_FORM_VIEW_ID);
+        return actionFormView;
     }
 }

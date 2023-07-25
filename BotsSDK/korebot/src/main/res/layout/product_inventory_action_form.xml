@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/form_input_bg"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/latobold"
+        android:gravity="center_horizontal"
+        android:textColor="#121212"
+        android:textSize="18sp"
+        android:text="@string/user_details"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/form_field_name"
+        android:textColor="#121212"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/form_input_bg"
+        android:hint="@string/provide_your_input"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:textColor="#121212"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/form_field_phone_number"
+        android:textColor="#121212"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/form_input_bg"
+        android:hint="@string/hint_phone_number"
+        android:inputType="phone"
+        android:maxLength="14"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:textColor="#121212"
+        android:textSize="14sp" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/action_send_directions"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/action_button_bg"
+        android:backgroundTint="@color/color_blue_1_1"
+        android:gravity="center"
+        android:text="@string/send_direction"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/action_reserve"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/action_button_bg"
+        android:backgroundTint="@color/color_blue_1_1"
+        android:gravity="center"
+        android:text="@string/action_reserve"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+</androidx.appcompat.widget.LinearLayoutCompat>

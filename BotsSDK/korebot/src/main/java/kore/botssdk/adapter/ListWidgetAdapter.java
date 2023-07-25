@@ -462,7 +462,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
                     }
                 }
             });
-            if (position == items.size() - 1 && items.size() < 3) {
+            if (holder.divider != null && position == items.size() - 1 && items.size() < 3) {
                 holder.divider.setVisibility(View.GONE);
             }
         }

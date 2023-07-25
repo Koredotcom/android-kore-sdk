@@ -108,9 +108,11 @@
         android:visibility="gone">
 
         <kore.botssdk.customviews.RatioFixedImageView
+            android:id="@+id/google_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:src="@color/bgLightBlue"
             app:heightHint="2"
             app:widthHint="3" />
 
