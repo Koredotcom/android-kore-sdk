@@ -107,14 +107,33 @@
         android:paddingHorizontal="12dp"
         android:visibility="gone">
 
-        <kore.botssdk.customviews.RatioFixedImageView
-            android:id="@+id/google_map"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:src="@color/bgLightBlue"
-            app:heightHint="2"
-            app:widthHint="3" />
+            android:layout_marginBottom="8dp">
+
+            <kore.botssdk.customviews.RatioFixedImageView
+                android:id="@+id/google_map_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/bgLightBlue"
+                app:heightHint="2"
+                app:widthHint="3" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/error_msg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/google_static_map_image_error_msg"
+                android:textColor="@color/color_red"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/store_address"

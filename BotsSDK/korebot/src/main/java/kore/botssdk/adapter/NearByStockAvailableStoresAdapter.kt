@@ -1,6 +1,7 @@
 package kore.botssdk.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kore.botssdk.R
 import kore.botssdk.customviews.RatioFixedImageView
@@ -18,6 +20,7 @@ import kore.botssdk.itemdecorators.StoreTimingItemDecoration
 import kore.botssdk.listener.ComposeFooterInterface
 import kore.botssdk.listener.InvokeGenericWebViewInterface
 import kore.botssdk.models.NearByStockAvailableStoreModel
+import kore.botssdk.view.viewUtils.RoundedCornersTransform
 
 class NearByStockAvailableStoresAdapter(
     private val context: Context,
@@ -25,7 +28,8 @@ class NearByStockAvailableStoresAdapter(
 ) : RecyclerView.Adapter<NearByStockAvailableStoresAdapter.ViewHolder>() {
 
     companion object {
-        private const val GOOGLE_URL =
+        private const val TAG = "NearByStockAvailableStoresAdapter"
+        private const val GOOGLE_STATIC_MAP_URL =
             "https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&key=AIzaSyCj4bW9JL4fppO1tJbM9jrSwG2tRfgR-nQ"
     }
 
@@ -34,6 +38,11 @@ class NearByStockAvailableStoresAdapter(
     private var invokeGenericWebViewInterface: InvokeGenericWebViewInterface? = null
 
     private var isLastItem = false
+    var roundedCornersTransform: RoundedCornersTransform? = null
+
+    init {
+        roundedCornersTransform = RoundedCornersTransform()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -53,10 +62,20 @@ class NearByStockAvailableStoresAdapter(
         holder.storeAddress.text = model.storeAddress
         holder.actionButton.text = model.action
         holder.storeTimings.layoutManager = LinearLayoutManager(context)
-        Picasso.get().load(GOOGLE_URL)
-            .placeholder(R.drawable.edit_btn_blue_bg)
-            .error(R.drawable.conection_error)
-            .into(holder.googleMap)
+        Picasso.get()
+            .load(GOOGLE_STATIC_MAP_URL)
+            .error(R.drawable.edit_btn_blue_bg)
+            .transform(roundedCornersTransform!!)
+            .into(holder.googleMapImage, object : Callback {
+                override fun onSuccess() {
+                    holder.mapErrorMsg.isVisible = false
+                }
+
+                override fun onError(e: Exception?) {
+                    e?.message?.let { Log.e(TAG, it) }
+                    holder.mapErrorMsg.isVisible = true
+                }
+            })
         model.storeTimings?.let {
             holder.storeTimings.adapter = StoreTimingsAdapter(it)
             holder.storeTimings.addItemDecoration(StoreTimingItemDecoration(context))
@@ -93,7 +112,8 @@ class NearByStockAvailableStoresAdapter(
         val storeTimings: RecyclerView
         val storeInfo: ImageView
         val layoutStoreInfo: LinearLayoutCompat
-        val googleMap: RatioFixedImageView
+        val googleMapImage: RatioFixedImageView
+        val mapErrorMsg: TextView
 
         init {
             root = itemView
@@ -107,7 +127,8 @@ class NearByStockAvailableStoresAdapter(
             storeTimings = itemView.findViewById(R.id.store_timings)
             storeInfo = itemView.findViewById(R.id.store_info)
             layoutStoreInfo = itemView.findViewById(R.id.layout_store_info)
-            googleMap = itemView.findViewById(R.id.google_map)
+            googleMapImage = itemView.findViewById(R.id.google_map_image)
+            mapErrorMsg = itemView.findViewById(R.id.error_msg)
         }
     }
 

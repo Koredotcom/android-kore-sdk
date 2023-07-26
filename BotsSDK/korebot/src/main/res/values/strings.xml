@@ -112,6 +112,7 @@
     <string name="msg_invalid_user_name">Please enter valid user name</string>
     <string name="msg_invalid_phone_number">Please enter valid phone number</string>
     <string name="user_details">User Details</string>
+    <string name="google_static_map_image_error_msg">There is a possibility of Google api key mismatch or internet issue. Please check!</string>
 
     <string-array name="attachments_strings">
         <item>Take Photo</item>

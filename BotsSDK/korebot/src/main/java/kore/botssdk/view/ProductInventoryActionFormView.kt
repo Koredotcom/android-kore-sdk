@@ -70,6 +70,8 @@ class ProductInventoryActionFormView : ViewGroup {
 
     fun showInputForm(id: String?) {
         selectedItemId = id
+        binding.userName.setText("")
+        binding.phoneNumber.setText("")
         binding.root.isVisible = !id.isNullOrEmpty()
     }
 
