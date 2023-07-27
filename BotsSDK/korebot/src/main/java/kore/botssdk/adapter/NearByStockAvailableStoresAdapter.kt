@@ -23,7 +23,6 @@ import kore.botssdk.itemdecorators.StoreTimingItemDecoration
 import kore.botssdk.listener.ComposeFooterInterface
 import kore.botssdk.listener.InvokeGenericWebViewInterface
 import kore.botssdk.models.NearByStockAvailableStoreModel
-import kore.botssdk.view.viewUtils.RoundedCornersTransform
 
 class NearByStockAvailableStoresAdapter(
     private val context: Context,
@@ -34,7 +33,7 @@ class NearByStockAvailableStoresAdapter(
         private var delegate: EmployeeAssistDelegate? = null
         private const val TAG = "NearByStockAvailableStoresAdapter"
         private const val GOOGLE_STATIC_MAP_URL =
-            "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=15&size=%s&markers=color:red%s&markers=size:mid&maptype=roadmap&key=%s"
+            "https://maps.googleapis.com/maps/api/staticmap?center=%s&zoom=16&size=%s&markers=color:red%s&markers=size:mid&maptype=roadmap&key=%s"
 
         private fun inject(context: Context) {
             val entryPoint = EntryPointAccessors.fromApplication(
@@ -50,14 +49,6 @@ class NearByStockAvailableStoresAdapter(
     private var invokeGenericWebViewInterface: InvokeGenericWebViewInterface? = null
 
     private var isLastItem = false
-
-    private var roundedCornersTransform: RoundedCornersTransform? = null
-
-//    private val sharedPreferences = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE)
-
-    init {
-        roundedCornersTransform = RoundedCornersTransform()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -88,20 +79,18 @@ class NearByStockAvailableStoresAdapter(
                 latLong,
                 delegate?.getGoogleMapKey() ?: ""
             )
-            val requestCreator = Picasso.get()
-                .load(url)
+            Picasso.get().load(url)
                 .error(R.drawable.edit_btn_blue_bg)
-            roundedCornersTransform?.let { requestCreator.transform(it) }
-            requestCreator.into(holder.googleMapImage, object : Callback {
-                override fun onSuccess() {
-                    holder.mapErrorMsg.isVisible = false
-                }
+                .into(holder.googleMapImage, object : Callback {
+                    override fun onSuccess() {
+                        holder.mapErrorMsg.isVisible = false
+                    }
 
-                override fun onError(e: Exception?) {
-                    e?.message?.let { Log.e(TAG, it) }
-                    holder.mapErrorMsg.isVisible = true
-                }
-            })
+                    override fun onError(e: Exception?) {
+                        e?.message?.let { Log.e(TAG, it) }
+                        holder.mapErrorMsg.isVisible = true
+                    }
+                })
         }
         model.storeTimings?.let {
             holder.storeTimings.adapter = StoreTimingsAdapter(it)

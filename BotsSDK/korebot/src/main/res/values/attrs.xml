@@ -2,6 +2,7 @@
 <resources>
     <attr name="widthHint" format="integer" />
     <attr name="heightHint" format="integer" />
+    <attr name="radius" format="dimension" />
     <declare-styleable name="CircularProfileView">
         <attr name="badge_padding" format="dimension" />
         <attr name="text_size" format="dimension" />
@@ -49,5 +50,9 @@
     <declare-styleable name="RatioFixedImageView">
         <attr name="widthHint" />
         <attr name="heightHint" />
+    </declare-styleable>
+
+    <declare-styleable name="SimpleRoundedImageView">
+        <attr name="radius" />
     </declare-styleable>
 </resources>

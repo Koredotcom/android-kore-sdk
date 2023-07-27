@@ -14,9 +14,9 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/latobold"
         android:gravity="center_horizontal"
+        android:text="@string/user_details"
         android:textColor="#121212"
-        android:textSize="18sp"
-        android:text="@string/user_details"/>
+        android:textSize="18sp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"
@@ -35,6 +35,8 @@
         android:layout_marginTop="6dp"
         android:background="@drawable/form_input_bg"
         android:hint="@string/provide_your_input"
+        android:imeOptions="actionNext"
+        android:overScrollMode="never"
         android:maxLines="1"
         android:paddingHorizontal="12dp"
         android:paddingVertical="6dp"
