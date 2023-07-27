@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.EntryPointAccessors
 import kore.botssdk.R
 import kore.botssdk.customviews.RatioFixedImageView
+import kore.botssdk.delegate.EmployeeAssistDelegate
+import kore.botssdk.delegate.EmployeeAssistDelegateEntryPoint
 import kore.botssdk.extensions.clearItemDecorations
 import kore.botssdk.itemdecorators.StoreTimingItemDecoration
 import kore.botssdk.listener.ComposeFooterInterface
@@ -28,9 +31,18 @@ class NearByStockAvailableStoresAdapter(
 ) : RecyclerView.Adapter<NearByStockAvailableStoresAdapter.ViewHolder>() {
 
     companion object {
+        private var delegate: EmployeeAssistDelegate? = null
         private const val TAG = "NearByStockAvailableStoresAdapter"
         private const val GOOGLE_STATIC_MAP_URL =
-            "https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&key=AIzaSyCj4bW9JL4fppO1tJbM9jrSwG2tRfgR-nQ"
+            "https://maps.googleapis.com/maps/api/staticmap?center=40.714728,-73.998672&zoom=12&size=400x400&key=%s"
+
+        private fun inject(context: Context) {
+            val entryPoint = EntryPointAccessors.fromApplication(
+                context.applicationContext,
+                EmployeeAssistDelegateEntryPoint::class.java
+            )
+            delegate = entryPoint.getKoreBotDelegate()
+        }
     }
 
     private var composeFooterInterface: ComposeFooterInterface? = null
@@ -38,7 +50,10 @@ class NearByStockAvailableStoresAdapter(
     private var invokeGenericWebViewInterface: InvokeGenericWebViewInterface? = null
 
     private var isLastItem = false
-    var roundedCornersTransform: RoundedCornersTransform? = null
+
+    private var roundedCornersTransform: RoundedCornersTransform? = null
+
+//    private val sharedPreferences = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE)
 
     init {
         roundedCornersTransform = RoundedCornersTransform()
@@ -47,6 +62,7 @@ class NearByStockAvailableStoresAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val listItem = layoutInflater.inflate(R.layout.near_by_stock_available_store_view, parent, false)
+        inject(listItem.context)
         return ViewHolder(listItem)
     }
 
@@ -62,20 +78,20 @@ class NearByStockAvailableStoresAdapter(
         holder.storeAddress.text = model.storeAddress
         holder.actionButton.text = model.action
         holder.storeTimings.layoutManager = LinearLayoutManager(context)
-        Picasso.get()
-            .load(GOOGLE_STATIC_MAP_URL)
+        val requestCreator = Picasso.get()
+            .load(String.format(GOOGLE_STATIC_MAP_URL, delegate?.getGoogleMapKey() ?: ""))
             .error(R.drawable.edit_btn_blue_bg)
-            .transform(roundedCornersTransform!!)
-            .into(holder.googleMapImage, object : Callback {
-                override fun onSuccess() {
-                    holder.mapErrorMsg.isVisible = false
-                }
+        roundedCornersTransform?.let { requestCreator.transform(it) }
+        requestCreator.into(holder.googleMapImage, object : Callback {
+            override fun onSuccess() {
+                holder.mapErrorMsg.isVisible = false
+            }
 
-                override fun onError(e: Exception?) {
-                    e?.message?.let { Log.e(TAG, it) }
-                    holder.mapErrorMsg.isVisible = true
-                }
-            })
+            override fun onError(e: Exception?) {
+                e?.message?.let { Log.e(TAG, it) }
+                holder.mapErrorMsg.isVisible = true
+            }
+        })
         model.storeTimings?.let {
             holder.storeTimings.adapter = StoreTimingsAdapter(it)
             holder.storeTimings.addItemDecoration(StoreTimingItemDecoration(context))
