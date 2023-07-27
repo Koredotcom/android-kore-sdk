@@ -53,6 +53,7 @@
         tools:text="Only 4 left" />
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginHorizontal="12dp"
@@ -102,7 +103,7 @@
         android:id="@+id/layout_store_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:orientation="vertical"
         android:paddingHorizontal="12dp"
         android:visibility="gone">
@@ -112,13 +113,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
-            <kore.botssdk.customviews.RatioFixedImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/google_map_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
                 android:src="@color/bgLightBlue"
-                app:heightHint="2"
-                app:widthHint="3" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/error_msg"
