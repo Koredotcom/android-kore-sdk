@@ -567,33 +567,54 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 			try {
 				if(outputStream != null)
 					outputStream.close();
-
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
 				if(inputStream != null)
 					inputStream.close();
-
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
 				if(dataOutputStream != null)
 					dataOutputStream.close();
-
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
 				if(inputStreamReader != null)
 					inputStreamReader.close();
-
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if(fis != null)
+					fis.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if(thumbBaos != null)
+					thumbBaos.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if(input != null)
+					input.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
 				if(httpsURLConnection != null)
 					httpsURLConnection.disconnect();
 
-				if(fis != null)
-					fis.close();
-
-				if(thumbBaos != null)
-					thumbBaos.close();
-
-				if(input != null)
-					input.close();
-
-				helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
+			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
 		}
 	}
 	private  String getFileSizeMegaBytes(File file) {

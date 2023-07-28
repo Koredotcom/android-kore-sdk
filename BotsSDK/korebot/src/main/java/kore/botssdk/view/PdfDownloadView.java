@@ -263,25 +263,25 @@ public class PdfDownloadView extends LinearLayout {
                 }
 
                 outputStream.write(fileReader, 0, read);
-
                 fileSizeDownloaded += read;
-
                 LogUtils.d("Downloading file", "file download: " + fileSizeDownloaded + " of " + fileSize);
             }
 
             outputStream.flush();
-
             return true;
         } catch (IOException e) {
             return false;
         } finally {
             try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
                 if (outputStream != null) {
                     outputStream.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

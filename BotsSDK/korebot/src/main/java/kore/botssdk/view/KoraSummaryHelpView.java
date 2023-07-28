@@ -59,7 +59,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
 
             ArrayList<WelcomeChatSummaryModel> list = new ArrayList<WelcomeChatSummaryModel>();
 
-            if(summaryModel!=null && summaryModel.getButtons() != null && summaryModel.getButtons().size()>0){
+            if(summaryModel.getButtons() != null && summaryModel.getButtons().size() > 0){
                 for(ButtonTemplate item : summaryModel.getButtons()){
                     WelcomeChatSummaryModel mdl = new WelcomeChatSummaryModel();
                     mdl.setSummary(item.getTitle());

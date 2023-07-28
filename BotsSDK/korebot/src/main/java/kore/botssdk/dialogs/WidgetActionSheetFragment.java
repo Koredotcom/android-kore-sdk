@@ -50,7 +50,6 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
                 false);
         recycler_actions = view.findViewById(R.id.recycler_actions);
         recycler_actions.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycler_actions.setHasFixedSize(true);
 
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter((Activity) getActivity(), this,

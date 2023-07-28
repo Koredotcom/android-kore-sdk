@@ -8,86 +8,173 @@
     android:padding="7dp">
 
     <!-- Item image -->
-    <ImageView
-        android:id="@+id/bot_list_item_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
-        android:clickable="false"
-        android:minWidth="60dp"
-        android:minHeight="60dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone" />
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/bot_list_item_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/bot_list_item_image"
-        android:clickable="false"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Title"
-        android:textColor="@color/left_bubble_text_color"
-        android:textSize="14dp" />
+        <ImageView
+            android:id="@+id/bot_list_item_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:clickable="false"
+            android:contentDescription="@string/app_name"
+            android:minWidth="60dp"
+            android:minHeight="60dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/bot_list_item_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/bot_list_item_title"
-        android:layout_toRightOf="@id/bot_list_item_image"
-        android:clickable="false"
-        android:ellipsize="end"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:text="Subtitle"
-        android:textColor="@color/footer_color_dark_grey"
-        android:textSize="@dimen/text_size_small"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/bot_list_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/bot_list_item_image"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/left_bubble_text_color"
+            android:textSize="@dimen/text_size_normal" />
+
+        <TextView
+            android:id="@+id/bot_list_item_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bot_list_item_title"
+            android:layout_toEndOf="@id/bot_list_item_image"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="@color/footer_color_dark_grey"
+            android:textSize="@dimen/text_size_small"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rlAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="center_vertical"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:gravity="center_vertical"
         android:visibility="gone">
 
         <ImageView
             android:id="@+id/ivAction"
             android:layout_width="@dimen/dimen_10dp"
             android:layout_height="@dimen/dimen_10dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
         <kore.botssdk.views.CustomTextView
             android:id="@+id/tvAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:textSize="@dimen/text_size_small"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/advanced_list_bt_bg"
-            android:visibility="gone"/>
+            android:textSize="@dimen/text_size_small"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/llDefalutView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlTitle"
+        android:orientation="vertical">
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/lvDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_7dp"
+            android:divider="@color/transparent_card"
+            android:dividerHeight="@dimen/dimen_7dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDefaultButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_7dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlDropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlTitle"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDropDownButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_7dp"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/ivDropDownAction"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_arrow_drop_down_24px"
+            android:contentDescription="@string/app_name"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlTitle"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/lvOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOptionButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_7dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/lvTableList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlTitle"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/bot_list_item_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bot_list_item_subtitle"
-        android:layout_alignParentRight="true"
+        android:layout_below="@id/rlTitle"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="2dp"
         android:background="@drawable/rounded_image_bg_blue"
         android:textColor="@android:color/white"
-        android:textSize="12dp"
+        android:textSize="@dimen/text_size_small"
         android:visibility="gone" />
 
 </RelativeLayout>

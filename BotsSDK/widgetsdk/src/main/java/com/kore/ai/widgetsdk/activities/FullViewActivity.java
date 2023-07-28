@@ -135,7 +135,6 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
                 template = new TypeToken<ArrayList<WidgetListElementModel>>(){}.getType();
                 ListWidgetAdapter listWidgetAdapter = new ListWidgetAdapter(FullViewActivity.this, BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, trigger);
                 listWidgetAdapter.setWidgetData(gson.fromJson(dataString, template));
-                listWidgetAdapter.setFromWidget(true);
                 listWidgetAdapter.setFromFullView(true);
                 listWidgetAdapter.setVerticalListViewActionHelper(this);
                 setAdapter(listWidgetAdapter);

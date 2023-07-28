@@ -185,7 +185,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         dp1 = (int) Utility.convertDpToPixel(context, 1);
         listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
         listWidgetAdapter.setSkillName(name);
-        listWidgetAdapter.setFromWidget(true);
         listWidgetAdapter.setViewMoreEnum(widgetViewMoreEnum);
         listWidgetAdapter.setVerticalListViewActionHelper(this);
         imgMenu = view.findViewById(R.id.icon_image);
@@ -581,7 +580,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             }
 
         }
-        if (model != null && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
+        if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
 
             if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
@@ -590,44 +589,37 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             listWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setPreviewLength(3);
-            listWidgetAdapter.notifyDataSetChanged();
         }
         else if(model.getData().get(0).getTemplateType().equals("loginURL")){
-            if(model != null ) {
-                listWidgetAdapter.setWidgetData(null);
-                listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
-                list_widget_root_recycler.setAdapter(listWidgetAdapter);
-                listWidgetAdapter.setLoginNeeded(true);
-            }
+            listWidgetAdapter.setWidgetData(null);
+            listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
+            list_widget_root_recycler.setAdapter(listWidgetAdapter);
+            listWidgetAdapter.setLoginNeeded(true);
         }
         else if(model.getData().get(0).getTemplateType().equals("form"))
         {
-            if(model != null)
-            {
-                list_widget_root_recycler.setVisibility(GONE);
-                llFormData.setVisibility(VISIBLE);
-                tvFillForm.setText(mWidget.getTitle());
+            list_widget_root_recycler.setVisibility(GONE);
+            llFormData.setVisibility(VISIBLE);
+            tvFillForm.setText(mWidget.getTitle());
 
-                tvFillForm.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
-                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
-                            intent.putExtra("url", model.getData().get(0).getFormLink());
-                            intent.putExtra("header",mWidget.getTitle());
-                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                        }else{
-                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
-                        }
+            tvFillForm.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                        Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                        intent.putExtra("url", model.getData().get(0).getFormLink());
+                        intent.putExtra("header",mWidget.getTitle());
+                        ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    }else{
+                        Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
                     }
-                });
-            }
+                }
+            });
         }
         else
         {
             listWidgetAdapter.setData(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
-            listWidgetAdapter.notifyDataSetChanged();
         }
     }
 }

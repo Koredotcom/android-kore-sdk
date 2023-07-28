@@ -22,4 +22,19 @@ public class DefaultValueFormatter extends ValueFormatter {
     public String getFormattedValue(float value) {
         return this.mFormat.format((double)value);
     }
+
+    public void setup(int digits)
+    {
+        StringBuffer b = new StringBuffer();
+
+        for(int i = 0; i < digits; ++i) {
+            if (i == 0) {
+                b.append(".");
+            }
+
+            b.append("0");
+        }
+
+        this.mFormat = new DecimalFormat("###,###,###,##0" + b);
+    }
 }

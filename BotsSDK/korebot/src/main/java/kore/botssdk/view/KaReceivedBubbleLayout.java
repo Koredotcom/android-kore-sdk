@@ -873,7 +873,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
         MeasureUtils.measure(botPieChartView, childWidthSpec, childHeightSpec);
-        MeasureUtils.measure(advancedListTemplateView, childWidthSpec, childHeightSpec);
+        MeasureUtils.measure(advancedListTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For List View Templates

@@ -6,12 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -245,10 +243,22 @@ public class KaMediaUtils {
             e.printStackTrace();
         } finally {
             try {
-                if (fis != null) fis.close();
-                if (bis != null) bis.close();
-                if (fos != null) fos.close();
                 if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (fos != null) fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (bis != null) bis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (fis != null) fis.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -598,6 +598,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(buttonDeepLinkTemplateView != null){
             buttonDeepLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(advancedListTemplateView != null){
+            advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -674,6 +677,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (buttonDeepLinkTemplateView != null) {
             buttonDeepLinkTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (advancedListTemplateView != null) {
+            advancedListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

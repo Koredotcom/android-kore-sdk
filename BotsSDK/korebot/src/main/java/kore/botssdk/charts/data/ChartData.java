@@ -1,7 +1,6 @@
 package kore.botssdk.charts.data;
 
 import android.graphics.Typeface;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -495,18 +494,8 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     }
 
-    public void setHighlightEnabled(boolean enabled) {
-        Iterator var2 = this.mDataSets.iterator();
-
-        while(var2.hasNext()) {
-            IDataSet set = (IDataSet)var2.next();
-            set.setHighlightEnabled(enabled);
-        }
-
-    }
-
     public boolean isHighlightEnabled() {
-        Iterator var1 = this.mDataSets.iterator();
+        Iterator<T> var1 = this.mDataSets.iterator();
 
         IDataSet set;
         do {

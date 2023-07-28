@@ -25,7 +25,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.OrientationEventListener;
 import android.widget.Toast;
 
@@ -332,8 +331,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                         File file = null;
                         try {
                             file = KaMediaUtils.getOutputMediaFile(KoreMedia.MEDIA_TYPE_VIDEO, null);
-                        } catch (NoExternalStorageException | NoWriteAccessException e) {
+                        } catch (NoExternalStorageException e) {
                             e.printStackTrace();
+                        } catch (NoWriteAccessException e) {
+                            throw new RuntimeException(e);
                         }
                         if (file != null) MEDIA_FILE_PATH = file.getAbsolutePath();
 
@@ -406,11 +407,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     {
         String filepath = "";
         File file;
-        if (uri.getScheme().compareTo("content") == 0)
+        if (Objects.requireNonNull(uri.getScheme()).compareTo("content") == 0)
         {
             Cursor cursor = context.getContentResolver().query(uri, new String[] { android.provider.MediaStore.Images.ImageColumns.DATA, MediaStore.Images.Media.ORIENTATION }, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-
             cursor.moveToFirst();
 
             String mImagePath = cursor.getString(column_index);
@@ -858,6 +858,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finishAndCancelOperation();
     }
 

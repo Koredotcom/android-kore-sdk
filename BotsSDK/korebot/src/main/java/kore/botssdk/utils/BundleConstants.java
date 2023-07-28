@@ -9,6 +9,11 @@ public class BundleConstants {
     public static final String KNOWLEDGE_ID = "knowledgeId";
     public static final String SHOW_SHARE ="show_share" ;
     public static final String FAQ = "faq";
+    public static final String DEFAULT = "default";
+    public static final String OPTIONS = "options";
+    public static final String TABLE = "table";
+    public static final String RIGHT = "right";
+    public static final String LEFT = "left";
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
     public static String RESOURCE_ID = "resource_id";
@@ -23,11 +28,10 @@ public class BundleConstants {
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
     public final static String SHOW_PIC = "showPic";
-
     public static final String ICON = "icon";
-
     public static final String BUTTON = "button";
-
+    public static final String DROP_DOWN = "dropdown";
+    public static final String DROP_DOWN_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";

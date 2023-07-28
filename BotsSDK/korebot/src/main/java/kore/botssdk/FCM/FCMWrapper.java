@@ -48,7 +48,6 @@ public class FCMWrapper extends FirebaseMessagingService
 
 	@Override
 	public void onNewToken(@NonNull String token) {
-		Log.e(TAG, "updatePushToken FCM: " + token);
 		sharedPreferences = getGlobalContext().getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
 		if(!token.equals("")){
 			LogUtils.e("FCM Token", token);
@@ -67,7 +66,7 @@ public class FCMWrapper extends FirebaseMessagingService
 			String text = notif.getBody();
 			Log.e(TAG, "message " + title);
 
-			postGDAuthRequiredNotification(text);
+			postGDAuthRequiredNotification(title, text);
 		}
 	}
 
@@ -81,7 +80,7 @@ public class FCMWrapper extends FirebaseMessagingService
 			Log.e(TAG, "init FCM failed", th);
 		}
 	}
-	private void postGDAuthRequiredNotification(String pushMessage) {
+	public void postGDAuthRequiredNotification(String title, String pushMessage) {
 		Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		NotificationCompat.Builder nBuilder = null;
@@ -95,8 +94,8 @@ public class FCMWrapper extends FirebaseMessagingService
 		}
 
 		nBuilder
-				.setContentTitle(getString(R.string.app_name))
-				.setSmallIcon(R.drawable.download)
+				.setContentTitle(title)
+				.setSmallIcon(R.drawable.ic_launcher)
 				.setColor(Color.parseColor("#009dab"))
 				.setContentText(pushMessage)
 				.setGroup(GROUP_KEY_NOTIFICATIONS)
