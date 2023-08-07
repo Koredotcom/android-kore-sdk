@@ -149,6 +149,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected PdfDownloadView pdfDownloadView;
     protected ResultsTemplateView resultsTemplateView;
     protected BotButtonLinkTemplateView botButtonLinkTemplateView;
+    protected CardTemplateView cardTemplateView;
 
 
     //    protected int[] dimens;
@@ -460,6 +461,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         buttonDeepLinkTemplateView = ViewProvider.getButtonDeepLinkTemplateView(context);
         buttonDeepLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(buttonDeepLinkTemplateView);
+
+        cardTemplateView = ViewProvider.getCardTemplateView(context);
+        cardTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(cardTemplateView);
     }
 
 
@@ -601,6 +606,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(advancedListTemplateView != null){
             advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(cardTemplateView != null){
+            cardTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -680,6 +688,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (advancedListTemplateView != null) {
             advancedListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (cardTemplateView != null) {
+            cardTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

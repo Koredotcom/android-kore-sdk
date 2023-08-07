@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static android.view.View.GONE;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -7,10 +9,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +25,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -30,20 +39,22 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<Widget.Button> buttons;
     private final Context mContext;
     private String skillName;
-    private final int type;
+    private final String type;
     private final AdvanceButtonClickListner advanceButtonClickListner;
     private AdvanceOptionsAdapter advanceOptionsAdapter;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private PopupWindow popupWindow;
+    private int count;
 
-    public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, int type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
@@ -56,7 +67,7 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     @NonNull
     @Override
     public AdvanceListButtonAdapter.ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        if (type == 1) {
+        if (!StringUtils.isNullOrEmpty(type) && type.equalsIgnoreCase(BundleConstants.FULL_WIDTH)) {
             return new ButtonViewHolder(inflater.inflate(R.layout.advance_button_fullwidth, viewGroup, false));
         }
         return new ButtonViewHolder(inflater.inflate(R.layout.widget_button_list_item, viewGroup, false));
@@ -67,6 +78,25 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
 
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
+        holder.ivBtnImage.setVisibility(GONE);
+
+        if(!StringUtils.isNullOrEmpty(btn.getIcon())) {
+            holder.ivBtnImage.setVisibility(View.VISIBLE);
+            try {
+                String imageData;
+                imageData = btn.getIcon();
+                if (imageData.contains(",")) {
+                    imageData = imageData.substring(imageData.indexOf(",") + 1);
+                    byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                    holder.ivBtnImage.setImageBitmap(decodedByte);
+                } else {
+                    Picasso.get().load(btn.getIcon()).transform(new RoundedCornersTransform()).into(holder.ivBtnImage);
+                }
+            } catch (Exception e) {
+                holder.ivBtnImage.setVisibility(GONE);
+            }
+        }
 
         holder.tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,14 +128,45 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
                     }
                 }
 
-                if(popupWindow != null)
-                    popupWindow.dismiss();
+                if(advanceButtonClickListner != null)
+                    advanceButtonClickListner.closeWindow();
             }
         });
-    }
 
-    public void setPopUpWindow(PopupWindow popupWindow) {
-        this.popupWindow = popupWindow;
+        holder.layout_deails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(!StringUtils.isNullOrEmpty(btn.getBtnType()))
+                {
+                    if(btn.getBtnType().equalsIgnoreCase("confirm"))
+                    {
+                        if(advanceOptionsAdapter != null)
+                            advanceButtonClickListner.advanceButtonClick(advanceOptionsAdapter.getData());
+                    }
+                    else
+                    {
+                        if(advanceOptionsAdapter != null)
+                            advanceOptionsAdapter.setChecked(-1);
+                    }
+                }
+                else
+                {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                        if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                        }else{
+                            String title = btn.getTitle();
+                            String payload = btn.getPayload();
+                            composeFooterInterface.onSendClick(title, payload,false);
+                        }
+                    }
+                }
+
+                if(advanceButtonClickListner != null)
+                    advanceButtonClickListner.closeWindow();
+            }
+        });
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -114,9 +175,16 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
 
     @Override
     public int getItemCount() {
+        if(count != 0)
+            return count;
+
         return buttons != null ? buttons.size() : 0;
     }
 
+    public void setDisplayLimit(int count)
+    {
+        this.count = count;
+    }
     boolean isFullView;
 
     public void setIsFromFullView(boolean isFullView) {
@@ -125,10 +193,14 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         private final TextView tv;
+        private final ImageView ivBtnImage;
+        private final LinearLayout layout_deails;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.buttonTV);
+            ivBtnImage = itemView.findViewById(R.id.ivBtnImage);
+            layout_deails = itemView.findViewById(R.id.layout_deails);
         }
     }
 

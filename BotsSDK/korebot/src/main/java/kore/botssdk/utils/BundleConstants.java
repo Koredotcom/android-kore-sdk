@@ -14,6 +14,8 @@ public class BundleConstants {
     public static final String TABLE = "table";
     public static final String RIGHT = "right";
     public static final String LEFT = "left";
+    public static final String BOLD = "bold";
+    public static final String FULL_WIDTH = "fullwidth";
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
     public static String RESOURCE_ID = "resource_id";

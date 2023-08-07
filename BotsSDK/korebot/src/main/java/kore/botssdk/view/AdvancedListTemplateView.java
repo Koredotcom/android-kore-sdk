@@ -2,16 +2,22 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AdvancedListAdapter;
 import kore.botssdk.dialogs.AdvancedListActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
@@ -19,10 +25,12 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 public class AdvancedListTemplateView extends LinearLayout {
     float dp1;
     AutoExpandListView autoExpandListView;
-    TextView botCustomListViewButton, botListViewTitle;
+    TextView botCustomListViewButton, botListViewTitle, tvDescription;
     LinearLayout botCustomListRoot;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private ImageView ivSorting;
+    private AdvancedListAdapter botListTemplateAdapter;;
 
     public AdvancedListTemplateView(Context context)
     {
@@ -32,6 +40,9 @@ public class AdvancedListTemplateView extends LinearLayout {
         autoExpandListView = findViewById(R.id.botCustomListView);
         botCustomListViewButton = findViewById(R.id.botCustomListViewButton);
         botListViewTitle = findViewById(R.id.botListViewTitle);
+        tvDescription = findViewById(R.id.tvDescription);
+        ivSorting = findViewById(R.id.ivSorting);
+
         dp1 = (int) DimensionUtil.dp1;
         botCustomListViewButton.setVisibility(GONE);
     }
@@ -45,9 +56,17 @@ public class AdvancedListTemplateView extends LinearLayout {
                 botListViewTitle.setText(payloadInner.getTitle());
             }
 
-            if (payloadInner.getListItems() != null && payloadInner.getListItems().size() > 0) {
-                AdvancedListAdapter botListTemplateAdapter;
-                if (autoExpandListView.getAdapter() == null) {
+            if(!StringUtils.isNullOrEmpty(payloadInner.getDescription()))
+            {
+                tvDescription.setVisibility(VISIBLE);
+                tvDescription.setText(payloadInner.getDescription());
+            }
+
+            if (payloadInner.getListItems() != null && payloadInner.getListItems().size() > 0)
+            {
+
+                if (autoExpandListView.getAdapter() == null)
+                {
                     botListTemplateAdapter = new AdvancedListAdapter(getContext(), autoExpandListView);
                     botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
                     botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

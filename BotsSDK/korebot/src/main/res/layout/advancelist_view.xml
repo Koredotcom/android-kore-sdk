@@ -18,18 +18,39 @@
         android:paddingRight="@dimen/dimen_10dp"
         android:paddingBottom="@dimen/dimen_10dp">
 
-        <kore.botssdk.views.CustomTextViewBold
-            android:id="@+id/botListViewTitle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:paddingTop="@dimen/dimen_10dp"
-            android:paddingEnd="@dimen/dimen_20dp"
-            android:paddingBottom="@dimen/dimen_10dp"
-            android:text="Title"
-            android:textColor="@color/txtFontBlack"
-            android:textSize="@dimen/text_size_sub_header"
-            android:visibility="gone" />
+            android:layout_height="wrap_content">
+
+            <kore.botssdk.views.CustomTextViewBold
+                android:id="@+id/botListViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_sub_header"
+                android:visibility="gone" />
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/botListViewTitle"
+                android:layout_margin="1dp"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_normal"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivSorting"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/sort_svgrepo_com"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
 
         <kore.botssdk.view.AutoExpandListView
             android:id="@+id/botCustomListView"
@@ -37,8 +58,6 @@
             android:layout_height="wrap_content"
             android:divider="#ffffff"
             android:dividerHeight="5dp"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
             android:padding="2dp"
             android:scrollbars="none" />
 
@@ -46,11 +65,11 @@
             android:id="@+id/botCustomListViewButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_30dp"
-            android:gravity="center|right"
-            android:text="See More"
-            android:textColor="@color/color_blue_1_1"
             android:drawableEnd="@drawable/right_arrow_iconn"
             android:drawableTint="@color/color_blue_1_1"
+            android:gravity="center|end"
+            android:text="See More"
+            android:textColor="@color/color_blue_1_1"
             android:visibility="gone" />
     </LinearLayout>
 

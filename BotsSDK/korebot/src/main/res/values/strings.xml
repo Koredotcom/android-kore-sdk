@@ -103,6 +103,7 @@
     <string name="get_started">Get Started</string>
     <string name="see_all_results">See all results</string>
     <string name="notification_channel_id">3903</string>
+    <string name="more">More</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

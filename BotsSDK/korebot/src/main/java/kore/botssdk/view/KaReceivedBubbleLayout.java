@@ -174,6 +174,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         , botBeneficiaryTemplateView.getMeasuredWidth()
                         , pdfDownloadView.getMeasuredWidth()
                         , buttonDeepLinkTemplateView.getMeasuredWidth()
+                        , cardTemplateView.getMeasuredWidth()
                         //Add new template above
                 )) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
@@ -225,6 +226,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + botButtonLinkTemplateView.getMeasuredHeight()
                 + botBeneficiaryTemplateView.getMeasuredHeight()
                 + buttonDeepLinkTemplateView.getMeasuredHeight()
+                + cardTemplateView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
@@ -275,6 +277,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + botButtonLinkTemplateView.getMeasuredHeight()
                 + botBeneficiaryTemplateView.getMeasuredHeight()
                 + buttonDeepLinkTemplateView.getMeasuredHeight()
+                + cardTemplateView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN;
 
@@ -325,6 +328,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 || botButtonLinkTemplateView.getMeasuredHeight() > 0
                 || botBeneficiaryTemplateView.getMeasuredHeight() > 0
                 || buttonDeepLinkTemplateView.getMeasuredHeight() > 0
+                || cardTemplateView.getMeasuredHeight() > 0
                 ;
     }
 
@@ -418,6 +422,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         botBeneficiaryTemplateView.populateListTemplateView(null,null, null, 0, null, null);
         buttonDeepLinkTemplateView.populateButtonDeepLinkView(null, false);
         buttonDeepLinkTemplateView.setVisibility(GONE);
+        cardTemplateView.populateCardsView(null);
+        cardTemplateView.setVisibility(GONE);
     }
 
     @Override
@@ -638,7 +644,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 {
                     botContactTemplateView.setVisibility(View.VISIBLE);
                     botContactTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
-                    botContactTemplateView.populateContactTemplateView(payInner.getCards(), payInner.getTitle());
+                    botContactTemplateView.populateContactTemplateView(payInner.getContactCardModel(), payInner.getTitle());
+                }
+                else if(BotResponse.CARD_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
+                    cardTemplateView.setVisibility(View.VISIBLE);
+                    cardTemplateView.populateCardsView(payInner.getCardsModel());
                 }
                 else if (BotResponse.TEMPLATE_TYPE_KORA_SEARCH_CAROUSAL.equalsIgnoreCase(payInner.getTemplate_type())) {
                     verticalListView.setVisibility(View.VISIBLE);
@@ -1016,6 +1027,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(pdfDownloadView, wrapSpec, wrapSpec);
         MeasureUtils.measure(botBeneficiaryTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(buttonDeepLinkTemplateView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(cardTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Widget List Templates
@@ -1101,6 +1113,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(botButtonLinkTemplateView, top, left, arrayList);
         layoutView(botBeneficiaryTemplateView, top, left, arrayList);
         layoutView(buttonDeepLinkTemplateView, top, left, arrayList);
+        layoutView(cardTemplateView, top, left, arrayList);
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);

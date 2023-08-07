@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import kore.botssdk.R;
 import kore.botssdk.models.Widget;
 
 public class AdvanceListdetailsAdapter extends BaseAdapter
@@ -57,7 +58,7 @@ public class AdvanceListdetailsAdapter extends BaseAdapter
     {
         DetailsViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(com.kora.ai.widgetsdk.R.layout.listwidget_details_item, null);
+            convertView = layoutInflater.inflate(R.layout.listwidget_details_item, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new DetailsViewHolder();
             holder.tvBtnText = convertView.findViewById(com.kora.ai.widgetsdk.R.id.tvBtnText);

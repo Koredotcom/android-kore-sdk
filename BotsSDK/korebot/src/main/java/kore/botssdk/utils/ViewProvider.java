@@ -39,6 +39,7 @@ import kore.botssdk.view.BotResponsiveTableView;
 import kore.botssdk.view.BotTableListTemplateView;
 import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.ButtonDeepLinkTemplateView;
+import kore.botssdk.view.CardTemplateView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.FeedbackTemplateView;
 import kore.botssdk.view.FormActionView;
@@ -451,6 +452,11 @@ public class ViewProvider {
 
     public static ButtonDeepLinkTemplateView getButtonDeepLinkTemplateView(Context context){
         ButtonDeepLinkTemplateView multiSelectView = new ButtonDeepLinkTemplateView(context);
+        multiSelectView.setId(MULTI_SELECT_VIEW_ID);
+        return multiSelectView;
+    }
+    public static CardTemplateView getCardTemplateView(Context context){
+        CardTemplateView multiSelectView = new CardTemplateView(context);
         multiSelectView.setId(MULTI_SELECT_VIEW_ID);
         return multiSelectView;
     }

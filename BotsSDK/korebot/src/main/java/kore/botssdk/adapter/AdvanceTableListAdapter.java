@@ -53,26 +53,23 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
         {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-            holder.botListItemImage.setLayoutParams(layoutParams);
+//            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+            layoutParams.setMargins(0, 0, 10, 0);
 
             if(!StringUtils.isNullOrEmpty(btn.getIconSize()))
             {
                 if(btn.getIconSize().equalsIgnoreCase("large"))
                 {
-                    layoutParams.height = 200;
-                    layoutParams.width = 200;
-
-                    holder.botListItemImage.setLayoutParams(layoutParams);
+                    layoutParams.height = 180;
+                    layoutParams.width = 180;
                 }
                 else if(btn.getIconSize().equalsIgnoreCase("small"))
                 {
-
-                    layoutParams.height = 50;
-                    layoutParams.width = 50;
-
-                    holder.botListItemImage.setLayoutParams(layoutParams);
+                    layoutParams.height = 60;
+                    layoutParams.width = 60;
                 }
             }
+            holder.botListItemImage.setLayoutParams(layoutParams);
 
             try {
                 String imageData;

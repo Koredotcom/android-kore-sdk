@@ -7,4 +7,6 @@ import kore.botssdk.models.AdvanceOptionsModel;
 public interface AdvanceButtonClickListner
 {
     void advanceButtonClick(ArrayList<AdvanceOptionsModel> viewType);
+
+    void closeWindow();
 }
