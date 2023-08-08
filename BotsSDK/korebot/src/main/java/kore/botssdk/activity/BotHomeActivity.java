@@ -69,7 +69,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
             } else
             {
                 KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
-                        Manifest.permission.POST_NOTIFICATIONS);
+                        Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO);
             }
         }
     }

@@ -5,7 +5,7 @@ public class WelcomeChatSummaryModel {
 
     private String summary;
     private String iconId;
-    private String payload;
+    private Object payload;
     private String type;
 
 
@@ -33,11 +33,11 @@ public class WelcomeChatSummaryModel {
         this.iconId = iconId;
     }
 
-    public String getPayload() {
+    public Object getPayload() {
         return payload;
     }
 
-    public void setPayload(String payload) {
+    public void setPayload(Object payload) {
         this.payload = payload;
     }
 }

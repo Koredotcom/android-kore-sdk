@@ -719,19 +719,19 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private void launchSelectedMode(int position) {
         switch (position) {
-            case 0:
+            case 4:
                 fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_CAMERA, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
-            case 1:
+            case 0:
                 fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_GALLERY, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
-            case 2:
+            case 3:
                 launchVideoRecorder();
                 break;
-            case 3:
+            case 1:
                 fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
                 break;
-            case 4:
+            case 2:
                 fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_FILE, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
                 break;
 
@@ -781,11 +781,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         try {
             File actualImageFile = KaMediaUtils.getOutputMediaFile(BundleConstants.MEDIA_TYPE_VIDEO, null);
             Uri uri;
-            if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-                cameraVideoUri1 = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", actualImageFile);
-            } else {
-                cameraVideoUri1 = Uri.fromFile(actualImageFile);
-            }
+            cameraVideoUri1 = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".provider", actualImageFile);
 
             LogUtils.d(LOG_TAG, "actual file image path" + actualImageFile);
         } catch (Exception ex) {

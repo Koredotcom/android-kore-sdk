@@ -17,6 +17,7 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -77,20 +78,32 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
                 int position =  parentRecyclerView.getChildPosition(v);
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
+
+                    String quickReplyPayload = null;
+                    try {
+                        quickReplyPayload = (String) quickReplyTemplate.getPayload();
+                    }catch (Exception e)
+                    {
+                        try {
+                            QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) quickReplyTemplate.getPayload();
+                            quickReplyPayload = quickRepliesPayloadModel.getName();
+                        }
+                        catch (Exception exception)
+                        {
+                            quickReplyPayload = "";
+                        }
+                    }
+
                     if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getContent_type())) {
-                        String quickReplyTitle = quickReplyTemplate.getTitle();
-                        String quickReplyPayload = quickReplyTemplate.getPayload();
-                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload,false);
+                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
                     } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
                         invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                     }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyTemplate.getPayload(),false);
+                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
                     }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
+                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
                     }else{
-                        String quickReplyTitle = quickReplyTemplate.getTitle();
-                        String quickReplyPayload = quickReplyTemplate.getPayload();
-                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload,false);
+                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
                     }
                 }
             }

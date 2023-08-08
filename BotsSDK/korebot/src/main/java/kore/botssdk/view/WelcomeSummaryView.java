@@ -26,6 +26,7 @@ import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
+import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.Weather;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.models.WelcomeSummaryModel;
@@ -83,8 +84,8 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
                     list.add(mdl);
                 }
             }
-            if(welcomeSummaryModel != null && welcomeSummaryModel.getWeather()!=null)
-            bindWeatherInfo(welcomeSummaryModel.getWeather());
+            if(welcomeSummaryModel.getWeather() != null)
+                bindWeatherInfo(welcomeSummaryModel.getWeather());
 
 
             myRecyclerViewAdapter.setData(list);
@@ -233,10 +234,26 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
     @Override
     public void welcomeSummaryItemClick(final WelcomeChatSummaryModel model) {
-            if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())){
+            if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && model.getPayload() != null){
                 if (Utility.checkIsSkillKora()) {
-                    if(composeFooterInterface != null)
-                        composeFooterInterface.onSendClick(model.getPayload(),true);
+                    if(composeFooterInterface != null) {
+                        String quickReplyPayload = null;
+                        try {
+                            quickReplyPayload = (String) model.getPayload();
+                        }catch (Exception e)
+                        {
+                            try {
+                                QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) model.getPayload();
+                                quickReplyPayload = quickRepliesPayloadModel.getName();
+                            }
+                            catch (Exception exception)
+                            {
+                                quickReplyPayload = "";
+                            }
+                        }
+
+                        composeFooterInterface.onSendClick(quickReplyPayload, true);
+                    }
                 } else {
                         DialogCaller.showDialog(context, null, new DialogInterface.OnClickListener() {
                             @Override
@@ -254,7 +271,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
             }else if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("open_form")){
                 if(composeFooterInterface != null)
-                composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
+                    composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
             }
     }
 

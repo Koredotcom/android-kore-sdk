@@ -127,16 +127,6 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
                 break;
         }
     }
-    private void setIntrensic(WelcomeChatSummaryModel model, ViewHolder holder) {
-        if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())) {
-            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
-                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
-        } else if (!StringUtils.isNullOrEmpty(model.getType()) && model.getType().equals("open_form")) {
-            holder.itemRowBinding.widgetSummaryTv.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,
-                    ContextCompat.getDrawable(context, R.drawable.ic_launch_24px2),null);
-        }
-    }
-
     @Override
     public int getItemCount() {
         return summaryList != null && summaryList.size() > 0 ? summaryList.size() :1;

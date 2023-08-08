@@ -251,7 +251,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         public void onMessage(SocketDataTransferModel data) {
             if (data == null) return;
             if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
-                processPayload(strResp, null);
+                processPayload(data.getPayLoad(), null);
 
             } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
                 if (botContentFragment != null) {

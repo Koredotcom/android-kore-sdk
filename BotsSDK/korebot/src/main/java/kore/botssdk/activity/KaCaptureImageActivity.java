@@ -111,18 +111,18 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private void checkForPermissionAccessAndRequest() {
         if (CHOOSE_TYPE_CAMERA.equalsIgnoreCase(imagePickType)) {
 
-            if (KaPermissionsHelper.hasPermission(this,Manifest.permission.CAMERA,Manifest.permission.READ_MEDIA_IMAGES)) {
+            if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_MEDIA_IMAGES)) {
                 openImageIntent(imagePickType);
             } else {
                 if(Build.VERSION.SDK_INT >= 33)
                 {
                     KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
-                            Manifest.permission.CAMERA,Manifest.permission.READ_MEDIA_IMAGES);
+                            Manifest.permission.READ_MEDIA_IMAGES);
                 }
                 else
                 {
                     KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
-                            Manifest.permission.CAMERA);
+                            Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
             }
         } else if (CHOOSE_TYPE_IMAGE_VIDEO.equalsIgnoreCase(imagePickType) ||
