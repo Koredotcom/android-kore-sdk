@@ -109,6 +109,7 @@ import retrofit2.Response;
 
 import static android.view.View.VISIBLE;
 import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
+import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 
 /**
@@ -417,15 +418,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST)
-        {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
 
-                if(!StringUtils.isNullOrEmpty(fileUrl))
+                if (!StringUtils.isNullOrEmpty(fileUrl))
                     KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
-            }
-            else
-            {
+            } else {
                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
             }
         }
@@ -577,6 +576,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             Log.d(LOG_TAG, payload);
+
+            if(botClient != null && enable_ack_delivery)
+                botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
+
             boolean resolved = true;
             PayloadOuter payOuter = null;
 //            PayloadInner payInner = null;

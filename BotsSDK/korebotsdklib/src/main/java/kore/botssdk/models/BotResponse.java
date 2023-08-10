@@ -125,6 +125,16 @@ public class BotResponse extends BaseBotMessage {
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
     private String icon;
+    private String timestamp;
+    private String key;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public String getKey() {
+        return key;
+    }
 
     public String getMessageId() {
         return messageId;
