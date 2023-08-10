@@ -15,6 +15,7 @@ import java.util.UUID;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kore.botssdk.models.BotInfoModel;
+import kore.botssdk.models.BotMessageAckModel;
 import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Utils;
@@ -244,7 +245,20 @@ public class BotClient {
             Log.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
         }
+    }
 
+    public void sendMsgAcknowledgement(String timestamp, String key) {
+        BotMessageAckModel botMessageAckModel = new BotMessageAckModel();
+        botMessageAckModel.setClientMessageId(timestamp);
+        botMessageAckModel.setId(timestamp);
+        botMessageAckModel.setKey(key);
+        botMessageAckModel.setReplyto(timestamp);
+
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botMessageAckModel);
+
+        Log.d("BotClient", "Payload : " + jsonPayload);
+        SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
     }
 
     public void updateAuthToken(String accessToken){
@@ -272,30 +286,8 @@ public class BotClient {
 
             Log.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
-//            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
-//            sendQueMessages();
         }
-
     }
 
-    /*private void sendQueMessages(){
-        if (!BotRequestPool.isPoolEmpty()) {
-            if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
-                ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
-                int len = botRequestStringArrayList.size();
-                for (int i = 0; i < len; i++) {
-                    String botRequestPayload = botRequestStringArrayList.get(i);
-                    boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
-                    if (wasSuccessfullySend) {
-                        BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
-                        i--; //reset the parameter
-                        len--; //reset the length.
-                    } else {
-                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
-                    }
-                }
-            }
-        }
-    }*/
 
 }
