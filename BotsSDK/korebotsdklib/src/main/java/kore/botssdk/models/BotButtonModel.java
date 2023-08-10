@@ -34,7 +34,15 @@ public class BotButtonModel implements MultiSelectBase {
     }
 
     HashMap<String,Object> customData;
+    private boolean isSamePageNavigation;
 
+    public boolean isSamePageNavigation() {
+        return isSamePageNavigation;
+    }
+
+    public void setSamePageNavigation(boolean samePageNavigation) {
+        isSamePageNavigation = samePageNavigation;
+    }
 
     public String getAction() {
         return action;

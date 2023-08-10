@@ -662,6 +662,20 @@ public class Widget implements Serializable,Cloneable {
         private String type;
         private String utterance;
         private String url;
+        private String icon;
+        private String btnType;
+
+        public String getBtnType() {
+            return btnType;
+        }
+
+        public String getIcon() {
+            return icon;
+        }
+
+        public void setIcon(String icon) {
+            this.icon = icon;
+        }
 
         public ImageModel getImage() {
             return image;

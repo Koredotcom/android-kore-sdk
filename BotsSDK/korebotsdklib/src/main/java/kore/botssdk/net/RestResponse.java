@@ -152,8 +152,6 @@ public class RestResponse {
     }
 
     public static class BotPayLoad {
-
-
         private BotMessage message;
         private final String resourceid = "/bot.message";
         private BotInfoModel botInfo;

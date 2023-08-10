@@ -1,4 +1,3 @@
-/*
 package kore.botssdk.net;
 
 import java.util.HashMap;
@@ -10,14 +9,14 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-
-
 public class UnSubscribePushNotificationRequest {
 
     private final String accessToken;
+    private String userId;
     private HashMap<String, Object> request;
 
-    public UnSubscribePushNotificationRequest(String accessToken, HashMap<String, Object> request) {
+    public UnSubscribePushNotificationRequest(String userId, String accessToken, HashMap<String, Object> request) {
+        this.userId = userId;
         this.request = request;
         this.accessToken = accessToken;
     }
@@ -27,7 +26,7 @@ public class UnSubscribePushNotificationRequest {
             @Override
             public void subscribe(ObservableEmitter<ResponseBody> emitter) throws Exception {
                 try {
-                    Call<ResponseBody> _responseBodyCall = RestBuilder.getRestAPI().unSubscribeForPushNotification(accessToken, request);
+                    Call<ResponseBody> _responseBodyCall = RestBuilder.getRestAPI().unSubscribeForPushNotification(userId, accessToken, request);
                     Response<ResponseBody> rBody = _responseBodyCall.execute();
                     ResponseBody resp = rBody.body();
 
@@ -41,4 +40,3 @@ public class UnSubscribePushNotificationRequest {
         //return response;
     }
 }
-*/

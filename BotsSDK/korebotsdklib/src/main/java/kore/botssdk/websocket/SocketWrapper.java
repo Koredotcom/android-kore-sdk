@@ -29,6 +29,7 @@ import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.BotRestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.utils.Constants;
+import kore.botssdk.utils.LogUtils;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -313,7 +314,7 @@ public final class SocketWrapper{
                 .subscribe(new Observer<RestResponse.RTMUrl>() {
                     @Override
                     public void onSubscribe(Disposable disposable) {
-                        Log.d("HI","on Subscribe");
+                        LogUtils.d("HI","on Subscribe");
                     }
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
@@ -325,7 +326,7 @@ public final class SocketWrapper{
                     }
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.d("HI","on error");
+                        LogUtils.d("HI","on error");
                         mIsReconnectionAttemptNeeded = true;
                         reconnectAttempt();
                     }
@@ -363,7 +364,7 @@ public final class SocketWrapper{
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onOpen(isReconnectionAttaempt);
                         }else{
-                            Log.d("IKIDO","Hey listener is null");
+                            LogUtils.d("IKIDO","Hey listener is null");
                         }
                         isConnecting = false;
                         startSendingPong();
@@ -374,11 +375,11 @@ public final class SocketWrapper{
 
                     @Override
                     public void onClose(int code, String reason) {
-                        Log.d(LOG_TAG, "Connection Lost.");
+                        LogUtils.d(LOG_TAG, "Connection Lost.");
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onClose(code, reason);
                         }else{
-                            Log.d("IKIDO","Hey listener is null");
+                            LogUtils.d("IKIDO","Hey listener is null");
                         }
                         if(timer != null){
                             timer.cancel();
@@ -399,25 +400,9 @@ public final class SocketWrapper{
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onTextMessage(payload);
                         }else{
-                            Log.d("IKIDO","Hey listener is null");
+                            LogUtils.d("IKIDO","Hey listener is null");
                         }
                     }
-
-                    /*@Override
-                    public void onRawTextMessage(byte[] payload) {
-//                        Log.d(LOG_TAG, "onRawTextMessage payload:" + payload);
-                        if (socketConnectionListener != null) {
-                            socketConnectionListener.onRawTextMessage(payload);
-                        }
-                    }
-
-                    @Override
-                    public void onBinaryMessage(byte[] payload) {
-//                        Log.d(LOG_TAG, "onBinaryMessage payload: " + payload);
-                        if (socketConnectionListener != null) {
-                            socketConnectionListener.onBinaryMessage(payload);
-                        }
-                    }*/
                 });
             } catch (WebSocketException e) {
                 isConnecting = false;
@@ -525,7 +510,7 @@ public final class SocketWrapper{
      * Reconnection for authentic user
      */
     private void reconnectForAuthenticUser() {
-        Log.i(LOG_TAG, "Connection lost. Reconnecting....");
+        LogUtils.i(LOG_TAG, "Connection lost. Reconnecting....");
 
 
         getRtmUrlReconnectForAuthenticUser(accessToken).subscribeOn(Schedulers.io())
@@ -630,7 +615,7 @@ public final class SocketWrapper{
      */
     private void reconnectForAnonymousUser() {
 
-        Log.i(LOG_TAG, "Connection lost. Reconnecting....");
+        LogUtils.i(LOG_TAG, "Connection lost. Reconnecting....");
 
         getRtmUrlReconnectForAnonymousUser().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -678,7 +663,7 @@ public final class SocketWrapper{
             }else {
                 reconnect();
             }
-            Log.e(LOG_TAG, "Connection is not present. Reconnecting...");
+            LogUtils.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
         }
     }
@@ -698,20 +683,20 @@ public final class SocketWrapper{
                 @Override
                 public void run() {
 
-                    Log.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
+                    LogUtils.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
                     if (mIsReconnectionAttemptNeeded && !isConnected()) {
                         reconnect();
 //                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
                         mReconnectDelay = getReconnectDelay();
                         _handler.postDelayed(this, mReconnectDelay);
-                        Log.d(LOG_TAG, "#### trying to reconnect");
+                        LogUtils.d(LOG_TAG, "#### trying to reconnect");
                     }
 
                 }
             };
                 _handler.postDelayed(r, mReconnectDelay);
         } catch (Exception e) {
-            Log.d(LOG_TAG, ":: The Exception is " + e);
+            LogUtils.d(LOG_TAG, ":: The Exception is " + e);
         }
     }
 
@@ -722,7 +707,7 @@ public final class SocketWrapper{
      */
     private int getReconnectDelay() {
         mReconnectionCount++;
-        Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
+        LogUtils.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
         if (mReconnectionCount > 6) mReconnectionCount = 1;
         SecureRandom rint = new SecureRandom();
         return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
@@ -737,11 +722,11 @@ public final class SocketWrapper{
             try {
                 mConnection.sendClose();
             } catch (Exception e) {
-                Log.d(LOG_TAG, "Exception while disconnection");
+                LogUtils.d(LOG_TAG, "Exception while disconnection");
             }
-            Log.d(LOG_TAG, "DisConnected successfully");
+            LogUtils.d(LOG_TAG, "DisConnected successfully");
         } else {
-            Log.d(LOG_TAG, "Cannot disconnect.._client is null");
+            LogUtils.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
 
 

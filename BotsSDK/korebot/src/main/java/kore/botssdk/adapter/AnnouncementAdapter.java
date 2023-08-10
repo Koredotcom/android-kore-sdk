@@ -24,7 +24,6 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AnnoucementResModel;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 
@@ -82,11 +81,9 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof AnnouncementViewHolder) {
-            holder = (AnnouncementViewHolder) holder;
             AnnoucementResModel annoucementResModel = data.get(position);
             ((AnnouncementViewHolder) holder).binding.setAnnoucement(annoucementResModel);
 
-            ((AnnouncementViewHolder) holder).binding.tvTime.setText(DateUtils.getFormattedSendDateInTimeFormatCoreFunctionality2(context, annoucementResModel.getLastMod()));
             ((AnnouncementViewHolder) holder).binding.userProfileName.setCircle(true);
             if (annoucementResModel.getOwner() != null && annoucementResModel.getOwner().getFullName() != null) {
                 ((AnnouncementViewHolder) holder).binding.userProfileName.setText(StringUtils.getInitials(annoucementResModel.getOwner().getFullName()));

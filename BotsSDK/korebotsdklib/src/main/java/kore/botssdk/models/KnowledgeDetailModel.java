@@ -104,7 +104,7 @@ public class KnowledgeDetailModel implements Serializable {
                 }
             }
             if (namesList.size() > 0) {
-                return android.text.TextUtils.join(", ", namesList);
+                return TextUtils.join(", ", namesList);
             }
         }
         return "";

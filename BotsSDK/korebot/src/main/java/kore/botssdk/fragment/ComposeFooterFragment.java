@@ -848,7 +848,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         String filePath = result.getData().getStringExtra("filePath");
                         String fileName = result.getData().getStringExtra("fileName");
                         String filePathThumbnail = result.getData().getStringExtra(THUMBNAIL_FILE_PATH);
-                        ((BotChatActivity) getActivity()).sendImage(filePath, fileName, filePathThumbnail);
+                        ((BotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
                     }
                 }
             });
@@ -890,7 +890,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             String filePath = data.getStringExtra("filePath");
             String fileName = data.getStringExtra("fileName");
             String filePathThumbnail = data.getStringExtra(THUMBNAIL_FILE_PATH);
-            ((BotChatActivity) getActivity()).sendImage(filePath, fileName, filePathThumbnail);
+            ((BotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
           /*  String filePath = data.getStringExtra("filePath");
             String fileName = data.getStringExtra("fileName");
             String filePathThumbnail = data.getStringExtra(THUMBNAIL_FILE_PATH);

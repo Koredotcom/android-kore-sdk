@@ -3,9 +3,11 @@ package kore.botssdk.activity;
 import static android.view.View.VISIBLE;
 import static kore.botssdk.FCM.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -19,10 +21,10 @@ import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
@@ -54,10 +56,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
 import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
@@ -106,6 +110,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.pushnotification.PushNotificationRegister;
+import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
@@ -636,10 +641,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 return;
             }
 
-            LogUtils.d(LOG_TAG, payload);
+            if(botClient != null && enable_ack_delivery)
+                botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
+            LogUtils.d(LOG_TAG, payload);
             PayloadOuter payOuter = null;
-            if (!botResponse.getMessage().isEmpty()) {
+            if (!botResponse.getMessage().isEmpty())
+            {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
                 if (compModel != null) {
                     payOuter = compModel.getPayload();
@@ -650,7 +658,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         }
                         else if(payOuter.getText() != null && payOuter.getText().contains("*"))
                         {
-                            String requiredString = payOuter.getText().substring(payOuter.getText().indexOf("(") + 1, payOuter.getText().indexOf(")"));
                             Gson gson = new Gson();
                             payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                         }
@@ -704,7 +711,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             return;
                         }
                         LogUtils.d(LOG_TAG, payload);
-                        boolean resolved = true;
                         if (!botResponse.getMessage().isEmpty()) {
                             ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
                             if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload()))
@@ -1034,26 +1040,16 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     public void sendImage(String fP, String fN, String fPT) {
-    /*    String filePath = data.getStringExtra("filePath");
-        String fileName = data.getStringExtra("fileName");
-        String filePathThumbnail = data.getStringExtra(THUMBNAIL_FILE_PATH);*/
-        String filePath = fP;
-        String fileName = fN;
-        String filePathThumbnail = fPT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).execute();
-        }
+        new SaveCapturedImageTask(fP, fN, fPT).executeAsync();
     }
 
-    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
-
+    protected class SaveCapturedImageTask extends AsyncTaskExecutor<String>
+    {
         private final String filePath;
         private final String fileName;
         private final String filePathThumbnail;
         private String orientation;
+        private String extn = null;
 
         public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
             this.filePath = filePath;
@@ -1061,24 +1057,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             this.filePathThumbnail = filePathThumbnail;
         }
 
-
         @Override
-        protected String doInBackground(String... params) {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-            String extn = null;
+        protected void doInBackground(String... strings) {
             OutputStream fOut = null;
-
             if (filePath != null) {
                 extn = filePath.substring(filePath.lastIndexOf(".") + 1);
                 Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-//                    compressImage(filePath);
                 if (thePic != null) {
                     try {
                         // compress the image
                         File _file = new File(filePath);
 
                         LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-                        fOut = new FileOutputStream(_file);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            fOut = Files.newOutputStream(_file.toPath());
+                        }
+                        else
+                            fOut = new FileOutputStream(_file);
 
                         thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
                         thePic = rotateIfNecessary(filePath, thePic);
@@ -1098,16 +1093,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     }
                 }
             }
-            return extn;
         }
 
-
         @Override
-        protected void onPostExecute(String extn) {
+        protected void onPostExecute() {
             if (extn != null) {
-                //Common place for addition to composeBar
-                long fileLimit = getFileMaxSize();
-
                 if(!SDKConfiguration.Client.isWebHook)
                 {
                     KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
@@ -1132,7 +1122,72 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 showToast("Unable to attach!");
             }
         }
+        @Override
+        protected void onCancelled() {
+            // update UI on task cancelled
+            showToast("Unable to attach!");
+        }
     }
+
+//    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
+//
+//        private final String filePath;
+//        private final String fileName;
+//        private final String filePathThumbnail;
+//        private String orientation;
+//
+//        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
+//            this.filePath = filePath;
+//            this.fileName = fileName;
+//            this.filePathThumbnail = filePathThumbnail;
+//        }
+//
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
+//            String extn = null;
+//            OutputStream fOut = null;
+//
+//            if (filePath != null) {
+//                extn = filePath.substring(filePath.lastIndexOf(".") + 1);
+//                Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
+////                    compressImage(filePath);
+//                if (thePic != null) {
+//                    try {
+//                        // compress the image
+//                        File _file = new File(filePath);
+//
+//                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
+//                        fOut = new FileOutputStream(_file);
+//
+//                        thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
+//                        thePic = rotateIfNecessary(filePath, thePic);
+//                        orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
+//                        fOut.flush();
+//                        fOut.close();
+//                    } catch (Exception e) {
+//                        LogUtils.e(LOG_TAG, e.toString());
+//                    }
+//                    finally {
+//                        try {
+//                            assert fOut != null;
+//                            fOut.close();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//            return extn;
+//        }
+//
+//
+//        @Override
+//        protected void onPostExecute(String extn) {
+//
+//        }
+//    }
 
     private long getFileMaxSize() {
         long FILE_MAX_SIZE = getFileLimit();
@@ -1143,29 +1198,19 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return FILE_MAX_SIZE;
     }
 
-    Handler messagesMediaUploadAcknowledgeHandler = new Handler() {
+    @SuppressLint("HandlerLeak")
+    Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public synchronized void handleMessage(Message msg) {
             Bundle reply = msg.getData();
             LogUtils.e("shri", reply + "------------------------------");
-          /*  if (reply.getBoolean(UploadBulkFile.isFileSizeMore_key, false)) {
-                showFreemiumDialog();
-                return;
-            }
-*/
             if (reply.getBoolean("success", true)) {
-               /* long fileSizeBytes = reply.getLong(UploadBulkFile.fileSizeBytes_key);
-                totalFileSize= totalFileSize+fileSizeBytes;*/
-//                String messageId = reply.getString(Constants.MESSAGE_ID);
                 String mediaFilePath = reply.getString("filePath");
                 String MEDIA_TYPE = reply.getString("fileExtn");
                 String mediaFileId = reply.getString("fileId");
                 String mediaFileName = reply.getString("fileName");
                 String componentType = reply.getString("componentType");
                 String thumbnailURL = reply.getString("thumbnailURL");
-                String orientation = reply.getString(BundleConstants.ORIENTATION);
-                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription") : null;
-                HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
                 String fileSize = reply.getString("fileSize");
                 KoreComponentModel koreMedia = new KoreComponentModel();
                 koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
@@ -1180,9 +1225,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 koreMedia.setMediafileId(mediaFileId);
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
-
-//                hideBottomSheet();
-                composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
+                composeFooterFragment.setSectionSelected();
                 messageHandler.postDelayed(new Runnable() {
                     public void run() {
                         HashMap<String, String> attachmentKey = new HashMap<>();
@@ -1193,16 +1236,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         attachmentKey.put("fileExtn", MEDIA_TYPE);
                         attachmentKey.put("thumbnailURL", thumbnailURL);
                         composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                       /* KoraSocketConnectionManager.getInstance().sendMessageWithCustomDataAttchment(mediaFileName+"."+MEDIA_TYPE, attachmentKey, false);
-                        KoraSocketConnectionManager.getInstance().stopDelayMsgTimer();
-                        toggleVisibilities(false, true);*/
                     }
                 }, 400);
-
-
-                // kaComponentModels.add(koreMedia);
-                // insertTags(koreMedia, componentType, orientation, mediaFileName);
-
             } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
@@ -1215,24 +1250,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void mediaAttachment(HashMap<String, String> attachmentKey)
     {
-//        hideBottomSheet();
-        composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
+        composeFooterFragment.setSectionSelected();
         messageHandler.postDelayed(new Runnable() {
             public void run() {
-
                 composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                       /* KoraSocketConnectionManager.getInstance().sendMessageWithCustomDataAttchment(mediaFileName+"."+MEDIA_TYPE, attachmentKey, false);
-                        KoraSocketConnectionManager.getInstance().stopDelayMsgTimer();
-                        toggleVisibilities(false, true);*/
             }
         }, 400);
     }
-
-//    public void hideBottomSheet() {
-//        if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
-//            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-//        }
-//    }
 
     private int getFileLimit() {
         attachment = SharedPreferenceUtils.getInstance(this).getAttachmentPref("");
@@ -1246,20 +1270,24 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private String getComponentId(String componentType) {
-        if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
-            return "image_" + System.currentTimeMillis();
-        } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
-            return "video_" + System.currentTimeMillis();
-        } else {
-            return "doc_" + System.currentTimeMillis();
+        if(componentType != null)
+        {
+            if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
+                return "image_" + System.currentTimeMillis();
+            } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
+                return "video_" + System.currentTimeMillis();
+            } else {
+                return "doc_" + System.currentTimeMillis();
+            }
         }
+        return "";
     }
 
     private void getBrandingDetails() {
         Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Response<ArrayList<BrandingNewModel>> response) {
                 if (response.isSuccessful())
                 {
                     arrBrandingNewDos = response.body();
@@ -1292,7 +1320,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             @Override
-            public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
+            public void onFailure(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Throwable t)
             {
                 LogUtils.e("getBrandingDetails", t.toString());
 
@@ -1310,7 +1338,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
-            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+            public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
                 if (response.isSuccessful())
                 {
                     webHookResponseDataModel = response.body();
@@ -1325,7 +1353,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         {
                             if(webHookResponseDataModel.getData().get(i).getVal() instanceof String)
                                 displayMessage(webHookResponseDataModel.getData().get(i).getVal().toString(), webHookResponseDataModel.getData().get(i).getType(), webHookResponseDataModel.getData().get(i).getMessageId());
-                            else if(webHookResponseDataModel.getData().get(i).getVal() instanceof Object)
+                            else if(webHookResponseDataModel.getData().get(i).getVal() != null)
                             {
                                 try {
                                     String elementsAsString = gson.toJson(webHookResponseDataModel.getData().get(i).getVal());
@@ -1367,7 +1395,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             @Override
-            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            public void onFailure(@NonNull Call<WebHookResponseDataModel> call, @NonNull Throwable t)
             {
             }
         });
@@ -1378,20 +1406,18 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id);
         getBankingConfigService.enqueue(new Callback<BotMetaModel>() {
             @Override
-            public void onResponse(Call<BotMetaModel> call, Response<BotMetaModel> response) {
+            public void onResponse(@NonNull Call<BotMetaModel> call, @NonNull Response<BotMetaModel> response) {
                 if (response.isSuccessful())
                 {
                     botMetaModel = response.body();
-                    SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());
+                    if(botMetaModel != null)
+                        SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());
                     sendWebHookMessage(true, "ON_CONNECT", null);
-                }
-                else
-                {
                 }
             }
 
             @Override
-            public void onFailure(Call<BotMetaModel> call, Throwable t)
+            public void onFailure(@NonNull Call<BotMetaModel> call, @NonNull Throwable t)
             {}
         });
     }
@@ -1401,7 +1427,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
-            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+            public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
                 if (response.isSuccessful())
                 {
                     webHookResponseDataModel = response.body();
@@ -1422,13 +1448,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         stopSendingPolling();
                     }
                 }
-                else
-                {
-                }
             }
 
             @Override
-            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            public void onFailure(@NonNull Call<WebHookResponseDataModel> call, @NonNull Throwable t)
             {}
         });
     }
@@ -1451,13 +1474,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private HashMap<String, Object> getJsonRequest(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
     {
-        String jsonPayload = "";
         HashMap<String, Object> hsh = new HashMap<>();
 
         try
         {
             WebHookRequestModel webHookRequestModel = new WebHookRequestModel();
-
             WebHookRequestModel.Session session = new WebHookRequestModel.Session();
             session.setNewSession(new_session);
             webHookRequestModel.setSession(session);
@@ -1498,12 +1519,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if(attachments != null && attachments.size() > 0)
                 hsh.put("attachments", attachments);
-
-            jsonPayload = gson.toJson(webHookRequestModel);
         }
         catch (Exception e)
         {
-
+            e.printStackTrace();
         }
 
         return hsh;

@@ -44,6 +44,19 @@ public class BrandingRestBuilder {
         return restAPI;
     }
 
+    public static RestAPI getPDfAPI(){
+//        if(restAPI == null) {
+        restAPI = new Retrofit.Builder()
+                .baseUrl("https://app.qa-opt.idfcfirstbank.com/")
+                .addConverterFactory(new RestBuilder.NullOnEmptyConverterFactory())
+                .addConverterFactory(createConverter())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(getClient())
+                .build().create(RestAPI.class);
+//        }
+        return restAPI;
+    }
+
     public static void setContext(Context context)
     {
         mContext = context;

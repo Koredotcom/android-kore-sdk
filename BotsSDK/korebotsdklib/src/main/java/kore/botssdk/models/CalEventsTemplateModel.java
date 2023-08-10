@@ -40,17 +40,6 @@ public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements
         this.mId = mId;
     }
 
-    public MeetJoin getMeetJoin() {
-        return meetJoin;
-    }
-
-    public void setMeetJoin(MeetJoin meetJoin) {
-        this.meetJoin = meetJoin;
-    }
-
-    private MeetJoin meetJoin;
-
-
     public String getDescription() {
 
         return description != null ? description : "";
