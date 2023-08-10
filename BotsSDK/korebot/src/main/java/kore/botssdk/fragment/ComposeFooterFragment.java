@@ -806,12 +806,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         File mediaFile = new File(mediaStorageDir.getPath() + File.separator
                 + videoFileName + "." + "mp4");
 
-        /*File image = File.createTempFile(
-                videoFileName,  *//* prefix *//*
-                ".mp4",         *//* suffix *//*
-                storageDir      *//* directory *//*
-        );*/
-
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = mediaFile.getAbsolutePath();
         return mediaFile;
@@ -823,17 +817,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         photoPickerIntent.putExtra("fileContext", BundleConstants.FOR_MESSAGE);
         photoPickerIntent.putExtra("mediaType", mediaType);
 
-        switch (reqCode)
-        {
-            case REQ_CAMERA:
-            case REQ_IMAGE:
-                activityImageResultLaunch.launch(photoPickerIntent);
-            break;
-            case REQ_VIDEO:
-                activityVideoResultLaunch.launch(photoPickerIntent);
-                break;
-            default:
-                startActivityForResult(photoPickerIntent, reqCode);
+        if (reqCode == REQ_VIDEO) {
+            activityVideoResultLaunch.launch(photoPickerIntent);
+        } else {
+            activityImageResultLaunch.launch(photoPickerIntent);
         }
     }
 
