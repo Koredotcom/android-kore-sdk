@@ -1,33 +1,19 @@
 package com.kore.ai.widgetsdk.utils;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.models.KoreMedia;
-import com.kore.ai.widgetsdk.room.models.UserData;
-import com.kore.ai.widgetsdk.view.CircularProfileView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
 /**
  * Created by Shiva Krishna on 4/5/2018.
@@ -247,8 +233,8 @@ public class BitmapUtils {
 
     private static Bitmap decodeBitmap(File file, BitmapFactory.Options options, float rotationAngle){
         Bitmap bitmap = null, bm = null;
+        FileInputStream fis = null;
         try {
-            FileInputStream fis;
             fis = new FileInputStream(file);
             options.inJustDecodeBounds = false;
             bm = BitmapFactory.decodeStream(fis,null, options);
@@ -256,11 +242,17 @@ public class BitmapUtils {
             matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
             bitmap = Bitmap.createBitmap(bm, 0, 0, options.outWidth, options.outHeight, matrix, true);
         } catch (OutOfMemoryError | FileNotFoundException oom){
-            if(bm != null) bm.recycle();
             options.inSampleSize *= 2;
             bitmap = decodeBitmap(file, options, rotationAngle);
         } finally {
             if(bm != null && !bm.equals(bitmap)) bm.recycle();
+            if(fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return bitmap;
@@ -979,135 +971,6 @@ public class BitmapUtils {
             }
         }
         return Bitmap.createScaledBitmap(image, (int)actualWidth, (int)actualHeight, true);//.compress(Bitmap.CompressFormat.JPEG, compressionQuality, stream);
-    }
-    public static String createImageThumbnailForBulk(Bitmap thumbnail, String thumbPath, int compressQualityInt) {
-        String originalFilepath = thumbPath;
-        int index = thumbPath.lastIndexOf(".");
-        /*if(AppSandboxUtils.shouldEncryptLocalFiles){
-            thumbPath = thumbPath.substring(0, index) + "_th"+AppSandboxUtils.ENCRYPTED_FILE_SUFFIX+".png";
-        }else {*/
-        thumbPath = thumbPath.substring(0, index) + "_th.png";
-//        }
-
-//        KoreLogger.debugLog("BitmapUtils", "createImageThumbnailForBulk() - thumbnail path = " + thumbPath);
-
-        File thumbnailFile = new File(thumbPath);
-//        KoreLogger.debugLog("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.getAbsolutePath());
-
-        try {
-            FileOutputStream fos = new FileOutputStream(thumbnailFile);
-            OutputStream outputStream = null;
-
-                thumbnail.compress(Bitmap.CompressFormat.PNG, compressQualityInt, fos);
-            thumbnail = rotateIfNecessary(thumbPath, thumbnail);
-            if(outputStream != null){
-                outputStream.flush();
-                outputStream.close();
-            }
-            fos.flush();
-            fos.close();
-
-        } catch (IOException e) {
-//            KoreLogger.errorLog("BitmapUtils", "createImageThumbnailForBulk() - Excep: = " + e.getMessage(), e);
-
-        } finally {
-            if (thumbnail != null) {
-                thumbnail.recycle();
-            }
-        }
-
-        return thumbPath;
-    }
-    public static int getVideoIdFromFilePath(Context context, Uri uri) {
-
-        int photoId = 1;
-        final String[] columns = {MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID, MediaStore.Video.Media.DURATION};
-        final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-
-        // TODO This will break if we have no matching item in the MediaStore.
-        Cursor cursor = context.getContentResolver().query(uri, columns, null, null, orderBy);
-        if (cursor == null)
-            cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
-        cursor.moveToLast();
-
-        if (cursor.getCount() > 0) {
-            int image_column_index = cursor
-                    .getColumnIndex(MediaStore.Video.Media._ID);
-            if(image_column_index != - 1) {
-                String file = cursor.getString(image_column_index);
-                photoId = cursor.getInt(image_column_index);
-            }
-        }
-
-        cursor.close();
-        return photoId;
-
-    }
-    public static  Drawable getProfileDrawable(Context mContext,String fullName,String profileColor,int size) {
-
-        String DEFAULT_GREEN = "#3942f6";
-        int dp35 = (int)dp1*size;
-
-        if (profileColor == null || !profileColor.contains("#")) {
-            profileColor = DEFAULT_GREEN;
-        }
-
-        CircularProfileView circularProfileViewForActionBar = new CircularProfileView(mContext);
-        circularProfileViewForActionBar.setDimens(dp35, dp35);
-        circularProfileViewForActionBar.setDrawingCacheEnabled(true);
-        circularProfileViewForActionBar.setClickable(true);
-
-//        circularProfileViewForActionBar.setOnClickListener(onCircularProfileViewForActionBarClickListner);
-
-        circularProfileViewForActionBar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        circularProfileViewForActionBar.populateLayout(StringUtils.getInitials(fullName),
-                null, null, null, -1, Color.parseColor(profileColor), true, dp35, dp35);//34 * dp1, 34 * dp1);
-
-        Bitmap cb = loadBitmapFromView(circularProfileViewForActionBar, dp35, dp35);
-        return new BitmapDrawable(mContext.getResources(), cb);
-    }
-
-    public static Drawable getProfileDrawable(UserData userInfo, Context mContext, boolean isActionBar)
-    {
-        return getProfileDrawable(userInfo,  mContext,  isActionBar,null);
-    }
-
-    public static Drawable getProfileDrawable(UserData userInfo, Context mContext, boolean isActionBar,String bgColor) {
-
-        String firstName = "", lastName = "", emaildId = "", profileColor = "", mProfileStatus = "";
-        String DEFAULT_GREEN = "#3942f6";
-        int dp35;
-        if(isActionBar) dp35 = (int)dp1*35;
-        else dp35 = (int)dp1*58;
-
-
-        if(bgColor==null) {
-            if (userInfo.getProfColour() == null || userInfo.getProfColour().equalsIgnoreCase("no-avatar")) {
-                profileColor = DEFAULT_GREEN;
-            } else {
-                profileColor = userInfo.getProfColour();
-            }
-        }else {
-            profileColor = bgColor;
-        }
-
-        if (profileColor == null || !profileColor.contains("#")) {
-            profileColor = DEFAULT_GREEN;
-        }
-
-        CircularProfileView circularProfileViewForActionBar = new CircularProfileView(mContext);
-        circularProfileViewForActionBar.setDimens(dp35, dp35);
-        circularProfileViewForActionBar.setDrawingCacheEnabled(true);
-        circularProfileViewForActionBar.setClickable(true);
-
-//        circularProfileViewForActionBar.setOnClickListener(onCircularProfileViewForActionBarClickListner);
-
-        circularProfileViewForActionBar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        circularProfileViewForActionBar.populateLayout(StringUtils.getInitials(userInfo.getDisplayName()),
-                null, null, null, -1, Color.parseColor(profileColor), true, dp35, dp35);//34 * dp1, 34 * dp1);
-
-        Bitmap cb = loadBitmapFromView(circularProfileViewForActionBar, dp35, dp35);
-        return new BitmapDrawable(mContext.getResources(), cb);
     }
 
     private static Bitmap loadBitmapFromView(View v, int height, int width) {

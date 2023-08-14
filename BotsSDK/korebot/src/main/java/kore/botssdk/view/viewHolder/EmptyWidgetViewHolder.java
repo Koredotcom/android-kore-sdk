@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import kore.botssdk.R;
 
 public class EmptyWidgetViewHolder extends RecyclerView.ViewHolder {

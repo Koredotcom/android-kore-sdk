@@ -60,7 +60,7 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
     private RecyclerView actionsContainer;
     //    private View footerContainer;
     private boolean loading;
-    private boolean hasMore = true;
+    private final boolean hasMore = true;
     private AuthData authData;
     private RecyclerView.Adapter adapter;
     boolean fromWidget;
@@ -101,8 +101,6 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
           _duration =   ((CalEventsTemplateModel.Duration) getIntent().getExtras().get(BundleConstants.DURATION));
         }
 
-        String calendarMultiCation = getIntent().getStringExtra(BundleConstants.DATA_CALENDER_MULTICATION);
-        String multiActions = getIntent().getStringExtra(BundleConstants.MULTI_ACTIONS);
         try {
             fromWidget = getIntent().getBooleanExtra(BundleConstants.FROM_WIDGET, false);
         } catch (Exception e) {
@@ -137,7 +135,6 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
                 template = new TypeToken<ArrayList<WidgetListElementModel>>(){}.getType();
                 ListWidgetAdapter listWidgetAdapter = new ListWidgetAdapter(FullViewActivity.this, BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, trigger);
                 listWidgetAdapter.setWidgetData(gson.fromJson(dataString, template));
-                listWidgetAdapter.setFromWidget(true);
                 listWidgetAdapter.setFromFullView(true);
                 listWidgetAdapter.setVerticalListViewActionHelper(this);
                 setAdapter(listWidgetAdapter);

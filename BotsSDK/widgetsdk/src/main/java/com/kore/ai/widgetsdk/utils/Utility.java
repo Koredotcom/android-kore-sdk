@@ -124,18 +124,11 @@ public class Utility {
     }
 
     public static boolean checkIsSkillInCurrent(String skill) {
-        if(Constants.SKILL_SELECTION.equalsIgnoreCase(skill)||TextUtils.isEmpty(Constants.SKILL_SELECTION)) {
-            return true;
-        }
-
-        return false;
+        return Constants.SKILL_SELECTION.equalsIgnoreCase(skill) || TextUtils.isEmpty(Constants.SKILL_SELECTION);
     }
 
     public static boolean checkIsSkillKora() {
-        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)||TextUtils.isEmpty(Constants.SKILL_SELECTION))
-            return true;
-
-            return false;
+        return Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION);
     }
 
     public static int getDarkerColor (int color, float factor) {

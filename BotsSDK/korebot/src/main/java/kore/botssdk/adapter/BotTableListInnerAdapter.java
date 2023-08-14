@@ -17,24 +17,24 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotTableListRowItemsModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotTableListInnerAdapter extends BaseAdapter
 {
-    private Context context;
-    private ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels;
+    private final Context context;
+    private final ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels;
     String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     LayoutInflater ownLayoutInflator;
     ListView parentListView;
     RoundedCornersTransform roundedCornersTransform;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int dp1;
+    private final int dp1;
 
     protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels)
     {
@@ -42,7 +42,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
         this.context = context;
         this.botTableListRowItemsModels = botTableListRowItemsModels;
         this.roundedCornersTransform = new RoundedCornersTransform();
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
     }
 
     @Override

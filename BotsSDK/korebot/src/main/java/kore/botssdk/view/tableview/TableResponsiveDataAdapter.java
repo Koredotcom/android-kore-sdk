@@ -3,7 +3,6 @@ package kore.botssdk.view.tableview;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -225,8 +222,8 @@ public abstract class TableResponsiveDataAdapter<T> extends ArrayAdapter<T> {
 
     protected class GridChildAdapter extends BaseAdapter
     {
-        private Context context;
-        private MiniTableModel miniTableModel;
+        private final Context context;
+        private final MiniTableModel miniTableModel;
 
         protected GridChildAdapter(Context context, MiniTableModel miniTableModel)
         {

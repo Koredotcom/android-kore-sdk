@@ -1,5 +1,7 @@
 package kore.botssdk.view.viewUtils;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,10 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 
 import com.squareup.picasso.Transformation;
-
-import kore.botssdk.application.AppControl;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Shiva Krishna on 3/14/2018.

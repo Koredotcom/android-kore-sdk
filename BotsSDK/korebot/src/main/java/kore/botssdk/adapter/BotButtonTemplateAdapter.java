@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,13 +15,12 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 /**
  * Created by Anil Kumar on 12/1/2016.
@@ -30,10 +28,13 @@ import kore.botssdk.utils.BundleConstants;
 public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
     private LayoutInflater ownLayoutInflater = null;
-    private String splashColour, disabledColour, textColor, disabledTextColor;
+    private final String splashColour;
+    private final String disabledColour;
+    private final String textColor;
+    private final String disabledTextColor;
     private boolean isEnabled;
-    private SharedPreferences sharedPreferences;
-    private float dp1;
+    private final SharedPreferences sharedPreferences;
+    private final float dp1;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
@@ -52,7 +53,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 //        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
 //        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
 
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
     }
 
     @Override

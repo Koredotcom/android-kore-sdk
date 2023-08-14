@@ -1,7 +1,6 @@
 package kore.botssdk.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
@@ -28,9 +27,7 @@ public class CustomTextView extends AppCompatTextView {
 
     private void style(Context context, AttributeSet attrs) {
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
-        Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latomedium);
+        Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latoregular);
         setTypeface(tfRegular);
-        a.recycle();
     }
 }

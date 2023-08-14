@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.github.mikephil.charting.data.PieEntry;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import kore.botssdk.R;
+import kore.botssdk.charts.data.PieEntry;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotPieChartElementModel;
 import kore.botssdk.models.BotResponse;
@@ -79,7 +79,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
 
         BUBBLE_LEFT_PROFILE_PIC = cpvSenderImage.getMeasuredWidth();
         BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? (int) (10 * dp1) : 0;
-        BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = (BUBBLE_LEFT_PROFILE_PIC != 0) ? 0 : 0;
+        BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT = 0;
         if (isContinuousMessage && isSeparatedClosely) {
             BUBBLE_TOP_BORDER = (int) dp1;
         } else {

@@ -2,6 +2,7 @@ package kore.botssdk.net;
 
 import android.util.Log;
 
+import kore.botssdk.utils.LogUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,7 +27,7 @@ public abstract class RetryableCallback<T> implements Callback<T> {
     public void onResponse(Call<T> call, Response<T> response) {
         if (!RestAPIHelper.isCallSuccess(response))
             if (retryCount++ < totalRetries) {
-                Log.v(TAG, "Retrying API Call -  (" + retryCount + " / " + totalRetries + ")");
+                LogUtils.v(TAG, "Retrying API Call -  (" + retryCount + " / " + totalRetries + ")");
                 retry();
             } else
                 onFinalResponse(call, response);
@@ -36,9 +37,9 @@ public abstract class RetryableCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        Log.e(TAG, t.getMessage());
+        LogUtils.e(TAG, t.getMessage());
         if (retryCount++ < totalRetries) {
-            Log.v(TAG, "Retrying API Call -  (" + retryCount + " / " + totalRetries + ")");
+            LogUtils.v(TAG, "Retrying API Call -  (" + retryCount + " / " + totalRetries + ")");
             retry();
         } else
             onFinalFailure(call, t);

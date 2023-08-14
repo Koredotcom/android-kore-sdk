@@ -1,10 +1,11 @@
 package kore.botssdk.view.viewHolder;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
 
@@ -13,9 +14,9 @@ import kore.botssdk.R;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class QuickReplyViewHolder extends RecyclerView.ViewHolder{
-    private TextView quickReplyTitle;
-    private ImageView quickReplyImage;
-    private LinearLayout quickReplyRoot;
+    private final TextView quickReplyTitle;
+    private final ImageView quickReplyImage;
+    private final LinearLayout quickReplyRoot;
 
     public QuickReplyViewHolder(View view) {
         super(view);

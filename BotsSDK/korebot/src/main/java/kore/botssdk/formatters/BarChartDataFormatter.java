@@ -1,13 +1,12 @@
 package kore.botssdk.formatters;
 
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
-
 import java.text.DecimalFormat;
+
+import kore.botssdk.charts.components.AxisBase;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.formatter.IAxisValueFormatter;
+import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.charts.utils.ViewPortHandler;
 
 /**
  * Created by Ramachandra Pradeep on 10-May-18.
@@ -16,7 +15,7 @@ import java.text.DecimalFormat;
 public class BarChartDataFormatter extends ValueFormatter implements IAxisValueFormatter {
     private static String[] SUFFIX = new String[]{"", "k", "m", "b", "t"};
 //    private static final int MAX_LENGTH = 5;
-    private DecimalFormat mFormat;
+    private final DecimalFormat mFormat;
     private String mText;
 
     public BarChartDataFormatter() {
@@ -52,7 +51,6 @@ public class BarChartDataFormatter extends ValueFormatter implements IAxisValueF
         int combined = Integer.valueOf(numericValue2 + "" + numericValue1).intValue();
 
         for(r = r.replaceAll("E[0-9][0-9]", SUFFIX[combined / 3]); r.length() > 5 || r.matches("[0-9]+\\.[a-z]"); r = r.substring(0, r.length() - 2) + r.substring(r.length() - 1)) {
-            ;
         }
 
         return r;

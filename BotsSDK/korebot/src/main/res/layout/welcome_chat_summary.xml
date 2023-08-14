@@ -111,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:fontFamily="@font/wetherfont"
+                        android:fontFamily="@font/latoregular"
                         android:maxWidth="135dp"
                         android:textColor="@color/color_485260"
                         android:textSize="16sp" />

@@ -10,22 +10,19 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.utils.DimensionUtil;
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
-import com.kore.ai.widgetsdk.utils.Utility;
-
-import kore.botssdk.utils.AppUtils;
+import kore.botssdk.R;
+import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.Utility;
 
 /**
  * Created by Shiva Krishna on 1/22/2018.
  */
 
 public class ReUsableListViewActionSheet extends Dialog {
-    private Context mContext;
-    private LayoutInflater layoutInflater;
+    private final Context mContext;
+    private final LayoutInflater layoutInflater;
     private ListAdapter adapter;
-    private float dp1;
+    private final float dp1;
 
     public ListView getOptionsListView() {
         return optionsListView;
@@ -42,7 +39,7 @@ public class ReUsableListViewActionSheet extends Dialog {
         super(context);
         this.mContext = context;
         layoutInflater = LayoutInflater.from(mContext);
-        this.dp1 = Utility.convertDpToPixel(context, 1);;
+        this.dp1 = Utility.convertDpToPixel(context, 1);
     }
 
     @Override
@@ -65,7 +62,7 @@ public class ReUsableListViewActionSheet extends Dialog {
         optionsListView.setAdapter(adapter);
 
         ViewGroup.LayoutParams params = optionsListView.getLayoutParams();
-        params.height = (int)(53 * dp1) * (adapter.getCount() - 1);
+        params.height = (int)(70 * dp1) * (adapter.getCount() - 1);
         optionsListView.setLayoutParams(params);
     }
 

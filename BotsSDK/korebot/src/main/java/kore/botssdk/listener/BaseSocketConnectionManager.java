@@ -2,7 +2,6 @@ package kore.botssdk.listener;
 
 import android.content.Context;
 
-
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.models.UserNameModel;

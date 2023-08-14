@@ -1,5 +1,7 @@
 package kore.botssdk.view.tableview;
 
+import static android.widget.LinearLayout.LayoutParams;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
@@ -16,12 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
-
-import static android.widget.LinearLayout.LayoutParams;
 
 
 /**
@@ -151,7 +152,7 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
         try {
             rowData = getItem(rowIndex);
         } catch (final IndexOutOfBoundsException e) {
-            Log.w(LOG_TAG, "No row date available for row with index " + rowIndex + ". " +
+            LogUtils.w(LOG_TAG, "No row date available for row with index " + rowIndex + ". " +
                     "Caught Exception: " + e.getMessage());
         }
 

@@ -3,7 +3,6 @@ package com.kore.ai.widgetsdk.widgets;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.widget.EditText;
 
 import androidx.appcompat.widget.AppCompatEditText;
 

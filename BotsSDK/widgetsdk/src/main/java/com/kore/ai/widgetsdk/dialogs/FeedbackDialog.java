@@ -23,7 +23,7 @@ import com.kore.ai.widgetsdk.utils.KaUtility;
 public class FeedbackDialog extends Dialog {
 
     private final LayoutInflater layoutInflater;
-    private Context _context;
+    private final Context _context;
     boolean isScreenTouched;
     View close;
     View icon_1, icon_2, icon_3, icon_4, icon_5;

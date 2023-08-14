@@ -14,7 +14,7 @@ public class TableColumnPxWidthModel implements TableColumnModel {
 
     private final Map<Integer, Integer> columnWidths;
     private int columnCount;
-    private int defaultColumnWidth;
+    private final int defaultColumnWidth;
 
     /**
      * Creates a new TableColumnModel with the given number of columns. Every column has by default

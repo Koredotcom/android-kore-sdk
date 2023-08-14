@@ -10,9 +10,9 @@ import com.kore.ai.widgetsdk.restresponse.KaRestResponse;
 public class BotRequest extends BaseBotMessage {
 
     private KaRestResponse.BotMessage message;
-    private String resourceid = "/bot.message";
+    private final String resourceid = "/bot.message";
     private BotInfoModel botInfo;
-    private long id = 1;
+    private final long id = 1;
 
     public void setMessage(KaRestResponse.BotMessage message) {
         this.message = message;

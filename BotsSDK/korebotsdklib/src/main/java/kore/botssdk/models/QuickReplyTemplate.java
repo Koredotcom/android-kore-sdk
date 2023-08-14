@@ -24,7 +24,7 @@ public class QuickReplyTemplate {
         this.image_url = image_url;
     }
 
-    private String payload;
+    private Object payload;
     private String image_url;
 
     public String getContent_type() {
@@ -35,7 +35,7 @@ public class QuickReplyTemplate {
         return title;
     }
 
-    public String getPayload() {
+    public Object getPayload() {
         return payload;
     }
 

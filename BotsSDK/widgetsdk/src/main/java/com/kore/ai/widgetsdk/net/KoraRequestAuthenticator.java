@@ -38,9 +38,9 @@ import retrofit2.Call;
  */
 
 public class KoraRequestAuthenticator implements Authenticator {
-    private Context mContext;
+    private final Context mContext;
     private String newToken;
-    private boolean tokenRefreshed = false;
+    private final boolean tokenRefreshed = false;
 
     public KoraRequestAuthenticator(Context mContext) {
         this.mContext = mContext;

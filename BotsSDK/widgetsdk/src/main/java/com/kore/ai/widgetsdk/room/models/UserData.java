@@ -104,7 +104,7 @@ public class UserData {
     private ArrayList<String> roles = new ArrayList<String>();
 
     @Ignore
-    private String deviceType = "android";
+    private final String deviceType = "android";
 
 
 

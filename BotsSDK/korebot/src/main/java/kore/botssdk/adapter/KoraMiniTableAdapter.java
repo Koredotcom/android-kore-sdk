@@ -24,7 +24,7 @@ public class KoraMiniTableAdapter extends PagerAdapter {
     ArrayList<BotMiniTableModel> data;
     LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
-    private String template_type;
+    private final String template_type;
     public KoraMiniTableAdapter(ArrayList<BotMiniTableModel> miniTableModels, Context mContext, String template_type){
         super();
         this.data = miniTableModels;

@@ -100,10 +100,16 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         } else {
             this.setPeekHeight(a.getDimensionPixelSize(styleable.BottomSheetBehavior_Layout_behavior_peekHeight, -1));
         }
+        this.hideable = a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_hideable, false);
+        if (this.fitToContents != a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true)) {
+            this.fitToContents = a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true);
+            if (this.viewRef != null) {
+                this.calculateCollapsedOffset();
+            }
 
-        this.setHideable(a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_hideable, false));
-        this.setFitToContents(a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_fitToContents, true));
-        this.setSkipCollapsed(a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false));
+            this.setStateInternal(this.fitToContents && this.state == 6 ? 3 : this.state);
+        }
+        this.skipCollapsed = a.getBoolean(styleable.BottomSheetBehavior_Layout_behavior_skipCollapsed, false);
         a.recycle();
         ViewConfiguration configuration = ViewConfiguration.get(context);
         this.maximumVelocity = (float) configuration.getScaledMaximumFlingVelocity();
@@ -135,7 +141,6 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
         } else {
             this.state = 4;
         }
-
     }
 
     public boolean onLayoutChild(CoordinatorLayout parent, V child, int layoutDirection) {
@@ -371,14 +376,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
     }
 
     public void setFitToContents(boolean fitToContents) {
-        if (this.fitToContents != fitToContents) {
-            this.fitToContents = fitToContents;
-            if (this.viewRef != null) {
-                this.calculateCollapsedOffset();
-            }
 
-            this.setStateInternal(this.fitToContents && this.state == 6 ? 3 : this.state);
-        }
     }
 
     public final int getPeekHeight() {
@@ -418,10 +416,6 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
 
     public boolean getSkipCollapsed() {
         return this.skipCollapsed;
-    }
-
-    public void setSkipCollapsed(boolean skipCollapsed) {
-        this.skipCollapsed = skipCollapsed;
     }
 
     public void setBottomSheetCallback(CustomBottomSheetBehavior.BottomSheetCallback callback) {

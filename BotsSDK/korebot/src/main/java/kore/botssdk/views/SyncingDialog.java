@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
+import kore.botssdk.R;
+import kore.botssdk.utils.KaFontUtils;
 
 /**
  * Created by Pradeep on 14-Apr-15.

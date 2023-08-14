@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,6 +31,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 {
@@ -88,7 +88,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
         rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rvViewMore.setVisibility(View.VISIBLE);
         lvMoreData.setVisibility(View.GONE);
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         BottomOptionsCycleAdapter bottomOptionsCycleAdapter;
 
         if (rvViewMore.getAdapter() == null) {

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotFormTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotFormTemplateModel;
@@ -23,6 +22,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -81,7 +81,7 @@ public class BotFormTemplateView extends ViewGroup {
         multiSelectLayout = view.findViewById(R.id.multi_select_layout);
         tvform_template_title = view.findViewById(R.id.tvform_template_title);
         btfieldButton = (TextView) view.findViewById(R.id.btfieldButton);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 
         sharedPreferences = getSharedPreferences(context);
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");

@@ -1,5 +1,7 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.utils.DateUtils.getSlotsDate;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -25,10 +26,9 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.utils.DateUtils.getSlotsDate;
 
 public class MeetingConfirmationView extends ViewGroup {
     private TextView locationView;
@@ -87,7 +87,7 @@ public class MeetingConfirmationView extends ViewGroup {
         slotLayout.setBackground(shape);
         titleView = (TextView) view.findViewById(R.id.title_view);
         tv_users = (TextView) view.findViewById(R.id.tv_users);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         label = view.findViewById(R.id.label);
         slots = view.findViewById(R.id.time_slots);
     }

@@ -1,14 +1,13 @@
 package com.kore.ai.widgetsdk.models;
 
+import static com.kore.ai.widgetsdk.utils.DateUtils.getTimeInAmPm;
+
 import android.view.View;
 
 import com.kore.ai.widgetsdk.utils.DateUtils;
-import com.kore.ai.widgetsdk.utils.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-
-import static com.kore.ai.widgetsdk.utils.DateUtils.getTimeInAmPm;
 
 public class MeetingConfirmationModel {
     private String title;

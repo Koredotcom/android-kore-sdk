@@ -69,7 +69,6 @@
         android:maxLines="1"
         android:text="Title"
         android:textSize="14dp"
-        android:textColor="@color/listview_cost"
-        />
+        android:textColor="@color/txtFontBlack"/>
 
 </LinearLayout>

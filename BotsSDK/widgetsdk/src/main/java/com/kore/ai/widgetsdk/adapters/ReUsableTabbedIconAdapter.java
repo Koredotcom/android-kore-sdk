@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ReUsableTabbedIconAdapter extends FragmentStatePagerAdapter {
     String userId;
     ArrayList<KoreHomeFragmentModel> fragmentModelArrayList;
-    private ViewPager viewPager;
+    private final ViewPager viewPager;
 
     public ReUsableTabbedIconAdapter(ViewPager viewPager, FragmentManager fm, ArrayList<KoreHomeFragmentModel> fragmentModels) {
         super(fm);

@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -18,6 +17,8 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMessageAckModel;
 import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.websocket.SocketConnectionListener;
 import kore.botssdk.websocket.SocketWrapper;
@@ -183,7 +184,7 @@ public class BotClient {
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
 
-            Log.d("BotClient", "Payload : " + jsonPayload);
+            LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
 //            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
         }
@@ -222,7 +223,7 @@ public class BotClient {
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
 
-            Log.d("BotClient", "Payload : " + jsonPayload);
+            LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
         }
         else if(attachements != null && attachements.size() > 0)
@@ -242,11 +243,17 @@ public class BotClient {
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
 
-            Log.d("BotClient", "Payload : " + jsonPayload);
+            LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
         }
+
     }
 
+    /**
+     * Method to send message acknowledgement over socket.
+     * @param timestamp
+     * @param key
+     */
     public void sendMsgAcknowledgement(String timestamp, String key) {
         BotMessageAckModel botMessageAckModel = new BotMessageAckModel();
         botMessageAckModel.setClientMessageId(timestamp);
@@ -259,12 +266,6 @@ public class BotClient {
 
         Log.d("BotClient", "Payload : " + jsonPayload);
         SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
-    }
-
-    public void updateAuthToken(String accessToken){
-        if(customData != null){
-            customData.put("kmToken",accessToken);
-        }
     }
 
     public void sendFormData(String payLoad,String message) {
@@ -284,10 +285,30 @@ public class BotClient {
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(botPayLoad);
 
-            Log.d("BotClient", "Payload : " + jsonPayload);
+            LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
         }
+
     }
 
+    /*private void sendQueMessages(){
+        if (!BotRequestPool.isPoolEmpty()) {
+            if (!BotRequestPool.getBotRequestStringArrayList().isEmpty()) {
+                ArrayList<String> botRequestStringArrayList = BotRequestPool.getBotRequestStringArrayList();
+                int len = botRequestStringArrayList.size();
+                for (int i = 0; i < len; i++) {
+                    String botRequestPayload = botRequestStringArrayList.get(i);
+                    boolean wasSuccessfullySend = SocketWrapper.getInstance(mContext).sendMessage(botRequestPayload);
+                    if (wasSuccessfullySend) {
+                        BotRequestPool.getBotRequestStringArrayList().remove(botRequestPayload);
+                        i--; //reset the parameter
+                        len--; //reset the length.
+                    } else {
+                        break;//Break the loop, as re-connection would be attempted from sendMessage(...)
+                    }
+                }
+            }
+        }
+    }*/
 
 }

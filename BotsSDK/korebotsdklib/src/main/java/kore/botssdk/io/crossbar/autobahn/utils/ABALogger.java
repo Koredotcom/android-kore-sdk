@@ -1,8 +1,8 @@
 package kore.botssdk.io.crossbar.autobahn.utils;
 
-import android.util.Log;
-
 import static kore.botssdk.io.crossbar.autobahn.utils.Globals.DEBUG;
+
+import android.util.Log;
 
 
 class ABALogger implements IABLogger {

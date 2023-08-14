@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AttendeeSlotsAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.AttendeeSlotSelectionViewBinding;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SendWithSomeDelay;
@@ -25,6 +24,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AttendeeSlotTemplateModel;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.SelectionUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -73,7 +73,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
 
     private void init() {
         attendeeSlotSelectionViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.attendee_slot_selection_view, this, true);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         attendeeSlotSelectionViewBinding.slotsList.setItemAnimator(null);
         ((GradientDrawable)attendeeSlotSelectionViewBinding.confirm.getBackground()).setColor(getContext().getResources().getColor(R.color.splash_color));
         ((GradientDrawable)attendeeSlotSelectionViewBinding.decline.getBackground()).setColor(getContext().getResources().getColor(R.color.white));

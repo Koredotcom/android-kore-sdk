@@ -2,10 +2,12 @@ package kore.botssdk.models;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
@@ -50,6 +52,7 @@ public class PayloadInner {
     private String format;
     private String boxShadow;
     private String seeMore;
+    private String seeMoreTitle;
     private int moreCount = 0;
     private String subtitle;
     private String image_url;
@@ -59,7 +62,7 @@ public class PayloadInner {
     private String messageTodisplay;
     private boolean sliderView;
     private String description;
-    private HeaderOptionsModel headerOptions;
+    private Object headerOptions;
     private BotFormFieldButtonModel fieldButton;
     private String url;
     private String videoUrl;
@@ -71,6 +74,32 @@ public class PayloadInner {
     private ArrayList<FeedbackExperienceContentModel> experienceContent;
     private ArrayList<FeedbackListModel> feedbackList;
     private String text_message;
+    private String fileName;
+    private boolean url_present;
+    private boolean isSortEnabled;
+
+    public boolean isSortEnabled() {
+        return isSortEnabled;
+    }
+
+    public void setSortEnabled(boolean sortEnabled) {
+        isSortEnabled = sortEnabled;
+    }
+
+    public boolean isUrl_present() {
+        return url_present;
+    }
+
+    public void setUrl_present(boolean url_present) {
+        this.url_present = url_present;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     public String getText_message() {
         return text_message;
@@ -130,7 +159,7 @@ public class PayloadInner {
     public void setFocus(String focus) {
         this.focus = focus;
     }
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
         return hideComposeBar;
     }
@@ -175,6 +204,10 @@ public class PayloadInner {
 
     public String getSeeMore() {
         return seeMore;
+    }
+
+    public String getSeeMoreTitle() {
+        return seeMoreTitle;
     }
 
     public void setSeeMore(String seeMore) {
@@ -338,18 +371,6 @@ public class PayloadInner {
 
     private String placeholder_text;
 
-    public AutoSuggestions getAutoSuggestions() {
-        return auto_suggestions;
-    }
-
-    public void setAutoSuggestions(AutoSuggestions auto_suggestions) {
-        this.auto_suggestions = auto_suggestions;
-    }
-
-//    private String hashtag_search_url;
-
-    private AutoSuggestions auto_suggestions;
-
     private List<List<String>> columns = null;
     private ArrayList<BotTableDataModel> tableDataModel = null;
 
@@ -364,9 +385,57 @@ public class PayloadInner {
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
     private ArrayList<FeedbackStarModel> starArrays;
-    private ArrayList<ContactTemplateModel> cards;
-    private boolean dialogCancel;
+    private Object cards;
+    private ArrayList<AdvancedListModel> listItems;
+    private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
+    public ArrayList<BotBeneficiaryModel> getBotBeneficiaryModels() {
+        return botBeneficiaryModels;
+    }
 
+    private SearchGraphAnswerModel graph_answer;
+
+    public SearchGraphAnswerModel getGraph_answer() {
+        return graph_answer;
+    }
+
+    private HashMap<String, AllSearchResultsDataModel> results;
+
+    public HashMap<String, AllSearchResultsDataModel> getResults() {
+        return results;
+    }
+
+    public void setResults(HashMap<String, AllSearchResultsDataModel> results) {
+        this.results = results;
+    }
+
+    private boolean dialogCancel;
+    private int listItemDisplayCount;
+
+    private int checkedPosition = -1;
+
+    public int getCheckedPosition() {
+        return checkedPosition;
+    }
+
+    public void setCheckedPosition(int checkedPosition) {
+        this.checkedPosition = checkedPosition;
+    }
+
+    public int getListItemDisplayCount() {
+        return listItemDisplayCount;
+    }
+
+    public void setListItemDisplayCount(int listItemDisplayCount) {
+        this.listItemDisplayCount = listItemDisplayCount;
+    }
+
+    public ArrayList<AdvancedListModel> getListItems() {
+        return listItems;
+    }
+
+    public void setListItems(ArrayList<AdvancedListModel> listItems) {
+        this.listItems = listItems;
+    }
 
     public ArrayList<BotMultiSelectElementModel> getMultiSelectModels() {
         return multiSelectModels;
@@ -410,6 +479,8 @@ public class PayloadInner {
 
     private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotCarouselModel> carouselElements;
+    private ArrayList<ContactTemplateModel> contactTemplateModels;
+    private ArrayList<CardTemplateModel> cardTemplateModels;
     private ArrayList<BotListModel> listElements;
     private ArrayList<BotLineChartDataModel> lineChartDataModels;
     private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
@@ -447,6 +518,7 @@ public class PayloadInner {
     private ArrayList<BotBarChartDataModel> barChartDataModels;
     private ArrayList<MeetingTemplateModel> meetingTemplateModels;
     private ArrayList<QuickReplyTemplate> pickerTemplateModels;
+    private ArrayList<PdfDownloadModel> pdfDownloadModels;
 
     public ArrayList<AttendeeSlotTemplateModel> getAttendeeSlotTemplateModels() {
         return attendeeSlotTemplateModels;
@@ -524,12 +596,8 @@ public class PayloadInner {
         return miniTableDataModels;
     }
 
-    public ArrayList<ContactTemplateModel> getCards() {
+    public Object getCards() {
         return cards;
-    }
-
-    public void setCards(ArrayList<ContactTemplateModel> cards) {
-        this.cards = cards;
     }
 
     public void setMiniTableDataModels(ArrayList<BotMiniTableModel> miniTableDataModels) {
@@ -555,11 +623,11 @@ public class PayloadInner {
         this.description = description;
     }
 
-    public HeaderOptionsModel getHeaderOptions() {
+    public Object getHeaderOptions() {
         return headerOptions;
     }
 
-    public void setHeaderOptions(HeaderOptionsModel headerOptions) {
+    public void setHeaderOptions(Object headerOptions) {
         this.headerOptions = headerOptions;
     }
 
@@ -599,7 +667,7 @@ public class PayloadInner {
     private Duration cursor = null;
     //    private Object columns = null;
     private String elementsAsString;
-    private String color = "#000000";
+    private final String color = "#000000";
 
     //    private final String INVALID_JSON = "Invalid JSON";
     private String speech_hint;
@@ -622,6 +690,13 @@ public class PayloadInner {
         return text;
     }
 
+    public ArrayList<PdfDownloadModel> getPdfDownloadModels() {
+        return pdfDownloadModels;
+    }
+
+    public void setPdfDownloadModels(ArrayList<PdfDownloadModel> pdfDownloadModels) {
+        this.pdfDownloadModels = pdfDownloadModels;
+    }
     public ArrayList<BotButtonModel> getButtons() {
         return buttons;
     }
@@ -674,6 +749,32 @@ public class PayloadInner {
     public BotListViewMoreDataModel getMoreData()
     {
         return moreData;
+    }
+
+    public ArrayList<ContactTemplateModel> getContactCardModel()
+    {
+        if(getCards() != null && getCards() instanceof ArrayList<?>)
+        {
+            String cardsAsString = gson.toJson(getCards());
+            Type carouselType = new TypeToken<ArrayList<ContactTemplateModel>>() {
+            }.getType();
+            contactTemplateModels = gson.fromJson(cardsAsString, carouselType);
+            return contactTemplateModels;
+        }
+        return null;
+    }
+
+    public ArrayList<CardTemplateModel> getCardsModel()
+    {
+        if(getCards() != null && getCards() instanceof ArrayList<?>)
+        {
+            String cardsAsString = gson.toJson(getCards());
+            Type carouselType = new TypeToken<ArrayList<CardTemplateModel>>() {
+            }.getType();
+            cardTemplateModels = gson.fromJson(cardsAsString, carouselType);
+            return cardTemplateModels;
+        }
+        return null;
     }
 
     public void convertElementToAppropriate() {
@@ -885,22 +986,6 @@ public class PayloadInner {
                 throw new JsonSyntaxException("Invalid JSON");
             }
         }
-    }
-
-    public ArrayList<ButtonTemplate> convertQuickReplyToButton(ArrayList<QuickReplyTemplate> quick_replies) {
-        ArrayList<ButtonTemplate> buttonTemplates = new ArrayList<>();
-        if (quick_replies != null && quick_replies.size() > 0) {
-            buttonTemplates = new ArrayList<>(quick_replies.size());
-            for (QuickReplyTemplate template : quick_replies) {
-                ButtonTemplate buttonTemplate = new ButtonTemplate();
-                buttonTemplate.setTitle(template.getTitle());
-                buttonTemplate.setPayload(template.getPayload());
-                buttonTemplate.setType(template.getContent_type());
-                buttonTemplates.add(buttonTemplate);
-            }
-
-        }
-        return buttonTemplates;
     }
 
     public ArrayList<String> getHeaders() {

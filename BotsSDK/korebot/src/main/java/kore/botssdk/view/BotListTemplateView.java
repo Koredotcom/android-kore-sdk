@@ -12,12 +12,12 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -57,7 +57,7 @@ public class BotListTemplateView extends ViewGroup {
         botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
     }

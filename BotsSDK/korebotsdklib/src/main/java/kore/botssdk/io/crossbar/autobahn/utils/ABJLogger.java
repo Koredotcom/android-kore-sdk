@@ -1,9 +1,9 @@
 package kore.botssdk.io.crossbar.autobahn.utils;
 
+import static kore.botssdk.io.crossbar.autobahn.utils.Globals.DEBUG;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static kore.botssdk.io.crossbar.autobahn.utils.Globals.DEBUG;
 
 class ABJLogger implements IABLogger {
 

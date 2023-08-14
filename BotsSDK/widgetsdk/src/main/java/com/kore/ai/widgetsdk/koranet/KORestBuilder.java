@@ -27,25 +27,15 @@ public final class KORestBuilder {
 /**
  * Created by Ramachandra Pradeep on 18-Jul-18.
  */
-            if(builderType == BUILDER_TYPE_KORA_REST) {
-                if (instanceKora == null) {
-                    instanceKora = new Retrofit.Builder()
-                            .baseUrl(URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .client(getSSLPinnedClient(URL))
-                            .build();
-                }
-                return instanceKora;
-            }else{
-                return null;
+            if (instanceKora == null) {
+                instanceKora = new Retrofit.Builder()
+                        .baseUrl(URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(getSSLPinnedClient(URL))
+                        .build();
             }
+            return instanceKora;
         }
-    }
-
-    public static KORestAPI getKoraRestService(String URL){
-            if(serviceKora == null)
-                serviceKora =  getBuilder(BUILDER_TYPE_KORA_REST,URL).create(KORestAPI.class);
-            return serviceKora;
     }
 
     public static void init(Context mContext){

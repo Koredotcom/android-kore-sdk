@@ -34,6 +34,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -152,7 +153,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     private void initiliazeCoordinates() {
         if (AppControl.getInstance() != null
                 && AppControl.getInstance().getDimensionUtil() != null) {
-            dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = DimensionUtil.dp1;
             dp4 = 4 * dp1;
             dp2 = 2 * dp1;
             dp6 = 6 * dp1;
@@ -365,7 +366,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         canvas.drawBitmap(curveBitmap, x, y, paint);
     }
 
-    private Paint curvePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint curvePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Bitmap formCurveBitmap(int channelImageRadius, int bubbleRadius) {
 
@@ -384,7 +385,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
         if (isLeftSide()) {
             curveCanvas.drawCircle(BUBBLE_LEFT_BORDER + 4 * dp1 - dp1 / 3, 0, channelImageRadius, curvePaint);
         } else {
-            int circularCurveX = (int) ((isGroupMessage) ? channelImageRadius + bubbleRadius + 3 * dp1 : channelImageRadius + bubbleRadius + 3 * dp1);
+            int circularCurveX = (int) (channelImageRadius + bubbleRadius + 3 * dp1);
             curveCanvas.drawCircle(circularCurveX, 0, channelImageRadius, curvePaint);
         }
 
@@ -394,7 +395,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected void drawBubbleBackground(Canvas canvas) {
         final RectF rect = new RectF();
 
-        int dimen[] = textMediaDimen;
+        int[] dimen = textMediaDimen;
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
         int rectBottom = 0;

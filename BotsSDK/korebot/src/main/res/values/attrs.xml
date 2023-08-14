@@ -20,6 +20,13 @@
         <attr name="publish_events" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="WaitingDots">
+        <attr name="dotsColor" format="color" />
+        <attr name="period" format="integer" />
+        <attr name="jumpHeight" format="integer" />
+        <attr name="autoplay" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="RippleView">
         <attr name="rv_alpha" format="integer" />
         <attr name="rv_framerate" format="integer"/>

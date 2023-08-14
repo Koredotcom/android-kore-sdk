@@ -66,11 +66,11 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
         this.actions = actions;
     }
 
-    public CalenderEventData getData() {
+    public final CalenderEventData getData() {
         return data;
     }
 
-    public void setData(CalenderEventData data) {
+    public final void setData(CalenderEventData data) {
         this.data = data;
     }
 
@@ -102,7 +102,7 @@ public class WCalEventsTemplateModel extends BaseCalenderTemplateModel implement
     private boolean isOnGoing;
 
 
-    public class Action implements Serializable {
+    public static class Action implements Serializable {
         private String type;
         private String title;
         private String utterance;

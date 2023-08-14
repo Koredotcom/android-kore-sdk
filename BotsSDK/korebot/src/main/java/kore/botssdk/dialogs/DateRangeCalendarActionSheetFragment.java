@@ -31,6 +31,8 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.LogUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class DateRangeCalendarActionSheetFragment extends BottomSheetDialogFragment
 {
@@ -77,7 +79,7 @@ public class DateRangeCalendarActionSheetFragment extends BottomSheetDialogFragm
         tvDateConfirm = view.findViewById(R.id.tvDateConfirm);
         datePicker = view.findViewById(R.id.datePicker1);
         tvOptionsTitle.setVisibility(View.VISIBLE);
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         datePicker.setMinDate(System.currentTimeMillis() - 1000);
 
         if(payInner != null && payInner.getText() != null && !payInner.getText().isEmpty())
@@ -118,7 +120,7 @@ public class DateRangeCalendarActionSheetFragment extends BottomSheetDialogFragm
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(),false);
         } else {
-            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
+            LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
     }
 

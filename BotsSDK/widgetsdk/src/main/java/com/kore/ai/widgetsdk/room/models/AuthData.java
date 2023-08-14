@@ -15,8 +15,8 @@ public class AuthData {
     public static final String TABLE_NAME = "auth_data";
     public static final String USER_ID = "user_id";
     public static final String TOKEN_TYPE = "token_type";
-    public static final String ACCESS_TOKEN = "access_token";
-    public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String ACCESS_TKN= "access_token";
+    public static final String REFRESH_TKN = "refresh_token";
     public static final String EXPIRY_DATE = "expires_date";
     public static final String REFRESH_EXPIRES_DATE = "refresh_expires_date";
     public static final String ISSUED_DATE = "issued_date";
@@ -31,10 +31,10 @@ public class AuthData {
     @ColumnInfo(name = TOKEN_TYPE)
     public String token_type;
 
-    @ColumnInfo(name = ACCESS_TOKEN)
+    @ColumnInfo(name = ACCESS_TKN)
     public String accessToken;
 
-    @ColumnInfo(name = REFRESH_TOKEN)
+    @ColumnInfo(name = REFRESH_TKN)
     public String refreshToken;
 
     @ColumnInfo(name = EXPIRY_DATE)

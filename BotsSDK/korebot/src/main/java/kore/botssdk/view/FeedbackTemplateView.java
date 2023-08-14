@@ -2,10 +2,8 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -18,22 +16,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 
-import java.util.ArrayList;
-
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotFormTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.dialogs.FeedbackActionSheetFragment;
-import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotFormTemplateModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class FeedbackTemplateView extends LinearLayout implements View.OnClickListener
 {
@@ -41,7 +31,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     private TextView tvfeedback_template_title;
     private ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
     private LinearLayout multiSelectLayout;
-    private Context mContext;
+    private final Context mContext;
     private int position;
     private  PayloadInner payloadInner;
     private RatingBar rbFeedback;
@@ -106,7 +96,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
         icon_4.setOnClickListener(this);
         icon_5.setOnClickListener(this);
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 
         rbFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
@@ -211,30 +201,30 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     }
 
     private void resetAll() {
-        icon_1.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_1);
-        icon_2.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_2);
-        icon_3.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_3);
-        icon_4.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_4);
-        icon_5.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_5);
+        icon_1.setImageResource(R.drawable.feedback_icon_1);
+        icon_2.setImageResource(R.drawable.feedback_icon_2);
+        icon_3.setImageResource(R.drawable.feedback_icon_3);
+        icon_4.setImageResource(R.drawable.feedback_icon_4);
+        icon_5.setImageResource(R.drawable.feedback_icon_5);
     }
 
     public void loademojis(int position) {
         this.payloadInner.setEmojiPosition(position);
         switch (position) {
             case 0:
-                Glide.with(mContext).load(R.drawable.feedbac_ic_emo_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
+                Glide.with(mContext).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
                 break;
             case 1:
-                Glide.with(mContext).load(R.drawable.feedbac_ic_emo_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
+                Glide.with(mContext).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
                 break;
             case 2:
-                Glide.with(mContext).load(R.drawable.feedbac_ic_emo_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
+                Glide.with(mContext).load(R.drawable.feedback_icon_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
                 break;
             case 3:
-                Glide.with(mContext).load(R.drawable.feedbac_ic_emo_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
+                Glide.with(mContext).load(R.drawable.feedback_icon_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
                 break;
             case 4:
-                Glide.with(mContext).load(R.drawable.feedbacon_emo_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
+                Glide.with(mContext).load(R.drawable.feedback_icon_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
                 break;
         }
     }

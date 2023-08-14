@@ -11,7 +11,7 @@ public class SwipeDetector implements View.OnTouchListener {
     private static final int MIN_DISTANCE = 50;
     private float downX;
     private float downY;
-    private LinearLayoutManager linearLayoutManager;
+    private final LinearLayoutManager linearLayoutManager;
 
     public SwipeDetector(LinearLayoutManager linearLayoutManager) {
         this.linearLayoutManager = linearLayoutManager;

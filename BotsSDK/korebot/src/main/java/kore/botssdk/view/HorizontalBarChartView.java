@@ -6,38 +6,36 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
+import kore.botssdk.charts.charts.HorizontalBarChart;
+import kore.botssdk.charts.components.Legend;
+import kore.botssdk.charts.components.XAxis;
+import kore.botssdk.charts.components.YAxis;
+import kore.botssdk.charts.data.BarData;
+import kore.botssdk.charts.data.BarDataSet;
+import kore.botssdk.charts.data.BarEntry;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.formatter.LargeValueFormatter;
+import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
+import kore.botssdk.charts.listener.OnChartValueSelectedListener;
+import kore.botssdk.charts.utils.ColorTemplate;
+import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.LogUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class HorizontalBarChartView extends ViewGroup implements OnChartValueSelectedListener {
     private HorizontalBarChart mChart;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
     int labelCount = 0;
 
@@ -49,7 +47,7 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
 
     private void init() {
         labelCount = 0;
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mChart = new HorizontalBarChart(mContext);
         mChart.setTouchEnabled(true);
         mChart.setPinchZoom(false);
@@ -108,9 +106,9 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
         labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
+        ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-        BarDataSet dataSet[];
+        BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
         if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
@@ -138,7 +136,7 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
             BarData data = new BarData(barDataSets);
             data.setValueFormatter(new BarChartDataFormatter());
 //        data.setValueTypeface(mTfLight);
-            Log.e("Values", _payInner.getxAxis()+"");
+            LogUtils.e("Values", _payInner.getxAxis()+"");
             XAxis xAxis = mChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //            xAxis.setTypeface(mTfLight);
@@ -249,10 +247,10 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
         mChart.getBarBounds((BarEntry) e, bounds);
         MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
 
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
+        LogUtils.i("bounds", bounds.toString());
+        LogUtils.i("position", position.toString());
 
-        Log.i("x-index",
+        LogUtils.i("x-index",
                 "low: " + mChart.getLowestVisibleX() + ", high: "
                         + mChart.getHighestVisibleX());
 

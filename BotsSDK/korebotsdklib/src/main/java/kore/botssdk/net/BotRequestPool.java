@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Data structure to maintain pool of requested messages.
  */
 public class BotRequestPool {
-    private static ArrayList<String> botRequestStringArrayList = new ArrayList<>();
+    private static final ArrayList<String> botRequestStringArrayList = new ArrayList<>();
 
     /**
      * Get the pool of requests

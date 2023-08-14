@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -18,7 +16,6 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
@@ -27,13 +24,15 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
 
     private ArrayList<BotButtonModel> quickReplyTemplateArrayList;
     Context context;
-    private LayoutInflater layoutInflater;
-    private RecyclerView parentRecyclerView;
+    private final LayoutInflater layoutInflater;
+    private final RecyclerView parentRecyclerView;
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int quickWidgetColor,fillColor,quickReplyFontColor;
-    private int dp1;
+    private final int quickWidgetColor;
+    private final int fillColor;
+    private final int quickReplyFontColor;
+    private final int dp1;
 
     public AgentQuickOptionsTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;

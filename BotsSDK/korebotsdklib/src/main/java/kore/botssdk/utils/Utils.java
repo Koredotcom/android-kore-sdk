@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -31,7 +30,6 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
-import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
@@ -105,7 +103,7 @@ public class Utils {
         int offset = TimeZone.getDefault().getOffset(date);
         calendar.setTimeInMillis(date - offset);
 
-        return buildBotMessage(msg,streamId,botName,BaseBotMessage.isoFormatter.format(calendar.getTime()).toString());
+        return buildBotMessage(msg,streamId,botName, BaseBotMessage.isoFormatter.format(calendar.getTime()));
 
     }
 
@@ -215,7 +213,7 @@ public class Utils {
         botResponse.setType("bot_response");
         botResponse.setFrom("bot");
 
-        botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(time).toString());
+        botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(time));
 
         BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
         botResponse.setBotInfo(bInfo);
@@ -287,10 +285,7 @@ public class Utils {
         long timeStampMillis = 0;
         try {
             timeStampMillis = DateUtils.isoFormatter.parse(time).getTime() + TimeZone.getDefault().getRawOffset();
-            if((System.currentTimeMillis() - timeStampMillis) > (1000*60*15)){
-                return  true;
-            }else
-                return false;
+            return (System.currentTimeMillis() - timeStampMillis) > (1000 * 60 * 15);
         } catch (ParseException e) {
             e.printStackTrace();
         }

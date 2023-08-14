@@ -1,5 +1,5 @@
 package com.kore.ai.widgetsdk.models;
-public interface KoreMedia{
+public class KoreMedia{
 	
 	public static final String MEDIA_TYPE_AUDIO = "audio";
 	public static final String MEDIA_TYPE_VIDEO = "video";
@@ -42,18 +42,4 @@ public interface KoreMedia{
 	public static final byte RECORD = 0;
 	public static final byte STOP = 1;
 	public static final byte PLAY = 2;
-	
-	public  void startMediaRecording();
-	public  void stopMediaRecording();
-
-	public void createMediaFilePath();
-
-	public void playOrViewMedia();
-	public void pauseOrStopMedia();
-	public void resumeMedia();
-	
-	public void getUserinfo();
-	public void getFileTokenAndStartUpload();
-
-	
 }

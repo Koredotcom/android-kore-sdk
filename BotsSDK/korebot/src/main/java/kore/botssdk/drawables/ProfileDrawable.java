@@ -13,10 +13,10 @@ import android.graphics.Typeface;
  */
 public class ProfileDrawable extends BaseDrawable {
 
-    private int backgroundColor;
-    private String initials;
-    private Paint backgroundPaint;
-    private Paint mTextPaint;
+    private final int backgroundColor;
+    private final String initials;
+    private final Paint backgroundPaint;
+    private final Paint mTextPaint;
 
     public ProfileDrawable(int color, String initials, float textSize) {
         this(color, initials, textSize, null);

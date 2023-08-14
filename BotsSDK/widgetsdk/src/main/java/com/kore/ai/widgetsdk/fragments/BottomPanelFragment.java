@@ -1,5 +1,12 @@
 package com.kore.ai.widgetsdk.fragments;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
+import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -16,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,7 +44,6 @@ import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.interfaces.PanelInterface;
-import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
@@ -67,7 +72,6 @@ import com.kore.ai.widgetsdk.utils.WidgetConstants;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 import com.kore.ai.widgetsdk.views.widgetviews.ArticlesWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.BarChartWidgetView;
-//import com.kore.ai.widgetsdk.views.widgetviews.BotTableListTemplateView;
 import com.kore.ai.widgetsdk.views.widgetviews.ChartListWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 import com.kore.ai.widgetsdk.views.widgetviews.DefaultWidgetView;
@@ -83,18 +87,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
 public class BottomPanelFragment extends KaBaseFragment implements PanelInterface,
         VerticalListViewActionHelper, UpdateRefreshItem, GestureDetector.OnGestureListener {
@@ -107,10 +103,10 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     private TextView emptyPanelView;
     private JWTTokenResponse jwtKeyResponse;
     private SharedPreferenceUtils sharedPreferenceUtils;
-    private String packageName = "com.kore.koreapp";
-    private String appName = "Kore";
+    private final String packageName = "com.kore.koreapp";
+    private final String appName = "Kore";
     private CustomBottomSheetBehavior mBottomSheetBehavior;
-    private boolean keyBoardShowing = false;
+    private final boolean keyBoardShowing = false;
     private PanelBaseModel pModels;
     private LinearLayout perssiatentPanel, persistentSubLayout;
     private ImageView img_skill;
@@ -544,14 +540,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 return WidgetConstants.CHART_LIST_TEMPLATE;
 
             case WidgetConstants.TASK_LIST:
-                if (widget.getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.TASKS_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.TASK_LIST_TEMPLATE;
                 }
 
             case WidgetConstants.FILES_TEMPLATE_SERVER:
-                if (widget.getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.FILES_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.FILES_TEMPLATE;

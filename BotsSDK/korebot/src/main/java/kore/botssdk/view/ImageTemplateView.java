@@ -1,31 +1,20 @@
 package kore.botssdk.view;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -33,28 +22,16 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.kore.ai.widgetsdk.events.EntityEditEvent;
-
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.VideoFullScreenActivity;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.events.VideoTimerEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -65,13 +42,11 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.ToastUtils;
-
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ImageTemplateView extends LinearLayout
 {
-    private Context mContext;
+    private final Context mContext;
     private ImageView ivImage;
     private TextView tvFileName, tvAudioVideoTiming;
     private SharedPreferences sharedPreferences;
@@ -90,7 +65,7 @@ public class ImageTemplateView extends LinearLayout
     private WebView wvAudio;
     private LinearLayout llAudio, llPlayControls;
     private ImageView ivAudioPlayPauseIcon, ivFullScreen, ivAudioMore;
-    private MediaPlayer player = new MediaPlayer();
+    private final MediaPlayer player = new MediaPlayer();
     private PayloadInner payloadInner;
     private ImageView ivVideoMore;
     private PopupWindow popupWindow;
@@ -103,19 +78,19 @@ public class ImageTemplateView extends LinearLayout
     {
         super(context);
         this.mContext = context;
-        init();
+//        init();
     }
 
     public ImageTemplateView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
-        init();
+//        init();
     }
 
     public ImageTemplateView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-        init();
+//        init();
     }
 
     private void init()
@@ -125,7 +100,7 @@ public class ImageTemplateView extends LinearLayout
         llAttachment = (LinearLayout) view.findViewById(R.id.llAttachment);
         ivImage = (ImageView) view.findViewById(R.id.ivImage);
         tvFileName = (TextView) view.findViewById(R.id.tvFileName);
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
         vvAttachment = (VideoView) view.findViewById(R.id.vvAttachment);
         ivPlayPauseIcon = (ImageView) view.findViewById(R.id.ivPlayPauseIcon);
         sbVideo = (SeekBar) view.findViewById(R.id.sbVideo);
@@ -180,11 +155,7 @@ public class ImageTemplateView extends LinearLayout
 
     private boolean checkForPermissionAccessAndRequest()
     {
-        if (KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            return true;
-        }
-
-        return false;
+        return KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
@@ -216,12 +187,14 @@ public class ImageTemplateView extends LinearLayout
     {
         if(payloadInner != null && templateType != null)
         {
+            init();
             this.payloadInner = payloadInner;
             switch (templateType)
             {
                 case BundleConstants.MEDIA_TYPE_IMAGE:
                     llAudio.setVisibility(GONE);
                     rlVideo.setVisibility(GONE);
+                    vvAttachment.setVisibility(GONE);
                     ivImage.setVisibility(VISIBLE);
                     tvVideoTitle.setVisibility(GONE);
                     tvFileName.setVisibility(GONE);
@@ -235,7 +208,7 @@ public class ImageTemplateView extends LinearLayout
                     if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                     {
                         tvFileName.setVisibility(VISIBLE);
-                        fileName = payloadInner.getUrl().substring(payloadInner.getUrl().lastIndexOf("/") + 1, payloadInner.getUrl().length());
+                        fileName = payloadInner.getUrl().substring(payloadInner.getUrl().lastIndexOf("/") + 1);
 
                         if(!StringUtils.isNullOrEmpty(fileName))
                         {
@@ -272,7 +245,7 @@ public class ImageTemplateView extends LinearLayout
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
                         } catch(Exception e) {
-                            System.out.println(e.toString());
+                            System.out.println(e);
                         }
                     }
                     else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
@@ -284,7 +257,7 @@ public class ImageTemplateView extends LinearLayout
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
                         } catch(Exception e) {
-                            System.out.println(e.toString());
+                            System.out.println(e);
                         }
                     }
 
@@ -324,7 +297,7 @@ public class ImageTemplateView extends LinearLayout
                                 {
                                     player.start();
                                 } catch(Exception e) {
-                                    System.out.println(e.toString());
+                                    System.out.println(e);
                                 }
                                 v.setTag(false);
                             }
@@ -335,7 +308,7 @@ public class ImageTemplateView extends LinearLayout
                                 {
                                     player.pause();
                                 } catch(Exception e) {
-                                    System.out.println(e.toString());
+                                    System.out.println(e);
                                 }
                                 v.setTag(true);
                             }
@@ -511,45 +484,11 @@ public class ImageTemplateView extends LinearLayout
 
     public void onEvent(VideoTimerEvent event)
     {
-        sbVideo.setProgress((int)event.getCurrentPos());
-        vvAttachment.seekTo((int)event.getCurrentPos());
-        ivAudioPlayPauseIcon.performClick();
-    }
-
-    public class WebInterface{
-        Context mContext;
-
-        WebInterface(Context c) {
-            mContext = c;
-        }
-
-        @JavascriptInterface
-        public void playSound(String toast) {
-            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
-        }
-
-        @JavascriptInterface
-        public void pauseSound(String toast) {
-            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isUrlReachable(String file_url)
-    {
-        try {
-            URL url = new URL(file_url);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            int code = connection.getResponseCode();
-
-            if(code == 200)
-            {   return true;
-            } else {
-                return false;
-            }
-        }
-        catch (Exception e)
+        if(vvAttachment.getVisibility() == VISIBLE)
         {
-            return false;
+            sbVideo.setProgress((int)event.getCurrentPos());
+            vvAttachment.seekTo((int)event.getCurrentPos());
+            ivAudioPlayPauseIcon.performClick();
         }
     }
 

@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListViewTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.dialogs.ListMoreActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -25,9 +23,9 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotListViewTemplateView extends LinearLayout {
 
@@ -65,7 +63,7 @@ public class BotListViewTemplateView extends LinearLayout {
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
     }
@@ -73,7 +71,7 @@ public class BotListViewTemplateView extends LinearLayout {
     public void populateListTemplateView(String title, BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore) {
 
         if(botListViewMoreDataModel != null)
-            Log.e("More Data", botListViewMoreDataModel.getTab1().toString());
+            LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
         if (botListModelArrayList != null && botListModelArrayList.size() > 0)
         {

@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 
 public class ErrorCodeUtils {
-    private static HashMap<String,String> errorCodeMessageMap = new HashMap<>();
+    private static final HashMap<String,String> errorCodeMessageMap = new HashMap<>();
 
     private static void loadErrorCodes(){
         errorCodeMessageMap.put( "QuestionAlreadyExist", "Question already exists");

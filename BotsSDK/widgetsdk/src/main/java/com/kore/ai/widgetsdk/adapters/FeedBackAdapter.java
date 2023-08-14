@@ -1,5 +1,6 @@
 package com.kore.ai.widgetsdk.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,21 +45,14 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
 
 
     public void refreshButtonState() {
-        boolean enableButton = false;
         if (options != null) {
             for (FeedbackDataResponse.Option opt : options) {
                 if (opt.isUserAction()) {
-                    enableButton = true;
                     break;
                 }
             }
         }
-        if (options == null || options.size() < 1) {
-            enableButton = true;
-        }
-
         feedBackButtonState.notify(true);
-
     }
 
     @NonNull
@@ -69,6 +63,7 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
         return new FeedBackViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull FeedBackViewHolder holder, int position) {
 
@@ -107,20 +102,20 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
                         final InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     } catch (Exception e) {
-
+                        e.printStackTrace();
                     }
                 }
             }
         });
 
         holder.edt_freetext.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             public boolean onTouch(View v, MotionEvent event) {
                 if (holder.edt_freetext.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
-                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
-                        case MotionEvent.ACTION_SCROLL:
-                            v.getParent().requestDisallowInterceptTouchEvent(false);
-                            return true;
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL) {
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
                     }
                 }
                 return false;
@@ -130,9 +125,9 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
             @Override
             public void onClick(View v) {
 
-                options.get(position).setUserAction(holder.checkBox_btn.isChecked());
+                options.get(holder.getBindingAdapterPosition()).setUserAction(holder.checkBox_btn.isChecked());
 
-                if (options.get(position).getAction().equalsIgnoreCase("inputText")) {
+                if (options.get(holder.getBindingAdapterPosition()).getAction().equalsIgnoreCase("inputText")) {
                     holder.edt_freetext.setVisibility(holder.checkBox_btn.isChecked() ? View.VISIBLE : View.GONE);
                 }
                 refreshButtonState();
@@ -156,18 +151,7 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 String data = s.toString().trim();
-                options.get(position).setUserAnswer(data);
-                /*if (StringUtils.isNullOrEmptyWithTrim(data)) {
-                  // options.get(position).setUserAction(false);
-                    refreshButtonState();
-
-                } else {
-                   // options.get(position).setUserAction(true);
-                    refreshButtonState();
-                }*/
-
-                // listData.get(position).setAnswerText(data);
-                // answers.put(question, data);
+                options.get(holder.getBindingAdapterPosition()).setUserAnswer(data);
             }
         });
 

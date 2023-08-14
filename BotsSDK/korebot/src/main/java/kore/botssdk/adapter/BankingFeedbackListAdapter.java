@@ -6,29 +6,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.FeedbackExperienceUpdateListner;
 import kore.botssdk.models.FeedbackListModel;
-import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.ViewProvider;
 
 public class BankingFeedbackListAdapter extends BaseAdapter
 {
-    private Context context;
-    private ArrayList<FeedbackListModel> feedbackListModels;
-    private ArrayList<FeedbackListModel> checkedItems = new ArrayList<>();
-    private FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
-    private boolean isEnabled;
+    private final Context context;
+    private final ArrayList<FeedbackListModel> feedbackListModels;
+    private final ArrayList<FeedbackListModel> checkedItems = new ArrayList<>();
+    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    private final boolean isEnabled;
 
     public BankingFeedbackListAdapter(Context context, ArrayList<FeedbackListModel> feedbackListModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled)
     {
@@ -91,15 +86,12 @@ public class BankingFeedbackListAdapter extends BaseAdapter
             holder.check_multi_item.setOnClickListener(itemSelectionListener);
         }
 
-        if(dataObj.getChecked())
-            holder.check_multi_item.setChecked(true);
-        else
-            holder.check_multi_item.setChecked(false);
+        holder.check_multi_item.setChecked(dataObj.getChecked());
 
         return convertView;
     }
 
-    private View.OnClickListener itemSelectionListener = new View.OnClickListener() {
+    private final View.OnClickListener itemSelectionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(isEnabled) {

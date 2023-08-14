@@ -8,6 +8,14 @@ public class BundleConstants {
 
     public static final String KNOWLEDGE_ID = "knowledgeId";
     public static final String SHOW_SHARE ="show_share" ;
+    public static final String FAQ = "faq";
+    public static final String DEFAULT = "default";
+    public static final String OPTIONS = "options";
+    public static final String TABLE = "table";
+    public static final String RIGHT = "right";
+    public static final String LEFT = "left";
+    public static final String BOLD = "bold";
+    public static final String FULL_WIDTH = "fullwidth";
     public static String CAROUSEL_ITEM = "carousel_item";
     public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
     public static String RESOURCE_ID = "resource_id";
@@ -22,15 +30,19 @@ public class BundleConstants {
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
     public final static String SHOW_PIC = "showPic";
+    public static final String ICON = "icon";
+    public static final String BUTTON = "button";
+    public static final String DROP_DOWN = "dropdown";
+    public static final String DROP_DOWN_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
     public static final String SLOTS_LIST = "slots_list";
     public static final String QUICK_SLOTS = "quick_slots";
-    public static final String DELAY_MESSAGES[] = { "I’m working on it…", "Still, working on it…",
+    public static final String[] DELAY_MESSAGES = { "I’m working on it…", "Still, working on it…",
             "This is taking a bit longer. Please wait…", "Things are slower than usual today. Please wait…",
             "I’m sorry. The server response seems really slow today. Please continue to wait...",
             "I’m sorry. I haven’t gotten a response from the server yet. Please continue to wait...",
             "I apologize. The server is has not responded yet. Please continue to wait…"};
-    public static final String SESSION_END_ALERT_MESSAGES[] = {"We have noticed that chat is inactive for around a minute. The chat will be closed soon",
+    public static final String[] SESSION_END_ALERT_MESSAGES = {"We have noticed that chat is inactive for around a minute. The chat will be closed soon",
     "The chat is still inactive for around two minutes, it will be closed in about a minute","Your session is going to expire soon as you are inactive for last 3 min... "};
     public static final String TASK_INFO = "task_information";
 

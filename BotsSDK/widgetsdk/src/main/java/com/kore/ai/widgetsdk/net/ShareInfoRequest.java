@@ -18,10 +18,10 @@ public class ShareInfoRequest {
     protected String userId;
     protected  String kid;
     protected HashMap<String,ArrayList<KaRestResponse.SharedList>> payload;
-    private boolean notify;
-    private int methodType;
-    private String accessToken;
-    private Callback<KaRestResponse.ShareResponse> callback;
+    private final boolean notify;
+    private final int methodType;
+    private final String accessToken;
+    private final Callback<KaRestResponse.ShareResponse> callback;
 
 
     public ShareInfoRequest(String accessToken, String userId, String kid, boolean notify, int methodType,

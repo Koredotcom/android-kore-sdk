@@ -244,33 +244,33 @@ public class AnnoucementResModel implements Serializable {
     public void setSharedOn(Long sharedOn) {
         this.sharedOn = sharedOn;
     }
-    public class MyActions implements Serializable {
+    public static class MyActions implements Serializable {
 
         @SerializedName("follow")
         @Expose
-        private Boolean follow;
+        private boolean follow;
         @SerializedName("privilege")
         @Expose
-        private Long privilege;
+        private long privilege;
 
-        public Boolean getFollow() {
+        public boolean getFollow() {
             return follow;
         }
 
-        public void setFollow(Boolean follow) {
+        public void setFollow(boolean follow) {
             this.follow = follow;
         }
 
-        public Long getPrivilege() {
+        public long getPrivilege() {
             return privilege;
         }
 
-        public void setPrivilege(Long privilege) {
+        public void setPrivilege(long privilege) {
             this.privilege = privilege;
         }
 
     }
-    public class SharedList implements Serializable{
+    public static class SharedList implements Serializable{
 
         @SerializedName("lN")
         @Expose
@@ -353,7 +353,7 @@ public class AnnoucementResModel implements Serializable {
 
     }
 
-    public class Owner implements Serializable {
+    public static class Owner implements Serializable {
 
         @SerializedName("lN")
         @Expose

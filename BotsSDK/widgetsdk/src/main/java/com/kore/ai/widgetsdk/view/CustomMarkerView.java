@@ -3,13 +3,13 @@ package com.kore.ai.widgetsdk.view;
 import android.content.Context;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.utils.MPPointF;
-import com.github.mikephil.charting.utils.Utils;
 import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.charts.components.MarkerView;
+import com.kore.ai.widgetsdk.charts.data.CandleEntry;
+import com.kore.ai.widgetsdk.charts.data.Entry;
+import com.kore.ai.widgetsdk.charts.highlight.Highlight;
+import com.kore.ai.widgetsdk.charts.utils.MPPointF;
+import com.kore.ai.widgetsdk.charts.utils.Utils;
 
 /**
  * Created by Shiva Krishna on 11/7/2017.
@@ -17,7 +17,7 @@ import com.kora.ai.widgetsdk.R;
 
 public class CustomMarkerView extends MarkerView {
 
-    private TextView tvContent;
+    private final TextView tvContent;
     public CustomMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview

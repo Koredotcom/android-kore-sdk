@@ -1,8 +1,9 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
+
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,8 +11,6 @@ import java.util.Collections;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
 /**
  * Created by Pradeep Mahato on 01-Jun-16.

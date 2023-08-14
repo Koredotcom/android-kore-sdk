@@ -1,9 +1,10 @@
 package kore.botssdk.view.viewHolder;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
 

@@ -16,14 +16,12 @@
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/contactCardRL"
         android:layout_width="match_parent"
         android:background="@drawable/calender_view_background"
         android:layout_height="61dp"
         android:gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        >
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/headerTV"
@@ -42,7 +40,6 @@
             android:layout_below="@id/headerTV"
             android:layout_alignParentStart="true"
             android:layout_marginTop="4dp"
-            android:fontFamily="@font/latomedium"
             android:text="@{contactListInfo.value}"
             android:textColor="@color/color_626281"
             android:textSize="15sp" />

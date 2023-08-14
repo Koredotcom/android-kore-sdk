@@ -3,12 +3,13 @@ package com.kore.ai.widgetsdk.views;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.widget.MultiAutoCompleteTextView;
+
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 import com.kore.ai.widgetsdk.listeners.ActionListener;
 
 
-public class MyWidgetAutoCompletionTextView extends MultiAutoCompleteTextView {
+public class MyWidgetAutoCompletionTextView extends AppCompatMultiAutoCompleteTextView {
 
 
     public MyWidgetAutoCompletionTextView(Context context) {
@@ -38,8 +39,8 @@ public class MyWidgetAutoCompletionTextView extends MultiAutoCompleteTextView {
     private int mIndex;
     private long mDelay = 150; // in ms
 
-    private Handler mHandler = new Handler();
-    private Runnable characterAdder = new Runnable() {
+    private final Handler mHandler = new Handler();
+    private final Runnable characterAdder = new Runnable() {
         @Override
         public void run() {
             setText(mText.subSequence(0, mIndex++));

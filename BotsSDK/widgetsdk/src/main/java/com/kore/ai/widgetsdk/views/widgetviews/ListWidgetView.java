@@ -1,5 +1,8 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +13,6 @@ import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -28,11 +28,9 @@ import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.FullViewActivity;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ListWidgetAdapter;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
@@ -45,7 +43,6 @@ import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetListDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
@@ -54,7 +51,6 @@ import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
@@ -69,8 +65,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
-import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
 
 public class ListWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private float dp1;
@@ -108,7 +102,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     }
 
     private WidgetsModel mWidget;
-    private String name;
+    private final String name;
     private String trigger;
     WidgetViewMoreEnum widgetViewMoreEnum;
     Context context;
@@ -191,7 +185,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         dp1 = (int) Utility.convertDpToPixel(context, 1);
         listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
         listWidgetAdapter.setSkillName(name);
-        listWidgetAdapter.setFromWidget(true);
         listWidgetAdapter.setViewMoreEnum(widgetViewMoreEnum);
         listWidgetAdapter.setVerticalListViewActionHelper(this);
         imgMenu = view.findViewById(R.id.icon_image);
@@ -429,7 +422,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -456,7 +449,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -502,12 +495,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     tvButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                    (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                buttonAction(model.getData().get(0).getHeaderOptions().getButton(), true);
-                            } else {
-                                buttonAction(model.getData().get(0).getHeaderOptions().getButton(), false);
-                            }
+                            buttonAction(model.getData().get(0).getHeaderOptions().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                    (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                         }
                     });
 
@@ -577,16 +566,10 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                             public void onClick(View v) {
 
 
-                                if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                        (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                   // buttonAction(model.getHeaderOptions().getButton(), true);
-                                    buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"",true);
-
-                                } else {
-                                    //buttonAction(model.getHeaderOptions().getButton(), false);
-                                    buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"",false);
-
-                                }
+                                // buttonAction(model.getHeaderOptions().getButton(), true);
+                                //buttonAction(model.getHeaderOptions().getButton(), false);
+                                buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                        (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                             }
                               //       }
                         });
@@ -597,7 +580,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             }
 
         }
-        if (model != null && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
+        if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
 
             if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
@@ -606,44 +589,37 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             listWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setPreviewLength(3);
-            listWidgetAdapter.notifyDataSetChanged();
         }
         else if(model.getData().get(0).getTemplateType().equals("loginURL")){
-            if(model != null ) {
-                listWidgetAdapter.setWidgetData(null);
-                listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
-                list_widget_root_recycler.setAdapter(listWidgetAdapter);
-                listWidgetAdapter.setLoginNeeded(true);
-            }
+            listWidgetAdapter.setWidgetData(null);
+            listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
+            list_widget_root_recycler.setAdapter(listWidgetAdapter);
+            listWidgetAdapter.setLoginNeeded(true);
         }
         else if(model.getData().get(0).getTemplateType().equals("form"))
         {
-            if(model != null)
-            {
-                list_widget_root_recycler.setVisibility(GONE);
-                llFormData.setVisibility(VISIBLE);
-                tvFillForm.setText(mWidget.getTitle());
+            list_widget_root_recycler.setVisibility(GONE);
+            llFormData.setVisibility(VISIBLE);
+            tvFillForm.setText(mWidget.getTitle());
 
-                tvFillForm.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
-                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
-                            intent.putExtra("url", model.getData().get(0).getFormLink());
-                            intent.putExtra("header",mWidget.getTitle());
-                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                        }else{
-                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
-                        }
+            tvFillForm.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                        Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                        intent.putExtra("url", model.getData().get(0).getFormLink());
+                        intent.putExtra("header",mWidget.getTitle());
+                        ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    }else{
+                        Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
                     }
-                });
-            }
+                }
+            });
         }
         else
         {
             listWidgetAdapter.setData(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
-            listWidgetAdapter.notifyDataSetChanged();
         }
     }
 }

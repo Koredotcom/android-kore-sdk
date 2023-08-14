@@ -23,7 +23,7 @@ public class PanelBaseModel implements Serializable,Cloneable {
         return data;
     }
 
-    public void setData(PanelResponseData.Panel data) {
+    public final void setData(PanelResponseData.Panel data) {
         this.data = data;
     }
 }

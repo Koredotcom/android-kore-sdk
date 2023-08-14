@@ -1,4 +1,4 @@
-package kore.botssdk.BotDb;
+package kore.botssdk.botdb;
 
 import android.content.Context;
 
@@ -11,12 +11,12 @@ import kore.botssdk.models.BotRequest;
 
 public class BotDataPersister /*extends SpiceRequest<Void>*/ {
 
-    private Context mContext;
-    private static Gson gson = new Gson();
-    private String payload;
-    private boolean isSentMessage;
-    private BotRequest sentMsg;
-    private String userId;
+    private final Context mContext;
+    private static final Gson gson = new Gson();
+    private final String payload;
+    private final boolean isSentMessage;
+    private final BotRequest sentMsg;
+    private final String userId;
 
     public BotDataPersister(Context mContext, String userId, String payload, boolean isSentMessage, BotRequest sentMsg) {
 //        super(Void.class);

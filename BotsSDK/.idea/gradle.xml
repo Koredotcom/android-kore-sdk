@@ -7,13 +7,12 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="11" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/MPAndroidChart-3.1.0" />
             <option value="$PROJECT_DIR$/korebot" />
             <option value="$PROJECT_DIR$/korebotsdklib" />
-            <option value="$PROJECT_DIR$/korefileuploadsdk" />
             <option value="$PROJECT_DIR$/widgetsdk" />
           </set>
         </option>

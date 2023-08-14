@@ -1,4 +1,3 @@
-/*
 package kore.botssdk.net;
 
 import java.util.HashMap;
@@ -45,4 +44,3 @@ public class RegisterPushNotificationRequest  {
         //return response;
     }
 }
-*/

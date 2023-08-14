@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -59,7 +60,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         holder.close_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dataList.remove(position);
+                dataList.remove(holder.getBindingAdapterPosition());
                 notifyDataSetChanged();
                 attachmentListner.onRemoveAttachment();
             }

@@ -16,9 +16,9 @@ import com.squareup.picasso.Picasso;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotCarouselItemButtonAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 
 /**
@@ -63,7 +63,7 @@ public class CarouselItemView extends ViewGroup {
 
     private void init() {
         ownLayoutInflater = LayoutInflater.from(getContext());
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 
         View inflatedView;
         inflatedView = ownLayoutInflater.inflate(R.layout.carousel_item_layout, container, false);

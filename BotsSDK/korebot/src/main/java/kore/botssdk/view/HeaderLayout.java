@@ -10,8 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.utils.BubbleConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -51,7 +51,7 @@ public class HeaderLayout extends ViewGroup {
     private void init() {
 
         if (!isInEditMode()) {
-            dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = DimensionUtil.dp1;
         }
 
         //Add a textView

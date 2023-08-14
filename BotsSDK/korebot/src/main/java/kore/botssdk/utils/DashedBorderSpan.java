@@ -8,8 +8,8 @@ import android.text.style.ReplacementSpan;
 
 public class DashedBorderSpan extends ReplacementSpan {
 
-    private Drawable mDrawable;
-    private int mPadding;
+    private final Drawable mDrawable;
+    private final int mPadding;
 
 
     public DashedBorderSpan(Drawable drawable, int padding) {

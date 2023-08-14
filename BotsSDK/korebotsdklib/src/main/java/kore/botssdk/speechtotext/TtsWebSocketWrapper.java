@@ -5,13 +5,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.net.URI;
 import java.util.HashMap;
 
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnection;
 import kore.botssdk.io.crossbar.autobahn.websocket.WebSocketConnectionHandler;
 import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocket;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.websocket.SocketConnectionListener;
 
 /**
@@ -33,7 +33,7 @@ public final class TtsWebSocketWrapper {
 //    private String accessToken;
 
 
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Restricting outside object creation
@@ -90,7 +90,7 @@ public final class TtsWebSocketWrapper {
          */
 
         String url = SDKConfiguration.Server.TTS_WS_URL;
-        Log.d(LOG_TAG,"The url is "+ url);
+        LogUtils.d(LOG_TAG,"The url is "+ url);
         try {
 //            this.uri = new URI(url);
             mConnection.connect(url, new  WebSocketConnectionHandler() {
@@ -104,7 +104,7 @@ public final class TtsWebSocketWrapper {
 
                 @Override
                 public void onClose(int code, String reason) {
-                    Log.d(LOG_TAG, "Connection Lost.");
+                    LogUtils.d(LOG_TAG, "Connection Lost.");
                     if (socketConnectionListener != null) {
                         socketConnectionListener.onClose(code, reason);
                     }
@@ -169,7 +169,7 @@ public final class TtsWebSocketWrapper {
             return true;
         } else {
            connect(socketConnectionListener);
-            Log.e(LOG_TAG, "Connection is not present. Reconnecting...");
+            LogUtils.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
         }
     }
@@ -184,21 +184,17 @@ public final class TtsWebSocketWrapper {
             try {
                 mConnection.sendClose();
             } catch (Exception e) {
-                Log.d(LOG_TAG, "Exception while disconnection");
+                LogUtils.d(LOG_TAG, "Exception while disconnection");
             }
-            Log.d(LOG_TAG, "DisConnected successfully");
+            LogUtils.d(LOG_TAG, "DisConnected successfully");
         } else {
-            Log.d(LOG_TAG, "Cannot disconnect.._client is null");
+            LogUtils.d(LOG_TAG, "Cannot disconnect.._client is null");
         }
 
     }
 
     public boolean isConnected() {
-        if (mConnection != null && mConnection.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return mConnection != null && mConnection.isConnected();
     }
 
     /*@Override

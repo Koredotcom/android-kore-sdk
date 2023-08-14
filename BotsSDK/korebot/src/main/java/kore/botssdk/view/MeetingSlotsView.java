@@ -15,13 +15,13 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.MeetingSlotsButtonAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.models.MeetingTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -83,7 +83,7 @@ public class MeetingSlotsView extends ViewGroup {
         meetingLayout = view.findViewById(R.id.meeting_layout);
         button1 = (TextView) view.findViewById(R.id.button1);
         button2 = view.findViewById(R.id.button2);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             button1.setLetterSpacing(0.06f);
             button2.setLetterSpacing(0.06f);

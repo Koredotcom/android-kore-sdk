@@ -1,6 +1,13 @@
 
 package com.kore.ai.widgetsdk.plantronics;
 
+import static android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED;
+import static android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED;
+import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
+import static android.bluetooth.BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED;
+import static android.bluetooth.BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT;
+import static android.bluetooth.BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS;
+
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,16 +16,9 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
-import static android.bluetooth.BluetoothDevice.ACTION_ACL_CONNECTED;
-import static android.bluetooth.BluetoothDevice.ACTION_ACL_DISCONNECTED;
-import static android.bluetooth.BluetoothDevice.EXTRA_DEVICE;
-import static android.bluetooth.BluetoothHeadset.ACTION_AUDIO_STATE_CHANGED;
-import static android.bluetooth.BluetoothHeadset.ACTION_VENDOR_SPECIFIC_HEADSET_EVENT;
-import static android.bluetooth.BluetoothHeadset.EXTRA_VENDOR_SPECIFIC_HEADSET_EVENT_ARGS;
-
 public class PlantronicsReceiver extends BroadcastReceiver {
     private static final String TAG = "PlantronicsReceiver";
-    private BluetoothHandler handler;
+    private final BluetoothHandler handler;
     public static final int HEADSET_EVENT = 198007;
 
     public PlantronicsReceiver(BluetoothHandler btHandler){

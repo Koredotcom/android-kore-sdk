@@ -28,8 +28,6 @@
     <color name="color_5258bd">@color/splash_background_color</color>
     <color name="color_splash">@color/splash_background_color</color>
 
-    <color name="passwordGrey">#545656</color>
-
     <color name="color_e4f9fd">#e4f9fd</color>
     <color name="color_5fad56">#5fad56</color>
     <color name="color_grey_all_7">#777777</color>

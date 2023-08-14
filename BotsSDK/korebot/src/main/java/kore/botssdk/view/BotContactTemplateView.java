@@ -12,11 +12,11 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotContactTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.ContactTemplateModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -53,7 +53,7 @@ public class BotContactTemplateView extends ViewGroup {
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         botListViewTitle = (TextView) findViewById(R.id.botListViewTitle);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
     }

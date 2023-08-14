@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -24,37 +26,33 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ButtonListAdapter;
+import com.kore.ai.widgetsdk.charts.animation.Easing;
+import com.kore.ai.widgetsdk.charts.charts.PieChart;
+import com.kore.ai.widgetsdk.charts.components.AxisBase;
+import com.kore.ai.widgetsdk.charts.components.Description;
+import com.kore.ai.widgetsdk.charts.components.Legend;
+import com.kore.ai.widgetsdk.charts.components.XAxis;
+import com.kore.ai.widgetsdk.charts.data.BarData;
+import com.kore.ai.widgetsdk.charts.data.BarDataSet;
+import com.kore.ai.widgetsdk.charts.data.BarEntry;
+import com.kore.ai.widgetsdk.charts.data.Entry;
+import com.kore.ai.widgetsdk.charts.data.PieData;
+import com.kore.ai.widgetsdk.charts.data.PieDataSet;
+import com.kore.ai.widgetsdk.charts.data.PieEntry;
+import com.kore.ai.widgetsdk.charts.formatter.PercentFormatter;
+import com.kore.ai.widgetsdk.charts.formatter.ValueFormatter;
+import com.kore.ai.widgetsdk.charts.highlight.Highlight;
+import com.kore.ai.widgetsdk.charts.interfaces.datasets.IBarDataSet;
+import com.kore.ai.widgetsdk.charts.listener.OnChartValueSelectedListener;
+import com.kore.ai.widgetsdk.charts.utils.ColorTemplate;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.formatters.BarChartDataFormatter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BaseChartModel;
@@ -68,7 +66,6 @@ import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetsDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
@@ -76,7 +73,6 @@ import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
@@ -84,7 +80,6 @@ import com.kore.ai.widgetsdk.views.viewutils.LayoutUtils;
 import com.kore.ai.widgetsdk.views.viewutils.MeasureUtils;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,8 +89,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 public class PieChartWidgetView extends BaseWidgetView {
 
@@ -112,9 +105,9 @@ public class PieChartWidgetView extends BaseWidgetView {
     private float holeRadius;
     private float transparentCircleRadius;
     private RecyclerView recyclerView;
-    private Context mContext;
+    private final Context mContext;
     private String trigger;
-    private String skillName;
+    private final String skillName;
     public ImageView imgMenu, icon_image_load;
     public TextView tvText;
     public TextView tvUrl;
@@ -293,7 +286,7 @@ public class PieChartWidgetView extends BaseWidgetView {
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if (appendUtterance && trigger != null)
@@ -321,7 +314,7 @@ public class PieChartWidgetView extends BaseWidgetView {
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if (appendUtterance && trigger != null)
@@ -359,12 +352,8 @@ public class PieChartWidgetView extends BaseWidgetView {
                     tvButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                    (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                buttonAction(model.getHeaderOptions().getButton(), true);
-                            } else {
-                                buttonAction(model.getHeaderOptions().getButton(), false);
-                            }
+                            buttonAction(model.getHeaderOptions().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                    (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                         }
                     });
 
@@ -442,14 +431,8 @@ public class PieChartWidgetView extends BaseWidgetView {
                                         ex.printStackTrace();
                                     }
                                 } else if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getType() != null && model.getHeaderOptions().getImage().getType().equals("postback")) {
-                                    if (Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) {
-                                        buttonAction(model.getHeaderOptions().getImage().getUtterance() != null ? model.getHeaderOptions().getImage().getUtterance() : model.getHeaderOptions().getImage().getPayload() != null ? model.getHeaderOptions().getImage().getPayload() : "", true);
-
-                                    } else {
-                                        buttonAction(model.getHeaderOptions().getImage().getUtterance() != null ? model.getHeaderOptions().getImage().getUtterance() : model.getHeaderOptions().getImage().getPayload() != null ? model.getHeaderOptions().getImage().getPayload() : "", false);
-
-                                    }
+                                    buttonAction(model.getHeaderOptions().getImage().getUtterance() != null ? model.getHeaderOptions().getImage().getUtterance() : model.getHeaderOptions().getImage().getPayload() != null ? model.getHeaderOptions().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                                 }
 
                                 //  buttonAction(model.getHeaderOptions().getImage().getUtterance()!=null?model.getHeaderOptions().getImage().getUtterance():model.getHeaderOptions().getImage().getPayload()!=null?model.getHeaderOptions().getImage().getPayload():"",true);
@@ -485,8 +468,8 @@ public class PieChartWidgetView extends BaseWidgetView {
             int startYear = 1;
             int groupCount = 4;
             labelCount = 0;
-            ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
-            BarDataSet dataSet[];
+            ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
+            BarDataSet[] dataSet;
             List<IBarDataSet> barDataSets = new ArrayList<>();
 
             if (barChartElements != null && barChartElements.size() > 0) {

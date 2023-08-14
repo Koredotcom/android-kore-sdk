@@ -11,7 +11,7 @@ public interface SocketConnectionListener {
      * Fired when the WebSockets connection has been established.
      * After this happened, messages may be sent.
      */
-    public void onOpen(boolean isReconnection);
+    void onOpen(boolean isReconnection);
 
     /**
      * Fired when the WebSockets connection has deceased (or could
@@ -20,7 +20,7 @@ public interface SocketConnectionListener {
      * @param code   Close code.
      * @param reason Close reason (human-readable).
      */
-    public void onClose(int code, String reason);
+    void onClose(int code, String reason);
 
     /**
      * Fired when a text message has been received (and text
@@ -28,7 +28,7 @@ public interface SocketConnectionListener {
      *
      * @param payload Text message payload or null (empty payload).
      */
-    public void onTextMessage(String payload);
+    void onTextMessage(String payload);
 
     /**
      * Fired when a text message has been received (and text
@@ -36,17 +36,17 @@ public interface SocketConnectionListener {
      *
      * @param payload Text message payload as raw UTF-8 or null (empty payload).
      */
-    public void onRawTextMessage(byte[] payload);
+    void onRawTextMessage(byte[] payload);
 
     /**
      * Fired when a binary message has been received.
      *
      * @param payload Binar message payload or null (empty payload).
      */
-    public void onBinaryMessage(byte[] payload);
+    void onBinaryMessage(byte[] payload);
 
 
-    public void refreshJwtToken();
+    void refreshJwtToken();
     /**
      * Callback for when user Connected
      *//*
