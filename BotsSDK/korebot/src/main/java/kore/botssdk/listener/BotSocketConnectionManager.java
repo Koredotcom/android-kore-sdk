@@ -578,7 +578,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void startSpeak(String text) {
-        if (text != null && !text.isEmpty() && isSubscribed) {
+        if (text != null && !text.isEmpty() && isSubscribed && ttsSynthesizer != null) {
             ttsSynthesizer.speak(text.replaceAll("\\<.*?>", ""), botClient.getAccessToken());
         }
     }
