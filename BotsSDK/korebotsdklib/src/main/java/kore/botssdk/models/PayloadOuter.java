@@ -8,6 +8,11 @@ public class PayloadOuter {
     private String type;
     private PayloadInner payload;
     private String text;
+    private String speech_hint;
+
+    public String getSpeech_hint() {
+        return speech_hint;
+    }
 
     public String getType() {
         return type;

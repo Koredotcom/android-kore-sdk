@@ -2,7 +2,6 @@ package kore.botssdk.helper
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import com.google.gson.Gson
@@ -19,8 +18,9 @@ import kore.botssdk.models.PayloadInner
 import kore.botssdk.models.PayloadOuter
 import kore.botssdk.utils.DateUtils
 import kore.botssdk.utils.StringUtils
-import kore.botssdk.view.row.chatbot.ChatBotRowType
+import kore.botssdk.view.row.SimpleListRow
 import kore.botssdk.view.row.botrequestresponse.BotRequestResponseRow
+import kore.botssdk.view.row.chatbot.ChatBotRowType
 import java.util.Date
 
 object ChatBotHelper {
@@ -33,7 +33,8 @@ object ChatBotHelper {
         context: Context,
         payload: String,
         botLocalResponse: BotResponse?,
-        addMessageToChatBotAdapter: (botResponse: BaseBotMessage) -> Unit,
+        addMessageToChatBotAdapter: (botResponse: BotResponse) -> Unit,
+        updateContentListOnSend: (botRequest: BotRequest) -> Unit,
         showQuickReplies: (botResponse: BotResponse?) -> Unit,
         setBotTypingStatus: (botResponse: BotResponse) -> Unit
     ) {
@@ -75,7 +76,7 @@ object ChatBotHelper {
                     //This is the case Bot returning user sent message from another channel
                     val botRequest: BotRequest = gson.fromJson(payload, BotRequest::class.java)
                     botRequest.createdOn = DateUtils.isoFormatter.format(Date())
-                    addMessageToChatBotAdapter(botRequest)
+                    updateContentListOnSend(botRequest)
                 } catch (e1: Exception) {
                     e1.printStackTrace()
                     try {
@@ -98,6 +99,7 @@ object ChatBotHelper {
                                         localPayload,
                                         response,
                                         addMessageToChatBotAdapter,
+                                        updateContentListOnSend,
                                         showQuickReplies,
                                         setBotTypingStatus
                                     )
@@ -232,13 +234,14 @@ object ChatBotHelper {
             textColor!!,
             bgColor!!,
             drawable,
+            false,
             isLastItem
         )
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    fun createRows(context: Context, botMessages: List<BaseBotMessage>): List<Any> {
-        var rows = emptyList<Any>()
+    fun createRows(context: Context, botMessages: List<BaseBotMessage>): List<SimpleListRow> {
+        var rows = emptyList<SimpleListRow>()
         botMessages.mapIndexed { index, baseBotMessage ->
             val isLastItem = index == botMessages.size - 1
             when (baseBotMessage) {
@@ -249,11 +252,12 @@ object ChatBotHelper {
                     val drawable = context.getDrawable(R.drawable.theme1_right_bubble_bg) as GradientDrawable
                     rows = rows + BotRequestResponseRow(
                         ChatBotRowType.RequestMsg,
-                        baseBotMessage.botInfo._id,
+                        baseBotMessage.formattedDate,
                         baseBotMessage.message.body,
                         textColor!!,
                         bgColor!!,
-                        drawable
+                        drawable,
+                        true
                     )
                 }
 

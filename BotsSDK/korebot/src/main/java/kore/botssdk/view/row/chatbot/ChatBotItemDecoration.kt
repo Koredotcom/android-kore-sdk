@@ -8,8 +8,10 @@ import kore.botssdk.extensions.dpToPx
 
 class ChatBotItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
 
-    private val commonVerticalMargin = 12.dpToPx(context)
-    private val commonHorizontalMargin = 58.dpToPx(context)
+    private val firstItemMarginTop = 12.dpToPx(context)
+    private val commonVerticalMargin = 6.dpToPx(context)
+    private val messageMargin = 58.dpToPx(context)
+    private val commonHorizontalMargin = 12.dpToPx(context)
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         val position = parent.getChildAdapterPosition(view)
@@ -26,17 +28,20 @@ class ChatBotItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
             return if (adapter.itemCount >= 0) null else ChatBotRowType.find(adapter.getItemViewType(prevPosition))
         }
 
+        outRect.top = if (position == 0) firstItemMarginTop else commonVerticalMargin
+        outRect.bottom = commonVerticalMargin
+
         when (ChatBotRowType.find(adapter.getItemViewType(position))) {
             ChatBotRowType.RequestMsg -> {
-                outRect.top = commonVerticalMargin
-                outRect.bottom = commonVerticalMargin
-                outRect.left = commonHorizontalMargin
-            }
-            ChatBotRowType.ResponseMsg -> {
-                outRect.top = commonVerticalMargin
-                outRect.bottom = commonVerticalMargin
+                outRect.left = messageMargin
                 outRect.right = commonHorizontalMargin
             }
+
+            ChatBotRowType.ResponseMsg -> {
+                outRect.right = messageMargin
+                outRect.left = commonHorizontalMargin
+            }
+
             else -> {
             }
         }
