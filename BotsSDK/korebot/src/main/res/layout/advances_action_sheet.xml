@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_options_bg"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llBottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llCloseBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="@dimen/dimen_20dp">
+
+            <TextView
+                android:id="@+id/tvOptionsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Title"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_sub_header"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_close_black_24dp" />
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/lvMoreData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20dp"
+            android:layout_marginRight="@dimen/dimen_20dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:divider="#ffffff"
+            android:dividerHeight="@dimen/dimen_10dp"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:padding="2dp"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
+</LinearLayout>
