@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_options_more"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_5dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/ivDeepLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_deeplink__1_"
+        android:layout_marginEnd="@dimen/dimen_7dp"/>
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/more_txt_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:padding="@dimen/dimen_5dp"
+        android:text="Select"
+        android:maxLines="2"
+        android:textColor="#2e6fc5"
+        android:textSize="@dimen/text_size_small" />
+
+</LinearLayout>
+
+
+

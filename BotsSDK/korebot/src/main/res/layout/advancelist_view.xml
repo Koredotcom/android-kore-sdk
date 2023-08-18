@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botCustomListRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_10dp"
+    android:orientation="vertical"
+    android:paddingBottom="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_15dp"
+        android:background="@drawable/bottom_right_rounded_rectangle"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dimen_10dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingRight="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <kore.botssdk.views.CustomTextViewBold
+                android:id="@+id/botListViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_sub_header"
+                android:visibility="gone" />
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/botListViewTitle"
+                android:layout_margin="1dp"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_normal"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivSorting"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/sort_svgrepo_com"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/botCustomListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#ffffff"
+            android:dividerHeight="5dp"
+            android:padding="2dp"
+            android:scrollbars="none" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/botCustomListViewButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_30dp"
+            android:drawableEnd="@drawable/right_arrow_iconn"
+            android:drawableTint="@color/color_blue_1_1"
+            android:gravity="center|end"
+            android:text="See More"
+            android:textColor="@color/color_blue_1_1"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/llLiveSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/theme1_left_bubble_bg"
+        android:elevation="@dimen/dimen_2dp"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lvCentralPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/dimen_12dp" />
+    </RelativeLayout>
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/tvSeeAllResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/dimen_7dp"
+        android:background="@drawable/search_rounded_bg"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingEnd="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:text="@string/see_all_results"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="bold" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvPageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="Web Pages"
+        android:textAllCaps="true"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_10dp"
+        android:background="@drawable/theme1_left_bubble_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/dimen_5dp"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lvLiveSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="@dimen/dimen_12dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+</LinearLayout>

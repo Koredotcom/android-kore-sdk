@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bot_list_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_5dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvPageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_7dp"
+        android:text="Suggested FAQ"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_sub_header"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/llPages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvPageTitle"
+        android:background="@drawable/pages_item_bg"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_15dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivPagesCell"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <kore.botssdk.views.CustomTextViewBold
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Title"
+                    android:textColor="@color/txtFontBlack"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <ImageView
+                    android:id="@+id/ivSuggestedPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_5dp"
+                    android:layout_marginTop="@dimen/dimen_3dp"
+                    android:background="@drawable/ic_launch_24px2"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Title"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_normal" />
+
+            <kore.botssdk.views.CustomTextView
+                android:id="@+id/tvFullDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="Title"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_normal"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTask"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/tvPageTitle"
+        android:background="@drawable/actions_bg"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_15dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivTaskCell"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="@dimen/dimen_30dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/tvTaskName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Title"
+            android:textColor="@color/txtFontBlack"
+            android:textSize="@dimen/text_size_sub_header"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

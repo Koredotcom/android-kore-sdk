@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:layout_margin="@dimen/dimen_7dp">
+
+    <ImageView
+        android:id="@+id/bot_list_item_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="5dp"
+        android:clickable="false"
+        android:contentDescription="@string/app_name"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/bot_list_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="@dimen/text_size_normal" />
+
+    <TextView
+        android:id="@+id/bot_list_item_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bot_list_item_title"
+        android:layout_toEndOf="@id/bot_list_item_image"
+        android:clickable="false"
+        android:ellipsize="end"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textColor="@color/footer_color_dark_grey"
+        android:textSize="@dimen/text_size_small"
+        android:visibility="gone" />
+
+
+</RelativeLayout>
