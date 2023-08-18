@@ -36,7 +36,6 @@
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
             android:maxLines="1"
             android:paddingEnd="12dp"
             android:text="@{fileModel.fileName}"
@@ -54,12 +53,9 @@
             android:paddingEnd="10dp"
             android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
             android:maxLines="1"
             android:text="@{fileModel.getSharedByDetails()}"
-            android:visibility='@{fileModel.getSharedByDetails() == null || fileModel.getSharedByDetails.trim().equals("") ? View.GONE : View.VISIBLE}'
-
-
+            android:visibility='gone'
             android:textColor="#a3b0be"
             android:textSize="13sp" />
 
@@ -70,7 +66,6 @@
             android:layout_alignStart="@+id/sharedBy"
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/image"
-            android:fontFamily="@font/latomedium"
             android:id="@+id/last_edited"
             android:paddingEnd="10dp"
             android:maxLines="1"

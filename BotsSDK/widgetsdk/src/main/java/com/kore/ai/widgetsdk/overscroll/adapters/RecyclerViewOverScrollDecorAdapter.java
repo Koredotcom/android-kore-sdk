@@ -50,31 +50,6 @@ public class RecyclerViewOverScrollDecorAdapter implements IOverScrollDecoratorA
         }
     }
 
-    public RecyclerViewOverScrollDecorAdapter(RecyclerView recyclerView, Impl impl) {
-        mRecyclerView = recyclerView;
-        mImpl = impl;
-    }
-
-    public RecyclerViewOverScrollDecorAdapter(RecyclerView recyclerView, ItemTouchHelper.Callback itemTouchHelperCallback) {
-        this(recyclerView);
-        setUpTouchHelperCallback(itemTouchHelperCallback);
-    }
-
-    public RecyclerViewOverScrollDecorAdapter(RecyclerView recyclerView, Impl impl, ItemTouchHelper.Callback itemTouchHelperCallback) {
-        this(recyclerView, impl);
-        setUpTouchHelperCallback(itemTouchHelperCallback);
-    }
-
-    protected void setUpTouchHelperCallback(final ItemTouchHelper.Callback itemTouchHelperCallback) {
-        new ItemTouchHelper(new ItemTouchHelperCallbackWrapper(itemTouchHelperCallback) {
-            @Override
-            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-                mIsItemTouchInEffect = actionState != 0;
-                super.onSelectedChanged(viewHolder, actionState);
-            }
-        }).attachToRecyclerView(mRecyclerView);
-    }
-
     @Override
     public View getView() {
         return mRecyclerView;

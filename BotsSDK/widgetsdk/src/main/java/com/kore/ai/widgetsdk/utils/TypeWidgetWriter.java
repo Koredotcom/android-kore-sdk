@@ -30,8 +30,8 @@ public class TypeWidgetWriter extends AppCompatTextView {
     public TypeWidgetWriter(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    private Handler mHandler = new Handler();
-    private Runnable characterAdder = new Runnable() {
+    private final Handler mHandler = new Handler();
+    private final Runnable characterAdder = new Runnable() {
         @Override
         public void run() {
             setText(mText.subSequence(0, mIndex++));

@@ -81,7 +81,7 @@ public class PayloadInner {
     public void setFocus(String focus) {
         this.focus = focus;
     }
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
     public boolean shouldHideComposeBar() {
         return hideComposeBar;
     }
@@ -352,7 +352,7 @@ public class PayloadInner {
     private CalEventsTemplateModel.Duration cursor = null;
 //    private Object columns = null;
     private String elementsAsString;
-    private String color = "#000000";
+    private final String color = "#000000";
 
 //    private final String INVALID_JSON = "Invalid JSON";
     private String speech_hint;

@@ -3,6 +3,6 @@
     <font
         android:fontStyle="normal"
 
-        android:font="@font/bebas_neue_regular" />
+        android:font="@font/latobold" />
 
 </font-family>

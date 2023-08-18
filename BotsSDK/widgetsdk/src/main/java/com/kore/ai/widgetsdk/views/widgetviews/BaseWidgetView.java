@@ -3,7 +3,6 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 import android.content.Context;
 import android.view.ViewGroup;
 
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
 import com.kore.ai.widgetsdk.utils.Utility;

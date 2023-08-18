@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -10,17 +12,16 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
+import com.kore.ai.widgetsdk.charts.charts.LineChart;
+import com.kore.ai.widgetsdk.charts.components.Description;
+import com.kore.ai.widgetsdk.charts.components.Legend;
+import com.kore.ai.widgetsdk.charts.components.XAxis;
+import com.kore.ai.widgetsdk.charts.data.Entry;
+import com.kore.ai.widgetsdk.charts.data.LineData;
+import com.kore.ai.widgetsdk.charts.data.LineDataSet;
+import com.kore.ai.widgetsdk.charts.interfaces.datasets.ILineDataSet;
+import com.kore.ai.widgetsdk.charts.utils.ColorTemplate;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
@@ -31,7 +32,6 @@ import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.WidgetsDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
@@ -51,8 +51,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
-
 public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGestureListener*/ {
 
     private WidgetsModel mWidget;
@@ -62,7 +60,7 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
     public ProgressBar progress;
     private View rootView;
     private TextView chartHeader;
-    private Context mContext;
+    private final Context mContext;
     private String jwtToken;
 
     private TextView pin_view,panel_name_view;
@@ -187,7 +185,7 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
     }
 
     public void setData(ArrayList<BotLineChartDataModel> lineList) {
-        LineDataSet dataSet[];
+        LineDataSet[] dataSet;
         Description desc = new Description();
 //        desc.setText("Hi This is challa");
         mChart.setDescription(desc);

@@ -74,7 +74,8 @@
     <string name="audio">&#9835;</string>
     <string name="icon_e995">&#xe995;</string> <!-- threads-->
     <string name="icon_e996">&#xe996;</string> <!-- teams-->
-
+    <string name="read_more"><![CDATA[<u> Read More </u>]]></string>
+    <string name="show_less"><![CDATA[<u> Show Less </u>]]></string>
 
     <string name="border0">
         <![CDATA[
@@ -100,11 +101,14 @@
     <string name="about">About</string>
     <string name="add_suggestions">Add Suggestions</string>
     <string name="get_started">Get Started</string>
+    <string name="see_all_results">See all results</string>
+    <string name="notification_channel_id">3903</string>
+    <string name="more">More</string>
 
     <string-array name="attachments_strings">
-        <item>Take Photo</item>
+       <!-- <item>Take Photo</item>-->
         <item>Upload Photo</item>
-        <item>Take Video</item>
+        <!--<item>Take Video</item>-->
         <item>Upload Video</item>
         <item>Attach Document</item>
     </string-array>

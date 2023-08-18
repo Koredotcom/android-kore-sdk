@@ -4,21 +4,20 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.databinding.TaskViewLayoutBinding;
-import kore.botssdk.dialogs.WidgetDialogActivityTask;
 import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.TaskTemplateModel;
@@ -30,12 +29,12 @@ import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private final Drawable selectedCheck;
     private final Drawable unSelectedCheck;
-    private Context context;
+    private final Context context;
     private float maxWidth;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isExpanded = false;
-    private int DATA_FOUND = 1;
-    private int NO_DATA = 0;
+    private final int DATA_FOUND = 1;
+    private final int NO_DATA = 0;
     private String nodata_meesage = "";
 
     public String getNodata_meesage() {

@@ -1,5 +1,8 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.utils.DateUtils.getSlotsDate;
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
+
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -21,16 +24,13 @@ import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.MeetingSlotsView;
 
-import static kore.botssdk.utils.DateUtils.getSlotsDate;
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
-
 public class MeetingSlotsButtonAdapter extends BaseAdapter {
 
     String LOG_TAG = MeetingSlotsButtonAdapter.class.getSimpleName();
 
     private ArrayList<MeetingSlotModel.Slot> meetingSlotModels = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
-    private LayoutInflater ownLayoutInflator;
+    private final LayoutInflater ownLayoutInflator;
     Context context;
     MeetingSlotsView meetSlotView;
 

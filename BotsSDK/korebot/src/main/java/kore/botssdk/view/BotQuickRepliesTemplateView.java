@@ -2,37 +2,21 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.text.Html;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 
-import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
-import kore.botssdk.adapter.QuickRepliesAdapter;
 import kore.botssdk.adapter.QuickRepliesTemplateAdapter;
 import kore.botssdk.application.AppControl;
-import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.dialogs.ListMoreActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.BotListModel;
-import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -120,9 +104,7 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
     }
 
     public boolean getRecyclerVisibility(){
-        if(recyclerView != null && recyclerView.getAdapter() != null)
-            return false;
-        return true;
+        return recyclerView == null || recyclerView.getAdapter() == null;
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {

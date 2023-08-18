@@ -25,16 +25,15 @@ import kore.botssdk.models.BotMultiSelectElementModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.StringUtils;
 
 public class MultiSelectButtonAdapter extends BaseAdapter {
 
     private ArrayList<MultiSelectBase> multiSelectModels = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
-    private LayoutInflater ownLayoutInflator;
-    private Context context;
-    private Set<MultiSelectBase> checkedItems = new HashSet<>();
-    private SharedPreferences sharedPreferences;
+    private final LayoutInflater ownLayoutInflator;
+    private final Context context;
+    private final Set<MultiSelectBase> checkedItems = new HashSet<>();
+    private final SharedPreferences sharedPreferences;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -168,7 +167,7 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
         }
 
     }
-    private View.OnClickListener itemSelectionListener = new View.OnClickListener() {
+    private final View.OnClickListener itemSelectionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if(isEnabled) {

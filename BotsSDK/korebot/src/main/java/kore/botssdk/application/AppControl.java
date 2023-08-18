@@ -10,9 +10,9 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
  */
 public class AppControl {
 
-    private Context context;
+    private final Context context;
     private static AppControl singleton;
-    private DimensionUtil dimensionUtil;
+    private final DimensionUtil dimensionUtil;
 
     public AppControl(Context context) {
         this.context = context;

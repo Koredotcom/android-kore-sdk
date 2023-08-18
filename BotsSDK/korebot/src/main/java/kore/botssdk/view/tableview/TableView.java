@@ -7,22 +7,16 @@ import android.animation.PropertyValuesHolder;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DrawableRes;
-import androidx.core.view.ViewCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
@@ -31,8 +25,6 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.BotCustomTableView;
-import kore.botssdk.view.BotTableView;
 import kore.botssdk.view.tableview.colorizers.TableDataRowColorizer;
 import kore.botssdk.view.tableview.listeners.OnScrollListener;
 import kore.botssdk.view.tableview.listeners.SwipeToRefreshListener;
@@ -65,10 +57,10 @@ public class TableView<T> extends LinearLayout {
     protected ListView tableDataView;
     private TableDataAdapter<T> tableDataAdapter;
     private TableHeaderAdapter tableHeaderAdapter;
-    private float dp1;
+    private final float dp1;
     private PayloadInner payloadInner;
     private int headerElevation;
-    private Dialog dialog;
+    private String propertyName = "y";
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 //    private int headerColor;
@@ -152,7 +144,7 @@ public class TableView<T> extends LinearLayout {
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", 0));
+                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
                 moveInAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
                 setLayoutTransition(layoutTransition);
@@ -162,7 +154,7 @@ public class TableView<T> extends LinearLayout {
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
             if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat("y", -tableHeaderView.getHeight()));
+                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
                 moveOutAnimator.setDuration(animationDuration);
                 layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
                 setLayoutTransition(layoutTransition);

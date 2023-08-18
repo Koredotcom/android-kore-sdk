@@ -1,33 +1,26 @@
 package kore.botssdk.utils;
 
+import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_IMAGE;
+import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_VIDEO;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Objects;
 
 import kore.botssdk.models.KoreMedia;
-
-import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_IMAGE;
-import static kore.botssdk.models.KoreMedia.BUFFER_SIZE_VIDEO;
 
 
 /**
@@ -38,20 +31,12 @@ public class BitmapUtils {
 
     public static final String ORIENTATION_LS = "landscape";
     public static final String ORIENTATION_PT = "portrait";
-
-    public static final String CSV_MIME_TYPE = "text/csv";
-    public static final String DOTX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.template";
-    public static final String SLDX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.presentationml.slide";
-    public static final String DOTM_MIME_TYPE = "application/vnd.ms-word.template.macroEnabled.12";
-    public static final String DOCM_MIME_TYPE = "application/vnd.ms-word.document.macroEnabled.12";
-
     public static final String EXT_DOTX = "dotx";
     public static final String EXT_DOTM = "dotm";
     public static final String EXT_DOCM = "docm";
     public static final String EXT_DOT = "dot";
     public static final String EXT_XLA = "xla";
     public static final String EXT_XLT = "xlt";
-    public static final String EXT_XLM = "xlm";
     public static final String EXT_XLL = "xll";
     public static final String EXT_XLW = "xlw";
     public static final String EXT_XLSB = "xlsb";
@@ -75,10 +60,6 @@ public class BitmapUtils {
     public static final String EXT_AUDIO_WAV = "wav";
     public static final String EXT_AUDIO_AAC = "aac";
     public static final String EXT_AUDIO_PLAIN = "audio";
-    public static final String EXT_AUDIO_RA = "ra";
-    public static final String EXT_AUDIO_RM = "rm";
-    public static final String EXT_AUDIO_WMA = "wma";
-    public static final String EXT_VIDEO_AVI = "avi";
     public static final String EXT_VIDEO_MOV = "mov";
     public static final String EXT_VIDEO_FLV = "flv";
     public static final String EXT_VIDEO_WMV = "wmv";
@@ -90,9 +71,6 @@ public class BitmapUtils {
     public static final String EXT_7ZIP = "7z";
     public static final String EXT_ZIP = "zip";
     public static final String EXT_RAR = "rar";
-    public static final String EXT_HTM = "htm";
-    public static final String EXT_HTML = "html";
-    public static final String EXT_AZW = "azw";
 
     //3dimageFileFormats
     public static final String EXT_3DM = "3dm";
@@ -212,11 +190,6 @@ public class BitmapUtils {
     public static final String EXT_VOB = "vob";
     public static final String EXT_WMV = "wmv";
 
-
-    private static final int FREE_MEMORY_FRACTION = 16;
-
-    private static final int MAX_IMAGE_SIZE = 800;
-
     public static final int TYPE_DOC_ATTACHMENT = 101;
     public static final int TYPE_PPT_ATTACHMENT = 102;
     public static final int TYPE_EXCEL_ATTACHMENT = 103;
@@ -232,36 +205,30 @@ public class BitmapUtils {
     public static final int TYPE_OTHER_ATTACHMENT = 109;
     public static final int TYPE_TEXT = 113;
 
-    public static final String DOC_TEXT = "Document";
-    public static final String PPT_TEXT = "Presentation";
-    public static final String XLX_TEXT = "Excel";
-    public static final String PDF_TEXT = "Pdf";
-    public static final String AUDIO_TEXT = "Audio";
-    public static final String VIDEO_TEXT = "Video";
-    public static final String IMAGE_TEXT = "Image";
-    public static final String ZIP_TEXT = "Zip";
-    public static final String AI_TEXT = "Adobe Illustrator Artwork";
-    public static final String PS_TEXT = "PostScript";
-    public static final String EPS_TEXT = "Encapsulated PostScript";
-    public static final String OTHER_TEXT = "Other";
-
-
     private static Bitmap decodeBitmap(File file, BitmapFactory.Options options, float rotationAngle){
         Bitmap bitmap = null, bm = null;
+        FileInputStream fis = null;
         try {
-            FileInputStream fis;
             fis = new FileInputStream(file);
             options.inJustDecodeBounds = false;
             bm = BitmapFactory.decodeStream(fis,null, options);
             Matrix matrix = new Matrix();
-            matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-            bitmap = Bitmap.createBitmap(bm, 0, 0, options.outWidth, options.outHeight, matrix, true);
+            if(bm != null){
+                matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+                bitmap = Bitmap.createBitmap(bm, 0, 0, options.outWidth, options.outHeight, matrix, true);
+            }
         } catch (OutOfMemoryError | FileNotFoundException oom){
             if(bm != null) bm.recycle();
             options.inSampleSize *= 2;
             bitmap = decodeBitmap(file, options, rotationAngle);
         } finally {
             if(bm != null && !bm.equals(bitmap)) bm.recycle();
+            if(fis != null)
+            {
+                try {
+                    fis.close();
+                }catch (Exception e){e.printStackTrace();}
+            }
         }
 
         return bitmap;
@@ -289,13 +256,11 @@ public class BitmapUtils {
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(fileName);
-//            KoreLogger.debugLog("EXIF value", exif.getAttribute(ExifInterface.TAG_ORIENTATION));
-            if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("6")) {
-
+            if (Objects.requireNonNull(exif.getAttribute(ExifInterface.TAG_ORIENTATION)).equalsIgnoreCase("6")) {
                 bitmap = rotate(bitmap, 90);
-            } else if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("8")) {
+            } else if (Objects.requireNonNull(exif.getAttribute(ExifInterface.TAG_ORIENTATION)).equalsIgnoreCase("8")) {
                 bitmap = rotate(bitmap, 270);
-            } else if (exif.getAttribute(ExifInterface.TAG_ORIENTATION).equalsIgnoreCase("3")) {
+            } else if (Objects.requireNonNull(exif.getAttribute(ExifInterface.TAG_ORIENTATION)).equalsIgnoreCase("3")) {
                 bitmap = rotate(bitmap, 180);
             }
         } catch (IOException e) {
@@ -305,10 +270,7 @@ public class BitmapUtils {
         return bitmap;
     }
 
-
     public static Bitmap decodeBitmapFromFile(File file, int reqWidth, int reqHeight) {
-
-
         ExifInterface exif;
         String orientString = null;
         try {
@@ -368,10 +330,10 @@ public class BitmapUtils {
             // end up being too large to fit comfortably in memory, so we should
             // be more aggressive with sample down the image (=larger inSampleSize).
 
-            long totalPixels = width * height / inSampleSize;
+            long totalPixels = (long) width * height / inSampleSize;
 
             // Anything more than 2x the requested pixels we'll sample down further
-            final long totalReqPixelsCap = reqWidth * reqHeight * 6;
+            final long totalReqPixelsCap = (long) reqWidth * reqHeight * 6;
 
             while (totalPixels > totalReqPixelsCap) {
                 inSampleSize *= 2;
@@ -489,7 +451,6 @@ public class BitmapUtils {
     }
 
     public static String createImageThumbnailForBulk(Bitmap thumbnail, String thumbPath, int compressQualityInt) {
-        String originalFilepath = thumbPath;
         int index = thumbPath.lastIndexOf(".");
         /*if(AppSandboxUtils.shouldEncryptLocalFiles){
             thumbPath = thumbPath.substring(0, index) + "_th"+AppSandboxUtils.ENCRYPTED_FILE_SUFFIX+".png";
@@ -497,37 +458,35 @@ public class BitmapUtils {
         thumbPath = thumbPath.substring(0, index) + "_th.png";
 //        }
 
-        Log.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail path = " + thumbPath);
+        LogUtils.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail path = " + thumbPath);
 
         File thumbnailFile = new File(thumbPath);
-        Log.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.getAbsolutePath());
+        LogUtils.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.getAbsolutePath());
+        FileOutputStream fos = null;
 
         try {
-            FileOutputStream fos = new FileOutputStream(thumbnailFile);
-            OutputStream outputStream = null;
-
+            fos = new FileOutputStream(thumbnailFile);
             thumbnail.compress(Bitmap.CompressFormat.PNG, compressQualityInt, fos);
             thumbnail = rotateIfNecessary(thumbPath, thumbnail);
-            if(outputStream != null){
-                outputStream.flush();
-                outputStream.close();
-            }
             fos.flush();
-            fos.close();
-
         } catch (IOException e) {
-            Log.e("BitmapUtils", "createImageThumbnailForBulk() - Excep: = " + e.getMessage(), e);
-
+            LogUtils.e("BitmapUtils", "createImageThumbnailForBulk() - Excep: = " + e.getMessage());
         } finally {
             if (thumbnail != null) {
                 thumbnail.recycle();
+            }
+            if( fos != null)
+            {
+                try {
+                    fos.close();
+                }catch (Exception e){e.printStackTrace();}
             }
         }
 
         return thumbPath;
     }
 
-    
+
     public static String getFileAssetOnAttachmentType(String fileType) {
         switch (fileType.toLowerCase()) {
 
@@ -744,10 +703,6 @@ public class BitmapUtils {
         }
     }
 
-
-
-    
-
     // determines extn media type. If type !image && !video && !audio then return extn
     // Method generally used with creating dir
     public static String obtainMediaTypeOfExtn(String extn) {
@@ -783,8 +738,6 @@ public class BitmapUtils {
         float maxWidth = 800f;
         float imgRatio = actualWidth/actualHeight;
         float maxRatio = maxWidth/maxHeight;
-//        int compressionQuality = 50;//50 percent compression
-//        KoreLogger.debugLog(LOG_TAG, "#############@@@@@@@@@@@@@@@@ Image size before compress ::" + sizeOf(image));
         if (actualHeight > maxHeight || actualWidth > maxWidth){
             if(imgRatio < maxRatio){
                 //adjust width according to maxHeight
@@ -812,44 +765,34 @@ public class BitmapUtils {
         final String[] columns = {MediaStore.Video.Media.DATA, MediaStore.Video.Media._ID, MediaStore.Video.Media.DURATION};
         final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
 
-        // TODO This will break if we have no matching item in the MediaStore.
         Cursor cursor = context.getContentResolver().query(uri, columns, null, null, orderBy);
         if (cursor == null)
             cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, columns, null, null, orderBy);
-        cursor.moveToLast();
 
-        if (cursor.getCount() > 0) {
-            int image_column_index = cursor
-                    .getColumnIndex(MediaStore.Video.Media._ID);
-            if(image_column_index != - 1) {
-                String file = cursor.getString(image_column_index);
-                photoId = cursor.getInt(image_column_index);
+        if(cursor != null)
+        {
+            cursor.moveToLast();
+
+            if (cursor.getCount() > 0) {
+                int image_column_index = cursor
+                        .getColumnIndex(MediaStore.Video.Media._ID);
+                if(image_column_index != - 1) {
+                    photoId = cursor.getInt(image_column_index);
+                }
             }
+            cursor.close();
         }
 
-        cursor.close();
         return photoId;
-
     }
     public static int getBufferSize(String mediaType) {
         switch (mediaType) {
             case KoreMedia.MEDIA_TYPE_IMAGE:
                 return BUFFER_SIZE_IMAGE;
-            case KoreMedia.MEDIA_TYPE_VIDEO:
-                return BUFFER_SIZE_VIDEO;
             case KoreMedia.MEDIA_TYPE_AUDIO:
                 return KoreMedia.BUFFER_SIZE_AUDIO;
             default:
                 return BUFFER_SIZE_VIDEO;
         }
-    }
-
-
-    private static Bitmap loadBitmapFromView(View v, int height, int width) {
-        Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-        v.layout(0, 0, width, height);
-        v.draw(c);
-        return b;
     }
 }

@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -15,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.cache.PanelDataLRUCache;
 import com.kore.ai.widgetsdk.events.KaEvents;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
@@ -29,6 +30,7 @@ import com.kore.ai.widgetsdk.net.KaRestBuilder;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.Utility;
@@ -36,7 +38,6 @@ import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,8 +45,6 @@ import java.util.TimerTask;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 /**
  * Created by Ramachandra Pradeep on 23-Apr-19.
@@ -65,7 +64,7 @@ public class GenericWidgetView extends LinearLayout {
 
 
     private WidgetsModel widget;
-    private String name;
+    private final String name;
     boolean hasMore;
     LinearLayoutManager mLayoutManager;
     Timer timer;
@@ -200,7 +199,7 @@ public class GenericWidgetView extends LinearLayout {
 
 
         });
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         getUserData();
 //        adapter = new KnowledgeRecyclerAdapter(null, getContext());
 //        adapter.setExpanded(false);

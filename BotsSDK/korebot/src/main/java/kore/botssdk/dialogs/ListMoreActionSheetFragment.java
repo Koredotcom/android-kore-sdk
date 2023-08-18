@@ -32,9 +32,9 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListModel;
-import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
 
@@ -52,7 +52,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         return skillName;
     }
     private BottomSheetDialog bottomSheetDialog;
-    private boolean showHeader = true;
+    private final boolean showHeader = true;
     private int count;
     private RecyclerView rvViewMore;
     private TextView tvOptionsTitle;
@@ -81,7 +81,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore.setVisibility(View.VISIBLE);
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
             botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, model.size());

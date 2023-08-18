@@ -54,7 +54,7 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
     private EditText edt_search;
     private String navigationfrom;
     private View available_switch_layout;
-    private List<CalEventsTemplateModel.Attendee> serachList = new ArrayList<>();
+    private final List<CalEventsTemplateModel.Attendee> serachList = new ArrayList<>();
     private boolean isCheckBoxRequired = true;
     private ActionBar actionBar;
     private TextView label_attendee;
@@ -167,11 +167,7 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
         menuInflater.inflate(R.menu.meeting_task_menu, menu);
         menuDone = menu.findItem(R.id.done);
 
-        if (navigationfrom.equals("Share")) {
-            menuDone.setVisible(true);
-        } else {
-            menuDone.setVisible(false);
-        }
+        menuDone.setVisible(navigationfrom.equals("Share"));
         return true;
     }
 

@@ -21,8 +21,8 @@ public class PlantronicsXEventMessage {
     public static String HEADSET_DISCONNECTED_EVENT = "HEADSET_DISCONNECTED";
     public static String CALL_STATUS_CHANGED_EVENT = "CALL_STATUS_CHANGED_EVENT";
     //holds properties that are transmitted as part of the XEvent
-    private Map<String, Object> messageProperties = new HashMap<String, Object>();
-    private String eventType;
+    private final Map<String, Object> messageProperties = new HashMap<String, Object>();
+    private final String eventType;
 
 
 /**

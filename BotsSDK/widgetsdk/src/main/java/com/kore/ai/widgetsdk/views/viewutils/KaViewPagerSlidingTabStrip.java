@@ -26,7 +26,7 @@ import android.widget.TextView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.application.AppControl;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
 import com.kore.ai.widgetsdk.view.CircularProfileView;
 
@@ -97,8 +97,8 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
     private final int TAG_PAGE_PROGRESS_VIEW_ID = 1003;
     private final int TAG_PAGE_CPV_ID = 1004;
 
-    private LinearLayout.LayoutParams defaultTabLayoutParams;
-    private LinearLayout.LayoutParams expandedTabLayoutParams;
+    private final LinearLayout.LayoutParams defaultTabLayoutParams;
+    private final LinearLayout.LayoutParams expandedTabLayoutParams;
 
     private final PageListener pageListener = new PageListener();
     public ViewPager.OnPageChangeListener delegatePageListener;
@@ -107,10 +107,10 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
 
     private HashMap<Integer, View> tabViewCache;
 
-    private AccelerateDecelerateInterpolator accelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
+    private final AccelerateDecelerateInterpolator accelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
 
 
-    private LinearLayout tabsContainer;
+    private final LinearLayout tabsContainer;
     private ViewPager pager;
 
     private int tabCount;
@@ -118,8 +118,8 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
     private int currentPosition = 0;
     private float currentPositionOffset = 0f;
 
-    private Paint rectPaint;
-    private Paint dividerPaint;
+    private final Paint rectPaint;
+    private final Paint dividerPaint;
 
     private int indicatorColor = 0xFF666666;
     private int underlineColor = 0x1A000000;
@@ -141,7 +141,7 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
 
     private int tabTextSize = 13;
     private int tabTextColor = 0xFF666666;
-    private int tabTypefaceStyle = Typeface.BOLD;
+    private final int tabTypefaceStyle = Typeface.BOLD;
 
     private int lastScrollX = 0;
 
@@ -228,7 +228,7 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
         }
 
         if (!isInEditMode()) {
-            dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = DimensionUtil.dp1;
 
             //Getting default selectable background from default theme resources
             TypedValue backgroundResValue = new TypedValue();
@@ -528,7 +528,7 @@ public class KaViewPagerSlidingTabStrip extends HorizontalScrollView {
         KaFontUtils.applyCustomFont(getContext(), tab);
     }
 
-    private OnClickListener onClickListener = new OnClickListener() {
+    private final OnClickListener onClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View tab) {

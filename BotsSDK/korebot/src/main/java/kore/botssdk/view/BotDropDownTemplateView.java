@@ -2,38 +2,34 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.socket.client.On;
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotDropDownTemplateView extends LinearLayout {
     private float dp1;
     private TextView tvDropDownTitle;
     private Spinner snrSplitList;
     private LinearLayout llSpinner;
-    private Context mContext;
-    private List<String> categories = new ArrayList<String>();
+    private final Context mContext;
+    private final List<String> categories = new ArrayList<String>();
     private int selectionCurrent;
     private PopupWindow popupWindow;
     private View popUpView;
@@ -85,7 +81,7 @@ public class BotDropDownTemplateView extends LinearLayout {
         snrSplitList = view.findViewById(R.id.snrSplitList);
         llSpinner = view.findViewById(R.id.llSpinner);
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         selectionCurrent = snrSplitList.getSelectedItemPosition();
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -122,8 +118,8 @@ public class BotDropDownTemplateView extends LinearLayout {
     public class SpinnerAdapter extends BaseAdapter
     {
         private LayoutInflater inflater = null;
-        private List<String> arrDropDownElementsModels;
-        private Context context;
+        private final List<String> arrDropDownElementsModels;
+        private final Context context;
 
         public SpinnerAdapter(Context context, List<String> arrDropDownElementsModels) {
             this.context = context;
@@ -183,7 +179,7 @@ public class BotDropDownTemplateView extends LinearLayout {
     public static void hideSpinnerDropDown(Spinner spinner) {
         try {
             Method method = Spinner.class.getDeclaredMethod("onDetachedFromWindow");
-            method.setAccessible(true);
+            AccessibleObject.setAccessible(new AccessibleObject[] {method}, true);
             method.invoke(spinner);
         } catch (Exception e) {
             e.printStackTrace();

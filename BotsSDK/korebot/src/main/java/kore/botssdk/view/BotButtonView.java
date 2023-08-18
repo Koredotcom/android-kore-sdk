@@ -5,18 +5,16 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotButtonTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -48,7 +46,7 @@ public class BotButtonView extends ViewGroup {
     }
 
     private void init() {
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_button_view, this, true);
         autoExpandListView = (ListView) inflatedView.findViewById(R.id.botCustomButtonList);
 

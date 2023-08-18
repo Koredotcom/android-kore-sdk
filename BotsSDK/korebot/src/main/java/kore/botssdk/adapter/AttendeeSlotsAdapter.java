@@ -1,5 +1,8 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.utils.DateUtils.getSlotsDate;
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -19,9 +22,6 @@ import kore.botssdk.R;
 import kore.botssdk.databinding.AttendeeSlotItemBinding;
 import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.SelectionUtils;
-
-import static kore.botssdk.utils.DateUtils.getSlotsDate;
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 
 /**
@@ -48,11 +48,13 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
     private ArrayList<MeetingSlotModel.Slot> normalSlots = new ArrayList<>();
     private ArrayList<MeetingSlotModel.Slot> popularSlots = new ArrayList<>();
 
-    private Drawable selectedCheck, unSelectedCheck;
-    private int selectedColor, unSelectedColor;
-    private LayoutInflater layoutInflater;
+    private final Drawable selectedCheck;
+    private final Drawable unSelectedCheck;
+    private final int selectedColor;
+    private final int unSelectedColor;
+    private final LayoutInflater layoutInflater;
     private ArrayList<MeetingSlotModel.Slot> selectedSlots = new ArrayList<>();
-    private SlotSelectionListener slotSelectionListener;
+    private final SlotSelectionListener slotSelectionListener;
     private boolean isEnabled = false;
     private void addOrRemoveSelectedSlot(MeetingSlotModel.Slot slot){
         if(selectedSlots.contains(slot)){
@@ -121,7 +123,7 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
                         addOrRemoveSelectedSlot(slot);
                         SelectionUtils.setSelectedSlots(selectedSlots);
                         slotSelectionListener.onSlotSelectionChanged();
-                        notifyItemChanged(position);
+                        notifyItemChanged(holder.getBindingAdapterPosition());
                     }
                 }
             });
@@ -203,6 +205,6 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
     }
 
     public interface SlotSelectionListener {
-        public void onSlotSelectionChanged();
+        void onSlotSelectionChanged();
     }
 }

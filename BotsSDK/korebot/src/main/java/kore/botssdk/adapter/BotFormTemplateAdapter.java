@@ -23,8 +23,8 @@ import kore.botssdk.utils.StringUtils;
 public class BotFormTemplateAdapter extends BaseAdapter {
 
     private ComposeFooterInterface composeFooterInterface;
-    private LayoutInflater ownLayoutInflator;
-    private Context context;
+    private final LayoutInflater ownLayoutInflator;
+    private final Context context;
     private ArrayList<BotFormTemplateModel> arrBotFormTemplateModels;
     private String textColor;
 

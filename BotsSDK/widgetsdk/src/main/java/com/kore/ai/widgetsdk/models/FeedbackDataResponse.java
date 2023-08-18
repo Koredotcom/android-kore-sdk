@@ -31,10 +31,7 @@ public void setRatings(List<Rating> ratings) {
 this.ratings = ratings;
 }
 
-
-
-
-    public class Feedback implements  Serializable{
+    public static class Feedback implements  Serializable{
 
         @SerializedName("rating")
         @Expose
@@ -72,10 +69,7 @@ this.ratings = ratings;
 
     }
 
-    public class Feature implements  Serializable{
-
-
-
+    public static class Feature implements  Serializable{
 
         @SerializedName("id")
         @Expose
@@ -113,7 +107,7 @@ this.ratings = ratings;
 
     }
 
-    public class Option implements  Serializable{
+    public static class Option implements  Serializable{
 
         private boolean userAction;
 
@@ -182,7 +176,7 @@ this.ratings = ratings;
 
     }
 
-    public class Rating implements  Serializable{
+    public static class Rating implements  Serializable{
 
 
         @Override

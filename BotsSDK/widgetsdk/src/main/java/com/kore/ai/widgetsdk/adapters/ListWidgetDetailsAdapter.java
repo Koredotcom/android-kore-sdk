@@ -1,7 +1,6 @@
 package com.kore.ai.widgetsdk.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.ContentModel;
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.view.ProfileTextView;
 import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
@@ -22,9 +19,9 @@ import java.util.ArrayList;
 
 public class ListWidgetDetailsAdapter extends BaseAdapter
 {
-    private Context context;
-    private ArrayList<ContentModel> contentModels;
-    private LayoutInflater layoutInflater;
+    private final Context context;
+    private final ArrayList<ContentModel> contentModels;
+    private final LayoutInflater layoutInflater;
 
     protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {

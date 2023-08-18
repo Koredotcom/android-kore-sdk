@@ -1,17 +1,17 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.cardview.widget.CardView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.cardview.widget.CardView;
+import androidx.viewpager.widget.PagerAdapter;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.KoraSearchDataSetModel;

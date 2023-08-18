@@ -21,7 +21,7 @@ import kore.botssdk.models.WelcomeChatSummaryModel;
 
 public class KoraSummaryHelpRecyclerAdapter extends RecyclerView.Adapter<KoraSummaryHelpRecyclerAdapter.ViewHolder> implements RecyclerViewDataAccessor {
 
-    private Context context;
+    private final Context context;
     private ArrayList<WelcomeChatSummaryModel> summaryList;
     VerticalListViewActionHelper verticalListViewActionHelper;
 

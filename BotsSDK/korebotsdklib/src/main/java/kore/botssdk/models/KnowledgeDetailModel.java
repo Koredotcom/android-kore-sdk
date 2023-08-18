@@ -1,13 +1,8 @@
 package kore.botssdk.models;
 
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -15,7 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.databinding.BindingAdapter;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -110,7 +104,7 @@ public class KnowledgeDetailModel implements Serializable {
                 }
             }
             if (namesList.size() > 0) {
-                return android.text.TextUtils.join(", ", namesList);
+                return TextUtils.join(", ", namesList);
             }
         }
         return "";
@@ -445,7 +439,7 @@ public boolean getDateLabelVisblity()
         this.likes = likes;
     }
 
-    public class SharedList implements Serializable {
+    public static class SharedList implements Serializable {
 
 
         private String lN;
@@ -540,7 +534,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class VoteModel implements Serializable{
+    public static class VoteModel implements Serializable{
         int vote;
 
         public int getVote() {
@@ -564,7 +558,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class MyActions implements Serializable {
+    public static class MyActions implements Serializable {
         boolean like;
         boolean follow;
         int vote;
@@ -604,7 +598,7 @@ public boolean getDateLabelVisblity()
         }
     }
 
-    public class CommentModel implements Serializable{
+    public static class CommentModel implements Serializable{
         private long cOn;
         private String id;
         private long lMod;

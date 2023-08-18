@@ -1,12 +1,13 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
-import androidx.viewpager.widget.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Created by Shiva Krishna on 2/9/2018.

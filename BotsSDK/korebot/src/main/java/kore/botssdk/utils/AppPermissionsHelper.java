@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
@@ -71,7 +72,7 @@ public class AppPermissionsHelper {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void requestForPermission(Activity activity, String permission[], int requestCode) {
+    public static void requestForPermission(Activity activity, String[] permission, int requestCode) {
         if (activity.shouldShowRequestPermissionRationale(permission[0])) {
             activity.requestPermissions( permission,
                     requestCode);

@@ -9,14 +9,12 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
 import kore.botssdk.adapter.BotTableListTemlateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotTableListModel;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotTableListTemplateView extends LinearLayout {
 
@@ -53,7 +51,7 @@ public class BotTableListTemplateView extends LinearLayout {
         autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
     }

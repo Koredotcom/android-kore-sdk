@@ -26,15 +26,18 @@ import android.speech.SpeechRecognizer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
 import com.github.zagum.speechrecognitionview.animators.BarParamsAnimator;
 import com.github.zagum.speechrecognitionview.animators.IdleAnimator;
 import com.github.zagum.speechrecognitionview.animators.RmsAnimator;
 import com.github.zagum.speechrecognitionview.animators.RotatingAnimator;
 import com.github.zagum.speechrecognitionview.animators.TransformAnimator;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.speech.SpeechListener;
+import kore.botssdk.utils.LogUtils;
 
 public class RecognitionProgressView extends View implements RecognitionListener {
 
@@ -391,7 +394,7 @@ public class RecognitionProgressView extends View implements RecognitionListener
             && results.get(0) != null && !results.get(0).isEmpty()) {
       result = results.get(0);
     } else {
-      Log.d(RecognitionProgressView.class.getSimpleName(), "No speech results, getting partial");
+      LogUtils.d(RecognitionProgressView.class.getSimpleName(), "No speech results, getting partial");
       result = getPartialResultsAsString();
     }
 
@@ -402,8 +405,8 @@ public class RecognitionProgressView extends View implements RecognitionListener
         recognitionListener.onSpeechResult(result.trim());
       }
     } catch (final Throwable exc) {
-      Log.d(RecognitionProgressView.class.getSimpleName(),
-              "Unhandled exception in delegate onSpeechResult", exc);
+      LogUtils.d(RecognitionProgressView.class.getSimpleName(),
+              "Unhandled exception in delegate onSpeechResult");
     }
   }
 
@@ -425,8 +428,8 @@ public class RecognitionProgressView extends View implements RecognitionListener
           mLastPartialResults = partialResults;
         }
       } catch (final Throwable exc) {
-        Log.d(RecognitionProgressView.class.getSimpleName(),
-                "Unhandled exception in delegate onSpeechPartialResults", exc);
+        LogUtils.d(RecognitionProgressView.class.getSimpleName(),
+                "Unhandled exception in delegate onSpeechPartialResults");
       }
     }
   }
@@ -438,7 +441,7 @@ public class RecognitionProgressView extends View implements RecognitionListener
     }*/
   }
   private String getPartialResultsAsString() {
-    final StringBuilder out = new StringBuilder("");
+    final StringBuilder out = new StringBuilder();
 
     for (final String partial : mPartialData) {
       out.append(partial).append(" ");

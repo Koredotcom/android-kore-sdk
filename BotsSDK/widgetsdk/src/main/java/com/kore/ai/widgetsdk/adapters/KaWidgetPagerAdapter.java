@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class KaWidgetPagerAdapter extends FragmentPagerAdapter{
     private final SparseArray<Fragment> instantiatedFragments = new SparseArray<>();
-    private Activity mContext;
+    private final Activity mContext;
 //    private ArrayList<String> mTabHeader;
     private boolean shouldShowHome = true;
 
@@ -119,11 +119,7 @@ public class KaWidgetPagerAdapter extends FragmentPagerAdapter{
     @Nullable
     public Fragment getFragment(final int position) {
         final Fragment wr = instantiatedFragments.get(position);
-        if (wr != null) {
-            return wr;
-        } else {
-            return null;
-        }
+        return wr;
     }
 
     public Fragment getRegisteredFragment(int position) {

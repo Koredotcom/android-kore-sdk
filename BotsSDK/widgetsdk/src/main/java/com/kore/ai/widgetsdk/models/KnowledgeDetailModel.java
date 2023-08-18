@@ -448,7 +448,7 @@ public boolean getDateLabelVisblity()
         this.likes = likes;
     }
 
-    public class SharedList implements Serializable {
+    public static class SharedList implements Serializable {
 
 
         private String lN;
@@ -554,7 +554,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class VoteModel implements Serializable{
+    public static class VoteModel implements Serializable{
         int vote;
 
         public int getVote() {
@@ -578,7 +578,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public class MyActions implements Serializable {
+    public static class MyActions implements Serializable {
         boolean like;
         boolean follow;
         int vote;
@@ -618,7 +618,7 @@ public boolean getDateLabelVisblity()
         }
     }
 
-    public class CommentModel implements Serializable{
+    public static class CommentModel implements Serializable{
         private long cOn;
         private String id;
         private long lMod;

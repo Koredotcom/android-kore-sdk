@@ -7,7 +7,6 @@ import com.kore.ai.widgetsdk.models.KnowledgeDetailModel;
 import com.kore.ai.widgetsdk.models.MeetingRequestModel;
 import com.kore.ai.widgetsdk.models.User;
 import com.kore.ai.widgetsdk.models.WTaskTemplateModel;
-//import com.kore.korelib.koradbmodels.KoraTeam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,80 +27,6 @@ public class KaRestResponse {
             return bearer;
         }
     }
-    /*public class JWTTokenResponse{
-        private String jwt;
-        private String streamId;
-        private String botName;
-        private String botsUrl;
-
-        public String getTaskId() {
-            return taskId;
-        }
-
-        public void setTaskId(String taskId) {
-            this.taskId = taskId;
-        }
-
-        private String taskId;
-
-        public String getStreamId() {
-            return streamId;
-        }
-
-        public void setStreamId(String streamId) {
-            this.streamId = streamId;
-        }
-
-        public String getBotName() {
-            return botName;
-        }
-
-        public void setBotName(String botName) {
-            this.botName = botName;
-        }
-
-        public String getClientId() {
-            return clientId;
-        }
-
-        public void setClientId(String clientId) {
-            this.clientId = clientId;
-        }
-
-        public String getClientSecret() {
-            return clientSecret;
-        }
-
-        public void setClientSecret(String clientSecret) {
-            this.clientSecret = clientSecret;
-        }
-
-        private String clientId;
-        private String clientSecret;
-
-        *//**
-         * @return
-         * The jwt
-         *//*
-        public String getJwt() {
-            return jwt;
-        }
-        *//**
-         * @param jwt
-         * The jwt
-         *//*
-        public void setJwt(String jwt) {
-            this.jwt = jwt;
-        }
-
-        public String getBotsUrl() {
-            return botsUrl;
-        }
-
-        public void setBotsUrl(String botsUrl) {
-            this.botsUrl = botsUrl;
-        }
-    }*/
 
     public static class URLUnfurlResponse {
 
@@ -278,7 +203,7 @@ public class KaRestResponse {
 
 
         private KaRestResponse.BotMessage message;
-        private String resourceid = "/bot.message";
+        private final String resourceid = "/bot.message";
         private BotInfoModel botInfo;
         private int clientMessageId = (int)System.currentTimeMillis();
         private KaRestResponse.Meta meta;

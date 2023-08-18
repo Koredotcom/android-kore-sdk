@@ -60,7 +60,6 @@
             android:layout_toStartOf="@+id/image"
             android:layout_toEndOf="@+id/image"
             android:ellipsize="end"
-            android:fontFamily="@font/latomedium"
             android:maxLines="1"
             android:text="@{StringEscapeUtils.unescapeHtml4(emailModel.getFrom())}"
             android:textColor="@color/color_485260"

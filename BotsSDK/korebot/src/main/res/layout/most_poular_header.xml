@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:textColor="#ffa10e"
     android:textSize="13sp"
-    android:fontFamily="@font/latomedium"
     android:gravity="center_vertical"
     android:text="Most Popular Slot"
     android:textAllCaps="true"

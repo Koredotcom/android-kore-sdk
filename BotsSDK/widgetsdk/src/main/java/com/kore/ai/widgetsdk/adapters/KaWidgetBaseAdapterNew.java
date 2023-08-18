@@ -12,19 +12,18 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
 import com.kore.ai.widgetsdk.models.ContactViewListModel;
 import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
+import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 import com.kore.ai.widgetsdk.viewholder.ArticleWidgetViewHolder;
-import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
-import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.views.widgetviews.ArticlesWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.BarChartWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.ChartListWidgetView;
@@ -44,9 +43,9 @@ import java.util.HashMap;
 
 public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements UpdateRefreshItem, VerticalListViewActionHelper {
 
-    private Context kaWidgetFragmentContext;
-    private Context activityObj;
-    private WidgetViewMoreEnum widgetViewMoreEnum;
+    private final Context kaWidgetFragmentContext;
+    private final Context activityObj;
+    private final WidgetViewMoreEnum widgetViewMoreEnum;
     PanelLevelData panelData;
     public boolean isFirstLaunch() {
         return isFirstLaunch;
@@ -55,7 +54,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         isFirstLaunch = firstLaunch;
     }
     private boolean isFirstLaunch;
-    private String skillName;
+    private final String skillName;
     private String jwtToken;
     public PanelBaseModel getWidget() {
         return widget;
@@ -90,7 +89,6 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int templateType) {
-        View view = null;
         switch (templateType) {
             case WidgetConstants.MEETINGS_TEMPLATE:
                 MeetingWidgetView mView = new MeetingWidgetView(parent.getContext(), this, widget.getData().getName(), widgetViewMoreEnum);
@@ -272,14 +270,14 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
                 return WidgetConstants.CHART_LIST_TEMPLATE;
 
             case WidgetConstants.TASK_LIST:
-                if (widget.getData().getWidgets().get(position).getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getData().getWidgets().get(position).getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.TASKS_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.TASK_LIST_TEMPLATE;
                 }
 
             case WidgetConstants.FILES_TEMPLATE_SERVER:
-                if (widget.getData().getWidgets().get(position).getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getData().getWidgets().get(position).getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.FILES_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.FILES_TEMPLATE;
@@ -468,7 +466,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
 //    }
 
     public class MeetingViewHolder extends RecyclerView.ViewHolder {
-        private MeetingWidgetView customView;
+        private final MeetingWidgetView customView;
 
         public MeetingViewHolder(View v) {
             super(v);
@@ -481,7 +479,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class ChartListViewHolder extends RecyclerView.ViewHolder {
-        private ChartListWidgetView customView;
+        private final ChartListWidgetView customView;
 
         public ChartListViewHolder(View v) {
             super(v);
@@ -494,7 +492,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class DefaultViewHolder extends RecyclerView.ViewHolder {
-        private DefaultWidgetView customView;
+        private final DefaultWidgetView customView;
 
         public DefaultViewHolder(View v) {
             super(v);
@@ -507,7 +505,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class PieChartViewHolder extends RecyclerView.ViewHolder {
-        private PieChartWidgetView customView;
+        private final PieChartWidgetView customView;
 
         public PieChartViewHolder(View v) {
             super(v);
@@ -519,7 +517,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
     public class BarChartViewHolder extends RecyclerView.ViewHolder {
-        private BarChartWidgetView customView;
+        private final BarChartWidgetView customView;
 
         public BarChartViewHolder(View v) {
             super(v);
@@ -532,7 +530,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class FormWidgetViewHolder extends RecyclerView.ViewHolder {
-        private FormWidgetView customView;
+        private final FormWidgetView customView;
 
         public FormWidgetViewHolder(View v) {
             super(v);
@@ -544,7 +542,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
     public class LineChartViewHolder extends RecyclerView.ViewHolder {
-        private LineChartWidgetView customView;
+        private final LineChartWidgetView customView;
 
         public LineChartViewHolder(View v) {
             super(v);
@@ -557,7 +555,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class ListWidgetViewHolder extends RecyclerView.ViewHolder {
-        private ListWidgetView customView;
+        private final ListWidgetView customView;
 
         public ListWidgetViewHolder(View v) {
             super(v);
@@ -570,7 +568,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class TableListWidgetViewHolder extends RecyclerView.ViewHolder {
-        private TableListWidgetView customView;
+        private final TableListWidgetView customView;
 
         public TableListWidgetViewHolder(View v) {
             super(v);
@@ -583,7 +581,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class HashTagViewHolder extends RecyclerView.ViewHolder {
-        private TrendingHashTagView customView;
+        private final TrendingHashTagView customView;
 
         public HashTagViewHolder(View v) {
             super(v);
@@ -609,7 +607,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
 //    }
 
     public class SkillViewHolder extends RecyclerView.ViewHolder {
-        private SkillWidgetView customView;
+        private final SkillWidgetView customView;
 
         public SkillViewHolder(View v) {
             super(v);
@@ -622,7 +620,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     }
 
     public class GenericWidgetSingleViewHolder extends RecyclerView.ViewHolder {
-        private GenericWidgetView customView;
+        private final GenericWidgetView customView;
 
         public GenericWidgetSingleViewHolder(View v) {
             super(v);

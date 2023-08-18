@@ -1,5 +1,8 @@
 package kore.botssdk.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -40,16 +43,13 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.Widget.Element;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.CircleTransform;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
@@ -69,15 +69,15 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     ArrayList<String> selectedIds = null;
 
-    public ArrayList<Element> getEventList() {
+    public ArrayList<Widget.Element> getEventList() {
         return eventList;
     }
 
 //    private Duration _cursor;
 
-    ArrayList<Element> eventList = new ArrayList<>();
+    ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private Context mContext;
+    private final Context mContext;
 
     private String skillName;
 
@@ -92,10 +92,10 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     private LoginModel loginModel;
 
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
-    private int MESSAGE = 2;
-    private int REPORTS = 3;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
+    private final int MESSAGE = 2;
+    private final int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -135,7 +135,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
         selectedIds.clear();
     }
 
-    public Element getItem(int position) {
+    public Widget.Element getItem(int position) {
         if (position < eventList.size())
             return eventList.get(position);
         else return null;
@@ -217,7 +217,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
             ViewHolder holder = (ViewHolder) holderData;
 
-            final Element model = eventList.get(position);
+            final Widget.Element model = eventList.get(position);
 
             if (StringUtils.isNullOrEmpty(model.getTitle())) {
                 holder.txtTitle.setVisibility(GONE);
@@ -292,12 +292,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
                             ex.printStackTrace();
                         }
                     }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
-                        if(Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME)|| TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))){
-                            defaultAction(model.getDefaultAction().getPayload(),true);
-                        }else{
-                            defaultAction(model.getDefaultAction().getPayload(),false);
-                        }
+                        defaultAction(model.getDefaultAction().getPayload(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                     }
                 }
             });
@@ -309,7 +305,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     public void defaultAction(String utterance, boolean appendUtterance){
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer("");
+        StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
@@ -365,8 +361,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     }
 
-    public void setWidgetData(List<Element> data) {
-        this.eventList = (ArrayList<Element>) data;
+    public void setWidgetData(List<Widget.Element> data) {
+        this.eventList = (ArrayList<Widget.Element>) data;
         notifyDataSetChanged();
     }
 

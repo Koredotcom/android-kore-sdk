@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,11 +57,11 @@ class WebSocketReader extends Thread {
     private final Handler mMaster;
     private final WebSocketOptions mOptions;
 
-    private BufferedInputStream mBufferedStream;
-    private Socket mSocket;
+    private final BufferedInputStream mBufferedStream;
+    private final Socket mSocket;
     private int mPosition;
     private byte[] mMessageData;
-    private ByteArrayOutputStream mMessagePayload;
+    private final ByteArrayOutputStream mMessagePayload;
 
     private final static int STATE_CLOSED = 0;
     private final static int STATE_CONNECTING = 1;
@@ -77,7 +78,7 @@ class WebSocketReader extends Thread {
     /// Frame currently being received.
     private FrameHeader mFrameHeader;
 
-    private Utf8Validator mUtf8Validator = new Utf8Validator();
+    private final Utf8Validator mUtf8Validator = new Utf8Validator();
 
 
     /**
@@ -334,7 +335,7 @@ class WebSocketReader extends Thread {
                                 if (!val.isValid()) {
                                     throw new WebSocketException("invalid close reasons (not UTF-8)");
                                 } else {
-                                    reason = new String(ra, "UTF-8");
+                                    reason = new String(ra, StandardCharsets.UTF_8);
                                 }
                             }
                         }
@@ -407,7 +408,7 @@ class WebSocketReader extends Thread {
                             } else {
 
                                 // dispatch WS text message as Java String (previously already validated)
-                                String s = new String(mMessagePayload.toByteArray(), "UTF-8");
+                                String s = mMessagePayload.toString("UTF-8");
                                 onTextMessage(s);
                             }
 
@@ -535,7 +536,7 @@ class WebSocketReader extends Thread {
 
                 // Check HTTP status code
                 boolean serverError = false;
-                String rawHeaders = new String(Arrays.copyOf(mMessageData, pos + 4), "UTF-8");
+                String rawHeaders = new String(Arrays.copyOf(mMessageData, pos + 4), StandardCharsets.UTF_8);
                 String[] headers = rawHeaders.split("\r\n");
                 if (headers[0].startsWith("HTTP")) {
                     Pair<Integer, String> status = parseHttpStatus(headers[0]);
@@ -662,7 +663,7 @@ class WebSocketReader extends Thread {
 
         } catch (WebSocketException e) {
 
-            LOGGER.d("run() : WebSocketException (" + e.toString() + ")");
+            LOGGER.d("run() : WebSocketException (" + e + ")");
 
             // wrap the exception and notify master
             notify(new ProtocolViolation(e));
@@ -672,7 +673,7 @@ class WebSocketReader extends Thread {
             // BufferedInputStream throws when the socket is closed,
             // eat the exception if we are already in STATE_CLOSED.
             if (mState != STATE_CLOSED && !mSocket.isClosed()) {
-                LOGGER.d("run() : SocketException (" + e.toString() + ")");
+                LOGGER.d("run() : SocketException (" + e + ")");
 
                 // wrap the exception and notify master
                 notify(new ConnectionLost(null));
@@ -680,7 +681,7 @@ class WebSocketReader extends Thread {
 
         } catch (Exception e) {
 
-            LOGGER.d("run() : Exception (" + e.toString() + ")");
+            LOGGER.d("run() : Exception (" + e + ")");
 
             // wrap the exception and notify master
             notify(new Error(e));

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListWidgetTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -25,7 +24,9 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotListWidgetModel;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -67,7 +68,7 @@ public class BotListWidgetTemplateView extends ViewGroup {
         botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
         workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
         tvListWidgetTitle = (TextView) findViewById(R.id.tvListWidgetTitle);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         KaFontUtils.applyCustomFont(getContext(), view);
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 
@@ -76,7 +77,7 @@ public class BotListWidgetTemplateView extends ViewGroup {
     public void populateListWidgetTemplateView(String title, BotListViewMoreDataModel botListViewMoreDataModel, ArrayList<BotListWidgetModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, int moreCount, String seeMore) {
 
         if(botListViewMoreDataModel != null)
-            Log.e("More Data", botListViewMoreDataModel.getTab1().toString());
+            LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
         if(!StringUtils.isNullOrEmpty(title))
         {

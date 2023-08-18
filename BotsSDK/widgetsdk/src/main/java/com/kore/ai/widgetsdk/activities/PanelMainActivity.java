@@ -1,5 +1,11 @@
 package com.kore.ai.widgetsdk.activities;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -91,12 +97,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
-
 public class PanelMainActivity extends KaAppCompatActivity implements PanelInterface, UpdateRefreshItem,
         ChildToActivityActions, GestureDetector.OnGestureListener, VerticalListViewActionHelper, ComposeFooterInterface
 {
@@ -104,7 +104,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     private ProgressBar progressBarPanel;
     private TextView emptyPanelView;
     private PannelAdapter pannelAdapter;
-    private String packageName = "com.kore.koreapp";
+    private final String packageName = "com.kore.koreapp";
     String appName = "Kore";
     private ViewGroup activityRootView;
     private TextView closeBtnPanel, editButton;
@@ -130,7 +130,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     final Handler handler = new Handler();
 
     LinearLayout single_item_container;
-    private boolean shouldShowHome = true;
+    private final boolean shouldShowHome = true;
     private boolean isAudioPanelLaunched;
     private String jwtToken;
 
@@ -666,14 +666,14 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 return WidgetConstants.CHART_LIST_TEMPLATE;
 
             case WidgetConstants.TASK_LIST:
-                if (widget.getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.TASKS_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.TASK_LIST_TEMPLATE;
                 }
 
             case WidgetConstants.FILES_TEMPLATE_SERVER:
-                if (widget.getTemplateType().toLowerCase().equals("list")) {
+                if (widget.getTemplateType().equalsIgnoreCase("list")) {
                     return WidgetConstants.FILES_SINGLE_TEMPLATE;
                 } else {
                     return WidgetConstants.FILES_TEMPLATE;

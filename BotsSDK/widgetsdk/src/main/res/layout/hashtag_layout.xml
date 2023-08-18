@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/hashtag_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -46,7 +45,7 @@
         android:layout_below="@+id/knowledget_widget_recycler"
         android:layout_marginStart="10dp"
         android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
-        android:fontFamily="@font/latomedium"
+        android:fontFamily="@font/latoregular"
         android:gravity="center_vertical"
         android:paddingEnd="@dimen/dimen_10_dp"
         android:text="@string/view_more"

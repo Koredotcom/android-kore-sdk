@@ -1,5 +1,7 @@
 package kore.botssdk.view.tableview;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,15 +18,13 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.tableview.adapters.BotTableAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.toolkit.SimpleTableHeaderAdapter;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Extension of the {@link TableView} that gives the possibility to sort the table by every single
@@ -160,7 +160,7 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
                 height = height + (int) (25 * dp1);
             }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
-            Log.d("IKIDO","On measure called for botminitab , The total height is "+ height);
+            LogUtils.d("IKIDO","On measure called for botminitab , The total height is "+ height);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;
@@ -186,7 +186,7 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
             int measuredHeight = listItem.getMeasuredHeight();
-            Log.d("IKIDO","On measure called for listview , The total height of individual view is "+ measuredHeight);
+            LogUtils.d("IKIDO","On measure called for listview , The total height of individual view is "+ measuredHeight);
             totalHeight += listItem.getMeasuredHeight();
         }
         return totalHeight;

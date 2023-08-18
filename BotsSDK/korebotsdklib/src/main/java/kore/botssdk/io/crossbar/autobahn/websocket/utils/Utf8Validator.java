@@ -59,7 +59,7 @@ public class Utf8Validator {
      * Reset validator state to begin validation of new
      * UTF-8 stream.
      */
-    public void reset() {
+    public final void reset() {
         mState = ACCEPT;
         mPos = 0;
     }

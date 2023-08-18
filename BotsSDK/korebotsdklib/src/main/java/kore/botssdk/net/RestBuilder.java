@@ -16,7 +16,6 @@ import java.lang.reflect.Type;
 import java.util.concurrent.TimeUnit;
 
 import kore.botssdk.net.SDKConfiguration.Server;
-import kore.botssdk.ssl.SSLHelper;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -70,29 +69,29 @@ public class RestBuilder {
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);
 
-        if(SDKConfiguration.SSLConfig.isSSLEnable)
-        {
+//        if(SDKConfiguration.SSLConfig.isSSLEnable)
+//        {
+//            return new OkHttpClient.Builder()
+//                    .connectTimeout(60, TimeUnit.SECONDS)
+//                    .readTimeout(60, TimeUnit.SECONDS)
+//                    .addInterceptor(interceptor)
+//                    .dispatcher(dispatcher)
+//                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.KORE_BOT_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
+//                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+//                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+//                    .build();
+//        }
+//        else
+//        {
             return new OkHttpClient.Builder()
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(interceptor)
                     .dispatcher(dispatcher)
-                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.KORE_BOT_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
                     //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
                     //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
                     .build();
-        }
-        else
-        {
-            return new OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .addInterceptor(interceptor)
-                    .dispatcher(dispatcher)
-                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-                    .build();
-        }
+//        }
     }
 
     private static GsonConverterFactory createConverter() {
@@ -109,7 +108,7 @@ public class RestBuilder {
         public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws com.google.gson.JsonParseException {
             boolean value;
             try {
-                value = json.getAsInt() > 0 ? true : false;
+                value = json.getAsInt() > 0;
             } catch (NumberFormatException ex) {
                 value = json.getAsBoolean();
             }

@@ -1,7 +1,6 @@
 package kore.botssdk.view.tableview.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,25 +12,25 @@ import android.widget.TextView;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.TableRespExpandDataAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTableModel> {
 
     private static final int TEXT_SIZE = 14;
     private static final int HEADER_TEXT_SIZE = 12;
-    private String[] alignment;
-    private String[]  headers;
+    private final String[] alignment;
+    private final String[]  headers;
     int dp1;
-    private PayloadInner payloadInner;
+    private final PayloadInner payloadInner;
 
     public BotRespExpandTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, String[]  headers, PayloadInner payloadInner) {
         super(context, data, payloadInner);
         this.alignment = alignment;
         this.headers = headers;
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         this.payloadInner = payloadInner;
     }
 

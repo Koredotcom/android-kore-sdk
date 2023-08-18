@@ -64,7 +64,7 @@ public class BotRestBuilder {
         public Object deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws com.google.gson.JsonParseException {
             boolean value;
             try {
-                value = json.getAsInt() > 0 ? true : false;
+                value = json.getAsInt() > 0;
             } catch (NumberFormatException ex) {
                 value = json.getAsBoolean();
             }

@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.content.Context;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -10,22 +12,20 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.charts.charts.BarChart;
+import com.kore.ai.widgetsdk.charts.components.AxisBase;
+import com.kore.ai.widgetsdk.charts.components.Legend;
+import com.kore.ai.widgetsdk.charts.components.XAxis;
+import com.kore.ai.widgetsdk.charts.components.YAxis;
+import com.kore.ai.widgetsdk.charts.data.BarData;
+import com.kore.ai.widgetsdk.charts.data.BarDataSet;
+import com.kore.ai.widgetsdk.charts.data.BarEntry;
+import com.kore.ai.widgetsdk.charts.formatter.LargeValueFormatter;
+import com.kore.ai.widgetsdk.charts.formatter.ValueFormatter;
+import com.kore.ai.widgetsdk.charts.interfaces.datasets.IBarDataSet;
+import com.kore.ai.widgetsdk.charts.utils.ColorTemplate;
 import com.kore.ai.widgetsdk.formatters.BarChartDataFormatter;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotBarChartDataModel;
@@ -36,12 +36,10 @@ import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.WidgetsDataModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.NetworkUtility;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
 import com.kore.ai.widgetsdk.view.CustomMarkerView;
@@ -55,10 +53,9 @@ import java.util.Map;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValueSelectedListener*/ {
 
@@ -70,7 +67,7 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
     private View rootView;
     private TextView chartHeader;
     private int labelCount = 0;
-    private Context mContext;
+    private final Context mContext;
     private TextView pin_view,panel_name_view;
     private String jwtToken;
 
@@ -188,11 +185,6 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
     }
 
     private void loadData() {
-
-        /*if(PanelDataLRUCache.getInstance().getEntry(name) !=null && !shouldRefresh){
-            afterDataLoad((Widget) PanelDataLRUCache.getInstance().getEntry(name));
-            return;
-        }*/
         if(mWidget.getCallbackURL()==null) {
             return;
         }
@@ -218,23 +210,8 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         progress.setVisibility(View.GONE);
-
-
-                        String msg;
-                        Drawable drawable=null;
-                        if (!NetworkUtility.isNetworkConnectionAvailable(BarChartWidgetView.this.getContext())) {
-                            //No Internet Connect
-                            msg=getResources().getString(R.string.no_internet_connection);
-                            drawable=getResources().getDrawable(R.drawable.no_internet);
-                        } else {
-                            //Oops some thing went wrong
-                            msg=getResources().getString(R.string.oops);
-                            drawable=getResources().getDrawable(R.drawable.oops_icon);
-                        }
-//                        defaultWidgetAdapter.setWidgetData(null);
-//                        defaultWidgetAdapter.setMessage(msg,drawable);
                     }
 
                     @Override
@@ -347,9 +324,9 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
         labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
+        ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-        BarDataSet dataSet[];
+        BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
         if (barChartElements != null && barChartElements.size() > 0) {

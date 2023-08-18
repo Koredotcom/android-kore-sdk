@@ -89,7 +89,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:textSize="10sp"
-                android:fontFamily="@font/latomedium"
+                android:fontFamily="@font/latoregular"
                 android:textColor="#FFFFFF"
                 android:gravity="center"
                 android:layout_centerVertical="true"

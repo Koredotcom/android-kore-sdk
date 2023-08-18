@@ -24,6 +24,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.CircleTransform;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AgentTransferTemplateView extends LinearLayout
 {
@@ -70,7 +71,7 @@ public class AgentTransferTemplateView extends LinearLayout
         rvAgentButtons.setItemAnimator(new DefaultItemAnimator());
         rvAgentButtons.addItemDecoration(new VerticalSpaceItemDecoration(15));
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
         listViewHeight = (int) AppControl.getInstance().getDimensionUtil().screenWidth;
     }

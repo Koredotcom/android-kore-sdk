@@ -1,7 +1,7 @@
 package kore.botssdk.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;
@@ -10,10 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
-
-import kore.korebotsdklib.R;
 
 /**
  * Created by Pradeep Mahato on 09-Jun-16.
@@ -28,6 +27,7 @@ public class DateUtils {
     public static final long oneMonth = oneDay * 30;
     public static final long oneYear = oneMonth * 12;
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+    public static final SimpleDateFormat fileFormatter = new SimpleDateFormat("yy_MM_dd_HH_mm_ss", Locale.ENGLISH);
     public static final Format dateFormat4 = new SimpleDateFormat("d MMM yyyy 'at' h:mm a", Locale.ENGLISH);
     public static final Format dateTime = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     public static final Format dateDay = new SimpleDateFormat("dd", Locale.ENGLISH);
@@ -73,6 +73,9 @@ public class DateUtils {
         return getTimeStamp(timeStampMillis);
     }
 
+    public static String getCurrentDateTime() {
+        return fileFormatter.format(new Date(System.currentTimeMillis()));
+    }
 
     public static long getTimeStampLong(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
 
@@ -135,6 +138,7 @@ public class DateUtils {
      */
 
 
+    @SuppressLint("DefaultLocale")
     public static String calenderDateFormation(Context mContext, long startDate) {
         long currentTime = System.currentTimeMillis();
         long diff = startDate - currentTime;
@@ -159,77 +163,11 @@ public class DateUtils {
         } else if (isTomorrow(startDate)) {
             return "Tomorrow";
         } else if (diff >= oneDay && diff < oneYear) {
-            long val = (DateUtils.getDDMMYYYY(startDate).getTime() - DateUtils.getDDMMYYYY(currentTime).getTime());
+            long val = (Objects.requireNonNull(DateUtils.getDDMMYYYY(startDate)).getTime() - Objects.requireNonNull(DateUtils.getDDMMYYYY(currentTime)).getTime());
             return String.format("%s%d%s", "In ", TimeUnit.MILLISECONDS.toDays(val), " days");
         } else {
-            return String.format("%s%d%s", "In ", diff / oneYear, mContext.getResources().getString(R.string.time_stamp_years), " years");
+            return String.format("%s%d%s", "In ", (diff / oneYear), " years");
         }
-    }
-
-
-    public static String formattedSentDateV2_2(Context mContext, long diff) {
-        long timeOffset = 0;
-
-
-//        int messageDay = Integer.parseInt(dateDay.format(date1));
-//        int currentDay = Integer.parseInt(dateDay.format(date2));
-
-        try {
-            if (android.text.format.DateUtils.isToday(diff)) {
-                return new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(diff));
-            } else if (isYesterday(diff)) {
-                return "Yesterday";
-            } else if (diff >= oneHour && diff < oneDay) {
-                return String.format("%d%s", TimeUnit.MILLISECONDS.toHours(diff), mContext.getResources().getString(R.string.time_stamp_hours));
-            } else if (diff >= oneDay && diff < oneWeek) {
-                return String.format("%d%s", TimeUnit.MILLISECONDS.toDays(diff), mContext.getResources().getString(R.string.time_stamp_days));
-            } else if (diff >= oneWeek && diff < oneMonth) {
-                return String.format("%d%s", diff / oneWeek, mContext.getResources().getString(R.string.time_stamp_weeks));
-            } else if (diff >= oneMonth && diff < oneYear) {
-                //return String.format("%d%s", diff / oneMonth, mContext.getResources().getString(R.string.time_stamp_mins_months));
-                return String.format("%d%s", diff / oneWeek, mContext.getResources().getString(R.string.time_stamp_weeks));
-            } else {
-                return String.format("%d%s", diff / oneYear, mContext.getResources().getString(R.string.time_stamp_years));
-            }
-        } catch (Exception e) {
-            return "";
-        }
-
-    }
-
-    public static String getFormattedSendDateInTimeFormatCoreFunctionality2(Context mContext, long last_Modified) {
-
-
-        if (android.text.format.DateUtils.isToday(last_Modified)) {
-            return new SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(new Date(last_Modified));
-        } else if (isYesterday(last_Modified)) {
-            return "Yesterday";
-        }
-
-
-        long currentTime = System.currentTimeMillis();
-        long diff = currentTime - last_Modified;
-
-        String time = "";
-
-        long oneMin = 60 * 1000;
-
-        long serverSyncOffset = 1000 * 60 * 3; //3 minutes
-        if (diff > (-serverSyncOffset)) {
-            /*if (diff < oneMin) {
-                return "Just Now";
-            } else if (diff >= oneMin) {
-                date.setTime(sentDate);
-                time = dateTime.format(date);
-            }*/
-            time = DateUtils.formattedSentDateV2_2(mContext, diff);
-        } else {
-            /*date.setTime(sentDate);
-            time = dateFormat.format(date);*/
-            time = DateUtils.formattedSentDateV2_2(mContext, last_Modified);
-        }
-
-        return time;
     }
 
     public static String formattedSentDateV6(long lastModified) {
@@ -341,10 +279,7 @@ public class DateUtils {
         } else {
             Date current = new Date();
             Date other = new Date(when);
-            if (other.before(current))
-                return true;
-            else
-                return false;
+            return other.before(current);
         }
     }
 

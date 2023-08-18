@@ -2,36 +2,31 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
+import kore.botssdk.charts.charts.BarChart;
+import kore.botssdk.charts.components.Legend;
+import kore.botssdk.charts.components.XAxis;
+import kore.botssdk.charts.components.YAxis;
+import kore.botssdk.charts.data.BarData;
+import kore.botssdk.charts.data.BarDataSet;
+import kore.botssdk.charts.data.BarEntry;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.formatter.LargeValueFormatter;
+import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.charts.highlight.Highlight;
+import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
+import kore.botssdk.charts.listener.OnChartValueSelectedListener;
+import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -42,7 +37,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 public class StackedBarChatView extends ViewGroup implements OnChartValueSelectedListener {
 
     private BarChart mChart;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
     int labelCount = 0;
 
@@ -54,7 +49,7 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
 
     private void init() {
         labelCount = 0;
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mChart = new BarChart(mContext);
         mChart.setTouchEnabled(true);
         mChart.setPinchZoom(false);
@@ -118,9 +113,9 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
         labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry> yVals1[];// = new ArrayList<BarEntry>();
+        ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
-        BarDataSet dataSet[];
+        BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
         if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
@@ -135,14 +130,14 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
             yVals1[0] = new ArrayList<>();
 //                BotBarChartDataModel model2 = _payInner.getBarChartDataModels().get(1);
             ArrayList<BotBarChartDataModel> dataList = new ArrayList<>(size);
-            String labels[] = new String[size];
+            String[] labels = new String[size];
             for (int in = 0; in < size; in++) {
                 dataList.add(_payInner.getBarChartDataModels().get(in));
                 labels[in] = _payInner.getBarChartDataModels().get(in).getTitle();
             }
 
             for (int k = 0; k < dataList.get(0).getValues().size(); k++) {
-                float arr[] = new float[size];
+                float[] arr = new float[size];
                 for (int j = 0; j < size; j++) {
                     arr[j] = dataList.get(j).getValues().get(k);
                 }

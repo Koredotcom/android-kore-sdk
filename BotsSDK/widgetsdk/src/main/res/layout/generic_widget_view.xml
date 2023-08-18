@@ -65,7 +65,7 @@
         android:layout_below="@+id/item_list"
         android:layout_marginStart="10dp"
         android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
-        android:fontFamily="@font/latomedium"
+        android:fontFamily="@font/latoregular"
         android:gravity="center_vertical"
         android:text="@string/view_more"
         android:textColor="#737d87"

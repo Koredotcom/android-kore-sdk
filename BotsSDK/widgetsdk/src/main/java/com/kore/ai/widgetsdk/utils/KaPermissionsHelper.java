@@ -78,7 +78,7 @@ public class KaPermissionsHelper {
         return shouldShowRequestPermissionRationale;
     }
 
-    public static void requestForPermission(Activity activity, String permission[], int requestCode) {
+    public static void requestForPermission(Activity activity, String[] permission, int requestCode) {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission[0])) {
             ActivityCompat.requestPermissions(activity, permission,
                     requestCode);

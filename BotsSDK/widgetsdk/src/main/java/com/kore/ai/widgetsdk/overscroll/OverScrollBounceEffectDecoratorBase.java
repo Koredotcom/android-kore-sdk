@@ -1,5 +1,10 @@
 package com.kore.ai.widgetsdk.overscroll;
 
+import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_BOUNCE_BACK;
+import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_DRAG_END_SIDE;
+import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_DRAG_START_SIDE;
+import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_IDLE;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -12,11 +17,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 import com.kore.ai.widgetsdk.overscroll.adapters.IOverScrollDecoratorAdapter;
-
-import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_BOUNCE_BACK;
-import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_DRAG_END_SIDE;
-import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_DRAG_START_SIDE;
-import static com.kore.ai.widgetsdk.overscroll.IOverScrollState.STATE_IDLE;
 
 
 public abstract class OverScrollBounceEffectDecoratorBase implements IOverScrollDecor, View.OnTouchListener {

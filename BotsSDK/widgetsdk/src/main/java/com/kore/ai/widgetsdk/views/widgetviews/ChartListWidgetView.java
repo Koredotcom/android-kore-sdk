@@ -1,8 +1,9 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -16,13 +17,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ChartListWidgetAdapter;
-import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
-import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
@@ -35,14 +33,12 @@ import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.net.KaRestAPIHelper;
 import com.kore.ai.widgetsdk.network.NetworkEvents;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.ToastUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
-import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 import com.kore.ai.widgetsdk.views.viewutils.LayoutUtils;
 import com.kore.ai.widgetsdk.views.viewutils.MeasureUtils;
@@ -50,14 +46,6 @@ import com.kore.ai.widgetsdk.views.viewutils.MeasureUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-//import kore.botssdk.activity.GenericWebViewActivity;
-
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 public class ChartListWidgetView extends ViewGroup implements VerticalListViewActionHelper {
     private float dp1;
@@ -86,7 +74,7 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
         }
     }
     private WidgetsModel mWidget;
-    private String name;
+    private final String name;
     final Handler handler = new Handler();
     WidgetViewMoreEnum widgetViewMoreEnum;
     Context context;
@@ -164,7 +152,7 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
 
         meeting_header = view.findViewById(R.id.meeting_header);
         meeting_progress = view.findViewById(R.id.meeting_progress);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         defaultWidgetAdapter = new ChartListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, true, false);
         defaultWidgetAdapter.setVerticalListViewActionHelper(this);
         getUserData();

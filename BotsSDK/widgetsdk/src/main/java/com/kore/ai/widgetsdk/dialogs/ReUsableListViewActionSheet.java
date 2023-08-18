@@ -18,8 +18,8 @@ import com.kore.ai.widgetsdk.utils.KaFontUtils;
  */
 
 public class ReUsableListViewActionSheet extends Dialog {
-    private Context mContext;
-    private LayoutInflater layoutInflater;
+    private final Context mContext;
+    private final LayoutInflater layoutInflater;
     private ListAdapter adapter;
 
     public ListView getOptionsListView() {

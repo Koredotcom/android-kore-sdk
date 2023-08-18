@@ -1,14 +1,12 @@
 package com.kore.ai.widgetsdk.models;
 
+import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.kore.ai.widgetsdk.net.SDKConfiguration;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.UUID;
-
-import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 
 public class WidgetsModel implements Serializable,Cloneable {
 
@@ -275,7 +273,7 @@ public class WidgetsModel implements Serializable,Cloneable {
     }
 
 
-    public class AutoRefresh implements Serializable{
+    public static class AutoRefresh implements Serializable{
 
         private boolean enabled;
         private int interval;
@@ -298,7 +296,7 @@ public class WidgetsModel implements Serializable,Cloneable {
 
     }
 
-    public class Source implements Serializable{
+    public static class Source implements Serializable{
 
         private String type;
         private String resource;
@@ -321,7 +319,7 @@ public class WidgetsModel implements Serializable,Cloneable {
 
     }
 
-    public class Param implements Serializable
+    public static class Param implements Serializable
     {
         private String from = identity;
 //        private String from = UUID.randomUUID().toString();
@@ -345,7 +343,7 @@ public class WidgetsModel implements Serializable,Cloneable {
         }
     }
 
-    public class Visibility implements Serializable{
+    public static class Visibility implements Serializable{
 
         private String namespace;
         private String[] namespaceIds;

@@ -1,16 +1,15 @@
 package kore.botssdk.view;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatTextView;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Shiva Krishna on 2/22/2018.
@@ -60,7 +59,7 @@ public class ProfileTextView extends AppCompatTextView {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }*/
-    void init(){
+    public final void init(){
         paint = new Paint();
         tPaint = new Paint();
         paint.setFlags(Paint.ANTI_ALIAS_FLAG);

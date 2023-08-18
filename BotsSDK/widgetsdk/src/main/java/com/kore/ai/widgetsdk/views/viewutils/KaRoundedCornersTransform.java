@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.viewutils;
 
+import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,8 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 
 import com.squareup.picasso.Transformation;
-
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
 /**
  * Created by Shiva Krishna on 3/14/2018.

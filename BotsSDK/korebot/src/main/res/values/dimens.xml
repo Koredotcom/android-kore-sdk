@@ -35,10 +35,10 @@
     <dimen name="mini_table_layout_height">150dp</dimen>
 
     <!-- Text Sizes -->
-    <dimen name="text_size_small">12dp</dimen>
-    <dimen name="text_size_normal">14dp</dimen>
-    <dimen name="text_size_sub_header">16dp</dimen>
-    <dimen name="text_size_header">18dp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_normal">14sp</dimen>
+    <dimen name="text_size_sub_header">16sp</dimen>
+    <dimen name="text_size_header">18sp</dimen>
     <dimen name="agent_image_size">50dp</dimen>
     <dimen name="bottom_options_icon_width">30dp</dimen>
 
@@ -61,5 +61,6 @@
     <dimen name="dimen_28dp">28dp</dimen>
     <dimen name="dimen_20dp">20dp</dimen>
     <dimen name="dimen_40dp">40dp</dimen>
+    <dimen name="dimen_2dp">2dp</dimen>
 
 </resources>

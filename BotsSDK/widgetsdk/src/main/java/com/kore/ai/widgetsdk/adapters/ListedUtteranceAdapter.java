@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ListedUtteranceAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private final Context mContext;
     private ArrayList<String> utterancesList;
     // private HashMap<String, KoreContact> contactHashMap;
     LayoutInflater layoutInflater;

@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp"
             android:layout_below="@+id/chart_progress"
             android:orientation="vertical">
-            <com.github.mikephil.charting.charts.LineChart
+            <com.kore.ai.widgetsdk.charts.charts.LineChart
                 android:id="@+id/mChart"
                 android:layout_width="match_parent"
                 android:layout_marginLeft="@dimen/dimen_10_dp"

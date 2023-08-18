@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,15 +25,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class FeedbackActionSheetFragment extends BottomSheetDialogFragment implements View.OnClickListener{
 
@@ -74,7 +72,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
                              @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.feedback_template_view, container,false);
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
         multiSelectLayout = view.findViewById(R.id.multiSelectLayout);
         tvfeedback_template_title = view.findViewById(R.id.tvfeedback_template_title);
         rbFeedback = view.findViewById(R.id.rbFeedback);
@@ -195,11 +193,11 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     }
 
     private void resetAll() {
-        icon_1.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_1);
-        icon_2.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_2);
-        icon_3.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_3);
-        icon_4.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_4);
-        icon_5.setImageResource(com.kora.ai.widgetsdk.R.drawable.feedback_icon_5);
+        icon_1.setImageResource(R.drawable.feedback_icon_1);
+        icon_2.setImageResource(R.drawable.feedback_icon_2);
+        icon_3.setImageResource(R.drawable.feedback_icon_3);
+        icon_4.setImageResource(R.drawable.feedback_icon_4);
+        icon_5.setImageResource(R.drawable.feedback_icon_5);
     }
 
     @Override
@@ -276,19 +274,19 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         this.payloadInner.setEmojiPosition(position);
         switch (position) {
             case 0:
-                Glide.with(getActivity()).load(R.drawable.feedbac_ic_emo_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
+                Glide.with(getActivity()).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
                 break;
             case 1:
-                Glide.with(getActivity()).load(R.drawable.feedbac_ic_emo_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
+                Glide.with(getActivity()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
                 break;
             case 2:
-                Glide.with(getActivity()).load(R.drawable.feedbac_ic_emo_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
+                Glide.with(getActivity()).load(R.drawable.feedback_icon_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
                 break;
             case 3:
-                Glide.with(getActivity()).load(R.drawable.feedbac_ic_emo_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
+                Glide.with(getActivity()).load(R.drawable.feedback_icon_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
                 break;
             case 4:
-                Glide.with(getActivity()).load(R.drawable.feedbacon_emo_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
+                Glide.with(getActivity()).load(R.drawable.feedback_icon_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
                 break;
         }
     }

@@ -2,9 +2,6 @@ package kore.botssdk.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 /**
  * Created by Ramachandra Pradeep on 12/8/2016.
@@ -34,7 +34,7 @@ public class QuickReplyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.quickreply_layout, null);
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
         findViews(view);
         return view;
     }

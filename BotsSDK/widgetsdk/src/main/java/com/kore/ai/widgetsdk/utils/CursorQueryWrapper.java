@@ -9,7 +9,7 @@ import android.util.Log;
 public class CursorQueryWrapper {
 
     private final String tag;
-    private QueryInterface queryInterface;
+    private final QueryInterface queryInterface;
 
     public static class CursorIteratonInterrupt extends Exception {
         private static final long serialVersionUID = -1124533346986767621L;
@@ -49,7 +49,7 @@ public class CursorQueryWrapper {
 
     private CursorQueryWrapper(final String tag, QueryInterface queryInterface) {
         this.tag = tag;
-        this.queryInterface = queryInterface == null ? new ContextQuery() : queryInterface;
+        this.queryInterface = new ContextQuery();
     }
 
     public boolean query(Context context, Uri uri, String[] projection,
@@ -62,8 +62,7 @@ public class CursorQueryWrapper {
             bld.append("\nUri: ").append(uri.toString());
             bld.append("\nProjection: ").append(projection == null ? "null" : TextUtils.join(", ", projection));
             bld.append("\nSelection: ").append(selection);
-            bld.append("\nSelectionArgs: ").append(
-                    selectionArgs == null ? "null" : TextUtils.join(", ", selectionArgs));
+            bld.append("\nSelectionArgs: ").append("null");
             bld.append("\nSortOrder: ").append(sortOrder);
             Log.d(tag, bld.toString());
             cursor = queryInterface.query(context, uri, projection, selection, selectionArgs, sortOrder);
@@ -73,10 +72,8 @@ public class CursorQueryWrapper {
             }
             Log.d(tag, "Cursor's count is " + cursor.getCount());
             iterator.prepareForIterations(cursor);
-            if (iterator.shouldIterate()) {
-                while (cursor.moveToNext()) {
-                    iterator.iterate(cursor);
-                }
+            while (cursor.moveToNext()) {
+                iterator.iterate(cursor);
             }
         } catch (Exception e) {
             if (!(e instanceof CursorIteratonInterrupt)) {

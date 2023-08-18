@@ -18,7 +18,7 @@ public class TableColumnDpWidthModel implements TableColumnModel {
     private final Map<Integer, Integer> columnWidths;
     private final DisplayMetrics displayMetrics;
     private int columnCount;
-    private int defaultColumnWidth;
+    private final int defaultColumnWidth;
 
     /**
      * Creates a new TableColumnModel with the given number of columns. Every column has by default

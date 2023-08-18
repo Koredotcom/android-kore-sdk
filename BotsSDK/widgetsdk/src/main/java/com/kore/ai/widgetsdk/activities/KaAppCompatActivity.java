@@ -36,7 +36,7 @@ import okhttp3.ResponseBody;
 
 public abstract class KaAppCompatActivity extends AppCompatActivity{
 
-    private String TAG = "KoreAppCompatActivity";
+    private final String TAG = "KoreAppCompatActivity";
     AlertDialog alertDialog;
 
     protected final String LOG_TAG = getClass().getSimpleName();
@@ -209,7 +209,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity{
     }
 
     protected final void showToast(String message){
-        if(message != null && !message.equals("INVALID_ACCESS_TOKEN"))
+        if(!message.equals("INVALID_ACCESS_TOKEN"))
             ToastUtils.showToast(this,message);
     }
     protected final void showToast(String msg, int length) {
@@ -241,7 +241,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity{
         snackbar.show();
     }
 
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private String getHeader(String code) {
         switch (code.trim()) {
             case "QuestionAlreadyExist":

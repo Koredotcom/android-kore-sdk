@@ -14,7 +14,7 @@ import kore.botssdk.R;
  */
 public class CustomToast {
 
-    private static boolean enableToast = true;
+    private static final boolean enableToast = true;
 
     public static void toastIt(Context context, CharSequence text, int duration) {
         if (enableToast) {

@@ -26,14 +26,14 @@ import java.util.ArrayList;
 
 public class MultiLamp extends RelativeLayout {
 
-    private int overlayColor = Color.parseColor("#CC000000");
+    private final int overlayColor = Color.parseColor("#CC000000");
     private ArrayList<Target> list;
-    private Activity activity;
+    private final Activity activity;
     public static final char LEFT = 'l';
     public static final char RIGHT = 'r';
     public static final char TOP = 't';
     public static final char BOTTOM = 'b';
-    private Context context;
+    private final Context context;
     //    private float density;
     private Callback callback;
 
@@ -132,7 +132,7 @@ public class MultiLamp extends RelativeLayout {
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 paint.setTextSize(60f);
                 paint.setTypeface(Typeface.create("Arial", Typeface.NORMAL));
-                int location[] = new int[2];
+                int[] location = new int[2];
                 view.getLocationInWindow(location);
                 float x = view.getX() + view.getWidth() / 2f;
                 float y = view.getY() + view.getHeight() / 2f;

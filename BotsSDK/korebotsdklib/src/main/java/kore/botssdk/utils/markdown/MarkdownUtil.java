@@ -384,7 +384,7 @@ public class MarkdownUtil {
 
             StringBuilder builder = new StringBuilder(text);
             builder.delete(itemStartOffset, itemEndOffset);
-            String itemList = String.format(itemContainerFormat, itemBuilder.toString());
+            String itemList = String.format(itemContainerFormat, itemBuilder);
             builder.insert(itemStartOffset, itemList);
             text = builder.toString();
 

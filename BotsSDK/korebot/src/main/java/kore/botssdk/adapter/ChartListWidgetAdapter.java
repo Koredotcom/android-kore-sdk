@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,14 +32,12 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.LoginModel;
 import kore.botssdk.models.MultiAction;
-import kore.botssdk.models.Widget.Element;
+import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 /**
  * Created by Ramachandra Pradeep on 01-Apr-19.
@@ -47,14 +47,14 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
-    ArrayList<Element> eventList = new ArrayList<>();
+    ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private Context mContext;
+    private final Context mContext;
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
-    private int MESSAGE = 2;
-    private int REPORTS = 3;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
+    private final int MESSAGE = 2;
+    private final int REPORTS = 3;
 
     public String getType() {
         return type;
@@ -92,7 +92,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         notifyDataSetChanged();
     }
 
-    public Element getItem(int position) {
+    public Widget.Element getItem(int position) {
         if (position < eventList.size())
             return eventList.get(position);
         else return null;
@@ -168,7 +168,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         else {
 
             ViewHolder holder = (ViewHolder) holderData;
-            final Element model = eventList.get(position);
+            final Widget.Element model = eventList.get(position);
 
             int dp80 = (int) dp1 * 80;
 
@@ -205,8 +205,8 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         }
     }
 
-    public void setCalData(List<Element> data) {
-        this.eventList = (ArrayList<Element>) data;
+    public void setCalData(List<Widget.Element> data) {
+        this.eventList = (ArrayList<Widget.Element>) data;
         notifyDataSetChanged();
     }
     public ArrayList getData(){

@@ -50,7 +50,7 @@ public class KnowledgeCollectionModel {
     }
 
 
-    public class Elements {
+    public static class Elements {
 
         @SerializedName("definitive")
         @Expose
@@ -95,7 +95,7 @@ public class KnowledgeCollectionModel {
     }
 
 
-    public class DataElements implements Serializable {
+    public static class DataElements implements Serializable {
 
         @SerializedName("question")
         @Expose
@@ -162,7 +162,7 @@ public class KnowledgeCollectionModel {
         }
     }
 
-    public class AnswerPayload implements Serializable {
+    public static class AnswerPayload implements Serializable {
 
         @SerializedName("text")
         @Expose

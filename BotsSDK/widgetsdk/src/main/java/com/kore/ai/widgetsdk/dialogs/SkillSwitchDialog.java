@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.SkillsAdapter;
 import com.kore.ai.widgetsdk.models.PayloadInner;
@@ -24,9 +23,10 @@ import java.util.ArrayList;
 public class SkillSwitchDialog extends Dialog {
 
     private final LayoutInflater layoutInflater;
-    private Context _context;
-    private Bundle extras;
-    private String userId, accessToken;
+    private final Context _context;
+    private final Bundle extras;
+    private final String userId;
+    private final String accessToken;
     ArrayList<PayloadInner.Skill> data = null;
 
     public SkillSwitchDialog(@NonNull Context context, Bundle extra, ArrayList<PayloadInner.Skill> _ssm) {
@@ -35,7 +35,7 @@ public class SkillSwitchDialog extends Dialog {
         _context = context;
         this.extras = extra;
         userId = extras.getString(BundleConstants.USER_ID);
-        accessToken = extras.getString(BundleConstants.ACCESS_TOKEN);
+        accessToken = extras.getString(BundleConstants.ACCESS_TKN);
         data = _ssm;
         layoutInflater = LayoutInflater.from(context);
     }

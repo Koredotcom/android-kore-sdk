@@ -47,7 +47,7 @@ public class BotTableListValueModel implements Serializable
         return layout;
     }
 
-    public class BotTableListLayoutModel implements Serializable
+    public static class BotTableListLayoutModel implements Serializable
     {
         private String align;
         private String colSize;

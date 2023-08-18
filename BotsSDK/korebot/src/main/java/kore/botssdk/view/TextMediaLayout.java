@@ -1,5 +1,7 @@
 package kore.botssdk.view;
 
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,23 +34,21 @@ import java.util.regex.Pattern;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -62,7 +62,7 @@ public class TextMediaLayout extends ViewGroup {
     public int widthStyle = 0;
 
     float dp1;
-    private Context mContext;
+    private final Context mContext;
     //    final String TEXT_COLOR = "#000000";
     private int linkTextColor;
     private Typeface medium, regular;
@@ -71,7 +71,7 @@ public class TextMediaLayout extends ViewGroup {
     private SharedPreferences sharedPreferences;
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private String leftbgColor, leftTextColor, rightbgColor, rightTextColor, themeName;
     public boolean isClicable() {
         return isClicable;
@@ -101,7 +101,7 @@ public class TextMediaLayout extends ViewGroup {
         medium = KaFontUtils.getCustomTypeface("medium",mContext);
         regular = KaFontUtils.getCustomTypeface("regular",mContext);
         if (!isInEditMode()) {
-            dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+            dp1 = DimensionUtil.dp1;
         }
 
         //Add a textView
@@ -189,8 +189,8 @@ public class TextMediaLayout extends ViewGroup {
 
             String replaceText = str.substring(_start,_end);
             String _payload = replaceText.substring(2,replaceText.length()-2);
-            Log.d("!@#$% getReqText(", _payload);
-            _payload = _payload.substring(_payload.indexOf("{"),_payload.length());
+            LogUtils.d("!@#$% getReqText(", _payload);
+            _payload = _payload.substring(_payload.indexOf("{"));
             EntityEditModel model = gson.fromJson(_payload, EntityEditModel.class);
             String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";
 
@@ -222,9 +222,9 @@ public class TextMediaLayout extends ViewGroup {
             boolean isPencilSpanClick = false;
 
             if(textualContent.indexOf("%%{")>0){
-                Log.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
+                LogUtils.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
                 textualContent = getReqText(textualContent);
-                Log.d("!@#$% AFTER ", textualContent);
+                LogUtils.d("!@#$% AFTER ", textualContent);
                 strBuilder = new SpannableStringBuilder(textualContent);
             }
             Matcher matcher = pattern.matcher(textualContent);
@@ -238,7 +238,7 @@ public class TextMediaLayout extends ViewGroup {
                 String reqText = textualContent.substring(_start+2, _end-2);
                 reqText = reqText.substring(reqText.indexOf("{"));
 
-                Log.d("!@#$% REQ_TEXT while", reqText);
+                LogUtils.d("!@#$% REQ_TEXT while", reqText);
 
                 EntityEditModel model = gson.fromJson(reqText, EntityEditModel.class);
                 String addableText = !StringUtils.isNullOrEmpty(model.getTitle())?model.getTitle().trim():"";

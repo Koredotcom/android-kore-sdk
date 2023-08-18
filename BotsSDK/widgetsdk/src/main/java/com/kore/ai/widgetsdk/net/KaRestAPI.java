@@ -2,7 +2,6 @@ package com.kore.ai.widgetsdk.net;
 
 import com.kore.ai.widgetsdk.models.AnnoucementResModel;
 import com.kore.ai.widgetsdk.models.AnnouncementPanelNewResponse;
-import com.kore.ai.widgetsdk.models.BotTableListTemplateModel;
 import com.kore.ai.widgetsdk.models.CalEventsTemplateModel;
 import com.kore.ai.widgetsdk.models.CreateEmailActionRequest;
 import com.kore.ai.widgetsdk.models.CreateEmailActionResponse;
@@ -417,10 +416,10 @@ public interface KaRestAPI {
     Call<FeatureUtteranceModel.FeatureModel> getFeatureUtterancesQuery(@Path("userId") String userId, @Query("q") String query);
 
     @GET
-    public Call<TaskTemplateResponse> getTasks(@Url String url, @Query("offSet") int offSet, @Query("limit") int limit, @Header("authorization") String accessToken);
+    Call<TaskTemplateResponse> getTasks(@Url String url, @Query("offSet") int offSet, @Query("limit") int limit, @Header("authorization") String accessToken);
 
     @GET
-    public Call<com.kore.ai.widgetsdk.restresponse.KaRestResponse.WTasksList> getWTasks(@Url String url, @Query("offSet") int offSet, @Query("limit") int limit, @Header("authorization") String accessToken);
+    Call<com.kore.ai.widgetsdk.restresponse.KaRestResponse.WTasksList> getWTasks(@Url String url, @Query("offSet") int offSet, @Query("limit") int limit, @Header("authorization") String accessToken);
 
 
 //    @GET("/api" + URL_VERSION + "/ka/users/{userId}/widgets")

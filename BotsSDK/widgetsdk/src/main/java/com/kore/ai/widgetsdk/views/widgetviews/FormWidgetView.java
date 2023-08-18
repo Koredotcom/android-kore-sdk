@@ -1,16 +1,14 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
-import android.annotation.TargetApi;
+import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -54,12 +52,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
-
 public class FormWidgetView extends LinearLayout implements VerticalListViewActionHelper
 {
-    private Context mContext;
-    private String skillName;
+    private final Context mContext;
+    private final String skillName;
     private View rootView;
     private TextView chartHeader;
     private TextView chartTitle;

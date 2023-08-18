@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.databinding.SummaryHelpLayoutBinding;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -24,8 +23,10 @@ import kore.botssdk.models.ButtonTemplate;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoraSummaryHelpModel;
+import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -36,7 +37,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
     private KoraSummaryHelpRecyclerAdapter myRecyclerViewAdapter;
     private float dp1;
     private RecyclerView summaryList;
-    private boolean isWeatherDesc = true;
+    private final boolean isWeatherDesc = true;
 
     public KoraSummaryHelpView(Context context) {
         super(context);
@@ -59,7 +60,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
 
             ArrayList<WelcomeChatSummaryModel> list = new ArrayList<WelcomeChatSummaryModel>();
 
-            if(summaryModel!=null && summaryModel.getButtons() != null && summaryModel.getButtons().size()>0){
+            if(summaryModel.getButtons() != null && summaryModel.getButtons().size() > 0){
                 for(ButtonTemplate item : summaryModel.getButtons()){
                     WelcomeChatSummaryModel mdl = new WelcomeChatSummaryModel();
                     mdl.setSummary(item.getTitle());
@@ -82,7 +83,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
     private void init() {
         summaryViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.summary_help_layout, this, true);
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         summaryViewBinding.setViewBase(this);
 
         summaryList = ((RecyclerView)findViewById(R.id.summary_items_list));
@@ -187,9 +188,24 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
 
     @Override
     public void welcomeSummaryItemClick(WelcomeChatSummaryModel model) {
-        if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && !StringUtils.isNullOrEmpty(model.getPayload())
+        if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("postback") && model.getPayload() != null
                 && composeFooterInterface != null){
-            composeFooterInterface.onSendClick(model.getPayload(),true);
+            String quickReplyPayload = null;
+            try {
+                quickReplyPayload = (String) model.getPayload();
+            }catch (Exception e)
+            {
+                try {
+                    QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) model.getPayload();
+                    quickReplyPayload = quickRepliesPayloadModel.getName();
+                }
+                catch (Exception exception)
+                {
+                    quickReplyPayload = "";
+                }
+            }
+
+            composeFooterInterface.onSendClick(quickReplyPayload ,true);
         }
     }
 

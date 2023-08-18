@@ -1,30 +1,45 @@
 package kore.botssdk.activity;
 
+import static android.view.View.VISIBLE;
+import static kore.botssdk.FCM.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
+import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
+import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -33,8 +48,6 @@ import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
-import com.kore.korefileuploadsdk.core.KoreWorker;
-import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,16 +56,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
+import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
+import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.drawables.ThemeColors;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
+import kore.botssdk.fileupload.core.KoreWorker;
+import kore.botssdk.fileupload.core.UploadBulkFile;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.fragment.QuickReplyFragment;
@@ -75,7 +91,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.BrandingNewModel;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
+import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.FormActionTemplate;
@@ -93,12 +109,15 @@ import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
+import kore.botssdk.pushnotification.PushNotificationRegister;
+import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
@@ -107,19 +126,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.view.View.VISIBLE;
-import static com.kore.ai.widgetsdk.utils.BitmapUtils.rotateIfNecessary;
-import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-
 /**
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
-                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener/*, PanelInterface,
-                                        VerticalListViewActionHelper, UpdateRefreshItem*/
+                                        TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener
 {
     String LOG_TAG = BotChatActivity.class.getSimpleName();
     FrameLayout chatLayoutFooterContainer;
@@ -138,16 +151,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     //For Bottom Panel
-    private String packageName = "com.kore.koreapp";
-    private String appName = "Kore";
-    private CustomBottomSheetBehavior mBottomSheetBehavior;
+    private final String packageName = "com.kore.koreapp";
+    private final String appName = "Kore";
     //Fragment Approch
     private FrameLayout composerView;
+    private CustomBottomSheetBehavior mBottomSheetBehavior;
     private BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
-    private String chatBgColor, chatTextColor;
     private ImageView ivChaseBackground, ivChaseLogo;
     protected int compressQualityInt = 100;
     protected Attachment attachment;
@@ -157,20 +169,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private ArrayList<BrandingNewModel> arrBrandingNewDos;
     private WebHookResponseDataModel webHookResponseDataModel;
     private BotMetaModel botMetaModel;
-    private Handler pollHandler = new Handler();
     private Runnable runnable;
-    private int poll_delay = 2000;
+    private final int poll_delay = 2000;
     private String lastMsgId = "";
+    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"template\",\"payload\":{\"type\":\"template\",\"payload\":{\"template_type\":\"advancedListTemplate\",\"title\":\"Main Title\",\"isSortEnabled\":true,\"isSearchEnabled\":false,\"isButtonAvailable\":false,\"description\":\"Main title description\",\"listViewType\":\"default\",\"listItems\":[{\"title\":\"Title\",\"description\":\"Description\",\"descriptionIcon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\",\"descriptionIconAlignment\":\"right\",\"descriptionStyles\":{\"font-size\":\"10px\",\"color\":\"#10f4f4\"},\"titleStyles\":{\"font-size\":\"14px\",\"color\":\"#9bf410\"},\"elementStyles\":{\"background\":\"#fef100\"}},{\"title\":\"Title text[title and description,icon]\",\"description\":\"Description\",\"icon\":\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\"},{\"title\":\"Title text\",\"description\":\"List item with button\",\"iconShape\":\"circle-img\",\"icon\":\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\",\"headerOptions\":[{\"contenttype\":\"button\",\"title\":\"Button\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\",\"buttonStyles\":{\"color\":\"#10f4f4\"}}]},{\"title\":\"Title text [with dropdown]\",\"description\":\"title 1 description\",\"headerOptions\":[{\"type\":\"dropdown\",\"dropdownOptions\":[{\"title\":\"option1\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_payload\"},{\"title\":\"option2\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_payload\"}]}]},{\"title\":\"Title text [with default view]\",\"description\":\"See more action dropdown and display limit 3\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":true,\"imageSize\":\"small\",\"iconShape\":\"circle-img\",\"view\":\"default\",\"iconSize\":\"small\",\"isAccordian\":true,\"textInformation\":[{\"title\":\"Oct 9, 9:00am - 9:30am (Day 1/2)\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\"},{\"title\":\"WebEx\",\"type\":\"web_url\",\"url\":\"https://petersapparel.parseapp.com\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFHSURBVHgBdZC/TgJBEMZnZk+PxOZ4Ax4Bow+ApSWdsYBFJGInb8BV2omVpyQw+gI8gpQWJpydJW8gjQGTux13+aOixyaT7M58M/ubD2HD0bpZEAV9ey3ZGIsAP/aiELPFjaIoekKkEBKfYeujIKkaGMAbL3M8eSUkaXH3lpeZWJ82ayQw+NdwZFHA+My9zmStkMxiULnAW8dQAxAJBKZQrZ8NMcUWczR2daP8quUf0hozQfjQu8u7QMRXINCuXqmfV1GgjSnUcOGGjJDstG7ElZNm22rEOfIjNh005oC5G3vOOufGakEywKLw2iK9z1lFJiuxe3pznxO/vNplyVzW+iKA3CzgaLHDt4F2xAS8WfF30mGk9Kn/iuc/oFAoIP1j3Shvw87YqKljbpPFgIyj4tHL8+7efp6ALoGSKwTMocFD5vu3rIYvr/CSUC3Azu4AAAAASUVORK5CYII=\"},{\"title\":\"Text Info Title\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGbSURBVHgBdVJNTgJRDG77iBpXHAFPICTuxRu4cydPNHFc6dIdegLZMQt+Bj2AcAJgbwKeALgBbogY5tV2zEMY9CWTee18/fr16yCkjrV32SUsikSc19g5HGVgtx9F1dk6zqwH55fXt0DLDhHkJJxqTu5nkrs/LBxl34dvA49FfymVg5ZEOYzhIorCyaaKIMcGWnKdtBvhxarwvBxUEKEoyRMvN6a5TSQ56nii0mXQc4zdl2atStbarBRZ7fTL/jkkpENEykunnhIlXQRDCBWNaWl2iirBs8bkTuXVV0nPjdAywCCmRdL9B8MjMPNihlhY5SP8c2QW5rVYggED5TNpoHFfEZvdsczjS0+N48c0jhy6kcx47E1hs/cq4JF0+dBHWszY8NNqTsGS1qg52gFjLIgR6u40qocPG+u4Ch5E4rGawwQ9dHuFZB22fHPH6CrAOGs3wwP448iexzqwELeVmBK3ZC8M2JXsTNeRLkpymBg18GpwS5KDkmQn6p6fSebMI9FjVK9V19xOs4sJsicna0rcEyMg3t/6yb8BlCK9m52XgX8AAAAASUVORK5CYII=\"}],\"seeMoreAction\":\"dropdown\",\"buttonsLayout\":{\"displayLimit\":{\"count\":\"3\"},\"buttonAligment\":\"fullwidth\"},\"buttons\":[{\"type\":\"url\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 1 url\",\"url\":\"https://bankingassistant-qa-bots.kore.ai/botbuilder\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 1\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"headerOptions\":[{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=\"}]},{\"title\":\"Title text [view options] \",\"description\":\"List item with check box options\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":true,\"iconSize\":\"small\",\"imageSize\":\"large\",\"isAccordian\":true,\"view\":\"options\",\"optionsData\":[{\"id\":\"1\",\"type\":\"checkbox\",\"label\":\"1 Lorem ipsum doller ammen\",\"value\":\"1\"},{\"id\":\"2\",\"type\":\"checkbox\",\"label\":\"2 Lorem ipsum doller ammen\",\"value\":\"2\"}],\"buttons\":[{\"type\":\"postback\",\"btnType\":\"confirm\",\"title\":\"Confirm\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"btnType\":\"cancel\",\"title\":\"Cancel\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"buttonAligment\":\"right\",\"headerOptions\":[{\"type\":\"text\",\"value\":\"20$\",\"styles\":{\"color\":\"#105bf4\",\"font-size\":\"10px\"}}]},{\"title\":\"Title text [view options]\",\"description\":\"List item with radio options\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":false,\"iconSize\":\"small\",\"imageSize\":\"medium\",\"iconShape\":\"circle-img\",\"isAccordian\":true,\"view\":\"options\",\"optionsData\":[{\"id\":\"1\",\"type\":\"radio\",\"label\":\"1 Lorem ipsum doller ammen\",\"value\":\"1\"},{\"id\":\"2\",\"type\":\"radio\",\"label\":\"2 Lorem ipsum doller ammen\",\"value\":\"2\"}],\"buttons\":[{\"type\":\"postback\",\"btnType\":\"confirm\",\"title\":\"Confirm\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"btnType\":\"cancel\",\"title\":\"Cancel\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"headerOptions\":[{\"type\":\"text\",\"value\":\"20$\",\"styles\":{\"color\":\"#105bf4\",\"font-size\":\"10px\"}},{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\"}]},{\"title\":\"list item [view = \\\"table\\\"]\",\"description\":\"list item [view = \\\"table\\\"]\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":false,\"iconSize\":\"small\",\"isAccordian\":true,\"view\":\"table\",\"headerOptions\":[{\"contenttype\":\"button\",\"title\":\"confirm\",\"isStatus\":true,\"buttonStyles\":{\"background\":\"#00f3fe\",\"color\":\"#fe0000\",\"border\":\"1px solid #fe0000\"}},{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\"}],\"type\":\"column\",\"tableListData\":[{\"rowData\":[{\"title\":\"Text 1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"iconSize\":\"small\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"iconSize\":\"large\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"}]}]}],\"seeMoreTitle\":\"test\",\"previewModalTitle\":\"Preview title\",\"seeMoreIcon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\"}}},\"cInfo\":{\"body\":\"{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"template_type\\\":\\\"advancedListTemplate\\\",\\\"title\\\":\\\"Main Title\\\",\\\"isSortEnabled\\\":true,\\\"isSearchEnabled\\\":false,\\\"isButtonAvailable\\\":false,\\\"description\\\":\\\"Main title description\\\",\\\"listViewType\\\":\\\"default\\\",\\\"listItems\\\":[{\\\"title\\\":\\\"Title\\\",\\\"description\\\":\\\"Description\\\",\\\"descriptionIcon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\",\\\"descriptionIconAlignment\\\":\\\"right\\\",\\\"descriptionStyles\\\":{\\\"font-size\\\":\\\"10px\\\",\\\"color\\\":\\\"#10f4f4\\\"},\\\"titleStyles\\\":{\\\"font-size\\\":\\\"14px\\\",\\\"color\\\":\\\"#9bf410\\\"},\\\"elementStyles\\\":{\\\"background\\\":\\\"#fef100\\\"}},{\\\"title\\\":\\\"Title text[title and description,icon]\\\",\\\"description\\\":\\\"Description\\\",\\\"icon\\\":\\\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\\\"},{\\\"title\\\":\\\"Title text\\\",\\\"description\\\":\\\"List item with button\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"icon\\\":\\\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\\\",\\\"headerOptions\\\":[{\\\"contenttype\\\":\\\"button\\\",\\\"title\\\":\\\"Button\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\",\\\"buttonStyles\\\":{\\\"color\\\":\\\"#10f4f4\\\"}}]},{\\\"title\\\":\\\"Title text [with dropdown]\\\",\\\"description\\\":\\\"title 1 description\\\",\\\"headerOptions\\\":[{\\\"type\\\":\\\"dropdown\\\",\\\"dropdownOptions\\\":[{\\\"title\\\":\\\"option1\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_payload\\\"},{\\\"title\\\":\\\"option2\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_payload\\\"}]}]},{\\\"title\\\":\\\"Title text [with default view]\\\",\\\"description\\\":\\\"See more action dropdown and display limit 3\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":true,\\\"imageSize\\\":\\\"small\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"view\\\":\\\"default\\\",\\\"iconSize\\\":\\\"small\\\",\\\"isAccordian\\\":true,\\\"textInformation\\\":[{\\\"title\\\":\\\"Oct 9, 9:00am - 9:30am (Day 1/2)\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"WebEx\\\",\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://petersapparel.parseapp.com\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFHSURBVHgBdZC/TgJBEMZnZk+PxOZ4Ax4Bow+ApSWdsYBFJGInb8BV2omVpyQw+gI8gpQWJpydJW8gjQGTux13+aOixyaT7M58M/ubD2HD0bpZEAV9ey3ZGIsAP/aiELPFjaIoekKkEBKfYeujIKkaGMAbL3M8eSUkaXH3lpeZWJ82ayQw+NdwZFHA+My9zmStkMxiULnAW8dQAxAJBKZQrZ8NMcUWczR2daP8quUf0hozQfjQu8u7QMRXINCuXqmfV1GgjSnUcOGGjJDstG7ElZNm22rEOfIjNh005oC5G3vOOufGakEywKLw2iK9z1lFJiuxe3pznxO/vNplyVzW+iKA3CzgaLHDt4F2xAS8WfF30mGk9Kn/iuc/oFAoIP1j3Shvw87YqKljbpPFgIyj4tHL8+7efp6ALoGSKwTMocFD5vu3rIYvr/CSUC3Azu4AAAAASUVORK5CYII=\\\"},{\\\"title\\\":\\\"Text Info Title\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGbSURBVHgBdVJNTgJRDG77iBpXHAFPICTuxRu4cydPNHFc6dIdegLZMQt+Bj2AcAJgbwKeALgBbogY5tV2zEMY9CWTee18/fr16yCkjrV32SUsikSc19g5HGVgtx9F1dk6zqwH55fXt0DLDhHkJJxqTu5nkrs/LBxl34dvA49FfymVg5ZEOYzhIorCyaaKIMcGWnKdtBvhxarwvBxUEKEoyRMvN6a5TSQ56nii0mXQc4zdl2atStbarBRZ7fTL/jkkpENEykunnhIlXQRDCBWNaWl2iirBs8bkTuXVV0nPjdAywCCmRdL9B8MjMPNihlhY5SP8c2QW5rVYggED5TNpoHFfEZvdsczjS0+N48c0jhy6kcx47E1hs/cq4JF0+dBHWszY8NNqTsGS1qg52gFjLIgR6u40qocPG+u4Ch5E4rGawwQ9dHuFZB22fHPH6CrAOGs3wwP448iexzqwELeVmBK3ZC8M2JXsTNeRLkpymBg18GpwS5KDkmQn6p6fSebMI9FjVK9V19xOs4sJsicna0rcEyMg3t/6yb8BlCK9m52XgX8AAAAASUVORK5CYII=\\\"}],\\\"seeMoreAction\\\":\\\"dropdown\\\",\\\"buttonsLayout\\\":{\\\"displayLimit\\\":{\\\"count\\\":\\\"3\\\"},\\\"buttonAligment\\\":\\\"fullwidth\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"url\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 1 url\\\",\\\"url\\\":\\\"https://bankingassistant-qa-bots.kore.ai/botbuilder\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 1\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"headerOptions\\\":[{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=\\\"}]},{\\\"title\\\":\\\"Title text [view options] \\\",\\\"description\\\":\\\"List item with check box options\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":true,\\\"iconSize\\\":\\\"small\\\",\\\"imageSize\\\":\\\"large\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"options\\\",\\\"optionsData\\\":[{\\\"id\\\":\\\"1\\\",\\\"type\\\":\\\"checkbox\\\",\\\"label\\\":\\\"1 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"1\\\"},{\\\"id\\\":\\\"2\\\",\\\"type\\\":\\\"checkbox\\\",\\\"label\\\":\\\"2 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"2\\\"}],\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"btnType\\\":\\\"confirm\\\",\\\"title\\\":\\\"Confirm\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"btnType\\\":\\\"cancel\\\",\\\"title\\\":\\\"Cancel\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"buttonAligment\\\":\\\"right\\\",\\\"headerOptions\\\":[{\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"20$\\\",\\\"styles\\\":{\\\"color\\\":\\\"#105bf4\\\",\\\"font-size\\\":\\\"10px\\\"}}]},{\\\"title\\\":\\\"Title text [view options]\\\",\\\"description\\\":\\\"List item with radio options\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":false,\\\"iconSize\\\":\\\"small\\\",\\\"imageSize\\\":\\\"medium\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"options\\\",\\\"optionsData\\\":[{\\\"id\\\":\\\"1\\\",\\\"type\\\":\\\"radio\\\",\\\"label\\\":\\\"1 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"1\\\"},{\\\"id\\\":\\\"2\\\",\\\"type\\\":\\\"radio\\\",\\\"label\\\":\\\"2 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"2\\\"}],\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"btnType\\\":\\\"confirm\\\",\\\"title\\\":\\\"Confirm\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"btnType\\\":\\\"cancel\\\",\\\"title\\\":\\\"Cancel\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"headerOptions\\\":[{\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"20$\\\",\\\"styles\\\":{\\\"color\\\":\\\"#105bf4\\\",\\\"font-size\\\":\\\"10px\\\"}},{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\\\"}]},{\\\"title\\\":\\\"list item [view = \\\\\\\"table\\\\\\\"]\\\",\\\"description\\\":\\\"list item [view = \\\\\\\"table\\\\\\\"]\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":false,\\\"iconSize\\\":\\\"small\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"table\\\",\\\"headerOptions\\\":[{\\\"contenttype\\\":\\\"button\\\",\\\"title\\\":\\\"confirm\\\",\\\"isStatus\\\":true,\\\"buttonStyles\\\":{\\\"background\\\":\\\"#00f3fe\\\",\\\"color\\\":\\\"#fe0000\\\",\\\"border\\\":\\\"1px solid #fe0000\\\"}},{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\\\"}],\\\"type\\\":\\\"column\\\",\\\"tableListData\\\":[{\\\"rowData\\\":[{\\\"title\\\":\\\"Text 1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"iconSize\\\":\\\"small\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"iconSize\\\":\\\"large\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"}]}]}],\\\"seeMoreTitle\\\":\\\"test\\\",\\\"previewModalTitle\\\":\\\"Preview title\\\",\\\"seeMoreIcon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\"}}\"}}],\"messageId\":\"ms-42485617-4f74-51cb-a809-75282fdf7cd8\",\"botInfo\":{\"chatBot\":\"SDKBot\",\"taskBotId\":\"st-b9889c46-218c-58f7-838f-73ae9203488c\",\"hostDomain\":\"null\",\"os\":\"Windows\",\"device\":\"Other\"},\"createdOn\":\"2023-08-02T09:46:17.927Z\",\"xTraceId\":\"f76d7403-1bd3-4a43-911d-c79ccd2907b8\",\"icon\":\"https://dlnwzkim0wron.cloudfront.net/f-5e050d52-6c4a-5442-b7e6-2ddbc93e4df7.png\",\"traceId\":\"1a9032ab60145628\"}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
+
         findViews();
         getBundleInfo();
         getDataFromTxt();
 
-//        onThemeChangeClicked(sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -211,6 +223,16 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
         else
             BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isOnline()) {
+                    BotSocketConnectionManager.killInstance();
+                }
+                finish();
+            }
+        });
     }
 
     SocketChatListener sListener = new SocketChatListener() {
@@ -224,6 +246,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if(state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED){
                 getBrandingDetails();
             }
+
+            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)));
+
             updateTitleBar(state);
         }
 
@@ -241,11 +266,46 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     };
 
-    public void buttonClick(View view){
-        int red= new Random().nextInt(255);
-        int green= new Random().nextInt(255);
-        int blue= new Random().nextInt(255);
-        ThemeColors.setNewThemeColor(BotChatActivity.this, red, green, blue);
+    public void postNotification(String title, String pushMessage) {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder nBuilder = null;
+        if(Build.VERSION.SDK_INT >= 26){
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service","Kore_Android",importance);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+            nBuilder = new NotificationCompat.Builder(this,notificationChannel.getId());
+        }else {
+            nBuilder = new NotificationCompat.Builder(this);
+        }
+
+        nBuilder
+                .setContentTitle(title)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setColor(Color.parseColor("#009dab"))
+                .setContentText(pushMessage)
+                .setGroup(GROUP_KEY_NOTIFICATIONS)
+                .setGroupSummary(true)
+                .setAutoCancel(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        if (alarmSound != null) {
+            nBuilder.setSound(alarmSound);
+        }
+
+        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Bundle bundle = new Bundle();
+        //This should not be null
+        bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+        bundle.putString(BundleUtils.PICK_TYPE, "Notification");
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, SDKConfiguration.Client.bot_name.charAt(0)+"");
+        intent.putExtras(bundle);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_MUTABLE);
+        nBuilder.setContentIntent(pendingIntent);
+
+        Notification notification = nBuilder.build();
+        notification.ledARGB = 0xff0000FF;
+
+        mNotificationManager.notify("YUIYUYIU", 237891, notification);
     }
 
     @Override
@@ -258,7 +318,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            jwt = bundle.getString(BundleUtils.JWT_TOKEN, "");
+            jwt = bundle.getString(BundleUtils.JWT_TKN, "");
         }
         chatBot = SDKConfiguration.Client.bot_name;
         taskBotId = SDKConfiguration.Client.bot_id;
@@ -417,6 +477,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
+    public void onDeepLinkClicked(String url) {
+
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
@@ -449,6 +514,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onPause() {
+        BotApplication.activityPaused();
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -498,7 +564,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
         }
 
-        toggleQuickRepliesVisiblity(false);
+        toggleQuickRepliesVisiblity();
     }
 
     @Override
@@ -528,7 +594,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void sendWithSomeDelay(String message, String payload,long time,boolean isScrollupNeeded) {
-        Log.e("Message", message);
+        LogUtils.e("Message", message);
     }
 
     @Override
@@ -542,7 +608,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void openFullView(String templateType, String data, Duration duration, int position) {
+    public void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position) {
 
     }
 
@@ -575,15 +641,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 return;
             }
 
-            Log.d(LOG_TAG, payload);
-
             if(botClient != null && enable_ack_delivery)
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
-            boolean resolved = true;
+            LogUtils.d(LOG_TAG, payload);
             PayloadOuter payOuter = null;
-//            PayloadInner payInner = null;
-            if (!botResponse.getMessage().isEmpty()) {
+            if (!botResponse.getMessage().isEmpty())
+            {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
                 if (compModel != null) {
                     payOuter = compModel.getPayload();
@@ -594,7 +658,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         }
                         else if(payOuter.getText() != null && payOuter.getText().contains("*"))
                         {
-                            String requiredString = payOuter.getText().substring(payOuter.getText().indexOf("(") + 1, payOuter.getText().indexOf(")"));
                             Gson gson = new Gson();
                             payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                         }
@@ -609,23 +672,26 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
             }
-            if (resolved) {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
 
-                        if(botResponse.getMessageId() != null)
-                            lastMsgId = botResponse.getMessageId();
-
-                        botContentFragment.addMessageToBotChatAdapter(botResponse);
-                        textToSpeech(botResponse);
-                        botContentFragment.setQuickRepliesIntoFooter(botResponse);
-                        botContentFragment.showCalendarIntoFooter(botResponse);
-                    }
-                }, BundleConstants.TYPING_STATUS_TIME);
+            if(!BotApplication.isActivityVisible())
+            {
+                postNotification("Kore Message","Received new message.");
             }
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    if(botResponse.getMessageId() != null)
+                        lastMsgId = botResponse.getMessageId();
+
+                    botContentFragment.addMessageToBotChatAdapter(botResponse);
+                    textToSpeech(botResponse);
+                    botContentFragment.setQuickRepliesIntoFooter(botResponse);
+                    botContentFragment.showCalendarIntoFooter(botResponse);
+                }
+            }, BundleConstants.TYPING_STATUS_TIME);
         } catch (Exception e) {
-            /*Toast.makeText(getApplicationContext(), "Invalid JSON", Toast.LENGTH_SHORT).show();*/
             e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
                 try {
@@ -638,15 +704,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
                 catch (Exception e1)
                 {
-//                    e1.printStackTrace();
                     try
                     {
                         final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
                         if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                             return;
                         }
-                        Log.d(LOG_TAG, payload);
-                        boolean resolved = true;
+                        LogUtils.d(LOG_TAG, payload);
                         if (!botResponse.getMessage().isEmpty()) {
                             ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
                             if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload()))
@@ -695,7 +759,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             InputStream is = getResources().openRawResource(R.raw.option);
             Reader reader = new InputStreamReader(is);
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
-            Log.e("Options Size", botOptionsModel.getTasks().size() + "" );
+            LogUtils.e("Options Size", botOptionsModel.getTasks().size() + "" );
         }
         catch (Exception e)
         {
@@ -715,29 +779,26 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 if(StringUtils.isNullOrEmpty(payloadOuter.getType()))
                     payloadOuter.setType(type);
 
-                if(payloadOuter != null)
-                {
-                    ComponentModel componentModel = new ComponentModel();
-                    componentModel.setType(payloadOuter.getType());
-                    componentModel.setPayload(payloadOuter);
+                ComponentModel componentModel = new ComponentModel();
+                componentModel.setType(payloadOuter.getType());
+                componentModel.setPayload(payloadOuter);
 
-                    BotResponseMessage botResponseMessage = new BotResponseMessage();
-                    botResponseMessage.setType(componentModel.getType());
-                    botResponseMessage.setComponent(componentModel);
+                BotResponseMessage botResponseMessage = new BotResponseMessage();
+                botResponseMessage.setType(componentModel.getType());
+                botResponseMessage.setComponent(componentModel);
 
-                    ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
-                    arrBotResponseMessages.add(botResponseMessage);
+                ArrayList<BotResponseMessage> arrBotResponseMessages = new ArrayList<>();
+                arrBotResponseMessages.add(botResponseMessage);
 
-                    BotResponse botResponse = new BotResponse();
-                    botResponse.setType(componentModel.getType());
-                    botResponse.setMessage(arrBotResponseMessages);
-                    botResponse.setMessageId(messageId);
+                BotResponse botResponse = new BotResponse();
+                botResponse.setType(componentModel.getType());
+                botResponse.setMessage(arrBotResponseMessages);
+                botResponse.setMessageId(messageId);
 
-                    if(botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
-                        botResponse.setIcon(botMetaModel.getIcon());
+                if(botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
+                    botResponse.setIcon(botMetaModel.getIcon());
 
-                    processPayload("", botResponse);
-                }
+                processPayload("", botResponse);
             }
             catch (Exception e)
             {
@@ -824,7 +885,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onResume() {
-
+        BotApplication.activityResumed();
         if(!SDKConfiguration.Client.isWebHook)
         {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
@@ -847,7 +908,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         if (composeFooterFragment != null) {
             return composeFooterFragment.isTTSEnabled();
         } else {
-            Log.e(BotChatActivity.class.getSimpleName(), "ComposeFooterFragment not found");
+            LogUtils.e(BotChatActivity.class.getSimpleName(), "ComposeFooterFragment not found");
             return false;
         }
     }
@@ -904,31 +965,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
 
 
-    private void toggleQuickRepliesVisiblity(boolean visible){
-        if (visible) {
-            quickReplyFragment.toggleQuickReplyContainer(View.VISIBLE);
-        } else {
-            quickReplyFragment.toggleQuickReplyContainer(View.GONE);
-        }
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        if (isOnline()) {
-            BotSocketConnectionManager.getInstance().killInstance();
-        }
-            finish();
+    private void toggleQuickRepliesVisiblity(){
+        quickReplyFragment.toggleQuickReplyContainer(View.GONE);
     }
 
     protected boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return netInfo != null && netInfo.isConnected();
     }
 
     private void attachFragments() {
@@ -977,7 +1021,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         }
 
-        toggleQuickRepliesVisiblity(false);
+        toggleQuickRepliesVisiblity();
     }
 
     @Override
@@ -996,26 +1040,16 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     public void sendImage(String fP, String fN, String fPT) {
-    /*    String filePath = data.getStringExtra("filePath");
-        String fileName = data.getStringExtra("fileName");
-        String filePathThumbnail = data.getStringExtra(THUMBNAIL_FILE_PATH);*/
-        String filePath = fP;
-        String fileName = fN;
-        String filePathThumbnail = fPT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).execute();
-        }
+        new SaveCapturedImageTask(fP, fN, fPT).executeAsync();
     }
 
-    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
-
-        private String filePath;
-        private String fileName;
-        private String filePathThumbnail;
+    protected class SaveCapturedImageTask extends AsyncTaskExecutor<String>
+    {
+        private final String filePath;
+        private final String fileName;
+        private final String filePathThumbnail;
         private String orientation;
+        private String extn = null;
 
         public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
             this.filePath = filePath;
@@ -1023,23 +1057,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             this.filePathThumbnail = filePathThumbnail;
         }
 
-
         @Override
-        protected String doInBackground(String... params) {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-            String extn = null;
+        protected void doInBackground(String... strings) {
+            OutputStream fOut = null;
             if (filePath != null) {
                 extn = filePath.substring(filePath.lastIndexOf(".") + 1);
                 Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-//                    compressImage(filePath);
                 if (thePic != null) {
                     try {
                         // compress the image
-                        OutputStream fOut = null;
                         File _file = new File(filePath);
 
-                        Log.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-                        fOut = new FileOutputStream(_file);
+                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            fOut = Files.newOutputStream(_file.toPath());
+                        }
+                        else
+                            fOut = new FileOutputStream(_file);
 
                         thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
                         thePic = rotateIfNecessary(filePath, thePic);
@@ -1047,20 +1081,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         fOut.flush();
                         fOut.close();
                     } catch (Exception e) {
-                        Log.e(LOG_TAG, e.toString());
+                        LogUtils.e(LOG_TAG, e.toString());
+                    }
+                    finally {
+                        try {
+                            assert fOut != null;
+                            fOut.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
-            return extn;
         }
 
-
         @Override
-        protected void onPostExecute(String extn) {
+        protected void onPostExecute() {
             if (extn != null) {
-                //Common place for addition to composeBar
-                long fileLimit = getFileMaxSize();
-
                 if(!SDKConfiguration.Client.isWebHook)
                 {
                     KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
@@ -1085,7 +1122,72 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 showToast("Unable to attach!");
             }
         }
+        @Override
+        protected void onCancelled() {
+            // update UI on task cancelled
+            showToast("Unable to attach!");
+        }
     }
+
+//    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
+//
+//        private final String filePath;
+//        private final String fileName;
+//        private final String filePathThumbnail;
+//        private String orientation;
+//
+//        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
+//            this.filePath = filePath;
+//            this.fileName = fileName;
+//            this.filePathThumbnail = filePathThumbnail;
+//        }
+//
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
+//            String extn = null;
+//            OutputStream fOut = null;
+//
+//            if (filePath != null) {
+//                extn = filePath.substring(filePath.lastIndexOf(".") + 1);
+//                Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
+////                    compressImage(filePath);
+//                if (thePic != null) {
+//                    try {
+//                        // compress the image
+//                        File _file = new File(filePath);
+//
+//                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
+//                        fOut = new FileOutputStream(_file);
+//
+//                        thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
+//                        thePic = rotateIfNecessary(filePath, thePic);
+//                        orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
+//                        fOut.flush();
+//                        fOut.close();
+//                    } catch (Exception e) {
+//                        LogUtils.e(LOG_TAG, e.toString());
+//                    }
+//                    finally {
+//                        try {
+//                            assert fOut != null;
+//                            fOut.close();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }
+//            return extn;
+//        }
+//
+//
+//        @Override
+//        protected void onPostExecute(String extn) {
+//
+//        }
+//    }
 
     private long getFileMaxSize() {
         long FILE_MAX_SIZE = getFileLimit();
@@ -1096,29 +1198,19 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return FILE_MAX_SIZE;
     }
 
-    Handler messagesMediaUploadAcknowledgeHandler = new Handler() {
+    @SuppressLint("HandlerLeak")
+    Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public synchronized void handleMessage(Message msg) {
             Bundle reply = msg.getData();
-            Log.d("shri", reply + "------------------------------");
-          /*  if (reply.getBoolean(UploadBulkFile.isFileSizeMore_key, false)) {
-                showFreemiumDialog();
-                return;
-            }
-*/
+            LogUtils.e("shri", reply + "------------------------------");
             if (reply.getBoolean("success", true)) {
-               /* long fileSizeBytes = reply.getLong(UploadBulkFile.fileSizeBytes_key);
-                totalFileSize= totalFileSize+fileSizeBytes;*/
-//                String messageId = reply.getString(Constants.MESSAGE_ID);
                 String mediaFilePath = reply.getString("filePath");
                 String MEDIA_TYPE = reply.getString("fileExtn");
                 String mediaFileId = reply.getString("fileId");
                 String mediaFileName = reply.getString("fileName");
                 String componentType = reply.getString("componentType");
                 String thumbnailURL = reply.getString("thumbnailURL");
-                String orientation = reply.getString(BundleConstants.ORIENTATION);
-                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription").toString() : null;
-                HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
                 String fileSize = reply.getString("fileSize");
                 KoreComponentModel koreMedia = new KoreComponentModel();
                 koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
@@ -1133,9 +1225,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 koreMedia.setMediafileId(mediaFileId);
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
-
-                hideBottomSheet();
-                composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
+                composeFooterFragment.setSectionSelected();
                 messageHandler.postDelayed(new Runnable() {
                     public void run() {
                         HashMap<String, String> attachmentKey = new HashMap<>();
@@ -1146,20 +1236,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         attachmentKey.put("fileExtn", MEDIA_TYPE);
                         attachmentKey.put("thumbnailURL", thumbnailURL);
                         composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                       /* KoraSocketConnectionManager.getInstance().sendMessageWithCustomDataAttchment(mediaFileName+"."+MEDIA_TYPE, attachmentKey, false);
-                        KoraSocketConnectionManager.getInstance().stopDelayMsgTimer();
-                        toggleVisibilities(false, true);*/
                     }
                 }, 400);
-
-
-                // kaComponentModels.add(koreMedia);
-                // insertTags(koreMedia, componentType, orientation, mediaFileName);
-
             } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
-                    Log.i("File upload error", errorMsg);
+                    LogUtils.i("File upload error", errorMsg);
                     showToast(errorMsg);
                 }
             }
@@ -1168,23 +1250,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void mediaAttachment(HashMap<String, String> attachmentKey)
     {
-        hideBottomSheet();
-        composeFooterFragment.setSectionSelected(/*KoraMainComposeFragment.SECTION_TYPE.SECTION_COMPOSE_WITH_COMPOSE_BAR*/);
+        composeFooterFragment.setSectionSelected();
         messageHandler.postDelayed(new Runnable() {
             public void run() {
-
                 composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                       /* KoraSocketConnectionManager.getInstance().sendMessageWithCustomDataAttchment(mediaFileName+"."+MEDIA_TYPE, attachmentKey, false);
-                        KoraSocketConnectionManager.getInstance().stopDelayMsgTimer();
-                        toggleVisibilities(false, true);*/
             }
         }, 400);
-    }
-
-    public void hideBottomSheet() {
-        if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_HIDDEN) {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-        }
     }
 
     private int getFileLimit() {
@@ -1199,20 +1270,24 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private String getComponentId(String componentType) {
-        if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
-            return "image_" + System.currentTimeMillis();
-        } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
-            return "video_" + System.currentTimeMillis();
-        } else {
-            return "doc_" + System.currentTimeMillis();
+        if(componentType != null)
+        {
+            if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
+                return "image_" + System.currentTimeMillis();
+            } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
+                return "video_" + System.currentTimeMillis();
+            } else {
+                return "doc_" + System.currentTimeMillis();
+            }
         }
+        return "";
     }
 
     private void getBrandingDetails() {
         Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
-            public void onResponse(Call<ArrayList<BrandingNewModel>> call, Response<ArrayList<BrandingNewModel>> response) {
+            public void onResponse(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Response<ArrayList<BrandingNewModel>> response) {
                 if (response.isSuccessful())
                 {
                     arrBrandingNewDos = response.body();
@@ -1245,9 +1320,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             @Override
-            public void onFailure(Call<ArrayList<BrandingNewModel>> call, Throwable t)
+            public void onFailure(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Throwable t)
             {
-                Log.e("getBrandingDetails", t.toString());
+                LogUtils.e("getBrandingDetails", t.toString());
 
                 if(isItFirstConnect)
                 {
@@ -1263,7 +1338,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
-            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+            public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
                 if (response.isSuccessful())
                 {
                     webHookResponseDataModel = response.body();
@@ -1278,7 +1353,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         {
                             if(webHookResponseDataModel.getData().get(i).getVal() instanceof String)
                                 displayMessage(webHookResponseDataModel.getData().get(i).getVal().toString(), webHookResponseDataModel.getData().get(i).getType(), webHookResponseDataModel.getData().get(i).getMessageId());
-                            else if(webHookResponseDataModel.getData().get(i).getVal() instanceof Object)
+                            else if(webHookResponseDataModel.getData().get(i).getVal() != null)
                             {
                                 try {
                                     String elementsAsString = gson.toJson(webHookResponseDataModel.getData().get(i).getVal());
@@ -1320,7 +1395,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             @Override
-            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            public void onFailure(@NonNull Call<WebHookResponseDataModel> call, @NonNull Throwable t)
             {
             }
         });
@@ -1331,20 +1406,18 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id);
         getBankingConfigService.enqueue(new Callback<BotMetaModel>() {
             @Override
-            public void onResponse(Call<BotMetaModel> call, Response<BotMetaModel> response) {
+            public void onResponse(@NonNull Call<BotMetaModel> call, @NonNull Response<BotMetaModel> response) {
                 if (response.isSuccessful())
                 {
                     botMetaModel = response.body();
-                    SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());
+                    if(botMetaModel != null)
+                        SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());
                     sendWebHookMessage(true, "ON_CONNECT", null);
-                }
-                else
-                {
                 }
             }
 
             @Override
-            public void onFailure(Call<BotMetaModel> call, Throwable t)
+            public void onFailure(@NonNull Call<BotMetaModel> call, @NonNull Throwable t)
             {}
         });
     }
@@ -1354,7 +1427,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
-            public void onResponse(Call<WebHookResponseDataModel> call, Response<WebHookResponseDataModel> response) {
+            public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
                 if (response.isSuccessful())
                 {
                     webHookResponseDataModel = response.body();
@@ -1375,13 +1448,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         stopSendingPolling();
                     }
                 }
-                else
-                {
-                }
             }
 
             @Override
-            public void onFailure(Call<WebHookResponseDataModel> call, Throwable t)
+            public void onFailure(@NonNull Call<WebHookResponseDataModel> call, @NonNull Throwable t)
             {}
         });
     }
@@ -1404,13 +1474,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private HashMap<String, Object> getJsonRequest(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
     {
-        String jsonPayload = "";
         HashMap<String, Object> hsh = new HashMap<>();
 
         try
         {
             WebHookRequestModel webHookRequestModel = new WebHookRequestModel();
-
             WebHookRequestModel.Session session = new WebHookRequestModel.Session();
             session.setNewSession(new_session);
             webHookRequestModel.setSession(session);
@@ -1451,12 +1519,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if(attachments != null && attachments.size() > 0)
                 hsh.put("attachments", attachments);
-
-            jsonPayload = gson.toJson(webHookRequestModel);
         }
         catch (Exception e)
         {
-
+            e.printStackTrace();
         }
 
         return hsh;

@@ -34,10 +34,10 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static final int SECTION_VIEW = 0;
     public static final int CONTENT_VIEW = 1;
     WeakReference<Context> mContextWeakReference;
-    private SkillSwitchDialog skillSwitchDialog;
+    private final SkillSwitchDialog skillSwitchDialog;
 
-    private ArrayList<PayloadInner.Skill> data;
-    private Context mContext;
+    private final ArrayList<PayloadInner.Skill> data;
+    private final Context mContext;
 
     public SkillsAdapter(ArrayList<PayloadInner.Skill> data, Context context, SkillSwitchDialog skillSwitchDialog) {
         this.data = data;
@@ -102,7 +102,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Context context = mContextWeakReference.get();
         if (context == null) {
             return;
@@ -118,7 +118,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         skillItemVH.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doSkillItemAction(position);
+                doSkillItemAction(holder.getBindingAdapterPosition());
             }
         });
         if (data.get(position).isCurrentSkill()) {
@@ -134,7 +134,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         skillItemVH.rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                doSkillItemAction(position);
+                doSkillItemAction(holder.getBindingAdapterPosition());
             }
         });
 

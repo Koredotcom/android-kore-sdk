@@ -81,23 +81,22 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HashViewHolder) {
 
             ((HashViewHolder) holder).tv_hashtag.setText(hashList.get(position).getName());
-            int count = hashList.get(position).getCount();
             ((HashViewHolder) holder).tv_numberofviews.setText(hashList.get(position).getTitle_right());
             ((HashViewHolder) holder).rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     if (Utility.checkIsSkillKora()) {
-                        postAction(position, ((HashViewHolder) holder), false);
+                        postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), false);
                     } else {
                         DialogCaller.showDialog(activity, null,new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                postAction(position, ((HashViewHolder) holder), true);
+                                postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), true);
                                 dialog.dismiss();
                             }
                         });

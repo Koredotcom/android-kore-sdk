@@ -29,7 +29,6 @@ import kore.botssdk.adapter.KnowledgeRecyclerAdapter;
 import kore.botssdk.adapter.KoraEmailRecyclerAdapter;
 import kore.botssdk.adapter.KoraFilesRecyclerAdapter;
 import kore.botssdk.adapter.TasksListAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -42,7 +41,6 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.ContactViewListModel;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.TaskTemplateResponse;
@@ -50,6 +48,7 @@ import kore.botssdk.models.WelcomeChatSummaryModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -62,7 +61,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     private View rootLayout;
     private int dp1;
     private TextView viewMore;
-    private Duration _cursor;
+    private CalEventsTemplateModel.Duration _cursor;
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -75,7 +74,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     public VerticalListView(Context mContext) {
 
@@ -114,7 +113,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             }
         });
 
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
 
     }
 
@@ -141,7 +140,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             if(composeFooterInterface != null)
                 composeFooterInterface.openFullView(BotResponse.TEMPLATE_TYPE_TASK_VIEW, gson.toJson(((TasksListAdapter) recyclerView.getAdapter()).getTaskTemplateResponse()), null, 0);
         } else {
-            Duration _duration = null;
+            CalEventsTemplateModel.Duration _duration = null;
             if(adapter instanceof CalendarEventsAdapter){
                 _duration = ((CalendarEventsAdapter) adapter).getCursorDuration();
             }
@@ -229,7 +228,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
       //  prepareDataSetAndPopulate(data,templateType);
     }*/
 
-    public void setCursorDuration(Duration cursor){
+    public void setCursorDuration(CalEventsTemplateModel.Duration cursor){
         _cursor = cursor;
     }
     public void prepareDataSetAndPopulate(ArrayList data, String templateType, boolean isEnabled) {
@@ -259,7 +258,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         adapter.notifyDataSetChanged();
     }
 
-    public void setAdapterByData(ArrayList data, String type, boolean isEnabled, Duration _cursor) {
+    public void setAdapterByData(ArrayList data, String type, boolean isEnabled, CalEventsTemplateModel.Duration _cursor) {
         switch (type) {
             case BotResponse.TEMPLATE_TYPE_FILES_LOOKUP:
                 setAdapter(new KoraFilesRecyclerAdapter(data, getContext()));

@@ -29,7 +29,7 @@ public interface OnScrollListener {
          */
         TOUCH_SCROLL(AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
 
-        private int value;
+        private final int value;
 
         ScrollState(final int value) {
             this.value = value;

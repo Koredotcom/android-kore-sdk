@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import com.kore.ai.widgetsdk.models.BotTableListDefaultActionsModel;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -22,7 +22,6 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotTableListDefaultActionsModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.tableview.TableDataAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
@@ -31,10 +30,10 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     private static final int TEXT_SIZE = 14;
-    private String[] alignment;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private Gson gson = new Gson();
+    private final String[] alignment;
+    private final ComposeFooterInterface composeFooterInterface;
+    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final Gson gson = new Gson();
     private Dialog dialog;
 
     public BotTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface)
@@ -68,9 +67,9 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     private int getGravity(int columnIndex){
         if(alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
-            return Gravity.LEFT;
+            return Gravity.START;
         else if(alignment[columnIndex].equals("right"))
-            return Gravity.RIGHT;
+            return Gravity.END;
         else return Gravity.CENTER;
     }
 

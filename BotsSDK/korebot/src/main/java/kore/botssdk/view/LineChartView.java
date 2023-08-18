@@ -4,36 +4,31 @@ package kore.botssdk.view;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
-
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
+import kore.botssdk.charts.charts.LineChart;
+import kore.botssdk.charts.components.Description;
+import kore.botssdk.charts.components.Legend;
+import kore.botssdk.charts.components.XAxis;
+import kore.botssdk.charts.data.Entry;
+import kore.botssdk.charts.data.LineData;
+import kore.botssdk.charts.data.LineDataSet;
+import kore.botssdk.charts.formatter.ValueFormatter;
+import kore.botssdk.charts.interfaces.datasets.ILineDataSet;
+import kore.botssdk.charts.listener.ChartTouchListener;
+import kore.botssdk.charts.listener.OnChartGestureListener;
+import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.models.BotLineChartDataModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -45,7 +40,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class LineChartView extends ViewGroup implements OnChartGestureListener {
     private LineChart mChart;
-    private Context mContext;
+    private final Context mContext;
     int dp1;
 
     public LineChartView(Context context) {
@@ -55,7 +50,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     }
 
     private void init() {
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         mChart = new LineChart(mContext);
         mChart.getDescription().setEnabled(false);
         mChart.setTouchEnabled(true);
@@ -71,7 +66,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     public void setData(final PayloadInner _payInner) {
 
 
-        LineDataSet dataSet[];
+        LineDataSet[] dataSet;
 
 
 
@@ -157,7 +152,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
 
 
     private String[] getXAxisValues(ArrayList<BotLineChartDataModel> dataModels){
-        String arr[] = new String[dataModels.size()];
+        String[] arr = new String[dataModels.size()];
         for(int in=0; in<dataModels.size();in++){
             arr[in] = dataModels.get(in).getTitle();
         }
@@ -166,7 +161,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     }
     private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, List<String> headers){
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        Random randomGenerator = new Random();
+        SecureRandom randomGenerator = new SecureRandom();
         String[] colors = this.getResources().getStringArray(R.array.color_set);
 
         int size = dataModels != null && dataModels.size() > 0 ? dataModels.get(0).getValues() != null ? dataModels.get(0).getValues().size() : 0 :0;

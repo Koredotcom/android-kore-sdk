@@ -257,10 +257,7 @@ public class KaEnforcementHelper {
                 });
 
         acceptAlertDialog = builder.create();
-        if(errorCode == KaAuthErrorCodes.MDM_AUTHENTICATION_REQUIRED)
-            acceptAlertDialog.setCancelable(true);
-        else
-            acceptAlertDialog.setCancelable(false);
+        acceptAlertDialog.setCancelable(errorCode == KaAuthErrorCodes.MDM_AUTHENTICATION_REQUIRED);
         acceptAlertDialog.setCanceledOnTouchOutside(false);
         if(!((Activity)context).isFinishing() && !((Activity)context).isDestroyed())
             acceptAlertDialog.show();

@@ -1,10 +1,5 @@
 package kore.botssdk.utils;
 
-import android.text.Html;
-import android.text.Spanned;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -244,11 +239,7 @@ public class StringUtils {
 
     public static boolean isValidEmail(String emailId)
     {
-        if (emailId.toString().trim().matches(emailPattern)) {
-            return true;
-        } else {
-            return false;
-        }
+        return emailId.trim().matches(emailPattern);
     }
 
     //time conversion

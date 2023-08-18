@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContentModel;
 import kore.botssdk.utils.KaFontUtils;
@@ -22,10 +23,10 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListWidgetDetailsAdapter extends BaseAdapter
 {
-    private Context context;
-    private ArrayList<ContentModel> contentModels;
-    private LayoutInflater layoutInflater;
-    private SharedPreferences sharedPreferences;
+    private final Context context;
+    private final ArrayList<ContentModel> contentModels;
+    private final LayoutInflater layoutInflater;
+    private final SharedPreferences sharedPreferences;
 
     protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {
@@ -57,11 +58,11 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
     {
         DetailsViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(com.kora.ai.widgetsdk.R.layout.listwidget_details_item, null);
+            convertView = layoutInflater.inflate(R.layout.listwidget_details_item, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new DetailsViewHolder();
-            holder.tvBtnText = convertView.findViewById(com.kora.ai.widgetsdk.R.id.tvBtnText);
-            holder.ivListBtnIcon = convertView.findViewById(com.kora.ai.widgetsdk.R.id.ivListBtnIcon);
+            holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);
+            holder.ivListBtnIcon = convertView.findViewById(R.id.ivListBtnIcon);
             convertView.setTag(holder);
         } else {
             holder = (DetailsViewHolder) convertView.getTag();

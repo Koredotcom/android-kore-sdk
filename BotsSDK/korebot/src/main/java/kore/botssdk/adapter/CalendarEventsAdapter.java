@@ -1,5 +1,10 @@
 package kore.botssdk.adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
+import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
@@ -11,7 +16,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,17 +49,10 @@ import kore.botssdk.listener.RecyclerViewDataAccessor;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.CalEventsTemplateModel;
-import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.models.WidgetDialogModel;
-import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
-import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 /**
  * Created by Ramachandra Pradeep on 02-Aug-18.
@@ -65,7 +62,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
     ArrayList<String> selectedIds = null;
-    private Duration _cursor;
+    private CalEventsTemplateModel.Duration _cursor;
 
     public ArrayList<CalEventsTemplateModel> getEventList() {
         return eventList;
@@ -82,14 +79,14 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
     ArrayList<CalEventsTemplateModel> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private int EVENTS_LIST_LIMIT = 3;
+    private final int EVENTS_LIST_LIMIT = 3;
     private String title = "SHOW MORE";
     private EventSelectionListener eventSelectionListener;
-    private Context mContext;
+    private final Context mContext;
 
 
-    private int DATA_FOUND = 1;
-    private int EMPTY_CARD = 0;
+    private final int DATA_FOUND = 1;
+    private final int EMPTY_CARD = 0;
 
     public String getType() {
         return type;
@@ -100,19 +97,20 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
     private String type;
-    private boolean isEnabled;
+    private final boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private boolean isFromWidget;
 
     public boolean isFromWidget() {
         return isFromWidget;
     }
 
-    private Drawable selectedCheck;
-    private Drawable unSelectedCheck;
+    private final Drawable selectedCheck;
+    private final Drawable unSelectedCheck;
 
-    private Drawable insetDivider,normalDivider;
+    private final Drawable insetDivider;
+    private final Drawable normalDivider;
 
     public void setFromWidget(boolean fromWidget) {
         isFromWidget = fromWidget;
@@ -513,7 +511,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             ed = st + (30 * 60000);
                         }
 
-                        Duration _duration = _data.getDuration();
+                        CalEventsTemplateModel.Duration _duration = _data.getDuration();
 
                         _duration.setStart(st);
                         _duration.setEnd(ed);
@@ -584,11 +582,11 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
     }
 
-    public void setCursorDuration(Duration cursor) {
+    public void setCursorDuration(CalEventsTemplateModel.Duration cursor) {
         _cursor = cursor;
     }
 
-    public Duration getCursorDuration(){
+    public CalEventsTemplateModel.Duration getCursorDuration(){
         return _cursor;
     }
 
@@ -645,7 +643,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("content://com.android.calendar/events/" + String.valueOf(id)));
+            intent.setData(Uri.parse("content://com.android.calendar/events/" + id));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -762,7 +760,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 //        HashSet<String> calendarIds = CalendarService.getCalenderIds(lcursor);
 //        beginTime = beginTime + TimeZone.getDefault().getRawOffset();
 //        for(String id:calendarIds) {
-        String projection[] = {"_id", "title", CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
+        String[] projection = {"_id", "title", CalendarContract.Events.DTSTART, CalendarContract.Events.DTEND};
         Cursor cursor = mContext.getContentResolver().query(eventUri, null, null,
                 null, null);
 
