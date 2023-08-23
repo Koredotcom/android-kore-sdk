@@ -3,9 +3,6 @@ package kore.botssdk.activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -17,11 +14,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 import kore.botssdk.R;
 
-
 public class GenericWebViewActivity extends BotAppCompactActivity {
-
+    public static String EXTRA_URL = "url";
+    public static String EXTRA_HEADER = "header";
     String actionbarTitle;
     String url;
     WebView webview;
@@ -32,8 +32,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generic_webview_layout);
         Bundle receivedBundle = getIntent().getExtras();
-        url = receivedBundle.getString("url");
-        actionbarTitle = receivedBundle.getString("header");
+        url = receivedBundle.getString(EXTRA_URL);
+        actionbarTitle = receivedBundle.getString(EXTRA_HEADER);
         setUpActionBar();
         webview = (WebView) findViewById(R.id.webView);
         mProgressBar = findViewById(R.id.mProgress);
@@ -46,7 +46,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
-       webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
+        webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
 
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         webview.getSettings().setDomStorageEnabled(true);
@@ -129,7 +129,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
         actionBar.setTitle(actionbarTitle);
 

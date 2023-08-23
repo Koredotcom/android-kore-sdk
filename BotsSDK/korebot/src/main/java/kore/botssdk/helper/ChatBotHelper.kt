@@ -247,8 +247,8 @@ object ChatBotHelper {
             when (baseBotMessage) {
                 is BotRequest -> {
                     val sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE)
-                    val bgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#121212")
-                    val textColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#C8C8F4")
+                    val bgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#C8C8F4")
+                    val textColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#121212")
                     val drawable = context.getDrawable(R.drawable.theme1_right_bubble_bg) as GradientDrawable
                     rows = rows + BotRequestResponseRow(
                         ChatBotRowType.RequestMsg,

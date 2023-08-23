@@ -2,6 +2,7 @@ package kore.botssdk.view.row.botrequestresponse
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.text.method.LinkMovementMethod
 import android.view.Gravity
 import androidx.viewbinding.ViewBinding
 import kore.botssdk.databinding.RowBotRequestResponseMsgBinding
@@ -47,6 +48,8 @@ class BotRequestResponseRow(
         message.setTextColor(Color.parseColor(textColor))
         drawable.setColor(Color.parseColor(bgColor))
         message.background = drawable
+        message.movementMethod = LinkMovementMethod.getInstance()
+        message.isClickable = isLastItem
         root.gravity = if (isBotRequest) Gravity.END else Gravity.START
     }
 }
