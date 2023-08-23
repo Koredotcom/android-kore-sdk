@@ -740,7 +740,8 @@ public final class SocketWrapper{
         Log.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
         if (mReconnectionCount > 6) mReconnectionCount = 1;
         Random rint = new Random();
-        return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
+//        return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
+        return 2000;
     }
     /**
      * For disconnecting user's presence
