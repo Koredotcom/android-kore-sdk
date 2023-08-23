@@ -81,6 +81,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.listener.ThemeChangeListener;
+import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
@@ -182,6 +183,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         findViews();
         getBundleInfo();
         getDataFromTxt();
+        getBrandingDataFromTxt();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -760,6 +762,24 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             Reader reader = new InputStreamReader(is);
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
             LogUtils.e("Options Size", botOptionsModel.getTasks().size() + "" );
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return botOptionsModel;
+    }
+
+    public BotBrandingModel getBrandingDataFromTxt()
+    {
+        BotBrandingModel botOptionsModel = null;
+
+        try
+        {
+            InputStream is = getResources().openRawResource(R.raw.branding_response);
+            Reader reader = new InputStreamReader(is);
+            botOptionsModel = gson.fromJson(reader, BotBrandingModel.class);
+            LogUtils.e("Options Size", botOptionsModel.getGeneral().getSize() + "" );
         }
         catch (Exception e)
         {

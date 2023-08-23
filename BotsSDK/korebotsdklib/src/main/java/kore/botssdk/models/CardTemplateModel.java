@@ -1,9 +1,5 @@
 package kore.botssdk.models;
 
-import android.widget.Button;
-
-import com.google.gson.annotations.SerializedName;
-
 import java.util.ArrayList;
 
 public class CardTemplateModel

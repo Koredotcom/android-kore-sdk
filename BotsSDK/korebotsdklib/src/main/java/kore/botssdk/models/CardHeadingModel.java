@@ -1,7 +1,5 @@
 package kore.botssdk.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class CardHeadingModel
 {
     private String title;
