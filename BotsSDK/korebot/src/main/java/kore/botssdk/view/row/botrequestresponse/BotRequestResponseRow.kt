@@ -23,7 +23,7 @@ class BotRequestResponseRow(
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is BotRequestResponseRow) return false
-        return otherRow.id == id || otherRow.botMessage == botMessage
+        return otherRow.id == id && otherRow.botMessage == botMessage
     }
 
     override fun getChangePayload(otherRow: SimpleListRow): Any {

@@ -27,7 +27,7 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
     private LayoutInflater layoutInflater;
     private SharedPreferences sharedPreferences;
 
-    protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
+    public ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {
         this.context = context;
         this.contentModels = contentModels;

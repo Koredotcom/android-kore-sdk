@@ -21,6 +21,7 @@ import kore.botssdk.utils.StringUtils
 import kore.botssdk.view.row.SimpleListRow
 import kore.botssdk.view.row.botrequestresponse.BotRequestResponseRow
 import kore.botssdk.view.row.chatbot.ChatBotRowType
+import kore.botssdk.view.row.listwidget.BotListWidgetRow
 import java.util.Date
 
 object ChatBotHelper {
@@ -239,6 +240,20 @@ object ChatBotHelper {
         )
     }
 
+    private fun getListWidgetRows(context: Context, id: String, payloadInner: PayloadInner): List<BotListWidgetRow> {
+        var rows = emptyList<BotListWidgetRow>()
+        if (payloadInner.widgetlistElements.isEmpty()) return rows
+        val sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE)
+        val activeButtonTextColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")
+
+        for (index in payloadInner.widgetlistElements.indices) {
+            if (!payloadInner.isShowMoreClicked && index >= 3) break
+            rows = rows + BotListWidgetRow(id, payloadInner.widgetlistElements[index], activeButtonTextColor!!, "", "")
+        }
+
+        return rows
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     fun createRows(context: Context, botMessages: List<BaseBotMessage>): List<SimpleListRow> {
         var rows = emptyList<SimpleListRow>()
@@ -382,7 +397,8 @@ object ChatBotHelper {
                         } else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equals(payInner.template_type, ignoreCase = true)) {
                             // listWidgetView.populateListWidgetData(payInner)
                             // bubbleTextMediaLayout.populateText(payInner.text)
-                            rows = rows + getBotResponseRow(context, baseBotMessage.messageId, payInner.text, isLastItem)
+                            rows = rows + getBotResponseRow(context, baseBotMessage.messageId, payInner.title, isLastItem)
+                            rows = rows + getListWidgetRows(context, baseBotMessage.messageId, payInner)
                         } else if (BotResponse.TEMPLATE_DROPDOWN.equals(payInner.template_type, ignoreCase = true)) {
                             // botDropDownTemplateView.populateData(payInner)
                         } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL == payInner.template_type) {

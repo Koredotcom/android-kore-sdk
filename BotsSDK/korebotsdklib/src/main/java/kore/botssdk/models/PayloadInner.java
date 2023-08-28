@@ -72,6 +72,16 @@ public class PayloadInner {
     private ArrayList<FeedbackListModel> feedbackList;
     private String text_message;
 
+    private boolean isShowMoreClicked = false;
+
+    public boolean isShowMoreClicked() {
+        return isShowMoreClicked;
+    }
+
+    public void setShowMoreClicked(boolean showMoreClicked) {
+        isShowMoreClicked = showMoreClicked;
+    }
+
     public String getText_message() {
         return text_message;
     }

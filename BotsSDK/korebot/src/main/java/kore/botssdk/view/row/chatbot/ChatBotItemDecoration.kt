@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kore.botssdk.extensions.dpToPx
 
 class ChatBotItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
-
     private val firstItemMarginTop = 12.dpToPx(context)
     private val commonVerticalMargin = 6.dpToPx(context)
     private val messageMargin = 58.dpToPx(context)
@@ -37,12 +36,9 @@ class ChatBotItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
                 outRect.right = commonHorizontalMargin
             }
 
-            ChatBotRowType.ResponseMsg -> {
+            else -> {
                 outRect.right = messageMargin
                 outRect.left = commonHorizontalMargin
-            }
-
-            else -> {
             }
         }
     }
