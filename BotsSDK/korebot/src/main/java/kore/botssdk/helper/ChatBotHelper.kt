@@ -22,6 +22,7 @@ import kore.botssdk.view.row.SimpleListRow
 import kore.botssdk.view.row.chatbot.botrequestresponse.BotRequestResponseRow
 import kore.botssdk.view.row.chatbot.ChatBotRowType
 import kore.botssdk.view.row.chatbot.listwidget.BotListWidgetRow
+import kore.botssdk.view.row.chatbot.showmore.BotShowMoreButtonRow
 import java.util.Date
 
 object ChatBotHelper {
@@ -399,6 +400,7 @@ object ChatBotHelper {
                             // bubbleTextMediaLayout.populateText(payInner.text)
                             rows = rows + getBotResponseRow(context, baseBotMessage.messageId, payInner.title, isLastItem)
                             rows = rows + getListWidgetRows(context, baseBotMessage.messageId, payInner)
+                            rows = rows + BotShowMoreButtonRow(baseBotMessage.messageId)
                         } else if (BotResponse.TEMPLATE_DROPDOWN.equals(payInner.template_type, ignoreCase = true)) {
                             // botDropDownTemplateView.populateData(payInner)
                         } else if (BotResponse.TEMPLATE_TYPE_KORA_CAROUSAL == payInner.template_type) {

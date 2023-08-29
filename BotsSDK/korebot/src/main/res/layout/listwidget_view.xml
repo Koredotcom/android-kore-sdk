@@ -206,7 +206,7 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/show_more"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_30dp"
+        android:background="@drawable/action_button_bg"
+        android:gravity="center"
+        android:text="@string/show_more"
+        android:textAllCaps="true"
+        android:textColor="@color/white" />
+</LinearLayout>

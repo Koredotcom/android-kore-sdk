@@ -21,7 +21,6 @@ import kore.botssdk.R
 import kore.botssdk.activity.GenericWebViewActivity
 import kore.botssdk.adapter.ListWidgetAdapter
 import kore.botssdk.adapter.ListWidgetButtonAdapter
-import kore.botssdk.adapter.ListWidgetDetailsAdapter
 import kore.botssdk.databinding.ListwidgetViewBinding
 import kore.botssdk.event.KoreEventCenter
 import kore.botssdk.events.EntityEditEvent
@@ -30,8 +29,10 @@ import kore.botssdk.models.ViewStyles
 import kore.botssdk.models.Widget
 import kore.botssdk.models.WidgetListElementModel
 import kore.botssdk.utils.Constants
+import kore.botssdk.view.row.SimpleListAdapter
 import kore.botssdk.view.row.SimpleListRow
 import kore.botssdk.view.row.chatbot.ChatBotRowType
+import kore.botssdk.view.row.chatbot.listwidget.detail.BotListWidgetDetailRow
 import kore.botssdk.view.viewUtils.RoundedCornersTransform
 
 class BotListWidgetRow(
@@ -105,11 +106,7 @@ class BotListWidgetRow(
                             buttonAction(model.value.button, appendUtterance, context)
                         }
                         var btnTitle: String? = ""
-                        btnTitle = if (model.value.button != null && model.value.button.title != null) {
-                            model.value.button.title
-                        } else {
-                            model.value.text
-                        }
+                        btnTitle = model.value.button?.title?:model.value.text
                         if (!btnTitle.isNullOrEmpty()) tvButton.text = btnTitle else tvValuesLayout.isVisible = false
                     }
 
@@ -138,10 +135,9 @@ class BotListWidgetRow(
                         tvUrl.text = content
                         tvUrl.setOnClickListener {
                             if (model.value.url.link != null) {
-                                val intent =
-                                    Intent(context, GenericWebViewActivity::class.java)
-                                intent.putExtra("url", model.value.url.link)
-                                intent.putExtra("header", context.getString(R.string.app_name))
+                                val intent = Intent(context, GenericWebViewActivity::class.java)
+                                intent.putExtra(GenericWebViewActivity.EXTRA_URL, model.value.url.link)
+                                intent.putExtra(GenericWebViewActivity.EXTRA_HEADER, context.getString(R.string.app_name))
                                 context.startActivity(intent)
                             }
                         }
@@ -151,15 +147,8 @@ class BotListWidgetRow(
                         if (model.value.image != null && !model.value.image.image_src.isNullOrEmpty()) {
                             Picasso.get().load(model.value.image.image_src).into(iconImageLoad)
                             iconImageLoad.setOnClickListener {
-                                //   defaultAction(model.getValue().getImage().getUtterance()!=null?model.getValue().getImage().getUtterance():model.getValue().getImage().getPayload()!=null?model.getValue().getImage().getPayload():"",true);
                                 defaultAction(
-                                    if (model.value.image.utterance != null) {
-                                        model.value.image.utterance
-                                    } else if (model.value.image.payload != null) {
-                                        model.value.image.payload
-                                    } else {
-                                        ""
-                                    },
+                                    model.value.image.utterance ?: model.value.image.payload ?: "",
                                     appendUtterance
                                 )
                             }
@@ -167,6 +156,7 @@ class BotListWidgetRow(
                     }
                 }
             }
+            imgUpDown.isVisible = !model.buttons.isNullOrEmpty()
             if (!model.buttons.isNullOrEmpty()) {
                 buttonsList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 val buttonRecyclerAdapter = ListWidgetButtonAdapter(context, model.buttons, trigger)
@@ -176,36 +166,38 @@ class BotListWidgetRow(
 //                buttonRecyclerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface)
 //                buttonRecyclerAdapter.setBottomSheet(bottomSheetDialog)
                 buttonsList.adapter = buttonRecyclerAdapter
-            } else {
-                imgUpDown.isVisible = false
             }
 
-            alDetails.visibility = View.GONE
-            if (model.details != null && model.details.size > 0) {
-                alDetails.visibility = View.VISIBLE
-                val listWidgetDetailsAdapter = ListWidgetDetailsAdapter(context, model.details)
-                alDetails.adapter = listWidgetDetailsAdapter
+            alDetails.isVisible = !model.details.isNullOrEmpty()
+            if (!model.details.isNullOrEmpty()) {
+                alDetails.layoutManager = LinearLayoutManager(root.context)
+                alDetails.adapter = SimpleListAdapter(BotListWidgetRowType.values().asList()).apply {
+                    submitList(createDetailsRows())
+                }
             }
 
             innerlayout.setOnClickListener {
-                if (model.default_action != null && model.default_action.type != null && model.default_action.type == "url") {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(model.default_action.url))
-                    try {
-                        context.startActivity(browserIntent)
-                    } catch (ex: ActivityNotFoundException) {
-                        ex.printStackTrace()
+                if (model.default_action != null && model.default_action.type != null) {
+                    when (model.default_action.type) {
+                        "url" -> {
+                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(model.default_action.url))
+                            try {
+                                context.startActivity(browserIntent)
+                            } catch (ex: ActivityNotFoundException) {
+                                ex.printStackTrace()
+                            }
+                        }
+
+                        "postback" -> defaultAction(model.default_action.payload, appendUtterance)
                     }
-                } else if (model.default_action != null && model.default_action.type != null && model.default_action.type == "postback") {
-                    defaultAction(model.default_action.payload, appendUtterance)
                 }
             }
         }
     }
 
     private fun applyStyles(textView: TextView, style: ViewStyles?, drawableId: Int) {
-        if (style == null) {
-            textView.visibility = View.GONE
-        } else {
+        textView.isVisible = style != null
+        if (style != null) {
             textView.applyStyles(style)
             if (textView.background is LayerDrawable) {
                 (textView.background as LayerDrawable).applyStyles(style, drawableId)
@@ -224,9 +216,6 @@ class BotListWidgetRow(
         event.payLoad = Gson().toJson(hashMap)
         event.isScrollUpNeeded = true
         KoreEventCenter.post(event)
-//        if (isFullView) {
-//            (mContext as Activity).finish()
-//        }
     }
 
     private fun updateHeaderViews(text: String?, view: TextView) {
@@ -234,7 +223,7 @@ class BotListWidgetRow(
         view.text = text
     }
 
-    fun buttonAction(button: Widget.Button?, appendUtterance: Boolean, context: Context) {
+    private fun buttonAction(button: Widget.Button?, appendUtterance: Boolean, context: Context) {
         var utterance: String? = null
         if (button != null) {
             utterance = button.utterance
@@ -259,11 +248,12 @@ class BotListWidgetRow(
         event.payLoad = Gson().toJson(hashMap)
         event.isScrollUpNeeded = true
         KoreEventCenter.post(event)
-//        try {
-//            if (isFullView) {
-//                (mContext as Activity).finish()
-//            }
-//        } catch (e: Exception) {
-//        }
+    }
+
+    private fun createDetailsRows(): List<BotListWidgetDetailRow> {
+        var rows = emptyList<BotListWidgetDetailRow>()
+        rows = rows + model.details.map { BotListWidgetDetailRow(id, it, btnActiveTextColor) }
+
+        return rows
     }
 }
