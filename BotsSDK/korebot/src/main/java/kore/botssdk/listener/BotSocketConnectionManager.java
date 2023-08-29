@@ -561,8 +561,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void stopTextToSpeech() {
         try {
-            ttsSynthesizer.stopTextToSpeech();
-        } catch (IllegalArgumentException | NullPointerException exception) {
+            if (ttsSynthesizer != null) ttsSynthesizer.stopTextToSpeech();
+        } catch (IllegalArgumentException exception) {
             exception.printStackTrace();
         }
     }
