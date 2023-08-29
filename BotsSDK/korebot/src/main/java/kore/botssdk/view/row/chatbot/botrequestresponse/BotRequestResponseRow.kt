@@ -1,4 +1,4 @@
-package kore.botssdk.view.row.botrequestresponse
+package kore.botssdk.view.row.chatbot.botrequestresponse
 
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable

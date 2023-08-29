@@ -1,4 +1,4 @@
-package kore.botssdk.view.row.listwidget
+package kore.botssdk.view.row.chatbot.listwidget
 
 import android.app.Activity
 import android.content.ActivityNotFoundException

@@ -19,9 +19,9 @@ import kore.botssdk.models.PayloadOuter
 import kore.botssdk.utils.DateUtils
 import kore.botssdk.utils.StringUtils
 import kore.botssdk.view.row.SimpleListRow
-import kore.botssdk.view.row.botrequestresponse.BotRequestResponseRow
+import kore.botssdk.view.row.chatbot.botrequestresponse.BotRequestResponseRow
 import kore.botssdk.view.row.chatbot.ChatBotRowType
-import kore.botssdk.view.row.listwidget.BotListWidgetRow
+import kore.botssdk.view.row.chatbot.listwidget.BotListWidgetRow
 import java.util.Date
 
 object ChatBotHelper {

@@ -2,9 +2,9 @@ package kore.botssdk.view.row.chatbot
 
 import kore.botssdk.view.row.SimpleListRow
 import kore.botssdk.view.row.SimpleListViewHolderProvider
-import kore.botssdk.view.row.botrequestresponse.BotRequestResponseProvider
-import kore.botssdk.view.row.listwidget.BotListWidgetProvider
-import kore.botssdk.view.row.listwidget.BotListWidgetRow
+import kore.botssdk.view.row.chatbot.botrequestresponse.BotRequestResponseProvider
+import kore.botssdk.view.row.chatbot.listwidget.BotListWidgetProvider
+import kore.botssdk.view.row.chatbot.listwidget.BotListWidgetRow
 
 enum class ChatBotRowType(
     override val provider: SimpleListViewHolderProvider<*>
