@@ -1,11 +1,12 @@
 package kore.botssdk.application;
 
 import android.app.Application;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 
-import kore.botssdk.FCM.FCMWrapper;
+import com.google.firebase.FirebaseApp;
+
+import kore.botssdk.fcm.FCMWrapper;
 import kore.botssdk.listener.NetworkStateReceiver;
 
 /**
@@ -15,19 +16,14 @@ import kore.botssdk.listener.NetworkStateReceiver;
 public class BotApplication extends Application {
 
     AppControl appControl;
-    private static Context globalContext;
     @Override
     public void onCreate() {
         super.onCreate();
         appControl = new AppControl(getApplicationContext());
-        globalContext = this;
+        FirebaseApp.initializeApp(getApplicationContext());
         FCMWrapper.getInstance().init();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(new NetworkStateReceiver(), filter);
-    }
-
-    public static Context getGlobalContext() {
-        return globalContext;
     }
 
     public static boolean isActivityVisible() {

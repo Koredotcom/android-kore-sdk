@@ -147,7 +147,7 @@ public class CircleN implements Shape {
 
                 float textly = point.y + (target.getTextPlace() * density);
                 if (lines.length > 0) {
-                    textly = textly - ((22 * ((int) lines.length / 2) * density));
+                    textly = textly - ((22 * (lines.length / 2) * density));
                 }
                 for (int line = 0; line < lines.length; line++) {
                     Log.d("texty", String.valueOf(textly));
@@ -176,7 +176,7 @@ public class CircleN implements Shape {
 
                 float textry = point.y + (6 * density);
                 if (lines.length > 0) {
-                    textry = textry - ((22 * ((int) lines.length / 2) * density));
+                    textry = textry - ((22 * (lines.length / 2) * density));
                 }
                 for (int line = 0; line < lines.length; line++) {
                     Log.d("texty", String.valueOf(textry));

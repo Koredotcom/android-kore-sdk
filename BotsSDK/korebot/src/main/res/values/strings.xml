@@ -5,7 +5,7 @@
     <string name="socket_disconnected">Disconnected</string>
     <string name="socket_failed">Failed to connect</string>
     <string name="send">"Send"</string>
-    <string name="please_wait">"Please wait..."</string>
+    <string name="please_wait">"Please wait…"</string>
     <string name="speak_now">"Speak now"</string>
     <string name="no_network">"No network!"</string>
     <string name="click_hear_to_enter_text">click hear to enter text</string>
@@ -104,6 +104,13 @@
     <string name="see_all_results">See all results</string>
     <string name="notification_channel_id">3903</string>
     <string name="more">More</string>
+    <string name="download">Download</string>
+    <string name="nodata">No Data</string>
+    <string name="no_upcoming_meetings">No Upcoming Meetings</string>
+    <string name="no_files">No Files</string>
+    <string name="you">You</string>
+    <string name="view_less">View less</string>
+    <string name="message">Message...</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

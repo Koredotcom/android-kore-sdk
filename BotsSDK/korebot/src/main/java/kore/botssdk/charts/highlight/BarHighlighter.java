@@ -18,8 +18,8 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
             return null;
         } else {
             MPPointD pos = this.getValsForTouch(x, y);
-            BarData barData = ((BarDataProvider)this.mChart).getBarData();
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(high.getDataSetIndex());
+            BarData barData = this.mChart.getBarData();
+            IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
             if (set.isStacked()) {
                 return this.getStackedHighlight(high, set, (float)pos.x, (float)pos.y);
             } else {
@@ -30,7 +30,7 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
     }
 
     public Highlight getStackedHighlight(Highlight high, IBarDataSet set, float xVal, float yVal) {
-        BarEntry entry = (BarEntry)set.getEntryForXValue(xVal, yVal);
+        BarEntry entry = set.getEntryForXValue(xVal, yVal);
         if (entry == null) {
             return null;
         } else if (entry.getYVals() == null) {
@@ -39,7 +39,7 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
             Range[] ranges = entry.getRanges();
             if (ranges.length > 0) {
                 int stackIndex = this.getClosestStackIndex(ranges, yVal);
-                MPPointD pixels = ((BarDataProvider)this.mChart).getTransformer(set.getAxisDependency()).getPixelForValues(high.getX(), ranges[stackIndex].to);
+                MPPointD pixels = this.mChart.getTransformer(set.getAxisDependency()).getPixelForValues(high.getX(), ranges[stackIndex].to);
                 Highlight stackedHigh = new Highlight(entry.getX(), entry.getY(), (float)pixels.x, (float)pixels.y, high.getDataSetIndex(), stackIndex, high.getAxis());
                 MPPointD.recycleInstance(pixels);
                 return stackedHigh;
@@ -76,6 +76,6 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
     }
 
     protected BarLineScatterCandleBubbleData getData() {
-        return ((BarDataProvider)this.mChart).getBarData();
+        return this.mChart.getBarData();
     }
 }

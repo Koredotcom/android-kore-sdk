@@ -244,9 +244,7 @@ class WebSocketWriter extends Handler {
             if (message.mReason != null && !message.mReason.equals("")) {
                 byte[] pReason = message.mReason.getBytes(StandardCharsets.UTF_8);
                 payload = new byte[2 + pReason.length];
-                for (int i = 0; i < pReason.length; ++i) {
-                    payload[i + 2] = pReason[i];
-                }
+                System.arraycopy(pReason, 0, payload, 2, pReason.length);
             } else {
                 payload = new byte[2];
             }

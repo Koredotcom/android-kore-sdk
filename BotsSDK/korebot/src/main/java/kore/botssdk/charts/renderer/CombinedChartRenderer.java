@@ -19,8 +19,8 @@ import kore.botssdk.utils.LogUtils;
 
 public class CombinedChartRenderer extends DataRenderer {
     protected List<DataRenderer> mRenderers = new ArrayList(5);
-    protected WeakReference<Chart> mChart;
-    protected List<Highlight> mHighlightBuffer = new ArrayList();
+    protected final WeakReference<Chart> mChart;
+    protected final List<Highlight> mHighlightBuffer = new ArrayList();
 
     public CombinedChartRenderer(CombinedChart chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -114,7 +114,7 @@ public class CombinedChartRenderer extends DataRenderer {
     }
 
     public void drawHighlighted(Canvas c, Highlight[] indices) {
-        Chart chart = (Chart)this.mChart.get();
+        Chart chart = this.mChart.get();
         if (chart != null) {
             Iterator var4 = this.mRenderers.iterator();
 
@@ -145,14 +145,14 @@ public class CombinedChartRenderer extends DataRenderer {
                     }
                 }
 
-                renderer.drawHighlighted(c, (Highlight[])this.mHighlightBuffer.toArray(new Highlight[this.mHighlightBuffer.size()]));
+                renderer.drawHighlighted(c, this.mHighlightBuffer.toArray(new Highlight[this.mHighlightBuffer.size()]));
             }
 
         }
     }
 
     public DataRenderer getSubRenderer(int index) {
-        return index < this.mRenderers.size() && index >= 0 ? (DataRenderer)this.mRenderers.get(index) : null;
+        return index < this.mRenderers.size() && index >= 0 ? this.mRenderers.get(index) : null;
     }
 
     public List<DataRenderer> getSubRenderers() {

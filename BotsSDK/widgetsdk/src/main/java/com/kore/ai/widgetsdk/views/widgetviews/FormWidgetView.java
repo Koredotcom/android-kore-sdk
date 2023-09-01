@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +53,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("ViewConstructor")
 public class FormWidgetView extends LinearLayout implements VerticalListViewActionHelper
 {
     private final Context mContext;
@@ -100,7 +102,7 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
         pin_view = view.findViewById(R.id.pin_view);
         panel_name_view=view.findViewById(R.id.panel_name_view);
         dp1 = (int) Utility.convertDpToPixel(getContext(), 1);
-        tvFillForm = (TextView) view.findViewById(R.id.tvFillForm);
+        tvFillForm = view.findViewById(R.id.tvFillForm);
 
         getUserData();
     }
@@ -181,19 +183,6 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
                     @Override
                     public void onError(Throwable e) {
                         progress.setVisibility(View.GONE);
-
-
-                        String msg;
-                        Drawable drawable = null;
-                        if (!NetworkUtility.isNetworkConnectionAvailable(FormWidgetView.this.getContext())) {
-                            //No Internet Connect
-                            msg = getResources().getString(R.string.no_internet_connection);
-                            drawable = getResources().getDrawable(R.drawable.no_internet);
-                        } else {
-                            //Oops some thing went wrong
-                            msg = getResources().getString(R.string.oops);
-                            drawable = getResources().getDrawable(R.drawable.oops_icon);
-                        }
                     }
 
                     @Override

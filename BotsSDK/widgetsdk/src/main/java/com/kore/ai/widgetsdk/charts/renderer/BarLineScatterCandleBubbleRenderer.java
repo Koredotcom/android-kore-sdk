@@ -9,7 +9,7 @@ import com.kore.ai.widgetsdk.charts.interfaces.datasets.IDataSet;
 import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
-    protected XBounds mXBounds = new XBounds();
+    protected final XBounds mXBounds = new XBounds();
 
     public BarLineScatterCandleBubbleRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

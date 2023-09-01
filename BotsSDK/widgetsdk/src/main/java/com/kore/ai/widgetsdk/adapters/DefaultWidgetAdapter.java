@@ -117,7 +117,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     int previewLength;
     String msg;
     Drawable errorIcon;
-    String trigger;
+    final String trigger;
     private boolean isLoginNeeded;
 
     public DefaultWidgetAdapter(Context mContext, String type, String trigger) {
@@ -352,7 +352,7 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
 
     @Override
     public ArrayList getData() {
-        return (ArrayList) eventList;
+        return eventList;
     }
 
     @Override
@@ -400,26 +400,28 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout layoutDetails, innerlayout;
-        public TextView txtTitle;
-        public TextView txtSubTitle;
-        public TextView txtText, txtTextModif;
+        LinearLayout layoutDetails;
+        final LinearLayout innerlayout;
+        public final TextView txtTitle;
+        public final TextView txtSubTitle;
+        public final TextView txtText;
+        public final TextView txtTextModif;
         public TextView tvborder, tv_users;
-        public ImageView imageIcon;
-        public View divider;
-        public ImageView icon_down;
-        public RecyclerView recyclerView;
+        public final ImageView imageIcon;
+        public final View divider;
+        public final ImageView icon_down;
+        public final RecyclerView recyclerView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
-            txtText = (TextView) itemView.findViewById(R.id.txtText);
-            txtTextModif = (TextView) itemView.findViewById(R.id.txtTextModif);
+            txtTitle = itemView.findViewById(R.id.txtTitle);
+            txtSubTitle = itemView.findViewById(R.id.txtSubtitle);
+            txtText = itemView.findViewById(R.id.txtText);
+            txtTextModif = itemView.findViewById(R.id.txtTextModif);
 
 
-            imageIcon = (ImageView) itemView.findViewById(R.id.imageIcon);
+            imageIcon = itemView.findViewById(R.id.imageIcon);
             innerlayout = itemView.findViewById(R.id.innerlayout);
 
             recyclerView = itemView.findViewById(R.id.buttonsList);
@@ -447,8 +449,8 @@ public class DefaultWidgetAdapter extends RecyclerView.Adapter implements Recycl
     }
 
     class ReportsViewHolder extends RecyclerView.ViewHolder{
-        Button loginBtn;
-        TextView txt;
+        final Button loginBtn;
+        final TextView txt;
         public ReportsViewHolder(@NonNull View itemView) {
             super(itemView);
             loginBtn = itemView.findViewById(R.id.login_button);

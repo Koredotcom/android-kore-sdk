@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.text.HtmlCompat;
+
 import java.util.Locale;
 
 import kore.botssdk.R;
@@ -32,6 +35,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotButtonLinkTemplateView extends LinearLayout implements RadioListListner {
 
@@ -64,11 +68,11 @@ public class BotButtonLinkTemplateView extends LinearLayout implements RadioList
     }
 
     private void init(Context context) {
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = DimensionUtil.dp1;
         inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_button_link_view, this, true);
-        autoExpandListView = (ListView) inflatedView.findViewById(R.id.botCustomButtonList);
-        llRoot = (LinearLayout) inflatedView.findViewById(R.id.llRoot);
-        tvButtonLinkTitle = (TextView) inflatedView.findViewById(R.id.tvButtonLinkTitle);
+        autoExpandListView = inflatedView.findViewById(R.id.botCustomButtonList);
+        llRoot = inflatedView.findViewById(R.id.llRoot);
+        tvButtonLinkTitle = inflatedView.findViewById(R.id.tvButtonLinkTitle);
 
         sharedPreferences = getSharedPreferences(context);
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
@@ -95,21 +99,23 @@ public class BotButtonLinkTemplateView extends LinearLayout implements RadioList
         if (payloadInner != null && payloadInner.getButtons() != null)
         {
             this.payloadInner = payloadInner;
-            leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
+            leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
 
-            leftDrawable.setColor(Color.parseColor(leftbgColor));
-            leftDrawable.setStroke((int) (1*dp1), Color.parseColor(leftbgColor));
-            tvButtonLinkTitle.setBackground(leftDrawable);
+            if(leftDrawable != null)
+            {
+                leftDrawable.setColor(Color.parseColor(leftbgColor));
+                leftDrawable.setStroke((int) (1*dp1), Color.parseColor(leftbgColor));
+                tvButtonLinkTitle.setBackground(leftDrawable);
+            }
 
             if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
             {
                 String textualContent = unescapeHtml4(payloadInner.getText().trim());
                 textualContent = StringUtils.unescapeHtml3(textualContent.trim());
                 textualContent = MarkdownUtil.processMarkDown(textualContent);
-                CharSequence sequence = Html.fromHtml(textualContent.replace("\n", "<br />"),
+                CharSequence sequence = HtmlCompat.fromHtml(textualContent.replace("\n", "<br />"), HtmlCompat.FROM_HTML_MODE_LEGACY,
                         new MarkdownImageTagHandler(getContext(), tvButtonLinkTitle , textualContent), new MarkdownTagHandler());
                 SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-
                 tvButtonLinkTitle.setText(strBuilder);
                 tvButtonLinkTitle.setMovementMethod(null);
             }
@@ -140,52 +146,4 @@ public class BotButtonLinkTemplateView extends LinearLayout implements RadioList
         if(payloadInner != null)
             payloadInner.setCheckedPosition(position);
     }
-
-//    private int getViewHeight() {
-//        int viewHeight = 0;
-//        if (autoExpandListView != null) {
-//            int count = 0;
-//            if (autoExpandListView.getAdapter() != null) {
-//                count = autoExpandListView.getAdapter().getCount();
-//            }
-//            viewHeight = (int) (layoutItemHeight * count)+(int)(count*(3*dp1));
-//        }
-//        return viewHeight;
-//    }
-//
-//    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        int viewHeight = getViewHeight();
-//        int viewWidth = (viewHeight == 0) ? 0 : (int) restrictedMaxWidth;
-//        int childHeightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY);
-//        int childWidthSpec = MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY);
-//
-//        MeasureUtils.measure(autoExpandListView, childWidthSpec, childHeightSpec);
-//
-//        int parentWidthSpec = childWidthSpec;
-//        int parentHeightSpec = childHeightSpec;
-//
-//        super.onMeasure(parentWidthSpec, parentHeightSpec);
-//    }
-//
-//    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//
-//        final int count = getChildCount();
-//        int parentWidth = getMeasuredWidth();
-//
-//        //get the available size of child view
-//        int childLeft = this.getPaddingLeft();
-//        int childTop = this.getPaddingTop();
-//
-//        int itemWidth = (r - l) / getChildCount();
-//
-//        for (int i = 0; i < count; i++) {
-//            View child = getChildAt(i);
-//            if (child.getVisibility() != GONE) {
-//                LayoutUtils.layoutChild(child, childLeft, childTop);
-//                childTop += child.getMeasuredHeight();
-//            }
-//        }
-//    }
 }

@@ -109,7 +109,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     int previewLength;
     String msg;
     Drawable errorIcon;
-    String trigger;
+    final String trigger;
     private boolean isLoginNeeded;
     private WidgetComposeFooterInterface widgetComposeFooterInterface;
 
@@ -558,27 +558,30 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout layoutDetails, innerlayout;
-        public TextView txtTitle;
-        public TextView txtSubTitle;
+        LinearLayout layoutDetails;
+        final LinearLayout innerlayout;
+        public final TextView txtTitle;
+        public final TextView txtSubTitle;
         public TextView tvborder, tv_users;
-        public ImageView imageIcon, img_up_down;
-        public ExpandableLayout buttonLayout;
-        public View divider;
-        public RecyclerView recyclerView;
-        public ImageView imgMenu, icon_image_load;
-        public TextView tvText;
-        public TextView tvUrl;
-        public TextView tvButton;
-        public LinearLayout tvButtonParent;
-        public ListView alDetails;
+        public final ImageView imageIcon;
+        public final ImageView img_up_down;
+        public final ExpandableLayout buttonLayout;
+        public final View divider;
+        public final RecyclerView recyclerView;
+        public final ImageView imgMenu;
+        public final ImageView icon_image_load;
+        public final TextView tvText;
+        public final TextView tvUrl;
+        public final TextView tvButton;
+        public final LinearLayout tvButtonParent;
+        public final ListView alDetails;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtSubTitle = (TextView) itemView.findViewById(R.id.txtSubtitle);
-            imageIcon = (ImageView) itemView.findViewById(R.id.imageIcon);
+            txtTitle = itemView.findViewById(R.id.txtTitle);
+            txtSubTitle = itemView.findViewById(R.id.txtSubtitle);
+            imageIcon = itemView.findViewById(R.id.imageIcon);
             buttonLayout = itemView.findViewById(R.id.button_layout);
             img_up_down = itemView.findViewById(R.id.img_up_down);
             innerlayout = itemView.findViewById(R.id.innerlayout);
@@ -611,8 +614,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     }
 
     static class ReportsViewHolder extends RecyclerView.ViewHolder {
-        Button loginBtn;
-        TextView txt;
+        final Button loginBtn;
+        final TextView txt;
 
         public ReportsViewHolder(@NonNull View itemView) {
             super(itemView);

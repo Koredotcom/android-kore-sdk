@@ -16,9 +16,9 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
-    protected Path mDrawZeroLinePathBuffer = new Path();
-    protected Path mRenderLimitLinesPathBuffer = new Path();
-    protected float[] mRenderLimitLinesBuffer = new float[4];
+    protected final Path mDrawZeroLinePathBuffer = new Path();
+    protected final Path mRenderLimitLinesPathBuffer = new Path();
+    protected final float[] mRenderLimitLinesBuffer = new float[4];
 
     public YAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, YAxis yAxis, Transformer trans) {
         super(viewPortHandler, yAxis, trans);
@@ -154,7 +154,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             limitLinePath.reset();
 
             for(int i = 0; i < limitLines.size(); ++i) {
-                LimitLine l = (LimitLine)limitLines.get(i);
+                LimitLine l = limitLines.get(i);
                 if (l.isEnabled()) {
                     int clipRestoreCount = c.save();
                     this.mLimitLineClippingRect.set(this.mViewPortHandler.getContentRect());
@@ -176,7 +176,7 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
                     String label = l.getLabel();
                     if (label != null && !label.equals("")) {
                         this.mLimitLinePaint.setStyle(l.getTextStyle());
-                        this.mLimitLinePaint.setPathEffect((PathEffect)null);
+                        this.mLimitLinePaint.setPathEffect(null);
                         this.mLimitLinePaint.setColor(l.getTextColor());
                         this.mLimitLinePaint.setTypeface(l.getTypeface());
                         this.mLimitLinePaint.setStrokeWidth(0.5F);

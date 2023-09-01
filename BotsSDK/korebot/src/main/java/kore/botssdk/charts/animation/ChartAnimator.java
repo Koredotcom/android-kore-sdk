@@ -3,8 +3,6 @@ package kore.botssdk.charts.animation;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 
-import androidx.annotation.RequiresApi;
-
 
 
 public class ChartAnimator {
@@ -15,45 +13,38 @@ public class ChartAnimator {
     public ChartAnimator() {
     }
 
-    @RequiresApi(11)
     public ChartAnimator(ValueAnimator.AnimatorUpdateListener listener) {
         this.mListener = listener;
     }
 
-    @RequiresApi(11)
     private ObjectAnimator xAnimator(int duration, Easing.EasingFunction easing) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "phaseX", 0.0F, 1.0F);
         animatorX.setInterpolator(easing);
-        animatorX.setDuration((long)duration);
+        animatorX.setDuration(duration);
         return animatorX;
     }
 
-    @RequiresApi(11)
     private ObjectAnimator yAnimator(int duration, Easing.EasingFunction easing) {
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "phaseY", 0.0F, 1.0F);
         animatorY.setInterpolator(easing);
-        animatorY.setDuration((long)duration);
+        animatorY.setDuration(duration);
         return animatorY;
     }
 
-    @RequiresApi(11)
     public void animateX(int durationMillis) {
         this.animateX(durationMillis, Easing.Linear);
     }
 
-    @RequiresApi(11)
     public void animateX(int durationMillis, Easing.EasingFunction easing) {
         ObjectAnimator animatorX = this.xAnimator(durationMillis, easing);
         animatorX.addUpdateListener(this.mListener);
         animatorX.start();
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY) {
         this.animateXY(durationMillisX, durationMillisY, Easing.Linear, Easing.Linear);
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, Easing.EasingFunction easing) {
         ObjectAnimator xAnimator = this.xAnimator(durationMillisX, easing);
         ObjectAnimator yAnimator = this.yAnimator(durationMillisY, easing);
@@ -67,7 +58,6 @@ public class ChartAnimator {
         yAnimator.start();
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, Easing.EasingFunction easingX, Easing.EasingFunction easingY) {
         ObjectAnimator xAnimator = this.xAnimator(durationMillisX, easingX);
         ObjectAnimator yAnimator = this.yAnimator(durationMillisY, easingY);
@@ -81,12 +71,10 @@ public class ChartAnimator {
         yAnimator.start();
     }
 
-    @RequiresApi(11)
     public void animateY(int durationMillis) {
         this.animateY(durationMillis, Easing.Linear);
     }
 
-    @RequiresApi(11)
     public void animateY(int durationMillis, Easing.EasingFunction easing) {
         ObjectAnimator animatorY = this.yAnimator(durationMillis, easing);
         animatorY.addUpdateListener(this.mListener);

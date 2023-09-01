@@ -63,11 +63,11 @@ public class BotListWidgetTemplateView extends ViewGroup {
 
     private void init() {
         View view =  LayoutInflater.from(getContext()).inflate(R.layout.bot_listwidget_template, this, true);
-        botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
-        autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
-        botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
-        workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
-        tvListWidgetTitle = (TextView) findViewById(R.id.tvListWidgetTitle);
+        botCustomListRoot = findViewById(R.id.botCustomListRoot);
+        autoExpandListView = findViewById(R.id.botCustomListView);
+        botCustomListViewButton = findViewById(R.id.botCustomListViewButton);
+        workBenchListViewButton = findViewById(R.id.workBenchListViewButton);
+        tvListWidgetTitle = findViewById(R.id.tvListWidgetTitle);
         dp1 = (int) DimensionUtil.dp1;
         KaFontUtils.applyCustomFont(getContext(), view);
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);

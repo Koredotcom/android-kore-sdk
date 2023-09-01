@@ -35,7 +35,7 @@ public class ReceivedBubbleContainer extends BaseBubbleContainer {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        receivedBubbleLayout = (ReceivedBubbleLayout) findViewById(R.id.receivedBubbleLayout);
+        receivedBubbleLayout = findViewById(R.id.receivedBubbleLayout);
 
         dp1 = (int) DimensionUtil.dp1;
     }

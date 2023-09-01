@@ -1,7 +1,10 @@
 package kore.botssdk.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 
 public class NetworkUtility {
@@ -21,21 +24,12 @@ public class NetworkUtility {
     public static boolean isNetworkConnectionAvailable(Context context) {
         return isNetworkConnectionAvailable(context, true);
     }
-
+    @SuppressLint("MissingPermission")
     public static boolean isNetworkConnectionAvailable(Context context, boolean showMessage) {
-        boolean isNetworkConnectionAvailable = false;
-
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        if (activeNetworkInfo != null) {
-            isNetworkConnectionAvailable = activeNetworkInfo.isConnected();
-        }
-
-        if (!isNetworkConnectionAvailable && showMessage) {
-//            CustomToast.showToast(context, "No network available");
-
-        }
-        return isNetworkConnectionAvailable;
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 }

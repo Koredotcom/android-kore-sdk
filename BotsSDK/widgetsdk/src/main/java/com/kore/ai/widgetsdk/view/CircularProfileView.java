@@ -12,9 +12,12 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.application.AppControl;
 import com.kore.ai.widgetsdk.drawables.ProfileDrawable;
+import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.StringConstants;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
@@ -76,7 +79,7 @@ public class CircularProfileView extends RoundedImageView {
 
         //Essentials
         if (!isInEditMode()) {
-            dp1 = (int) AppControl.getInstance(getContext()).getDimensionUtil().dp1;
+            dp1 = (int) DimensionUtil.dp1;
             SDK = android.os.Build.VERSION.SDK_INT;
             DEFAULT_HEIGHT = dp1 * 52;
             DEFAULT_WIDTH = dp1 * 52;
@@ -93,6 +96,7 @@ public class CircularProfileView extends RoundedImageView {
             hasBorder = attr.getBoolean(R.styleable.CircularProfileView_has_border, false);
             borderColor = attr.getColor(R.styleable.CircularProfileView_border_color, 0xffffffff);
             borderStrokeWidth = attr.getInt(R.styleable.CircularProfileView_border_width, 0);
+            attr.recycle();
         } else {
             CPV_TEXT_SIZE = 17 * dp1;
             PROFILE_DRAWABLE_PADDING = 0;
@@ -183,10 +187,6 @@ public class CircularProfileView extends RoundedImageView {
 
     public void clearProfileImage() {
         setImageBitmap(null);
-    }
-
-    public void populateLayout(int drawableId, boolean b) {
-        populateLayout("", null, getResources().getDrawable(drawableId), -1, -1, b);
     }
 
     public void populateLayout(String nameInitials, String url, Drawable d, int imageRes,
@@ -294,7 +294,7 @@ public class CircularProfileView extends RoundedImageView {
         this.borderColor = borderColor;
     }
 
-    Target viewTarget = new Target() {
+    final Target viewTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
             setImageDrawable(null);

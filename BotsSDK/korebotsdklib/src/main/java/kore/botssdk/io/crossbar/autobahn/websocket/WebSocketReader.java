@@ -24,6 +24,7 @@ import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import kore.botssdk.io.crossbar.autobahn.utils.ABLogger;
@@ -408,7 +409,14 @@ class WebSocketReader extends Thread {
                             } else {
 
                                 // dispatch WS text message as Java String (previously already validated)
-                                String s = mMessagePayload.toString("UTF-8");
+                                String s;
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                                    s = mMessagePayload.toString(StandardCharsets.UTF_8);
+                                }
+                                else
+                                {
+                                    s = mMessagePayload.toString();
+                                }
                                 onTextMessage(s);
                             }
 
@@ -597,7 +605,7 @@ class WebSocketReader extends Thread {
             statusMessageBuilder.append(" ");
         }
         String statusMessage = statusMessageBuilder.toString().trim();
-        LOGGER.d(String.format("Status: %d (%s)", statusCode, statusMessage));
+        LOGGER.d(String.format(Locale.US, "Status: %d (%s)", statusCode, statusMessage));
         return new Pair<>(statusCode, statusMessage);
     }
 

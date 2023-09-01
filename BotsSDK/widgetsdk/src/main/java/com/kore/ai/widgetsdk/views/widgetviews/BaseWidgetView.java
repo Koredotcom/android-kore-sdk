@@ -9,7 +9,7 @@ import com.kore.ai.widgetsdk.utils.Utility;
 
 public abstract class BaseWidgetView extends ViewGroup implements VerticalListViewActionHelper {
 
-    protected float dp1;
+    protected final float dp1;
 //    protected final int viewHeight;
     public BaseWidgetView(Context context) {
         super(context);

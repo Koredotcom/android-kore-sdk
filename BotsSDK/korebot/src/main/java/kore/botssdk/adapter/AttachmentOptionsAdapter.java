@@ -17,8 +17,8 @@ import kore.botssdk.utils.KaFontUtils;
  */
 
 public class AttachmentOptionsAdapter extends BaseAdapter {
-    ArrayList<String> data;
-    Context mContext;
+    final ArrayList<String> data;
+    final Context mContext;
 
     public AttachmentOptionsAdapter(Context mContext, ArrayList<String> data) {
         this.data = data;
@@ -46,7 +46,7 @@ public class AttachmentOptionsAdapter extends BaseAdapter {
         ListItemViewHolder holder;
         if (view == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-            view = layoutInflater.inflate(R.layout.attachment_options_view, null);
+            view = View.inflate(mContext, R.layout.attachment_options_view, null);
             KaFontUtils.applyCustomFont(mContext, view);
             holder = new ListItemViewHolder();
             holder.title = view.findViewById(R.id.hash_text_view);

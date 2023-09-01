@@ -105,7 +105,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     private TextView emptyPanelView;
     private PannelAdapter pannelAdapter;
     private final String packageName = "com.kore.koreapp";
-    String appName = "Kore";
+    final String appName = "Kore";
     private ViewGroup activityRootView;
     private TextView closeBtnPanel, editButton;
     private TextView img_icon, txtTitle;
@@ -136,7 +136,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
 
     private PanelBaseModel pModels;
     private boolean keyBoardShowing = false;
-    ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
 
@@ -173,10 +173,10 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panel_layout);
 
-        activityRootView = (LinearLayout)findViewById(R.id.root_view);
-        pannel_recycler = (RecyclerView)findViewById(R.id.pannel_recycler);
-        progressBarPanel = (ProgressBar) findViewById(R.id.progressBarPanel);
-        emptyPanelView = (TextView)findViewById(R.id.emptyView);
+        activityRootView = findViewById(R.id.root_view);
+        pannel_recycler = findViewById(R.id.pannel_recycler);
+        progressBarPanel = findViewById(R.id.progressBarPanel);
+        emptyPanelView = findViewById(R.id.emptyView);
         cordinate_layout = findViewById(R.id.cordinate_layout);
 
         //   footerContainer = findViewById(R.id.footer_container);
@@ -191,11 +191,11 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         txtTitle = findViewById(R.id.txtTitle);
         img_icon.setTypeface(KaUtility.getTypeFaceObj(this));
         recyclerView_panel = findViewById(R.id.recyclerView_panel);
-        closeBtnPanel = (TextView) findViewById(R.id.closeBtnPanel);
+        closeBtnPanel = findViewById(R.id.closeBtnPanel);
         closeBtnPanel.setTypeface(KaUtility.getTypeFaceObj(this));
 
         view_helplayout=findViewById(R.id.view_helplayout);
-        editButton = (TextView) findViewById(R.id.editButton);
+        editButton = findViewById(R.id.editButton);
         editButton.setTypeface(KaUtility.getTypeFaceObj(this));
         recyclerView_panel.setLayoutManager(new LinearLayoutManager(this));
 
@@ -500,7 +500,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     @Override
     public void onPanelClicked(PanelBaseModel pModel)
     {
-        if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
+        if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
             try {
                 if (isAppInstalled(getApplicationContext(), packageName))
                 {
@@ -526,7 +526,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                     Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
-        } else if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
+        } else if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
             try {
                 if (isAppInstalled(getApplicationContext(), packageName)) {
                     Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://teams"/*"http://threads.com/thread"*/));
@@ -555,14 +555,14 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         if (mBottomSheetBehavior != null) {
             if (keyBoardShowing)
                 AppUtils.showHideVirtualKeyboard(PanelMainActivity.this, null, false);
-            pModels = removeSystemHealth((PanelBaseModel) pModel);
+            pModels = removeSystemHealth(pModel);
 //            audioLayout.setVisibility(View.GONE);
             persistentSubLayout.setVisibility(View.VISIBLE);
             perssiatentPanel.setVisibility(View.VISIBLE);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    updatePanelData((PanelBaseModel) pModel, false);
+                    updatePanelData(pModel, false);
                 }
             }, 500);
 
@@ -586,7 +586,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             showToast("No data to show");
             return;
         }
-        LinearLayout img_background = (LinearLayout) findViewById(R.id.panel_title_icon);
+        LinearLayout img_background = findViewById(R.id.panel_title_icon);
 //        StateListDrawable gradientDrawable = (StateListDrawable) img_background.getBackground();
 //        DrawableContainer.DrawableContainerState drawableContainerState = (DrawableContainer.DrawableContainerState) gradientDrawable.getConstantState();
 //        Drawable[] children = drawableContainerState.getChildren();

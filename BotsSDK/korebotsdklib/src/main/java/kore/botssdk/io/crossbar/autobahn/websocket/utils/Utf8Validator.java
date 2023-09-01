@@ -96,7 +96,7 @@ public class Utf8Validator {
      */
     public boolean validate(byte[] data, int off, int len) {
         for (int i = off; i < off + len; ++i) {
-            mState = DFA[256 + (mState << 4) + DFA[(int) (0xff & data[i])]];
+            mState = DFA[256 + (mState << 4) + DFA[0xff & data[i]]];
             if (mState == REJECT) {
                 mPos += i;
                 return false;

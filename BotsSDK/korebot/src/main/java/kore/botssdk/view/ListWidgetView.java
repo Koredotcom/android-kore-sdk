@@ -1,7 +1,5 @@
 package kore.botssdk.view;
 
-import static kore.botssdk.adapter.ListWidgetButtonAdapter.showEmailIntent;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -37,7 +37,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.models.Widget;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
@@ -47,14 +46,13 @@ public class ListWidgetView extends LinearLayout {
     private ListWidgetAdapter listWidgetAdapter = null;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
-    Context context;
+    final Context context;
     private TextView botCustomListViewButton;
     private LinearLayout botCustomListRoot;
     private PayloadInner model;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
-    public ImageView menu_btn,icon_image_load;
-    private TextView panel_name_view;
+    public ImageView icon_image_load;
     public TextView tvText;
     public TextView tvUrl;
     public TextView tvButton;
@@ -72,14 +70,12 @@ public class ListWidgetView extends LinearLayout {
     {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bot_list_widget_template_view, this, true);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
+        rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rect_feedback, context.getTheme());
 
-        // KoreEventCenter.register(this);
         botCustomListView = view.findViewById(R.id.botCustomListView);
         botCustomListView.setLayoutManager(new LinearLayoutManager(getContext()));
         botCustomListRoot = view.findViewById(R.id.botCustomListRoot);
         botCustomListViewButton = view.findViewById(R.id.botCustomListViewButton);
-//        panel_name_view=view.findViewById(com.kora.ai.widgetsdk.R.id.panel_name_view);
         icon_image_load=view.findViewById(R.id.icon_image_load);
         tvButton = view.findViewById(R.id.tv_button);
         tvText = view.findViewById(R.id.tv_text);
@@ -115,7 +111,6 @@ public class ListWidgetView extends LinearLayout {
 
         dp1 = (int) Utility.convertDpToPixel(context, 1);
         listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
-        listWidgetAdapter.setFromWidget(true);
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -127,46 +122,18 @@ public class ListWidgetView extends LinearLayout {
         utterance = utt;
 
         if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+        if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
             if(utterance.startsWith("tel:")){
-//                KaUtility.launchDialer(getContext(),utterance);
+                KaUtility.launchDialer(getContext(),utterance);
             }else if(utterance.startsWith("mailto:")){
-//                KaUtility.showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
+                KaUtility.showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
             }
             return;
         }
         EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer();
+        StringBuilder msg = new StringBuilder();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        msg.append(utterance);
-        event.setMessage(msg.toString());
-        event.setPayLoad(new Gson().toJson(hashMap));
-        event.setScrollUpNeeded(true);
-        KoreEventCenter.post(event);
-
-    }
-
-    public void buttonAction(Widget.Button button, boolean appendUtterance){
-        String utterance = null;
-        if(button != null){
-            utterance = button.getUtterance();
-        }
-        if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
-            if(utterance.startsWith("tel:")){
-//                KaUtility.launchDialer(getContext(),utterance);
-            }else if(utterance.startsWith("mailto:")){
-                showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
-            }
-            return;
-        }
-        EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer();
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("refresh", Boolean.TRUE);
-//        if(appendUtterance && trigger!= null)
-//            msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
         event.setPayLoad(new Gson().toJson(hashMap));
@@ -223,8 +190,7 @@ public class ListWidgetView extends LinearLayout {
                     tvButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (model != null && model.getHeaderOptions() != null && headerOptionsModel.getButton() != null
-                                && headerOptionsModel.getButton().getPayload() != null)
+                            if (model.getHeaderOptions() != null && headerOptionsModel.getButton() != null && headerOptionsModel.getButton().getPayload() != null)
                             {
                                 buttonAction(headerOptionsModel.getButton().getPayload(), true);
                             }

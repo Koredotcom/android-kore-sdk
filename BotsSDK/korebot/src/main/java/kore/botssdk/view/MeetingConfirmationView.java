@@ -13,7 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
@@ -79,21 +82,23 @@ public class MeetingConfirmationView extends ViewGroup {
 
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_confirmation_layout, this, true);
-        locationView = (TextView) view.findViewById(R.id.location_view);
+        locationView = view.findViewById(R.id.location_view);
         slotLayout = view.findViewById(R.id.slot_confirm_layout);
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
         slotLayout.setBackground(shape);
-        titleView = (TextView) view.findViewById(R.id.title_view);
-        tv_users = (TextView) view.findViewById(R.id.tv_users);
+        titleView = view.findViewById(R.id.title_view);
+        tv_users = view.findViewById(R.id.tv_users);
         dp1 = (int) DimensionUtil.dp1;
         label = view.findViewById(R.id.label);
         slots = view.findViewById(R.id.time_slots);
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
         slotLayout.setBackground(shape);
@@ -185,9 +190,9 @@ public class MeetingConfirmationView extends ViewGroup {
             } else {
                 int remaining = userDetailModels.size() - 1;
                 if(remaining > 1)
-                    return String.format("%1$s  and %2$d others", userDetailModels.get(0).getFirstName(), remaining);
+                    return String.format(Locale.US, "%1$s  and %2$d others", userDetailModels.get(0).getFirstName(), remaining);
                 else
-                    return String.format("%1$s  and %2$d other", userDetailModels.get(0).getFirstName(), remaining);
+                    return String.format(Locale.US, "%1$s  and %2$d other", userDetailModels.get(0).getFirstName(), remaining);
             }
 
         }
@@ -203,7 +208,6 @@ public class MeetingConfirmationView extends ViewGroup {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
         final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
         int childLeft = 0;

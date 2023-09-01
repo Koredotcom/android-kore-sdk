@@ -49,11 +49,11 @@ import java.util.List;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
-    WidgetActionSheetFragment widgetDialogActivity;
+    final WidgetActionSheetFragment widgetDialogActivity;
     Object actionList;
-    Object model;
-    Activity mainContext;
-    boolean isFromFullView;
+    final Object model;
+    final Activity mainContext;
+    final boolean isFromFullView;
 
 
     private String skillName;
@@ -334,7 +334,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 if (utterance.startsWith("tel:")) {
                     launchDialer(mainContext, utterance);
                 } else if (utterance.startsWith("mailto:")) {
-                    showEmailIntent((Activity) mainContext, utterance.split(":")[1]);
+                    showEmailIntent(mainContext, utterance.split(":")[1]);
                 }
                 return;
             }
@@ -407,7 +407,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     }
 
     static class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_actions;
+        final TextView tv_actions;
 
         public WidgetCancelViewHolder(@NonNull View itemView) {
             super(itemView);

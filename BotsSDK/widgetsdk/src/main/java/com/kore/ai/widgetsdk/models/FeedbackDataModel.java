@@ -3,7 +3,7 @@ package com.kore.ai.widgetsdk.models;
 public class FeedbackDataModel {
 
 
-    String questions;
+    final String questions;
     boolean answered;
     boolean editTextRequired;
     String answerText;
@@ -32,7 +32,7 @@ public class FeedbackDataModel {
         this.answered = answered;
     }
 
-    String qId;
+    final String qId;
 
     public FeedbackDataModel(String questions, String qId, boolean editTextRequired) {
         this.questions=questions;

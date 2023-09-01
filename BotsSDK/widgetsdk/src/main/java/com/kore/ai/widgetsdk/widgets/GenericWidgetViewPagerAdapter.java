@@ -24,8 +24,8 @@ public class GenericWidgetViewPagerAdapter extends PagerAdapter {
     private GenericWidgetView itemLayout;
     private final WidgetsModel widget;
     private final String name;
-    boolean isPaaginationRequired;
-    WidgetViewMoreEnum widgetViewMoreEnum;
+    final boolean isPaaginationRequired;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
     public GenericWidgetViewPagerAdapter(Activity context,
                                          VerticalListViewActionHelper listener, WidgetsModel widget,
                                          String name, boolean isPaaginationRequired, WidgetViewMoreEnum widgetViewMoreEnum) {

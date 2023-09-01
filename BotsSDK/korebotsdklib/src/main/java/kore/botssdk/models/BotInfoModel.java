@@ -38,7 +38,7 @@ public class BotInfoModel {
     }
 
 
-    public HashMap<Object,Object> customData;
+    public final HashMap<Object,Object> customData;
 
 
     public BotInfoModel(String chatBot, String taskBotId,HashMap customData) {

@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -50,6 +51,7 @@ import retrofit2.Response;
  * Created by Ramachandra Pradeep on 23-Apr-19.
  */
 
+@SuppressLint("ViewConstructor")
 public class GenericWidgetView extends LinearLayout {
 
     private ProgressBar linear_progress;
@@ -369,7 +371,7 @@ public class GenericWidgetView extends LinearLayout {
         Map<String, Object> param = null;
         Object body = null;
         // responseNew = null;
-        if (isPagination == false || responseNew == null || responseNew.getHook() == null) {
+        if (!isPagination || responseNew == null || responseNew.getHook() == null) {
             if (widget.getTemplateType().equals("List")) {
                 api = widget.getCallbackURL();
 //                body = widget.getHook().getBody();
@@ -411,24 +413,7 @@ public class GenericWidgetView extends LinearLayout {
             @Override
             public void onFailure(Call<KnowledgeDetailModelResponseNew> call, Throwable t) {
                 linear_progress.setVisibility(View.GONE);
-                String msg;
                 fetching=false;
-                Drawable drawable = null;
-                if (!NetworkUtility.isNetworkConnectionAvailable(GenericWidgetView.this.getContext())) {
-                    //No Internet Connect
-                    msg = getResources().getString(R.string.no_internet_connection);
-                    drawable = getResources().getDrawable(R.drawable.no_internet);
-                } else {
-                    //Oops some thing went wrong
-                    msg = getResources().getString(R.string.oops);
-                    drawable = getResources().getDrawable(R.drawable.oops_icon);
-                }
-//                adapter.setData(null);
-//                adapter.setMessage(msg, drawable);
-//                autoExpandListView.setAdapter(adapter);
-//                view_more.setVisibility(GONE);
-//                adapter.notifyDataSetChanged();
-
             }
         });
     }

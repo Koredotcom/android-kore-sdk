@@ -26,21 +26,22 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.DeepLinkViewHolder>
 {
-    private Context context;
-    private ArrayList<BotButtonModel> arrPdfDownloadModels;
-    private LayoutInflater ownLayoutInflator;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private LayoutInflater layoutInflater;
-    private int dp1;
-    private boolean isLastItem;
+    private final Context context;
+    private final ArrayList<BotButtonModel> arrPdfDownloadModels;
+    private final LayoutInflater ownLayoutInflator;
+    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final LayoutInflater layoutInflater;
+    private final int dp1;
+    private final boolean isLastItem;
     private int checkedPosition = -1;
-    private RadioListListner radioListListner;
-    private ComposeFooterInterface composeFooterInterface;
+    private final RadioListListner radioListListner;
+    private final ComposeFooterInterface composeFooterInterface;
     private String quickWidgetColor,fillColor,quickReplyFontColor;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public ButtonLinkAdapter(Context context, ArrayList<BotButtonModel> arrPdfDownloadModels, InvokeGenericWebViewInterface invokeGenericWebViewInterface, boolean isLastItem, int checkedPosition, RadioListListner radioListListner, ComposeFooterInterface composeFooterInterface)
     {
@@ -53,7 +54,7 @@ public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.De
         this.checkedPosition = checkedPosition;
         this.radioListListner = radioListListner;
         this.composeFooterInterface = composeFooterInterface;
-        this.dp1= (int) AppControl.getInstance(context).getDimensionUtil().dp1;
+        this.dp1= (int) DimensionUtil.dp1;
         this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         quickWidgetColor = SDKConfiguration.BubbleColors.quickReplyTextColor;
@@ -83,7 +84,7 @@ public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.De
     @NonNull
     @Override
     public DeepLinkViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View convertView = layoutInflater.inflate(R.layout.button_link_template_cell, null);
+        View convertView = View.inflate(context, R.layout.button_link_template_cell, null);
         DeepLinkViewHolder viewHolder = new DeepLinkViewHolder(convertView);
 
         GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground();
@@ -160,15 +161,15 @@ public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.De
     }
 
     class DeepLinkViewHolder extends RecyclerView.ViewHolder{
-        ImageView ivLinkForward;
-        TextView tvButtonTitle;
-        LinearLayout llButtonDeepLink;
+        final ImageView ivLinkForward;
+        final TextView tvButtonTitle;
+        final LinearLayout llButtonDeepLink;
 
         public DeepLinkViewHolder(View view) {
             super(view);
-            ivLinkForward = (ImageView) view.findViewById(R.id.ivLinkForward);
-            tvButtonTitle = (TextView) view.findViewById(R.id.tvButtonTitle);
-            llButtonDeepLink = (LinearLayout) view.findViewById(R.id.llButtonDeepLink);
+            ivLinkForward = view.findViewById(R.id.ivLinkForward);
+            tvButtonTitle = view.findViewById(R.id.tvButtonTitle);
+            llButtonDeepLink = view.findViewById(R.id.llButtonDeepLink);
         }
     }
 }

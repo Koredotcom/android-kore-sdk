@@ -114,7 +114,7 @@ public class ContactViewRecyclerAdapter extends RecyclerView.Adapter<ContactView
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ContactCardListItemBinding itemRowBinding;
+        public final ContactCardListItemBinding itemRowBinding;
 
         public ViewHolder(ContactCardListItemBinding itemRowBinding) {
             super(itemRowBinding.getRoot());

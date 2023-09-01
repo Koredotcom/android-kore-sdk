@@ -7,10 +7,10 @@ import com.kore.ai.widgetsdk.charts.utils.Transformer;
 import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 
 public class MoveViewJob extends ViewPortJob {
-    private static final ObjectPool<MoveViewJob> pool = ObjectPool.create(2, new MoveViewJob((ViewPortHandler)null, 0.0F, 0.0F, (Transformer)null, (View)null));
+    private static final ObjectPool<MoveViewJob> pool = ObjectPool.create(2, new MoveViewJob(null, 0.0F, 0.0F, null, null));
 
     public static MoveViewJob getInstance(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v) {
-        MoveViewJob result = (MoveViewJob)pool.get();
+        MoveViewJob result = pool.get();
         result.mViewPortHandler = viewPortHandler;
         result.xValue = xValue;
         result.yValue = yValue;

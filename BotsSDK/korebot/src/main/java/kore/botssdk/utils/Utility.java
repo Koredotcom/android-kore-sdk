@@ -26,7 +26,7 @@ import kore.botssdk.models.CalEventsTemplateModel;
  */
 public class Utility {
 
-    public static String userId="";
+    public static final String userId="";
 
 
 

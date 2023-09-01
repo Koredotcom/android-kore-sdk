@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,7 +29,6 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
 
     private ArrayList<MultiSelectBase> multiSelectModels = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
-    private final LayoutInflater ownLayoutInflator;
     private final Context context;
     private final Set<MultiSelectBase> checkedItems = new HashSet<>();
     private final SharedPreferences sharedPreferences;
@@ -46,7 +44,6 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
     private boolean isEnabled;
 
     public MultiSelectButtonAdapter(Context context) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
@@ -81,13 +78,13 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             if (multiSelectModels.get(position) instanceof BotMultiSelectElementModel) {
-                convertView = ownLayoutInflator.inflate(R.layout.multi_select_item, null);
+                convertView = View.inflate(context, R.layout.multi_select_item, null);
                 holder.textView = convertView.findViewById(R.id.text_view);
                 holder.checkBox = convertView.findViewById(R.id.check_multi_item);
                 holder.root_layout = convertView.findViewById(R.id.root_layout);
             } else {
-                convertView = ownLayoutInflator.inflate(R.layout.multiselect_button, null);
-                holder.textView = (TextView) convertView.findViewById(R.id.text_view_button);
+                convertView = View.inflate(context, R.layout.multiselect_button, null);
+                holder.textView = convertView.findViewById(R.id.text_view_button);
                 holder.root_layout_btn = convertView.findViewById(R.id.root_layout);
             }
             convertView.setTag(holder);
@@ -124,23 +121,6 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
             holder.checkBox.setChecked(checkedItems.contains(item));
             holder.checkBox.setTag(item);
             holder.checkBox.setOnClickListener(itemSelectionListener);
-            /*holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (composeFooterInterface != null && isEnabled) {
-                        setEnabled(false);
-                        multiSelectView.setMeetingLayoutAlpha(isEnabled());
-                   *//* MeetingSlotModel.Slot meetingSlotModel = (MeetingSlotModel.Slot) v.getTag();
-                    if (meetingSlotModel != null) {
-                        HashMap<String, ArrayList<MeetingSlotModel.Slot>> selectedSlot = new HashMap<>();
-                        ArrayList<MeetingSlotModel.Slot> slotModels = new ArrayList<>();
-                        slotModels.add(meetingSlotModel);
-                        selectedSlot.put("slots",slotModels);
-                        composeFooterInterface.sendWithSomeDelay(((TextView)v).getText().toString(), gson.toJson(selectedSlot),0,false);
-                    }*//*
-                    }
-                }
-            });*/
         }else{
             holder.textView.setTag(item);
             holder.textView.setText(((BotButtonModel)item).getTitle());
@@ -148,8 +128,8 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if(composeFooterInterface!= null && isEnabled && checkedItems.size()>0){
-                        StringBuffer sb = new StringBuffer();
-                        StringBuffer sbValue = new StringBuffer();
+                        StringBuilder sb = new StringBuilder();
+                        StringBuilder sbValue = new StringBuilder();
                         for(MultiSelectBase item:checkedItems){
                             if(!sb.toString().isEmpty())
                                 sb.append(",");
@@ -189,18 +169,6 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-    }
-
-    private void initializeViewHolder(View view, int type) {
-        ViewHolder holder = new ViewHolder();
-
-        if(type == 0){
-            holder.textView = view.findViewById(R.id.text_view);
-            holder.checkBox = view.findViewById(R.id.check_multi_item);
-        }else{
-            holder.textView = (TextView) view.findViewById(R.id.text_view_button);
-        }
-        view.setTag(holder);
     }
 
     private static class ViewHolder {

@@ -75,7 +75,7 @@ public class Approximator {
             this.dy = y1 - y2;
             this.sxey = x1 * y2;
             this.exsy = x2 * y1;
-            this.length = (float)Math.sqrt((double)(this.dx * this.dx + this.dy * this.dy));
+            this.length = (float)Math.sqrt(this.dx * this.dx + this.dy * this.dy);
             this.points = new float[]{x1, y1, x2, y2};
         }
 

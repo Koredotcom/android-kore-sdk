@@ -4,13 +4,14 @@ import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.charts.charts.LineChart;
@@ -35,7 +36,6 @@ import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
 import com.kore.ai.widgetsdk.view.CustomMarkerView;
@@ -145,13 +145,13 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<WidgetsDataModel>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
+                    public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(WidgetsDataModel model) {
+                    public void onNext(@NonNull WidgetsDataModel model) {
 //                        afterDataLoad(model);
-                        if(model!=null && model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getElements()!=null&&model.getData().get(0).getElements().size()>0){
+                        if(model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0){
                             model.getData().get(0).convertElementsToModel();
                             setData(model.getData().get(0).getLineChartElements());
                         }
@@ -159,22 +159,8 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         progress.setVisibility(View.GONE);
-
-                        String msg;
-                        Drawable drawable=null;
-                        if (!NetworkUtility.isNetworkConnectionAvailable(LineChartWidgetView.this.getContext())) {
-                            //No Internet Connect
-                            msg=getResources().getString(R.string.no_internet_connection);
-                            drawable=getResources().getDrawable(R.drawable.no_internet);
-                        } else {
-                            //Oops some thing went wrong
-                            msg=getResources().getString(R.string.oops);
-                            drawable=getResources().getDrawable(R.drawable.oops_icon);
-                        }
-//                        defaultWidgetAdapter.setWidgetData(null);
-//                        defaultWidgetAdapter.setMessage(msg,drawable);
                     }
 
                     @Override

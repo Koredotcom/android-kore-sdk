@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -17,13 +16,11 @@ public class PdfDownloadAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<PdfDownloadModel> arrPdfDownloadModels;
-    private final LayoutInflater ownLayoutInflator;
 
     public PdfDownloadAdapter(Context context, ArrayList<PdfDownloadModel> arrPdfDownloadModels)
     {
         this.context = context;
         this.arrPdfDownloadModels = arrPdfDownloadModels;
-        this.ownLayoutInflator = LayoutInflater.from(context);
     }
 
     @Override
@@ -45,7 +42,7 @@ public class PdfDownloadAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.pdf_download_cell, null);
+            convertView = View.inflate(context, R.layout.pdf_download_cell, null);
         }
 
         if (convertView.getTag() == null)

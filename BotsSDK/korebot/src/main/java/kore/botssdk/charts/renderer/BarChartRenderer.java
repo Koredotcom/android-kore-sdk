@@ -26,11 +26,11 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
-    protected BarDataProvider mChart;
-    protected RectF mBarRect = new RectF();
+    protected final BarDataProvider mChart;
+    protected final RectF mBarRect = new RectF();
     protected BarBuffer[] mBarBuffers;
-    protected Paint mShadowPaint;
-    protected Paint mBarBorderPaint;
+    protected final Paint mShadowPaint;
+    protected final Paint mBarBorderPaint;
     private final RectF mBarShadowRectBuffer = new RectF();
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
@@ -51,7 +51,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         this.mBarBuffers = new BarBuffer[barData.getDataSetCount()];
 
         for(int i = 0; i < this.mBarBuffers.length; ++i) {
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(i);
+            IBarDataSet set = barData.getDataSetByIndex(i);
             this.mBarBuffers[i] = new BarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1), barData.getDataSetCount(), set.isStacked());
         }
 
@@ -61,7 +61,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
         BarData barData = this.mChart.getBarData();
 
         for(int i = 0; i < barData.getDataSetCount(); ++i) {
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(i);
+            IBarDataSet set = barData.getDataSetByIndex(i);
             if (set.isVisible()) {
                 this.drawDataSet(c, set, i);
             }
@@ -83,8 +83,8 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             float barWidthHalf = barWidth / 2.0F;
             int i = 0;
 
-            for(int count = Math.min((int)Math.ceil((double)((float)dataSet.getEntryCount() * phaseX)), dataSet.getEntryCount()); i < count; ++i) {
-                BarEntry e = (BarEntry)dataSet.getEntryForIndex(i);
+            for(int count = Math.min((int)Math.ceil((float)dataSet.getEntryCount() * phaseX), dataSet.getEntryCount()); i < count; ++i) {
+                BarEntry e = dataSet.getEntryForIndex(i);
                 float x = e.getX();
                 this.mBarShadowRectBuffer.left = x - barWidthHalf;
                 this.mBarShadowRectBuffer.right = x + barWidthHalf;
@@ -157,7 +157,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
             boolean drawValueAboveBar = this.mChart.isDrawValueAboveBarEnabled();
 
             for(int i = 0; i < this.mChart.getBarData().getDataSetCount(); ++i) {
-                IBarDataSet dataSet = (IBarDataSet)dataSets.get(i);
+                IBarDataSet dataSet = dataSets.get(i);
                 if (this.shouldDrawValues(dataSet)) {
                     this.applyValueTextStyle(dataSet);
                     boolean isInverted = this.mChart.isInverted(dataSet.getAxisDependency());
@@ -184,7 +184,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                             }
 
                             if (this.mViewPortHandler.isInBoundsY(buffer.buffer[j + 1]) && this.mViewPortHandler.isInBoundsLeft(x)) {
-                                BarEntry entry = (BarEntry)dataSet.getEntryForIndex(j / 4);
+                                BarEntry entry = dataSet.getEntryForIndex(j / 4);
                                 float val = entry.getY();
                                 if (dataSet.isDrawValuesEnabled()) {
                                     this.drawValue(c, formatter.getBarLabel(entry), x, val >= 0.0F ? buffer.buffer[j + 1] + posOffset : buffer.buffer[j + 3] + negOffset, dataSet.getValueTextColor(j / 4));
@@ -213,7 +213,7 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
                                     break label181;
                                 }
 
-                                BarEntry entry = (BarEntry)dataSet.getEntryForIndex(index);
+                                BarEntry entry = dataSet.getEntryForIndex(index);
                                 vals = entry.getYVals();
                                 x = (buffer.buffer[bufferIndex] + buffer.buffer[bufferIndex + 2]) / 2.0F;
                                 int color = dataSet.getValueTextColor(index);
@@ -318,9 +318,9 @@ public class BarChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         for(int var6 = 0; var6 < var5; ++var6) {
             Highlight high = var4[var6];
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(high.getDataSetIndex());
+            IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
             if (set != null && set.isHighlightEnabled()) {
-                BarEntry e = (BarEntry)set.getEntryForXValue(high.getX(), high.getY());
+                BarEntry e = set.getEntryForXValue(high.getX(), high.getY());
                 if (this.isInBoundsX(e, set)) {
                     Transformer trans = this.mChart.getTransformer(set.getAxisDependency());
                     this.mHighlightPaint.setColor(set.getHighLightColor());

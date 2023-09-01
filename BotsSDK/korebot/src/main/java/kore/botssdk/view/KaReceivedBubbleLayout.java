@@ -47,7 +47,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
     CircularProfileView cpvSenderImage;
     int carouselViewHeight, pieViewHeight, lineHeight, respTableViewHeight;
-    ArrayList<Integer> arrayList = new ArrayList<>();
+    final ArrayList<Integer> arrayList = new ArrayList<>();
 
     public KaReceivedBubbleLayout(Context context) {
         super(context);
@@ -86,7 +86,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        cpvSenderImage = (CircularProfileView) findViewById(R.id.cpvSenderImage);
+        cpvSenderImage = findViewById(R.id.cpvSenderImage);
     }
 
     @Override
@@ -882,7 +882,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For PieChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(pieViewHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(botPieChartView, childWidthSpec, childHeightSpec);
         MeasureUtils.measure(advancedListTemplateView, childWidthSpec, wrapSpec);
 
@@ -948,28 +948,28 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          */
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int) dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) lineHeight, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(lineChartView, childWidthSpec, childHeightSpec);
 
         /**
          * For BarChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(barChartView, childWidthSpec, childHeightSpec);
 
         /**
          * For Horizontal BarChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(horizontalBarChartView, childWidthSpec,childHeightSpec);
 
         /**
          * For stacked BarChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (lineHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(stackedBarChatView, childWidthSpec,childHeightSpec);
 
         /*

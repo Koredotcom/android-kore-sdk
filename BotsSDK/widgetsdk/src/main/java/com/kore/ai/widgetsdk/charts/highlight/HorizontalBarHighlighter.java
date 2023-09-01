@@ -18,13 +18,13 @@ public class HorizontalBarHighlighter extends BarHighlighter {
     }
 
     public com.kore.ai.widgetsdk.charts.highlight.Highlight getHighlight(float x, float y) {
-        BarData barData = ((BarDataProvider)this.mChart).getBarData();
+        BarData barData = this.mChart.getBarData();
         MPPointD pos = this.getValsForTouch(y, x);
         com.kore.ai.widgetsdk.charts.highlight.Highlight high = this.getHighlightForX((float)pos.y, y, x);
         if (high == null) {
             return null;
         } else {
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(high.getDataSetIndex());
+            IBarDataSet set = barData.getDataSetByIndex(high.getDataSetIndex());
             if (set.isStacked()) {
                 return this.getStackedHighlight(high, set, (float)pos.y, (float)pos.x);
             } else {
@@ -51,7 +51,7 @@ public class HorizontalBarHighlighter extends BarHighlighter {
 
             while(var10.hasNext()) {
                 Entry e = (Entry)var10.next();
-                MPPointD pixels = ((BarDataProvider)this.mChart).getTransformer(set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());
+                MPPointD pixels = this.mChart.getTransformer(set.getAxisDependency()).getPixelForValues(e.getY(), e.getX());
                 highlights.add(new Highlight(e.getX(), e.getY(), (float)pixels.x, (float)pixels.y, dataSetIndex, set.getAxisDependency()));
             }
 

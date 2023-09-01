@@ -42,13 +42,13 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 
     protected void calcMinMax() {
         if (this.mFitBars) {
-            this.mXAxis.calculate(((BarData)this.mData).getXMin() - ((BarData)this.mData).getBarWidth() / 2.0F, ((BarData)this.mData).getXMax() + ((BarData)this.mData).getBarWidth() / 2.0F);
+            this.mXAxis.calculate(this.mData.getXMin() - this.mData.getBarWidth() / 2.0F, this.mData.getXMax() + this.mData.getBarWidth() / 2.0F);
         } else {
-            this.mXAxis.calculate(((BarData)this.mData).getXMin(), ((BarData)this.mData).getXMax());
+            this.mXAxis.calculate(this.mData.getXMin(), this.mData.getXMax());
         }
 
-        this.mAxisLeft.calculate(((BarData)this.mData).getYMin(YAxis.AxisDependency.LEFT), ((BarData)this.mData).getYMax(YAxis.AxisDependency.LEFT));
-        this.mAxisRight.calculate(((BarData)this.mData).getYMin(YAxis.AxisDependency.RIGHT), ((BarData)this.mData).getYMax(YAxis.AxisDependency.RIGHT));
+        this.mAxisLeft.calculate(this.mData.getYMin(YAxis.AxisDependency.LEFT), this.mData.getYMax(YAxis.AxisDependency.LEFT));
+        this.mAxisRight.calculate(this.mData.getYMin(YAxis.AxisDependency.RIGHT), this.mData.getYMax(YAxis.AxisDependency.RIGHT));
     }
 
     public Highlight getHighlightByTouchPoint(float x, float y) {
@@ -68,13 +68,13 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     }
 
     public void getBarBounds(BarEntry e, RectF outputRect) {
-        IBarDataSet set = (IBarDataSet)((BarData)this.mData).getDataSetForEntry(e);
+        IBarDataSet set = this.mData.getDataSetForEntry(e);
         if (set == null) {
             outputRect.set(1.4E-45F, 1.4E-45F, 1.4E-45F, 1.4E-45F);
         } else {
             float y = e.getY();
             float x = e.getX();
-            float barWidth = ((BarData)this.mData).getBarWidth();
+            float barWidth = this.mData.getBarWidth();
             float left = x - barWidth / 2.0F;
             float right = x + barWidth / 2.0F;
             float top = y >= 0.0F ? y : 0.0F;
@@ -113,7 +113,7 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
     }
 
     public BarData getBarData() {
-        return (BarData)this.mData;
+        return this.mData;
     }
 
     public void setFitBars(boolean enabled) {

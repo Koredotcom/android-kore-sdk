@@ -40,7 +40,7 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
         float barWidthHalf = this.mBarWidth / 2.0F;
 
         for(int i = 0; (float)i < size; ++i) {
-            BarEntry e = (BarEntry)data.getEntryForIndex(i);
+            BarEntry e = data.getEntryForIndex(i);
             if (e != null) {
                 float x = e.getX();
                 float y = e.getY();

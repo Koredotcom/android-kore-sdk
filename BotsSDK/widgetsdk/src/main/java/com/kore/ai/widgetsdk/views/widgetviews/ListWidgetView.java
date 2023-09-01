@@ -3,6 +3,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -66,6 +69,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("ViewConstructor")
 public class ListWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private float dp1;
     public ImageView menu_btn,icon_image_load;
@@ -104,8 +108,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     private WidgetsModel mWidget;
     private final String name;
     private String trigger;
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    Context context;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
+    final Context context;
     public ListWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.context=context;
@@ -375,29 +379,26 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         progress.setVisibility(View.GONE);
-                        if (e.getMessage().equalsIgnoreCase("410") || e.getMessage().equalsIgnoreCase("401"))
-                        {
-                            //KoreEventCenter.post(new OnTokenExpired());
-                        }
 
                         String msg;
-                        Drawable drawable=null;
+                        Drawable drawable;
                         if (!NetworkUtility.isNetworkConnectionAvailable(ListWidgetView.this.getContext())) {
                             //No Internet Connect
                             msg=getResources().getString(R.string.no_internet_connection);
-                            drawable=getResources().getDrawable(R.drawable.no_internet);
+                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.no_internet, context.getTheme());
                         } else {
                             //Oops some thing went wrong
                             msg=getResources().getString(R.string.oops);
-                            drawable=getResources().getDrawable(R.drawable.oops_icon);
+                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.oops_icon, context.getTheme());
                         }
+
                         listWidgetAdapter.setWidgetData(null);
                         listWidgetAdapter.setMessage(msg,drawable);
                         view_more.setVisibility(GONE);
                         list_widget_root_recycler.setAdapter(listWidgetAdapter);
-                        listWidgetAdapter.notifyDataSetChanged();
+                        listWidgetAdapter.notifyAll();
                     }
 
                     @Override
@@ -408,16 +409,13 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     }
 
     public void buttonAction(String utt, boolean appendUtterance){
-        String utterance = null;
 
-        utterance = utt;
-
-        if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
-            if(utterance.startsWith("tel:")){
-                KaUtility.launchDialer(getContext(),utterance);
-            }else if(utterance.startsWith("mailto:")){
-                KaUtility.showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
+        if(utt == null)return;
+        if(utt.startsWith("tel:") || utt.startsWith("mailto:")){
+            if(utt.startsWith("tel:")){
+                KaUtility.launchDialer(getContext(), utt);
+            }else if(utt.startsWith("mailto:")){
+                KaUtility.showEmailIntent((Activity) getContext(), utt.split(":")[1]);
             }
             return;
         }
@@ -427,7 +425,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         hashMap.put("refresh", Boolean.TRUE);
         if(appendUtterance && trigger!= null)
             msg = msg.append(trigger).append(" ");
-        msg.append(utterance);
+        msg.append(utt);
         event.setMessage(msg.toString());
         event.setPayLoad(new Gson().toJson(hashMap));
         event.setScrollUpNeeded(true);
@@ -440,7 +438,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             utterance = button.getUtterance();
         }
         if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+        if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
             if(utterance.startsWith("tel:")){
                 KaUtility.launchDialer(getContext(),utterance);
             }else if(utterance.startsWith("mailto:")){
@@ -459,16 +457,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         event.setPayLoad(new Gson().toJson(hashMap));
         event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
-
-  /*      try {
-
-
-           *//* if (isFullView) {
-                ((Activity) mContext).finish();
-            }*//*
-        } catch (Exception e) {
-
-        }*/
     }
     private void afterDataLoad(final WidgetListDataModel model){
 

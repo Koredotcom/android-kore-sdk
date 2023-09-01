@@ -12,7 +12,7 @@ public final class FSize extends ObjectPool.Poolable {
     }
 
     public static FSize getInstance(float width, float height) {
-        FSize result = (FSize)pool.get();
+        FSize result = pool.get();
         result.width = width;
         result.height = height;
         return result;

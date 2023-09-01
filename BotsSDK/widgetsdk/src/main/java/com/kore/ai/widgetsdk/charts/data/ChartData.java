@@ -170,13 +170,13 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         int i;
         if (ignorecase) {
             for(i = 0; i < dataSets.size(); ++i) {
-                if (label.equalsIgnoreCase(((IDataSet)dataSets.get(i)).getLabel())) {
+                if (label.equalsIgnoreCase(dataSets.get(i).getLabel())) {
                     return i;
                 }
             }
         } else {
             for(i = 0; i < dataSets.size(); ++i) {
-                if (label.equals(((IDataSet)dataSets.get(i)).getLabel())) {
+                if (label.equals(dataSets.get(i).getLabel())) {
                     return i;
                 }
             }
@@ -189,7 +189,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         String[] types = new String[this.mDataSets.size()];
 
         for(int i = 0; i < this.mDataSets.size(); ++i) {
-            types[i] = ((IDataSet)this.mDataSets.get(i)).getLabel();
+            types[i] = this.mDataSets.get(i).getLabel();
         }
 
         return types;
@@ -201,11 +201,11 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public T getDataSetByLabel(String label, boolean ignorecase) {
         int index = this.getDataSetIndexByLabel(this.mDataSets, label, ignorecase);
-        return index >= 0 && index < this.mDataSets.size() ? (T) this.mDataSets.get(index) : null;
+        return index >= 0 && index < this.mDataSets.size() ? this.mDataSets.get(index) : null;
     }
 
     public T getDataSetByIndex(int index) {
-        return this.mDataSets != null && index >= 0 && index < this.mDataSets.size() ? (T) this.mDataSets.get(index) : null;
+        return this.mDataSets != null && index >= 0 && index < this.mDataSets.size() ? this.mDataSets.get(index) : null;
     }
 
     public void addDataSet(T d) {
@@ -230,7 +230,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public boolean removeDataSet(int index) {
         if (index < this.mDataSets.size() && index >= 0) {
-            T set = (T) this.mDataSets.get(index);
+            T set = this.mDataSets.get(index);
             return this.removeDataSet(set);
         } else {
             return false;
@@ -239,7 +239,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public void addEntry(Entry e, int dataSetIndex) {
         if (this.mDataSets.size() > dataSetIndex && dataSetIndex >= 0) {
-            IDataSet set = (IDataSet)this.mDataSets.get(dataSetIndex);
+            IDataSet set = this.mDataSets.get(dataSetIndex);
             if (!set.addEntry(e)) {
                 return;
             }
@@ -327,7 +327,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public boolean removeEntry(Entry e, int dataSetIndex) {
         if (e != null && dataSetIndex < this.mDataSets.size()) {
-            IDataSet set = (IDataSet)this.mDataSets.get(dataSetIndex);
+            IDataSet set = this.mDataSets.get(dataSetIndex);
             if (set != null) {
                 boolean removed = set.removeEntry(e);
                 if (removed) {
@@ -347,7 +347,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
         if (dataSetIndex >= this.mDataSets.size()) {
             return false;
         } else {
-            IDataSet dataSet = (IDataSet)this.mDataSets.get(dataSetIndex);
+            IDataSet dataSet = this.mDataSets.get(dataSetIndex);
             Entry e = dataSet.getEntryForXValue(xValue, 0.0F / 0.0F);
             return e != null && this.removeEntry(e, dataSetIndex);
         }
@@ -358,7 +358,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
             return null;
         } else {
             for(int i = 0; i < this.mDataSets.size(); ++i) {
-                T set = (T) this.mDataSets.get(i);
+                T set = this.mDataSets.get(i);
 
                 for(int j = 0; j < set.getEntryCount(); ++j) {
                     if (e.equalTo(set.getEntryForXValue(e.getX(), e.getY()))) {
@@ -554,7 +554,7 @@ public abstract class ChartData<T extends IDataSet<? extends Entry>> {
 
     public T getMaxEntryCountSet() {
         if (this.mDataSets != null && !this.mDataSets.isEmpty()) {
-            T max = (T) this.mDataSets.get(0);
+            T max = this.mDataSets.get(0);
             Iterator var2 = this.mDataSets.iterator();
 
             while(var2.hasNext()) {

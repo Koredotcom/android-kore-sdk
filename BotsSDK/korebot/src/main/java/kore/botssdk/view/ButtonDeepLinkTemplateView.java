@@ -50,7 +50,7 @@ public class ButtonDeepLinkTemplateView extends LinearLayout implements RadioLis
 
     private void init(Context context) {
         view =  LayoutInflater.from(getContext()).inflate(R.layout.button_deep_link_view, this, true);
-        lvButtonLink = (RecyclerView) view.findViewById(R.id.lvButtonLink);
+        lvButtonLink = view.findViewById(R.id.lvButtonLink);
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().density;
 //        lvButtonLink.addItemDecoration(new VerticalSpaceItemDecoration(10 * dp1));

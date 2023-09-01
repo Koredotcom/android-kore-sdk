@@ -1,10 +1,9 @@
 package kore.botssdk.activity;
 
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,14 +18,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.UUID;
 
-import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
@@ -56,8 +54,8 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
 
     private void findViews() {
 
-        launchBotBtn = (Button) findViewById(R.id.launchBotBtn);
-        etIdentity = (EditText) findViewById(R.id.etIdentity);
+        launchBotBtn = findViewById(R.id.launchBotBtn);
+        etIdentity = findViewById(R.id.etIdentity);
         launchBotBtn.setText(getResources().getString(R.string.get_started));
         etIdentity.setText(SDKConfiguration.Client.identity);
         if(etIdentity.getText().length() > 0)
@@ -81,7 +79,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
     /**
      * START of : Listeners
      */
-    View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
+    final View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (isOnline())
@@ -128,7 +126,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
 
         startActivity(intent);
     }
-
+    @SuppressLint("MissingPermission")
     protected boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         Network nw = connectivityManager.getActiveNetwork();

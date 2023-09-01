@@ -38,7 +38,7 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
 //    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
-    Context context;
+final Context context;
     private Activity activityContext;
     private final LayoutInflater ownLayoutInflater;
     private final HashMap<String, Integer> headersMap = new HashMap<>();
@@ -208,20 +208,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        KaBaseBubbleContainer baseBubbleContainer;
-        KaBaseBubbleLayout baseBubbleLayout;
-        View headerView;
-        TextView textView;
+        final KaBaseBubbleContainer baseBubbleContainer;
+        final KaBaseBubbleLayout baseBubbleLayout;
+        final View headerView;
+        final TextView textView;
         public ViewHolder(View view,int viewType){
             super(view);
             if ( viewType== BUBBLE_RIGHT_LAYOUT) {
                 // Right Side
-                baseBubbleLayout = (KaSendBubbleLayout) view.findViewById(R.id.sendBubbleLayout);
-                baseBubbleContainer = (KaSendBubbleContainer) view.findViewById(R.id.send_bubble_layout_container);
+                baseBubbleLayout = view.findViewById(R.id.sendBubbleLayout);
+                baseBubbleContainer = view.findViewById(R.id.send_bubble_layout_container);
             } else {
                 // Left Side
-                baseBubbleLayout = (KaReceivedBubbleLayout) view.findViewById(R.id.receivedBubbleLayout);
-                baseBubbleContainer = (KaReceivedBubbleContainer) view.findViewById(R.id.received_bubble_layout_container);
+                baseBubbleLayout = view.findViewById(R.id.receivedBubbleLayout);
+                baseBubbleContainer = view.findViewById(R.id.received_bubble_layout_container);
             }
             headerView = view.findViewById(R.id.headerLayout);
             textView = view.findViewById(R.id.filesSectionHeader);
@@ -239,7 +239,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         SelectionUtils.resetSelectionTasks();
         SelectionUtils.resetSelectionSlots();
         isAlpha = false;
-        notifyDataSetChanged();
+        notifyItemInserted(baseBotMessageArrayList.size() -1);
     }
 
 

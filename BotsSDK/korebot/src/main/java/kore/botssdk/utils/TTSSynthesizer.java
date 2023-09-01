@@ -25,8 +25,8 @@ public class TTSSynthesizer {
 
     private final Context context;
     private final MediaPlayer mediaPlayer = new MediaPlayer();
-    public static String LOG_TAG = TTSSynthesizer.class.getSimpleName();
-    public ArrayList<String> que = new ArrayList<>();
+    public static final String LOG_TAG = TTSSynthesizer.class.getSimpleName();
+    public final ArrayList<String> que = new ArrayList<>();
     public boolean ttsEnabled = true;
 
 
@@ -84,7 +84,7 @@ public class TTSSynthesizer {
         TtsWebSocketWrapper.getInstance(context).sendMessage(textualMessage,accessToken);
     }
 
-    MediaPlayer.OnPreparedListener mediaPlayerOnPreparedListener = new MediaPlayer.OnPreparedListener() {
+    final MediaPlayer.OnPreparedListener mediaPlayerOnPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mp) {
             if (mp != null) {

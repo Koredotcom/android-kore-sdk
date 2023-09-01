@@ -28,15 +28,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public class LineChartRenderer extends LineRadarRenderer {
-    protected LineDataProvider mChart;
-    protected Paint mCirclePaintInner;
+    protected final LineDataProvider mChart;
+    protected final Paint mCirclePaintInner;
     protected WeakReference<Bitmap> mDrawBitmap;
     protected Canvas mBitmapCanvas;
     protected Bitmap.Config mBitmapConfig;
-    protected Path cubicPath;
-    protected Path cubicFillPath;
+    protected final Path cubicPath;
+    protected final Path cubicFillPath;
     private float[] mLineBuffer;
-    protected Path mGenerateFilledPathBuffer;
+    protected final Path mGenerateFilledPathBuffer;
     private final HashMap<IDataSet, DataSetImageCache> mImageCaches;
     private final float[] mCirclesBuffer;
 
@@ -61,7 +61,7 @@ public class LineChartRenderer extends LineRadarRenderer {
     public void drawData(Canvas c) {
         int width = (int)this.mViewPortHandler.getChartWidth();
         int height = (int)this.mViewPortHandler.getChartHeight();
-        Bitmap drawBitmap = this.mDrawBitmap == null ? null : (Bitmap)this.mDrawBitmap.get();
+        Bitmap drawBitmap = this.mDrawBitmap == null ? null : this.mDrawBitmap.get();
         if (drawBitmap == null || drawBitmap.getWidth() != width || drawBitmap.getHeight() != height) {
             if (width <= 0 || height <= 0) {
                 return;
@@ -103,7 +103,7 @@ public class LineChartRenderer extends LineRadarRenderer {
                     this.drawHorizontalBezier(dataSet);
             }
 
-            this.mRenderPaint.setPathEffect((PathEffect)null);
+            this.mRenderPaint.setPathEffect(null);
         }
     }
 
@@ -135,7 +135,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         this.mRenderPaint.setStyle(Paint.Style.STROKE);
         trans.pathValueToPixel(this.cubicPath);
         this.mBitmapCanvas.drawPath(this.cubicPath, this.mRenderPaint);
-        this.mRenderPaint.setPathEffect((PathEffect)null);
+        this.mRenderPaint.setPathEffect(null);
     }
 
     protected void drawCubicBezier(ILineDataSet dataSet) {
@@ -184,7 +184,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         this.mRenderPaint.setStyle(Paint.Style.STROKE);
         trans.pathValueToPixel(this.cubicPath);
         this.mBitmapCanvas.drawPath(this.cubicPath, this.mRenderPaint);
-        this.mRenderPaint.setPathEffect((PathEffect)null);
+        this.mRenderPaint.setPathEffect(null);
     }
 
     protected void drawCubicFill(Canvas c, ILineDataSet dataSet, Path spline, Transformer trans, XBounds bounds) {
@@ -302,7 +302,7 @@ public class LineChartRenderer extends LineRadarRenderer {
             }
         }
 
-        this.mRenderPaint.setPathEffect((PathEffect)null);
+        this.mRenderPaint.setPathEffect(null);
     }
 
     protected void drawLinearFill(Canvas c, ILineDataSet dataSet, Transformer trans, XBounds bounds) {
@@ -367,7 +367,7 @@ public class LineChartRenderer extends LineRadarRenderer {
             List<ILineDataSet> dataSets = this.mChart.getLineData().getDataSets();
 
             for(int i = 0; i < dataSets.size(); ++i) {
-                ILineDataSet dataSet = (ILineDataSet)dataSets.get(i);
+                ILineDataSet dataSet = dataSets.get(i);
                 if (this.shouldDrawValues(dataSet) && dataSet.getEntryCount() >= 1) {
                     this.applyValueTextStyle(dataSet);
                     Transformer trans = this.mChart.getTransformer(dataSet.getAxisDependency());
@@ -427,7 +427,7 @@ public class LineChartRenderer extends LineRadarRenderer {
         List<ILineDataSet> dataSets = this.mChart.getLineData().getDataSets();
 
         for(int i = 0; i < dataSets.size(); ++i) {
-            ILineDataSet dataSet = (ILineDataSet)dataSets.get(i);
+            ILineDataSet dataSet = dataSets.get(i);
             if (dataSet.isVisible() && dataSet.isDrawCirclesEnabled() && dataSet.getEntryCount() != 0) {
                 this.mCirclePaintInner.setColor(dataSet.getCircleHoleColor());
                 Transformer trans = this.mChart.getTransformer(dataSet.getAxisDependency());
@@ -438,7 +438,7 @@ public class LineChartRenderer extends LineRadarRenderer {
                 boolean drawTransparentCircleHole = drawCircleHole && dataSet.getCircleHoleColor() == 1122867;
                 DataSetImageCache imageCache;
                 if (this.mImageCaches.containsKey(dataSet)) {
-                    imageCache = (DataSetImageCache)this.mImageCaches.get(dataSet);
+                    imageCache = this.mImageCaches.get(dataSet);
                 } else {
                     imageCache = new DataSetImageCache();
                     this.mImageCaches.put(dataSet, imageCache);
@@ -467,7 +467,7 @@ public class LineChartRenderer extends LineRadarRenderer {
                     if (this.mViewPortHandler.isInBoundsLeft(this.mCirclesBuffer[0]) && this.mViewPortHandler.isInBoundsY(this.mCirclesBuffer[1])) {
                         Bitmap circleBitmap = imageCache.getBitmap(j);
                         if (circleBitmap != null) {
-                            c.drawBitmap(circleBitmap, this.mCirclesBuffer[0] - circleRadius, this.mCirclesBuffer[1] - circleRadius, (Paint)null);
+                            c.drawBitmap(circleBitmap, this.mCirclesBuffer[0] - circleRadius, this.mCirclesBuffer[1] - circleRadius, null);
                         }
                     }
                 }
@@ -483,7 +483,7 @@ public class LineChartRenderer extends LineRadarRenderer {
 
         for(int var6 = 0; var6 < var5; ++var6) {
             Highlight high = var4[var6];
-            ILineDataSet set = (ILineDataSet)lineData.getDataSetByIndex(high.getDataSetIndex());
+            ILineDataSet set = lineData.getDataSetByIndex(high.getDataSetIndex());
             if (set != null && set.isHighlightEnabled()) {
                 Entry e = set.getEntryForXValue(high.getX(), high.getY());
                 if (this.isInBoundsX(e, set)) {
@@ -507,12 +507,12 @@ public class LineChartRenderer extends LineRadarRenderer {
 
     public void releaseBitmap() {
         if (this.mBitmapCanvas != null) {
-            this.mBitmapCanvas.setBitmap((Bitmap)null);
+            this.mBitmapCanvas.setBitmap(null);
             this.mBitmapCanvas = null;
         }
 
         if (this.mDrawBitmap != null) {
-            Bitmap drawBitmap = (Bitmap)this.mDrawBitmap.get();
+            Bitmap drawBitmap = this.mDrawBitmap.get();
             if (drawBitmap != null) {
                 drawBitmap.recycle();
             }

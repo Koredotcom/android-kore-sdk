@@ -1,8 +1,8 @@
 package kore.botssdk.charts.highlight;
 
 public final class Range {
-    public float from;
-    public float to;
+    public final float from;
+    public final float to;
 
     public Range(float from, float to) {
         this.from = from;

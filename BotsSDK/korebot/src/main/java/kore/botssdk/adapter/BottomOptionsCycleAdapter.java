@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -27,7 +28,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.BrandingChangeActivity;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -54,14 +54,14 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         this.model = model;
         this.roundedCornersTransform = new RoundedCornersTransform();
     }
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.bottom_options_item, parent, false);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         dp1 = Utility.convertDpToPixel(context, 1);
-        ViewHolder viewHolder = new ViewHolder(listItem);
-        return viewHolder;
+        return new ViewHolder(listItem);
     }
 
     @Override
@@ -71,10 +71,14 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
 
         if(sharedPreferences != null)
         {
-            GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-            rightDrawable.setStroke((int)(1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
-            holder.bot_list_item_root.setBackground(rightDrawable);
+            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rect_feedback, context.getTheme());
+            if(rightDrawable != null)
+            {
+                rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+                rightDrawable.setStroke((int)(1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+                holder.bot_list_item_root.setBackground(rightDrawable);
+            }
+
             holder.bottom_option_name.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
         }
 
@@ -107,13 +111,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
                 if(bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
 
-                if(botListModel.getTitle().equalsIgnoreCase("Branding Change"))
-                {
-                    Intent intent = new Intent(context, BrandingChangeActivity.class);
-                    context.startActivity(intent);
-                }
-                else
-                    sendMessageText(model.get(holder.getBindingAdapterPosition()).getPostback().getTitle(), model.get(holder.getBindingAdapterPosition()).getPostback().getValue());
+                sendMessageText(model.get(holder.getBindingAdapterPosition()).getPostback().getTitle(), model.get(holder.getBindingAdapterPosition()).getPostback().getValue());
             }
         });
     }
@@ -121,7 +119,6 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
     public void setBotListModelArrayList(BottomSheetDialog bottomSheetDialog, List<BotOptionModel> botOptionModels) {
         this.model = botOptionModels;
         this.bottomSheetDialog = bottomSheetDialog;
-        notifyDataSetChanged();
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -152,15 +149,15 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView bottom_option_image;
-        TextView bottom_option_name;
-        LinearLayout bot_list_item_root;
+        final ImageView bottom_option_image;
+        final TextView bottom_option_name;
+        final LinearLayout bot_list_item_root;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.bottom_option_image = (ImageView) itemView.findViewById(R.id.bottom_option_image);
-            this.bottom_option_name = (TextView) itemView.findViewById(R.id.bottom_option_name);
-            this.bot_list_item_root = (LinearLayout) itemView.findViewById(R.id.bot_list_item_root);
+            this.bottom_option_image = itemView.findViewById(R.id.bottom_option_image);
+            this.bottom_option_name = itemView.findViewById(R.id.bottom_option_name);
+            this.bot_list_item_root = itemView.findViewById(R.id.bot_list_item_root);
         }
     }
 }

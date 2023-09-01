@@ -167,7 +167,7 @@ public class Rectangle implements Shape {
                 txtPaint.setTextAlign(target.getAlign());
                 float textly = point.y + (target.getView().getHeight() / 2) + (6 * density);
                 if (lines.length > 0) {
-                    textly = textly - ((22 * ((int) lines.length / 2) * density));
+                    textly = textly - ((22 * (lines.length / 2) * density));
                 }
                 for (int line = 0; line < lines.length; line++) {
                     Log.d("texty", String.valueOf(textly));
@@ -194,7 +194,7 @@ public class Rectangle implements Shape {
 
                 float textry = point.y + (target.getView().getHeight()) + (6 * density);
                 if (lines.length > 0) {
-                    textry = textry - ((22 * ((int) lines.length / 1.4f) * density));
+                    textry = textry - ((22 * (lines.length / 1.4f) * density));
                 }
                 for (int line = 0; line < lines.length; line++) {
                     Log.d("texty", String.valueOf(textry));

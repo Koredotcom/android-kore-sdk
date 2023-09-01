@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class TableView<T> extends LinearLayout {
     private final float dp1;
     private PayloadInner payloadInner;
     private int headerElevation;
-    private String propertyName = "y";
+    private final String propertyName = "y";
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 //    private int headerColor;
@@ -101,7 +102,7 @@ public class TableView<T> extends LinearLayout {
         setAttributes(attributes);
         setupTableHeaderView(attributes);
         setupTableDataView(attributes, styleAttributes);
-        setBackground(context.getDrawable(R.drawable.round_rect));
+        setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.round_rect, context.getTheme()));
         layoutTransition = new LayoutTransition();
     }
 
@@ -114,7 +115,7 @@ public class TableView<T> extends LinearLayout {
         this.tableHeaderView = headerView;
 
         tableHeaderView.setAdapter(tableHeaderAdapter);
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         tableHeaderView.setId(R.id.table_header_view);
 
         if (getChildCount() == 2) {
@@ -143,24 +144,8 @@ public class TableView<T> extends LinearLayout {
      */
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
-                moveInAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
-                moveOutAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             removeView(tableHeaderView);
         }
     }
@@ -563,7 +548,7 @@ public class TableView<T> extends LinearLayout {
     private void setupTableHeaderView(final AttributeSet attributes) {
         tableHeaderAdapter = new DefaultTableHeaderAdapter(getContext());
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         setHeaderView(tableHeaderView);
     }
 

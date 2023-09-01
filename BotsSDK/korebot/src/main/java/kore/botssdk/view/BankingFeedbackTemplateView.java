@@ -52,14 +52,14 @@ public class BankingFeedbackTemplateView extends LinearLayout implements Feedbac
     {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.banking_feedback_template, this, true);
         KaFontUtils.applyCustomFont(getContext(), view);
-        feedback_layout = (LinearLayout) view.findViewById(R.id.feedback_layout);
-        lvExperience = (AutoExpandListView) view.findViewById(R.id.lvExperience);
-        tvFeedbackHeading = (TextView) view.findViewById(R.id.tvFeedbackHeading);
-        tvEmpathyMessage = (TextView) view.findViewById(R.id.tvEmpathyMessage);
-        lvFeedback = (AutoExpandListView) view.findViewById(R.id.lvFeedback);
-        rvButtons = (RecyclerView) view.findViewById(R.id.rvButtonList);
-        llFeedbackSelected = (LinearLayout) view.findViewById(R.id.llFeedbackSelected);
-        edtSuggestions = (EditText) view.findViewById(R.id.edtSuggestions);
+        feedback_layout = view.findViewById(R.id.feedback_layout);
+        lvExperience = view.findViewById(R.id.lvExperience);
+        tvFeedbackHeading = view.findViewById(R.id.tvFeedbackHeading);
+        tvEmpathyMessage = view.findViewById(R.id.tvEmpathyMessage);
+        lvFeedback = view.findViewById(R.id.lvFeedback);
+        rvButtons = view.findViewById(R.id.rvButtonList);
+        llFeedbackSelected = view.findViewById(R.id.llFeedbackSelected);
+        edtSuggestions = view.findViewById(R.id.edtSuggestions);
         dp1 = Utility.convertDpToPixel(getContext(), 1);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvButtons.setLayoutManager(layoutManager);

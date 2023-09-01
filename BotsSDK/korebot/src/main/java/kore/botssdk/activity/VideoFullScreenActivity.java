@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,6 +17,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
@@ -31,15 +36,12 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
 {
     private VideoView vvFullScreen;
     private String videoUrl;
-    private ImageView ivPlayPauseIcon, ivFullScreen;
+    private ImageView ivPlayPauseIcon;
     private TextView tvVideoTiming;
     private SeekBar sbVideo;
     private double current_pos, total_duration;
     private PopupWindow popupWindow;
-    private View popUpView;
     private ImageView ivVideoMore;
-    private TextView tvTheme1, tvTheme2;
-    private View vTheme;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -47,18 +49,18 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_full_screen);
         KoreEventCenter.register(this);
-        vvFullScreen = (VideoView) findViewById(R.id.vvFullVideo);
-        ivPlayPauseIcon = (ImageView) findViewById(R.id.ivPlayPauseIcon);
-        ivFullScreen = (ImageView) findViewById(R.id.ivFullScreen);
-        sbVideo = (SeekBar) findViewById(R.id.sbVideo);
-        tvVideoTiming = (TextView) findViewById(R.id.tvVideoTiming);
-        ivVideoMore = (ImageView) findViewById(R.id.ivVideoMore);
+        vvFullScreen = findViewById(R.id.vvFullVideo);
+        ivPlayPauseIcon = findViewById(R.id.ivPlayPauseIcon);
+        ImageView ivFullScreen = findViewById(R.id.ivFullScreen);
+        sbVideo = findViewById(R.id.sbVideo);
+        tvVideoTiming = findViewById(R.id.tvVideoTiming);
+        ivVideoMore = findViewById(R.id.ivVideoMore);
 
-        popUpView = LayoutInflater.from(VideoFullScreenActivity.this).inflate(R.layout.theme_change_layout, null);
-        tvTheme1 = (TextView) popUpView.findViewById(R.id.tvTheme1);
-        tvTheme2 = (TextView) popUpView.findViewById(R.id.tvTheme2);
-        vTheme = (View) popUpView.findViewById(R.id.vTheme);
-        tvTheme1.setText("Download");
+        View popUpView = View.inflate(VideoFullScreenActivity.this, R.layout.theme_change_layout, null);
+        TextView tvTheme1 = popUpView.findViewById(R.id.tvTheme1);
+        TextView tvTheme2 = popUpView.findViewById(R.id.tvTheme2);
+        View vTheme = popUpView.findViewById(R.id.vTheme);
+        tvTheme1.setText(getText(R.string.download));
         tvTheme2.setVisibility(View.GONE);
         vTheme.setVisibility(View.GONE);
 
@@ -66,7 +68,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
-        videoUrl = getIntent().getExtras().getString("VideoUrl");
+        videoUrl = Objects.requireNonNull(getIntent().getExtras()).getString("VideoUrl");
 
         if(!StringUtils.isNullOrEmpty(videoUrl))
         {
@@ -79,7 +81,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
 
                     if(getIntent().hasExtra("CurrentPosition"))
                     {
-                        current_pos = getIntent().getExtras().getDouble("CurrentPosition");
+                        current_pos = Objects.requireNonNull(getIntent().getExtras()).getDouble("CurrentPosition");
                         sbVideo.setProgress((int)current_pos);
                         vvFullScreen.seekTo((int)current_pos);
                     }
@@ -108,13 +110,13 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
             {
                 if((boolean)v.getTag())
                 {
-                    ivPlayPauseIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause_icon));
+                    ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pause_icon, getTheme()));
                     vvFullScreen.start();
                     v.setTag(false);
                 }
                 else
                 {
-                    ivPlayPauseIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_icon));
+                    ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_play_icon, getTheme()));
                     vvFullScreen.pause();
                     v.setTag(true);
                 }
@@ -124,7 +126,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         ivVideoMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupWindow.showAtLocation(ivVideoMore, Gravity.BOTTOM|Gravity.RIGHT, 80, 400);
+                popupWindow.showAtLocation(ivVideoMore, Gravity.BOTTOM|Gravity.END, 80, 400);
             }
         });
 
@@ -137,8 +139,17 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
                 if(checkForPermissionAccessAndRequest())
                 {
                     KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
-//                    new DownloadFileFromURL().execute(videoUrl);
                 }
+            }
+        });
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                VideoTimerEvent event = new VideoTimerEvent();
+                event.setCurrentPos(current_pos);
+                KoreEventCenter.post(event);
+                finish();
             }
         });
     }
@@ -150,9 +161,6 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         current_pos = vvFullScreen.getCurrentPosition();
         total_duration = vvFullScreen.getDuration();
 
-        //display video duration
-//        total.setText(timeConversion((long) total_duration));
-//        current.setText(timeConversion((long) current_pos));
         sbVideo.setMax((int) total_duration);
         final Handler handler = new Handler();
 
@@ -163,7 +171,8 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
                 try
                 {
                     current_pos = vvFullScreen.getCurrentPosition();
-                    tvVideoTiming.setText(StringUtils.timeConversion((long) current_pos)+"/"+StringUtils.timeConversion((long) total_duration));
+                    String str = StringUtils.timeConversion((long) current_pos)+"/"+StringUtils.timeConversion((long) total_duration);
+                    tvVideoTiming.setText(str);
                     sbVideo.setProgress((int) current_pos);
                     handler.postDelayed(this, 1000);
                 } catch (IllegalStateException ed){
@@ -193,15 +202,6 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         });
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        VideoTimerEvent event = new VideoTimerEvent();
-        event.setCurrentPos(current_pos);
-        KoreEventCenter.post(event);
-        super.onBackPressed();
-    }
-
     public void onEvent(double currentPos)
     {
         Log.e("Current Position", currentPos+"");
@@ -221,16 +221,14 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-         if(requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST)
-         {
-             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
-                 KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
-             }
-             else
-             {
-                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
-             }
-         }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
+                KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
+            } else {
+                Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

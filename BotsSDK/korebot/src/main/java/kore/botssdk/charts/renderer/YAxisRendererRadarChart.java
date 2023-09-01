@@ -20,21 +20,21 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
     private final Path mRenderLimitLinesPathBuffer = new Path();
 
     public YAxisRendererRadarChart(ViewPortHandler viewPortHandler, YAxis yAxis, RadarChart chart) {
-        super(viewPortHandler, yAxis, (Transformer)null);
+        super(viewPortHandler, yAxis, null);
         this.mChart = chart;
     }
 
     protected void computeAxisValues(float min, float max) {
         int labelCount = this.mAxis.getLabelCount();
-        double range = (double)Math.abs(max - min);
+        double range = Math.abs(max - min);
         if (labelCount != 0 && !(range <= 0.0D) && !Double.isInfinite(range)) {
             double rawInterval = range / (double)labelCount;
-            double interval = (double) Utils.roundToNextSignificant(rawInterval);
+            double interval = Utils.roundToNextSignificant(rawInterval);
             if (this.mAxis.isGranularityEnabled()) {
                 interval = interval < (double)this.mAxis.getGranularity() ? (double)this.mAxis.getGranularity() : interval;
             }
 
-            double intervalMagnitude = (double)Utils.roundToNextSignificant(Math.pow(10.0D, (double)((int)Math.log10(interval))));
+            double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10.0D, (int)Math.log10(interval)));
             int intervalSigDigit = (int)(interval / intervalMagnitude);
             if (intervalSigDigit > 5) {
                 interval = Math.floor(10.0D * intervalMagnitude);
@@ -150,7 +150,7 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
             MPPointF pOut = MPPointF.getInstance(0.0F, 0.0F);
 
             for(int i = 0; i < limitLines.size(); ++i) {
-                LimitLine l = (LimitLine)limitLines.get(i);
+                LimitLine l = limitLines.get(i);
                 if (l.isEnabled()) {
                     this.mLimitLinePaint.setColor(l.getLineColor());
                     this.mLimitLinePaint.setPathEffect(l.getDashPathEffect());
@@ -159,7 +159,7 @@ public class YAxisRendererRadarChart extends YAxisRenderer {
                     Path limitPath = this.mRenderLimitLinesPathBuffer;
                     limitPath.reset();
 
-                    for(int j = 0; j < ((IRadarDataSet)((RadarData)this.mChart.getData()).getMaxEntryCountSet()).getEntryCount(); ++j) {
+                    for(int j = 0; j < this.mChart.getData().getMaxEntryCountSet().getEntryCount(); ++j) {
                         Utils.getPosition(center, r, sliceangle * (float)j + this.mChart.getRotationAngle(), pOut);
                         if (j == 0) {
                             limitPath.moveTo(pOut.x, pOut.y);

@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,10 +12,8 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RadioListListner;
@@ -26,25 +23,21 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 
 public class BotButtonLinkTemplateAdapter extends BaseAdapter {
-    private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
-    private LayoutInflater ownLayoutInflater = null;
+    private final ArrayList<BotButtonModel> botButtonModels;
     private String splashColour, disabledColour, textColor, disabledTextColor;
     private boolean isEnabled;
-    private SharedPreferences sharedPreferences;
-    private float dp1;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private int type;
+    private final int type;
     private RadioListListner radioListListner;
-    private int checkedPosition = -1;
-    private String lang = "en";
+    private final Context context;
 
     public BotButtonLinkTemplateAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, int type)
     {
+        this.context = context;
         this.botButtonModels = botButtonModels;
         this.type = type;
-        ownLayoutInflater = LayoutInflater.from(context);
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
         disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
@@ -55,8 +48,6 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
         disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
         textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
         disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
-
-        dp1 = AppControl.getInstance().getDimensionUtil().dp1;
     }
 
     @Override
@@ -82,7 +73,7 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflater.inflate(R.layout.bot_button_link_item_cell, null);
+            convertView = View.inflate(context, R.layout.bot_button_link_item_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -100,21 +91,16 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
         holder.botItemButton.setText(buttonTemplate.getTitle());
         holder.ivDeepLink.setVisibility(View.GONE);
 
-        switch (type)
-        {
-            case 2:
-                holder.botItemButton.setTextColor(Color.parseColor("#ffffff"));
-                holder.ivDeepLink.setVisibility(View.VISIBLE);
-                holder.ivDeepLink.setImageResource(R.drawable.ic_external_link__1_);
+        if (type == 2) {
+            holder.botItemButton.setTextColor(Color.parseColor("#ffffff"));
+            holder.ivDeepLink.setVisibility(View.VISIBLE);
+            holder.ivDeepLink.setImageResource(R.drawable.ic_external_link__1_);
 
-                if(buttonTemplate.isSamePageNavigation()) {
-                    holder.ivDeepLink.setImageResource(R.drawable.ic_deeplink__1_);
-                }
-
-                break;
-            default:
-                holder.botItemButton.setTextColor(Color.parseColor("#2e6fc5"));
-                break;
+            if (buttonTemplate.isSamePageNavigation()) {
+                holder.ivDeepLink.setImageResource(R.drawable.ic_deeplink__1_);
+            }
+        } else {
+            holder.botItemButton.setTextColor(Color.parseColor("#2e6fc5"));
         }
 
         holder.botItemButton.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +141,6 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
     }
 
     public void setCheckedPosition(int checkedPosition) {
-        this.checkedPosition = checkedPosition;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -176,7 +161,6 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
 
     public void setLang(String lang)
     {
-        this.lang = lang;
     }
 
     public static class ViewHolder {
@@ -186,9 +170,9 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
 
     private void initializeViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.botItemButton = (TextView) view.findViewById(R.id.more_txt_view);
-        viewHolder.ivDeepLink = (ImageView) view.findViewById(R.id.ivDeepLink);
-        viewHolder.botItemButton.setTextColor(isEnabled ? Color.parseColor("#2e6fc5") : Color.parseColor("#2e6fc5"));
+        viewHolder.botItemButton = view.findViewById(R.id.more_txt_view);
+        viewHolder.ivDeepLink = view.findViewById(R.id.ivDeepLink);
+        viewHolder.botItemButton.setTextColor(Color.parseColor("#2e6fc5"));
         view.setTag(viewHolder);
     }
 }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
@@ -89,7 +90,6 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         this.mContext = mContext;
         inflater = LayoutInflater.from(mContext);
         this.type = type;
-        notifyDataSetChanged();
     }
 
     public Widget.Element getItem(int position) {
@@ -134,7 +134,6 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     }
 
 
-    @RequiresApi(api = VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holderData, int position) {
         if(holderData.getItemViewType() ==  REPORTS){
@@ -179,9 +178,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
                 holder.title.setText(title);
             }
             int shape = 1;
-            if (!StringUtils.isNullOrEmpty(type) && type.equalsIgnoreCase("circle")) {
-                shape = GradientDrawable.OVAL;
-            } else if (!StringUtils.isNullOrEmpty(type) && type.equalsIgnoreCase("rectange")) {
+            if (!StringUtils.isNullOrEmpty(type) && type.equalsIgnoreCase("rectange")) {
                 shape = GradientDrawable.RECTANGLE;
             } else if (!StringUtils.isNullOrEmpty(type) && type.equalsIgnoreCase("ring")) {
                 shape = GradientDrawable.RING;
@@ -190,10 +187,11 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
             if (!StringUtils.isNullOrEmpty(text)) {
                 holder.text.setText(text);
 
-                Drawable dr = mContext.getDrawable(R.drawable.selected_video);
+                Drawable dr = ResourcesCompat.getDrawable(mContext.getResources(), R.drawable.selected_video, mContext.getTheme());
 
                 if (!StringUtils.isNullOrEmpty(color)) {
                     GradientDrawable drawable = (GradientDrawable) dr;
+                    assert drawable != null;
                     drawable.setColor(Color.parseColor(color));
                     drawable.setStroke(10, Utility.getDarkerColor(Color.parseColor(color), 0.7f));
                     drawable.setShape(shape);
@@ -205,10 +203,11 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
 
     public void setCalData(List<Widget.Element> data) {
         this.eventList = (ArrayList<Widget.Element>) data;
-        notifyDataSetChanged();
+        if(eventList != null && eventList.size() > 0)
+            notifyItemRangeChanged(0, eventList.size() - 1);
     }
     public ArrayList getData(){
-        return (ArrayList) this.eventList;
+        return this.eventList;
     }
 
     @Override
@@ -270,8 +269,8 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView text;
-        public TextView title;
+        public final TextView text;
+        public final TextView title;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -289,8 +288,8 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
     }
 
     class ReportsViewHolder extends RecyclerView.ViewHolder{
-        Button loginBtn;
-        TextView txt;
+        final Button loginBtn;
+        final TextView txt;
         public ReportsViewHolder(@NonNull View itemView) {
             super(itemView);
             loginBtn = itemView.findViewById(R.id.login_button);

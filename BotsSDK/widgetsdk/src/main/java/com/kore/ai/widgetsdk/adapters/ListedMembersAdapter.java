@@ -26,7 +26,7 @@ public class ListedMembersAdapter extends BaseAdapter {
     private String userId;
     private ArrayList<ContactsTeamsHolder> contactsTeamsHolders;
     // private HashMap<String, KoreContact> contactHashMap;
-    LayoutInflater layoutInflater;
+    final LayoutInflater layoutInflater;
 
     public ListedMembersAdapter(Context mContext) {
         this.mContext = mContext;
@@ -77,7 +77,7 @@ public class ListedMembersAdapter extends BaseAdapter {
     }
 
     private void populateData(SharesViewHolder holder, int position) {
-        ContactsTeamsHolder dataObj = (ContactsTeamsHolder) getItem(position);
+        ContactsTeamsHolder dataObj = getItem(position);
         holder.userName.setText(dataObj.getDisplayName());
         holder.profileTextView.setCircle(true);
         holder.profileTextView.setText(dataObj.getDisplayNameInitials());

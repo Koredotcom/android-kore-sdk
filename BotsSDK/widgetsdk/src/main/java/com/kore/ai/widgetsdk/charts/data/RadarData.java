@@ -33,6 +33,6 @@ public class RadarData extends ChartData<IRadarDataSet> {
     }
 
     public Entry getEntryForHighlight(Highlight highlight) {
-        return ((IRadarDataSet)this.getDataSetByIndex(highlight.getDataSetIndex())).getEntryForIndex((int)highlight.getX());
+        return this.getDataSetByIndex(highlight.getDataSetIndex()).getEntryForIndex((int)highlight.getX());
     }
 }

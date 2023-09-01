@@ -264,7 +264,7 @@ public abstract class TableResponsiveDataAdapter<T> extends ArrayAdapter<T> {
                     cellView = new TextView(getContext());
                 }
 
-                final int cellWidth = columnModel.getColumnWidth(columnIndex, (int)(tableWidth * 2));
+                final int cellWidth = columnModel.getColumnWidth(columnIndex, tableWidth * 2);
                 final LinearLayout.LayoutParams cellLayoutParams = new LinearLayout.LayoutParams(cellWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
                 cellView.setLayoutParams(cellLayoutParams);
 

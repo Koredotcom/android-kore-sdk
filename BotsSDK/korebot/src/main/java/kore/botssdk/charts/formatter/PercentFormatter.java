@@ -6,7 +6,7 @@ import kore.botssdk.charts.charts.PieChart;
 import kore.botssdk.charts.data.PieEntry;
 
 public class PercentFormatter extends ValueFormatter {
-    public DecimalFormat mFormat;
+    public final DecimalFormat mFormat;
     private PieChart pieChart;
 
     public PercentFormatter() {
@@ -19,10 +19,10 @@ public class PercentFormatter extends ValueFormatter {
     }
 
     public String getFormattedValue(float value) {
-        return this.mFormat.format((double)value) + " %";
+        return this.mFormat.format(value) + " %";
     }
 
     public String getPieLabel(float value, PieEntry pieEntry) {
-        return this.pieChart != null && this.pieChart.isUsePercentValuesEnabled() ? this.getFormattedValue(value) : this.mFormat.format((double)value);
+        return this.pieChart != null && this.pieChart.isUsePercentValuesEnabled() ? this.getFormattedValue(value) : this.mFormat.format(value);
     }
 }

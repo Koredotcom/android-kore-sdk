@@ -55,7 +55,7 @@ public class BotCarouselView extends ViewGroup {
     private void init() {
         dp1 = (int) DimensionUtil.dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
-        carouselViewpager = (HeightAdjustableViewPager) inflatedView.findViewById(R.id.carouselViewpager);
+        carouselViewpager = inflatedView.findViewById(R.id.carouselViewpager);
         carouselViewpager.setAddExtraHeight(true);
         TypedValue typedValue = new TypedValue();
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);

@@ -20,7 +20,7 @@ import kore.botssdk.view.viewHolder.MeetingNotesViewHolder;
 
 public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesViewHolder> implements RecyclerViewDataAccessor {
 
-    Context context;
+    final Context context;
     ArrayList<CalEventsTemplateModel> modelData;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
@@ -71,7 +71,7 @@ public class MeetingNotesAdapter extends RecyclerView.Adapter<MeetingNotesViewHo
     public void setData(ArrayList modelData) {
 
         this.modelData = modelData;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, modelData.size() - 1);
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import kore.botssdk.R;
@@ -24,22 +25,12 @@ public class DotsTextView extends AppCompatTextView {
     private JumpingSpan dotOne;
     private JumpingSpan dotTwo;
     private JumpingSpan dotThree;
-
     private final int showSpeed = 700;
-
     private int jumpHeight;
     private boolean autoPlay;
     private boolean isPlaying;
     private boolean isHide;
     private int period;
-    private long startTime;
-
-
-    private boolean lockDotOne;
-    private boolean lockDotTwo;
-    private boolean lockDotThree;
-
-
     private Handler handler;
     private final AnimatorSet mAnimatorSet = new AnimatorSet();
     private float textWidth;
@@ -90,33 +81,31 @@ public class DotsTextView extends AppCompatTextView {
 
         ObjectAnimator dotOneJumpAnimator = createDotJumpAnimator(dotOne, 0);
         dotOneJumpAnimator.addUpdateListener(new AnimatorUpdateListener() {
-
-
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
                 invalidate();
             }
         });
         mAnimatorSet.playTogether(dotOneJumpAnimator, createDotJumpAnimator(dotTwo,
-                period / 6), createDotJumpAnimator(dotThree, period * 2 / 6));
+                period / 6), createDotJumpAnimator(dotThree, period * 2L / 6));
         mAnimatorSet.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
+            public void onAnimationStart(@NonNull Animator animation) {
 
             }
 
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(@NonNull Animator animation) {
                 isPlaying = false;
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
+            public void onAnimationCancel(@NonNull Animator animation) {
 
             }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
+            public void onAnimationRepeat(@NonNull Animator animation) {
 
             }
         });
@@ -144,8 +133,6 @@ public class DotsTextView extends AppCompatTextView {
     private ObjectAnimator createDotJumpAnimator(JumpingSpan jumpingSpan, long delay) {
         ObjectAnimator jumpAnimator = ObjectAnimator.ofFloat(jumpingSpan, "translationY", 0, -jumpHeight);
         jumpAnimator.setEvaluator(new TypeEvaluator<Number>() {
-
-
             @Override
             public Number evaluate(float fraction, Number from, Number to) {
                 return Math.max(0, Math.sin(fraction * Math.PI * 2)) * (to.floatValue() - from.floatValue());
@@ -158,13 +145,6 @@ public class DotsTextView extends AppCompatTextView {
         return jumpAnimator;
     }
 
-
-    public void stop() {
-        isPlaying = false;
-        setAllAnimationsRepeatCount(0);
-    }
-
-
     public void setAllAnimationsRepeatCount(int repeatCount) {
         for (Animator animator : mAnimatorSet.getChildAnimations()) {
             if (animator instanceof ObjectAnimator) {
@@ -173,46 +153,17 @@ public class DotsTextView extends AppCompatTextView {
         }
     }
 
-
-    public void hide() {
-
-
-        createDotHideAnimator(dotThree, 2).start();
-
-
-        ObjectAnimator dotTwoMoveRightToLeft = createDotHideAnimator(dotTwo, 1);
-        dotTwoMoveRightToLeft.addUpdateListener(new AnimatorUpdateListener() {
-
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                invalidate();
-            }
-        });
-
-
-        dotTwoMoveRightToLeft.start();
-        isHide = true;
-    }
-
-
     public void show() {
         ObjectAnimator dotThreeMoveRightToLeft = createDotShowAnimator(dotThree, 2);
-
-
         dotThreeMoveRightToLeft.start();
-
 
         ObjectAnimator dotTwoMoveRightToLeft = createDotShowAnimator(dotTwo, 1);
         dotTwoMoveRightToLeft.addUpdateListener(new AnimatorUpdateListener() {
-
-
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
                 invalidate();
             }
         });
-
 
         dotTwoMoveRightToLeft.start();
         isHide = false;
@@ -233,36 +184,5 @@ public class DotsTextView extends AppCompatTextView {
         ObjectAnimator dotThreeMoveRightToLeft = ObjectAnimator.ofFloat(span, "translationX", from, to);
         dotThreeMoveRightToLeft.setDuration(showSpeed);
         return dotThreeMoveRightToLeft;
-    }
-
-
-    public void showAndPlay() {
-        show();
-        start();
-    }
-
-
-    public void hideAndStop() {
-        hide();
-        stop();
-    }
-
-
-    public boolean isHide() {
-        return isHide;
-    }
-
-
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void setJumpHeight(int jumpHeight) {
-        this.jumpHeight = jumpHeight;
-    }
-
-
-    public void setPeriod(int period) {
-        this.period = period;
     }
 }

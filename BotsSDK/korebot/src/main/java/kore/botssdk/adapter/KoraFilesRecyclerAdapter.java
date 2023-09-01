@@ -74,7 +74,7 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements Re
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holdermodel, int position) {
         if (holdermodel.getItemViewType() == NO_DATA) {
             EmptyWidgetViewHolder emptyHolder = (EmptyWidgetViewHolder) holdermodel;
-            emptyHolder.tv_disrcription.setText("No Files");
+            emptyHolder.tv_disrcription.setText(R.string.no_files);
             emptyHolder.img_icon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.no_meeting));
         } else {
             ViewHolder holder = (ViewHolder) holdermodel;
@@ -133,7 +133,7 @@ public class KoraFilesRecyclerAdapter extends RecyclerView.Adapter implements Re
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        KoraFileLookupViewBinding koraFileLookupViewBinding;
+        final KoraFileLookupViewBinding koraFileLookupViewBinding;
 
         public ViewHolder(@NonNull KoraFileLookupViewBinding itemView) {
             super(itemView.getRoot());

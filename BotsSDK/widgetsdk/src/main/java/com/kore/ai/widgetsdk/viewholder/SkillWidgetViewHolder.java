@@ -10,7 +10,7 @@ import com.kora.ai.widgetsdk.R;
 
 public class SkillWidgetViewHolder extends RecyclerView.ViewHolder {
 
-public  TextView item_text;
+public final TextView item_text;
     public SkillWidgetViewHolder(@NonNull View itemView) {
         super(itemView);
         item_text=itemView.findViewById(R.id.item_text);

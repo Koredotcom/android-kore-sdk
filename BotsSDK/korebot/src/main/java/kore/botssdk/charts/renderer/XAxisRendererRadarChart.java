@@ -15,7 +15,7 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
     private final RadarChart mChart;
 
     public XAxisRendererRadarChart(ViewPortHandler viewPortHandler, XAxis xAxis, RadarChart chart) {
-        super(viewPortHandler, xAxis, (Transformer)null);
+        super(viewPortHandler, xAxis, null);
         this.mChart = chart;
     }
 
@@ -31,7 +31,7 @@ public class XAxisRendererRadarChart extends XAxisRenderer {
             MPPointF center = this.mChart.getCenterOffsets();
             MPPointF pOut = MPPointF.getInstance(0.0F, 0.0F);
 
-            for(int i = 0; i < ((IRadarDataSet)((RadarData)this.mChart.getData()).getMaxEntryCountSet()).getEntryCount(); ++i) {
+            for(int i = 0; i < this.mChart.getData().getMaxEntryCountSet().getEntryCount(); ++i) {
                 String label = this.mXAxis.getValueFormatter().getAxisLabel((float)i, this.mXAxis);
                 float angle = (sliceangle * (float)i + this.mChart.getRotationAngle()) % 360.0F;
                 Utils.getPosition(center, this.mChart.getYRange() * factor + (float)this.mXAxis.mLabelRotatedWidth / 2.0F, angle, pOut);

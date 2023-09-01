@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class RatingEvent {
 
-    HashMap<String,Object> hashMap;
+    final HashMap<String,Object> hashMap;
 
     public RatingEvent(HashMap<String, Object> hashMap) {
         this.hashMap = hashMap;

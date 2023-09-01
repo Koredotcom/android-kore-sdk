@@ -28,9 +28,9 @@ public class FeedbackDialog extends Dialog {
     View close;
     View icon_1, icon_2, icon_3, icon_4, icon_5;
 
-    PanelMainActivity activity;
-    String id;
-    Handler handler;
+    final PanelMainActivity activity;
+    final String id;
+    final Handler handler;
     public FeedbackDialog(Context context, String id) {
         super(context);
         _context = context;
@@ -42,7 +42,7 @@ public class FeedbackDialog extends Dialog {
         handler.postDelayed(runnable, 4000);
     }
 
-    Runnable runnable = new Runnable() {
+    final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (!isScreenTouched) {

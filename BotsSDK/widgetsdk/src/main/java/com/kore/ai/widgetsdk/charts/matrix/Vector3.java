@@ -24,43 +24,43 @@ public final class Vector3 {
         this.set(other);
     }
 
-    public final void add(Vector3 other) {
+    public void add(Vector3 other) {
         this.x += other.x;
         this.y += other.y;
         this.z += other.z;
     }
 
-    public final void add(float otherX, float otherY, float otherZ) {
+    public void add(float otherX, float otherY, float otherZ) {
         this.x += otherX;
         this.y += otherY;
         this.z += otherZ;
     }
 
-    public final void subtract(Vector3 other) {
+    public void subtract(Vector3 other) {
         this.x -= other.x;
         this.y -= other.y;
         this.z -= other.z;
     }
 
-    public final void subtractMultiple(Vector3 other, float multiplicator) {
+    public void subtractMultiple(Vector3 other, float multiplicator) {
         this.x -= other.x * multiplicator;
         this.y -= other.y * multiplicator;
         this.z -= other.z * multiplicator;
     }
 
-    public final void multiply(float magnitude) {
+    public void multiply(float magnitude) {
         this.x *= magnitude;
         this.y *= magnitude;
         this.z *= magnitude;
     }
 
-    public final void multiply(Vector3 other) {
+    public void multiply(Vector3 other) {
         this.x *= other.x;
         this.y *= other.y;
         this.z *= other.z;
     }
 
-    public final void divide(float magnitude) {
+    public void divide(float magnitude) {
         if (magnitude != 0.0F) {
             this.x /= magnitude;
             this.y /= magnitude;
@@ -69,42 +69,42 @@ public final class Vector3 {
 
     }
 
-    public final void set(Vector3 other) {
+    public void set(Vector3 other) {
         this.x = other.x;
         this.y = other.y;
         this.z = other.z;
     }
 
-    public final void set(float xValue, float yValue, float zValue) {
+    public void set(float xValue, float yValue, float zValue) {
         this.x = xValue;
         this.y = yValue;
         this.z = zValue;
     }
 
-    public final float dot(Vector3 other) {
+    public float dot(Vector3 other) {
         return this.x * other.x + this.y * other.y + this.z * other.z;
     }
 
-    public final Vector3 cross(Vector3 other) {
+    public Vector3 cross(Vector3 other) {
         return new Vector3(this.y * other.z - this.z * other.y, this.z * other.x - this.x * other.z, this.x * other.y - this.y * other.x);
     }
 
-    public final float length() {
-        return (float)Math.sqrt((double)this.length2());
+    public float length() {
+        return (float)Math.sqrt(this.length2());
     }
 
-    public final float length2() {
+    public float length2() {
         return this.x * this.x + this.y * this.y + this.z * this.z;
     }
 
-    public final float distance2(Vector3 other) {
+    public float distance2(Vector3 other) {
         float dx = this.x - other.x;
         float dy = this.y - other.y;
         float dz = this.z - other.z;
         return dx * dx + dy * dy + dz * dz;
     }
 
-    public final float normalize() {
+    public float normalize() {
         float magnitude = this.length();
         if (magnitude != 0.0F) {
             this.x /= magnitude;
@@ -115,11 +115,11 @@ public final class Vector3 {
         return magnitude;
     }
 
-    public final void zero() {
+    public void zero() {
         this.set(0.0F, 0.0F, 0.0F);
     }
 
-    public final boolean pointsInSameDirection(Vector3 other) {
+    public boolean pointsInSameDirection(Vector3 other) {
         return this.dot(other) > 0.0F;
     }
 }

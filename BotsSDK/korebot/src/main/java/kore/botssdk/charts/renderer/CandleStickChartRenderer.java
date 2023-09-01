@@ -21,7 +21,7 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
-    protected CandleDataProvider mChart;
+    protected final CandleDataProvider mChart;
     private final float[] mShadowBuffers = new float[8];
     private final float[] mBodyBuffers = new float[4];
     private final float[] mRangeBuffers = new float[4];
@@ -58,7 +58,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
         this.mRenderPaint.setStrokeWidth(dataSet.getShadowWidth());
 
         for(int j = this.mXBounds.min; j <= this.mXBounds.range + this.mXBounds.min; ++j) {
-            CandleEntry e = (CandleEntry)dataSet.getEntryForIndex(j);
+            CandleEntry e = dataSet.getEntryForIndex(j);
             if (e != null) {
                 float xPos = e.getX();
                 float open = e.getOpen();
@@ -174,7 +174,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
             List<ICandleDataSet> dataSets = this.mChart.getCandleData().getDataSets();
 
             for(int i = 0; i < dataSets.size(); ++i) {
-                ICandleDataSet dataSet = (ICandleDataSet)dataSets.get(i);
+                ICandleDataSet dataSet = dataSets.get(i);
                 if (this.shouldDrawValues(dataSet) && dataSet.getEntryCount() >= 1) {
                     this.applyValueTextStyle(dataSet);
                     Transformer trans = this.mChart.getTransformer(dataSet.getAxisDependency());
@@ -194,7 +194,7 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
                         }
 
                         if (this.mViewPortHandler.isInBoundsLeft(x) && this.mViewPortHandler.isInBoundsY(y)) {
-                            CandleEntry entry = (CandleEntry)dataSet.getEntryForIndex(j / 2 + this.mXBounds.min);
+                            CandleEntry entry = dataSet.getEntryForIndex(j / 2 + this.mXBounds.min);
                             if (dataSet.isDrawValuesEnabled()) {
                                 this.drawValue(c, formatter.getCandleLabel(entry), x, y - yOffset, dataSet.getValueTextColor(j / 2));
                             }
@@ -228,9 +228,9 @@ public class CandleStickChartRenderer extends LineScatterCandleRadarRenderer {
 
         for(int var6 = 0; var6 < var5; ++var6) {
             Highlight high = var4[var6];
-            ICandleDataSet set = (ICandleDataSet)candleData.getDataSetByIndex(high.getDataSetIndex());
+            ICandleDataSet set = candleData.getDataSetByIndex(high.getDataSetIndex());
             if (set != null && set.isHighlightEnabled()) {
-                CandleEntry e = (CandleEntry)set.getEntryForXValue(high.getX(), high.getY());
+                CandleEntry e = set.getEntryForXValue(high.getX(), high.getY());
                 if (this.isInBoundsX(e, set)) {
                     float lowValue = e.getLow() * this.mAnimator.getPhaseY();
                     float highValue = e.getHigh() * this.mAnimator.getPhaseY();

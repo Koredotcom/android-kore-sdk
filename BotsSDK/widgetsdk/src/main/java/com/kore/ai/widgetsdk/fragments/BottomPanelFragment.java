@@ -7,6 +7,7 @@ import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
 import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -65,7 +66,6 @@ import com.kore.ai.widgetsdk.utils.AppUtils;
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.SharedPreferenceUtils;
-import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
@@ -84,7 +84,6 @@ import com.kore.ai.widgetsdk.views.widgetviews.SkillWidgetView;
 import com.kore.ai.widgetsdk.views.widgetviews.TableListWidgetView;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -95,7 +94,6 @@ import retrofit2.Response;
 public class BottomPanelFragment extends KaBaseFragment implements PanelInterface,
         VerticalListViewActionHelper, UpdateRefreshItem, GestureDetector.OnGestureListener {
     private View view;
-    //For Bottom Panel
     private ProgressBar progressBarPanel;
     private RecyclerView pannel_recycler;
     private PannelAdapter pannelAdapter;
@@ -103,19 +101,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     private TextView emptyPanelView;
     private JWTTokenResponse jwtKeyResponse;
     private SharedPreferenceUtils sharedPreferenceUtils;
-    private final String packageName = "com.kore.koreapp";
-    private final String appName = "Kore";
-    private CustomBottomSheetBehavior mBottomSheetBehavior;
-    private final boolean keyBoardShowing = false;
-    private PanelBaseModel pModels;
+    private CustomBottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
     private LinearLayout perssiatentPanel, persistentSubLayout;
     private ImageView img_skill;
     private TextView closeBtnPanel, editButton;
     private RecyclerView recyclerView_panel;
     private LinearLayout single_item_container;
     private KaWidgetBaseAdapterNew widgetBaseAdapter;
-    private TextView img_icon, txtTitle;
-    private int maxHeight;
+    private TextView txtTitle;
     final Handler handler = new Handler();
     private WidgetComposeFooterInterface widgetComposeFooterInterface;
     private Button panelDrag;
@@ -123,6 +116,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     private CoordinatorLayout cordinate_layout;
     private float screenHeight;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -131,9 +125,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         findPanelView(view);
         KoreEventCenter.register(this);
         KaFontUtils.applyCustomFont(getActivity(), view);
-        dp1 = (int) AppControl.getInstance(getContext()).getDimensionUtil().dp1;
+        dp1 = (int) dp1;
         screenHeight = (int) AppControl.getInstance(getContext()).getDimensionUtil().screenHeight;
-        maxHeight = (int) ((3 * 64 * dp1) + 28 * dp1);
 
         closeBtnPanel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,29 +140,27 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gestureScanner.onTouchEvent(event);
-
             }
         });
 
         getJWToken();
-//        getPanelData("home",false);
         return view;
     }
 
     private void findPanelView(View view) {
-        pannel_recycler = (RecyclerView) view.findViewById(R.id.pannel_recycler);
-        progressBarPanel = (ProgressBar) view.findViewById(R.id.progressBarPanel);
-        emptyPanelView = (TextView) view.findViewById(R.id.emptyView);
+        pannel_recycler = view.findViewById(R.id.pannel_recycler);
+        progressBarPanel = view.findViewById(R.id.progressBarPanel);
+        emptyPanelView = view.findViewById(R.id.emptyView);
 
         perssiatentPanel = view.findViewById(R.id.persistentPanel);
         persistentSubLayout = view.findViewById(R.id.panel_sub_layout);
         img_skill = view.findViewById(R.id.img_skill);
         txtTitle = view.findViewById(R.id.txtTitle);
-        editButton = (TextView) view.findViewById(R.id.editButton);
+        editButton = view.findViewById(R.id.editButton);
         editButton.setTypeface(KaUtility.getTypeFaceObj(getActivity()));
 
         recyclerView_panel = view.findViewById(R.id.recyclerView_panel);
-        closeBtnPanel = (TextView) view.findViewById(R.id.closeBtnPanel);
+        closeBtnPanel = view.findViewById(R.id.closeBtnPanel);
         closeBtnPanel.setTypeface(KaUtility.getTypeFaceObj(getActivity()));
         single_item_container = view.findViewById(R.id.single_item_container);
         panelDrag = view.findViewById(R.id.panel_drag);
@@ -184,30 +175,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-//                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-//                        }
-//                        mBottomSheetBehavior.setLocked(false);
-//                        break;
-//                    case BottomSheetBehavior.STATE_SETTLING:
-//
-//                        break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         mBottomSheetBehavior.setLocked(true);
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        perssiatentPanel.setVisibility(GONE);
-                        mBottomSheetBehavior.setLocked(false);
-                        break;
                     case BottomSheetBehavior.STATE_HIDDEN:
                         perssiatentPanel.setVisibility(GONE);
                         mBottomSheetBehavior.setLocked(false);
-
                         break;
-//                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-//                        mBottomSheetBehavior.setLocked(false);
-//                        break;
                 }
             }
 
@@ -228,7 +203,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         KaRestAPIHelper.enqueueWithRetry(baseWidgetData, new Callback<List<PanelResponseData.Panel>>() {
             @Override
             public void onResponse(Call<List<PanelResponseData.Panel>> call, Response<List<PanelResponseData.Panel>> response) {
-                if (response != null && response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     progressBarPanel.setVisibility(View.GONE);
                     pannel_recycler.setVisibility(View.VISIBLE);
                     Log.e("Panel Response", response.body() + "");
@@ -236,7 +211,6 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                     panelResponseData.setPanels(response.body());
                     updatePannelData(panelResponseData, panelName, isFromPresence);
                 } else {
-//                    ((KoraMainActivity) getActivity()).dismissMainLoader();
                     progressBarPanel.setVisibility(View.GONE);
                     if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
                         emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
@@ -339,9 +313,11 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     public void onPanelClicked(PanelBaseModel pModel) {
         AppUtils.showHideVirtualKeyboard(getActivity(), recyclerView_panel, false);
 
-        if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
+        String appName = "Kore";
+        String packageName = "com.kore.koreapp";
+        if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
             try {
-                if (isAppInstalled(getActivity().getApplicationContext(), packageName)) {
+                if (isAppInstalled(requireActivity(), packageName)) {
                     Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://messages"));
                     _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(_intent);
@@ -354,17 +330,19 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                     }
                 }
             } catch (Exception e) {
-                if (isAppEnabled(getActivity().getApplicationContext(), packageName)) {
-                    Intent intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    getActivity().getApplicationContext().startActivity(intent);
+                if (isAppEnabled(requireActivity(), packageName)) {
+                    Intent intent = requireActivity().getPackageManager().getLaunchIntentForPackage(packageName);
+                    if(intent != null) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        requireActivity().startActivity(intent);
+                    }
                 } else
-                    Toast.makeText(getActivity().getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
-        } else if (pModel != null && ((PanelBaseModel) pModel).getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
+        } else if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
             try {
-                if (isAppInstalled(getActivity().getApplicationContext(), packageName)) {
+                if (isAppInstalled(requireActivity(), packageName)) {
                     Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://teams"/*"http://threads.com/thread"*/));
                     _intent.putExtra("KoreHomeState", "KoreHomeState");
                     _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -377,36 +355,35 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                     }
                 }
             } catch (Exception e) {
-                if (isAppEnabled(getActivity().getApplicationContext(), packageName)) {
-                    Intent intent = getActivity().getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                    intent.putExtra("KoreHomeState", "KoreHomeState");
-                    getActivity().getApplicationContext().startActivity(intent);
+                if (isAppEnabled(requireActivity(), packageName)) {
+                    Intent intent = requireActivity().getPackageManager().getLaunchIntentForPackage(packageName);
+                    if(intent != null) {
+                        intent.putExtra("KoreHomeState", "KoreHomeState");
+                        requireActivity().startActivity(intent);
+                    }
                 } else
-                    Toast.makeText(getActivity().getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
         }
 
 
         if (mBottomSheetBehavior != null) {
-            if (keyBoardShowing)
-                AppUtils.showHideVirtualKeyboard(getActivity(), null, false);
-            pModels = removeSystemHealth((PanelBaseModel) pModel);
             persistentSubLayout.setVisibility(View.VISIBLE);
             perssiatentPanel.setVisibility(View.VISIBLE);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    updatePanelData((PanelBaseModel) pModel, false);
+                    if(pModel != null) {
+                        updatePanelData(pModel);
+                    }
                 }
             }, 500);
 
             perssiatentPanel.post(new Runnable() {
                 @Override
                 public void run() {
-//                    if(!isFromPresence) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                    }
                 }
             });
         }
@@ -416,9 +393,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         boolean appStatus = false;
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(packageName, 0);
-            if (ai != null) {
-                appStatus = ai.enabled;
-            }
+            appStatus = ai.enabled;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -435,29 +410,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         return false;
     }
 
-    private PanelBaseModel removeSystemHealth(PanelBaseModel model) {
-        if (model != null && model.getData() != null && model.getData().getWidgets() != null) {
-            boolean isHomePanel = model.getData().getName().equalsIgnoreCase("home");
-            ArrayList<WidgetsModel> newWidgets = new ArrayList<>();
-            for (int index = 0; index < model.getData().getWidgets().size(); index++) {
-                if (model.getData().getWidgets().get(index).getTemplateType() != null &&
-                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.SYSTEM_HEALTH_TEMPLATE)) {
-//                    model.getData().getWidgets().remove(index);
-                    continue;
-                }
-                if (isHomePanel && model.getData().getWidgets().get(index).getTemplateType() != null &&
-                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.MEETINGS_TEMPLATE_SERVER)) {
-//                    model.getData().getWidgets().remove(index);
-                    continue;
-                }
-                newWidgets.add(model.getData().getWidgets().get(index));
-            }
-            model.getData().setWidgets(newWidgets);
-        }
-        return model;
-    }
-
-    private void updatePanelData(PanelBaseModel pModels, boolean isFirstLaunch) {
+    @SuppressLint("NotifyDataSetChanged")
+    private void updatePanelData(PanelBaseModel pModels) {
         int size = pModels.getData().getWidgets().size();
 
         if (size == 0) {
@@ -465,7 +419,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             return;
         }
 
-        LinearLayout img_background = (LinearLayout) view.findViewById(R.id.panel_title_icon);
+        LinearLayout img_background = view.findViewById(R.id.panel_title_icon);
         img_background.setBackgroundResource(0);
 
         try {
@@ -479,7 +433,6 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 img_skill.setImageBitmap(decodedByte);
             } else {
                 Picasso.get().load(imageData).into(img_skill);
-//                selectedItem.setColor(getResources().getColor(android.R.color.transparent));
             }
         } catch (Exception e) {
             img_skill.setVisibility(GONE);
@@ -487,22 +440,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
 
         if (size > 1) {
-            List<WidgetsModel> tempModel = sortData(pModels);
-//            if (tempModel != null && tempModel.size() > 1) {
-//                editButton.setVisibility(View.VISIBLE);
-//            }
-//            else {
-//                editButton.setVisibility(View.GONE);
-//            }
-
             recyclerView_panel.setVisibility(View.VISIBLE);
             recyclerView_panel.setMinimumHeight((int) (screenHeight));
 
             single_item_container.removeAllViews();
             single_item_container.setVisibility(View.GONE);
             if (widgetBaseAdapter == null)
-                widgetBaseAdapter = new KaWidgetBaseAdapterNew(getActivity(), size > 1 ? WidgetViewMoreEnum.COLLAPSE_VIEW : WidgetViewMoreEnum.EXPAND_VIEW, isFirstLaunch, (""));
-            widgetBaseAdapter.setFirstLaunch(isFirstLaunch);
+                widgetBaseAdapter = new KaWidgetBaseAdapterNew(getActivity(), WidgetViewMoreEnum.COLLAPSE_VIEW, false, (""));
+            widgetBaseAdapter.setFirstLaunch(false);
             recyclerView_panel.setAdapter(widgetBaseAdapter);
             widgetBaseAdapter.setWidget(pModels, jwtToken);
             widgetBaseAdapter.notifyDataSetChanged();
@@ -529,10 +474,6 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     }
 
     public int getItemViewType(WidgetsModel widget) {
-
-//        if(widget.getName().equalsIgnoreCase("Table List"))
-//            widget.setTemplateType("tableList");
-
         switch (widget.getTemplateType().toLowerCase()) {
             case WidgetConstants.MEETINGS_TEMPLATE_SERVER:
                 return WidgetConstants.MEETINGS_TEMPLATE;
@@ -611,17 +552,9 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 articlesWidgetView.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), 0, true, panelData);
                 view = articlesWidgetView;
                 break;
-//            case WidgetConstants.HASH_TAG_TEMPLATE:
-//                TrendingHashTagView hashTagView = new TrendingHashTagView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                view = hashTagView;
-//                break;
-
             case WidgetConstants.SKILL_TEMPLATE:
-                SkillWidgetView skillWidgetView = new SkillWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                skillWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData);
-                view = skillWidgetView;
+                view = new SkillWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 break;
-
             case WidgetConstants.FILES_SINGLE_TEMPLATE:
             case WidgetConstants.TASKS_SINGLE_TEMPLATE:
                 GenericWidgetView gwv = new GenericWidgetView(getActivity(), 0, this, null,
@@ -658,13 +591,6 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 view = tableListWidgetView;
                 break;
 
-//            case WidgetConstants.TABLE_LIST_TEMPLATE:
-//                BotTableListTemplateView botTableListTemplateView = new BotTableListTemplateView(getActivity());
-//                BotTableListTemplateView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = botTableListTemplateView;
-//                break;
-
-
             case WidgetConstants.DEFAULT_TEMPLATE:
                 DefaultWidgetView dView = new DefaultWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 dView.setWidget(pModels.getData().getWidgets().get(0), panelData, jwtToken);
@@ -676,35 +602,10 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
     }
 
-    public List<WidgetsModel> sortData(PanelBaseModel pModels) {
-        List<WidgetsModel> widgetsList = new ArrayList<>();
-        if (pModels != null && pModels.getData() != null) {
-
-            for (WidgetsModel widget : pModels.getData().getWidgets()) {
-                if (!StringUtils.isNullOrEmptyWithTrim(widget.getName())) {
-                    widgetsList.add(widget);
-                }
-            }
-        }
-        return widgetsList;
-    }
-
-    public WidgetComposeFooterInterface getPanelComposeFooterInterface() {
-        return widgetComposeFooterInterface;
-    }
-
     public void setPanelComposeFooterInterface(WidgetComposeFooterInterface composeFooterInterface, String identity) {
         this.widgetComposeFooterInterface = composeFooterInterface;
         SDKConfiguration.Client.identity = identity;
     }
-
-//    public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
-//        return invokeGenericWebViewInterface;
-//    }
-//
-//    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-//        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-//    }
 
     @Override
     public void updateItemToRefresh(int pos) {
@@ -787,41 +688,41 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     }
 
     @Override
-    public boolean onDown(MotionEvent motionEvent) {
+    public boolean onDown(@NonNull MotionEvent motionEvent) {
         mBottomSheetBehavior.setLocked(false);
         try {
             if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 mBottomSheetBehavior.onInterceptTouchEvent(cordinate_layout, perssiatentPanel, motionEvent);
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
         return false;
     }
 
     @Override
-    public void onShowPress(MotionEvent motionEvent) {
+    public void onShowPress(@NonNull MotionEvent motionEvent) {
 
     }
 
     @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
+    public boolean onSingleTapUp(@NonNull MotionEvent motionEvent) {
         return false;
     }
 
     @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onScroll(MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
         return false;
     }
 
     @Override
-    public void onLongPress(MotionEvent motionEvent) {
+    public void onLongPress(@NonNull MotionEvent motionEvent) {
 
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onFling(MotionEvent motionEvent, @NonNull MotionEvent motionEvent1, float v, float v1) {
         return false;
     }
 

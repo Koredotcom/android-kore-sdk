@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.net;
 
+import androidx.annotation.NonNull;
+
 import com.kore.ai.widgetsdk.interfaces.PinUnPinnCallBack;
 import com.kore.ai.widgetsdk.models.PinWidget;
 import com.kore.ai.widgetsdk.models.Widget;
@@ -65,11 +67,11 @@ public class KaRestAPIHelper {
         Call<ResponseBody> call = KaRestBuilder.getKaRestAPI().pinUnPinAction(Utils.ah(accessToken),userId, hashMap);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if(response.isSuccessful())
-                callBack.success();
+                    callBack.success();
                 else
-                callBack.failure(null);
+                    callBack.failure(null);
             }
 
             @Override

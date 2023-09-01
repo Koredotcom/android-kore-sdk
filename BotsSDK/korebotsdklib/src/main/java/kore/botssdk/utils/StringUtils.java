@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class StringUtils {
 
-    public static String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+    public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
 
     public static final String unescapeHtml3(final String input) {
@@ -231,10 +231,9 @@ public class StringUtils {
     }
 
     public static String getInitials(String fn, String ln) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "");
-        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
-        return stringBuilder.toString().trim();
+        String stringBuilder = String.valueOf(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "") +
+                (!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
+        return stringBuilder.trim();
     }
 
     public static boolean isValidEmail(String emailId)

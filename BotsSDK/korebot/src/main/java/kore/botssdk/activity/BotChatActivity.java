@@ -1,7 +1,7 @@
 package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
-import static kore.botssdk.FCM.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
+import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
@@ -19,7 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +28,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Process;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -45,9 +44,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.kore.ai.widgetsdk.models.PanelBaseModel;
-import com.kore.ai.widgetsdk.models.PanelResponseData;
-import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,6 +56,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
@@ -104,7 +101,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.WebHookRequestModel;
 import kore.botssdk.models.WebHookResponseDataModel;
-import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
@@ -119,7 +115,6 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
@@ -135,7 +130,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                         QuickReplyFragment.QuickReplyInterface,
                                         TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener
 {
-    String LOG_TAG = BotChatActivity.class.getSimpleName();
+    final String LOG_TAG = BotChatActivity.class.getSimpleName();
     FrameLayout chatLayoutFooterContainer;
     FrameLayout chatLayoutContentContainer;
     FrameLayout chatLayoutPanelContainer;
@@ -153,19 +148,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
     private final Gson gson = new Gson();
-    //For Bottom Panel
-    private final String packageName = "com.kore.koreapp";
-    private final String appName = "Kore";
     //Fragment Approch
     private FrameLayout composerView;
-    private CustomBottomSheetBehavior mBottomSheetBehavior;
     private BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
     private ImageView ivChaseBackground, ivChaseLogo;
-    protected int compressQualityInt = 100;
-    protected Attachment attachment;
-    Handler messageHandler = new Handler();
-    protected static long totalFileSize;
+    protected final int compressQualityInt = 100;
+    final Handler messageHandler = new Handler();
     private String fileUrl;
     private ArrayList<BrandingNewModel> arrBrandingNewDos;
     private WebHookResponseDataModel webHookResponseDataModel;
@@ -173,7 +162,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private Runnable runnable;
     private final int poll_delay = 2000;
     private String lastMsgId = "";
-    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"template\",\"payload\":{\"type\":\"template\",\"payload\":{\"template_type\":\"advancedListTemplate\",\"title\":\"Main Title\",\"isSortEnabled\":true,\"isSearchEnabled\":false,\"isButtonAvailable\":false,\"description\":\"Main title description\",\"listViewType\":\"default\",\"listItems\":[{\"title\":\"Title\",\"description\":\"Description\",\"descriptionIcon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\",\"descriptionIconAlignment\":\"right\",\"descriptionStyles\":{\"font-size\":\"10px\",\"color\":\"#10f4f4\"},\"titleStyles\":{\"font-size\":\"14px\",\"color\":\"#9bf410\"},\"elementStyles\":{\"background\":\"#fef100\"}},{\"title\":\"Title text[title and description,icon]\",\"description\":\"Description\",\"icon\":\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\"},{\"title\":\"Title text\",\"description\":\"List item with button\",\"iconShape\":\"circle-img\",\"icon\":\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\",\"headerOptions\":[{\"contenttype\":\"button\",\"title\":\"Button\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\",\"buttonStyles\":{\"color\":\"#10f4f4\"}}]},{\"title\":\"Title text [with dropdown]\",\"description\":\"title 1 description\",\"headerOptions\":[{\"type\":\"dropdown\",\"dropdownOptions\":[{\"title\":\"option1\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_payload\"},{\"title\":\"option2\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_payload\"}]}]},{\"title\":\"Title text [with default view]\",\"description\":\"See more action dropdown and display limit 3\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":true,\"imageSize\":\"small\",\"iconShape\":\"circle-img\",\"view\":\"default\",\"iconSize\":\"small\",\"isAccordian\":true,\"textInformation\":[{\"title\":\"Oct 9, 9:00am - 9:30am (Day 1/2)\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\"},{\"title\":\"WebEx\",\"type\":\"web_url\",\"url\":\"https://petersapparel.parseapp.com\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFHSURBVHgBdZC/TgJBEMZnZk+PxOZ4Ax4Bow+ApSWdsYBFJGInb8BV2omVpyQw+gI8gpQWJpydJW8gjQGTux13+aOixyaT7M58M/ubD2HD0bpZEAV9ey3ZGIsAP/aiELPFjaIoekKkEBKfYeujIKkaGMAbL3M8eSUkaXH3lpeZWJ82ayQw+NdwZFHA+My9zmStkMxiULnAW8dQAxAJBKZQrZ8NMcUWczR2daP8quUf0hozQfjQu8u7QMRXINCuXqmfV1GgjSnUcOGGjJDstG7ElZNm22rEOfIjNh005oC5G3vOOufGakEywKLw2iK9z1lFJiuxe3pznxO/vNplyVzW+iKA3CzgaLHDt4F2xAS8WfF30mGk9Kn/iuc/oFAoIP1j3Shvw87YqKljbpPFgIyj4tHL8+7efp6ALoGSKwTMocFD5vu3rIYvr/CSUC3Azu4AAAAASUVORK5CYII=\"},{\"title\":\"Text Info Title\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGbSURBVHgBdVJNTgJRDG77iBpXHAFPICTuxRu4cydPNHFc6dIdegLZMQt+Bj2AcAJgbwKeALgBbogY5tV2zEMY9CWTee18/fr16yCkjrV32SUsikSc19g5HGVgtx9F1dk6zqwH55fXt0DLDhHkJJxqTu5nkrs/LBxl34dvA49FfymVg5ZEOYzhIorCyaaKIMcGWnKdtBvhxarwvBxUEKEoyRMvN6a5TSQ56nii0mXQc4zdl2atStbarBRZ7fTL/jkkpENEykunnhIlXQRDCBWNaWl2iirBs8bkTuXVV0nPjdAywCCmRdL9B8MjMPNihlhY5SP8c2QW5rVYggED5TNpoHFfEZvdsczjS0+N48c0jhy6kcx47E1hs/cq4JF0+dBHWszY8NNqTsGS1qg52gFjLIgR6u40qocPG+u4Ch5E4rGawwQ9dHuFZB22fHPH6CrAOGs3wwP448iexzqwELeVmBK3ZC8M2JXsTNeRLkpymBg18GpwS5KDkmQn6p6fSebMI9FjVK9V19xOs4sJsicna0rcEyMg3t/6yb8BlCK9m52XgX8AAAAASUVORK5CYII=\"}],\"seeMoreAction\":\"dropdown\",\"buttonsLayout\":{\"displayLimit\":{\"count\":\"3\"},\"buttonAligment\":\"fullwidth\"},\"buttons\":[{\"type\":\"url\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 1 url\",\"url\":\"https://bankingassistant-qa-bots.kore.ai/botbuilder\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 1\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"type\":\"postback\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\",\"title\":\"Button 2\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"headerOptions\":[{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=\"}]},{\"title\":\"Title text [view options] \",\"description\":\"List item with check box options\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":true,\"iconSize\":\"small\",\"imageSize\":\"large\",\"isAccordian\":true,\"view\":\"options\",\"optionsData\":[{\"id\":\"1\",\"type\":\"checkbox\",\"label\":\"1 Lorem ipsum doller ammen\",\"value\":\"1\"},{\"id\":\"2\",\"type\":\"checkbox\",\"label\":\"2 Lorem ipsum doller ammen\",\"value\":\"2\"}],\"buttons\":[{\"type\":\"postback\",\"btnType\":\"confirm\",\"title\":\"Confirm\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"btnType\":\"cancel\",\"title\":\"Cancel\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"buttonAligment\":\"right\",\"headerOptions\":[{\"type\":\"text\",\"value\":\"20$\",\"styles\":{\"color\":\"#105bf4\",\"font-size\":\"10px\"}}]},{\"title\":\"Title text [view options]\",\"description\":\"List item with radio options\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":false,\"iconSize\":\"small\",\"imageSize\":\"medium\",\"iconShape\":\"circle-img\",\"isAccordian\":true,\"view\":\"options\",\"optionsData\":[{\"id\":\"1\",\"type\":\"radio\",\"label\":\"1 Lorem ipsum doller ammen\",\"value\":\"1\"},{\"id\":\"2\",\"type\":\"radio\",\"label\":\"2 Lorem ipsum doller ammen\",\"value\":\"2\"}],\"buttons\":[{\"type\":\"postback\",\"btnType\":\"confirm\",\"title\":\"Confirm\",\"payload\":\"USER_DEFINED_PAYLOAD\"},{\"btnType\":\"cancel\",\"title\":\"Cancel\",\"type\":\"postback\",\"payload\":\"USER_DEFINED_PAYLOAD\"}],\"headerOptions\":[{\"type\":\"text\",\"value\":\"20$\",\"styles\":{\"color\":\"#105bf4\",\"font-size\":\"10px\"}},{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\"}]},{\"title\":\"list item [view = \\\"table\\\"]\",\"description\":\"list item [view = \\\"table\\\"]\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\",\"isCollapsed\":false,\"iconSize\":\"small\",\"isAccordian\":true,\"view\":\"table\",\"headerOptions\":[{\"contenttype\":\"button\",\"title\":\"confirm\",\"isStatus\":true,\"buttonStyles\":{\"background\":\"#00f3fe\",\"color\":\"#fe0000\",\"border\":\"1px solid #fe0000\"}},{\"type\":\"icon\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\"}],\"type\":\"column\",\"tableListData\":[{\"rowData\":[{\"title\":\"Text 1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"iconSize\":\"small\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"iconSize\":\"large\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"},{\"title\":\"Text1\",\"description\":\"Value\",\"icon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\"}]}]}],\"seeMoreTitle\":\"test\",\"previewModalTitle\":\"Preview title\",\"seeMoreIcon\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\"}}},\"cInfo\":{\"body\":\"{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"template_type\\\":\\\"advancedListTemplate\\\",\\\"title\\\":\\\"Main Title\\\",\\\"isSortEnabled\\\":true,\\\"isSearchEnabled\\\":false,\\\"isButtonAvailable\\\":false,\\\"description\\\":\\\"Main title description\\\",\\\"listViewType\\\":\\\"default\\\",\\\"listItems\\\":[{\\\"title\\\":\\\"Title\\\",\\\"description\\\":\\\"Description\\\",\\\"descriptionIcon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\",\\\"descriptionIconAlignment\\\":\\\"right\\\",\\\"descriptionStyles\\\":{\\\"font-size\\\":\\\"10px\\\",\\\"color\\\":\\\"#10f4f4\\\"},\\\"titleStyles\\\":{\\\"font-size\\\":\\\"14px\\\",\\\"color\\\":\\\"#9bf410\\\"},\\\"elementStyles\\\":{\\\"background\\\":\\\"#fef100\\\"}},{\\\"title\\\":\\\"Title text[title and description,icon]\\\",\\\"description\\\":\\\"Description\\\",\\\"icon\\\":\\\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\\\"},{\\\"title\\\":\\\"Title text\\\",\\\"description\\\":\\\"List item with button\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"icon\\\":\\\"https://kore.ai/wp-content/uploads/2021/09/kore.ai_logo.svg\\\",\\\"headerOptions\\\":[{\\\"contenttype\\\":\\\"button\\\",\\\"title\\\":\\\"Button\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\",\\\"buttonStyles\\\":{\\\"color\\\":\\\"#10f4f4\\\"}}]},{\\\"title\\\":\\\"Title text [with dropdown]\\\",\\\"description\\\":\\\"title 1 description\\\",\\\"headerOptions\\\":[{\\\"type\\\":\\\"dropdown\\\",\\\"dropdownOptions\\\":[{\\\"title\\\":\\\"option1\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_payload\\\"},{\\\"title\\\":\\\"option2\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_payload\\\"}]}]},{\\\"title\\\":\\\"Title text [with default view]\\\",\\\"description\\\":\\\"See more action dropdown and display limit 3\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":true,\\\"imageSize\\\":\\\"small\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"view\\\":\\\"default\\\",\\\"iconSize\\\":\\\"small\\\",\\\"isAccordian\\\":true,\\\"textInformation\\\":[{\\\"title\\\":\\\"Oct 9, 9:00am - 9:30am (Day 1/2)\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"WebEx\\\",\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://petersapparel.parseapp.com\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFHSURBVHgBdZC/TgJBEMZnZk+PxOZ4Ax4Bow+ApSWdsYBFJGInb8BV2omVpyQw+gI8gpQWJpydJW8gjQGTux13+aOixyaT7M58M/ubD2HD0bpZEAV9ey3ZGIsAP/aiELPFjaIoekKkEBKfYeujIKkaGMAbL3M8eSUkaXH3lpeZWJ82ayQw+NdwZFHA+My9zmStkMxiULnAW8dQAxAJBKZQrZ8NMcUWczR2daP8quUf0hozQfjQu8u7QMRXINCuXqmfV1GgjSnUcOGGjJDstG7ElZNm22rEOfIjNh005oC5G3vOOufGakEywKLw2iK9z1lFJiuxe3pznxO/vNplyVzW+iKA3CzgaLHDt4F2xAS8WfF30mGk9Kn/iuc/oFAoIP1j3Shvw87YqKljbpPFgIyj4tHL8+7efp6ALoGSKwTMocFD5vu3rIYvr/CSUC3Azu4AAAAASUVORK5CYII=\\\"},{\\\"title\\\":\\\"Text Info Title\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGbSURBVHgBdVJNTgJRDG77iBpXHAFPICTuxRu4cydPNHFc6dIdegLZMQt+Bj2AcAJgbwKeALgBbogY5tV2zEMY9CWTee18/fr16yCkjrV32SUsikSc19g5HGVgtx9F1dk6zqwH55fXt0DLDhHkJJxqTu5nkrs/LBxl34dvA49FfymVg5ZEOYzhIorCyaaKIMcGWnKdtBvhxarwvBxUEKEoyRMvN6a5TSQ56nii0mXQc4zdl2atStbarBRZ7fTL/jkkpENEykunnhIlXQRDCBWNaWl2iirBs8bkTuXVV0nPjdAywCCmRdL9B8MjMPNihlhY5SP8c2QW5rVYggED5TNpoHFfEZvdsczjS0+N48c0jhy6kcx47E1hs/cq4JF0+dBHWszY8NNqTsGS1qg52gFjLIgR6u40qocPG+u4Ch5E4rGawwQ9dHuFZB22fHPH6CrAOGs3wwP448iexzqwELeVmBK3ZC8M2JXsTNeRLkpymBg18GpwS5KDkmQn6p6fSebMI9FjVK9V19xOs4sJsicna0rcEyMg3t/6yb8BlCK9m52XgX8AAAAASUVORK5CYII=\\\"}],\\\"seeMoreAction\\\":\\\"dropdown\\\",\\\"buttonsLayout\\\":{\\\"displayLimit\\\":{\\\"count\\\":\\\"3\\\"},\\\"buttonAligment\\\":\\\"fullwidth\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"url\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 1 url\\\",\\\"url\\\":\\\"https://bankingassistant-qa-bots.kore.ai/botbuilder\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 1\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"type\\\":\\\"postback\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAOCAYAAAD0f5bSAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFFSURBVHgBnZGxTsMwEIZ9tlCDuoS5QuQRGAsSonmEPkH7BvQBkOIgdsrIVDIx8ghNGVCBoRnpFiS6w1IFkvj4LQGqqpRI/JId3ymf/7uzEpDTDgPVOo6xRLmYTESNlAWYTZ+Iuog1QLcOlBYwhrrZVMcAfSztHJ7v1UDCbTZFagNmPsEnye5PX/6EiESyXJqBDeDyzoBEjchpa88YnjGTn+cibTR4RiR1Ng2ijZDdAPZRWmB7KkvhSslj9OnnT7rSVdmteI2TrV1/B+CFlHQFeE7EN6p1NC8Xd89uR7uO13GyNM5+nX4ERw2wZx0RejiP0GOMn/YxMA+jGn4+noW0br0GCmOMllKmOF4jP0bmkqpqXgXxfulKvoP8bSVktX0QDDCUwJYEp6goCk8pNQIUbYS+b/ZseXDsoac3vGn48RAOxX/0BeH9oUngtmx1AAAAAElFTkSuQmCC\\\",\\\"title\\\":\\\"Button 2\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"headerOptions\\\":[{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=\\\"}]},{\\\"title\\\":\\\"Title text [view options] \\\",\\\"description\\\":\\\"List item with check box options\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":true,\\\"iconSize\\\":\\\"small\\\",\\\"imageSize\\\":\\\"large\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"options\\\",\\\"optionsData\\\":[{\\\"id\\\":\\\"1\\\",\\\"type\\\":\\\"checkbox\\\",\\\"label\\\":\\\"1 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"1\\\"},{\\\"id\\\":\\\"2\\\",\\\"type\\\":\\\"checkbox\\\",\\\"label\\\":\\\"2 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"2\\\"}],\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"btnType\\\":\\\"confirm\\\",\\\"title\\\":\\\"Confirm\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"btnType\\\":\\\"cancel\\\",\\\"title\\\":\\\"Cancel\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"buttonAligment\\\":\\\"right\\\",\\\"headerOptions\\\":[{\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"20$\\\",\\\"styles\\\":{\\\"color\\\":\\\"#105bf4\\\",\\\"font-size\\\":\\\"10px\\\"}}]},{\\\"title\\\":\\\"Title text [view options]\\\",\\\"description\\\":\\\"List item with radio options\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":false,\\\"iconSize\\\":\\\"small\\\",\\\"imageSize\\\":\\\"medium\\\",\\\"iconShape\\\":\\\"circle-img\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"options\\\",\\\"optionsData\\\":[{\\\"id\\\":\\\"1\\\",\\\"type\\\":\\\"radio\\\",\\\"label\\\":\\\"1 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"1\\\"},{\\\"id\\\":\\\"2\\\",\\\"type\\\":\\\"radio\\\",\\\"label\\\":\\\"2 Lorem ipsum doller ammen\\\",\\\"value\\\":\\\"2\\\"}],\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"btnType\\\":\\\"confirm\\\",\\\"title\\\":\\\"Confirm\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"},{\\\"btnType\\\":\\\"cancel\\\",\\\"title\\\":\\\"Cancel\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"USER_DEFINED_PAYLOAD\\\"}],\\\"headerOptions\\\":[{\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"20$\\\",\\\"styles\\\":{\\\"color\\\":\\\"#105bf4\\\",\\\"font-size\\\":\\\"10px\\\"}},{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\\\"}]},{\\\"title\\\":\\\"list item [view = \\\\\\\"table\\\\\\\"]\\\",\\\"description\\\":\\\"list item [view = \\\\\\\"table\\\\\\\"]\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\",\\\"isCollapsed\\\":false,\\\"iconSize\\\":\\\"small\\\",\\\"isAccordian\\\":true,\\\"view\\\":\\\"table\\\",\\\"headerOptions\\\":[{\\\"contenttype\\\":\\\"button\\\",\\\"title\\\":\\\"confirm\\\",\\\"isStatus\\\":true,\\\"buttonStyles\\\":{\\\"background\\\":\\\"#00f3fe\\\",\\\"color\\\":\\\"#fe0000\\\",\\\"border\\\":\\\"1px solid #fe0000\\\"}},{\\\"type\\\":\\\"icon\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAMCAYAAACulacQAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAB7SURBVHgBpY7BDUZAEIVnfr+zEQ2M4K4ESlABpehAK3SgEbEVsA3IGhIOa+PiS+ZdvjfJA3iDOS04TmYWbOdpvSiiKATEjigYtHDLI6Qwugre1XIV0LGhBTQ1mK38PSdiL8cAPllfWc5xujInzWchuITwP9NApdQ02nIHzFIyUM1lTqwAAAAASUVORK5CYII=\\\"}],\\\"type\\\":\\\"column\\\",\\\"tableListData\\\":[{\\\"rowData\\\":[{\\\"title\\\":\\\"Text 1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"iconSize\\\":\\\"small\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"iconSize\\\":\\\"large\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"},{\\\"title\\\":\\\"Text1\\\",\\\"description\\\":\\\"Value\\\",\\\"icon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAL5SURBVHgB7ZhPSBRRHMe/762iJmt6SFii2oEOBR6Mog5dTDoFkXWySyodOihSl8DoUCB6LMJTILlC5Kk1hE6ueemwVrTQQtIKs2WxaAdLE8WYfb3fbDvsumPse03uHPrAMvPe22G/8/v33v4YXDDNlUarOtDBGAtjFxCWSASqrYQRakpvX2OFAzOzEgZqHslH2lAZxoCtu4VCHYEfMxtdWWbdh2CNqCQM37jg1w+F6iK5oSS1uNZWVcVfwFdkzxih4Kwt0Mysm/IShr9IY3PrWGAh86Obg3XDfzRmA3yJB4Au+BTO+AVpPNYKv8JEK4dAZbP2T0htHD7H9wKr4BFflr8jOpO070+2HJCfg/ACzwS+N79iZOKlfX+xvcUzgdouJmutrW8641j8g3M/HU85a3TNW1YHJncRAUUGHjy3f3R/8150nT8hrbdUIoLWyNXT8QVbJFl1uP8cVFEWSLHWcSNSZL1yiT28ZgtXQdnFOasdhyoDV9uVxRFaMUiucyNYXyNFNLiuHTWaoYNWFkem3pTMkYUoHgkKgyu3n8jrqrNOiaOT2Uox2Dv8FHPJzyXx55YAc8lPUuRE0VywvlZach/GBy+jXJQsGJMZ6YabZdzm6MXmkotQwZOtjlxazpwOSgLnJ28ieq8bR7YFfGTqdYmgodGZojE9Mz7YiVeP+6GCVqGeN5dlLRwrmssX5gYZZ3EZf/SdQiZdXqwcPD4s7OzWVY3CTmjF4NBoDKrkDxKqaAks3BHIbTsVZyrcbs+ooOViqnlU086eOuyUk97hqCxDqd9iGjAycMnePaIz7+yj2C1ZyHXQShI36NTSJws5oXtyccOzJKEM7us87dx7hWcW/Ff8/1f3t3Bqd8GvUCsOQiTgVwRLUOvjGfyKlY0w6kejtuatlBuGr2BpI7TH4IbRJGPQ6oHvyGmys5hardKCPb5IGFuD6MlpKunyb4QFrDsMrEJNTTELBKS4unR+hrl9jYQi+7M1i91pbnIuZD86OGkYrMSDvwDabB9xyb55JAAAAABJRU5ErkJggg==\\\"}]}]}],\\\"seeMoreTitle\\\":\\\"test\\\",\\\"previewModalTitle\\\":\\\"Preview title\\\",\\\"seeMoreIcon\\\":\\\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFzSURBVHgBjVJBTgJBEKzu2cS9KT/gB+4T9AXCzYPKiiHCCXiB+ANukhBx1g/ID/AH7g/kCdzcAzttz27WIEKkk8n09HTNdHcVYcPieHDiOOuTuiDUyyilgKSU49HaybLK5cq5ueu1xHx9KqBGjFvKw1qxSIaiaDH0cd3uDap8KkH3fRIakMub1k7TItbujvz+OpuMymq6dWEsmGj08vyUsA8oekQO5xVol/kyyeRNB4x9SywGD/rxfLP+veDpNBUnic5hoD1KRIQEBxobzDW/FehvEdbhzhKJ6fhSW6nOIcIV1qsUJqzz3peBJZw0jnQg1YKWWN0HEE0Iskj991/9zCbWb9sPXsXdM6O8snKUuBwNHGjGoOVFweyyMbG04k4n+g/kqYNIw6uIrbUrJX8ozrzFG4P4C+pESt2CmAvp0c+FyknIFZzmOZIA5aTXyCIT0AWci8nQ0E6L3kHbpTijKoKcFjR50+GpdhOlbGzteFXlfgNFTZhUpiJhVAAAAABJRU5ErkJggg==\\\"}}\"}}],\"messageId\":\"ms-42485617-4f74-51cb-a809-75282fdf7cd8\",\"botInfo\":{\"chatBot\":\"SDKBot\",\"taskBotId\":\"st-b9889c46-218c-58f7-838f-73ae9203488c\",\"hostDomain\":\"null\",\"os\":\"Windows\",\"device\":\"Other\"},\"createdOn\":\"2023-08-02T09:46:17.927Z\",\"xTraceId\":\"f76d7403-1bd3-4a43-911d-c79ccd2907b8\",\"icon\":\"https://dlnwzkim0wron.cloudfront.net/f-5e050d52-6c4a-5442-b7e6-2ddbc93e4df7.png\",\"traceId\":\"1a9032ab60145628\"}";
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +227,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    SocketChatListener sListener = new SocketChatListener() {
+    final SocketChatListener sListener = new SocketChatListener() {
         @Override
         public void onMessage(BotResponse botResponse) {
             processPayload("", botResponse);
@@ -249,7 +239,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 getBrandingDetails();
             }
 
-            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)));
+            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", getUniqueDeviceId(BotChatActivity.this)));
 
             updateTitleBar(state);
         }
@@ -327,12 +317,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void findViews() {
-        chatLayoutFooterContainer = (FrameLayout) findViewById(R.id.chatLayoutFooterContainer);
-        chatLayoutContentContainer = (FrameLayout) findViewById(R.id.chatLayoutContentContainer);
-        chatLayoutPanelContainer   = (FrameLayout) findViewById(R.id.chatLayoutPanelContainer);
-        taskProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
-        ivChaseBackground = (ImageView) findViewById(R.id.ivChaseBackground);
-        ivChaseLogo = (ImageView) findViewById(R.id.ivChaseLogo);
+        chatLayoutFooterContainer = findViewById(R.id.chatLayoutFooterContainer);
+        chatLayoutContentContainer = findViewById(R.id.chatLayoutContentContainer);
+        chatLayoutPanelContainer   = findViewById(R.id.chatLayoutPanelContainer);
+        taskProgressBar = findViewById(R.id.taskProgressBar);
+        ivChaseBackground = findViewById(R.id.ivChaseBackground);
+        ivChaseLogo = findViewById(R.id.ivChaseLogo);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         RestBuilder.setContext(BotChatActivity.this);
         WebHookRestBuilder.setContext(BotChatActivity.this);
@@ -469,10 +459,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void externalReadWritePermission(String fileUrl)
     {
         this.fileUrl = fileUrl;
-        if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        }
-        else
-        {
+        if (!KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST,
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
@@ -484,7 +471,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
@@ -507,7 +494,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     }
 
-    Runnable actionBarUpdateRunnable = new Runnable() {
+    final Runnable actionBarUpdateRunnable = new Runnable() {
         @Override
         public void run() {
             updateTitleBar();
@@ -577,7 +564,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else
             {
-//                BotSocketConnectionManager.getInstance().stopTextToSpeech();
                 addSentMessageToChat(message);
                 sendWebHookMessage(false, message, attachments);
             }
@@ -770,7 +756,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return botOptionsModel;
     }
 
-    public BotBrandingModel getBrandingDataFromTxt()
+    public void getBrandingDataFromTxt()
     {
         BotBrandingModel botOptionsModel = null;
 
@@ -785,7 +771,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         {
             e.printStackTrace();
         }
-        return botOptionsModel;
     }
 
     public void displayMessage(String text, String type, String messageId)
@@ -944,7 +929,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = "";
-            BotResponseMessage msg = ((BotResponse) botResponse).getTempMessage();
             ComponentModel componentModel = botResponse.getMessage().get(0).getComponent();
             if (componentModel != null) {
                 String compType = componentModel.getType();
@@ -988,11 +972,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void toggleQuickRepliesVisiblity(){
         quickReplyFragment.toggleQuickReplyContainer(View.GONE);
     }
-
+    @SuppressLint("MissingPermission")
     protected boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     private void attachFragments() {
@@ -1007,23 +993,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
             composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
         }
-    }
-
-    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
-        PanelBaseModel model = null;
-        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
-            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
-                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
-                    model = new PanelBaseModel();
-                    panel.setItemClicked(true);
-                    model.setData(panel);
-                    return model;
-                }
-            }
-
-        }
-
-        return model;
     }
 
     @Override
@@ -1149,76 +1118,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-//    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
-//
-//        private final String filePath;
-//        private final String fileName;
-//        private final String filePathThumbnail;
-//        private String orientation;
-//
-//        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
-//            this.filePath = filePath;
-//            this.fileName = fileName;
-//            this.filePathThumbnail = filePathThumbnail;
-//        }
-//
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-//            String extn = null;
-//            OutputStream fOut = null;
-//
-//            if (filePath != null) {
-//                extn = filePath.substring(filePath.lastIndexOf(".") + 1);
-//                Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-////                    compressImage(filePath);
-//                if (thePic != null) {
-//                    try {
-//                        // compress the image
-//                        File _file = new File(filePath);
-//
-//                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-//                        fOut = new FileOutputStream(_file);
-//
-//                        thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
-//                        thePic = rotateIfNecessary(filePath, thePic);
-//                        orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-//                        fOut.flush();
-//                        fOut.close();
-//                    } catch (Exception e) {
-//                        LogUtils.e(LOG_TAG, e.toString());
-//                    }
-//                    finally {
-//                        try {
-//                            assert fOut != null;
-//                            fOut.close();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//            return extn;
-//        }
-//
-//
-//        @Override
-//        protected void onPostExecute(String extn) {
-//
-//        }
-//    }
-
-    private long getFileMaxSize() {
-        long FILE_MAX_SIZE = getFileLimit();
-        if (FILE_MAX_SIZE != -1) {
-            FILE_MAX_SIZE = FILE_MAX_SIZE * 1024 * 1024;
-        }
-
-        return FILE_MAX_SIZE;
-    }
-
     @SuppressLint("HandlerLeak")
+    final
     Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public synchronized void handleMessage(Message msg) {
@@ -1276,17 +1177,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 composeFooterFragment.addAttachmentToAdapter(attachmentKey);
             }
         }, 400);
-    }
-
-    private int getFileLimit() {
-        attachment = SharedPreferenceUtils.getInstance(this).getAttachmentPref("");
-
-        int file_limit = -1;
-        if (attachment != null) {
-            file_limit = attachment.getSize();
-        }
-
-        return file_limit;
     }
 
     private String getComponentId(String componentType) {
@@ -1557,6 +1447,22 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 postPollingData(pollId);
             }
         }, poll_delay);
+    }
+
+    public String getUniqueDeviceId(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null)
+            {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.apply();
+            }
+        }
+        return uniqueID;
     }
 
     private void stopSendingPolling()

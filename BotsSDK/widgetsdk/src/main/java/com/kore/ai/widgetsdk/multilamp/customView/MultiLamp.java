@@ -88,7 +88,7 @@ public class MultiLamp extends RelativeLayout {
 
         this.setClickable(false);
         if (null != this.getParent()) {
-            ((ViewGroup) ((Activity) activity).getWindow().getDecorView()).removeView(this);
+            ((ViewGroup) activity.getWindow().getDecorView()).removeView(this);
         }
         //todo need to work on it
         //        WindowManager.LayoutParams params5 = new WindowManager.LayoutParams(
@@ -112,7 +112,7 @@ public class MultiLamp extends RelativeLayout {
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         if (null != activity && null != this.getParent()) {
-            ((ViewGroup) ((Activity) activity).getWindow().getDecorView()).removeView(this);
+            ((ViewGroup) activity.getWindow().getDecorView()).removeView(this);
             if (null != callback)
                 callback.onTutorialFinished();
         }

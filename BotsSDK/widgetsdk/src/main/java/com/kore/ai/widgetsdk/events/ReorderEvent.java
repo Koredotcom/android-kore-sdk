@@ -4,7 +4,7 @@ import com.kore.ai.widgetsdk.models.PanelBaseModel;
 
 public class ReorderEvent {
 
-    PanelBaseModel panel;
+    final PanelBaseModel panel;
     public ReorderEvent(PanelBaseModel panel)
     {
       this.panel=panel;

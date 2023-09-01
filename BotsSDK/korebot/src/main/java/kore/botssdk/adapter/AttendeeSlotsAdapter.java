@@ -5,13 +5,13 @@ import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,16 +29,9 @@ import kore.botssdk.utils.SelectionUtils;
  */
 
 public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdapter.ViewHolder> {
-    public ArrayList<MeetingSlotModel.Slot> getNormalSlots() {
-        return normalSlots;
-    }
 
     public void setNormalSlots(ArrayList<MeetingSlotModel.Slot> normalSlots) {
         this.normalSlots = normalSlots;
-    }
-
-    public ArrayList<MeetingSlotModel.Slot> getPopularSlots() {
-        return popularSlots;
     }
 
     public void setPopularSlots(ArrayList<MeetingSlotModel.Slot> popularSlots) {
@@ -71,10 +64,10 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
 
     public AttendeeSlotsAdapter(Context mContext,SlotSelectionListener slotSelectionListener) {
         layoutInflater = LayoutInflater.from(mContext);
-        selectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_on);
-        unSelectedCheck = mContext.getResources().getDrawable(R.mipmap.checkbox_off);
-        selectedColor = mContext.getResources().getColor(R.color.color_dfdfeb);
-        unSelectedColor = mContext.getResources().getColor(R.color.white);
+        selectedCheck = ResourcesCompat.getDrawable(mContext.getResources() , R.mipmap.checkbox_on, mContext.getTheme());
+        unSelectedCheck = ResourcesCompat.getDrawable(mContext.getResources() , R.mipmap.checkbox_off, mContext.getTheme());
+        selectedColor = ResourcesCompat.getColor(mContext.getResources(), R.color.color_dfdfeb, mContext.getTheme());
+        unSelectedColor = ResourcesCompat.getColor(mContext.getResources(), R.color.white, mContext.getTheme());
         this.slotSelectionListener = slotSelectionListener;
     }
 
@@ -135,12 +128,12 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (viewType){
             case 0:
-                return new ViewHolder(layoutInflater.inflate(R.layout.most_poular_header,parent,false));
+                return new ViewHolder(layoutInflater.inflate(R.layout.most_poular_header, parent, false));
             case 1:
-                return new ViewHolder(layoutInflater.inflate(R.layout.separator_text_view,parent,false));
+                return new ViewHolder(layoutInflater.inflate(R.layout.separator_text_view, parent, false));
             case 2:
                 default:
-                return new ViewHolder(DataBindingUtil.inflate(layoutInflater,R.layout.attendee_slot_item,parent,false));
+                return new ViewHolder(DataBindingUtil.inflate(layoutInflater, R.layout.attendee_slot_item, parent, false));
 
         }
     }
@@ -190,13 +183,11 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
         isEnabled = enabled;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         AttendeeSlotItemBinding attendeeSlotItemBinding;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ((TextView)itemView).setLetterSpacing(0.06f);
-            }
+            ((TextView)itemView).setLetterSpacing(0.06f);
         }
         public ViewHolder(@NonNull AttendeeSlotItemBinding slotItemBinding) {
             super(slotItemBinding.getRoot());

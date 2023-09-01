@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kora.ai.widgetsdk.R;
@@ -33,7 +35,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public static final int SECTION_VIEW = 0;
     public static final int CONTENT_VIEW = 1;
-    WeakReference<Context> mContextWeakReference;
+    final WeakReference<Context> mContextWeakReference;
     private final SkillSwitchDialog skillSwitchDialog;
 
     private final ArrayList<PayloadInner.Skill> data;
@@ -41,26 +43,26 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public SkillsAdapter(ArrayList<PayloadInner.Skill> data, Context context, SkillSwitchDialog skillSwitchDialog) {
         this.data = data;
-        this.mContextWeakReference = new WeakReference<Context>(context);
+        this.mContextWeakReference = new WeakReference<>(context);
         this.skillSwitchDialog = skillSwitchDialog;
         this.mContext = context;
     }
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem = null;
+        View listItem;
         if (viewType == SECTION_VIEW) {
             listItem = layoutInflater.inflate(R.layout.skill_switch_section_item, parent, false);
             return new SkillSectionHeaderViewHolder(listItem);
         }
         listItem = layoutInflater.inflate(R.layout.skill_switch_list_item, parent, false);
-        SkillItemViewHolder viewHolder = new SkillItemViewHolder(listItem);
-        return viewHolder;
+        return new SkillItemViewHolder(listItem);
     }
 
     private void doSkillItemAction(int position) {
-        final PayloadInner.Skill skill = ((PayloadInner.Skill) data.get(position));
+        final PayloadInner.Skill skill = data.get(position);
         if (skill.isCurrentSkill()) {
             return;
         }
@@ -102,7 +104,7 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Context context = mContextWeakReference.get();
         if (context == null) {
             return;
@@ -140,35 +142,22 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
         Picasso.get().load(SDKConfiguration.Server.SERVER_URL + "/" + data.get(position).getIcon())
-                //.networkPolicy(NetworkPolicy.OFFLINE)
                 .transform(KaUtility.getRoundTransformation())
                 .resize(50,50)
                 .error(getErrorIcon(data.get(position).getName().toLowerCase(),context))
-                .into(skillItemVH.imageView);/*, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-            }
-
-            @Override
-            public void onError() {
-                if (data.get(position).getName().toLowerCase().equals("kora")) {
-                    skillItemVH.imageView.setImageDrawable(context.getResources().getDrawable(R.mipmap.kora_icon));
-                } else {
-                    skillItemVH.imageView.setImageDrawable(context.getResources().getDrawable(R.mipmap.temp_skill));
-                }
-            }
-        });*/
+                .into(skillItemVH.imageView);
     }
 
     private Drawable getErrorIcon(String name, Context context){
-        if(name !=null){
-            if(name.equals("kora"))
-                return context.getResources().getDrawable(R.mipmap.kora_icon);
-            else if(name.equalsIgnoreCase(Constants.SKILL_HOME))
-                return context.getResources().getDrawable(R.mipmap.kora_icon);
-            else return context.getResources().getDrawable(R.mipmap.temp_skill);
+        if(name !=null)
+        {
+            if(name.equals("kora") || name.equalsIgnoreCase(Constants.SKILL_HOME))
+                return ResourcesCompat.getDrawable(context.getResources(), R.mipmap.kora_icon, context.getTheme());
+            else
+                return ResourcesCompat.getDrawable(context.getResources(), R.mipmap.temp_skill, context.getTheme());
         }
-        return context.getResources().getDrawable(R.mipmap.temp_skill);
+
+        return ResourcesCompat.getDrawable(context.getResources(), R.mipmap.temp_skill, context.getTheme());
     }
     @Override
     public int getItemCount() {
@@ -185,26 +174,27 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public static class SkillItemViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView, skillSwitchCancel;
-        TextView textView;
-        RelativeLayout rl;
+        final ImageView imageView;
+        final ImageView skillSwitchCancel;
+        final TextView textView;
+        final RelativeLayout rl;
 
 
         public SkillItemViewHolder(View itemView) {
             super(itemView);
-            this.imageView = (ImageView) itemView.findViewById(R.id.imageView);
-            this.textView = (TextView) itemView.findViewById(R.id.textView);
-            this.skillSwitchCancel = (ImageView) itemView.findViewById(R.id.skill_switch_cancel_iv);
-            this.rl = (RelativeLayout) itemView.findViewById(R.id.recentSkillRL);
+            this.imageView = itemView.findViewById(R.id.imageView);
+            this.textView = itemView.findViewById(R.id.textView);
+            this.skillSwitchCancel = itemView.findViewById(R.id.skill_switch_cancel_iv);
+            this.rl = itemView.findViewById(R.id.recentSkillRL);
         }
     }
 
-    public class SkillSectionHeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView headerTitleTextview;
+    public static class SkillSectionHeaderViewHolder extends RecyclerView.ViewHolder {
+        final TextView headerTitleTextview;
 
         public SkillSectionHeaderViewHolder(View itemView) {
             super(itemView);
-            headerTitleTextview = (TextView) itemView.findViewById(R.id.skill_switch_scetion_tv);
+            headerTitleTextview = itemView.findViewById(R.id.skill_switch_scetion_tv);
         }
     }
 
