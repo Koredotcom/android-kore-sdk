@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,7 +11,8 @@
         android:layout_marginBottom="@dimen/dimen_15dp"
         android:background="@drawable/list_view_new_bg"
         android:orientation="vertical"
-        android:padding="@dimen/dimen_10dp">
+        android:padding="@dimen/dimen_10dp"
+        tools:ignore="UselessParent">
 
         <kore.botssdk.view.AutoExpandListView
             android:id="@+id/lvPdfs"

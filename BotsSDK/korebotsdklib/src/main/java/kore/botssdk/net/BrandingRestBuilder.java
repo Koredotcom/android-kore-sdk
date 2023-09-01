@@ -26,7 +26,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BrandingRestBuilder {
 
     private static RestAPI restAPI;
-    private static Context mContext;
 
     private BrandingRestBuilder(){}
 
@@ -59,7 +58,6 @@ public class BrandingRestBuilder {
 
     public static void setContext(Context context)
     {
-        mContext = context;
     }
 
 

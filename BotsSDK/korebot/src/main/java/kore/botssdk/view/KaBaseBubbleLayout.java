@@ -150,6 +150,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected ResultsTemplateView resultsTemplateView;
     protected BotButtonLinkTemplateView botButtonLinkTemplateView;
     protected CardTemplateView cardTemplateView;
+    protected EmptyTemplateView emptyTemplateView;
 
 
     //    protected int[] dimens;
@@ -254,7 +255,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             } else {
                 paint.setColor(LEFT_COLOR_UNSELECTED);
             }
-        } else if (!isLeftSide()) {
+        } else {
             if (isSelected()) {
                 paint.setColor(RIGHT_COLOR_SELECTED);
             } else {
@@ -465,6 +466,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         cardTemplateView = ViewProvider.getCardTemplateView(context);
         cardTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(cardTemplateView);
+
+        emptyTemplateView = ViewProvider.getEmptyTemplateView(context);
+        addView(emptyTemplateView);
     }
 
 
