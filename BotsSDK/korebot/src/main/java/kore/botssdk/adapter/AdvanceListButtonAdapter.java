@@ -49,7 +49,7 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     private final String type;
     private final AdvanceButtonClickListner advanceButtonClickListner;
     private AdvanceOptionsAdapter advanceOptionsAdapter;
-    private ComposeFooterInterface composeFooterInterface;
+    private final ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private PopupWindow popupWindow;
     private int count;

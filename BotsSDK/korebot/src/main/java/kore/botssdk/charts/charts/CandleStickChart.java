@@ -28,6 +28,6 @@ public class CandleStickChart extends BarLineChartBase<CandleData> implements Ca
     }
 
     public CandleData getCandleData() {
-        return (CandleData)this.mData;
+        return this.mData;
     }
 }

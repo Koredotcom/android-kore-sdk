@@ -5,10 +5,10 @@ import java.util.Map;
 /// Initial WebSockets handshake (client request).
 public class ClientHandshake extends Message {
 
-    public String mHost;
+    public final String mHost;
     public String mPath;
     public String mQuery;
-    public String mOrigin;
+    public final String mOrigin;
     public String[] mSubprotocols;
     public Map<String, String> mHeaderList;
 

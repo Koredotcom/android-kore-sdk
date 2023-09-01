@@ -48,7 +48,7 @@ public class BotButtonView extends ViewGroup {
     private void init() {
         dp1 = DimensionUtil.dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_button_view, this, true);
-        autoExpandListView = (ListView) inflatedView.findViewById(R.id.botCustomButtonList);
+        autoExpandListView = inflatedView.findViewById(R.id.botCustomButtonList);
 
         layoutItemHeight = getResources().getDimension(R.dimen.carousel_view_button_height_individual);
 //        setBackgroundColor(0xffffffff);

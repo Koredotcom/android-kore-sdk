@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -10,11 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.HashTagWidgetAdapter;
 import com.kore.ai.widgetsdk.cache.PanelDataLRUCache;
@@ -41,6 +43,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@SuppressLint("ViewConstructor")
 public class TrendingHashTagView extends ViewGroup {
 
     private final UpdateRefreshItem listener;
@@ -118,19 +121,17 @@ public class TrendingHashTagView extends ViewGroup {
                 .getTrendingHahTagPanel(Utils.ah(""), widget.getHook().getApi(),result,widget.getHook().getBody());
         KaRestAPIHelper.enqueueWithRetry(hashReq, new Callback<TrendingHahTagPanelNewResponse>() {
             @Override
-            public void onResponse(Call<TrendingHahTagPanelNewResponse> call, Response<TrendingHahTagPanelNewResponse> response) {
+            public void onResponse(@NonNull Call<TrendingHahTagPanelNewResponse> call, Response<TrendingHahTagPanelNewResponse> response) {
                 if (response.isSuccessful()) {
                     TrendingHahTagPanelNewResponse resp = response.body();
                     PanelDataLRUCache.getInstance().putEntry(name,resp);
+                    assert resp != null;
                     afterDataLoad(resp);
-                } else {
-                    // holder.hashtag_root.setVisibility(View.GONE);
-                    // showErrorToast(response.errorBody());
                 }
             }
 
             @Override
-            public void onFailure(Call<TrendingHahTagPanelNewResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<TrendingHahTagPanelNewResponse> call, @NonNull Throwable t) {
                 //  dismissProgress();
 //                rootView.setVisibility(View.GONE);
 
@@ -139,17 +140,17 @@ public class TrendingHashTagView extends ViewGroup {
                 if (!NetworkUtility.isNetworkConnectionAvailable(TrendingHashTagView.this.getContext())) {
                     //No Internet Connect
                     msg=getResources().getString(R.string.no_internet_connection);
-                    drawable=getResources().getDrawable(R.drawable.no_internet);
+                    drawable= ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.no_internet, getContext().getTheme());
                 } else {
                     //Oops some thing went wrong
                     msg=getResources().getString(R.string.oops);
-                    drawable=getResources().getDrawable(R.drawable.oops_icon);
+                    drawable= ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.oops_icon, getContext().getTheme());
                 }
                 hAdapter.setHashTagList(null);
                 hAdapter.setMessage(msg,drawable);
                 recycler_hash_tag.setAdapter(hAdapter);
                 view_more.setVisibility(GONE);
-                hAdapter.notifyDataSetChanged();
+                hAdapter.notifyAll();
             }
         });
 
@@ -162,25 +163,19 @@ public class TrendingHashTagView extends ViewGroup {
             hAdapter.setHashTagList(tags);
             view_more.setVisibility(tags.size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum) ? View.VISIBLE : View.GONE);
             recycler_hash_tag.setAdapter(hAdapter);
-            hAdapter.notifyDataSetChanged();
+            hAdapter.notifyItemRangeChanged(0 , tags.size() - 1);
             view_more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Gson gson = new Gson();
-//                    Intent fullviewIntent = new Intent(getContext(), HashtagFullView.class);
-//                    fullviewIntent.putExtra(BundleConstants.HASHATAG_DATA, gson.toJson(tags));
-//                    ((Activity)getContext()).startActivityForResult(fullviewIntent,BundleConstants.REQ_CODE_VIEW_HASH_TAGS_FROM_WIDGET);
                     if(listener != null)
                         listener.updateItemToRefresh(-1);
-
                 }
             });
         } else {
-            //    holder.hashtag_root.setVisibility(View.GONE);
             hAdapter.setHashTagList(null);
             view_more.setVisibility(View.GONE);
             recycler_hash_tag.setAdapter(hAdapter);
-            hAdapter.notifyDataSetChanged();
+            hAdapter.notifyAll();
         }
     }
     public void onEventMainThread(NewHashTagEvent event){

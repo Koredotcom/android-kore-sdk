@@ -50,7 +50,7 @@ public class LineDataSet extends LineRadarDataSet<com.kore.ai.widgetsdk.charts.d
         List<Entry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((Entry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         LineDataSet copied = new LineDataSet(entries, this.getLabel());
@@ -175,7 +175,7 @@ public class LineDataSet extends LineRadarDataSet<com.kore.ai.widgetsdk.charts.d
     }
 
     public int getCircleColor(int index) {
-        return (Integer)this.mCircleColors.get(index);
+        return this.mCircleColors.get(index);
     }
 
     public int getCircleColorCount() {
@@ -196,16 +196,16 @@ public class LineDataSet extends LineRadarDataSet<com.kore.ai.widgetsdk.charts.d
             clrs = new ArrayList();
         }
 
-        ((List)clrs).clear();
+        clrs.clear();
         int[] var4 = colors;
         int var5 = colors.length;
 
         for(int var6 = 0; var6 < var5; ++var6) {
             int color = var4[var6];
-            ((List)clrs).add(c.getResources().getColor(color));
+            clrs.add(c.getResources().getColor(color));
         }
 
-        this.mCircleColors = (List)clrs;
+        this.mCircleColors = clrs;
     }
 
     public void setCircleColor(int color) {

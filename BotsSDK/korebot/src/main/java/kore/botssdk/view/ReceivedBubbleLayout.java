@@ -71,7 +71,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        cpvSenderImage = (CircularProfileView) findViewById(R.id.cpvSenderImage);
+        cpvSenderImage = findViewById(R.id.cpvSenderImage);
     }
 
     @Override
@@ -338,7 +338,7 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          * For PieChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(pieViewHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(botPieChartView, childWidthSpec,childHeightSpec);
 
         /**
@@ -353,21 +353,21 @@ public class ReceivedBubbleLayout extends BaseBubbleLayout {
          */
 
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) lineHeight, MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(lineChartView, childWidthSpec,childHeightSpec);
 
         /**
          * For BarChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(pieViewHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(barChartView, childWidthSpec,childHeightSpec);
 
         /**
          * For stacked BarChart
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 50 * (int)dp1, MeasureSpec.EXACTLY);
-        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (pieViewHeight), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec(pieViewHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(stackedBarChatView, childWidthSpec,childHeightSpec);
 
         /*

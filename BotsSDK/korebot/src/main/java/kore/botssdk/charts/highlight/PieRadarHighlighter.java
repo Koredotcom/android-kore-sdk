@@ -7,8 +7,8 @@ import kore.botssdk.charts.charts.PieChart;
 import kore.botssdk.charts.charts.PieRadarChartBase;
 
 public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter {
-    protected T mChart;
-    protected List<kore.botssdk.charts.highlight.Highlight> mHighlightBuffer = new ArrayList();
+    protected final T mChart;
+    protected final List<kore.botssdk.charts.highlight.Highlight> mHighlightBuffer = new ArrayList();
 
     public PieRadarHighlighter(T chart) {
         this.mChart = chart;

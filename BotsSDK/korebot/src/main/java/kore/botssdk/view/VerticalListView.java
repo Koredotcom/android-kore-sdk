@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
@@ -98,7 +99,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         recyclerView.setItemAnimator(null);
         viewMore = view.findViewById(R.id.view_more);
         rootLayout = view.findViewById(R.id.rootLayoutvertical);
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
         rootLayout.setBackground(shape);
@@ -118,7 +120,8 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+BundleConstants.TRANSPERANCY_50_PERCENT);
         rootLayout.setBackground(shape);
@@ -181,7 +184,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         int totalHeight = getPaddingTop();
         int childWidthSpec;
 
-        childWidthSpec = MeasureSpec.makeMeasureSpec((int) parentWidth - 28 * dp1, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec(parentWidth - 28 * dp1, MeasureSpec.EXACTLY);
         MeasureUtils.measure(rootLayout, childWidthSpec, wrapSpec);
 
         totalHeight += rootLayout.getMeasuredHeight() + getPaddingBottom() + getPaddingTop();
@@ -214,7 +217,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         setAdapter(tasksListAdapter);
         if (SelectionUtils.getSelectedTasks().size() > 0) {
             tasksListAdapter.setSelectedTasks(SelectionUtils.getSelectedTasks());
-            tasksListAdapter.notifyDataSetChanged();
+            tasksListAdapter.notifyItemRangeChanged(0, SelectionUtils.getSelectedTasks().size() - 1);
         }
         prepareDataSetAndPopulate(data.getTaskData(), templateType, isEnabled);
 
@@ -255,7 +258,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
             recyclerView.addItemDecoration(itemDecorator);
         }*/
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
-        adapter.notifyDataSetChanged();
+        adapter.notifyAll();
     }
 
     public void setAdapterByData(ArrayList data, String type, boolean isEnabled, CalEventsTemplateModel.Duration _cursor) {
@@ -302,6 +305,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     @Override
     public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {
         LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) botCaourselButtonModel.getCustomData().get("redirectUrl");
+        assert map != null;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get("mob")));
         getContext().startActivity(browserIntent);
     }
@@ -325,9 +329,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
 
     @Override
     public void tasksSelectedOrDeselected(boolean selecetd) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setTranslationZ(500 * dp1);
-        }
+        setTranslationZ(500 * dp1);
         bringToFront();
         if(composeFooterInterface != null)
             composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));

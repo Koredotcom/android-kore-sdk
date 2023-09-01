@@ -21,11 +21,11 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class RadarChartRenderer extends LineRadarRenderer {
-    protected RadarChart mChart;
-    protected Paint mWebPaint;
-    protected Paint mHighlightCirclePaint;
-    protected Path mDrawDataSetSurfacePathBuffer = new Path();
-    protected Path mDrawHighlightCirclePathBuffer = new Path();
+    protected final RadarChart mChart;
+    protected final Paint mWebPaint;
+    protected final Paint mHighlightCirclePaint;
+    protected final Path mDrawDataSetSurfacePathBuffer = new Path();
+    protected final Path mDrawHighlightCirclePathBuffer = new Path();
 
     public RadarChartRenderer(RadarChart chart, ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);
@@ -47,8 +47,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
     }
 
     public void drawData(Canvas c) {
-        RadarData radarData = (RadarData)this.mChart.getData();
-        int mostEntries = ((IRadarDataSet)radarData.getMaxEntryCountSet()).getEntryCount();
+        RadarData radarData = this.mChart.getData();
+        int mostEntries = radarData.getMaxEntryCountSet().getEntryCount();
         Iterator var4 = radarData.getDataSets().iterator();
 
         while(var4.hasNext()) {
@@ -73,7 +73,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
 
         for(int j = 0; j < dataSet.getEntryCount(); ++j) {
             this.mRenderPaint.setColor(dataSet.getColor(j));
-            RadarEntry e = (RadarEntry)dataSet.getEntryForIndex(j);
+            RadarEntry e = dataSet.getEntryForIndex(j);
             Utils.getPosition(center, (e.getY() - this.mChart.getYChartMin()) * factor * phaseY, sliceangle * (float)j * phaseX + this.mChart.getRotationAngle(), pOut);
             if (!Float.isNaN(pOut.x)) {
                 if (!hasMovedToPoint) {
@@ -119,8 +119,8 @@ public class RadarChartRenderer extends LineRadarRenderer {
         MPPointF pIcon = MPPointF.getInstance(0.0F, 0.0F);
         float yoffset = Utils.convertDpToPixel(5.0F);
 
-        for(int i = 0; i < ((RadarData)this.mChart.getData()).getDataSetCount(); ++i) {
-            IRadarDataSet dataSet = (IRadarDataSet)((RadarData)this.mChart.getData()).getDataSetByIndex(i);
+        for(int i = 0; i < this.mChart.getData().getDataSetCount(); ++i) {
+            IRadarDataSet dataSet = this.mChart.getData().getDataSetByIndex(i);
             if (this.shouldDrawValues(dataSet)) {
                 this.applyValueTextStyle(dataSet);
                 ValueFormatter formatter = dataSet.getValueFormatter();
@@ -129,7 +129,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
                 iconsOffset.y = Utils.convertDpToPixel(iconsOffset.y);
 
                 for(int j = 0; j < dataSet.getEntryCount(); ++j) {
-                    RadarEntry entry = (RadarEntry)dataSet.getEntryForIndex(j);
+                    RadarEntry entry = dataSet.getEntryForIndex(j);
                     Utils.getPosition(center, (entry.getY() - this.mChart.getYChartMin()) * factor * phaseY, sliceangle * (float)j * phaseX + this.mChart.getRotationAngle(), pOut);
                     if (dataSet.isDrawValuesEnabled()) {
                         this.drawValue(c, formatter.getRadarLabel(entry), pOut.x, pOut.y - yoffset, dataSet.getValueTextColor(j));
@@ -170,7 +170,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
         this.mWebPaint.setColor(this.mChart.getWebColor());
         this.mWebPaint.setAlpha(this.mChart.getWebAlpha());
         int xIncrements = 1 + this.mChart.getSkipWebLineCount();
-        int maxEntryCount = ((IRadarDataSet)((RadarData)this.mChart.getData()).getMaxEntryCountSet()).getEntryCount();
+        int maxEntryCount = this.mChart.getData().getMaxEntryCountSet().getEntryCount();
         MPPointF p = MPPointF.getInstance(0.0F, 0.0F);
 
         int labelCount;
@@ -188,7 +188,7 @@ public class RadarChartRenderer extends LineRadarRenderer {
         MPPointF p2out = MPPointF.getInstance(0.0F, 0.0F);
 
         for(int j = 0; j < labelCount; ++j) {
-            for(int i = 0; i < ((RadarData)this.mChart.getData()).getEntryCount(); ++i) {
+            for(int i = 0; i < this.mChart.getData().getEntryCount(); ++i) {
                 float r = (this.mChart.getYAxis().mEntries[j] - this.mChart.getYChartMin()) * factor;
                 Utils.getPosition(center, r, sliceangle * (float)i + rotationangle, p1out);
                 Utils.getPosition(center, r, sliceangle * (float)(i + 1) + rotationangle, p2out);
@@ -205,15 +205,15 @@ public class RadarChartRenderer extends LineRadarRenderer {
         float factor = this.mChart.getFactor();
         MPPointF center = this.mChart.getCenterOffsets();
         MPPointF pOut = MPPointF.getInstance(0.0F, 0.0F);
-        RadarData radarData = (RadarData)this.mChart.getData();
+        RadarData radarData = this.mChart.getData();
         Highlight[] var8 = indices;
         int var9 = indices.length;
 
         for(int var10 = 0; var10 < var9; ++var10) {
             Highlight high = var8[var10];
-            IRadarDataSet set = (IRadarDataSet)radarData.getDataSetByIndex(high.getDataSetIndex());
+            IRadarDataSet set = radarData.getDataSetByIndex(high.getDataSetIndex());
             if (set != null && set.isHighlightEnabled()) {
-                RadarEntry e = (RadarEntry)set.getEntryForIndex((int)high.getX());
+                RadarEntry e = set.getEntryForIndex((int)high.getX());
                 if (this.isInBoundsX(e, set)) {
                     float y = e.getY() - this.mChart.getYChartMin();
                     Utils.getPosition(center, y * factor * this.mAnimator.getPhaseY(), sliceangle * high.getX() * this.mAnimator.getPhaseX() + this.mChart.getRotationAngle(), pOut);

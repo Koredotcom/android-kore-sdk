@@ -19,8 +19,8 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
-    protected BarChart mChart;
-    protected Path mRenderLimitLinesPathBuffer = new Path();
+    protected final BarChart mChart;
+    protected final Path mRenderLimitLinesPathBuffer = new Path();
 
     public XAxisRendererHorizontalBarChart(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans, BarChart chart) {
         super(viewPortHandler, xAxis, trans);
@@ -161,7 +161,7 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
             limitLinePath.reset();
 
             for(int i = 0; i < limitLines.size(); ++i) {
-                LimitLine l = (LimitLine)limitLines.get(i);
+                LimitLine l = limitLines.get(i);
                 if (l.isEnabled()) {
                     int clipRestoreCount = c.save();
                     this.mLimitLineClippingRect.set(this.mViewPortHandler.getContentRect());
@@ -180,7 +180,7 @@ public class XAxisRendererHorizontalBarChart extends XAxisRenderer {
                     String label = l.getLabel();
                     if (label != null && !label.equals("")) {
                         this.mLimitLinePaint.setStyle(l.getTextStyle());
-                        this.mLimitLinePaint.setPathEffect((PathEffect)null);
+                        this.mLimitLinePaint.setPathEffect(null);
                         this.mLimitLinePaint.setColor(l.getTextColor());
                         this.mLimitLinePaint.setStrokeWidth(0.5F);
                         this.mLimitLinePaint.setTextSize(l.getTextSize());

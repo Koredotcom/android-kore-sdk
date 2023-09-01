@@ -5,16 +5,16 @@ import android.content.SharedPreferences;
 
 public class EmailSessionManager {
 
-    SharedPreferences pref;
+    final SharedPreferences pref;
 
     // Editor for Shared preferences
     SharedPreferences.Editor editor;
 
     // Context
-    Context _context;
+    final Context _context;
 
     // Shared pref mode
-    int PRIVATE_MODE = 0;
+    final int PRIVATE_MODE = 0;
     public static final String Email = "email";
 
     public static final String LAST_FEEDBACK_VISIBLE_TIME = "feedbackVisibleTime";

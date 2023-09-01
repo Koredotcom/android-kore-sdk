@@ -45,10 +45,18 @@
 
     </declare-styleable>
 
-    <declare-styleable name="TableView">
-        <attr name="tableView_columnCount" format="integer"/>
-        <attr name="tableView_headerElevation" format="integer"/>
+    <attr name="tableView_columnCount" format="integer"/>
+    <attr name="tableView_headerElevation" format="integer"/>
+
+    <declare-styleable name="TableResponsiveView">
+        <attr name="tableView_columnCount"/>
+        <attr name="tableView_headerElevation"/>
         <attr name="tableView_headerColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="TableView">
+        <attr name="tableView_columnCount"/>
+        <attr name="tableView_headerElevation"/>
     </declare-styleable>
 
 </resources>

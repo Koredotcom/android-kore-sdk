@@ -130,7 +130,7 @@ import kore.botssdk.websocket.SocketWrapper;
 public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
 
     private static final int REQ_CODE_SPEECH_INPUT = 1;
-    String LOG_TAG = ComposeFooterFragment.class.getName();
+    final String LOG_TAG = ComposeFooterFragment.class.getName();
 
     protected EditText editTextMessage;
     protected TextView sendButton;
@@ -208,19 +208,19 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void findViews(View view) {
-        mainContentLayout = (LinearLayout)view.findViewById(R.id.mainContent);
-        defaultFooterLayout = (LinearLayout) view.findViewById(R.id.default_footer);
-        editTextMessage = (EditText) view.findViewById(R.id.edtTxtMessage);
+        mainContentLayout = view.findViewById(R.id.mainContent);
+        defaultFooterLayout = view.findViewById(R.id.default_footer);
+        editTextMessage = view.findViewById(R.id.edtTxtMessage);
         editTextMessage.addTextChangedListener(composeTextWatcher);
-        sendButton = (TextView) view.findViewById(R.id.sendTv);
-        speakerText = (TextView)view.findViewById(R.id.speaker_text);
-        rec_audio_img = (ImageView) view.findViewById(R.id.rec_audio_img);
-        keyboard_img = (ImageView)view.findViewById(R.id.keyboard_image);
-        audio_speak_tts = (ImageView) view.findViewById(R.id.audio_speak_tts);
-        linearLayoutProgress = (LinearLayout) view.findViewById(R.id.linearLayoutProgress);
-        newMenuLogo = (ImageView)view.findViewById(R.id.newMenuLogo);
-        progress = (SpeechProgressView) view.findViewById(R.id.progress);
-        attachemnt= (ImageView) view.findViewById(R.id.attachemnt);
+        sendButton = view.findViewById(R.id.sendTv);
+        speakerText = view.findViewById(R.id.speaker_text);
+        rec_audio_img = view.findViewById(R.id.rec_audio_img);
+        keyboard_img = view.findViewById(R.id.keyboard_image);
+        audio_speak_tts = view.findViewById(R.id.audio_speak_tts);
+        linearLayoutProgress = view.findViewById(R.id.linearLayoutProgress);
+        newMenuLogo = view.findViewById(R.id.newMenuLogo);
+        progress = view.findViewById(R.id.progress);
+        attachemnt= view.findViewById(R.id.attachemnt);
         attachment_recycler=view.findViewById(R.id.attachment_recycler);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         int[] colors = {
@@ -232,7 +232,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         };
         progress.setColors(colors);
 
-        text_view_speech = (TextView) view.findViewById(R.id.text_view_speech);
+        text_view_speech = view.findViewById(R.id.text_view_speech);
         if(composebarAttachmentAdapter==null)
         {   composebarAttachmentAdapter=new ComposebarAttachmentAdapter(getActivity(), new AttachmentListner() {
             @Override
@@ -305,9 +305,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private void toggleTTSButton() {
         if (isTTSEnabled) {
-            audio_speak_tts.setImageResource(R.drawable.ic_volume_up_black_24dp);
+            audio_speak_tts.setImageResource(R.mipmap.ic_volume_up_black_24dp);
         } else {
-            audio_speak_tts.setImageResource(R.drawable.ic_volume_off_black_24dp);
+            audio_speak_tts.setImageResource(R.mipmap.ic_volume_off_black_24dp);
         }
     }
 
@@ -358,7 +358,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
 
 
-    TextWatcher composeTextWatcher = new TextWatcher() {
+    final TextWatcher composeTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -387,7 +387,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     };*/
 
-    View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
+    final View.OnClickListener composeFooterSendBtOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String msg = editTextMessage.getText().toString();
@@ -434,7 +434,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             }
         }
     };
-    View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
+    final View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
                 animateLayoutVisible(mainContentLayout);
@@ -442,7 +442,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     };
 
-    View.OnClickListener onVoiceModeActivated = new View.OnClickListener() {
+    final View.OnClickListener onVoiceModeActivated = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             mainContentLayout.setVisibility(View.GONE);
@@ -458,7 +458,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     };
 
-    View.OnClickListener onTTSEnableSwitchClickListener = new View.OnClickListener() {
+    final View.OnClickListener onTTSEnableSwitchClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             isTTSEnabled = !isTTSEnabled;
@@ -824,7 +824,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    ActivityResultLauncher<Intent> activityImageResultLaunch = registerForActivityResult(
+    final ActivityResultLauncher<Intent> activityImageResultLaunch = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>()
             {
@@ -840,7 +840,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
             });
 
-    ActivityResultLauncher<Intent> activityVideoResultLaunch = registerForActivityResult(
+    final ActivityResultLauncher<Intent> activityVideoResultLaunch = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>()
             {
@@ -850,7 +850,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         String fileExtn = result.getData().getStringExtra("fileExtn");
                         if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
-                            processVideoResponse((Uri) result.getData().getParcelableExtra("fileUri"), false, result.getData());
+                            processVideoResponse(result.getData().getParcelableExtra("fileUri"), false, result.getData());
                         } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
                             processImageResponse(result.getData());
                         } else {
@@ -906,7 +906,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         } else if (reqCode == REQ_FILE && resCode == RESULT_OK) {
             String fileExtn = data.getStringExtra("fileExtn");
             if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && data.getParcelableExtra("fileUri") != null) {
-                processVideoResponse((Uri) data.getParcelableExtra("fileUri"), false, data);
+                processVideoResponse(data.getParcelableExtra("fileUri"), false, data);
             } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
                 processImageResponse(data);
             } else {
@@ -1238,7 +1238,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         return overlayBitmap;
     }
 
-    Handler messagesMediaUploadAcknowledgeHandler = new Handler() {
+    final Handler messagesMediaUploadAcknowledgeHandler = new Handler() {
         @Override
         public synchronized void handleMessage(Message msg) {
             Bundle reply = msg.getData();

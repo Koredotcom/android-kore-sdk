@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 
 public class EmptyWidgetViewHolder extends RecyclerView.ViewHolder {
-    public ImageView img_icon;
-    public TextView tv_disrcription;
-    public View rAccViewRootLayout;
+    public final ImageView img_icon;
+    public final TextView tv_disrcription;
+    public final View rAccViewRootLayout;
 
     public EmptyWidgetViewHolder(@NonNull View itemView) {
         super(itemView);

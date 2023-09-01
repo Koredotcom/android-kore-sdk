@@ -51,8 +51,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     VerticalListViewActionHelper verticalListViewActionHelper;
     ArrayList<KoraUniversalSearchModel> koraUniversalSearchModel;
 
-    Context context;
-    UniversalSearchView universalSearchViewContext;
+    final Context context;
+    final UniversalSearchView universalSearchViewContext;
 
 
     public UniversalSearchViewAdapter(UniversalSearchView universalSearchView) {
@@ -69,7 +69,6 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             case EMAIl:
                 view = LayoutInflater.from(context).inflate(R.layout.us_email_layout, parent, false);
                 return new EmailViewHolder(view);
-
             case FILES:
                 view = LayoutInflater.from(context).inflate(R.layout.us_files_layout, parent, false);
                 return new FilesViewHolder(view);
@@ -82,9 +81,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             case MEETING_NOTES:
                 view = LayoutInflater.from(context).inflate(R.layout.us_meeting_layout, parent, false);
                 return new MeetingNotesViewHolder(view);
+            default:
+                view = LayoutInflater.from(context).inflate(R.layout.us_email_layout, parent, false);
+                return new EmailViewHolder(view);
         }
-
-        return null;
     }
 
     private void bindKnowledgeCollection(KnowledgeCollectionViewHolder viewHolder, final int position) {
@@ -101,7 +101,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         viewHolder.view_suggest.setVisibility(model.isSuggestive() ? View.VISIBLE : View.GONE);
         viewHolder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
         if (count > 1) {
-            viewHolder.count_view.setText(count - 1 + " more");
+            String str = (count - 1) + " more";
+            viewHolder.count_view.setText(str);
         }
 
 
@@ -123,7 +124,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         viewHolder.title_view.setText(model.getQuestion());
         viewHolder.search_view.setText(model.getName());
-        viewHolder.percent_view.setText(model.getScore() + "% Match");
+        String str = model.getScore() + "% Match";
+        viewHolder.percent_view.setText(str);
         viewHolder.sub_view.setText(model.getAnswerPayload().get(0).getText());
     }
 
@@ -140,7 +142,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
 
         holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
         if (count > 1) {
-            holder.count_view.setText(count - 1 + " more");
+            String str = (count - 1) + " more";
+            holder.count_view.setText(str);
         }
         holder.date_view.setText(DateUtils.getDateMMMDDYYYY(model.getDuration().getStart(), model.getDuration().getEnd()));
         String text = Utility.getFormatedAttendiesFromList(model.getAttendees());
@@ -172,7 +175,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_2ad082));
         holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
         if (count > 1) {
-            holder.count_view.setText(count - 1 + " more");
+            String str = (count - 1) + " more";
+            holder.count_view.setText(str);
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getSubject() != null && !TextUtils.isEmpty(model.getSubject()) ? model.getSubject() : "(No Subject)");
@@ -191,9 +195,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
             @Override
             public void onClick(View v) {
 
-                EmailModel emailModel = model;
-                if (emailModel.getButtons() == null || emailModel.getButtons().size() == 0) return;
-                BotCaourselButtonModel botCaourselButtonModel = emailModel.getButtons().get(0);
+                if (model.getButtons() == null || model.getButtons().size() == 0) return;
+                BotCaourselButtonModel botCaourselButtonModel = model.getButtons().get(0);
                 verticalListViewActionHelper.emailItemClicked(botCaourselButtonModel.getAction(), botCaourselButtonModel.getCustomData());
             }
         });
@@ -211,7 +214,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.icon_view.setBackground(Utility.changeColorOfDrawable(context, R.color.color_38c9e1));
         holder.count_view.setVisibility(count > 1 ? View.VISIBLE : View.GONE);
         if (count > 1) {
-            holder.count_view.setText(count - 1 + " more");
+            String str = count - 1 + " more";
+            holder.count_view.setText(str);
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getFileName());
@@ -234,11 +238,10 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         holder.click_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KaFileLookupModel kaFileLookupModel = model;
-                if (kaFileLookupModel.getButtons() != null && kaFileLookupModel.getButtons().size() > 0) {
-                    verticalListViewActionHelper.driveItemClicked(kaFileLookupModel.getButtons().get(0));
-                } else if (kaFileLookupModel.getWebViewLink() != null) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(kaFileLookupModel.getWebViewLink()));
+                if (model.getButtons() != null && model.getButtons().size() > 0) {
+                    verticalListViewActionHelper.driveItemClicked(model.getButtons().get(0));
+                } else if (model.getWebViewLink() != null) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getWebViewLink()));
                     context.startActivity(browserIntent);
                 }
 
@@ -267,7 +270,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         }
 
         if (count > 1) {
-            holder.count_view.setText(count - 1 + " more");
+            String str = count - 1 + " more";
+            holder.count_view.setText(str);
         }
         holder.root_title_view.setText(title);
         holder.title.setText(model.getTitle());
@@ -394,7 +398,8 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     @Override
     public void setData(ArrayList koraUniversalSearchModel) {
         this.koraUniversalSearchModel = koraUniversalSearchModel;
-        notifyDataSetChanged();
+        if(koraUniversalSearchModel != null && koraUniversalSearchModel.size() - 1 > 0)
+            notifyItemRangeChanged(0, koraUniversalSearchModel.size() - 1);
     }
 
     @Override
@@ -407,11 +412,17 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 
-    public class EmailViewHolder extends RecyclerView.ViewHolder {
+    public static class EmailViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, date_view, from, body, icon_view, root_title_view, count_view;
-        ImageView image;
-        View click_view;
+        final TextView title;
+        final TextView date_view;
+        final TextView from;
+        final TextView body;
+        final TextView icon_view;
+        final TextView root_title_view;
+        final TextView count_view;
+        final ImageView image;
+        final View click_view;
 
         public EmailViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -429,11 +440,16 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
     }
 
 
-    public class FilesViewHolder extends RecyclerView.ViewHolder {
+    public static class FilesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView icon_view, root_title_view, count_view, title, sharedBy, last_edited;
-        ImageView image;
-        View click_view;
+        final TextView icon_view;
+        final TextView root_title_view;
+        final TextView count_view;
+        final TextView title;
+        final TextView sharedBy;
+        final TextView last_edited;
+        final ImageView image;
+        final View click_view;
 
         public FilesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -450,11 +466,20 @@ public class UniversalSearchViewAdapter extends RecyclerView.Adapter implements 
         }
     }
 
-    public class KnowledgeViewHolder extends RecyclerView.ViewHolder {
+    public static class KnowledgeViewHolder extends RecyclerView.ViewHolder {
 
-        TextView icon_view, root_title_view, count_view, title, time, description, eye_count, chat_count, like_count, downvote_count;
-        ImageView link_image;
-        View click_view;
+        final TextView icon_view;
+        final TextView root_title_view;
+        final TextView count_view;
+        final TextView title;
+        final TextView time;
+        final TextView description;
+        final TextView eye_count;
+        final TextView chat_count;
+        final TextView like_count;
+        final TextView downvote_count;
+        final ImageView link_image;
+        final View click_view;
 
         public KnowledgeViewHolder(@NonNull View itemView) {
             super(itemView);

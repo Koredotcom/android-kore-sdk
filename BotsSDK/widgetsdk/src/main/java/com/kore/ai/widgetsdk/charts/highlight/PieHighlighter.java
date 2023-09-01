@@ -11,7 +11,7 @@ public class PieHighlighter extends PieRadarHighlighter<PieChart> {
     }
 
     protected com.kore.ai.widgetsdk.charts.highlight.Highlight getClosestHighlight(int index, float x, float y) {
-        IPieDataSet set = ((PieData)((PieChart)this.mChart).getData()).getDataSet();
+        IPieDataSet set = this.mChart.getData().getDataSet();
         Entry entry = set.getEntryForIndex(index);
         return new Highlight((float)index, entry.getY(), x, y, 0, set.getAxisDependency());
     }

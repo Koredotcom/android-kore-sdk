@@ -73,11 +73,11 @@ public class CarouselItemView extends ViewGroup {
     }
 
     void findViews(View view) {
-        carouselItemRoot = (RelativeLayout) view.findViewById(R.id.carousel_item_root);
-        carouselItemImage = (ImageView) view.findViewById(R.id.carousel_item_image);
-        carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
-        carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
-        carouselButtonListview = (ListView) view.findViewById(R.id.carousel_button_listview);
+        carouselItemRoot = view.findViewById(R.id.carousel_item_root);
+        carouselItemImage = view.findViewById(R.id.carousel_item_image);
+        carouselItemTitle = view.findViewById(R.id.carousel_item_title);
+        carouselItemSubTitle = view.findViewById(R.id.carousel_item_subtitle);
+        carouselButtonListview = view.findViewById(R.id.carousel_button_listview);
     }
 
     int carouselPosition;

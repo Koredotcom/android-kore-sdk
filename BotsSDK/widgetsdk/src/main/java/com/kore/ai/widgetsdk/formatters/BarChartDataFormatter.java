@@ -29,7 +29,7 @@ public class BarChartDataFormatter extends ValueFormatter implements IAxisValueF
     }
 
     public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-        return this.makePretty((double)value) + this.mText;
+        return this.makePretty(value) + this.mText;
     }
 
     public String getFormattedValue(float value, AxisBase axis) {

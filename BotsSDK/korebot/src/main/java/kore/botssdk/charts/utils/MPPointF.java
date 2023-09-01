@@ -20,18 +20,18 @@ public class MPPointF extends ObjectPool.Poolable {
     }
 
     public static MPPointF getInstance(float x, float y) {
-        MPPointF result = (MPPointF)pool.get();
+        MPPointF result = pool.get();
         result.x = x;
         result.y = y;
         return result;
     }
 
     public static MPPointF getInstance() {
-        return (MPPointF)pool.get();
+        return pool.get();
     }
 
     public static MPPointF getInstance(MPPointF copy) {
-        MPPointF result = (MPPointF)pool.get();
+        MPPointF result = pool.get();
         result.x = copy.x;
         result.y = copy.y;
         return result;

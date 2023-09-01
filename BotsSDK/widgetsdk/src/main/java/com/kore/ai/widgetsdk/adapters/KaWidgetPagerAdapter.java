@@ -43,21 +43,18 @@ public class KaWidgetPagerAdapter extends FragmentPagerAdapter{
                     return null;
             }
         }else*/ /*if(ACMEngine.PAGER_MODE == ACMEngine.MODE_ONLY_CHAT){*/
-            switch (position) {
-                /*case 0:
+            /*case 0:
                     return KaWidgetFragment.newInstance();*/
-//                case 0:
-//                    KaChatContentFragment instance = KaChatContentFragment.newInstance();
-////                    instance.setComposeFooterInterface((ComposeBarActivity) mContext);
-////                    instance.setInvokeGenericWebViewInterface((ComposeBarActivity) (mContext));
-//                    instance.setShouldShowHelp(shouldShowHome);
-//                    return instance;
-                /*case 2:
+        //                case 0:
+        //                    KaChatContentFragment instance = KaChatContentFragment.newInstance();
+        ////                    instance.setComposeFooterInterface((ComposeBarActivity) mContext);
+        ////                    instance.setInvokeGenericWebViewInterface((ComposeBarActivity) (mContext));
+        //                    instance.setShouldShowHelp(shouldShowHome);
+        //                    return instance;
+            /*case 2:
                     return KaKnowledgeRightWidget.newInstance();*/
-                default:
-                    return null;
-            }
-        /*}else if(ACMEngine.PAGER_MODE == ACMEngine.MODE_CHAT_RIGHT){
+        return null;
+/*}else if(ACMEngine.PAGER_MODE == ACMEngine.MODE_CHAT_RIGHT){
             switch (position) {
                 *//*case 0:
                     return KaWidgetFragment.newInstance();*//*

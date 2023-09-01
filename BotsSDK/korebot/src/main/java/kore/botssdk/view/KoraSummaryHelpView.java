@@ -86,7 +86,7 @@ public class KoraSummaryHelpView extends ViewGroup implements VerticalListViewAc
         dp1 = (int) DimensionUtil.dp1;
         summaryViewBinding.setViewBase(this);
 
-        summaryList = ((RecyclerView)findViewById(R.id.summary_items_list));
+        summaryList = findViewById(R.id.summary_items_list);
         myRecyclerViewAdapter = new KoraSummaryHelpRecyclerAdapter(getContext());
         myRecyclerViewAdapter.setExpanded(false);
         myRecyclerViewAdapter.setVerticalListViewActionHelper(this);

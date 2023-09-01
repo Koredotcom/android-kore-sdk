@@ -24,8 +24,8 @@ import java.util.List;
 
 public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHolder> {
 
-    Context context;
-    List<Widget.Action> model;
+    final Context context;
+    final List<Widget.Action> model;
 
     public String getSkillName() {
         return skillName;

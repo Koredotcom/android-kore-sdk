@@ -17,8 +17,8 @@ import java.util.ArrayList;
  */
 
 public class AttachmentOptionsAdapter extends BaseAdapter {
-    ArrayList<String> data;
-    Context mContext;
+    final ArrayList<String> data;
+    final Context mContext;
 
     public AttachmentOptionsAdapter(Context mContext, ArrayList<String> data) {
         this.data = data;

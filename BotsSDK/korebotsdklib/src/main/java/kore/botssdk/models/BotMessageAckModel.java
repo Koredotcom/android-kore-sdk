@@ -3,9 +3,9 @@ package kore.botssdk.models;
 public class BotMessageAckModel
 {
     private String clientMessageId;
-    private String type = "ack";
+    private final String type = "ack";
     private String replyto;
-    private String status = "delivered";
+    private final String status = "delivered";
     private String key;
     private String id;
 

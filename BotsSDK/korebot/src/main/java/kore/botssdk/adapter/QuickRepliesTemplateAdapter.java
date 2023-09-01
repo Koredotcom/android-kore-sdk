@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,46 +13,32 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.QuickReplyTemplate;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
 
 public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
 
     private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
-    Context context;
-    private final LayoutInflater layoutInflater;
+    final Context context;
     private final RecyclerView parentRecyclerView;
-
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final int quickWidgetColor;
-    private final int fillColor;
     private final int quickReplyFontColor;
-    private final int dp1;
 
     public QuickRepliesTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
-        layoutInflater = LayoutInflater.from(context);
-        quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
-        fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         quickReplyFontColor = Color.parseColor("#3F51B5");
-        dp1= (int) AppControl.getInstance(context).getDimensionUtil().dp1;
     }
 
     @NonNull
     @Override
     public QuickReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View convertView = layoutInflater.inflate(R.layout.quick_replies_item_cell, null);
-//        GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground();
-//        gradientDrawable.setStroke(dp1, quickWidgetColor);
-//        gradientDrawable.setColor(fillColor);
+        View convertView = View.inflate(context, R.layout.quick_replies_item_cell, null);
         QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
         viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);
         return viewHolder;
@@ -75,11 +60,11 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
         holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position =  parentRecyclerView.getChildPosition(v);
+                int position =  parentRecyclerView.getChildAdapterPosition(v);
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
-                    String quickReplyPayload = null;
+                    String quickReplyPayload;
                     try {
                         quickReplyPayload = (String) quickReplyTemplate.getPayload();
                     }catch (Exception e)

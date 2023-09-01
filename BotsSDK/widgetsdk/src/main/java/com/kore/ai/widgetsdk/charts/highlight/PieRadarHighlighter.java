@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PieRadarHighlighter<T extends PieRadarChartBase> implements IHighlighter {
-    protected T mChart;
-    protected List<Highlight> mHighlightBuffer = new ArrayList();
+    protected final T mChart;
+    protected final List<Highlight> mHighlightBuffer = new ArrayList();
 
     public PieRadarHighlighter(T chart) {
         this.mChart = chart;

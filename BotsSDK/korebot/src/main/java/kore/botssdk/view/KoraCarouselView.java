@@ -87,7 +87,7 @@ public class KoraCarouselView extends ViewGroup {
     private void init() {
         dp1 = DimensionUtil.dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
-        carousalView = (HeightAdjustableViewPager) view.findViewById(R.id.carouselViewpager);
+        carousalView = view.findViewById(R.id.carouselViewpager);
 //        carousalView.setAddExtraHeight(true);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
 

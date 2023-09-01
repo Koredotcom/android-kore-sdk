@@ -52,8 +52,8 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
 
     protected void calcMinMax() {
         super.calcMinMax();
-        this.mYAxis.calculate(((RadarData)this.mData).getYMin(YAxis.AxisDependency.LEFT), ((RadarData)this.mData).getYMax(YAxis.AxisDependency.LEFT));
-        this.mXAxis.calculate(0.0F, (float)((IRadarDataSet)((RadarData)this.mData).getMaxEntryCountSet()).getEntryCount());
+        this.mYAxis.calculate(this.mData.getYMin(YAxis.AxisDependency.LEFT), this.mData.getYMax(YAxis.AxisDependency.LEFT));
+        this.mXAxis.calculate(0.0F, (float) this.mData.getMaxEntryCountSet().getEntryCount());
     }
 
     public void notifyDataSetChanged() {
@@ -108,13 +108,13 @@ public class RadarChart extends PieRadarChartBase<RadarData> {
     }
 
     public float getSliceAngle() {
-        return 360.0F / (float)((IRadarDataSet)((RadarData)this.mData).getMaxEntryCountSet()).getEntryCount();
+        return 360.0F / (float) this.mData.getMaxEntryCountSet().getEntryCount();
     }
 
     public int getIndexForAngle(float angle) {
         float a = Utils.getNormalizedAngle(angle - this.getRotationAngle());
         float sliceangle = this.getSliceAngle();
-        int max = ((IRadarDataSet)((RadarData)this.mData).getMaxEntryCountSet()).getEntryCount();
+        int max = this.mData.getMaxEntryCountSet().getEntryCount();
         int index = 0;
 
         for(int i = 0; i < max; ++i) {

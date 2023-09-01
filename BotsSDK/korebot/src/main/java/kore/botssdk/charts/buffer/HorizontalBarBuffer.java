@@ -13,7 +13,7 @@ public class HorizontalBarBuffer extends BarBuffer {
         float barWidthHalf = this.mBarWidth / 2.0F;
 
         for(int i = 0; (float)i < size; ++i) {
-            BarEntry e = (BarEntry)data.getEntryForIndex(i);
+            BarEntry e = data.getEntryForIndex(i);
             if (e != null) {
                 float x = e.getX();
                 float y = e.getY();
@@ -24,10 +24,8 @@ public class HorizontalBarBuffer extends BarBuffer {
                 if (this.mContainsStacks && vals != null) {
                     bottom = 0.0F;
                     top = -e.getNegativeSum();
-                    yStart = 0.0F;
 
-                    for(int k = 0; k < vals.length; ++k) {
-                        float value = vals[k];
+                    for (float value : vals) {
                         if (value >= 0.0F) {
                             y = bottom;
                             yStart = bottom + value;
@@ -43,11 +41,11 @@ public class HorizontalBarBuffer extends BarBuffer {
                         float left;
                         float right;
                         if (this.mInverted) {
-                            left = y >= yStart ? y : yStart;
-                            right = y <= yStart ? y : yStart;
+                            left = Math.max(y, yStart);
+                            right = Math.min(y, yStart);
                         } else {
-                            right = y >= yStart ? y : yStart;
-                            left = y <= yStart ? y : yStart;
+                            right = Math.max(y, yStart);
+                            left = Math.min(y, yStart);
                         }
 
                         right *= this.phaseY;
@@ -59,11 +57,11 @@ public class HorizontalBarBuffer extends BarBuffer {
                     top = x + barWidthHalf;
                     float right;
                     if (this.mInverted) {
-                        yStart = y >= 0.0F ? y : 0.0F;
-                        right = y <= 0.0F ? y : 0.0F;
+                        yStart = Math.max(y, 0.0F);
+                        right = Math.min(y, 0.0F);
                     } else {
-                        right = y >= 0.0F ? y : 0.0F;
-                        yStart = y <= 0.0F ? y : 0.0F;
+                        right = Math.max(y, 0.0F);
+                        yStart = Math.min(y, 0.0F);
                     }
 
                     if (right > 0.0F) {

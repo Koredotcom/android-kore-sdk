@@ -143,8 +143,8 @@ public class RestResponse {
     public static class BotResponses extends ArrayList<BotResponse>{}
 
     public static class Meta{
-        public String timezone;
-        public String locale;
+        public final String timezone;
+        public final String locale;
         public Meta(String timezone, String locale){
             this.timezone = timezone;
             this.locale = locale;

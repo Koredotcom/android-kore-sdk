@@ -1,5 +1,6 @@
 package com.kore.ai.widgetsdk.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,10 +17,11 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.kora.ai.widgetsdk.R;
 
-
+@SuppressLint("SetJavaScriptEnabled")
 public class GenericWebViewActivity extends BotAppCompactActivity {
 
     String actionbarTitle;
@@ -32,25 +34,27 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generic_webview_layout);
         Bundle receivedBundle = getIntent().getExtras();
-        url = receivedBundle.getString("url");
-        actionbarTitle = receivedBundle.getString("header");
+        if(receivedBundle != null)
+        {
+            url = receivedBundle.getString("url");
+            actionbarTitle = receivedBundle.getString("header");
+        }
         setUpActionBar();
-        webview = (WebView) findViewById(R.id.webView);
+        webview = findViewById(R.id.webView);
         mProgressBar = findViewById(R.id.mProgress);
         loadUrl();
     }
 
 
     protected void loadUrl() {
-
         webview.getSettings().setJavaScriptEnabled(true);
         webview.getSettings().setUseWideViewPort(true);
         webview.addJavascriptInterface(new WebAppInterface(this), "Android");
-       webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
-
+        webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -86,22 +90,13 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                         + consoleMessage.sourceId());
                 return super.onConsoleMessage(consoleMessage);
             }
-            /*@Override
-            public void onProgressChanged(WebView view, int newProgress) {
-                setTitle("Loading... " +newProgress +"%");
-//                KaGenericWebViewActivity.this.setProgress(newProgress * 100);
-
-                if(newProgress == 100)
-                    setTitle(R.string.app_name);
-            }*/
-
         });
 
         webview.loadUrl(url);
     }
 
-    public class WebAppInterface {
-        Context mContext;
+    public static class WebAppInterface {
+        final Context mContext;
 
         WebAppInterface(Context context) {
             mContext = context;
@@ -112,26 +107,19 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
             Log.d(this.getClass().getSimpleName(), "The response data is " + responseData);
         }
-
-        @JavascriptInterface
-        public void NativeBridgeDown() {
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        //Go back to Login screen
-        //Push right animation used
-        super.onBackPressed();
     }
 
     private void setUpActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled (true);
-        actionBar.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
-        actionBar.setTitle(actionbarTitle);
+
+        if(actionBar != null)
+        {
+            actionBar.setDisplayHomeAsUpEnabled (true);
+            actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_arrow_back_black_24dp, getTheme()));
+            actionBar.setTitle(actionbarTitle);
+        }
 
     }
 
@@ -148,14 +136,13 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            switch (keyCode) {
-                case KeyEvent.KEYCODE_BACK:
-                    if (webview.canGoBack()) {
-                        webview.goBack();
-                    } else {
-                        finish();
-                    }
-                    return true;
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (webview.canGoBack()) {
+                    webview.goBack();
+                } else {
+                    finish();
+                }
+                return true;
             }
 
         }

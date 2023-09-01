@@ -179,7 +179,7 @@ public class WelcomeSummaryRecyclerAdapter extends RecyclerView.Adapter implemen
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public WelcomeSummaryListItemBinding itemRowBinding;
+        public final WelcomeSummaryListItemBinding itemRowBinding;
 
         public ViewHolder(WelcomeSummaryListItemBinding itemRowBinding) {
             super(itemRowBinding.getRoot());

@@ -158,7 +158,7 @@ public class LinkTemplateView extends LinearLayout {
         FileOutputStream os = null;
         try {
             fileData = fileData.substring(fileData.indexOf(",") + 1);
-            byte[] pdfAsBytes = Base64.decode(String.valueOf(fileData), 0);
+            byte[] pdfAsBytes = Base64.decode(fileData, 0);
             InputStream isActual = new ByteArrayInputStream(pdfAsBytes);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 savePDFFile(context, isActual, fileName);

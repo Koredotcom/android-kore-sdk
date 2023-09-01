@@ -32,7 +32,7 @@ public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
         if (setCount <= 1) {
             throw new RuntimeException("BarData needs to hold at least 2 BarDataSets to allow grouping.");
         } else {
-            IBarDataSet max = (IBarDataSet)this.getMaxEntryCountSet();
+            IBarDataSet max = this.getMaxEntryCountSet();
             int maxEntryCount = max.getEntryCount();
             float groupSpaceWidthHalf = groupSpace / 2.0F;
             float barSpaceHalf = barSpace / 2.0F;
@@ -48,7 +48,7 @@ public class BarData extends BarLineScatterCandleBubbleData<IBarDataSet> {
                     fromX += barSpaceHalf;
                     fromX += barWidthHalf;
                     if (i < set.getEntryCount()) {
-                        BarEntry entry = (BarEntry)set.getEntryForIndex(i);
+                        BarEntry entry = set.getEntryForIndex(i);
                         if (entry != null) {
                             entry.setX(fromX);
                         }

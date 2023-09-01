@@ -25,14 +25,10 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.MeetingSlotsView;
 
 public class MeetingSlotsButtonAdapter extends BaseAdapter {
-
-    String LOG_TAG = MeetingSlotsButtonAdapter.class.getSimpleName();
-
     private ArrayList<MeetingSlotModel.Slot> meetingSlotModels = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
-    private final LayoutInflater ownLayoutInflator;
-    Context context;
-    MeetingSlotsView meetSlotView;
+    final Context context;
+    final MeetingSlotsView meetSlotView;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -43,10 +39,9 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     }
 
     private boolean isEnabled;
-    Gson gson = new Gson();
+    final Gson gson = new Gson();
 
     public MeetingSlotsButtonAdapter(Context context, MeetingSlotsView meetingSlotsView) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.meetSlotView = meetingSlotsView;
     }
@@ -78,7 +73,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.meeting_slot_button, null);
+            convertView = View.inflate(context, R.layout.meeting_slot_button, null);
             KaFontUtils.applyCustomFont(context,convertView);
         }
 
@@ -131,7 +126,7 @@ public class MeetingSlotsButtonAdapter extends BaseAdapter {
 
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
-        holder.textView = (TextView) view.findViewById(R.id.text_view);
+        holder.textView = view.findViewById(R.id.text_view);
         ((GradientDrawable) holder.textView.getBackground()).setColor(context.getResources().getColor(isEnabled ?R.color.splash_color : R.color.color_a7b0be));
          view.setTag(holder);
     }

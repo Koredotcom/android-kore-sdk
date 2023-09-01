@@ -9,7 +9,7 @@ import android.content.res.Resources;
  */
 public class DimensionUtil {
 
-    Context context;
+    final Context context;
     public static float dp1;
     public float screenHeight = 0;
     public float screenWidth = 0;

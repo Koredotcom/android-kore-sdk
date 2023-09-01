@@ -65,11 +65,11 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvButton;
+        final TextView tvButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.tvButton = (TextView) itemView.findViewById(R.id.tvButton);
+            this.tvButton = itemView.findViewById(R.id.tvButton);
         }
     }
 }

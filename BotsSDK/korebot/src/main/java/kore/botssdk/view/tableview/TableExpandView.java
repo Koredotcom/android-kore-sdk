@@ -1,9 +1,7 @@
 package kore.botssdk.view.tableview;
 
-import android.animation.Animator;
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -16,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
@@ -34,18 +33,9 @@ import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
 public class TableExpandView<T> extends LinearLayout {
-
-    private final String LOG_TAG = TableView.class.getName();
-
     private final int DEFAULT_COLUMN_COUNT = 4;
     private final int DEFAULT_HEADER_ELEVATION = 1;
-//    private static final int DEFAULT_HEADER_COLOR = 0xFFCCCCCC;
-
-    /*private final Set<TableDataLongClickListener<T>> dataLongClickListeners = new HashSet<>();
-    private final Set<TableDataClickListener<T>> dataClickListeners = new HashSet<>();
-    private final Set<OnScrollListener> onScrollListeners = new HashSet<>();*/
     private final LayoutTransition layoutTransition;
-
     private TableDataRowBackgroundProvider<? super T> dataRowBackgroundProvider =
             TableDataRowBackgroundProviders.similarRowColor(0x00000000);
     private TableColumnModel columnModel;
@@ -55,7 +45,7 @@ public class TableExpandView<T> extends LinearLayout {
     private TableHeaderAdapter tableHeaderAdapter;
     private int lastPosition = -1;
     private int headerElevation;
-    private String propertyName = "y";
+    private final String propertyName = "y";
 
     /**
      * Creates a new TableView with the given context.\n
@@ -91,7 +81,7 @@ public class TableExpandView<T> extends LinearLayout {
         setAttributes(attributes);
         setupTableHeaderView(attributes);
         setupTableDataView(attributes, styleAttributes);
-        setBackground(context.getDrawable(R.drawable.round_rect));
+        setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.round_rect, context.getTheme()));
         layoutTransition = new LayoutTransition();
     }
 
@@ -104,7 +94,7 @@ public class TableExpandView<T> extends LinearLayout {
         this.tableHeaderView = headerView;
 
         tableHeaderView.setAdapter(tableHeaderAdapter);
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         tableHeaderView.setId(R.id.table_header_view);
 
         if (getChildCount() == 2) {
@@ -133,24 +123,8 @@ public class TableExpandView<T> extends LinearLayout {
      */
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
-                moveInAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
-                moveOutAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             removeView(tableHeaderView);
         }
     }
@@ -419,9 +393,8 @@ public class TableExpandView<T> extends LinearLayout {
         if(dataAdapter != null) {
             tableDataAdapter = dataAdapter;
             tableDataAdapter.setColumnModel(columnModel);
-//            tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
-            tableDataView.setChildDivider(getResources().getDrawable(R.color.transparent_card));
-            tableDataView.setDivider(getResources().getDrawable(R.color.transparent_card));
+            tableDataView.setChildDivider(ResourcesCompat.getDrawable(getContext().getResources(), R.color.transparent_card, getContext().getTheme()));
+            tableDataView.setDivider(ResourcesCompat.getDrawable(getContext().getResources(), R.color.transparent_card, getContext().getTheme()));
             tableDataView.setDividerHeight(2);
             tableDataView.setAdapter(tableDataAdapter);
 
@@ -438,10 +411,7 @@ public class TableExpandView<T> extends LinearLayout {
             });
 
             forceRefresh();
-        }/*else{
-            tableDataView.setAdapter(null);
-            tableHeaderView.setAdapter(null);
-        }*/
+        }
     }
 
     /**
@@ -539,11 +509,9 @@ public class TableExpandView<T> extends LinearLayout {
             tableDataAdapter.notifyDataSetChanged();
         }
     }
-
+    @SuppressLint("CustomViewStyleable")
     private void setAttributes(final AttributeSet attributes) {
         final TypedArray styledAttributes = getContext().obtainStyledAttributes(attributes, R.styleable.TableView);
-
-//        headerColor = styledAttributes.getInt(R.styleable.TableView_tableView_headerColor, DEFAULT_HEADER_COLOR);
         headerElevation = styledAttributes.getInt(R.styleable.TableView_tableView_headerElevation, DEFAULT_HEADER_ELEVATION);
         final int columnCount = styledAttributes.getInt(R.styleable.TableView_tableView_columnCount, DEFAULT_COLUMN_COUNT);
         columnModel = new TableColumnWeightModel(columnCount);
@@ -559,7 +527,7 @@ public class TableExpandView<T> extends LinearLayout {
 //        }
 
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         setHeaderView(tableHeaderView);
     }
 

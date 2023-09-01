@@ -32,9 +32,9 @@ public class SkillWidgetView extends ViewGroup {
     private final String name;
     private TextView header;
     private RelativeLayout rootView;
-    WidgetViewMoreEnum widgetViewMoreEnum;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
     private TextView pin_view,panel_name_view;
-    Context context;
+    final Context context;
     private UserData userData;
     private AuthData authData;
     public SkillWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {

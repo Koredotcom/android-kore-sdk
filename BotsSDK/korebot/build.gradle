@@ -59,7 +59,7 @@ dependencies {
         exclude module: 'com.github.PhilJay'
     }
 
-    implementation 'com.google.android.material:material:1.11.0-alpha01'
+    implementation 'com.google.android.material:material:1.11.0-alpha02'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.makeramen:roundedimageview:2.2.0'
@@ -69,9 +69,10 @@ dependencies {
     implementation ('net.gotev:speech:1.6.2'){
         exclude module: 'support-v4'
     }
-    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
-    implementation 'org.apache.httpcomponents:httpcore:4.4.6'
-    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
+
+//    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+//    implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+//    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
 
     implementation 'com.j256.ormlite:ormlite-android:4.48'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
@@ -83,4 +84,8 @@ dependencies {
     //Firebase Cloud Messaging
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:23.2.1'
+
+    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.6'
+    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
 }

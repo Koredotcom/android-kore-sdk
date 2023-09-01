@@ -31,6 +31,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
@@ -69,11 +70,11 @@ public class BotBeneficiaryTemplateView extends ViewGroup implements ListClickab
 
     private void init(Context context) {
         view =  LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list_view_template, this, true);
-        botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
-        autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
-        botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
-        workBenchListViewButton = (TextView) findViewById(R.id.workBenchListViewButton);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        botCustomListRoot = findViewById(R.id.botCustomListRoot);
+        autoExpandListView = findViewById(R.id.botCustomListView);
+        botCustomListViewButton = findViewById(R.id.botCustomListViewButton);
+        workBenchListViewButton = findViewById(R.id.workBenchListViewButton);
+        dp1 = (int) DimensionUtil.dp1;
         KaFontUtils.applyCustomFont(getContext(), view);
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);

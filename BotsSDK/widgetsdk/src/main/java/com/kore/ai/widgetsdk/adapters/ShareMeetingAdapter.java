@@ -23,10 +23,10 @@ import java.util.List;
 
 public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapter.ShareViewHolder> {
 
-    KaShareMeetingActivity activity;
+    final KaShareMeetingActivity activity;
     List<CalEventsTemplateModel.Attendee> attendeesList;
 
-    boolean isCheckBoxRequired;
+    final boolean isCheckBoxRequired;
 //    boolean isAllSwitchSelected;
 
     private final HashMap<String, CalEventsTemplateModel.Attendee> initialSharedAttendeesList = new HashMap<>();
@@ -202,9 +202,9 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
 
     class ShareViewHolder extends RecyclerView.ViewHolder {
 
-        TextView user_name;
-        CheckBox check_user;
-        ProfileTextView profile_name;
+        final TextView user_name;
+        final CheckBox check_user;
+        final ProfileTextView profile_name;
 
         public ShareViewHolder(@NonNull View itemView) {
             super(itemView);

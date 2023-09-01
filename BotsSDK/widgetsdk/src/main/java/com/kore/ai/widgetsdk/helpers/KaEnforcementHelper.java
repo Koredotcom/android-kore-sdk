@@ -345,10 +345,8 @@ public class KaEnforcementHelper {
         if(context == null)
             return;
 
-        switch (errCode) {
-            case KaAuthErrorCodes.INSUFFICIENT_SEATS_IN_SPACE:
-                msg = context.getResources().getString(R.string.ka_no_licences_available_msg);
-                break;
+        if (KaAuthErrorCodes.INSUFFICIENT_SEATS_IN_SPACE.equals(errCode)) {
+            msg = context.getResources().getString(R.string.ka_no_licences_available_msg);
         }
 
         if(msg != null) {

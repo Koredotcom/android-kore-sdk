@@ -25,14 +25,12 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<ContentModel> contentModels;
-    private final LayoutInflater layoutInflater;
     private final SharedPreferences sharedPreferences;
 
     protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {
         this.context = context;
         this.contentModels = contentModels;
-        this.layoutInflater = LayoutInflater.from(context);
         this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
     @Override
@@ -58,7 +56,7 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
     {
         DetailsViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.listwidget_details_item, null);
+            convertView = View.inflate(context, R.layout.listwidget_details_item, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new DetailsViewHolder();
             holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);

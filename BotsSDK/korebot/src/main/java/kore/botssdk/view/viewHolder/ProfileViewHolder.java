@@ -8,12 +8,12 @@ import kore.botssdk.R;
 import kore.botssdk.view.ProfileTextView;
 
 public class ProfileViewHolder extends RecyclerView.ViewHolder{
-    ProfileTextView profileView;
+    final ProfileTextView profileView;
 
 
     public ProfileViewHolder(View view) {
         super(view);
-        profileView = (ProfileTextView) view.findViewById(R.id.profile_view);
+        profileView = view.findViewById(R.id.profile_view);
     }
 
     public ProfileTextView getProfileView() {

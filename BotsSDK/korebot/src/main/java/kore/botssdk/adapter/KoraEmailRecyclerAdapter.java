@@ -91,7 +91,7 @@ public class KoraEmailRecyclerAdapter extends RecyclerView.Adapter<KoraEmailRecy
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        EmailLookupViewBinding emailLookupViewBinding;
+        final EmailLookupViewBinding emailLookupViewBinding;
 
         public ViewHolder(@NonNull EmailLookupViewBinding itemView) {
             super(itemView.getRoot());

@@ -33,7 +33,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
     private AttendeeSlotSelectionViewBinding attendeeSlotSelectionViewBinding;
 
     float dp1;
-    Gson gson = new Gson();
+    final Gson gson = new Gson();
 
     public AttendeeSlotSelectionView(Context context) {
         super(context);

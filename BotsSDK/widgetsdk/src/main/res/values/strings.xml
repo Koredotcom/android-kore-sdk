@@ -613,4 +613,5 @@
     <string name="time_stamp_years">y</string>
     <string name="view_more">View more</string>
     <string name="show_more"><u>Show more</u></string>
+    <string name="please_wait">Please wait...</string>
 </resources>

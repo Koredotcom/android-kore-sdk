@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.models.BotFormFieldButtonModel;
 import kore.botssdk.models.BotFormTemplateModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -23,7 +21,6 @@ import kore.botssdk.utils.StringUtils;
 public class BotFormTemplateAdapter extends BaseAdapter {
 
     private ComposeFooterInterface composeFooterInterface;
-    private final LayoutInflater ownLayoutInflator;
     private final Context context;
     private ArrayList<BotFormTemplateModel> arrBotFormTemplateModels;
     private String textColor;
@@ -43,7 +40,6 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     }
 
     public BotFormTemplateAdapter(Context context, ArrayList<BotFormTemplateModel> arrBotFormTemplateModels) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.arrBotFormTemplateModels = arrBotFormTemplateModels;
     }
@@ -77,7 +73,7 @@ public class BotFormTemplateAdapter extends BaseAdapter {
         ViewHolder holder = null;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = ownLayoutInflator.inflate(R.layout.form_templete_cell_view, null);
+            convertView = View.inflate(context, R.layout.form_templete_cell_view, null);
             holder.tvFormFieldTitle = convertView.findViewById(R.id.tvFormFieldTitle);
             holder.btfieldButton = convertView.findViewById(R.id.btfieldButton);
             holder.edtFormInput = convertView.findViewById(R.id.edtFormInput);
@@ -99,41 +95,19 @@ public class BotFormTemplateAdapter extends BaseAdapter {
         final BotFormTemplateModel item = getItem(position);
         holder.btfieldButton.setTag(item);
 
-        if(((BotFormFieldButtonModel) item.getFieldButton()) != null)
-            holder.btfieldButton.setText(((BotFormFieldButtonModel) item.getFieldButton()).getTitle());
+        if(item.getFieldButton() != null)
+            holder.btfieldButton.setText(item.getFieldButton().getTitle());
         else
-            holder.btfieldButton.setText("Ok");
+            holder.btfieldButton.setText(R.string.ka_ok);
 
-        holder.tvFormFieldTitle.setText(item.getLabel()+" : ");
+        String str = item.getLabel()+" : ";
+        holder.tvFormFieldTitle.setText(str);
         holder.edtFormInput.setHint(item.getPlaceHolder());
 
         if(!StringUtils.isNullOrEmpty(textColor))
         {
             holder.tvFormFieldTitle.setTextColor(Color.parseColor(textColor));
         }
-
-//        holder.btfieldButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (composeFooterInterface != null && isEnabled)
-//                {
-//                    StringBuffer sb = new StringBuffer();
-//                    sb.append(holder.edtFormInput.getText().toString());
-//                    composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(),false);
-//                }
-//            }
-//        });
-    }
-
-    private String getDotMessage(String strPassword)
-    {
-//        self.replacingOccurrences(of: "[A-Za-z0-9 !\"#$%&'()*+,-./:;<=>?@\\[\\\\\\]^_`{|}~]", with: "•", options: .regularExpression, range: nil)
-        String strDots = "";
-        for (int i = 0; i< strPassword.length(); i++)
-        {
-            strDots = strDots+"•";
-        }
-        return strDots;
     }
 
     public void setBotFormTemplates(ArrayList<BotFormTemplateModel> arrBotFormTemplateModels) {
@@ -142,15 +116,6 @@ public class BotFormTemplateAdapter extends BaseAdapter {
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-    }
-
-    private void initializeViewHolder(View view, int type) {
-        ViewHolder holder = new ViewHolder();
-
-        holder.tvFormFieldTitle = view.findViewById(R.id.tvFormFieldTitle);
-        holder.btfieldButton = view.findViewById(R.id.btfieldButton);
-        holder.edtFormInput = view.findViewById(R.id.edtFormInput);
-        view.setTag(holder);
     }
 
     private static class ViewHolder {

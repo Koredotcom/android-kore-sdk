@@ -69,9 +69,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
-        popUpView = LayoutInflater.from(context).inflate(R.layout.advancelist_drop_down_popup, null);
+        popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        btnsPopUpView = LayoutInflater.from(context).inflate(R.layout.advancelist_drop_down_popup, null);
+        btnsPopUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         btnsPopUpWindow = new PopupWindow(btnsPopUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
     }
 
@@ -117,7 +117,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.advancedlist_cell, null);
+            convertView = View.inflate(context, R.layout.advancedlist_cell, null);
         }
 
         if (convertView.getTag() == null) {

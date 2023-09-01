@@ -6,15 +6,6 @@ import android.graphics.drawable.Drawable;
 import kore.botssdk.view.tableview.colorizers.TableDataRowColorizer;
 import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
 
-
-/**
- * A wrapper for a {@link TableDataRowColorizer} that implements the {@link TableDataRowBackgroundProvider} interface.
- *
- * @author ISchwarz
- * @deprecated The {@link TableDataRowBackgroundColorProvider} is deprecated as it is only used to map a
- * {@link TableDataRowColorizer} to a {@link TableDataRowBackgroundProvider}.
- */
-@Deprecated
 class TableDataRowBackgroundColorProvider<T> implements TableDataRowBackgroundProvider<T> {
 
     private final TableDataRowColorizer<T> colorizer;

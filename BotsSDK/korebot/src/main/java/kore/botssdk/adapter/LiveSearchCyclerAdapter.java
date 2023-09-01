@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -34,7 +34,7 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
     private final Context context;
     private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
-    public LiveSearchCyclerAdapter(Context context, ArrayList<LiveSearchResultsModel> model, int from, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public LiveSearchCyclerAdapter(Context context, ArrayList<LiveSearchResultsModel> model, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.model = model;
         this.context = context;
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -68,8 +68,8 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
         else if (liveSearchResultsModel.getPage_title() != null) {
             holder.tvTitle.setMaxLines(2);
             holder.ivPagesCell.setVisibility(View.VISIBLE);
-            holder.tvTitle.setText(Html.fromHtml(MarkdownUtil.processMarkDown(liveSearchResultsModel.getPage_title())));
-            holder.tvDescription.setText(Html.fromHtml(MarkdownUtil.processMarkDown(liveSearchResultsModel.getPage_preview())));
+            holder.tvTitle.setText(HtmlCompat.fromHtml(MarkdownUtil.processMarkDown(liveSearchResultsModel.getPage_title()), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            holder.tvDescription.setText(HtmlCompat.fromHtml(MarkdownUtil.processMarkDown(liveSearchResultsModel.getPage_preview()), HtmlCompat.FROM_HTML_MODE_LEGACY));
 
             if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getPage_image_url()))
                 Glide.with(context).load(liveSearchResultsModel.getPage_image_url())
@@ -117,22 +117,29 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvDescription, tvFullDescription, tvPageTitle, tvTaskName;
-        ImageView ivPagesCell, ivSuggestedPage, ivTaskCell;
-        LinearLayout llPages, llTask;
+        final TextView tvTitle;
+        final TextView tvDescription;
+        final TextView tvFullDescription;
+        final TextView tvPageTitle;
+        final TextView tvTaskName;
+        final ImageView ivPagesCell;
+        final ImageView ivSuggestedPage;
+        final ImageView ivTaskCell;
+        final LinearLayout llPages;
+        final LinearLayout llTask;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.ivPagesCell = (ImageView) itemView.findViewById(R.id.ivPagesCell);
-            this.tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
-            this.tvDescription = (TextView) itemView.findViewById(R.id.tvDescription);
-            this.tvFullDescription = (TextView) itemView.findViewById(R.id.tvFullDescription);
-            this.tvPageTitle = (TextView) itemView.findViewById(R.id.tvPageTitle);
-            this.ivSuggestedPage = (ImageView) itemView.findViewById(R.id.ivSuggestedPage);
-            this.llPages = (LinearLayout) itemView.findViewById(R.id.llPages);
-            this.ivTaskCell = (ImageView) itemView.findViewById(R.id.ivTaskCell);
-            this.tvTaskName = (TextView) itemView.findViewById(R.id.tvTaskName);
-            this.llTask = (LinearLayout) itemView.findViewById(R.id.llTask);
+            this.ivPagesCell = itemView.findViewById(R.id.ivPagesCell);
+            this.tvTitle = itemView.findViewById(R.id.tvTitle);
+            this.tvDescription = itemView.findViewById(R.id.tvDescription);
+            this.tvFullDescription = itemView.findViewById(R.id.tvFullDescription);
+            this.tvPageTitle = itemView.findViewById(R.id.tvPageTitle);
+            this.ivSuggestedPage = itemView.findViewById(R.id.ivSuggestedPage);
+            this.llPages = itemView.findViewById(R.id.llPages);
+            this.ivTaskCell = itemView.findViewById(R.id.ivTaskCell);
+            this.tvTaskName = itemView.findViewById(R.id.tvTaskName);
+            this.llTask = itemView.findViewById(R.id.llTask);
         }
     }
 }

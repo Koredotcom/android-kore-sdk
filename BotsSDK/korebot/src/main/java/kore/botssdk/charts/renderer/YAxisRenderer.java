@@ -16,16 +16,16 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class YAxisRenderer extends AxisRenderer {
-    protected YAxis mYAxis;
+    protected final YAxis mYAxis;
     protected Paint mZeroLinePaint;
-    protected Path mRenderGridLinesPath = new Path();
-    protected RectF mGridClippingRect = new RectF();
+    protected final Path mRenderGridLinesPath = new Path();
+    protected final RectF mGridClippingRect = new RectF();
     protected float[] mGetTransformedPositionsBuffer = new float[2];
-    protected Path mDrawZeroLinePath = new Path();
-    protected RectF mZeroLineClippingRect = new RectF();
-    protected Path mRenderLimitLines = new Path();
-    protected float[] mRenderLimitLinesBuffer = new float[2];
-    protected RectF mLimitLineClippingRect = new RectF();
+    protected final Path mDrawZeroLinePath = new Path();
+    protected final RectF mZeroLineClippingRect = new RectF();
+    protected final Path mRenderLimitLines = new Path();
+    protected final float[] mRenderLimitLinesBuffer = new float[2];
+    protected final RectF mLimitLineClippingRect = new RectF();
 
     public YAxisRenderer(ViewPortHandler viewPortHandler, YAxis yAxis, Transformer trans) {
         super(viewPortHandler, trans, yAxis);
@@ -176,7 +176,7 @@ public class YAxisRenderer extends AxisRenderer {
             limitLinePath.reset();
 
             for(int i = 0; i < limitLines.size(); ++i) {
-                LimitLine l = (LimitLine)limitLines.get(i);
+                LimitLine l = limitLines.get(i);
                 if (l.isEnabled()) {
                     int clipRestoreCount = c.save();
                     this.mLimitLineClippingRect.set(this.mViewPortHandler.getContentRect());
@@ -195,7 +195,7 @@ public class YAxisRenderer extends AxisRenderer {
                     String label = l.getLabel();
                     if (label != null && !label.equals("")) {
                         this.mLimitLinePaint.setStyle(l.getTextStyle());
-                        this.mLimitLinePaint.setPathEffect((PathEffect)null);
+                        this.mLimitLinePaint.setPathEffect(null);
                         this.mLimitLinePaint.setColor(l.getTextColor());
                         this.mLimitLinePaint.setTypeface(l.getTypeface());
                         this.mLimitLinePaint.setStrokeWidth(0.5F);

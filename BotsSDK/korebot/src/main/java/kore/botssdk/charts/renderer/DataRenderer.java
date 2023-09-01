@@ -12,11 +12,11 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public abstract class DataRenderer extends Renderer {
-    protected ChartAnimator mAnimator;
-    protected Paint mRenderPaint;
+    protected final ChartAnimator mAnimator;
+    protected final Paint mRenderPaint;
     protected Paint mHighlightPaint;
-    protected Paint mDrawPaint;
-    protected Paint mValuePaint;
+    protected final Paint mDrawPaint;
+    protected final Paint mValuePaint;
 
     public DataRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(viewPortHandler);

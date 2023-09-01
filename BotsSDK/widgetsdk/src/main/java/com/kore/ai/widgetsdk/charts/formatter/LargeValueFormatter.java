@@ -21,7 +21,7 @@ public class LargeValueFormatter extends ValueFormatter {
     }
 
     public String getFormattedValue(float value) {
-        return this.makePretty((double)value) + this.mText;
+        return this.makePretty(value) + this.mText;
     }
 
     public void setAppendix(String appendix) {

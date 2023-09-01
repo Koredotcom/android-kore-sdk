@@ -130,14 +130,14 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvBtnText;
-        public ImageView ivListBtnIcon;
+        public final TextView tvBtnText;
+        public final ImageView ivListBtnIcon;
 //        private LinearLayout ll;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvBtnText = (TextView) itemView.findViewById(R.id.tvBtnText);
-            ivListBtnIcon = (ImageView) itemView.findViewById(R.id.ivListBtnIcon);
+            tvBtnText = itemView.findViewById(R.id.tvBtnText);
+            ivListBtnIcon = itemView.findViewById(R.id.ivListBtnIcon);
 //            ll = itemView.findViewById(R.id.buttonsLayout);
         }
     }

@@ -22,7 +22,7 @@ public class RecyclerViewOverScrollDecorAdapter implements IOverScrollDecoratorA
     protected final RecyclerView mRecyclerView;
     protected final Impl mImpl;
 
-    protected boolean mIsItemTouchInEffect = false;
+    protected final boolean mIsItemTouchInEffect = false;
 
     public RecyclerViewOverScrollDecorAdapter(RecyclerView recyclerView) {
 

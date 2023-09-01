@@ -48,8 +48,8 @@ public class ReUsableListViewActionSheet extends Dialog {
     }
 
     public void findViews(View layoutView) {
-        optionsListView = (ListView) layoutView.findViewById(R.id.template_selection_tasksListView);
-        TextView _view = (TextView) findViewById(R.id.template_empty_text);
+        optionsListView = layoutView.findViewById(R.id.template_selection_tasksListView);
+        TextView _view = findViewById(R.id.template_empty_text);
         _view.setVisibility(View.VISIBLE);
         optionsListView.setEmptyView(_view);
     }

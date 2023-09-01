@@ -18,7 +18,7 @@ public class PieData extends ChartData<IPieDataSet> {
     }
 
     public IPieDataSet getDataSet() {
-        return (IPieDataSet)this.mDataSets.get(0);
+        return this.mDataSets.get(0);
     }
 
     public IPieDataSet getDataSetByIndex(int index) {
@@ -26,7 +26,7 @@ public class PieData extends ChartData<IPieDataSet> {
     }
 
     public IPieDataSet getDataSetByLabel(String label, boolean ignorecase) {
-        return ignorecase ? (label.equalsIgnoreCase(((IPieDataSet)this.mDataSets.get(0)).getLabel()) ? (IPieDataSet)this.mDataSets.get(0) : null) : (label.equals(((IPieDataSet)this.mDataSets.get(0)).getLabel()) ? (IPieDataSet)this.mDataSets.get(0) : null);
+        return ignorecase ? (label.equalsIgnoreCase(this.mDataSets.get(0).getLabel()) ? this.mDataSets.get(0) : null) : (label.equals(this.mDataSets.get(0).getLabel()) ? this.mDataSets.get(0) : null);
     }
 
     public Entry getEntryForHighlight(Highlight highlight) {
@@ -37,7 +37,7 @@ public class PieData extends ChartData<IPieDataSet> {
         float sum = 0.0F;
 
         for(int i = 0; i < this.getDataSet().getEntryCount(); ++i) {
-            sum += ((PieEntry)this.getDataSet().getEntryForIndex(i)).getY();
+            sum += this.getDataSet().getEntryForIndex(i).getY();
         }
 
         return sum;

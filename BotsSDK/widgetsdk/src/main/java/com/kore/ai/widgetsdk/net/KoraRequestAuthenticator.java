@@ -144,7 +144,6 @@ public class KoraRequestAuthenticator implements Authenticator {
             return response.getAuthData().getRefreshToken();
         } catch (Exception e) {
 //            KoreLogger.debugLog("KoraRequestInterceptor", "Error while fetching signedin users");
-        } finally {
         }
 
         return null;

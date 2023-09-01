@@ -92,7 +92,7 @@ public class ProfileTextView extends AppCompatTextView {
             canvas.drawCircle(diameter / 2 , diameter / 2, radius, paint);
 
         }else{
-            Path path = RoundedRect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+getMeasuredWidth() , getPaddingTop()+getMeasuredHeight() , (float) (8 * dp1),(float) (8 * dp1));
+            Path path = RoundedRect(getPaddingLeft(), getPaddingTop(), getPaddingLeft()+getMeasuredWidth() , getPaddingTop()+getMeasuredHeight() , 8 * dp1, 8 * dp1);
             canvas.drawPath(path, paint);
         }
         super.onDraw(canvas);

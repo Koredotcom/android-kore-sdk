@@ -24,30 +24,23 @@ import kore.botssdk.view.viewUtils.FileUtils;
 
 public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<ComposebarAttachmentAdapter.ImageAttachView> {
 
-    Context context;
-    AttachmentListner attachmentListner;
+    final Context context;
+    final AttachmentListner attachmentListner;
     public ComposebarAttachmentAdapter(Context context, AttachmentListner attachmentListner)
     {
         this.context=context;
         this.attachmentListner=attachmentListner;
-
     }
-
 
     @NonNull
     @Override
     public ImageAttachView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view= LayoutInflater.from(context).inflate(R.layout.attachment_view_composebar,parent,false);
-
         return new ImageAttachView(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ImageAttachView holder, int position) {
-//        holder. close_icon.setBackground(KaUtility.changeColorOfDrawable(context, R.color.color_E0F2F1));
-
-     // String thumbnail=dataList.get(position).get("thumbnailURL");
         String fileExtn=dataList.get(position).get("fileExtn");
         if(FileUtils.ImageTypes().contains(fileExtn)|| FileUtils.VideoTypes().contains(fileExtn))
         {
@@ -55,13 +48,12 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
            }else {
             holder.attach_view.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtn) ? fileExtn.toLowerCase() : ""));
-
         }
         holder.close_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dataList.remove(holder.getBindingAdapterPosition());
-                notifyDataSetChanged();
+                notifyItemRangeInserted(0, dataList.size() - 1);
                 attachmentListner.onRemoveAttachment();
             }
         });
@@ -72,17 +64,15 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         return dataList.size();
     }
 
-    ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
+    final ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
     public void addAttachment(HashMap<String, String> attachmentKey) {
         dataList.add(attachmentKey);
-        notifyDataSetChanged();
-
+        notifyItemRangeInserted(0, dataList.size() - 1);
     }
 
     public void clearAll()
     {
         dataList.clear();
-        notifyDataSetChanged();
     }
 
     public ArrayList<HashMap<String, String>> getData() {
@@ -90,10 +80,10 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     }
 
 
-    class ImageAttachView extends RecyclerView.ViewHolder
+    static class ImageAttachView extends RecyclerView.ViewHolder
     {
-        View close_icon;
-        ImageView attach_view;
+        final View close_icon;
+        final ImageView attach_view;
         public ImageAttachView(@NonNull View itemView) {
             super(itemView);
             close_icon=itemView.findViewById(R.id.close_icon);

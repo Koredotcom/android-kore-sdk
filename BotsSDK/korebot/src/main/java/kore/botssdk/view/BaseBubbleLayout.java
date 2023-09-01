@@ -42,7 +42,7 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
  */
 public abstract class BaseBubbleLayout extends ViewGroup {
 
-    Context context;
+    final Context context;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -81,17 +81,17 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_DOWN_BORDER = 0;
     protected int BUBBLE_LEFT_BORDER = 0;
     protected int BUBBLE_RIGHT_BORDER = 0;
-    protected int BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT = 0;
+    protected final int BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT = 0;
     protected int BUBBLE_CONTENT_LEFT_BORDER = 0; //TODO remove this...
     protected int BUBBLE_CONTENT_RIGHT_BORDER = 0; //TODO remove this...
     protected int BUBBLE_LEFT_PROFILE_PIC = 0;
-    protected int BUBBLE_SEPARATION_DISTANCE = 0;
+    protected final int BUBBLE_SEPARATION_DISTANCE = 0;
     protected int BUBBLE_GROUPING_TIMELINE = 0;
     protected int BUBBLE_READ_RECEIPT = 0;
 
     Paint paint;
 
-    protected int WHITE_COLOR = 0xffffffff;
+    protected final int WHITE_COLOR = 0xffffffff;
 //    public static String NON_KORE_COLOR = "#AEBFC4";
 
     protected TextMediaLayout bubbleTextMediaLayout;
@@ -417,7 +417,7 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        headerLayout = (HeaderLayout) findViewById(R.id.headerLayout);
+        headerLayout = findViewById(R.id.headerLayout);
     }
 
     public void fillBubbleLayout(int position, BaseBotMessage baseBotMessage,

@@ -15,9 +15,9 @@ import retrofit2.Callback;
 
 public class ShareInfoRequest {
 
-    protected String userId;
-    protected  String kid;
-    protected HashMap<String,ArrayList<KaRestResponse.SharedList>> payload;
+    protected final String userId;
+    protected final String kid;
+    protected final HashMap<String,ArrayList<KaRestResponse.SharedList>> payload;
     private final boolean notify;
     private final int methodType;
     private final String accessToken;

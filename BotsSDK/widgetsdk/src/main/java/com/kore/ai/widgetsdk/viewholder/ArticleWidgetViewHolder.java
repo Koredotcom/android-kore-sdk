@@ -14,7 +14,7 @@ public class ArticleWidgetViewHolder extends RecyclerView.ViewHolder {
     public ImageView widget_menu;
     public ProgressBar files_progress;
     public ViewPager viewpager;*/
-    ArticlesWidgetView articlesWidgetView;
+  final ArticlesWidgetView articlesWidgetView;
     public ArticleWidgetViewHolder(@NonNull View itemView) {
         super(itemView);
         articlesWidgetView=(ArticlesWidgetView)itemView;

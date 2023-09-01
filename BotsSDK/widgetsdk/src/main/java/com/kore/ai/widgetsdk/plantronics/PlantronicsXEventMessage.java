@@ -6,17 +6,17 @@ import java.util.Map;
 
 public class PlantronicsXEventMessage {
     //Plantronics Events
-    public static String USER_AGENT_EVENT = "USER-AGENT";
-    public static String SENSOR_STATUS_EVENT = "SENSORSTATUS";
-    public static String A2DP_EVENT = "A2DP";
-    public static String AUDIO_EVENT = "AUDIO";
-    public static String VOCALYST_EVENT = "VOCALYST";
-    public static String LANG_EVENT = "LANG";
-    public static String BATTERY_EVENT = "BATTERY";
-    public static String CONNECTED_EVENT = "CONNECTED";
-    public static String BUTTON_EVENT = "BUTTON";
-    public static String DON_EVENT = "DON";
-    public static String DOFF_EVENT = "DOFF";
+    public static final String USER_AGENT_EVENT = "USER-AGENT";
+    public static final String SENSOR_STATUS_EVENT = "SENSORSTATUS";
+    public static final String A2DP_EVENT = "A2DP";
+    public static final String AUDIO_EVENT = "AUDIO";
+    public static final String VOCALYST_EVENT = "VOCALYST";
+    public static final String LANG_EVENT = "LANG";
+    public static final String BATTERY_EVENT = "BATTERY";
+    public static final String CONNECTED_EVENT = "CONNECTED";
+    public static final String BUTTON_EVENT = "BUTTON";
+    public static final String DON_EVENT = "DON";
+    public static final String DOFF_EVENT = "DOFF";
     public static String HEADSET_CONNECTED_EVENT = "HEADSET_CONNECTED";
     public static String HEADSET_DISCONNECTED_EVENT = "HEADSET_DISCONNECTED";
     public static String CALL_STATUS_CHANGED_EVENT = "CALL_STATUS_CHANGED_EVENT";

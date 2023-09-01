@@ -32,7 +32,7 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
     private final ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons;
     private final Context mContext;
     private AdvanceOptionsAdapter advanceOptionsAdapter;
-    private ComposeFooterInterface composeFooterInterface;
+    private final ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public CardTemplateListAdapter(Context context, ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -104,8 +104,9 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
     }
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvBtnText, tvDescriptionTitle;
-        private ImageView ivListBtnIcon;
+        private final TextView tvBtnText;
+        private final TextView tvDescriptionTitle;
+        private final ImageView ivListBtnIcon;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);

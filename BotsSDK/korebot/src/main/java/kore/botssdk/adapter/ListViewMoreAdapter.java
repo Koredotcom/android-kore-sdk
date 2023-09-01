@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -29,23 +31,23 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder>{
     private final ArrayList<BotListModel> model;
-    RoundedCornersTransform roundedCornersTransform;
+    final RoundedCornersTransform roundedCornersTransform;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
 
-    // RecyclerView recyclerView;
     public ListViewMoreAdapter(ArrayList<BotListModel> model) {
         this.model = model;
         this.roundedCornersTransform = new RoundedCornersTransform();
 
     }
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.bot_listview_template_item_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        rightDrawable = (GradientDrawable) parent.getContext().getResources().getDrawable(R.drawable.rounded_rect_feedback);
+        rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(parent.getContext().getResources(), R.drawable.rounded_rect_feedback, parent.getContext().getTheme());
 
         return viewHolder;
     }
@@ -58,18 +60,8 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         if(rightDrawable != null && sharedPreferences != null)
         {
             rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-
-            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
-            else
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
+            rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+            holder.botListItemRoot.setBackground(rightDrawable);
 
             holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
@@ -105,18 +97,19 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout botListItemRoot;
-        ImageView botListItemImage;
-        TextView botListItemTitle;
-        TextView botListItemSubtitle, bot_list_item_cost;
+        final LinearLayout botListItemRoot;
+        final ImageView botListItemImage;
+        final TextView botListItemTitle;
+        final TextView botListItemSubtitle;
+        final TextView bot_list_item_cost;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            this.botListItemRoot = (LinearLayout) itemView.findViewById(R.id.bot_list_item_root);
-            this.botListItemImage = (ImageView) itemView.findViewById(R.id.bot_list_item_image);
-            this.botListItemTitle = (TextView) itemView.findViewById(R.id.bot_list_item_title);
-            this.botListItemSubtitle = (TextView) itemView.findViewById(R.id.bot_list_item_subtitle);
-            this.bot_list_item_cost = (TextView) itemView.findViewById(R.id.bot_list_item_cost);
+            this.botListItemRoot = itemView.findViewById(R.id.bot_list_item_root);
+            this.botListItemImage = itemView.findViewById(R.id.bot_list_item_image);
+            this.botListItemTitle = itemView.findViewById(R.id.bot_list_item_title);
+            this.botListItemSubtitle = itemView.findViewById(R.id.bot_list_item_subtitle);
+            this.bot_list_item_cost = itemView.findViewById(R.id.bot_list_item_cost);
         }
     }
 }

@@ -28,7 +28,7 @@ public class ScatterChart extends BarLineChartBase<ScatterData> implements Scatt
     }
 
     public ScatterData getScatterData() {
-        return (ScatterData)this.mData;
+        return this.mData;
     }
 
     public enum ScatterShape {

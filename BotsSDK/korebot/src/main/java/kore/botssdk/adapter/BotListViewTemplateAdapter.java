@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.squareup.picasso.Picasso;
 
@@ -31,21 +32,16 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotListViewTemplateAdapter extends BaseAdapter {
-
-    private final String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     private ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final LayoutInflater ownLayoutInflator;
     private final Context context;
     private final RoundedCornersTransform roundedCornersTransform;
     private final ListView parentListView;
-    private GradientDrawable bgDrawable;
-    private int count = 0;
+    private final int count;
     private final SharedPreferences sharedPreferences;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
@@ -80,7 +76,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_listview_template_item_layout, null);
+            convertView = View.inflate(context, R.layout.bot_listview_template_item_layout, null);
         }
 
         if (convertView.getTag() == null) {
@@ -100,20 +96,22 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
         if(sharedPreferences != null)
         {
-            GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-
-            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-            if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-            {
-                rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
-            else
-            {
-                rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
-                holder.botListItemRoot.setBackground(rightDrawable);
-            }
+            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources() , R.drawable.rounded_rect_feedback, context.getTheme());
+           if(rightDrawable != null)
+           {
+               rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+               String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+               if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+               {
+                   rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+                   holder.botListItemRoot.setBackground(rightDrawable);
+               }
+               else
+               {
+                   rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+                   holder.botListItemRoot.setBackground(rightDrawable);
+               }
+           }
 
             holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
@@ -142,29 +140,6 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
             if(sharedPreferences != null)
                 holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
-//        if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
-//            holder.botListItemButton.setVisibility(View.GONE);
-//        } else {
-//            holder.botListItemButton.setVisibility(View.VISIBLE);
-//            holder.botListItemButton.setText(botListModel.getButtons().get(0).getTitle());
-//            holder.botListItemButton.setTag(botListModel.getButtons().get(0));
-//
-//            holder.botListItemButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-//                        BotListElementButton botListElementButton = (BotListElementButton) v.getTag();
-//                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListElementButton.getType())) {
-//                            invokeGenericWebViewInterface.invokeGenericWebView(botListElementButton.getUrl());
-//                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListElementButton.getType())) {
-//                            String listElementButtonPayload = botListElementButton.getPayload();
-//                            String listElementButtonTitle = botListElementButton.getTitle();
-//                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload,false);
-//                        }
-//                    }
-//                }
-//            });
-//        }
 
         holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,11 +180,11 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
 
-        holder.botListItemRoot = (LinearLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.bot_list_item_cost = (TextView) view.findViewById(R.id.bot_list_item_cost);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.bot_list_item_cost = view.findViewById(R.id.bot_list_item_cost);
 
         view.setTag(holder);
     }

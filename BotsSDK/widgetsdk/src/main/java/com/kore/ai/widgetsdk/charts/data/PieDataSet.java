@@ -37,7 +37,7 @@ public class PieDataSet extends com.kore.ai.widgetsdk.charts.data.DataSet<PieEnt
         List<PieEntry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((PieEntry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         com.kore.ai.widgetsdk.charts.data.PieDataSet copied = new com.kore.ai.widgetsdk.charts.data.PieDataSet(entries, this.getLabel());

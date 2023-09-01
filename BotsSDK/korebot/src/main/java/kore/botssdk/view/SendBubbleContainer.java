@@ -39,7 +39,7 @@ public class SendBubbleContainer extends BaseBubbleContainer {
         super.onFinishInflate();
 
         //Find views...
-        sendBubbleLayout = (SendBubbleLayout) findViewById(R.id.sendBubbleLayout);
+        sendBubbleLayout = findViewById(R.id.sendBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
 
         dp1 = (int) DimensionUtil.dp1;

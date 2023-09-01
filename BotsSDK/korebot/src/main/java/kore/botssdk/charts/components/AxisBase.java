@@ -31,7 +31,7 @@ public abstract class AxisBase extends ComponentBase {
     protected boolean mCenterAxisLabels = false;
     private DashPathEffect mAxisLineDashPathEffect = null;
     private DashPathEffect mGridDashPathEffect = null;
-    protected List<LimitLine> mLimitLines;
+    protected final List<LimitLine> mLimitLines;
     protected boolean mDrawLimitLineBehindData = false;
     protected boolean mDrawGridLinesBehindData = true;
     protected float mSpaceMin = 0.0F;

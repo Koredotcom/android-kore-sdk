@@ -3,8 +3,8 @@ package kore.botssdk.charts.formatter;
 import java.text.DecimalFormat;
 
 public class DefaultAxisValueFormatter extends ValueFormatter {
-    protected DecimalFormat mFormat;
-    protected int digits;
+    protected final DecimalFormat mFormat;
+    protected final int digits;
 
     public DefaultAxisValueFormatter(int digits) {
         this.digits = digits;
@@ -22,7 +22,7 @@ public class DefaultAxisValueFormatter extends ValueFormatter {
     }
 
     public String getFormattedValue(float value) {
-        return this.mFormat.format((double)value);
+        return this.mFormat.format(value);
     }
 
     public int getDecimalDigits() {

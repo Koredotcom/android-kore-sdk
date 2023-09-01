@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -90,6 +91,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("ViewConstructor")
 public class PieChartWidgetView extends BaseWidgetView {
 
     private WidgetsModel mWidget;
@@ -100,7 +102,6 @@ public class PieChartWidgetView extends BaseWidgetView {
     private View rootView;
     private TextView chartHeader;
     private TextView chartTitle;
-    private final String PIE_TYPE_REGULAR = "regular";
     private final String PIE_TYPE_DONUT = "donut";
     private float holeRadius;
     private float transparentCircleRadius;
@@ -119,7 +120,6 @@ public class PieChartWidgetView extends BaseWidgetView {
     String panelName;
     private String jwtToken;
     private int labelCount = 0;
-//    private BarChart mBarChart;
 
     public PieChartWidgetView(Context context, String skillName) {
         super(context);
@@ -249,19 +249,6 @@ public class PieChartWidgetView extends BaseWidgetView {
                     @Override
                     public void onError(Throwable e) {
                         progress.setVisibility(View.GONE);
-
-
-                        String msg;
-                        Drawable drawable = null;
-                        if (!NetworkUtility.isNetworkConnectionAvailable(PieChartWidgetView.this.getContext())) {
-                            //No Internet Connect
-                            msg = getResources().getString(R.string.no_internet_connection);
-                            drawable = getResources().getDrawable(R.drawable.no_internet);
-                        } else {
-                            //Oops some thing went wrong
-                            msg = getResources().getString(R.string.oops);
-                            drawable = getResources().getDrawable(R.drawable.oops_icon);
-                        }
                     }
 
                     @Override
@@ -277,7 +264,7 @@ public class PieChartWidgetView extends BaseWidgetView {
         utterance = utt;
 
         if (utterance == null) return;
-        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
+        if (utterance.startsWith("tel:") || utterance.startsWith("mailto:")) {
             if (utterance.startsWith("tel:")) {
                 KaUtility.launchDialer(getContext(), utterance);
             } else if (utterance.startsWith("mailto:")) {
@@ -305,7 +292,7 @@ public class PieChartWidgetView extends BaseWidgetView {
             utterance = button.getUtterance();
         }
         if (utterance == null) return;
-        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
+        if (utterance.startsWith("tel:") || utterance.startsWith("mailto:")) {
             if (utterance.startsWith("tel:")) {
                 KaUtility.launchDialer(getContext(), utterance);
             } else if (utterance.startsWith("mailto:")) {
@@ -517,41 +504,18 @@ public class PieChartWidgetView extends BaseWidgetView {
                 l.setFormSize(9f);
                 l.setTextSize(11f);
                 l.setXEntrySpace(4f);
-
-//                mBarChart.setData(data);
-//
-//                mBarChart.getBarData().setBarWidth(barWidth);
-
-                // restrict the x-axis range
                 mChart.getXAxis().setAxisMinimum(startYear);
-
-
-                // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
-//                mChart.getXAxis().setAxisMaximum(startYear + mBarChart.getBarData().getGroupWidth(groupSpace, barSpace) * groupCount);
-//                mBarChart.groupBars(startYear, groupSpace, barSpace);
                 mChart.invalidate();
             }
         }
-//        else if(WidgetConstants.LINE_CHART.equals(templateType)){
-//            Type lineType = new TypeToken<ArrayList<BotLineChartDataModel>>() {
-//            }.getType();
-//            lineChartElements = gson.fromJson(elementsAsString, lineType);
-//        }
-
-
 
         if (model.getButtons() != null && model.getButtons().size() > 0) {
-            /*FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(mContext);
-            layoutManager.setFlexDirection(FlexDirection.ROW);
-            layoutManager.setJustifyContent(JustifyContent.FLEX_START);*/
-
             recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-
             ButtonListAdapter buttonRecyclerAdapter = new ButtonListAdapter(mContext, model.getButtons(), trigger);
             buttonRecyclerAdapter.setSkillName(skillName);
             buttonRecyclerAdapter.setIsFromFullView(false);
             recyclerView.setAdapter(buttonRecyclerAdapter);
-            buttonRecyclerAdapter.notifyDataSetChanged();
+            buttonRecyclerAdapter.notifyItemRangeChanged(0, model.getButtons().size() - 1);
         }
     }
 
@@ -635,7 +599,6 @@ public class PieChartWidgetView extends BaseWidgetView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
         int childLeft = 0;
@@ -695,8 +658,8 @@ public class PieChartWidgetView extends BaseWidgetView {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
 
-                if (e == null)
-                    return;
+                if (e == null) {
+                }
             }
 
             @Override
@@ -706,11 +669,6 @@ public class PieChartWidgetView extends BaseWidgetView {
         addData(xVals, yVals);
 
         Legend l = mChart.getLegend();
-       /* l.setPosition(Legend.LegendPosition.RIGHT_OF_CHART_CENTER);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
-
-        Legend l = chart.getLegend();*/
 
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.CENTER);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
@@ -737,7 +695,6 @@ public class PieChartWidgetView extends BaseWidgetView {
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
-//        data.setDataSet(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.WHITE);

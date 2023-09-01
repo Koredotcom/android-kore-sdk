@@ -6,12 +6,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.service.autofill.UserData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -24,7 +24,6 @@ import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
 import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
-import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.WidgetViewMoreEnum;
 import com.kore.ai.widgetsdk.widgets.GenericWidgetViewPagerAdapter;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 
 @SuppressLint("ViewConstructor")
 public class ArticlesWidgetView extends LinearLayout implements VerticalListViewActionHelper {
-    Context context;
+    final Context context;
     private TabLayout sliding_tabs;
     private TextView  widget_header;
     private ViewPager viewpager;
@@ -43,9 +42,7 @@ public class ArticlesWidgetView extends LinearLayout implements VerticalListView
     private TextView panel_name_view;
     boolean isPaaginationRequired;
     PanelLevelData panelData;
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    private UserData userData;
-    private AuthData authData;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
     public ArticlesWidgetView(Context context, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.context = context;
@@ -121,7 +118,7 @@ public class ArticlesWidgetView extends LinearLayout implements VerticalListView
             if(selectedTab != null)
             {
                 View tabView = selectedTab.view;
-                GradientDrawable gradientDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.tab_background_selected_widgets);
+                GradientDrawable gradientDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.tab_background_selected_widgets, context.getTheme());
                 tabView.setBackground(gradientDrawable);
             }
 
@@ -129,25 +126,23 @@ public class ArticlesWidgetView extends LinearLayout implements VerticalListView
             if(selectedTab2 != null)
             {
                 View tabView2 = selectedTab2.view;
-                tabView2.setBackground(context.getResources().getDrawable(R.drawable.tab_background_unselected));
+                tabView2.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.tab_background_unselected, context.getTheme()));
             }
 
             sliding_tabs.setTabTextColors(Color.parseColor("#000000"), Color.parseColor("#ffffff"));
-
             sliding_tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
 
                     View tabView = tab.view;
-                    GradientDrawable gradientDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.tab_background_selected_widgets);
-//                    gradientDrawable.setColor(Color.parseColor(widget.getTheme()));
+                    GradientDrawable gradientDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.tab_background_selected_widgets, context.getTheme());
                     tabView.setBackground(gradientDrawable);
                 }
 
                 @Override
                 public void onTabUnselected(TabLayout.Tab tab) {
                     View tabView = tab.view;
-                    tabView.setBackground(context.getResources().getDrawable(R.drawable.tab_background_unselected));
+                    tabView.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.tab_background_unselected, context.getTheme()));
                 }
 
                 @Override

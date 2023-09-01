@@ -11,31 +11,9 @@ import java.util.Locale;
 
 import kore.botssdk.utils.StringUtils;
 
-//@DatabaseTable(tableName = "CONTACTS"/*, daoClass = KoreBaseDaoImpl.class*/)
-public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializable {
-
-	public static final String DL = "dl";
-    public static final int STATUS_OFFLINE = 0;
-    public static final int STATUS_ONLINE = 1;
-    public static final int STATUS_BUSY = 2;
-    public static final int STATUS_STEALTH = STATUS_OFFLINE;
-    public static final int STATUS_AWAY = 4;
-
-	public static final int CATEGORY_GROUP = 4;
-	public static final int CATEGORY_DEVICE = 3;
+public class KoreContact implements Parcelable, Serializable {
 	public static final int CATEGORY_COMPANY = 2;
-	public static final int CATEGORY_RECENT = 1;
-	public static final int CATEGORY_OTHER = 0;
-
 	public static final String STATUS_ACTIVE = "active";
-	public static final String STATUS_INACTIVE = "inactive";
-	public static final String STATUS_UNKNOWN = "unknown";
-
-	public static final String STATUS_SIGNUP_ALLOWED = "signupAllowed";
-	public static final String STATUS_SIGNUP_NOT_ALLOWED = "signupNotAllowed";
-
-	public static final String STATUS_DISABLE = "disable";
-	public static final String STATUS_DELETE = "delete";
 
 	public interface KoreContactColumns {
 		String ID = "id";
@@ -63,10 +41,8 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 	@SerializedName("_id")
 	private String idInDl;
 
-//	@DatabaseField(id = true, columnName = KoreContactColumns.ID, dataType = DataType.STRING)
 	public String id;
 
-//	@DatabaseField(columnName = "first_name", dataType = DataType.STRING)
 	public String firstName;
 
     /**
@@ -160,15 +136,10 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 		isFavourite = source.readInt() != 0;
 		profileImage = source.readString();
 		profileColor = source.readString();
-//		isOnline = (source.readInt() == 0) ? false : true;
-        onlineStatus = source.readInt();
+		onlineStatus = source.readInt();
 		statusMessage = source.readString();
 		koreId = source.readString();
 		thumbnailURI = source.readString();
-	}
-
-	public KoreContact() {
-
 	}
 
 	public String getId() {
@@ -302,14 +273,6 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 		this.emailId = emailId;
 	}
 
-//	public String getActivationStatus() {
-//		if (accountInfo != null) {
-//			return accountInfo.getActivationStatus();
-//		} else {
-//			return activationStatus;
-//		}
-//	}
-
 	public void setActivationStatus(String activationStatus) {
 		this.activationStatus = activationStatus;
 	}
@@ -330,27 +293,9 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 		this.profileImage = profileImage;
 	}
 
-	/*public boolean isOnline() {
-		return isOnline;
-	}
-
-	public void setOnline(boolean isOnline) {
-		this.isOnline = isOnline;
-	}*/
-
-    /*public int getOnlineStatus(){
-//        return onlineStatus;
-		return JournalingUtils.getInstance().getOnlineStatus(id);
-    }*/
-
     public void setOnlineStatus(int status){
         onlineStatus = status;
     }
-
-	/*public String getStatusMessage() {
-//		return statusMessage;
-		return JournalingUtils.getInstance().getStatus(id);
-	}*/
 
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
@@ -398,7 +343,6 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -430,17 +374,8 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 	public void prepareEssentials() {
 		prepareDisplayName();
 		prepareDisplayFirstName();
-//		prepareDisplayNameInitials();
 		prepareProfilePicUrl128();
 	}
-
-//    public void setAccountInfo(AccountInfoContact accountInfo) {
-//        this.accountInfo = accountInfo;
-//    }
-//
-//    public AccountInfoContact getAccountInfo() {
-//        return accountInfo;
-//    }
 
     @Override
 	public void writeToParcel(Parcel dest, int flags) {
@@ -500,25 +435,6 @@ public class KoreContact /*extends KoreDBModel*/ implements Parcelable, Serializ
 
 	public boolean isProfilePicAvail() {
 		return profileImage !=null && profileImage.contains(PROFILE);
-	}
-
-//	public String getRole(){
-//		return accountInfo != null ? accountInfo.jTitle : "";
-//	}
-	@Override
-	public boolean equals(Object obj) {
-        if(obj ==null) return false;
-        if (obj == this) return true;
-    	if(obj instanceof KoreContact){
-    		if(this.getId() != null && ((KoreContact) obj).getId() != null) {
-    		    return this.getId().equals(((KoreContact) obj).getId());
-            }else if(this.getEmailId() != null && ((KoreContact) obj).getEmailId() != null){
-                return this.getEmailId().equals(((KoreContact) obj).getEmailId());
-            }else if(this.getPhoneNo() != null && ((KoreContact) obj).getPhoneNo() != null){
-                return this.getPhoneNo().equals(((KoreContact) obj).getPhoneNo());
-            }
-		}
-		return false;
 	}
 
     /**

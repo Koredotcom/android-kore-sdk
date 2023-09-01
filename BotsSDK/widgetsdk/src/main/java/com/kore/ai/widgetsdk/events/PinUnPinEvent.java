@@ -1,7 +1,7 @@
 package com.kore.ai.widgetsdk.events;
 
 public class PinUnPinEvent {
-    String panelId;
+    final String panelId;
     public PinUnPinEvent(String panelId) {
         this.panelId=panelId;
     }

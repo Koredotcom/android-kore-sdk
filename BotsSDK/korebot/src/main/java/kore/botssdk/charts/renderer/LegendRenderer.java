@@ -23,11 +23,11 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class LegendRenderer extends Renderer {
-    protected Paint mLegendLabelPaint;
-    protected Paint mLegendFormPaint;
-    protected Legend mLegend;
-    protected List<LegendEntry> computedEntries = new ArrayList(16);
-    protected Paint.FontMetrics legendFontMetrics = new Paint.FontMetrics();
+    protected final Paint mLegendLabelPaint;
+    protected final Paint mLegendFormPaint;
+    protected final Legend mLegend;
+    protected final List<LegendEntry> computedEntries = new ArrayList(16);
+    protected final Paint.FontMetrics legendFontMetrics = new Paint.FontMetrics();
     private final Path mLineFormPath = new Path();
 
     public LegendRenderer(ViewPortHandler viewPortHandler, Legend legend) {
@@ -61,11 +61,11 @@ public class LegendRenderer extends Renderer {
                     String[] sLabels = bds.getStackLabels();
 
                     for(int j = 0; j < clrs.size() && j < bds.getStackSize(); ++j) {
-                        this.computedEntries.add(new LegendEntry(sLabels[j % sLabels.length], dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), (Integer)clrs.get(j)));
+                        this.computedEntries.add(new LegendEntry(sLabels[j % sLabels.length], dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), clrs.get(j)));
                     }
 
                     if (bds.getLabel() != null) {
-                        this.computedEntries.add(new LegendEntry(dataSet.getLabel(), Legend.LegendForm.NONE, 0.0F / 0.0F, 0.0F / 0.0F, (DashPathEffect)null, 1122867));
+                        this.computedEntries.add(new LegendEntry(dataSet.getLabel(), Legend.LegendForm.NONE, 0.0F / 0.0F, 0.0F / 0.0F, null, 1122867));
                     }
                 } else {
                     int j;
@@ -73,17 +73,17 @@ public class LegendRenderer extends Renderer {
                         IPieDataSet pds = (IPieDataSet)dataSet;
 
                         for(j = 0; j < clrs.size() && j < entryCount; ++j) {
-                            this.computedEntries.add(new LegendEntry(((PieEntry)pds.getEntryForIndex(j)).getLabel(), dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), (Integer)clrs.get(j)));
+                            this.computedEntries.add(new LegendEntry(pds.getEntryForIndex(j).getLabel(), dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), clrs.get(j)));
                         }
 
                         if (pds.getLabel() != null) {
-                            this.computedEntries.add(new LegendEntry(dataSet.getLabel(), Legend.LegendForm.NONE, 0.0F / 0.0F, 0.0F / 0.0F, (DashPathEffect)null, 1122867));
+                            this.computedEntries.add(new LegendEntry(dataSet.getLabel(), Legend.LegendForm.NONE, 0.0F / 0.0F, 0.0F / 0.0F, null, 1122867));
                         }
                     } else {
                         if (dataSet instanceof ICandleDataSet && ((ICandleDataSet)dataSet).getDecreasingColor() != 1122867) {
                             j = ((ICandleDataSet)dataSet).getDecreasingColor();
                             j = ((ICandleDataSet)dataSet).getIncreasingColor();
-                            this.computedEntries.add(new LegendEntry((String)null, dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), j));
+                            this.computedEntries.add(new LegendEntry(null, dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), j));
                             this.computedEntries.add(new LegendEntry(dataSet.getLabel(), dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), j));
                         } else {
                             for(j = 0; j < clrs.size() && j < entryCount; ++j) {
@@ -94,7 +94,7 @@ public class LegendRenderer extends Renderer {
                                     label = data.getDataSetByIndex(i).getLabel();
                                 }
 
-                                this.computedEntries.add(new LegendEntry(label, dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), (Integer)clrs.get(j)));
+                                this.computedEntries.add(new LegendEntry(label, dataSet.getForm(), dataSet.getFormSize(), dataSet.getFormLineWidth(), dataSet.getFormLineDashEffect(), clrs.get(j)));
                             }
                         }
                     }
@@ -203,13 +203,13 @@ public class LegendRenderer extends Renderer {
                         LegendEntry e = entries[i];
                         boolean drawingForm = e.form != Legend.LegendForm.NONE;
                         float formSize = Float.isNaN(e.formSize) ? defaultFormSize : Utils.convertDpToPixel(e.formSize);
-                        if (i < calculatedLabelBreakPoints.size() && (Boolean)calculatedLabelBreakPoints.get(i)) {
+                        if (i < calculatedLabelBreakPoints.size() && calculatedLabelBreakPoints.get(i)) {
                             posX = originPosX;
                             posY += labelLineHeight + labelLineSpacing;
                         }
 
                         if (posX == originPosX && horizontalAlignment == Legend.LegendHorizontalAlignment.CENTER && lineIndex < calculatedLineSizes.size()) {
-                            posX += (direction == Legend.LegendDirection.RIGHT_TO_LEFT ? ((FSize)calculatedLineSizes.get(lineIndex)).width : -((FSize)calculatedLineSizes.get(lineIndex)).width) / 2.0F;
+                            posX += (direction == Legend.LegendDirection.RIGHT_TO_LEFT ? calculatedLineSizes.get(lineIndex).width : -calculatedLineSizes.get(lineIndex).width) / 2.0F;
                             ++lineIndex;
                         }
 
@@ -231,12 +231,12 @@ public class LegendRenderer extends Renderer {
                             }
 
                             if (direction == Legend.LegendDirection.RIGHT_TO_LEFT) {
-                                posX -= ((FSize)calculatedLabelSizes.get(i)).width;
+                                posX -= calculatedLabelSizes.get(i).width;
                             }
 
                             this.drawLabel(c, posX, posY + labelLineHeight, e.label);
                             if (direction == Legend.LegendDirection.LEFT_TO_RIGHT) {
-                                posX += ((FSize)calculatedLabelSizes.get(i)).width;
+                                posX += calculatedLabelSizes.get(i).width;
                             }
 
                             posX += direction == Legend.LegendDirection.RIGHT_TO_LEFT ? -xEntrySpace : xEntrySpace;

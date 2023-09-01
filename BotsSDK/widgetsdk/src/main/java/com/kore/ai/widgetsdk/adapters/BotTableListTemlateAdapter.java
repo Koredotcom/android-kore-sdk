@@ -39,9 +39,9 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     ArrayList<BotTableListElementsModel> botTableListModels = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflator;
-    Context context;
-    RoundedCornersTransform roundedCornersTransform;
+    final LayoutInflater ownLayoutInflator;
+    final Context context;
+    final RoundedCornersTransform roundedCornersTransform;
     int count = 0;
 
     public BotTableListTemlateAdapter(Context context, int count) {
@@ -270,9 +270,9 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
 
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.bot_list_item_desc = (TextView) view.findViewById(R.id.bot_list_item_desc);
-        holder.botTableListView = (ListView) view.findViewById(R.id.botTableListView);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.bot_list_item_desc = view.findViewById(R.id.bot_list_item_desc);
+        holder.botTableListView = view.findViewById(R.id.botTableListView);
         view.setTag(holder);
     }
 

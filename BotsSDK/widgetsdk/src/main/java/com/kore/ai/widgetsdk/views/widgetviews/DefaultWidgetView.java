@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +33,7 @@ import com.kore.ai.widgetsdk.models.BotResponse;
 import com.kore.ai.widgetsdk.models.ContactViewListModel;
 import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
 import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
+import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetsModel;
 import com.kore.ai.widgetsdk.models.WidgetsWidgetModel;
 import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
@@ -58,6 +61,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("ViewConstructor")
 public class DefaultWidgetView extends ViewGroup implements VerticalListViewActionHelper {
     private float dp1;
     public ImageView menu_meeting_btn;
@@ -81,28 +85,21 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
         this.mWidget = mWidget;
         this.panelData=panelData;
         this.jwtToken = jwtToken;
-//        this.trigger=mWidget.getTrigger();
         meeting_header.setText(mWidget.getTitle());
-//        pin_view.setText(mWidget.isPinned() ? context.getResources().getString(R.string.icon_31) :context.getResources().getString(R.string.icon_32));
-//        panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getPname()));
-//        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getPname(),name));
-
         loadData(false);
-//        defaultWidgetAdapter.setTrigger(trigger);
     }
 
     private WidgetsModel mWidget;
     private final String name;
     private String trigger;
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    Context context;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
+    final Context context;
     public DefaultWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.name = name;
         this.context=context;
         this.widgetViewMoreEnum=widgetViewMoreEnum;
         init();
-
     }
     private void getUserData() {
         authData = UserDataManager.getAuthData();
@@ -247,17 +244,6 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
 
     @Override
     public void calendarItemClicked(String action, BaseCalenderTemplateModel model) {
-        if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(action)) {
-//            Intent intent = new Intent(getContext(), ViewMeetingDetailsActivity.class);
-//            String data = new Gson().toJson(model);
-//            intent.putExtra("data", data);
-//            intent.putExtra("fromMeetingWidget", true);
-//
-//            CalenderEventData _data = ((WCalEventsTemplateModel) model).getData();
-//            intent.putExtra(BundleConstants.REQ_TEXT_TO_DISPLAY,_data.getReqTextToDispForDetails());
-//
-//            getContext().startActivity(intent);
-        }
     }
 
     @Override
@@ -294,13 +280,6 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
 
     @Override
     public void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel) {
-//        Intent intent = new Intent(getContext(), MeetingNotesCreationActivity.class);
-//        intent.putExtra(BundleConstants.NOTES_DATA,baseCalenderTemplateModel);
-//
-//        CalenderEventData _data = ((WCalEventsTemplateModel) baseCalenderTemplateModel).getData();
-//        intent.putExtra(BundleConstants.REQ_TEXT_TO_DISPLAY,_data.getReqTextToDispForDetails());
-//
-//        getContext().startActivity(intent);
     }
 
     @Override
@@ -364,27 +343,22 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
                     @Override
                     public void onError(Throwable e) {
                         meeting_progress.setVisibility(View.GONE);
-                        if (e.getMessage().equalsIgnoreCase("410") || e.getMessage().equalsIgnoreCase("401"))
-                        {
-                            //KoreEventCenter.post(new OnTokenExpired());
-                        }
-
                         String msg;
                         Drawable drawable=null;
                         if (!NetworkUtility.isNetworkConnectionAvailable(DefaultWidgetView.this.getContext())) {
                             //No Internet Connect
                             msg=getResources().getString(R.string.no_internet_connection);
-                            drawable=getResources().getDrawable(R.drawable.no_internet);
+                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.no_internet, context.getTheme());
                         } else {
                             //Oops some thing went wrong
                             msg=getResources().getString(R.string.oops);
-                            drawable=getResources().getDrawable(R.drawable.oops_icon);
+                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.oops_icon, context.getTheme());
                         }
                         defaultWidgetAdapter.setWidgetData(null);
                         defaultWidgetAdapter.setMessage(msg,drawable);
                         view_more.setVisibility(GONE);
                         upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
-                        defaultWidgetAdapter.notifyDataSetChanged();
+                        defaultWidgetAdapter.notifyAll();
                     }
 
                     @Override
@@ -395,39 +369,29 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
     }
 
     private void afterDataLoad(WidgetsWidgetModel model){
-
         meeting_header.setText(mWidget.getTitle());
-//        if(model.getData() == null && model.getData().size() > 0 && model.getData().get(0).getElements() == null || model.getData().get(0).getElements().size() == 0){
-//            calendarEventsAdapter.setMessage(model.getPlaceholder(),null);
-//        }
-        //  upcoming_meeting_root_recycler.tv_upcoming_meeting.setText(model.getSummary());
-        //  CalendarEventsAdapter calendarEventsAdapter = null;
-
-        if (model != null && model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0) {
-
-            if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
-                view_more.setVisibility(View.VISIBLE);
+        if (model != null && model.getData() != null && model.getData().size() > 0)
+        {
+            Widget widget = model.getData().get(0);
+            if (widget.getElements() != null && widget.getElements().size() > 0) {
+                if (widget.getElements().size() > 3 && Utility.isViewMoreVisible(widgetViewMoreEnum)) {
+                    view_more.setVisibility(View.VISIBLE);
+                }
+                llDefaultWidget.setVisibility(VISIBLE);
+                defaultWidgetAdapter.setWidgetData(new ArrayList<>(widget.getElements()));
+                defaultWidgetAdapter.setMultiActions(model.getData().get(0).getMultiActions());
+                upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
+                defaultWidgetAdapter.setPreviewLength(3);
+                defaultWidgetAdapter.notifyItemRangeChanged(0, widget.getElements().size() - 1);
             }
-            llDefaultWidget.setVisibility(VISIBLE);
-            defaultWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
-            defaultWidgetAdapter.setMultiActions(model.getData().get(0).getMultiActions());
-//            calendarEventsAdapter.setPreviewLength(model.getPreview_length());
-            upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
-            defaultWidgetAdapter.setPreviewLength(3);
-            defaultWidgetAdapter.notifyDataSetChanged();
-        }
-        else if(model != null && model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getTemplateType().equals("loginURL")){
-            if(model != null ) {
+            else if(widget.getTemplateType().equals("loginURL")){
                 llDefaultWidget.setVisibility(VISIBLE);
                 defaultWidgetAdapter.setWidgetData(null);
                 defaultWidgetAdapter.setLoginModel(model.getData().get(0).getLogin());
                 upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
                 defaultWidgetAdapter.setLoginNeeded(true);
             }
-        }
-        else if(model.getData().get(0).getTemplateType().equals("form"))
-        {
-            if(model != null)
+            else if(widget.getTemplateType().equals("form"))
             {
                 llDefaultWidget.setVisibility(GONE);
                 llFormData.setVisibility(VISIBLE);
@@ -447,15 +411,12 @@ public class DefaultWidgetView extends ViewGroup implements VerticalListViewActi
                     }
                 });
             }
+            else
+            {
+                defaultWidgetAdapter.setData(null);
+                upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
+                defaultWidgetAdapter.notifyAll();
+            }
         }
-        else
-        {
-            defaultWidgetAdapter.setData(null);
-            upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
-            defaultWidgetAdapter.notifyDataSetChanged();
-        }
-        //KoreEventCenter.post(new ShowLayoutEvent(0));
     }
-
-
 }

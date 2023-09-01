@@ -138,7 +138,7 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
 
     private void getSharedList() {
         if (mNId == null) return;
-        showProgress("", false);
+        showProgress();
 
         new ShareInfoRequest(accessToken, userId, mNId, false, 4, null, new Callback<KaRestResponse.ShareResponse>() {
             @Override
@@ -173,13 +173,12 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
 
     public void menuDoneVisibility(boolean visible){
         if(menuDone!=null)
-        menuDone.setEnabled(visible);
+            menuDone.setEnabled(visible);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.done) {
-//            showMissingValuesDialog();
             if (navigationfrom.equals("Share"))
                 shareMeetingNotes();
             else onBackPressed();
@@ -192,24 +191,18 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
 
     private void switchUIVisblity(String navigationfrom) {
 
-        switch (navigationfrom) {
-            case "Attendee Search":
-                actionBar.setTitle("Invitees");
-                available_switch_layout.setVisibility(View.GONE);
-                isCheckBoxRequired = false;
-                label_attendee.setVisibility(View.GONE);
-                break;
-
-            default:
-                //share cuurently
-                //pass the navigation from and change visiblity accordingly
-                actionBar.setTitle("Share");
-                available_switch_layout.setVisibility(View.VISIBLE);
-                isCheckBoxRequired = true;
-                removeMyEmail();
-                label_attendee.setVisibility(View.VISIBLE);
-                break;
-
+        if ("Attendee Search".equals(navigationfrom)) {
+            actionBar.setTitle("Invitees");
+            available_switch_layout.setVisibility(View.GONE);
+            isCheckBoxRequired = false;
+            label_attendee.setVisibility(View.GONE);
+        } else {//share cuurently
+            //pass the navigation from and change visiblity accordingly
+            actionBar.setTitle("Share");
+            available_switch_layout.setVisibility(View.VISIBLE);
+            isCheckBoxRequired = true;
+            removeMyEmail();
+            label_attendee.setVisibility(View.VISIBLE);
         }
     }
 
@@ -254,7 +247,7 @@ public class KaShareMeetingActivity extends KaAppCompatActivity {
         }
 
 
-        showProgress("",false);
+        showProgress();
         shareOrUnShareMeetingnotesToInvitees().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<KaRestResponse.ShareResponse>() {

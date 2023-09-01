@@ -23,14 +23,16 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AdvancedListTemplateView extends LinearLayout {
-    float dp1;
-    AutoExpandListView autoExpandListView;
-    TextView botCustomListViewButton, botListViewTitle, tvDescription;
-    LinearLayout botCustomListRoot;
+    final float dp1;
+    final AutoExpandListView autoExpandListView;
+    final TextView botCustomListViewButton;
+    final TextView botListViewTitle;
+    final TextView tvDescription;
+    final LinearLayout botCustomListRoot;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ImageView ivSorting;
-    private AdvancedListAdapter botListTemplateAdapter;;
+    private final ImageView ivSorting;
+    private AdvancedListAdapter botListTemplateAdapter;
 
     public AdvancedListTemplateView(Context context)
     {

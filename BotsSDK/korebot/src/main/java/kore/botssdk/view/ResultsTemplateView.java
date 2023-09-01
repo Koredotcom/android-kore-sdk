@@ -23,6 +23,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.ResultsViewTemplate;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ResultsTemplateView extends LinearLayout {
     float dp1, layoutItemHeight = 0;
@@ -32,9 +33,9 @@ public class ResultsTemplateView extends LinearLayout {
     String title;
     private RecyclerView lvLiveSearch, lvCentralPanel;
     private TextView tvSeeAllResults;
-    private Context mContext;
+    private final Context mContext;
     private SharedPreferences sharedPreferences;
-    private int allResultsCount = 0;
+    private final int allResultsCount = 0;
     private ResultsViewTemplate defaultTemplate;
     private Gson gson;
     private LinearLayout llResults;
@@ -67,7 +68,7 @@ public class ResultsTemplateView extends LinearLayout {
         lvCentralPanel = findViewById(R.id.lvCentralPanel);
         llResults = findViewById(R.id.llResults);
         tvPageTitle = findViewById(R.id.tvPageTitle);
-        dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         gson = new Gson();
@@ -84,7 +85,7 @@ public class ResultsTemplateView extends LinearLayout {
                 && payloadInner.getGraph_answer().getPayload().getCenter_panel().getData() != null &&
                    payloadInner.getGraph_answer().getPayload().getCenter_panel().getData().size() > 0)
            {
-               SearchCentralPanelAdapter liveSearchCyclerAdapter = new SearchCentralPanelAdapter(mContext, payloadInner.getGraph_answer().getPayload().getCenter_panel().getData(), 0, invokeGenericWebViewInterface);
+               SearchCentralPanelAdapter liveSearchCyclerAdapter = new SearchCentralPanelAdapter(mContext, payloadInner.getGraph_answer().getPayload().getCenter_panel().getData(), invokeGenericWebViewInterface);
                lvCentralPanel.setAdapter(liveSearchCyclerAdapter);
            }
            else
@@ -98,7 +99,7 @@ public class ResultsTemplateView extends LinearLayout {
             if(payloadInner.getResults() != null && payloadInner.getResults().get("web") != null
                     && payloadInner.getResults().get("web").getData() != null)
             {
-                LiveSearchCyclerAdapter liveSearchCyclerAdapter = new LiveSearchCyclerAdapter(mContext, payloadInner.getResults().get("web").getData(), 0, invokeGenericWebViewInterface);
+                LiveSearchCyclerAdapter liveSearchCyclerAdapter = new LiveSearchCyclerAdapter(mContext, payloadInner.getResults().get("web").getData(),  invokeGenericWebViewInterface);
                 lvLiveSearch.setAdapter(liveSearchCyclerAdapter);
             }
 

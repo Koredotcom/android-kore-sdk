@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -23,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,14 +86,14 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 	private int noOfMergeAttempts;
 	private final String host;
 
-	BotDBManager helper;
+	final BotDBManager helper;
 //	KoreBaseDao<FileUploadInfo, String> fileDao;
-	FileUploadInfo uploadInfo = new FileUploadInfo();
+final FileUploadInfo uploadInfo = new FileUploadInfo();
     public static final long FILE_SIZE_20MB = 20 * 1024*1024;
 //	KoreBaseDao<FileUploadInfo, String> uploadDao;
 
 
-	ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
+	final ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
     private ProgressDialog pDialog;
 	private final boolean isAnonymousUser;
 	private final boolean isWebHook;
@@ -210,13 +210,11 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 					totalbyteswritten += dataSizeRead;
 					LogUtils.d(LOG_TAG, "5#################################The chunk number is " + chunkNo);
 
-
 					ChunkInfo chunkInfo = new ChunkInfo();
 					chunkInfo.setFileName(fileName);
 					chunkInfo.setNumber(chunkNo);
 					chunkInfo.setOffset(totalbyteswritten - buffer.length);
 					chunkInfo.setSize(dataSizeRead);
-
 
 					if(helper.getChunkInfoMap().get(fileToken) != null) {
 						Objects.requireNonNull(helper.getChunkInfoMap().get(fileToken)).put(chunkNo, chunkInfo);
@@ -225,7 +223,8 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 						hMap.put(chunkNo, chunkInfo);
 						helper.getChunkInfoMap().put(fileToken,hMap);
 					}
-                    upLoadProgressState(0,true);
+
+					upLoadProgressState(0,true);
 					executor.execute(new UploadExecutor(context, fileName, fileToken, accessToken, userOrTeamId, chunkbaos.toByteArray(), chunkNo, this, host,isAnonymousUser, isWebHook, botId));
 					chunkNo++;
 					chunkbaos.reset(); /*chunk size doubles in next iteration*/
@@ -271,9 +270,10 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 				fis = new FileInputStream(outFilePath);
                 if (fis.available() > 0) {
                     int chunkNo = 0;
-                    while ((dataSizeRead = fis.read(buffer)) > 0) {
-                        chunkbaos.write(buffer, 0, dataSizeRead);
-                        chunkbaos.flush();
+                    while ((dataSizeRead = fis.read(buffer)) > 0)
+					{
+						chunkbaos.write(buffer, 0, dataSizeRead);
+						chunkbaos.flush();
 						LogUtils.d(LOG_TAG, "6########################The chunk number is " + chunkNo);
 
                         if(failedChunkList.contains(chunkNo+"")) {
@@ -297,41 +297,28 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 
 	@Override
 	public synchronized void notifyChunkUploadCompleted(String chunkNo, String fileName) {
-//		uploadCount.addAndGet(1);
 		try {
-//			uploadDao.refresh(uploadInfo);
 			uploadInfo.setUploadCount(uploadInfo.getUploadCount()+1);
             upLoadProgressState(uploadInfo.getUploadCount() * 100/uploadInfo.getTotalChunks(),true);
-			ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(Integer.parseInt(chunkNo));
+			ChunkInfo chInfo = Objects.requireNonNull(helper.getChunkInfoMap().get(fileToken)).get(Integer.parseInt(chunkNo));
+			assert chInfo != null;
 			chInfo.setUploaded(true);
-			helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
+			Objects.requireNonNull(helper.getChunkInfoMap().get(fileToken)).put(Integer.parseInt(chunkNo),chInfo);
 			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
-//			uploadDao.update(uploadInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
-//		if(isRecorded ){
-			if(uploadInfo.getTotalChunks() == uploadInfo.getUploadCount()){
 
-				LogUtils.d(LOG_TAG, "Sending merge request"+fileName +"as no failed chunks in recorded");
-				try {
-					sendMergeSignal(uploadInfo.getTotalChunks(), fileContext);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-//			}
-			}/*else if(!isRecorded && uploadInfo.getTotalChunks() == uploadInfo.getUploadCount()){
-				KoreLogger.debugLog(LOG_TAG, "Sending merge request"+fileName +"as no failed chunks");
-				sendMergeSignal(chunkCount, fileContext);
-			}*/
+		if(uploadInfo.getTotalChunks() == uploadInfo.getUploadCount()){
+
+			LogUtils.d(LOG_TAG, "Sending merge request"+fileName +"as no failed chunks in recorded");
+			try {
+				sendMergeSignal(uploadInfo.getTotalChunks(), fileContext);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-
-	/*@Override
-	public synchronized void chunkUploadFailed(String chunkNo, String fileName, byte[] dataToPost, String fileToken) {
-		executor.execute(new UploadExecutor(context, fileName,fileToken,accessToken,userOrTeamId,dataToPost, Integer.parseInt(chunkNo), this,isTeam));
-	}*/
+	}
 
 	@Override
 	public void initiateFileUpload(FileUploadedListener listener) {
@@ -404,7 +391,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 				if (fis.available() > 0)
 				{
 					thumbBaos=new ByteArrayOutputStream();
-					reqEntity.addPart("thumbnailUpload", new StringBody("true"));
+					reqEntity.addPart("thumbnailUpload", new StringBody("true", ContentType.TEXT_PLAIN));
 					int startInd = thumbnailFilePath.lastIndexOf(File.separator) + 1;
 					int endInd = thumbnailFilePath.indexOf(".",startInd);
 					String thfileName = thumbnailFilePath.substring(startInd,endInd);
@@ -416,31 +403,31 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 						thumbBaos.write(buff,0,dataRead);
 					}
 
-					reqEntity.addPart("thumbnail", new ByteArrayBody(thumbBaos.toByteArray(),"image/png",thfileName));
-					reqEntity.addPart("thumbnailExtension",new StringBody("png"));
+					reqEntity.addPart("thumbnail", new ByteArrayBody(thumbBaos.toByteArray(),ContentType.getByMimeType("image/png"),thfileName));
+					reqEntity.addPart("thumbnailExtension",new StringBody("png", ContentType.TEXT_PLAIN));
 					LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     Thumbnail uploaded");
 
 				}else{
-					reqEntity.addPart("thumbnailUpload", new StringBody("false"));
+					reqEntity.addPart("thumbnailUpload", new StringBody("false", ContentType.TEXT_PLAIN));
 				}
 			}else{
-				reqEntity.addPart("thumbnailUpload", new StringBody("false"));
+				reqEntity.addPart("thumbnailUpload", new StringBody("false", ContentType.TEXT_PLAIN));
 
 				LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   No Thumbnail ");
 		}
 
 		LogUtils.d(LOG_TAG,"M#####The chunk number is "+ dataCount);
 
-		reqEntity.addPart("totalChunks", new StringBody(dataCount + ""));
-		reqEntity.addPart("fileExtension", new StringBody(fileExtn));
-		reqEntity.addPart("fileToken", new StringBody(fileToken));
+		reqEntity.addPart("totalChunks", new StringBody(dataCount + "", ContentType.TEXT_PLAIN));
+		reqEntity.addPart("fileExtension", new StringBody(fileExtn, ContentType.TEXT_PLAIN));
+		reqEntity.addPart("fileToken", new StringBody(fileToken, ContentType.TEXT_PLAIN));
 		if(!StringUtils.isNullOrEmpty(fileName))
-			reqEntity.addPart("filename",new StringBody(fileName));
+			reqEntity.addPart("filename",new StringBody(fileName, ContentType.TEXT_PLAIN));
 
 
 		if (fileContext !=null) {
 			LogUtils.d(LOG_TAG,"Adding fileContext  !!!");
-			reqEntity.addPart("fileContext", new StringBody(fileContext));
+			reqEntity.addPart("fileContext", new StringBody(fileContext, ContentType.TEXT_PLAIN));
 		}
 		else{
 			LogUtils.d(LOG_TAG, "There is no fileContext !!");
@@ -461,9 +448,9 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		inputStreamReader = new InputStreamReader(inputStream);
 		input = new BufferedReader(inputStreamReader);
 
-		String serverResponse = "";
+		StringBuilder serverResponse = new StringBuilder();
 		for( int c = input.read(); c != -1; c = input.read() ) {
-			serverResponse = serverResponse + (char)c;
+			serverResponse.append((char) c);
 		}
 
 		upLoadProgressState(100,false);
@@ -473,7 +460,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		LogUtils.d(LOG_TAG, "status code for merge" + statusCode);
 		if (statusCode == 200) {
 			uploadInfo.setUploaded(true);
-			JSONObject jsonObject = new JSONObject(serverResponse);
+			JSONObject jsonObject = new JSONObject(serverResponse.toString());
 			String thumbnailURL = null;
 			jsonObject.get("fileId");
 			fileID = (String) jsonObject.get("fileId");
@@ -620,44 +607,42 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 	private  String getFileSizeMegaBytes(File file) {
 		if(file.length() < (1024*1024)){
 			return df2.format((double) file.length() / (1024)) + "kb";
-		}else	return df2.format((double) file.length() / (1024 * 1024)) + "mb";
+		}else
+			return df2.format((double) file.length() / (1024 * 1024)) + "mb";
 	}
 
 	private void handleErr404(InputStream errorStream , String fileName) throws IOException {
 		LogUtils.d(LOG_TAG,"Starting upload failed chunks");
-		String response="";
+		StringBuilder response= new StringBuilder();
 		String line;
-		BufferedReader br=new BufferedReader(new InputStreamReader(errorStream));
-		try {
-			while ((line=br.readLine()) != null) {
-                response+=line;
-            }
-			if(!StringUtils.isNullOrEmpty(response)){
-				LogUtils.d(LOG_TAG,"Failed chunks are "+response);
-				MissingChunks msc = new Gson().fromJson(response, MissingChunks.class);
-				if(msc != null){
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(errorStream))) {
+			while ((line = br.readLine()) != null) {
+				response.append(line);
+			}
+			if (!StringUtils.isNullOrEmpty(response.toString())) {
+				LogUtils.d(LOG_TAG, "Failed chunks are " + response);
+				MissingChunks msc = new Gson().fromJson(response.toString(), MissingChunks.class);
+				if (msc != null) {
 					UploadError uE = msc.getErrors().get(0);
-					ArrayList<String> missingChunks = new ArrayList<String>(Arrays.asList(uE.getMsg().substring(1,uE.getMsg().length()-1).split("\\s*,\\s*")));
-					changeUploadInfoForFailedChunks(missingChunks,fileName);
+					ArrayList<String> missingChunks = new ArrayList<String>(Arrays.asList(uE.getMsg().substring(1, uE.getMsg().length() - 1).split("\\s*,\\s*")));
+					changeUploadInfoForFailedChunks(missingChunks, fileName);
 					startUploadFailedChunks(missingChunks);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		finally {
-			br.close();
-		}
 	}
 
 	private void changeUploadInfoForFailedChunks(ArrayList<String> chunkNumbers, String fileName){
 		try {
-//			uploadDao.refresh(uploadInfo);
 			uploadInfo.setUploadCount(uploadInfo.getUploadCount() - chunkNumbers.size());
 			for(String chunkNo:chunkNumbers){
-				ChunkInfo chInfo = helper.getChunkInfoMap().get(fileToken).get(chunkNo);
-				chInfo.setUploaded(false);
-				helper.getChunkInfoMap().get(fileToken).put(Integer.parseInt(chunkNo),chInfo);
+				ChunkInfo chInfo = Objects.requireNonNull(helper.getChunkInfoMap().get(fileToken)).get(chunkNo);
+				if(chInfo != null) {
+					chInfo.setUploaded(false);
+					Objects.requireNonNull(helper.getChunkInfoMap().get(fileToken)).put(Integer.parseInt(chunkNo), chInfo);
+				}
 			}
 			uploadInfo.setUploaded(false);
 			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
@@ -676,9 +661,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		data.putString("fileName", fileName);
 		data.putString("filePath", outFilePath);
 		data.putString("componentType", componentType);
-        data.putBoolean("success",false);
-//		if(isTeam)
-//			data.putString(Constants.TEAM_ID,userOrTeamId);
+		data.putBoolean("success",false);
 		msg.setData(data); //put the data here
 
 		try {
@@ -686,10 +669,12 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 		} catch (RemoteException e) {
 			LogUtils.d("error", "error");
 		}
-		if(listener !=null)
-			listener.fileUploaded(/*comp, messageId, fileExtn,messenger*/);
 
-        upLoadProgressState(100,false);
+		if(listener !=null) {
+			listener.fileUploaded(/*comp, messageId, fileExtn,messenger*/);
+		}
+
+		upLoadProgressState(100,false);
 		uploadInfo.setMergeTriggered(isFromMergeSignal);
 	}
 }

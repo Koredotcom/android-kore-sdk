@@ -13,8 +13,8 @@ import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.utils.MPPointD;
 
 public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> implements IHighlighter {
-    protected T mChart;
-    protected List<Highlight> mHighlightBuffer = new ArrayList();
+    protected final T mChart;
+    protected final List<Highlight> mHighlightBuffer = new ArrayList();
 
     public ChartHighlighter(T chart) {
         this.mChart = chart;
@@ -50,7 +50,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
         float distance = 3.4028235E38F;
 
         for(int i = 0; i < closestValues.size(); ++i) {
-            Highlight high = (Highlight)closestValues.get(i);
+            Highlight high = closestValues.get(i);
             if (high.getAxis() == axis) {
                 float tempDistance = Math.abs(this.getHighlightPos(high) - pos);
                 if (tempDistance < distance) {
@@ -115,7 +115,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
         float distance = minSelectionDistance;
 
         for(int i = 0; i < closestValues.size(); ++i) {
-            Highlight high = (Highlight)closestValues.get(i);
+            Highlight high = closestValues.get(i);
             if (axis == null || high.getAxis() == axis) {
                 float cDistance = this.getDistance(x, y, high.getXPx(), high.getYPx());
                 if (cDistance < distance) {
@@ -129,7 +129,7 @@ public class ChartHighlighter<T extends BarLineScatterCandleBubbleDataProvider> 
     }
 
     protected float getDistance(float x1, float y1, float x2, float y2) {
-        return (float)Math.hypot((double)(x1 - x2), (double)(y1 - y2));
+        return (float)Math.hypot(x1 - x2, y1 - y2);
     }
 
     protected BarLineScatterCandleBubbleData getData() {

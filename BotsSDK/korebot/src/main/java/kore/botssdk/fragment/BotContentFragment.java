@@ -153,7 +153,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     private void findViews(View view) {
-        rvChatContent = (RelativeLayout)view.findViewById(R.id.rvChatContent);
+        rvChatContent = view.findViewById(R.id.rvChatContent);
         botsBubblesListView =  view.findViewById(R.id.chatContentListView);
         mLayoutManager = (LinearLayoutManager) botsBubblesListView.getLayoutManager();
         headerView = view.findViewById(R.id.filesSectionHeader);
@@ -464,10 +464,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
-        botTypingStatusRl = (LinearLayout) view.findViewById(R.id.botTypingStatus);
-        botTypingStatusIcon = (CircularProfileView) view.findViewById(R.id.typing_status_item_cpv);
+        botTypingStatusRl = view.findViewById(R.id.botTypingStatus);
+        botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);
         botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
-        typingStatusItemDots = (DotsTextView) view.findViewById(R.id.typing_status_item_dots);
+        typingStatusItemDots = view.findViewById(R.id.typing_status_item_dots);
         typingStatusItemDots.setTextColor(Color.BLACK);
     }
 
@@ -545,7 +545,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = DateUtils.isoFormatter.parse(((BotHistoryMessage) msg).getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);
@@ -613,7 +613,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = DateUtils.isoFormatter.parse(((BotHistoryMessage) msg).getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);
@@ -724,7 +724,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     static class RangeValidator implements CalendarConstraints.DateValidator {
 
-        long minDate, maxDate;
+        final long minDate;
+        final long maxDate;
 
         RangeValidator(long minDate, long maxDate) {
             this.minDate = minDate;

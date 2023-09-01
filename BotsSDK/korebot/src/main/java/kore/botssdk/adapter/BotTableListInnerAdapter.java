@@ -3,14 +3,14 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.squareup.picasso.Picasso;
 
@@ -28,17 +28,13 @@ public class BotTableListInnerAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels;
-    String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
-    LayoutInflater ownLayoutInflator;
-    ListView parentListView;
-    RoundedCornersTransform roundedCornersTransform;
+    final RoundedCornersTransform roundedCornersTransform;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int dp1;
 
     protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels)
     {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.botTableListRowItemsModels = botTableListRowItemsModels;
         this.roundedCornersTransform = new RoundedCornersTransform();
@@ -67,7 +63,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_table_list_inner_cell, null);
+            convertView = View.inflate(context, R.layout.bot_table_list_inner_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -123,7 +119,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
             }
         }
 
-        holder.bot_list_item_cost.setTextColor(context.getResources().getColor(R.color.black));
+        holder.bot_list_item_cost.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.black, context.getTheme()));
 
         if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getRowColor()))
         {
@@ -170,11 +166,11 @@ public class BotTableListInnerAdapter extends BaseAdapter
 
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
-        holder.botListItemRoot = (LinearLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.bot_list_item_cost = (TextView) view.findViewById(R.id.bot_list_item_cost);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.bot_list_item_cost = view.findViewById(R.id.bot_list_item_cost);
         view.setTag(holder);
     }
 

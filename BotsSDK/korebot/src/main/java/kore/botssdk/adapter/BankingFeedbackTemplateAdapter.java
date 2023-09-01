@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -55,8 +54,7 @@ public class BankingFeedbackTemplateAdapter extends BaseAdapter
         ExperienceItemViewHolder holder;
         if (convertView == null)
         {
-            LayoutInflater layoutInflater = LayoutInflater.from(context);
-            convertView = layoutInflater.inflate(R.layout.banking_feedback_template_cell, null);
+            convertView = View.inflate(context, R.layout.banking_feedback_template_cell, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new ExperienceItemViewHolder();
             holder.tvExperience = convertView.findViewById(R.id.tvExperience);

@@ -78,7 +78,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
             float diameter = this.getDiameter();
             float radius = diameter / 2.0F;
             MPPointF c = this.getCenterOffsets();
-            float shift = ((PieData)this.mData).getDataSet().getSelectionShift();
+            float shift = this.mData.getDataSet().getSelectionShift();
             this.mCircleBox.set(c.x - radius + shift, c.y - radius + shift, c.x + radius - shift, c.y + radius - shift);
             MPPointF.recycleInstance(c);
         }
@@ -100,14 +100,14 @@ public class PieChart extends PieRadarChartBase<PieData> {
         float rotationAngle = this.getRotationAngle();
         int entryIndex = (int)highlight.getX();
         float offset = this.mDrawAngles[entryIndex] / 2.0F;
-        float x = (float)((double)r * Math.cos(Math.toRadians((double)((rotationAngle + this.mAbsoluteAngles[entryIndex] - offset) * this.mAnimator.getPhaseY()))) + (double)center.x);
-        float y = (float)((double)r * Math.sin(Math.toRadians((double)((rotationAngle + this.mAbsoluteAngles[entryIndex] - offset) * this.mAnimator.getPhaseY()))) + (double)center.y);
+        float x = (float)((double)r * Math.cos(Math.toRadians((rotationAngle + this.mAbsoluteAngles[entryIndex] - offset) * this.mAnimator.getPhaseY())) + (double)center.x);
+        float y = (float)((double)r * Math.sin(Math.toRadians((rotationAngle + this.mAbsoluteAngles[entryIndex] - offset) * this.mAnimator.getPhaseY())) + (double)center.y);
         MPPointF.recycleInstance(center);
         return new float[]{x, y};
     }
 
     private void calcAngles() {
-        int entryCount = ((PieData)this.mData).getEntryCount();
+        int entryCount = this.mData.getEntryCount();
         if (this.mDrawAngles.length != entryCount) {
             this.mDrawAngles = new float[entryCount];
         } else {
@@ -124,19 +124,19 @@ public class PieChart extends PieRadarChartBase<PieData> {
             }
         }
 
-        float yValueSum = ((PieData)this.mData).getYValueSum();
-        List<IPieDataSet> dataSets = ((PieData)this.mData).getDataSets();
+        float yValueSum = this.mData.getYValueSum();
+        List<IPieDataSet> dataSets = this.mData.getDataSets();
         boolean hasMinAngle = this.mMinAngleForSlices != 0.0F && (float)entryCount * this.mMinAngleForSlices <= this.mMaxAngle;
         float[] minAngles = new float[entryCount];
         int cnt = 0;
         float offset = 0.0F;
         float diff = 0.0F;
 
-        for(int i = 0; i < ((PieData)this.mData).getDataSetCount(); ++i) {
-            IPieDataSet set = (IPieDataSet)dataSets.get(i);
+        for(int i = 0; i < this.mData.getDataSetCount(); ++i) {
+            IPieDataSet set = dataSets.get(i);
 
             for(int j = 0; j < set.getEntryCount(); ++j) {
-                float drawAngle = this.calcAngle(Math.abs(((PieEntry)set.getEntryForIndex(j)).getY()), yValueSum);
+                float drawAngle = this.calcAngle(Math.abs(set.getEntryForIndex(j).getY()), yValueSum);
                 if (hasMinAngle) {
                     float temp = drawAngle - this.mMinAngleForSlices;
                     if (temp <= 0.0F) {
@@ -189,7 +189,7 @@ public class PieChart extends PieRadarChartBase<PieData> {
     }
 
     private float calcAngle(float value) {
-        return this.calcAngle(value, ((PieData)this.mData).getYValueSum());
+        return this.calcAngle(value, this.mData.getYValueSum());
     }
 
     private float calcAngle(float value, float yValueSum) {
@@ -215,10 +215,10 @@ public class PieChart extends PieRadarChartBase<PieData> {
     }
 
     public int getDataSetIndexForIndex(int xIndex) {
-        List<IPieDataSet> dataSets = ((PieData)this.mData).getDataSets();
+        List<IPieDataSet> dataSets = this.mData.getDataSets();
 
         for(int i = 0; i < dataSets.size(); ++i) {
-            if (((IPieDataSet)dataSets.get(i)).getEntryForXValue((float)xIndex, 0.0F) != null) {
+            if (dataSets.get(i).getEntryForXValue((float)xIndex, 0.0F) != null) {
                 return i;
             }
         }

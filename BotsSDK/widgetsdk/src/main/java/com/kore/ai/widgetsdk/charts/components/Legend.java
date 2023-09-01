@@ -77,7 +77,7 @@ public class Legend extends ComponentBase {
     }
 
     public void setEntries(List<LegendEntry> entries) {
-        this.mEntries = (LegendEntry[])entries.toArray(new LegendEntry[entries.size()]);
+        this.mEntries = entries.toArray(new LegendEntry[entries.size()]);
     }
 
     public LegendEntry[] getEntries() {
@@ -134,7 +134,7 @@ public class Legend extends ComponentBase {
     }
 
     public void setExtra(List<LegendEntry> entries) {
-        this.mExtraEntries = (LegendEntry[])entries.toArray(new LegendEntry[entries.size()]);
+        this.mExtraEntries = entries.toArray(new LegendEntry[entries.size()]);
     }
 
     public void setExtra(LegendEntry[] entries) {
@@ -163,7 +163,7 @@ public class Legend extends ComponentBase {
             entries.add(entry);
         }
 
-        this.mExtraEntries = (LegendEntry[])entries.toArray(new LegendEntry[entries.size()]);
+        this.mExtraEntries = entries.toArray(new LegendEntry[entries.size()]);
     }
 
     public void setCustom(LegendEntry[] entries) {
@@ -172,7 +172,7 @@ public class Legend extends ComponentBase {
     }
 
     public void setCustom(List<LegendEntry> entries) {
-        this.mEntries = (LegendEntry[])entries.toArray(new LegendEntry[entries.size()]);
+        this.mEntries = entries.toArray(new LegendEntry[entries.size()]);
         this.mIsLegendCustom = true;
     }
 
@@ -411,7 +411,7 @@ public class Legend extends ComponentBase {
                     if (label != null) {
                         this.mCalculatedLabelSizes.add(Utils.calcTextSize(labelpaint, label));
                         requiredWidth += drawingForm ? formToTextSpace + formSize : 0.0F;
-                        requiredWidth += ((FSize)this.mCalculatedLabelSizes.get(i)).width;
+                        requiredWidth += this.mCalculatedLabelSizes.get(i).width;
                     } else {
                         this.mCalculatedLabelSizes.add(FSize.getInstance(0.0F, 0.0F));
                         requiredWidth += drawingForm ? formSize : 0.0F;

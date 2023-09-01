@@ -20,7 +20,7 @@ public class DefaultValueFormatter extends ValueFormatter {
     }
 
     public String getFormattedValue(float value) {
-        return this.mFormat.format((double)value);
+        return this.mFormat.format(value);
     }
 
     public void setup(int digits)

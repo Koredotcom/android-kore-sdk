@@ -27,7 +27,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         List<BarEntry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((BarEntry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         BarDataSet copied = new BarDataSet(entries, this.getLabel());
@@ -48,7 +48,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
         this.mEntryCountStacks = 0;
 
         for(int i = 0; i < yVals.size(); ++i) {
-            float[] vals = ((BarEntry)yVals.get(i)).getYVals();
+            float[] vals = yVals.get(i).getYVals();
             if (vals == null) {
                 ++this.mEntryCountStacks;
             } else {
@@ -60,7 +60,7 @@ public class BarDataSet extends BarLineScatterCandleBubbleDataSet<BarEntry> impl
 
     private void calcStackSize(List<BarEntry> yVals) {
         for(int i = 0; i < yVals.size(); ++i) {
-            float[] vals = ((BarEntry)yVals.get(i)).getYVals();
+            float[] vals = yVals.get(i).getYVals();
             if (vals != null && vals.length > this.mStackSize) {
                 this.mStackSize = vals.length;
             }

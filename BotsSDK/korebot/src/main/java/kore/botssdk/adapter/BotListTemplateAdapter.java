@@ -31,16 +31,13 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotListTemplateAdapter extends BaseAdapter {
-
-    String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
-
     ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflator;
-    Context context;
-    RoundedCornersTransform roundedCornersTransform;
-    ListView parentListView;
+    final LayoutInflater ownLayoutInflator;
+    final Context context;
+    final RoundedCornersTransform roundedCornersTransform;
+    final ListView parentListView;
 
     public BotListTemplateAdapter(Context context, ListView parentListView) {
         this.ownLayoutInflator = LayoutInflater.from(context);
@@ -52,7 +49,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (botListModelArrayList != null) {
-            return botListModelArrayList.size() >3 ? 3 : botListModelArrayList.size();
+            return Math.min(botListModelArrayList.size(), 3);
         } else {
             return 0;
         }
@@ -76,7 +73,7 @@ public class BotListTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_list_template_item_layout, null);
+            convertView = View.inflate(context, R.layout.bot_list_template_item_layout, null);
         }
 
         if (convertView.getTag() == null) {
@@ -161,11 +158,11 @@ public class BotListTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
 
-        holder.botListItemRoot = (RelativeLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.botListItemButton = (Button) view.findViewById(R.id.bot_list_item_button);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.botListItemButton = view.findViewById(R.id.bot_list_item_button);
 
         view.setTag(holder);
     }

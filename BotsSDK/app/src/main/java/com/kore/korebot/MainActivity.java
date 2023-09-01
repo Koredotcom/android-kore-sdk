@@ -15,14 +15,13 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
 public class MainActivity extends AppCompatActivity {
-    private Button launchBotBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        launchBotBtn = findViewById(R.id.launchBotBtn);
+        Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

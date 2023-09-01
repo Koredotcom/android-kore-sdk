@@ -55,7 +55,7 @@ public class ActionsAdapter extends RecyclerView.Adapter<ActionsAdapter.ViewHold
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ActionItemLayoutBinding actionItemLayoutBinding;
+        final ActionItemLayoutBinding actionItemLayoutBinding;
 
         public ViewHolder(@NonNull ActionItemLayoutBinding actionItemLayoutBinding) {
             super(actionItemLayoutBinding.getRoot());

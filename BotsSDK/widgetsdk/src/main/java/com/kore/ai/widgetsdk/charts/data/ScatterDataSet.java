@@ -28,7 +28,7 @@ public class ScatterDataSet extends LineScatterCandleRadarDataSet<com.kore.ai.wi
         List<com.kore.ai.widgetsdk.charts.data.Entry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((Entry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         com.kore.ai.widgetsdk.charts.data.ScatterDataSet copied = new com.kore.ai.widgetsdk.charts.data.ScatterDataSet(entries, this.getLabel());

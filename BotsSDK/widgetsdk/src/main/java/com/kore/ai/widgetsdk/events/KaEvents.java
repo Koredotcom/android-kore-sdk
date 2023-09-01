@@ -12,7 +12,7 @@ public class KaEvents {
 
     }
     public static class ReminderEvent{
-        public  String reminderInfo;
+        public final String reminderInfo;
         public ReminderEvent(String reminderInfo){
             this.reminderInfo = reminderInfo;
         }

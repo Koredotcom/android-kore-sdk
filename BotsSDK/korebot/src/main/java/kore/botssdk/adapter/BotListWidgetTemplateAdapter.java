@@ -3,8 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,26 +26,21 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotListWidgetTemplateAdapter extends BaseAdapter {
-
-    private final String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     private ArrayList<BotListWidgetModel> botListModelArrayList = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final LayoutInflater ownLayoutInflator;
-    private final Context context;
     private final RoundedCornersTransform roundedCornersTransform;
     private final ListView parentListView;
-    private GradientDrawable bgDrawable;
-    private int count = 0;
+    private final int count;
     private final SharedPreferences sharedPreferences;
+    private final Context context;
 
     public BotListWidgetTemplateAdapter(Context context, ListView parentListView, int count) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
-        this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
         this.count = count;
         this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        this.context = context;
     }
 
     @Override
@@ -77,7 +70,7 @@ public class BotListWidgetTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_listwidget_template_cell, null);
+            convertView = View.inflate(context, R.layout.bot_listwidget_template_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -94,16 +87,6 @@ public class BotListWidgetTemplateAdapter extends BaseAdapter {
     private void populateVIew(ViewHolder holder, int position) {
         BotListWidgetModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
-
-//        if(sharedPreferences != null)
-//        {
-//            GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-//            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-//
-//            holder.botListItemTitle.setTextColor(Color.parseColor("#000000"));
-//        }
-
-
 
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
@@ -164,11 +147,11 @@ public class BotListWidgetTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
 
-        holder.botListItemRoot = (LinearLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.bot_list_item_cost = (TextView) view.findViewById(R.id.bot_list_item_cost);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.bot_list_item_cost = view.findViewById(R.id.bot_list_item_cost);
 
         view.setTag(holder);
     }

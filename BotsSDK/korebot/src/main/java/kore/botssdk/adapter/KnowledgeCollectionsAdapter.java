@@ -19,7 +19,7 @@ import kore.botssdk.view.viewHolder.KnowledgeCollectionViewHolder;
 
 public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeCollectionViewHolder> implements RecyclerViewDataAccessor {
 
-    Context context;
+    final Context context;
     KnowledgeCollectionModel.Elements modelData;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
@@ -46,7 +46,8 @@ public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeC
         holder.sub_view.setText(model.getAnswerPayload().get(0).getText());
         holder.peopleicon.setTypeface(Utility.getTypeFaceObj(context));
         holder.search_view.setText(model.getName());
-        holder.percent_view.setText(model.getScore()+"% Match");
+        String str = model.getScore()+"% Match";
+        holder.percent_view.setText(str);
 
         holder.view_click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,12 +72,6 @@ public class KnowledgeCollectionsAdapter extends RecyclerView.Adapter<KnowledgeC
     @Override
     public void setData(ArrayList data) {
 
-    }
-
-
-    public void setDataObject(KnowledgeCollectionModel.Elements modelData) {
-        this.modelData = modelData;
-        notifyDataSetChanged();
     }
 
     @Override

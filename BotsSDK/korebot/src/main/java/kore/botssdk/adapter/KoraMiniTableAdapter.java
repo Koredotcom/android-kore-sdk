@@ -20,9 +20,9 @@ import kore.botssdk.view.tableview.BotMiniTableView;
  */
 
 public class KoraMiniTableAdapter extends PagerAdapter {
-    Context mContext;
-    ArrayList<BotMiniTableModel> data;
-    LayoutInflater ownLayoutInflater;
+    final Context mContext;
+    final ArrayList<BotMiniTableModel> data;
+    final LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
     private final String template_type;
     public KoraMiniTableAdapter(ArrayList<BotMiniTableModel> miniTableModels, Context mContext, String template_type){

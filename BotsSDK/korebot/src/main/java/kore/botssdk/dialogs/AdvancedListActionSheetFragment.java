@@ -31,6 +31,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
     private TextView tvOptionsTitle;
@@ -73,7 +74,7 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
-        this.dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
+        this.dp1 = (int) DimensionUtil.dp1;
 
         if(!StringUtils.isNullOrEmpty(title))
         {
@@ -120,7 +121,7 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
                 bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);

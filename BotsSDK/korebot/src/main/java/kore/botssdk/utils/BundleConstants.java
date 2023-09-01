@@ -16,17 +16,17 @@ public class BundleConstants {
     public static final String LEFT = "left";
     public static final String BOLD = "bold";
     public static final String FULL_WIDTH = "fullwidth";
-    public static String CAROUSEL_ITEM = "carousel_item";
-    public static String CAROUSEL_ITEM_POSITION = "carousel_item_position";
-    public static String RESOURCE_ID = "resource_id";
-    public static String BUTTON_TYPE_POSTBACK = "postback";
-    public static String BUTTON_TYPE_TEXT = "text";
-    public static String BUTTON_TYPE_POSTBACK_DISP_PAYLOAD = "postback_disp_payload";
-    public static String BUTTON_TYPE_WEB_URL = "web_url";
-    public static String BUTTON_TYPE_URL = "url";
-    public static String BUTTON_TYPE_CONFIRM = "Confirm";
-    public static String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
-    public static String BUTTON_TYPE_USER_INTENT = "USERINTENT";
+    public static final String CAROUSEL_ITEM = "carousel_item";
+    public static final String CAROUSEL_ITEM_POSITION = "carousel_item_position";
+    public static final String RESOURCE_ID = "resource_id";
+    public static final String BUTTON_TYPE_POSTBACK = "postback";
+    public static final String BUTTON_TYPE_TEXT = "text";
+    public static final String BUTTON_TYPE_POSTBACK_DISP_PAYLOAD = "postback_disp_payload";
+    public static final String BUTTON_TYPE_WEB_URL = "web_url";
+    public static final String BUTTON_TYPE_URL = "url";
+    public static final String BUTTON_TYPE_CONFIRM = "Confirm";
+    public static final String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
+    public static final String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
     public final static String SHOW_PIC = "showPic";
@@ -72,12 +72,12 @@ public class BundleConstants {
     public static final String FILE_CONTEXT = "fileContext";
 
 
-    public static String CHOOSE_TYPE_GALLERY = "choose";
+    public static final String CHOOSE_TYPE_GALLERY = "choose";
     public static String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
-    public static String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
-    public static String CHOOSE_TYPE_FILE = "choose_file";
-    public static String CHOOSE_TYPE_CAMERA = "camera";
-    public static String FOR_MESSAGE = "message";
+    public static final String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
+    public static final String CHOOSE_TYPE_FILE = "choose_file";
+    public static final String CHOOSE_TYPE_CAMERA = "camera";
+    public static final String FOR_MESSAGE = "message";
     public static String FOR_PROFILE = "profile";
     public static final String MEDIA_TYPE_AUDIO = "audio";
     public static final String MEDIA_TYPE_VIDEO = "video";

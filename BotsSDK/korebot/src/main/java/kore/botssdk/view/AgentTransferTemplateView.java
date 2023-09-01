@@ -58,12 +58,12 @@ public class AgentTransferTemplateView extends LinearLayout
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.agent_transfer_template, this, true);
-        tvAgentCardText = (TextView) findViewById(R.id.tvAgentCardText);
-        ivAgentImage = (ImageView) findViewById(R.id.ivAgentImage);
-        tvAgentName = (TextView) findViewById(R.id.tvAgentName);
-        tvAgentRole = (TextView) findViewById(R.id.tvAgentRole);
-        rvAgentButtons = (RecyclerView) findViewById(R.id.rvAgentButtons);
-        llAgentDetails = (LinearLayout) findViewById(R.id.llAgentDetails);
+        tvAgentCardText = findViewById(R.id.tvAgentCardText);
+        ivAgentImage = findViewById(R.id.ivAgentImage);
+        tvAgentName = findViewById(R.id.tvAgentName);
+        tvAgentRole = findViewById(R.id.tvAgentRole);
+        rvAgentButtons = findViewById(R.id.rvAgentButtons);
+        llAgentDetails = findViewById(R.id.llAgentDetails);
         circleTransform = new CircleTransform();
 
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, LinearLayoutManager.HORIZONTAL);

@@ -21,7 +21,7 @@ public class CustomMarkerView extends MarkerView {
     public CustomMarkerView (Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview
-        tvContent = (TextView) findViewById(R.id.tvContent);
+        tvContent = findViewById(R.id.tvContent);
     }
 
     // callbacks everytime the MarkerView is redrawn, can be used to update the

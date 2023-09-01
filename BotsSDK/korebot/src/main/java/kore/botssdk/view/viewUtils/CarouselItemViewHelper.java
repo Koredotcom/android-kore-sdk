@@ -58,21 +58,21 @@ public class CarouselItemViewHelper {
     public static void initializeViewHolder(View view) {
         CarouselViewHolder carouselViewHolder = new CarouselViewHolder();
 
-        carouselViewHolder.carouselItemRoot = (CardView) view.findViewById(R.id.carousel_item_root);
-        carouselViewHolder.carouselItemImage = (ImageView) view.findViewById(R.id.carousel_item_image);
-        carouselViewHolder.carouselItemTitle = (TextView) view.findViewById(R.id.carousel_item_title);
-        carouselViewHolder.carouselItemSubTitle = (TextView) view.findViewById(R.id.carousel_item_subtitle);
-        carouselViewHolder.carouselButtonListview = (ListView) view.findViewById(R.id.carousel_button_listview);
+        carouselViewHolder.carouselItemRoot = view.findViewById(R.id.carousel_item_root);
+        carouselViewHolder.carouselItemImage = view.findViewById(R.id.carousel_item_image);
+        carouselViewHolder.carouselItemTitle = view.findViewById(R.id.carousel_item_title);
+        carouselViewHolder.carouselItemSubTitle = view.findViewById(R.id.carousel_item_subtitle);
+        carouselViewHolder.carouselButtonListview = view.findViewById(R.id.carousel_button_listview);
 
-        carouselViewHolder.hashTagsView = (TextView) view.findViewById(R.id.hash_tags_view);
-        carouselViewHolder.knowledgeType = (TextView) view.findViewById(R.id.knowledge_type);
-        carouselViewHolder.knowledgeMode = (TextView) view.findViewById(R.id.knowledge_mode);
-        carouselViewHolder.koraItems = (RelativeLayout) view.findViewById(R.id.kora_items);
-        carouselViewHolder.carouselOfferPrice_FL =  (FrameLayout) view.findViewById(R.id.offer_price_fl);
-        carouselViewHolder.carouselSavedPrice_FL =  (FrameLayout) view.findViewById(R.id.saved_price_fl);
+        carouselViewHolder.hashTagsView = view.findViewById(R.id.hash_tags_view);
+        carouselViewHolder.knowledgeType = view.findViewById(R.id.knowledge_type);
+        carouselViewHolder.knowledgeMode = view.findViewById(R.id.knowledge_mode);
+        carouselViewHolder.koraItems = view.findViewById(R.id.kora_items);
+        carouselViewHolder.carouselOfferPrice_FL = view.findViewById(R.id.offer_price_fl);
+        carouselViewHolder.carouselSavedPrice_FL = view.findViewById(R.id.saved_price_fl);
 
-        carouselViewHolder.carousel_item_offer = (TextView) view.findViewById(R.id.carousel_item_offer);
-        carouselViewHolder.carousel_item_save_price= (TextView) view.findViewById(R.id.carousel_item_saved);
+        carouselViewHolder.carousel_item_offer = view.findViewById(R.id.carousel_item_offer);
+        carouselViewHolder.carousel_item_save_price= view.findViewById(R.id.carousel_item_saved);
 
         view.setTag(carouselViewHolder);
     }

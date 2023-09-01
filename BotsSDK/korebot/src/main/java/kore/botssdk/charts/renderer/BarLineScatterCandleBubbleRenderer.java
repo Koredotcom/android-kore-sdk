@@ -9,7 +9,7 @@ import kore.botssdk.charts.interfaces.datasets.IDataSet;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public abstract class BarLineScatterCandleBubbleRenderer extends DataRenderer {
-    protected BarLineScatterCandleBubbleRenderer.XBounds mXBounds = new BarLineScatterCandleBubbleRenderer.XBounds();
+    protected final BarLineScatterCandleBubbleRenderer.XBounds mXBounds = new BarLineScatterCandleBubbleRenderer.XBounds();
 
     public BarLineScatterCandleBubbleRenderer(ChartAnimator animator, ViewPortHandler viewPortHandler) {
         super(animator, viewPortHandler);

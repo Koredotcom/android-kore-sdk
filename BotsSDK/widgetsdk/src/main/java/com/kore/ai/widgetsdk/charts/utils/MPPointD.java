@@ -8,7 +8,7 @@ public class MPPointD extends ObjectPool.Poolable {
     public double y;
 
     public static MPPointD getInstance(double x, double y) {
-        MPPointD result = (MPPointD)pool.get();
+        MPPointD result = pool.get();
         result.x = x;
         result.y = y;
         return result;

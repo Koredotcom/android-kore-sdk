@@ -52,7 +52,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         AdvanceOptionsAdapter.DetailsViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.advance_options_view, null);
+            convertView = View.inflate(context, R.layout.advance_options_view, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new AdvanceOptionsAdapter.DetailsViewHolder();
             holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);

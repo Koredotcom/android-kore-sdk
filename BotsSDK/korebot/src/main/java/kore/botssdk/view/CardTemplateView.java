@@ -19,7 +19,7 @@ import kore.botssdk.models.CardTemplateModel;
 
 public class CardTemplateView extends LinearLayout {
 
-    private RecyclerView rvCards;
+    private final RecyclerView rvCards;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
