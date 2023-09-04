@@ -1,9 +1,0 @@
-<resources>
-    <string name="app_name">KoreBotSDKLib</string>
-    <string name="time_stamp_now">Now</string>
-    <string name="time_stamp_mins_months">m</string>
-    <string name="time_stamp_hours">h</string>
-    <string name="time_stamp_days">d</string>
-    <string name="time_stamp_weeks">w</string>
-    <string name="time_stamp_years">y</string>
-</resources>
