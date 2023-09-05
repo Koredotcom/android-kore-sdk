@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.charts.data.PieEntry;
@@ -135,7 +136,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         , verticalListView.getMeasuredWidth()
                         , timeStampsTextView.getMeasuredWidth()
                         , timeLineView.getMeasuredWidth()
-                        , advancedListTemplateView.getMeasuredWidth()
                         , meetingSlotsView.getMeasuredWidth()
                         , multiSelectView.getMeasuredWidth()
                         , attendeeSlotSelectionView.getMeasuredWidth()
@@ -170,11 +170,13 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         , universalSearchView.getMeasuredWidth()
                         , botContactTemplateView.getMeasuredWidth()
                         , resultsTemplateView.getMeasuredWidth()
+                        , advancedListTemplateView.getMeasuredWidth()
                         , botButtonLinkTemplateView.getMeasuredWidth()
                         , botBeneficiaryTemplateView.getMeasuredWidth()
                         , pdfDownloadView.getMeasuredWidth()
                         , buttonDeepLinkTemplateView.getMeasuredWidth()
                         , cardTemplateView.getMeasuredWidth()
+                        , emptyTemplateView.getMeasuredWidth()
                         //Add new template above
                 )) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
@@ -227,6 +229,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + botBeneficiaryTemplateView.getMeasuredHeight()
                 + buttonDeepLinkTemplateView.getMeasuredHeight()
                 + cardTemplateView.getMeasuredHeight()
+                + emptyTemplateView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
@@ -278,6 +281,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + botBeneficiaryTemplateView.getMeasuredHeight()
                 + buttonDeepLinkTemplateView.getMeasuredHeight()
                 + cardTemplateView.getMeasuredHeight()
+                + emptyTemplateView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN;
 
@@ -329,6 +333,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 || botBeneficiaryTemplateView.getMeasuredHeight() > 0
                 || buttonDeepLinkTemplateView.getMeasuredHeight() > 0
                 || cardTemplateView.getMeasuredHeight() > 0
+                || emptyTemplateView.getMeasuredHeight() > 0
                 ;
     }
 
@@ -424,6 +429,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         buttonDeepLinkTemplateView.setVisibility(GONE);
         cardTemplateView.populateCardsView(null);
         cardTemplateView.setVisibility(GONE);
+        emptyTemplateView.setVisibility(GONE);
     }
 
     @Override
@@ -475,7 +481,23 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 checkBubbleVisibilityAndHideCpv(payInner);
-                if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                if(SDKConfiguration.getCustomTemplateView() != null && SDKConfiguration.getCustomTemplateView().size() > 0
+                        && SDKConfiguration.getCustomTemplateView().containsKey(payInner.getTemplate_type()))
+                {
+                    emptyTemplateView.setVisibility(VISIBLE);
+                    CustomTemplateView customTemplateView1 = ((CustomTemplateView) Objects.requireNonNull(SDKConfiguration.getCustomTemplateView().get(payInner.getTemplate_type()))).getNewInstance();
+
+                    if(customTemplateView1 != null)
+                    {
+                        customTemplateView1.setComposeFooterInterface(composeFooterInterface);
+                        customTemplateView1.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+
+                        customTemplateView1.populateTemplate(payInner, isLastItem);
+                        emptyTemplateView.addView(customTemplateView1);
+                    }
+                }
+                else if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
                     if(!payInner.isUrl_present())
                     {
                         botButtonView.setVisibility(View.VISIBLE);
@@ -817,6 +839,18 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 imageTemplateView.setVisibility(View.VISIBLE);
                 imageTemplateView.populateData(payInner, payOuter.getType());
             }
+            else if(SDKConfiguration.getCustomTemplateView() != null && SDKConfiguration.getCustomTemplateView().size() > 0
+                    && SDKConfiguration.getCustomTemplateView().containsKey(payOuter.getType()))
+            {
+                emptyTemplateView.setVisibility(VISIBLE);
+                CustomTemplateView customTemplateView1 = ((CustomTemplateView) Objects.requireNonNull(SDKConfiguration.getCustomTemplateView().get(payOuter.getType()))).getNewInstance();
+
+                if(customTemplateView1 != null)
+                {
+                    customTemplateView1.populateTemplate(payInner, isLastItem);
+                    emptyTemplateView.addView(customTemplateView1);
+                }
+            }
             else if(BotResponse.COMPONENT_TYPE_LINK.equalsIgnoreCase(payOuter.getType()) && payInner != null)
             {
                 linkTemplateView.setVisibility(View.VISIBLE);
@@ -846,7 +880,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
 
@@ -856,8 +889,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For TextMedia Layout
          */
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        int fullWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.EXACTLY);
+        childWidthSpec = MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.AT_MOST);
+        int fullWidthSpec = MeasureSpec.makeMeasureSpec(parentWidth, MeasureSpec.EXACTLY);
         MeasureUtils.measure(bubbleTextMediaLayout, childWidthSpec, wrapSpec);
         // MeasureUtils.measure(meetingSlotsView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(timeStampsTextView, wrapSpec, wrapSpec);
@@ -951,16 +984,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(lineChartView, childWidthSpec, childHeightSpec);
 
-        /**
-         * For BarChart
-         */
+//        For BarChart
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(barChartView, childWidthSpec, childHeightSpec);
 
-        /**
-         * For Horizontal BarChart
-         */
+//        For Horizontal BarChart
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth - 40 * (int)dp1, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec(lineHeight, MeasureSpec.EXACTLY);
         MeasureUtils.measure(horizontalBarChartView, childWidthSpec,childHeightSpec);
@@ -1028,6 +1057,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(botBeneficiaryTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(buttonDeepLinkTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(cardTemplateView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(emptyTemplateView, childWidthSpec, wrapSpec);
 
         /*
          * For Widget List Templates
@@ -1114,6 +1144,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(botBeneficiaryTemplateView, top, left, arrayList);
         layoutView(buttonDeepLinkTemplateView, top, left, arrayList);
         layoutView(cardTemplateView, top, left, arrayList);
+        layoutView(emptyTemplateView, top, left, arrayList);
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);

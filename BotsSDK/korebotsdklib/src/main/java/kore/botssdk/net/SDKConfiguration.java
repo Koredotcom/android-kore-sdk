@@ -5,6 +5,11 @@ package kore.botssdk.net;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
+import android.util.Log;
+import android.view.View;
+
+import java.util.HashMap;
+
 /**
  * This class is for defining properties
  */
@@ -18,6 +23,7 @@ public class SDKConfiguration {
     private static String INIT_MESSAGE = "Welpro";
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
+    protected static HashMap<String , View> hsh = new HashMap<>();
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -199,5 +205,16 @@ public class SDKConfiguration {
     }
 
     private static final FONT_TYPES fontType = FONT_TYPES.ROBOTO;
+
+    public static void setCustomTemplateView(String templateName, View templateView)
+    {
+        hsh.put(templateName, templateView);
+        Log.e("HashMap Count", hsh.size()+"");
+    }
+
+    public static HashMap<String, View> getCustomTemplateView()
+    {
+        return hsh;
+    }
 
 }

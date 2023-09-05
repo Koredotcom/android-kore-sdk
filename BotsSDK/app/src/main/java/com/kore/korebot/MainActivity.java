@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SDKConfiguration.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
+        SDKConfiguration.setCustomTemplateView("button", new BotButtonView(MainActivity.this));
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
             @Override

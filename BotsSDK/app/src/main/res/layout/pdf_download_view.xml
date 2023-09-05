@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/theme1_left_bubble_bg"
+    android:padding="@dimen/dimen_15dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llPdfCell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_pdf_image"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            android:contentDescription="@string/about"
+            android:minWidth="60dp"
+            android:minHeight="60dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/download"
+            android:visibility="visible" />
+
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/tv_pdf_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/title"
+            android:textColor="@color/txtFontBlack"
+            android:textSize="@dimen/text_size_normal" />
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llPdfCell"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:layout_marginTop="@dimen/dimen_8dp">
+
+        <ImageView
+            android:id="@+id/ivPdfDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_icons24download"
+            android:contentDescription="@string/about"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/pbDownload"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
