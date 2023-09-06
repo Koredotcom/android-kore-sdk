@@ -78,8 +78,90 @@ public static final String JWT_SERVER_URL = "<jwt-token-server-url>";
 *	Download or clone the repository.
 *	Import the project.
 *	Run the app.
+  
+# How to integrate BotSdk with UI through gradle implementation
 
-## Integrating into your app
+1. Add below snippet in project/build.gradle
+   
+```
+maven { url 'https://www.jitpack.io' }
+```
+2. Add below snippet in app/build.gradle under dependencies
+```
+implementation 'com.github.DocsInternal-Kore:kore-ui:0.1.4'
+```
+3. You can initialize the bot by providing the bot config like below
+```
+SDKConfig.initialize(
+                "st-b9889c46-218c-58f7-838f-73ae9203488c",
+                "Bot Name",
+                "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9",
+                "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=",
+                "example@kore.com"
+        );
+```
+4. You can navigate to the bot chat window through Intent as below snippet
+```
+Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+Bundle bundle = new Bundle();
+//This should not be null
+bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+bundle.putString(BundleUtils.BOT_NAME_INITIALS,"B");
+intent.putExtras(bundle);
+startActivity(intent);
+```
+# 5. You can have your customized templates without touching the SDK code can check it in below provided branch "LinkTemplateView"
+   
+  https://github.com/Koredotcom/android-kore-sdk/tree/master_gradle
+
+# How to integrate BotSdk withoutUI through gradle implementation
+
+1. Add below snippet in project/build.gradle
+   
+```
+maven { url 'https://www.jitpack.io' }
+```
+2. Add below snippet in app/build.gradle under dependencies
+```
+implementation 'com.github.DocsInternal-Kore:korebot-sdk-lib:0.0.3'
+```
+3. You can change the bot config like below
+```
+SDKConfiguration.Client.bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+SDKConfiguration.Client.bot_name = "Your Bot name";
+SDKConfiguration.Client.client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+SDKConfiguration.Client.client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
+SDKConfiguration.Client.identity = "example@kore.com";
+```
+4. You can intialize the Bot like below
+   
+```
+//Initiating BotClient
+BotClient botClient = new BotClient(this);
+
+//Local library to generate JWT token can be replaced as per requirement(Can be client side API call)
+String jwt = botClient.generateJWT(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
+
+//Initiating bot connection once connected callbacks will be fired on respective actions
+botClient.connectAsAnonymousUser(jwt,SDKConfiguration.Client.bot_name,SDKConfiguration.Client.bot_id, MainActivity.this);
+```
+5. Where the Bot initiated, that class should implement "SocketConnectionListener" to receive the bot response as below
+```
+public class MainActivity extends AppCompatActivity implements SocketConnectionListener
+```
+6. Application class can send message to bot as below
+```
+botClient.sendMessage("Your message to bot");
+```
+7. Application class can receive message at Override method "onTextMessage(String payload)" as String as below
+```
+@Override
+public void onTextMessage(String payload) {
+Log.e("onTextMessage payload", payload);
+}
+```
+
+## Integrating into your app with library code base
 Copy "korebotsdklib" module available in this repository into your application and follow the below steps
 
 1. Create BotClient object providing context
@@ -181,7 +263,6 @@ pushNotificationRegistrar.unsubscribePushNotification(Context context, String ac
 Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
 botconnector.disconnect();
 ```
-License
 ```
 # How to enable API based (webhook channel) message communication
 ----
@@ -199,4 +280,5 @@ License
 	public static boolean isWebHook = true; // Default it's false
 	SDKConfiguration.koreAPIUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
 	
+License
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.
