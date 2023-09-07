@@ -35,10 +35,10 @@ android {
 
     dependencies {
 
-        api 'androidx.appcompat:appcompat:1.4.2'
+//        api 'androidx.appcompat:appcompat:1.4.2'
         api 'de.greenrobot:eventbus:2.4.0'
         api files('libs/commons-lang3-3.2.1.jar')
-        api project(':MPAndroidChart-3.1.0')
+//        api project(':MPAndroidChart-3.1.0')
         //For jwt
         api 'io.jsonwebtoken:jjwt-api:0.10.5'
         api 'io.jsonwebtoken:jjwt-impl:0.10.5'
@@ -54,7 +54,7 @@ android {
         api 'com.squareup.retrofit2:converter-gson:2.4.0'
         api 'io.reactivex.rxjava2:rxandroid:2.1.0'
         api 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
-        api 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
+//        api 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     }
 }
 
