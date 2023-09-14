@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/welcome_header_bg"
+    android:padding="@dimen/dimen_15dp">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="@dimen/welcome_icon_size"
+        android:layout_height="@dimen/welcome_icon_size"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/scb_logo_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvWelcomeHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView2"
+        android:text="@string/hello"
+        android:textColor="@color/white"
+        android:textSize="@dimen/welcome_header_size" />
+
+    <ImageView
+        android:layout_width="@dimen/welcome_header_size"
+        android:layout_height="@dimen/welcome_header_size"
+        android:layout_below="@+id/imageView2"
+        android:layout_toEndOf="@+id/tvWelcomeHeader"
+        android:layout_marginStart="@dimen/dimen_3dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/emoji" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvWelcomeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvWelcomeHeader"
+        android:text="@string/welcome_to_kore_ai_bot_support"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_header" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/tvWelcomeDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvWelcomeTitle"
+        android:text="@string/our_community_is_ready_to_help_you_to_join_our_best_platform"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_normal" />
+
+</RelativeLayout>

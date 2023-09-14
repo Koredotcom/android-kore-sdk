@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingBodyModel {
+import java.io.Serializable;
+
+public class BrandingBodyModel implements Serializable {
     private BrandingBodyBackgroundModel background;
     private BrandingBodyFontModel font;
     private BrandingBodyUserMessageModel user_message;

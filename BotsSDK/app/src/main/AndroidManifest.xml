@@ -14,7 +14,7 @@
         android:theme="@style/Theme.BotsSDK"
         tools:replace="android:icon,android:theme">
         <activity
-            android:name=".MainActivity"
+            android:name="kore.botssdk.activity.WelcomeScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

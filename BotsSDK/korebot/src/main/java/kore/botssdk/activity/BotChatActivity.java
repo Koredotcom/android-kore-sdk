@@ -1,8 +1,8 @@
 package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
-import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 
@@ -164,6 +164,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private String lastMsgId = "";
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    private String header_type, footer_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +182,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
+//        botContentFragment.setHeadertype("medium");
         botContentFragment.setThemeChangeInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
@@ -273,7 +275,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
         nBuilder
                 .setContentTitle(title)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setColor(Color.parseColor("#009dab"))
                 .setContentText(pushMessage)
                 .setGroup(GROUP_KEY_NOTIFICATIONS)
@@ -311,6 +313,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             jwt = bundle.getString(BundleUtils.JWT_TKN, "");
+            header_type = bundle.getString(BundleUtils.HEADER_TYPE, "compact");
+            footer_type = bundle.getString(BundleUtils.FOOTER_TYPE, "compact");
         }
         chatBot = SDKConfiguration.Client.bot_name;
         taskBotId = SDKConfiguration.Client.bot_id;

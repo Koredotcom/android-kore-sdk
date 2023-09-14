@@ -116,10 +116,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected LineChartView lineChartView;
     protected BarChartView barChartView;
     protected StackedBarChatView stackedBarChatView;
-    protected ContactInfoView contactInfoView;
-    protected WelcomeSummaryView welcomeSummaryView;
     protected UniversalSearchView universalSearchView;
-    protected KoraSummaryHelpView koraSummaryHelpView;
     protected KoraCarouselView koraCarouselView;
     protected MeetingSlotsView meetingSlotsView;
     protected MultiSelectView multiSelectView;
@@ -314,24 +311,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         multiSelectView.setComposeFooterInterface(composeFooterInterface);
         addView(multiSelectView);
 
-        contactInfoView = ViewProvider.getContactInfoView(context);
-        contactInfoView.setComposeFooterInterface(composeFooterInterface);
-        contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        addView(contactInfoView);
-
-        welcomeSummaryView = ViewProvider.getWelcomeSummaryView(context);
-        welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
-        addView(welcomeSummaryView);
-
-
         universalSearchView = ViewProvider.getUniversalSearchView(context);
         universalSearchView.setComposeFooterInterface(composeFooterInterface);
         universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         addView(universalSearchView);
-
-        koraSummaryHelpView = ViewProvider.getKoraSummaryHelpView(context);
-        koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
-        addView(koraSummaryHelpView);
 
         meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
         meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
@@ -526,18 +509,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(multiSelectView != null){
             multiSelectView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(contactInfoView != null){
-            contactInfoView.setComposeFooterInterface(composeFooterInterface);
-        }
-        if(welcomeSummaryView !=null){
-            welcomeSummaryView.setComposeFooterInterface(composeFooterInterface);
-        }
-
         if(universalSearchView !=null){
             universalSearchView.setComposeFooterInterface(composeFooterInterface);
-        }
-        if(koraSummaryHelpView !=null){
-            koraSummaryHelpView.setComposeFooterInterface(composeFooterInterface);
         }
         if(meetingConfirmationView != null){
             meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
@@ -545,47 +518,36 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(attendeeSlotSelectionView != null){
             attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(botFormTemplateView != null){
             botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if (botListViewTemplateView != null) {
             botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if (botListWidgetTemplateView != null) {
             botListWidgetTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if (botTableListTemplateView != null) {
             botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if (botQuickRepliesTemplateView != null) {
             botQuickRepliesTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if (agentTransferTemplateView != null) {
             agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(feedbackTemplateView != null){
             feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(listWidgetView != null){
             listWidgetView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(botDropDownTemplateView != null) {
             botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(imageTemplateView != null) {
             imageTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-
         if(tableView != null)
             tableView.setComposeFooterInterface(composeFooterInterface);
 
@@ -630,9 +592,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (botContactTemplateView != null) {
             botContactTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        }
-        if(contactInfoView != null){
-            contactInfoView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if(universalSearchView != null){
             universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

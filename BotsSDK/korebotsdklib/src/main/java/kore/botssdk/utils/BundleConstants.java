@@ -27,6 +27,7 @@ public class BundleConstants {
     public static final String BUTTON_TYPE_CONFIRM = "Confirm";
     public static final String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static final String BUTTON_TYPE_USER_INTENT = "USERINTENT";
+    public static final String COMPACT = "compact";
     public static String FORM_TYPE_OPEN_FORM="open_form";
     public static String FORM_TYPE_SHOW_FORM="show_form";
     public final static String SHOW_PIC = "showPic";

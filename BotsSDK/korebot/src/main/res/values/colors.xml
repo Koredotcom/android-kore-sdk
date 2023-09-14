@@ -199,4 +199,7 @@
     <color name="color_3E3E51">#3e3e51</color>
     <color name="listview_cost">#008000</color>
     <color name="txtFontBlack">#000000</color>
+    <color name="kora_grey">#202124</color>
+    <color name="gray_modern">#4B5565</color>
+    <color name="neutral">#404040</color>
 </resources>

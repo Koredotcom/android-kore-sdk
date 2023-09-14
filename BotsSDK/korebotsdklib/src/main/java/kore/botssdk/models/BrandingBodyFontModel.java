@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingBodyFontModel {
+import java.io.Serializable;
+
+public class BrandingBodyFontModel implements Serializable {
     private String family;
     private String size;
     private String style;

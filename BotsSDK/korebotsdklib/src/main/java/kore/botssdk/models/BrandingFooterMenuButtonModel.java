@@ -1,8 +1,9 @@
 package kore.botssdk.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BrandingFooterMenuButtonModel {
+public class BrandingFooterMenuButtonModel implements Serializable {
     private boolean show;
     private String icon;
     private ArrayList<BrandingQuickStartButtonActionModel> actions;

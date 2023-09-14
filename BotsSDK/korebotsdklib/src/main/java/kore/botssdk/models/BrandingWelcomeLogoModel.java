@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingWelcomeLogoModel {
+import java.io.Serializable;
+
+public class BrandingWelcomeLogoModel implements Serializable {
     private String logo_url;
 
     public String getLogo_url() {

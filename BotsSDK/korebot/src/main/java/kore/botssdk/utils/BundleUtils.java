@@ -6,6 +6,11 @@ package kore.botssdk.utils;
  */
 public class BundleUtils {
 
+    public static final String LAYOUT_REGULAR = "regular";
+    public static final String LAYOUT_MEDIUM = "medium";
+    public static final String LAYOUT_LARGE = "large";
+    public static final String COMPACT = "compact";
+
     public static String BOT_NAME = "chatBot";
     public static final String BOT_NAME_INITIALS ="bot_initials";
     public static final String CHANNEL_ICON_URL = "CHANNEL_ICON_URL";
@@ -15,4 +20,8 @@ public class BundleUtils {
     public static final String PICK_TYPE = "pickType";
     public static final String FILE_CONTEXT = "fileContext";
     public static final String BOT_ICON_ID = "bot_icon_id";
+    public static final String HEADER_TYPE = "header_type";
+    public static final String FOOTER_TYPE = "footer_type";
+    public static final String BRANDING = "branding";
+
 }

@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingQuickStartButtonActionModel {
+import java.io.Serializable;
+
+public class BrandingQuickStartButtonActionModel implements Serializable {
     private String type;
     private String value;
     private String icon;

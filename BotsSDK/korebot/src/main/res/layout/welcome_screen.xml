@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llOuterHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/llOuterHeader">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clStarter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:background="@drawable/rounded_rect_feedback"
+                android:padding="@dimen/dimen_10dp">
+
+                <ImageView
+                    android:id="@+id/ivStarterLogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/starter_logo"
+                    android:contentDescription="@string/hello"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <kore.botssdk.views.CustomTextView
+                    android:id="@+id/tvStarterTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:text="@string/start_conversation"
+                    android:textColor="@color/kora_grey"
+                    android:textSize="@dimen/text_size_normal"
+                    app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <kore.botssdk.views.CustomTextView
+                    android:id="@+id/tvStarterDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:text="@string/tap_to_speak"
+                    android:textColor="@color/gray_modern"
+                    android:textSize="@dimen/text_size_small"
+                    app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
+                    app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvStarterButtons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    app:layout_constraintStart_toStartOf="@+id/ivStarterLogo"
+                    app:layout_constraintTop_toBottomOf="@+id/ivStarterLogo" />
+
+                <LinearLayout
+                    android:id="@+id/llStartConversation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:background="@drawable/button_drawable"
+                    android:onClick="launchBotChatActivity"
+                    android:orientation="horizontal"
+                    app:layout_constraintStart_toStartOf="@+id/rvStarterButtons"
+                    app:layout_constraintTop_toBottomOf="@+id/rvStarterButtons">
+
+                    <kore.botssdk.views.CustomTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/start_conversation"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/right_arrow_iconn"
+                        android:backgroundTint="@color/white"
+                        android:contentDescription="@string/start_conversation" />
+
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/clStarter"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:background="@drawable/rounded_rect_feedback"
+                    android:padding="@dimen/dimen_10dp">
+
+                    <kore.botssdk.views.CustomTextViewBold
+                        android:id="@+id/tvLinksTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/links"
+                        android:textColor="@color/kora_grey"
+                        android:textSize="@dimen/text_size_header" />
+
+                    <kore.botssdk.view.HeightAdjustableViewPager
+                        android:id="@+id/hvpLinks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvLinksTitle"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:paddingEnd="@dimen/dimen_20dp"
+                        android:visibility="visible" />
+
+                </RelativeLayout>
+
+                <kore.botssdk.view.AutoExpandListView
+                    android:id="@+id/lvPromotions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:divider="@color/white"
+                    android:dividerHeight="@dimen/dimen_5dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

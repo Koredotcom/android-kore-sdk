@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingStarterBoxModel {
+import java.io.Serializable;
+
+public class BrandingStarterBoxModel implements Serializable {
     private boolean show;
     private BrandingIconModel icon;
     private String title;

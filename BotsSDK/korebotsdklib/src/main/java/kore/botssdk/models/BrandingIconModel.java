@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingIconModel {
+import java.io.Serializable;
+
+public class BrandingIconModel implements Serializable {
     private String icon_url;
     private String size;
     private String shape;

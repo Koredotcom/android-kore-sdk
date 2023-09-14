@@ -32,22 +32,11 @@
             android:background="@color/footerdivider_color"
             android:visibility="gone" />
 
-        <!--<com.kore.koreapp.views.AudioVisualiserView
-            android:id="@+id/bot_bottom_strip"
-            android:layout_width="220dp"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
-            android:background="@color/teamPostViewForAlertsStripColor"
-            android:orientation="horizontal"
-            android:visibility="gone"/>-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attachment_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"/>
+            android:layout_marginStart="2dp" />
 
         <RelativeLayout
             android:id="@+id/fl_footer"
@@ -78,9 +67,9 @@
                         android:layout_height="50dp"
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
+                        android:contentDescription="@string/app_name"
                         android:paddingStart="10dp"
                         android:paddingTop="10dp"
-                        android:contentDescription="@string/app_name"
                         android:paddingEnd="5dp"
                         android:paddingBottom="10dp"
                         android:src="@mipmap/new_task"
@@ -88,17 +77,25 @@
 
                     <ImageView
                         android:id="@+id/newMenuLogo"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="20dp"
+                        android:layout_height="16dp"
                         android:layout_centerVertical="true"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:paddingStart="10dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="5dp"
+                        android:layout_marginStart="@dimen/dimen_15dp"
                         android:contentDescription="@string/app_name"
-                        android:paddingBottom="10dp"
                         android:src="@drawable/widget_menu"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/attachemnt"
+                        android:layout_width="14dp"
+                        android:layout_height="24dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:layout_toEndOf="@+id/newMenuLogo"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/attachment_comp"
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/loadingTasks"
@@ -125,18 +122,16 @@
                 <LinearLayout
                     android:id="@+id/composeFrameLl"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="40dp"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_toStartOf="@+id/btnsend1"
                     android:layout_toEndOf="@id/tasksRl"
-                    android:background="@drawable/theme1_compose_bg"
+                    android:background="@drawable/input_compose"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -172,56 +167,44 @@
                 <LinearLayout
                     android:id="@+id/btnsend1"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/sendTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:paddingStart="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingEnd="5dp"
-                        android:paddingRight="5dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/send_msg"
                         android:tag="bold"
-                        android:text="@string/send"
                         android:textColor="@color/bgBlueSignup"
                         android:textSize="@dimen/text_size_normal"
                         android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/rec_audio_img"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
-                        android:alpha="0.70"
-                        android:padding="5dp"
                         android:contentDescription="@string/app_name"
+                        android:padding="5dp"
                         android:src="@drawable/ic_mic"
                         android:visibility="visible" />
 
                     <ImageView
-                        android:id="@+id/attachemnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/app_name"
-                        android:layout_gravity="center_vertical"
-                        android:padding="8dp"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/attachment_comp" />
-
-                    <ImageView
                         android:id="@+id/audio_speak_tts"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="@string/app_name"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
+                        android:contentDescription="@string/app_name"
                         android:padding="5dp"
                         android:src="@mipmap/ic_volume_up_black_24dp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -309,10 +292,12 @@
                 android:id="@+id/speaker_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:drawableTop="@mipmap/mic_white"
                 android:padding="5dp"
                 android:tag="regular"

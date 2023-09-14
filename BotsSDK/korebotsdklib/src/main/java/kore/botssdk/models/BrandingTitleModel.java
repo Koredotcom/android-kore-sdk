@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingTitleModel {
+import java.io.Serializable;
+
+public class BrandingTitleModel implements Serializable {
     private String name;
     private String color;
 

@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingMinimizeModel {
+import java.io.Serializable;
+
+public class BrandingMinimizeModel implements Serializable {
     private String icon;
     private String theme;
 

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.UUID;
 
 import kore.botssdk.activity.BotChatActivity;
+import kore.botssdk.activity.WelcomeScreenActivity;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
      *
      */
     private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), WelcomeScreenActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

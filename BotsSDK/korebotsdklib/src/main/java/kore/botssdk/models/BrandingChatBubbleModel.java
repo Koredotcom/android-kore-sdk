@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingChatBubbleModel {
+import java.io.Serializable;
+
+public class BrandingChatBubbleModel implements Serializable {
     private String style;
     private BrandingIconModel icon;
     private BrandingMinimizeModel minimise;

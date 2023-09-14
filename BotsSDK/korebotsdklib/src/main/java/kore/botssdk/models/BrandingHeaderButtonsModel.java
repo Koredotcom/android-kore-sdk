@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingHeaderButtonsModel {
+import java.io.Serializable;
+
+public class BrandingHeaderButtonsModel implements Serializable {
     private BrandingIconModel close;
     private BrandingIconModel minimise;
     private BrandingIconModel expand;

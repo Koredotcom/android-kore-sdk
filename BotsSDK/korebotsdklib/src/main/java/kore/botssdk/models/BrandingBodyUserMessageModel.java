@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingBodyUserMessageModel {
+import java.io.Serializable;
+
+public class BrandingBodyUserMessageModel implements Serializable {
     private String bg_color;
     private String color;
 

@@ -341,9 +341,10 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
                 //  d.setCanceledOnTouchOutside(false);
                 // d.setCancelable(false);
 
-                FrameLayout bottomSheet = d.findViewById(R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 // FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 //   bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+                assert bottomSheet != null;
                 bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);

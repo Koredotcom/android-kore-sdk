@@ -173,7 +173,9 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
-            customData.put("botToken",getAccessToken());
+            if(customData != null)
+                customData.put("botToken",getAccessToken());
+
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
             botPayLoad.setBotInfo(botInfoModel);

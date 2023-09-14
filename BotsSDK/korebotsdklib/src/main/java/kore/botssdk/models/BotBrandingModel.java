@@ -1,6 +1,10 @@
 package kore.botssdk.models;
 
-public class BotBrandingModel {
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
+
+public class BotBrandingModel implements Serializable {
     private BrandingGeneralModel general;
     private BrandingChatBubbleModel chat_bubble;
     private BrandingWelcomeModel welcome_screen;
@@ -8,32 +12,9 @@ public class BotBrandingModel {
     private BrandingFooterModel footer;
     private BrandingBodyModel body;
 
+    @NonNull
     public BrandingBodyModel getBody() {
         return body;
-    }
-
-    public void setBody(BrandingBodyModel body) {
-        this.body = body;
-    }
-
-    public void setChat_bubble(BrandingChatBubbleModel chat_bubble) {
-        this.chat_bubble = chat_bubble;
-    }
-
-    public void setFooter(BrandingFooterModel footer) {
-        this.footer = footer;
-    }
-
-    public void setGeneral(BrandingGeneralModel general) {
-        this.general = general;
-    }
-
-    public void setHeader(BrandingHeaderModel header) {
-        this.header = header;
-    }
-
-    public void setWelcome_screen(BrandingWelcomeModel welcome_screen) {
-        this.welcome_screen = welcome_screen;
     }
 
     public BrandingFooterModel getFooter() {

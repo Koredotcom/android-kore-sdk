@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingFooterButtonsModel {
+import java.io.Serializable;
+
+public class BrandingFooterButtonsModel implements Serializable {
     private BrandingFooterMenuButtonModel menu;
     private BrandingIconModel emoji;
     private BrandingIconModel microphone;

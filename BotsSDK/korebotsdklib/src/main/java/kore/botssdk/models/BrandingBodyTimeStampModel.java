@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingBodyTimeStampModel {
+import java.io.Serializable;
+
+public class BrandingBodyTimeStampModel implements Serializable {
     private boolean show;
     private String show_type;
     private String position;

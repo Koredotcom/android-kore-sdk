@@ -2,7 +2,9 @@ package kore.botssdk.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class BrandingFooterComposeBarModel {
+import java.io.Serializable;
+
+public class BrandingFooterComposeBarModel implements Serializable {
     private String bg_color;
     @SerializedName("outline-color")
     private String outline_color;

@@ -36,11 +36,14 @@
 
     <!-- Text Sizes -->
     <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_very_small">10sp</dimen>
     <dimen name="text_size_normal">14sp</dimen>
     <dimen name="text_size_sub_header">16sp</dimen>
     <dimen name="text_size_header">18sp</dimen>
     <dimen name="agent_image_size">50dp</dimen>
     <dimen name="bottom_options_icon_width">30dp</dimen>
+    <dimen name="welcome_header_size">30sp</dimen>
+    <dimen name="welcome_icon_size">56dp</dimen>
 
     <!--Line chart View-->
     <dimen name="line_layout_height">300dp</dimen>
@@ -62,5 +65,6 @@
     <dimen name="dimen_20dp">20dp</dimen>
     <dimen name="dimen_40dp">40dp</dimen>
     <dimen name="dimen_2dp">2dp</dimen>
+    <dimen name="dimen_1dp">1dp</dimen>
 
 </resources>

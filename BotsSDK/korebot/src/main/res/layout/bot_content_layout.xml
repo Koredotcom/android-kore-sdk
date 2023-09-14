@@ -7,51 +7,14 @@
     android:background="@android:color/transparent">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
+        android:id="@+id/llBotHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryKa">
-
-        <TextView
-            android:id="@+id/tvChaseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dimen_20dp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dimen_15dp"
-            android:background="@mipmap/chase"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/ivThemeSwitcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/dimen_10dp"
-            android:background="@mipmap/ic_more_vert_white_24dp"
-            android:visibility="gone" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/header_layout">
+        android:layout_below="@+id/llBotHeader">
 
         <include
             layout="@layout/kora_timestamps_header"
@@ -96,8 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/typing_layout_height"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/typing_layout_margin_left"
-            android:layout_marginRight="@dimen/typing_layout_margin_right"
+            android:layout_marginStart="@dimen/typing_layout_margin_left"
+            android:layout_marginEnd="@dimen/typing_layout_margin_right"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -118,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="@dimen/dot_view_margin_bottom"
                 android:textColor="@color/left_bubble_text_color"
                 android:textSize="16sp"

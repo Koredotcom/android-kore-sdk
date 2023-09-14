@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingFooterModel {
+import java.io.Serializable;
+
+public class BrandingFooterModel implements Serializable {
     private String bg_color;
     private String layout;
     private String style;

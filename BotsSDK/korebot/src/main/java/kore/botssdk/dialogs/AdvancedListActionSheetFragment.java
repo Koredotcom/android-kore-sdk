@@ -123,6 +123,7 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
+                assert bottomSheet != null;
                 bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
                 bottomSheetBehavior.setPeekHeight(bottomSheet.getLayoutParams().height);

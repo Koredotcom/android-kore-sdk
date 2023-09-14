@@ -1,6 +1,8 @@
 package kore.botssdk.models;
 
-public class BrandingBodyIconModel {
+import java.io.Serializable;
+
+public class BrandingBodyIconModel implements Serializable {
     private boolean show;
     private boolean user_icon;
     private boolean bot_icon;
