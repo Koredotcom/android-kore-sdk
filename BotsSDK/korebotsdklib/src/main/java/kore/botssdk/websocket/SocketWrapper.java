@@ -115,6 +115,7 @@ public final class SocketWrapper {
 //            synchronized (SocketWrapper.class) {
 //                if(pKorePresenceInstance == null) {
             pKorePresenceInstance = new SocketWrapper(mContext);
+            pKorePresenceInstance.mIsReconnectionAttemptNeeded = true;
 //                }
 //            }
         }
@@ -749,6 +750,7 @@ public final class SocketWrapper {
         mIsReconnectionAttemptNeeded = false;
         if (mConnection != null && mConnection.isConnected()) {
             try {
+                pKorePresenceInstance = null;
                 mConnection.sendClose();
             } catch (Exception e) {
                 Log.d(LOG_TAG, "Exception while disconnection");
