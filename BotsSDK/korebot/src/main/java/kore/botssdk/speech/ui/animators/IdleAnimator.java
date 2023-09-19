@@ -1,24 +1,8 @@
-/*
- * Copyright (C) 2016 Evgenii Zagumennyi
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.github.zagum.speechrecognitionview.animators;
-
-import com.github.zagum.speechrecognitionview.RecognitionBar;
+package kore.botssdk.speech.ui.animators;
 
 import java.util.List;
+
+import kore.botssdk.speech.ui.SpeechBar;
 
 public class IdleAnimator implements BarParamsAnimator {
 
@@ -28,9 +12,9 @@ public class IdleAnimator implements BarParamsAnimator {
     private boolean isPlaying;
 
     private final int floatingAmplitude;
-    private final List<RecognitionBar> bars;
+    private final List<SpeechBar> bars;
 
-    public IdleAnimator(List<RecognitionBar> bars, int floatingAmplitude) {
+    public IdleAnimator(List<SpeechBar> bars, int floatingAmplitude) {
         this.floatingAmplitude = floatingAmplitude;
         this.bars = bars;
     }
@@ -53,7 +37,7 @@ public class IdleAnimator implements BarParamsAnimator {
         }
     }
 
-    public void update(List<RecognitionBar> bars) {
+    public void update(List<SpeechBar> bars) {
 
         long currTimestamp = System.currentTimeMillis();
         if (currTimestamp - startTimestamp > IDLE_DURATION) {
@@ -62,13 +46,13 @@ public class IdleAnimator implements BarParamsAnimator {
         long delta = currTimestamp - startTimestamp;
 
         int i = 0;
-        for (RecognitionBar bar : bars) {
+        for (SpeechBar bar : bars) {
             updateCirclePosition(bar, delta, i);
             i++;
         }
     }
 
-    private void updateCirclePosition(RecognitionBar bar, long delta, int num) {
+    private void updateCirclePosition(SpeechBar bar, long delta, int num) {
         float angle = ((float) delta / IDLE_DURATION) * 360f + 120f * num;
         int y = (int) (Math.sin(Math.toRadians(angle)) * floatingAmplitude) + bar.getStartY();
         bar.setY(y);

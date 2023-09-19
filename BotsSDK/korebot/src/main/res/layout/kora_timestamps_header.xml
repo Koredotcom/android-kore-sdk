@@ -14,7 +14,8 @@
         android:layout_margin="5dp"
         android:background="@drawable/secure_email_file_background"
         android:textColor="#8d8d8d"
-        android:textSize="14dp"
-        android:tag="medium" />
+        android:textSize="@dimen/text_size_normal"
+        android:tag="medium"
+        android:textIsSelectable="true" />
 
 </RelativeLayout>

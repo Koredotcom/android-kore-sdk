@@ -5,7 +5,7 @@
       "themeType":"light"
    },
    "chat_bubble":{
-      "style":"rounded",
+      "style":"balloon",
       "icon":{
          "icon_url":"url2",
          "size":"medium",

@@ -60,10 +60,6 @@ public abstract class BaseBotMessage {
 
     }
 
-    public void setCreatedInMillis(long createdInMillis) {
-        this.createdInMillis = createdInMillis;
-    }
-
     public String getFormattedDate() {
         return DateUtils.formattedSentDateV6(getCreatedInMillis());
     }

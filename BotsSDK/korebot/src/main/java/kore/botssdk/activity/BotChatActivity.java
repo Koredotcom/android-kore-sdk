@@ -182,7 +182,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
-//        botContentFragment.setHeadertype("medium");
         botContentFragment.setThemeChangeInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
@@ -315,7 +314,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             jwt = bundle.getString(BundleUtils.JWT_TKN, "");
             header_type = bundle.getString(BundleUtils.HEADER_TYPE, "compact");
             footer_type = bundle.getString(BundleUtils.FOOTER_TYPE, "compact");
+
+            BotBrandingModel botBrandingModel = (BotBrandingModel)bundle.getSerializable(BundleUtils.BRANDING);
+            if(botBrandingModel != null && botBrandingModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botBrandingModel.getChat_bubble().getStyle()))
+            {
+                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botBrandingModel.getChat_bubble().getStyle()).apply();
+            }
         }
+
         chatBot = SDKConfiguration.Client.bot_name;
         taskBotId = SDKConfiguration.Client.bot_id;
     }
@@ -624,7 +630,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
      * payload processing
      */
 
-    private void processPayload(String payload, BotResponse botLocalResponse) {
+    void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
 
         try {
@@ -632,6 +638,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
             }
+
+            if(!StringUtils.isNullOrEmpty(botResponse.getIcon()) && StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+                SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
             if(botClient != null && enable_ack_delivery)
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
@@ -1150,7 +1159,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 koreMedia.setMediafileId(mediaFileId);
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
-                composeFooterFragment.setSectionSelected();
                 messageHandler.postDelayed(new Runnable() {
                     public void run() {
                         HashMap<String, String> attachmentKey = new HashMap<>();
@@ -1175,7 +1183,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void mediaAttachment(HashMap<String, String> attachmentKey)
     {
-        composeFooterFragment.setSectionSelected();
         messageHandler.postDelayed(new Runnable() {
             public void run() {
                 composeFooterFragment.addAttachmentToAdapter(attachmentKey);

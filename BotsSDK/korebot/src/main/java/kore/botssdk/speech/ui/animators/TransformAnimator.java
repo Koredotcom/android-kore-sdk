@@ -1,28 +1,12 @@
-/*
- * Copyright (C) 2016 Evgenii Zagumennyi
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.github.zagum.speechrecognitionview.animators;
+package kore.botssdk.speech.ui.animators;
 
 import android.graphics.Point;
 
-import com.github.zagum.speechrecognitionview.RecognitionBar;
-import com.github.zagum.speechrecognitionview.RecognitionProgressView;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.speech.ui.SpeechBar;
+import kore.botssdk.speech.ui.SpeechProgressView;
 
 public class TransformAnimator implements BarParamsAnimator {
 
@@ -37,9 +21,9 @@ public class TransformAnimator implements BarParamsAnimator {
     private final int radius;
     private final int centerX, centerY;
     private final List<Point> finalPositions = new ArrayList<>();
-    private final List<RecognitionBar> bars;
+    private final List<SpeechBar> bars;
 
-    public TransformAnimator(List<RecognitionBar> bars, int centerX, int centerY, int radius) {
+    public TransformAnimator(List<SpeechBar> bars, int centerX, int centerY, int radius) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.bars = bars;
@@ -72,7 +56,7 @@ public class TransformAnimator implements BarParamsAnimator {
         }
 
         for (int i = 0; i < bars.size(); i++) {
-            RecognitionBar bar = bars.get(i);
+            SpeechBar bar = bars.get(i);
 
             int x = bar.getStartX() + (int) ((finalPositions.get(i).x - bar.getStartX()) * ((float) delta / DURATION));
             int y = bar.getStartY() + (int) ((finalPositions.get(i).y - bar.getStartY()) * ((float) delta / DURATION));
@@ -92,9 +76,9 @@ public class TransformAnimator implements BarParamsAnimator {
         Point startPoint = new Point();
         startPoint.x = centerX;
         startPoint.y = centerY - radius;
-        for (int i = 0; i < RecognitionProgressView.BARS_COUNT; i++) {
+        for (int i = 0; i < SpeechProgressView.BARS_COUNT; i++) {
             Point point = new Point(startPoint);
-            rotate((360d / RecognitionProgressView.BARS_COUNT) * i, point);
+            rotate((360d / SpeechProgressView.BARS_COUNT) * i, point);
             finalPositions.add(point);
         }
     }

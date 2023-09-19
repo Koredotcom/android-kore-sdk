@@ -11,11 +11,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.core.text.HtmlCompat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -700,7 +703,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
         populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem);
-        timeStampsTextView.setText(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()));
+        timeStampsTextView.setText(isLeftSide() ? HtmlCompat.fromHtml("<big><b>" + SDKConfiguration.Client.bot_name + "</b></big>"+" "+ DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())+", "+DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()), HtmlCompat.FROM_HTML_MODE_COMPACT) : HtmlCompat.fromHtml(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())+", "+DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()) + "<big><b>" +" You"+"</b></big>", HtmlCompat.FROM_HTML_MODE_COMPACT));
+
         // Bubble Templates
         populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
 
@@ -721,7 +725,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         setDoDrawBubbleBackground(false);
         determineTextColor();
         textViewCosmeticChanges();
-        timeStampsTextView.setVisibility(GONE);
+        timeStampsTextView.setVisibility(VISIBLE);
     }
 
     /**

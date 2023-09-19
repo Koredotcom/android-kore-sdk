@@ -40,6 +40,7 @@ import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.utils.BubbleConstants;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -72,6 +73,7 @@ public class TextMediaLayout extends ViewGroup {
     private String leftTextColor;
     private String rightTextColor;
     private String themeName;
+    private String bubble_style = "rounded";
     public boolean isClicable() {
         return isClicable;
     }//
@@ -101,31 +103,46 @@ public class TextMediaLayout extends ViewGroup {
 
         //Add a textView
         botContentTextView = new LinkifyTextView(getContext());
-
         sharedPreferences = getSharedPreferences();
         String leftbgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
         String rightbgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+        bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
 
-        //Transparency 15%
-        int transparency = 0x26000000;
         rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_right_bubble_bg, getContext().getTheme());
+        leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
+
+        //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
+        float[] roundedRadii = { 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
+        float[] recRightRadii = { 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] recLeftRadii = { 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] balRightRadii = { 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1};
+        float[] balLeftRadii = { 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1};
 
         if(rightDrawable != null) {
             rightDrawable.setColor(Color.parseColor(rightbgColor));
             rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightbgColor));
+
+            if(bubble_style.equalsIgnoreCase(BundleConstants.ROUNDED))
+                rightDrawable.setCornerRadii(roundedRadii);
+            else if(bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
+                rightDrawable.setCornerRadii(recRightRadii);
+            else
+                rightDrawable.setCornerRadii(balRightRadii);
         }
-
-        leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
-
-        if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-            leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme2_left_bubble, getContext().getTheme());
 
         if(leftDrawable != null) {
             leftDrawable.setColor(Color.parseColor(leftbgColor));
             leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+
+            if(bubble_style.equalsIgnoreCase(BundleConstants.ROUNDED))
+                leftDrawable.setCornerRadii(roundedRadii);
+            else if(bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
+                leftDrawable.setCornerRadii(recLeftRadii);
+            else
+                leftDrawable.setCornerRadii(balLeftRadii);
         }
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(

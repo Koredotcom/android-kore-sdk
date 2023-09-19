@@ -10,7 +10,9 @@
     <string name="no_network">"No network!"</string>
     <string name="click_hear_to_enter_text">click hear to enter text</string>
     <string name="click_hear_to_speak_something">click hear to speak something</string>
-    <string name="tap_to_speak">Tap to speak</string>
+    <string name="tap_to_speak">Tap microphone to speak</string>
+    <string name="listening_tap_end">Listening.. Tap to end</string>
+    <string name="tap_to_send">Tap to send</string>
     <string name="repeat">Please repeat</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

@@ -426,7 +426,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         } else {
             cpvSenderImage.setVisibility(GONE);
         }*/
-        String icon = ((BotResponse) baseBotMessage).getIcon();
         if(SDKConfiguration.BubbleColors.showIcon)
         {
             if(!StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
@@ -858,7 +857,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         /*
          * For Sender icon [CPV]
          */
-        float cpvSenderImageDimen = dp1 * 21;
+        float cpvSenderImageDimen = dp1 * 25;
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         childHeightSpec = MeasureSpec.makeMeasureSpec((int) cpvSenderImageDimen, MeasureSpec.EXACTLY);
         cpvSenderImage.setDimens(cpvSenderImageDimen, cpvSenderImageDimen);
@@ -1047,12 +1046,14 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         int bubbleTextMediaLayouMarginLeft = BUBBLE_CONTENT_LEFT_MARGIN;
         int bubbleTextMediaLayouMarginTop = BUBBLE_CONTENT_TOP_MARGIN + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT;
 
+        LayoutUtils.layoutChild(timeStampsTextView, bubbleTextMediaLayouMarginLeft + cpvSenderImage.getMeasuredWidth() + (int) dp2, top);
+
         /*
          * For TextMedia Layout
          */
-        left += bubbleTextMediaLayouMarginLeft;
-        top = top + bubbleTextMediaLayouMarginTop;
-        LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
+        left += bubbleTextMediaLayouMarginLeft + cpvSenderImage.getMeasuredWidth();
+        top = top + bubbleTextMediaLayouMarginTop + (timeStampsTextView.getMeasuredHeight());
+        LayoutUtils.layoutChild(bubbleTextMediaLayout, left - 20, top);
         arrayList.add(bubbleTextMediaLayout.getBottom());
 
         top = bubbleTextMediaLayout.getMeasuredHeight() != 0 ? bubbleTextMediaLayout.getBottom() + (int) dp15 : minimumTop;
@@ -1099,16 +1100,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(cardTemplateView, top, left, arrayList);
         layoutView(emptyTemplateView, top, left, arrayList);
 
-        left = bubbleTextMediaLayout.getLeft();
+        left = bubbleTextMediaLayout.getLeft() - (int) (13 * dp1);
         top = Collections.max(arrayList);
-        LayoutUtils.layoutChild(cpvSenderImage, left, top);
-        if (cpvSenderImage.getMeasuredWidth() > 0) {
-            left = cpvSenderImage.getRight() + (int) (9 * dp1);
-            top = top + (int) (1 * dp1);
-        }
-
-
-        LayoutUtils.layoutChild(timeStampsTextView, left, top);
+        LayoutUtils.layoutChild(cpvSenderImage,left - (int)(17 * dp1), top - (top - (int)(25 * dp1)));
         LayoutUtils.layoutChild(timeLineView, 0, top);
 
         botCarouselView.bringToFront();

@@ -1,28 +1,12 @@
-/*
- * Copyright (C) 2016 Evgenii Zagumennyi
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package com.github.zagum.speechrecognitionview.animators;
+package kore.botssdk.speech.ui.animators;
 
 import android.graphics.Point;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.github.zagum.speechrecognitionview.RecognitionBar;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import kore.botssdk.speech.ui.SpeechBar;
 
 public class RotatingAnimator implements BarParamsAnimator {
 
@@ -37,14 +21,14 @@ public class RotatingAnimator implements BarParamsAnimator {
 
     private final int centerX, centerY;
     private final List<Point> startPositions;
-    private final List<RecognitionBar> bars;
+    private final List<SpeechBar> bars;
 
-    public RotatingAnimator(List<RecognitionBar> bars, int centerX, int centerY) {
+    public RotatingAnimator(List<SpeechBar> bars, int centerX, int centerY) {
         this.centerX = centerX;
         this.centerY = centerY;
         this.bars = bars;
         this.startPositions = new ArrayList<>();
-        for (RecognitionBar bar : bars) {
+        for (SpeechBar bar : bars) {
             startPositions.add(new Point(bar.getX(), bar.getY()));
         }
     }
@@ -76,7 +60,7 @@ public class RotatingAnimator implements BarParamsAnimator {
         float angle = interpolatedTime * ROTATION_DEGREES;
 
         int i = 0;
-        for (RecognitionBar bar : bars) {
+        for (SpeechBar bar : bars) {
             float finalAngle = angle;
             if (i > 0 && delta > ACCELERATE_ROTATION_DURATION) {
                 finalAngle += decelerate(delta, bars.size() - i);
@@ -108,7 +92,7 @@ public class RotatingAnimator implements BarParamsAnimator {
      * X = x0 + (x - x0) * cos(a) - (y - y0) * sin(a);
      * Y = y0 + (y - y0) * cos(a) + (x - x0) * sin(a);
      */
-    private void rotate(RecognitionBar bar, double degrees, Point startPosition) {
+    private void rotate(SpeechBar bar, double degrees, Point startPosition) {
 
         double angle = Math.toRadians(degrees);
 

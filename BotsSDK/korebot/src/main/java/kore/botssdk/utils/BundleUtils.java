@@ -10,6 +10,7 @@ public class BundleUtils {
     public static final String LAYOUT_MEDIUM = "medium";
     public static final String LAYOUT_LARGE = "large";
     public static final String COMPACT = "compact";
+    public static final String KEYPAD = "keypad";
 
     public static String BOT_NAME = "chatBot";
     public static final String BOT_NAME_INITIALS ="bot_initials";

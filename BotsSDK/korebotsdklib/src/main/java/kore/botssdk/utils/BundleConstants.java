@@ -28,16 +28,12 @@ public class BundleConstants {
     public static final String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static final String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static final String COMPACT = "compact";
-    public static String FORM_TYPE_OPEN_FORM="open_form";
-    public static String FORM_TYPE_SHOW_FORM="show_form";
-    public final static String SHOW_PIC = "showPic";
+    public static final String BUBBLE_STYLE = "style";
     public static final String ICON = "icon";
     public static final String BUTTON = "button";
     public static final String DROP_DOWN = "dropdown";
     public static final String DROP_DOWN_ICON = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAHCAYAAAA8sqwkAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABdSURBVHgBjctNDYAwDIbhNkUAoKAZCOCIHBwhASzgCAfDQelhh2Xrfr5Tkz4vgDF2y8VuPa0fWRgEDz33cZ748/4pBhEOwy2NqIztiOo4j7CN407uQTGDyNsVqP0BaHUk0IS2sYcAAAAASUVORK5CYII=";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
-    public static final String SLOTS_LIST = "slots_list";
-    public static final String QUICK_SLOTS = "quick_slots";
     public static final String[] DELAY_MESSAGES = { "I’m working on it…", "Still, working on it…",
             "This is taking a bit longer. Please wait…", "Things are slower than usual today. Please wait…",
             "I’m sorry. The server response seems really slow today. Please continue to wait...",
@@ -74,6 +70,8 @@ public class BundleConstants {
 
 
     public static final String CHOOSE_TYPE_GALLERY = "choose";
+    public static final String ROUNDED = "rounded";
+    public static final String RECTANGLE = "rectangle";
     public static String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
     public static final String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
     public static final String CHOOSE_TYPE_FILE = "choose_file";

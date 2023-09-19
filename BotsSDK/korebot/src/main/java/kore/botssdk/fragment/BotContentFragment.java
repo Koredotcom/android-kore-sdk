@@ -321,15 +321,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void showTypingStatus(BotResponse botResponse) {
         if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            if (typingStatusItemDots != null) {
-                botTypingStatusRl.setVisibility(View.VISIBLE);
-                typingStatusItemDots.start();
-//                Log.d("Hey", "Started animation");
-
-                if (StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
-                    mChannelIconURL = botResponse.getIcon();
-                    botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
-                }
+            botTypingStatusRl.setVisibility(View.VISIBLE);
+            if(StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
+                mChannelIconURL = botResponse.getIcon();
+                botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
             }
         }
     }

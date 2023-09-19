@@ -70,11 +70,7 @@ public class HeaderLayout extends ViewGroup {
         headerTextView.setId(HEADER_TEXTVIEW_ID);
         float dp5 = dp1 * 5;
         headerTextView.setPadding(0, 0, 0, (int) dp5);
-        if (gravity == BubbleConstants.GRAVITY_LEFT) {
-            headerTextView.setGravity(Gravity.LEFT);
-        } else if (gravity == BubbleConstants.GRAVITY_RIGHT) {
-            headerTextView.setGravity(Gravity.RIGHT);
-        }
+        headerTextView.setGravity(Gravity.START);
         headerTextView.setFocusable(false);
         headerTextView.setClickable(false);
         headerTextView.setLongClickable(false);
