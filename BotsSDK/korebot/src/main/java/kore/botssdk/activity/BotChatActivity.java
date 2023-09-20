@@ -156,7 +156,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected final int compressQualityInt = 100;
     final Handler messageHandler = new Handler();
     private String fileUrl;
-    private ArrayList<BrandingNewModel> arrBrandingNewDos;
+    ArrayList<BrandingNewModel> arrBrandingNewDos;
     private WebHookResponseDataModel webHookResponseDataModel;
     private BotMetaModel botMetaModel;
     private Runnable runnable;
@@ -408,11 +408,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    public void onEvent(BaseSocketConnectionManager.CONNECTION_STATE states) {
+    public void onEvent(@androidx.annotation.NonNull BaseSocketConnectionManager.CONNECTION_STATE states) {
         updateTitleBar(states);
     }
 
-    public void onEvent(BrandingModel brandingModel)
+    public void onEvent(@androidx.annotation.NonNull BrandingModel brandingModel)
     {
         SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBotchatBgColor());
@@ -939,7 +939,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void textToSpeech(BotResponse botResponse) {
+    void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = "";
             ComponentModel componentModel = botResponse.getMessage().get(0).getComponent();
@@ -1204,7 +1204,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return "";
     }
 
-    private void getBrandingDetails() {
+    void getBrandingDetails() {
         Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override

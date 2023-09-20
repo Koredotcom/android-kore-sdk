@@ -72,6 +72,7 @@ public class BundleConstants {
     public static final String CHOOSE_TYPE_GALLERY = "choose";
     public static final String ROUNDED = "rounded";
     public static final String RECTANGLE = "rectangle";
+    public static final String COLOR = "color";
     public static String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
     public static final String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
     public static final String CHOOSE_TYPE_FILE = "choose_file";

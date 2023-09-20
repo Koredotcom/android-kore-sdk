@@ -3,8 +3,12 @@ package kore.botssdk.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.util.TypedValue;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.text.HtmlCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -28,10 +33,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +76,7 @@ import kore.botssdk.models.BotHistoryMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BrandingBodyModel;
 import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
@@ -91,42 +106,41 @@ import retrofit2.Response;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
-    RelativeLayout rvChatContent;
+    RelativeLayout rvChatContent, rlBody;
     RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
-    String LOG_TAG = BotContentFragment.class.getSimpleName();
-    private LinearLayout botTypingStatusRl;
-    private CircularProfileView botTypingStatusIcon;
-    private DotsTextView typingStatusItemDots;
+    LinearLayout botTypingStatusRl;
+    CircularProfileView botTypingStatusIcon;
+    DotsTextView typingStatusItemDots;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     ThemeChangeListener themeChangeListener;
     boolean shallShowProfilePic;
-    private String mChannelIconURL;
-    private String mBotNameInitials;
-    private TTSUpdate ttsUpdate;
-    private int mBotIconId;
-    private boolean fetching = false;
-    private boolean hasMore = true;
-    private TextView headerView, tvTheme1, tvTheme2;
-    private final Gson gson = new Gson();
+    String mChannelIconURL;
+    String mBotNameInitials;
+    TTSUpdate ttsUpdate;
+    int mBotIconId;
+    boolean fetching = false;
+    boolean hasMore = true;
+    TextView headerView, tvTheme1, tvTheme2;
+    final Gson gson = new Gson();
     SwipeRefreshLayout swipeRefreshLayout;
-    private LinearLayoutManager mLayoutManager;
-    private int offset = 0;
-    private SharedPreferences sharedPreferences;
+    LinearLayoutManager mLayoutManager;
+    int offset = 0;
+    SharedPreferences sharedPreferences;
     //Date Range
-    private long today;
-    private long nextMonth;
-    private long janThisYear;
-    private long decThisYear;
-    private long oneYearForward;
-    private Pair<Long, Long> todayPair;
-    private Pair<Long, Long> nextMonthPair;
-    private PopupWindow popupWindow;
-    private View popUpView;
-    private String jwt;
-    private RelativeLayout llBotHeader;
+    long today;
+    long nextMonth;
+    long janThisYear;
+    long decThisYear;
+    long oneYearForward;
+    Pair<Long, Long> todayPair;
+    Pair<Long, Long> nextMonthPair;
+    PopupWindow popupWindow;
+    View popUpView;
+    String jwt;
+    RelativeLayout llBotHeader;
     BotBrandingModel botBrandingModel = null;
 
     @Nullable
@@ -161,6 +175,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
         llBotHeader = view.findViewById(R.id.llBotHeader);
+        rlBody = view.findViewById(R.id.rlBody);
 
         headerView.setVisibility(View.GONE);
         sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
@@ -201,20 +216,163 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_3, null));
                 else
                     llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
+
+                if(!StringUtils.isNullOrEmpty(headerModel.getBg_color()))
+                    llBotHeader.setBackgroundColor(Color.parseColor(headerModel.getBg_color()));
             }
             else
                 llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
 
             TextView tvBotTitle = llBotHeader.findViewById(R.id.tvBotTitle);
             TextView tvBotDesc = llBotHeader.findViewById(R.id.tvBotDesc);
+            ImageView ivBotAvatar = llBotHeader.findViewById(R.id.ivBotAvatar);
+            ImageView ivBotHelp = llBotHeader.findViewById(R.id.ivBotHelp);
+            ImageView ivBotSupport = llBotHeader.findViewById(R.id.ivBotSupport);
+            ImageView ivBotClose = llBotHeader.findViewById(R.id.ivBotClose);
 
-            if(headerModel != null && headerModel.getTitle() != null && headerModel.getSub_title() != null)
+            ivBotAvatar.setVisibility(View.GONE);
+            ivBotHelp.setVisibility(View.GONE);
+            ivBotSupport.setVisibility(View.GONE);
+            ivBotClose.setVisibility(View.GONE);
+
+            if(headerModel != null)
             {
-                tvBotTitle.setText(headerModel.getTitle().getName());
-                tvBotDesc.setText(headerModel.getSub_title().getName());
+                if(headerModel.getTitle() != null && !StringUtils.isNullOrEmpty(headerModel.getTitle().getName())) {
+                    tvBotTitle.setText(headerModel.getTitle().getName());
+                    if(!StringUtils.isNullOrEmpty(headerModel.getTitle().getColor())) {
+                        tvBotTitle.setTextColor(Color.parseColor(headerModel.getTitle().getColor()));
+                    }
+                }
+
+                if(headerModel.getSub_title() != null && !StringUtils.isNullOrEmpty(headerModel.getSub_title().getName())) {
+                    tvBotDesc.setText(headerModel.getSub_title().getName());
+                    if(!StringUtils.isNullOrEmpty(headerModel.getSub_title().getColor())) {
+                        tvBotDesc.setTextColor(Color.parseColor(headerModel.getSub_title().getColor()));
+                    }
+                }
+
+                if(headerModel.getIcon() != null && headerModel.getIcon().isShow()) {
+                    ivBotAvatar.setVisibility(View.VISIBLE);
+                }
+
+                if(headerModel.getButtons() != null)
+                {
+                    if(headerModel.getButtons().getHelp() != null && headerModel.getButtons().getHelp().isShow())
+                    {
+                        ivBotHelp.setVisibility(View.VISIBLE);
+
+                        ivBotHelp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(headerModel.getButtons().getHelp().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getType()))
+                                {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())
+                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getHelp().getAction().getValue());
+                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getValue(),false);
+                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getTitle(),false);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if(headerModel.getButtons().getLive_agent() != null && headerModel.getButtons().getLive_agent().isShow()) {
+                        ivBotSupport.setVisibility(View.VISIBLE);
+
+                        ivBotSupport.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(headerModel.getButtons().getLive_agent().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getType()))
+                                {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())
+                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getLive_agent().getAction().getValue());
+                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getValue(),false);
+                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getTitle(),false);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if(headerModel.getButtons().getClose() != null && headerModel.getButtons().getClose().isShow()) {
+                        ivBotClose.setVisibility(View.VISIBLE);
+
+                        ivBotClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requireActivity().finish();
+                            }
+                        });
+                    }
+                }
+            }
+
+            if(botBrandingModel.getBody() != null)
+            {
+                BrandingBodyModel bodyModel = botBrandingModel.getBody();
+
+                if(bodyModel != null)
+                {
+                    if(bodyModel.getBackground() != null && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getType()))
+                    {
+                        if(BundleConstants.COLOR.equalsIgnoreCase(bodyModel.getBackground().getType()) &&
+                                !StringUtils.isNullOrEmpty(bodyModel.getBackground().getColor())) {
+                            rlBody.setBackgroundColor(Color.parseColor(bodyModel.getBackground().getColor()));
+                        }
+                        else if(!StringUtils.isNullOrEmpty(bodyModel.getBackground().getImg())){
+                            Glide.with(requireActivity())
+                                .load(bodyModel.getBackground().getImg())
+                                .into(new CustomTarget<Drawable>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                        rlBody.setBackground(resource);
+                                    }
+                                    @Override
+                                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                            });
+                        }
+                    }
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if(bodyModel.getUser_message() != null) {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getBg_color())) {
+                            editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, bodyModel.getUser_message().getBg_color());
+                        }
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getColor())) {
+                            editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, bodyModel.getUser_message().getColor());
+                        }
+                    }
+                    if(bodyModel.getBot_message() != null) {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getBg_color())) {
+                            editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, bodyModel.getBot_message().getBg_color());
+                        }
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getColor())) {
+                            editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, bodyModel.getBot_message().getColor());
+                        }
+                    }
+                    if(bodyModel.getTime_stamp() != null )
+                    {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getTime_stamp().getColor())) {
+                            editor.putString(BotResponse.TIME_STAMP_TXT_COLOR, bodyModel.getTime_stamp().getColor());
+                        }
+
+                        SDKConfiguration.setTimeStampsRequired(bodyModel.getTime_stamp().isShow());
+                    }
+
+                    editor.apply();
+                }
             }
         }
-
     }
 
     public void findThemeViews(View view) {
@@ -225,7 +383,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                 editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 editor.apply();
 
@@ -774,7 +932,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 });
     }
 
-    private void loadChatHistory(final int _offset, final int limit) {
+    void loadChatHistory(final int _offset, final int limit) {
         if (fetching) {
             if (swipeRefreshLayout != null) {
                 swipeRefreshLayout.setRefreshing(false);

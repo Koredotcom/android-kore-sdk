@@ -9,9 +9,11 @@
     <RelativeLayout
         android:id="@+id/llBotHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/gray_modern"/>
 
     <RelativeLayout
+        android:id="@+id/rlBody"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/llBotHeader">

@@ -12,7 +12,6 @@ public class BotBrandingModel implements Serializable {
     private BrandingFooterModel footer;
     private BrandingBodyModel body;
 
-    @NonNull
     public BrandingBodyModel getBody() {
         return body;
     }

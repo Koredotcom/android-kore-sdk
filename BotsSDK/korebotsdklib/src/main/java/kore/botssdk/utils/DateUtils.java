@@ -1,13 +1,12 @@
 package kore.botssdk.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -18,6 +17,8 @@ import java.util.concurrent.TimeUnit;
  * Created by Pradeep Mahato on 09-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+
+@SuppressLint("UnknownNullness")
 public class DateUtils {
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
     public static final SimpleDateFormat fileFormatter = new SimpleDateFormat("yy_MM_dd_HH_mm_ss", Locale.ENGLISH);
@@ -44,7 +45,7 @@ public class DateUtils {
 
     public static String getTimeStamp(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return "";
-        long timeStampMillis = isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
+        long timeStampMillis = Objects.requireNonNull(isoFormatter.parse(timeStamp)).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
         return getTimeStamp(timeStampMillis);
     }
 
@@ -53,9 +54,8 @@ public class DateUtils {
     }
 
     public static double getOneDayMiliseconds(long diffvalue) {
-        double seconds = diffvalue / 1000;
-        double hours = seconds / (60 * 60);
-        return hours;
+        double seconds = (double) (diffvalue / 1000);
+        return seconds / (60 * 60);
 
     }
 
@@ -95,11 +95,12 @@ public class DateUtils {
     }
 
 
-    public static int getDays(Context mContext, long diff) {
+    public static int getDays(long diff) {
         return (int) TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
 
+    @SuppressLint("UnknownNullness")
     public static String formattedSentDateV6(long lastModified) {
         // CREATE DateFormatSymbols WITH ALL SYMBOLS FROM (DEFAULT) Locale
         DateFormatSymbols symbols = new DateFormatSymbols(Locale.getDefault());
@@ -199,15 +200,17 @@ public class DateUtils {
 
     public static String getFilesDateSturcture(String lastModified) {
         try {
+            Date dateCal = isoFormatter.parse(lastModified);
+            if(dateCal != null)
+            {
+                long date = dateCal.getTime();
 
-            long date = new Date(getDateFromString(lastModified)).getTime();
-            if (android.text.format.DateUtils.isToday(date)) {
-                return "Last Edited Today";
-            } else if (isYesterday(date)) {
-                return "Last Edited Yesterday";
+                if (android.text.format.DateUtils.isToday(date)) {
+                    return "Last Edited Today";
+                } else if (isYesterday(date)) {
+                    return "Last Edited Yesterday";
+                }
             }
-
-
             return "Last Edited " + getDateFromString(lastModified);
         } catch (Exception e) {
             e.printStackTrace();
@@ -252,7 +255,7 @@ public class DateUtils {
 
 
     public static Date getDDMMYYYY(long date) {
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
 
         try {
             return DATE_FORMAT.parse(dateFormat.format(date));

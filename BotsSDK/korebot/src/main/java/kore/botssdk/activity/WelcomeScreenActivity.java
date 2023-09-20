@@ -3,6 +3,7 @@ package kore.botssdk.activity;
 import static java.security.AccessController.getContext;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -10,9 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
@@ -70,6 +75,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
                     llHeaderLayout = (RelativeLayout) View.inflate(WelcomeScreenActivity.this, R.layout.welcome_header, null);
             }
 
+            RelativeLayout rlHeader = llHeaderLayout.findViewById(R.id.rlHeader);
             TextView tvWelcomeHeader = llHeaderLayout.findViewById(R.id.tvWelcomeHeader);
             TextView tvWelcomeTitle = llHeaderLayout.findViewById(R.id.tvWelcomeTitle);
             TextView tvWelcomeDescription = llHeaderLayout.findViewById(R.id.tvWelcomeDescription);
@@ -84,6 +90,20 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
 
             if(!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName()))
                 tvWelcomeDescription.setText(welcomeModel.getNote().getName());
+
+            if(welcomeModel.getBackground() != null && !StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg()))
+            {
+                Glide.with(WelcomeScreenActivity.this)
+                        .load(welcomeModel.getBackground().getImg())
+                        .into(new CustomTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                rlHeader.setBackground(resource);
+                            }
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {}
+                        });
+            }
 
             llOuterHeader.addView(llHeaderLayout);
 

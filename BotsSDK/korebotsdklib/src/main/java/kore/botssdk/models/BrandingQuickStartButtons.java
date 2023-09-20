@@ -13,20 +13,20 @@ public class BrandingQuickStartButtons implements Serializable
     private String input;
     private BrandingQuickStartButtonActionModel action;
 
-    public void setAction(@NonNull BrandingQuickStartButtonActionModel action) {
+    public void setAction( BrandingQuickStartButtonActionModel action) {
         this.action = action;
     }
 
-    public void setInput(@NonNull String input) {
+    public void setInput( String input) {
         this.input = input;
     }
 
-    @NonNull
+
     public BrandingQuickStartButtonActionModel getAction() {
         return action;
     }
 
-    @NonNull
+
     public String getInput() {
         return input;
     }
@@ -35,7 +35,6 @@ public class BrandingQuickStartButtons implements Serializable
         return show;
     }
 
-    @NonNull
     public String getStyle() {
         return style;
     }
@@ -44,15 +43,14 @@ public class BrandingQuickStartButtons implements Serializable
         this.show = show;
     }
 
-    public void setStyle(@NonNull String style) {
+    public void setStyle( String style) {
         this.style = style;
     }
 
-    public void setButtons(@NonNull ArrayList<BrandingQuickStartButtonButtonsModel> buttons) {
+    public void setButtons( ArrayList<BrandingQuickStartButtonButtonsModel> buttons) {
         this.buttons = buttons;
     }
 
-    @NonNull
     public ArrayList<BrandingQuickStartButtonButtonsModel> getButtons() {
         return buttons;
     }

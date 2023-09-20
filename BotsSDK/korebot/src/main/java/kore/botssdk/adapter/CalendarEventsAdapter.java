@@ -387,7 +387,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             long _end = (long) data.getDuration().getEnd();
 
             //getting the days count, observed different values if we pass the timestamo directly so we are giving the that day early hours 00:00AM
-            int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
+            int _days = DateUtils.getDays( DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
 
             Date eventStartDate = DateUtils.getDDMMYYYY(_start);
 

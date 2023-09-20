@@ -99,6 +99,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUBBLE_RIGHT_TEXT_COLOR = "BUBBLE_RIGHT_TEXT_COLOR";
     public static final String BUTTON_ACTIVE_BG_COLOR = "BUTTON_ACTIVE_BG_COLOR";
     public static final String BUTTON_ACTIVE_TXT_COLOR = "BUTTON_ACTIVE_TXT_COLOR";
+    public static final String TIME_STAMP_TXT_COLOR = "TIME_STAMP_TXT_COLOR";
     public static final String BUTTON_INACTIVE_BG_COLOR = "BUTTON_INACTIVE_BG_COLOR";
     public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
     public static final String WIDGET_BG_COLOR = "WIDGET_BG_COLOR";

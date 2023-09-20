@@ -3,8 +3,18 @@ package kore.botssdk.models;
 import java.io.Serializable;
 
 public class BrandingTitleModel implements Serializable {
-    private String name;
-    private String color;
+    String name;
+    String color;
+    String type;
+    String img;
+
+    public String getType() {
+        return type;
+    }
+
+    public String getImg() {
+        return img;
+    }
 
     public String getName() {
         return name;

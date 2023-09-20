@@ -1,17 +1,25 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.WelcomeScreenActivity;
 import kore.botssdk.models.PdfDownloadModel;
 import kore.botssdk.models.PromotionsModel;
 import kore.botssdk.utils.StringUtils;
@@ -67,7 +75,17 @@ public class PromotionsAdapter extends BaseAdapter
     private void populateVIew(ViewHolder holder, int position) {
         PromotionsModel promotionsModel = getItem(position);
         if(!StringUtils.isNullOrEmpty(promotionsModel.getBanner())) {
-            Picasso.get().load(promotionsModel.getBanner()).into(holder.ivPromotionsBanner);
+
+            Glide.with(context)
+                .load(promotionsModel.getBanner())
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        holder.ivPromotionsBanner.setBackground(resource);
+                    }
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {}
+                });
         }
     }
 

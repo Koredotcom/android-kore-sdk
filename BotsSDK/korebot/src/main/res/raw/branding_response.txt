@@ -158,7 +158,7 @@
    },
    "header":{
       "bg_color":"#ffffff",
-      "size":"large",
+      "size":"compact",
       "style":"translucent",
       "icon":{
          "show":true,

@@ -5,13 +5,13 @@ import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
-import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +43,7 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnknownNullness")
 public abstract class KaBaseBubbleLayout extends ViewGroup {
     final Context context;
     Activity activityContext;
@@ -104,11 +105,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
 
     protected final int WHITE_COLOR = 0xffffffff;
-//    public static String NON_KORE_COLOR = "#AEBFC4";
-
     protected TextMediaLayout bubbleTextMediaLayout;
     protected TextView botContentTextView;
-    // protected HeaderLayout headerLayout;
     protected BotListTemplateView botListTemplateView;
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
@@ -161,6 +159,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
     protected TimeLineTextView timeLineView;
+    SharedPreferences sharedPreferences;
 
     public KaBaseBubbleLayout(Context context) {
         super(context);
@@ -197,11 +196,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             paint.setAntiAlias(true);
         }
         viewAddition();
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
 
     public void setTimeStampVisible(){
-        timeStampsTextView.setVisibility(VISIBLE);
+        timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
     }
     private void initiliazeCoordinates() {
         if (AppControl.getInstance() != null
@@ -372,7 +372,6 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         timeStampsTextView = ViewProvider.getTimeStampTextView(context);
         timeStampsTextView.setPadding(0,(int)dp1*3  ,0,0);
         addView(timeStampsTextView);
-        timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
 
         timeLineView = ViewProvider.getTimeLineView(context);
         addView(timeLineView);
@@ -691,11 +690,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage) {
 
-        //    bubbleTextMediaLayout.gravity = isLeftSide() ? Gravity.START : Gravity.END;
-//        this.dimens = dimens;
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
-        // Customize BubbleSeparation
-        // Customise BubbleTimeLineGrouping Height
         BUBBLE_GROUPING_TIMELINE = 0;
 
         preCosmeticChanges();
@@ -725,7 +720,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         setDoDrawBubbleBackground(false);
         determineTextColor();
         textViewCosmeticChanges();
-        timeStampsTextView.setVisibility(VISIBLE);
+        timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
+        timeStampsTextView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.TIME_STAMP_TXT_COLOR, "#B0B0B0")));
     }
 
     /**
