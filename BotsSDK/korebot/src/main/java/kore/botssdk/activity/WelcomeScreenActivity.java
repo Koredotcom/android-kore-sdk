@@ -31,8 +31,11 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.PromotionsAdapter;
 import kore.botssdk.adapter.QuickRepliesAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
+import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
+import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotBrandingModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingWelcomeModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
@@ -81,6 +84,8 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
             TextView tvWelcomeDescription = llHeaderLayout.findViewById(R.id.tvWelcomeDescription);
             RecyclerView rvStarterButtons = findViewById(R.id.rvStarterButtons);
             HeightAdjustableViewPager hvpLinks = findViewById(R.id.hvpLinks);
+            RecyclerView rvLinks = findViewById(R.id.rvLinks);
+            rvLinks.setLayoutManager(new LinearLayoutManager(WelcomeScreenActivity.this, LinearLayoutManager.VERTICAL, false));
 
             if(!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName()))
                 tvWelcomeHeader.setText(welcomeModel.getTitle().getName());
@@ -110,13 +115,30 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
             if(welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0)
             {
                 FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(WelcomeScreenActivity.this);
-                layoutManager.setFlexDirection(FlexDirection.ROW);
-                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                rvStarterButtons.setLayoutManager(layoutManager);
 
-                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, rvStarterButtons);
-                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                rvStarterButtons.setAdapter(quickRepliesAdapter);
+                if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle()))
+                {
+                    if(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST))
+                    {
+                        layoutManager.setFlexDirection(FlexDirection.COLUMN);
+                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                        rvStarterButtons.setLayoutManager(layoutManager);
+
+                        WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_LIST);
+                        quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
+                        rvStarterButtons.setAdapter(quickRepliesAdapter);
+                    }
+                    else
+                    {
+                        layoutManager.setFlexDirection(FlexDirection.ROW);
+                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                        rvStarterButtons.setLayoutManager(layoutManager);
+
+                        WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL);
+                        quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
+                        rvStarterButtons.setAdapter(quickRepliesAdapter);
+                    }
+                }
             }
 
             if(welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().getPromotions().size() > 0)
@@ -124,10 +146,20 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
                 lvPromotions.setAdapter(new PromotionsAdapter(WelcomeScreenActivity.this, welcomeModel.getPromotional_content().getPromotions()));
             }
 
-            if(welcomeModel.getStatic_links().getLinks().size() > 0)
+            if(welcomeModel.getStatic_links() != null && welcomeModel.getStatic_links().getLinks() != null && welcomeModel.getStatic_links().getLinks().size() > 0)
             {
-                WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks());
-                hvpLinks.setAdapter(quickRepliesAdapter);
+                if(StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
+                    hvpLinks.setVisibility(View.VISIBLE);
+                    WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks());
+                    hvpLinks.setAdapter(quickRepliesAdapter);
+                }
+                else
+                {
+                    rvLinks.setVisibility(View.VISIBLE);
+                    WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(WelcomeScreenActivity.this, rvLinks);
+                    welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
+                    rvLinks.setAdapter(welcomeStaticLinkListAdapter);
+                }
             }
         }
     }
@@ -147,6 +179,8 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
 
     public void launchBotChatActivity(@NonNull View view)
     {
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), null);
+
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null

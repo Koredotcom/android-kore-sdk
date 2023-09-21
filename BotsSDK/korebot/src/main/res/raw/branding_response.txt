@@ -116,7 +116,7 @@
       },
       "static_links":{
          "show":true,
-         "layout":"carousel",
+         "layout":"list",
          "links":[
             {
                "title":"Community",

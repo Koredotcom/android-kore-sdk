@@ -149,8 +149,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     boolean isItFirstConnect = true;
     private final Gson gson = new Gson();
     //Fragment Approch
-    private FrameLayout composerView;
-    private BottomPanelFragment composerFragment;
+    FrameLayout composerView;
+    BottomPanelFragment composerFragment;
     private SharedPreferences sharedPreferences;
     private ImageView ivChaseBackground, ivChaseLogo;
     protected final int compressQualityInt = 100;
@@ -164,7 +164,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private String lastMsgId = "";
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    private String header_type, footer_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -312,8 +311,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             jwt = bundle.getString(BundleUtils.JWT_TKN, "");
-            header_type = bundle.getString(BundleUtils.HEADER_TYPE, "compact");
-            footer_type = bundle.getString(BundleUtils.FOOTER_TYPE, "compact");
 
             BotBrandingModel botBrandingModel = (BotBrandingModel)bundle.getSerializable(BundleUtils.BRANDING);
             if(botBrandingModel != null && botBrandingModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botBrandingModel.getChat_bubble().getStyle()))

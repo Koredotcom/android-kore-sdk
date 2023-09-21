@@ -6,32 +6,30 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class StaticLinksModel implements Serializable {
-    private boolean show;
-    private String type;
+    boolean show;
+    String type;
+    String layout;
     private ArrayList<BrandingQuickStartButtonButtonsModel> links;
 
     public void setShow(boolean show) {
         this.show = show;
     }
 
-    public void setLinks(@NonNull ArrayList<BrandingQuickStartButtonButtonsModel> links) {
+    public void setLinks( ArrayList<BrandingQuickStartButtonButtonsModel> links) {
         this.links = links;
     }
-
-    public void setType(@NonNull String type) {
+    public void setType( String type) {
         this.type = type;
     }
-
     public boolean isShow() {
         return show;
     }
-
-    @NonNull
     public String getType() {
         return type;
     }
-
-    @NonNull
+    public String getLayout() {
+        return layout;
+    }
     public ArrayList<BrandingQuickStartButtonButtonsModel> getLinks() {
         return links;
     }

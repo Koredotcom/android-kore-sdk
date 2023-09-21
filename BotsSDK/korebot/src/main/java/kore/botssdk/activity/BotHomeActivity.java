@@ -38,7 +38,7 @@ import kore.botssdk.utils.StringUtils;
  */
 public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
     private Button launchBotBtn;
-    private EditText etIdentity;
+    EditText etIdentity;
     private static final int ERROR_DIALOG_REQUEST_CODE = 1;
     private boolean retryProviderInstall;
 
@@ -116,7 +116,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
      * Launching BotchatActivity where user can interact with bot
      *
      */
-    private void launchBotChatActivity(){
+    void launchBotChatActivity(){
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null

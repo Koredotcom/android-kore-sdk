@@ -130,7 +130,14 @@
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         android:paddingEnd="@dimen/dimen_20dp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvLinks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvLinksTitle"
+                        android:layout_marginBottom="@dimen/dimen_10dp"/>
 
                 </RelativeLayout>
 

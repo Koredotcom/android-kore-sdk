@@ -1,8 +1,12 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,35 +16,42 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.models.BrandingQuickStartButtonButtonsModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
 
-public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
+public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder> {
     private ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList;
     final Context context;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    String type;
 
-    public WelcomeStarterButtonsAdapter(Context context, RecyclerView parentRecyclerView) {
+    public WelcomeStarterButtonsAdapter(Context context, String type) {
         this.context = context;
+        this.type = type;
     }
 
     @NonNull
     @Override
     public QuickReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View convertView = View.inflate(context, R.layout.welcome_quick_buttons, null);
+        View convertView;
+        if(type.equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST))
+            convertView = LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons_full, parent, false);
+        else
+            convertView = LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false);
+
         return new QuickReplyViewHolder(convertView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull QuickReplyViewHolder holder, int position) {
         BrandingQuickStartButtonButtonsModel quickReplyTemplate = quickReplyTemplateArrayList.get(position);
-        holder.getQuickReplyTitle().setText(quickReplyTemplate.getTitle());
+        holder.quickReplyTitle.setText(quickReplyTemplate.getTitle());
 
-        holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
+        holder.quickReplyRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null)
@@ -99,5 +110,18 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<QuickRepl
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public static class QuickReplyViewHolder extends RecyclerView.ViewHolder {
+        private final TextView quickReplyTitle;
+        private final ImageView quickReplyImage;
+        private final RelativeLayout quickReplyRoot;
+
+        public QuickReplyViewHolder(View view) {
+            super(view);
+            quickReplyImage = view.findViewById(R.id.quick_reply_item_image);
+            quickReplyTitle = view.findViewById(R.id.quick_reply_item_text);
+            quickReplyRoot = view.findViewById(R.id.quick_reply_item_root);
+        }
     }
 }

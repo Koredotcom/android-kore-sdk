@@ -65,6 +65,7 @@ import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.WelcomeScreenActivity;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
@@ -310,6 +311,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         ivBotClose.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                BotSocketConnectionManager.killInstance();
                                 requireActivity().finish();
                             }
                         });
