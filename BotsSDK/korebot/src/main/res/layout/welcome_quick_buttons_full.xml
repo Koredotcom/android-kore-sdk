@@ -16,7 +16,6 @@
         android:background="@drawable/rounded_rect_feedback"
         android:gravity="start"
         android:orientation="horizontal"
-        android:padding="8dp"
         tools:ignore="UselessParent">
 
         <ImageView
@@ -40,8 +39,8 @@
             android:gravity="start"
             android:singleLine="true"
             android:text="@string/hello"
-            android:textColor="@color/color_465360"
-            android:textSize="14sp" />
+            android:textColor="@color/neutral"
+            android:textSize="@dimen/text_size_normal" />
     </RelativeLayout>
 
 </RelativeLayout>

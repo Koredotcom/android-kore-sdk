@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_rect_feedback"
-        android:padding="8dp"
         tools:ignore="UselessParent">
 
         <ImageView
@@ -27,7 +26,7 @@
             android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
-        <TextView
+        <kore.botssdk.views.CustomTextViewSemiBold
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,8 +35,8 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="@string/hello"
-            android:textColor="@color/color_465360"
-            android:textSize="14sp" />
+            android:textColor="@color/neutral"
+            android:textSize="@dimen/text_size_normal" />
     </RelativeLayout>
 
 </RelativeLayout>

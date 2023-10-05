@@ -1,108 +1,135 @@
 package kore.botssdk.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BottomOptionsCycleAdapter;
+import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
+import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.view.viewUtils.DimensionUtil;
-
+@SuppressLint("UnknownNullness")
 public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 {
     final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
-    private View view;
-    private boolean isFromFullView;
-    private BotOptionsModel model;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
-    private ListView lvMoreData;
-    private int dp1;
-    private TextView tvTab1, tvTab2;
-    private TextView tvOptionsTitle;
-    private LinearLayout llCloseBottomSheet, llBottomLayout;
+    BotOptionsModel model;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    boolean isFromListMenu = false;
+    int dp1;
+
     public String getSkillName() {
         return skillName;
     }
-    private BottomSheetDialog bottomSheetDialog;
-    private LinearLayout llTabHeader;
-    private RecyclerView rvViewMore;
-    private SharedPreferences sharedPreferences;
+    BottomSheetDialog bottomSheetDialog;
+    private BotBrandingModel botBrandingModel;
 
-    public void setSkillName(String skillName, String trigger) {
+    public void setSkillName(String skillName) {
         this.skillName = skillName;
-        this.trigger = trigger;
     }
-
     private String skillName;
-    private String trigger;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.list_bottom_sheet, container,false);
-        lvMoreData = view.findViewById(R.id.lvMoreData);
-        tvTab1 = view.findViewById(R.id.tvTab1);
-        tvTab2 = view.findViewById(R.id.tvTab2);
-        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
-        llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        llBottomLayout = view.findViewById(R.id.llBottomLayout);
-        llTabHeader = view.findViewById(R.id.llTabHeader);
+        View view = inflater.inflate(R.layout.list_bottom_sheet, container, false);
+        TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
+        LinearLayout llOptionsBottom = view.findViewById(R.id.llOptionsBottom);
+
+        LinearLayout llTabHeader = view.findViewById(R.id.llTabHeader);
         llTabHeader.setVisibility(View.GONE);
         tvOptionsTitle.setVisibility(View.VISIBLE);
-        rvViewMore = view.findViewById(R.id.rvMoreData);
-        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        RecyclerView rvViewMore = view.findViewById(R.id.rvMoreData);
+        RecyclerView rvQuickData = view.findViewById(R.id.rvQuickData);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
-        rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        rvViewMore.setVisibility(View.VISIBLE);
-        lvMoreData.setVisibility(View.GONE);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireActivity());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        rvViewMore.setLayoutManager(layoutManager);
+
+        rvViewMore.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
         this.dp1 = (int) DimensionUtil.dp1;
         BottomOptionsCycleAdapter bottomOptionsCycleAdapter;
 
-        if (rvViewMore.getAdapter() == null) {
+        if (rvViewMore.getAdapter() == null)
+        {
             bottomOptionsCycleAdapter = new BottomOptionsCycleAdapter(model.getTasks());
             rvViewMore.setAdapter(bottomOptionsCycleAdapter);
             bottomOptionsCycleAdapter.setComposeFooterInterface(composeFooterInterface);
-            bottomOptionsCycleAdapter.setContext(getActivity());
+            bottomOptionsCycleAdapter.setContext(requireActivity());
             bottomOptionsCycleAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         } else {
             bottomOptionsCycleAdapter = (BottomOptionsCycleAdapter) rvViewMore.getAdapter();
         }
 
         bottomOptionsCycleAdapter.setBotListModelArrayList(bottomSheetDialog, model.getTasks());
-        bottomOptionsCycleAdapter.notifyDataSetChanged();
+        bottomOptionsCycleAdapter.notifyItemRangeChanged(0, (model.getTasks().size() - 1));
+
+        if(botBrandingModel != null && botBrandingModel.getWelcome_screen() != null
+                && botBrandingModel.getWelcome_screen().getStarter_box() != null
+                && botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons() != null
+                && botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons() != null
+                && botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons().size() > 0)
+        {
+            if(botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST))
+            {
+                layoutManager.setFlexDirection(FlexDirection.COLUMN);
+                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                rvQuickData.setLayoutManager(layoutManager);
+
+                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_LIST);
+                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons());
+                rvQuickData.setAdapter(quickRepliesAdapter);
+            }
+            else
+            {
+                layoutManager.setFlexDirection(FlexDirection.ROW);
+                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                rvQuickData.setLayoutManager(layoutManager);
+
+                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_CAROUSEL);
+                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons());
+                rvQuickData.setAdapter(quickRepliesAdapter);
+            }
+        }
 
         if(model.getHeading() != null)
         {
@@ -123,14 +150,6 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
         return view;
     }
 
-    private void sendMessageText(String message, String payLoad) {
-        if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message.trim(), payLoad, false);
-        } else {
-            Log.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
-        }
-    }
-
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
@@ -140,18 +159,27 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
     }
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        if (bottomSheetDialog.getWindow() != null)
+        {
+            bottomSheetDialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        }
+
         bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(DialogInterface dialogInterface) {
+            public void onShow(DialogInterface dialogInterface)
+            {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight)-(50 * dp1);
-                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight) -(50 * dp1)));
+                if(bottomSheet != null) {
+                    bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight);
+                    BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                    bottomSheetBehavior.setPeekHeight((int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight));
+                    bottomSheetBehavior.setDraggable(false);
+                }
             }
         });
 
@@ -160,7 +188,6 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
     }
 
     public void setisFromFullView(boolean isFromFullView) {
-        this.isFromFullView = isFromFullView;
     }
 
     public void setData(BotOptionsModel taskTemplateModel) {
@@ -173,7 +200,9 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 
+    public void setBrandingModel(BotBrandingModel botBrandingModel) {
+        this.botBrandingModel = botBrandingModel;
+    }
 }

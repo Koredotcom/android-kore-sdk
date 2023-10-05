@@ -1,9 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.BotsSDK" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.BotsSDK" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your light theme here. -->
          <item name="colorPrimary">#3F51B5</item>
     </style>
+
 
     <style name="Theme.BotsSDK" parent="Base.Theme.BotsSDK" />
 </resources>

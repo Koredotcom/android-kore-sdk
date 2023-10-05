@@ -4,6 +4,7 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -24,6 +25,12 @@ public class HeightAdjustableViewPager extends ViewPager {
 
     public HeightAdjustableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setClipChildren(false);
+        setClipToPadding(false);
+        // to avoid fade effect at the end of the page
+        setOverScrollMode(2);
+        setOffscreenPageLimit(3);
+
     }
 
     @Override

@@ -25,6 +25,7 @@ import kore.botssdk.view.BarChartView;
 import kore.botssdk.view.BotBeneficiaryTemplateView;
 import kore.botssdk.view.BotButtonLinkTemplateView;
 import kore.botssdk.view.BotButtonView;
+import kore.botssdk.view.BotCarouselStacked;
 import kore.botssdk.view.BotCarouselView;
 import kore.botssdk.view.BotContactTemplateView;
 import kore.botssdk.view.BotCustomTableView;
@@ -209,6 +210,11 @@ public class ViewProvider {
 
     public static BotCarouselView getBotCarousalView(Context context){
         BotCarouselView botCarouselView = new BotCarouselView(context);
+        botCarouselView.setId(CAROUSEL_VIEW_ID);
+        return botCarouselView;
+    }
+    public static BotCarouselStacked getBotCarousalStacked(Context context){
+        BotCarouselStacked botCarouselView = new BotCarouselStacked(context);
         botCarouselView.setId(CAROUSEL_VIEW_ID);
         return botCarouselView;
     }

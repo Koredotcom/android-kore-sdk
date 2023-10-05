@@ -1,37 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
 
-    <LinearLayout
-        android:id="@+id/loginContainer2"
+    <kore.botssdk.view.viewUtils.HorizontalInfiniteCycleViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/txtBotName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingRight="50dp"
-            android:paddingLeft="50dp"
-            android:paddingBottom="50dp"
-            android:gravity="center_horizontal"
-            android:text="Bot SDK Demo"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="#000000"
-            />
-
-        <Button
-            android:id="@+id/startUsingBot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Start using the Bots"
-            android:background="@drawable/button_drawable"
-            android:textColor="@android:color/white"/>
-
-    </LinearLayout>
+        android:layout_height="match_parent"
+        app:icvp_center_page_scale_offset="30dp"
+        app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
+        app:icvp_max_page_scale="0.8"
+        app:icvp_medium_scaled="false"
+        app:icvp_min_page_scale="0.55"
+        app:icvp_min_page_scale_offset="5dp"
+        app:icvp_scroll_duration="250"/>
 
 </RelativeLayout>

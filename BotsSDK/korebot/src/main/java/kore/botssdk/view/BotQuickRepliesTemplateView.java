@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -7,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import java.util.ArrayList;
 
@@ -20,15 +23,12 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
+@SuppressLint("UnknownNullness")
 public class BotQuickRepliesTemplateView extends ViewGroup {
-
     RecyclerView recyclerView;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    StaggeredGridLayoutManager staggeredGridLayoutManager;
-
-    int maxWidth, listViewHeight;
+    int maxWidth;
     int dp1;
     public BotQuickRepliesTemplateView(Context context) {
         super(context);
@@ -47,10 +47,6 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
 
     private void init() {
         recyclerView = new RecyclerView(getContext());
-//        recyclerView.setPadding((int) getResources().getDimension(R.dimen.quick_reply_recycler_layout_padding_left),
-//                (int) getResources().getDimension(R.dimen.quick_reply_recycler_layout_padding_top),
-//                (int) getResources().getDimension(R.dimen.quick_reply_recycler_layout_padding_right),
-//                (int) getResources().getDimension(R.dimen.quick_reply_recycler_layout_padding_bottom));
         recyclerView.setClipToPadding(false);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(15));
@@ -58,24 +54,18 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().density;
         maxWidth = (int) AppControl.getInstance().getDimensionUtil().screenWidth;
-        listViewHeight = (int) AppControl.getInstance().getDimensionUtil().screenWidth;
     }
 
     public void populateQuickReplyView(ArrayList<QuickReplyTemplate> quickReplyTemplates)
     {
-        if (quickReplyTemplates != null)
+        if (quickReplyTemplates != null && quickReplyTemplates.size() > 0)
         {
-            if(quickReplyTemplates != null && quickReplyTemplates.size() > 0)
-            {
-                if(quickReplyTemplates.size()/2 > 0)
-                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(quickReplyTemplates.size()/2, LinearLayoutManager.HORIZONTAL);
-                else
-                    staggeredGridLayoutManager = new StaggeredGridLayoutManager(quickReplyTemplates.size(), LinearLayoutManager.HORIZONTAL);
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+            layoutManager.setFlexDirection(FlexDirection.ROW);
+            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            recyclerView.setLayoutManager(layoutManager);
 
-                recyclerView.setLayoutManager(staggeredGridLayoutManager);
-            }
-
-            QuickRepliesTemplateAdapter quickRepliesAdapter = null;
+            QuickRepliesTemplateAdapter quickRepliesAdapter;
             if (recyclerView.getAdapter() == null) {
                 quickRepliesAdapter = new QuickRepliesTemplateAdapter(getContext(), recyclerView);
                 recyclerView.setAdapter(quickRepliesAdapter);
@@ -86,12 +76,10 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
             quickRepliesAdapter = (QuickRepliesTemplateAdapter) recyclerView.getAdapter();
 
             quickRepliesAdapter.setQuickReplyTemplateArrayList(quickReplyTemplates);
-            quickRepliesAdapter.notifyDataSetChanged();
-            listViewHeight = 60 * (quickReplyTemplates.size()/2) * dp1;
+            quickRepliesAdapter.notifyItemRangeChanged(0 , (quickReplyTemplates.size() - 1));
             recyclerView.setVisibility(VISIBLE);
         } else {
             recyclerView.setVisibility(GONE);
-            listViewHeight = 0;
         }
     }
 
@@ -103,27 +91,18 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public boolean getRecyclerVisibility(){
-        return recyclerView == null || recyclerView.getAdapter() == null;
-    }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
         int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
-        int totalHeight = getPaddingTop();
-        int totalWidth = getPaddingLeft();
 
         int childWidthSpec;
         int childHeightSpec;
-        int contentWidth = 0;
 
         /*
          * For Carousel ViewPager Layout
          */
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(listViewHeight, MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(wrapSpec, MeasureSpec.EXACTLY);
         childWidthSpec = widthMeasureSpec;
         childHeightSpec = heightMeasureSpec;
         MeasureUtils.measure(recyclerView, childWidthSpec, childHeightSpec);
@@ -137,7 +116,7 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
         LayoutUtils.layoutChild(childView, 0, 0);
     }
 
-    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+    public static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
         private final int verticalSpaceHeight;
 

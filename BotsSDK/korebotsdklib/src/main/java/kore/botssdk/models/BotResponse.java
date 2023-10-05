@@ -56,6 +56,7 @@ public class BotResponse extends BaseBotMessage {
 
     //Added new
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
+    public static final String CAROUSEL_STACKED = "stacked";
     public static final String TEMPLATE_TYPE_FORM = "form_template";
     public static final String TEMPLATE_TYPE_LIST_VIEW  = "listView";
     public static final String TEMPLATE_TYPE_DATE = "dateTemplate";

@@ -4,12 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public abstract class KaBaseBubbleContainer extends ViewGroup {
+public abstract class KaBaseBubbleContainer extends RelativeLayout {
 
     protected int dp1;
     protected int BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT;

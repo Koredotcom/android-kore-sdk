@@ -8,30 +8,33 @@
         android:id="@+id/llChildLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_35dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_marginLeft="@dimen/dimen_35dp"
-        android:orientation="vertical" >
-        <TextView
+        android:orientation="vertical">
+
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/tvColumnName1"
             android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/dimen_7dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_7dp"
             android:textColor="@color/colorSelected"
-            android:textSize="@dimen/text_size_small"/>
-        <TextView
+            android:textSize="@dimen/text_size_small" />
+
+        <kore.botssdk.views.CustomTextView
             android:id="@+id/tvValue1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_7dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivChildDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected"/>
+        android:contentDescription="@string/app_name"
+        android:background="@color/colorSelected" />
 
 </LinearLayout>

@@ -95,7 +95,9 @@ public class BotListWidgetTemplateAdapter extends BaseAdapter {
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
-        holder.bot_list_item_cost.setText(botListModel.getValue().getText());
+        if(botListModel.getValue() != null && !StringUtils.isNullOrEmpty(botListModel.getValue().getText())) {
+            holder.bot_list_item_cost.setText(botListModel.getValue().getText());
+        }
 
         if(botListModel.getColor() != null)
             holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));

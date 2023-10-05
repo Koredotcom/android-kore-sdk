@@ -295,7 +295,7 @@
       "time_stamp":{
          "show":true,
          "show_type":"always",
-         "position":"top",
+         "position":"to",
          "separator":"line",
          "color":"#0000FF"
       },

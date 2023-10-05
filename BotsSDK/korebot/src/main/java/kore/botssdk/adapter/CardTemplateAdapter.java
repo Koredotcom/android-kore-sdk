@@ -191,7 +191,8 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         ImageView ivDropDownCLose = popUpView.findViewById(R.id.ivDropDownCLose);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), BundleConstants.FULL_WIDTH, CardTemplateAdapter.this, null, null);
+                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), CardTemplateAdapter.this, null, null);
+                        advanceListButtonAdapter.setType(BundleConstants.FULL_WIDTH);
                         recyclerView.setAdapter(advanceListButtonAdapter);
                         ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
                             @Override

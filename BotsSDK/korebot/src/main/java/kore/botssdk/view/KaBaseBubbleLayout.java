@@ -110,6 +110,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotListTemplateView botListTemplateView;
     protected BotButtonView botButtonView;
     protected BotCarouselView botCarouselView;
+    protected BotCarouselStacked botCarouselStacked;
     protected PieChartView botPieChartView;
     protected BotTableView tableView;
     protected BotResponsiveExpandTableView responsiveExpandTableView;
@@ -335,6 +336,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botCarouselView.setComposeFooterInterface(composeFooterInterface);
         addView(botCarouselView);
 
+        botCarouselStacked = ViewProvider.getBotCarousalStacked(context);
+        botCarouselStacked.setComposeFooterInterface(composeFooterInterface);
+        addView(botCarouselStacked);
+
         botPieChartView = ViewProvider.getPieChartView(context);
         addView(botPieChartView);
 
@@ -493,6 +498,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botCarouselView != null) {
             botCarouselView.setComposeFooterInterface(composeFooterInterface);
         }
+        if (botCarouselStacked != null) {
+            botCarouselStacked.setComposeFooterInterface(composeFooterInterface);
+        }
         if (botButtonView != null) {
             botButtonView.setComposeFooterInterface(composeFooterInterface);
         }
@@ -582,6 +590,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
         if (botCarouselView != null) {
             botCarouselView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (botCarouselStacked != null) {
+            botCarouselStacked.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if (botButtonView != null) {
             botButtonView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -858,6 +869,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         this.activityContext = activityContext;
         if (botCarouselView != null) {
             botCarouselView.setActivityContext(activityContext);
+        }
+        if (botCarouselStacked != null) {
+            botCarouselStacked.setActivityContext(activityContext);
         }
 
     }

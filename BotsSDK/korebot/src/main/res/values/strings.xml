@@ -119,6 +119,10 @@
     <string name="our_community_is_ready_to_help_you_to_join_our_best_platform">Our community is ready to help you to join our best platform</string>
     <string name="start_conversation">Start Conversation</string>
     <string name="links">Links</string>
+    <string name="tab1">Tab1</string>
+    <string name="tab2">Tab2</string>
+    <string name="ask_for_help">Ask for help</string>
+    <string name="hi">hi</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

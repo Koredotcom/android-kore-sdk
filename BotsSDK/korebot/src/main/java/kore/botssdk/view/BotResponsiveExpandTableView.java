@@ -29,7 +29,6 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel> {
 
     private Context context;
-    private ExpandableListView expandableListView;
     private String[]  headers;
     int dp1;
 
@@ -37,19 +36,16 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
         this(context, null);
         this.context = context;
         this.dp1 = (int) DimensionUtil.dp1;
-//        setBackgroundColor(0xffff0000);
 
     }
 
     public BotResponsiveExpandTableView(final Context context, final AttributeSet attributes) {
         this(context, attributes, android.R.attr.listViewStyle);
-//        setBackgroundColor(0xffff0000);
 
     }
 
     public BotResponsiveExpandTableView(final Context context, final AttributeSet attributes, final int styleAttributes){
         super(context,attributes,styleAttributes);
-//        setBackgroundColor(0xffff0000);
 
     }
     public String[] addHeaderAdapter( List<List<String>> primary){
@@ -69,9 +65,7 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
         setHeaderVisible(false, 100);
 
         final int rowColorEven =context.getResources().getColor(R.color.table_data_row_even);
-        //final int rowColorOdd = context.getResources().getColor(R.color.table_data_row_odd);
         setDataRowBackgroundProvider(TableDataRowBackgroundProviders.alternatingRowColors(rowColorEven, rowColorEven));
-//        setHeaderSortStateViewProvider(SortStateViewProviders.brightArrows());
 
         final TableColumnWeightModel tableColumnWeightModel = new TableColumnWeightModel(headers.length);
         for(int index=0;index<headers.length;index++) {
@@ -82,44 +76,25 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
         return alignment;
     }
 
-    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment, PayloadInner data){
-        if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type) || BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)) {
-            List<MiniTableModel> lists = new ArrayList<>();
-            for(int j=0; j<additional.size();j++) {
-                MiniTableModel model = new MiniTableModel();
-                model.setElements(additional.get(j));
-                lists.add(model);
-            }
-
-            BotRespExpandTableAdapter botRespExpandTableAdapter = new BotRespExpandTableAdapter(context, lists, alignment, headers, data);
-            setDataAdapter(botRespExpandTableAdapter);
-        }
-
-    }
-
     public void setData(PayloadInner payloadInner){
         if(payloadInner != null) {
             String[] alignment = addHeaderAdapter(payloadInner.getColumns());
             addDataAdapterForTable(payloadInner, alignment);
-        }/*else{
-            setDataAdapter(null);
-        }*/
+        }
     }
 
     public void addDataAdapterForTable(PayloadInner data, String[] alignment) {
 
         List<MiniTableModel> lists = new ArrayList<>();
-        int size = ((ArrayList) data.getElements()).size();
+        int size = ((ArrayList<?>) data.getElements()).size();
         for (int j = 0; j < size; j++) {
             MiniTableModel model = new MiniTableModel();
-            model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
+            model.setElements(((ArrayList)(((LinkedTreeMap<?, ?>)((ArrayList) data.getElements()).get(j))).get("Values")));
             lists.add(model);
         }
 
         BotRespExpandTableAdapter botRespExpandTableAdapter = new BotRespExpandTableAdapter(context, lists, alignment, headers, data);
         setDataAdapter(botRespExpandTableAdapter);
-//        BotResponsiveTableAdapter tableAdapter = new BotResponsiveTableAdapter(context, lists,alignment, headers);
-//        setDataAdapter(tableAdapter);
     }
 
     @Override
@@ -150,59 +125,10 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             int height = 0;
-//            height = getListViewHeightBasedOnChildren(tableDataView);
             height = 70 * dp1 * tableDataView.getAdapter().getCount();
             height += tableHeaderView.getMeasuredHeight();
-
-//            if (height != 0 ) {
-//                height = height + (int) (25 * dp1);
-//            }
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
-    /*        for(int i = 0; i < getChildCount(); i++) {
-                View child = getChildAt(i);
-                child.getLayoutParams().height = height;
-                child.requestLayout();
-            }*/
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
-    public int getListViewHeightBasedOnChildren(ExpandableListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return  0;
-        }
-
-//        ViewGroup.LayoutParams params = listView.getLayoutParams();
-//        params.height = 6 * 20;
-//        listView.setLayoutParams(params);
-//        listView.requestLayout();
-
-        int totalHeight = 0;
-        int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.AT_MOST);
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
-            totalHeight += 70 * dp1;
-
-//            if(i == listAdapter.getCount()-1)
-//                totalHeight += 25 * dp1;
-
-            LogUtils.e("Child Height", listItem.getMeasuredHeight()+"");
-        }
-
-        return totalHeight;
-    }
-
-    public void hideSoftKeyboard(View view){
-        InputMethodManager imm =(InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
-
-    public void showKeypad()
-    {
-        InputMethodManager imm = (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 }

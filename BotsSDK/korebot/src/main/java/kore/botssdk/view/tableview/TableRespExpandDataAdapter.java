@@ -30,7 +30,6 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAdapter {
 
-    private static final String LOG_TAG = TableDataAdapter.class.getName();
     private final List<T> data;
     private final PayloadInner payloadInner;
     private TableColumnModel columnModel;

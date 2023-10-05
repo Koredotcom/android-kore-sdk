@@ -181,7 +181,7 @@ public class KoraCarouselView extends ViewGroup {
             koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
             carousalView.setAdapter(koraCarousalAdapter);
             koraCarousalAdapter.notifyDataSetChanged();
-            carousalView.setSwipeLocked(koraSearchDataSetModels.size() == 1);
+//            carousalView.setSwipeLocked(koraSearchDataSetModels.size() == 1);
 
         }
     }
@@ -193,7 +193,7 @@ public class KoraCarouselView extends ViewGroup {
             koraMiniTableAdapter = new KoraMiniTableAdapter(payloadInner.getMiniTableDataModels(), mContext, template_type);
             carousalView.setAdapter(koraMiniTableAdapter);
             koraMiniTableAdapter.notifyDataSetChanged();
-            carousalView.setSwipeLocked(payloadInner.getMiniTableDataModels().size() == 1);
+//            carousalView.setSwipeLocked(payloadInner.getMiniTableDataModels().size() == 1);
         }else{
             carousalView.setAdapter(null);
             koraMiniTableAdapter = null;

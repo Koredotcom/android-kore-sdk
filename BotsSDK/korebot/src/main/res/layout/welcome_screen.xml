@@ -28,7 +28,8 @@
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:background="@drawable/rounded_rect_feedback"
-                android:padding="@dimen/dimen_10dp">
+                android:padding="@dimen/dimen_10dp"
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/ivStarterLogo"
@@ -48,7 +49,8 @@
                     android:textColor="@color/kora_grey"
                     android:textSize="@dimen/text_size_normal"
                     app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="gone"/>
 
                 <kore.botssdk.views.CustomTextView
                     android:id="@+id/tvStarterDesc"
@@ -59,7 +61,8 @@
                     android:textColor="@color/gray_modern"
                     android:textSize="@dimen/text_size_small"
                     app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
-                    app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle"
+                    android:visibility="gone"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvStarterButtons"
@@ -74,13 +77,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
-                    android:background="@drawable/button_drawable"
+                    android:background="@drawable/welcome_start_conv_bg"
                     android:onClick="launchBotChatActivity"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@+id/rvStarterButtons"
                     app:layout_constraintTop_toBottomOf="@+id/rvStarterButtons">
 
                     <kore.botssdk.views.CustomTextView
+                        android:id="@+id/tvStartConversation"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -106,12 +110,14 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
+                    android:id="@+id/rlLinks"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:background="@drawable/rounded_rect_feedback"
-                    android:padding="@dimen/dimen_10dp">
+                    android:padding="@dimen/dimen_10dp"
+                    android:visibility="gone">
 
                     <kore.botssdk.views.CustomTextViewBold
                         android:id="@+id/tvLinksTitle"

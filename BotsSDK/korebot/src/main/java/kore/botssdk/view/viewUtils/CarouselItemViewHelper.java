@@ -116,24 +116,24 @@ public class CarouselItemViewHelper {
 
             String text = (price+" "+ cost_price).trim();
 
-            SpannableStringBuilder ssBuilder = new SpannableStringBuilder(text);
+//            SpannableStringBuilder ssBuilder = new SpannableStringBuilder(text);
 
             // Initialize a new StrikeThroughSpan to display strike through text
-            StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
+//            StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
 
             // Apply the strike through text to the span
-            ssBuilder.setSpan(
-                    strikethroughSpan, // Span to add
-                    text.indexOf(price), // Start of the span (inclusive)
-                    text.indexOf(price) + price.length(), // End of the span (exclusive)
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE // Do not extend the span when text add later
-            );
+//            ssBuilder.setSpan(
+//                    strikethroughSpan, // Span to add
+//                    text.indexOf(price), // Start of the span (inclusive)
+//                    text.indexOf(price) + price.length(), // End of the span (exclusive)
+//                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE // Do not extend the span when text add later
+//            );
 
             if(!Utils.isNullOrEmpty(botCarouselModel.getPrice()) || !Utils.isNullOrEmpty(botCarouselModel.getCost_price())) {
                 carouselViewHolder.carouselOfferPrice_FL.setVisibility(View.VISIBLE);
-                if(!Utils.isNullOrEmpty(botCarouselModel.getCost_price()))
-                    carouselViewHolder.carousel_item_offer.setText(ssBuilder);
-                else
+//                if(!Utils.isNullOrEmpty(botCarouselModel.getCost_price()))
+//                    carouselViewHolder.carousel_item_offer.setText(ssBuilder);
+//                else
                     carouselViewHolder.carousel_item_offer.setText(text);
             }else{
                 carouselViewHolder.carouselOfferPrice_FL.setVisibility(View.GONE);

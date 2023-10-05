@@ -3,7 +3,10 @@ package kore.botssdk.activity;
 import static java.security.AccessController.getContext;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +53,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
     private final Gson gson = new Gson();
     BotBrandingModel botOptionsModel = null;
     AutoExpandListView lvPromotions;
+    ConstraintLayout clStarter;
 
     @Override
     protected void onCreate(@NonNull Bundle data) {
@@ -57,6 +62,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
         llOuterHeader = findViewById(R.id.llOuterHeader);
         llStartConversation = findViewById(R.id.llStartConversation);
         lvPromotions = findViewById(R.id.lvPromotions);
+        clStarter = findViewById(R.id.clStarter);
 
         getBrandingDataFromTxt();
 
@@ -85,6 +91,11 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
             RecyclerView rvStarterButtons = findViewById(R.id.rvStarterButtons);
             HeightAdjustableViewPager hvpLinks = findViewById(R.id.hvpLinks);
             RecyclerView rvLinks = findViewById(R.id.rvLinks);
+            TextView tvStarterTitle = findViewById(R.id.tvStarterTitle);
+            TextView tvStarterDesc = findViewById(R.id.tvStarterDesc);
+            TextView tvStartConversation = findViewById(R.id.tvStartConversation);
+            RelativeLayout rlLinks = findViewById(R.id.rlLinks);
+
             rvLinks.setLayoutManager(new LinearLayoutManager(WelcomeScreenActivity.this, LinearLayoutManager.VERTICAL, false));
 
             if(!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName()))
@@ -112,31 +123,71 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
 
             llOuterHeader.addView(llHeaderLayout);
 
-            if(welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0)
+            if(welcomeModel.getStarter_box() != null)
             {
-                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(WelcomeScreenActivity.this);
-
-                if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle()))
+                if(welcomeModel.getStarter_box().isShow())
                 {
-                    if(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST))
-                    {
-                        layoutManager.setFlexDirection(FlexDirection.COLUMN);
-                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                        rvStarterButtons.setLayoutManager(layoutManager);
+                    clStarter.setVisibility(View.VISIBLE);
 
-                        WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_LIST);
-                        quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                        rvStarterButtons.setAdapter(quickRepliesAdapter);
+                    if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getTitle()))
+                    {
+                        tvStarterTitle.setVisibility(View.VISIBLE);
+
+                        tvStarterTitle.setText(welcomeModel.getStarter_box().getTitle());
+                        tvStartConversation.setText(welcomeModel.getStarter_box().getTitle());
                     }
-                    else
-                    {
-                        layoutManager.setFlexDirection(FlexDirection.ROW);
-                        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                        rvStarterButtons.setLayoutManager(layoutManager);
 
-                        WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL);
-                        quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                        rvStarterButtons.setAdapter(quickRepliesAdapter);
+                    if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getSub_text()))
+                    {
+                        tvStarterDesc.setVisibility(View.VISIBLE);
+                        tvStarterDesc.setText(welcomeModel.getStarter_box().getSub_text());
+                    }
+
+                    if(welcomeModel.getStarter_box().getStart_conv_button() != null)
+                    {
+                        if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_button().getColor()))
+                        {
+                            StateListDrawable gradientDrawable = (StateListDrawable)llStartConversation.getBackground();
+                            gradientDrawable.setTint(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_button().getColor()));
+                            llStartConversation.setBackground(gradientDrawable);
+                        }
+                    }
+
+                    if(welcomeModel.getStarter_box().getStart_conv_text() != null)
+                    {
+                        if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_text().getColor()))
+                        {
+                            tvStartConversation.setTextColor(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_text().getColor()));
+                        }
+                    }
+
+                    if(welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0)
+                    {
+                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(WelcomeScreenActivity.this);
+
+                        if(!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle()))
+                        {
+                            if(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST))
+                            {
+                                layoutManager.setFlexDirection(FlexDirection.COLUMN);
+                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                                rvStarterButtons.setLayoutManager(layoutManager);
+
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_LIST);
+                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
+                                rvStarterButtons.setAdapter(quickRepliesAdapter);
+                            }
+                            else
+                            {
+                                layoutManager.setFlexDirection(FlexDirection.ROW);
+                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                                rvStarterButtons.setLayoutManager(layoutManager);
+
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL);
+                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
+                                rvStarterButtons.setAdapter(quickRepliesAdapter);
+                            }
+                        }
                     }
                 }
             }
@@ -146,19 +197,29 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
                 lvPromotions.setAdapter(new PromotionsAdapter(WelcomeScreenActivity.this, welcomeModel.getPromotional_content().getPromotions()));
             }
 
-            if(welcomeModel.getStatic_links() != null && welcomeModel.getStatic_links().getLinks() != null && welcomeModel.getStatic_links().getLinks().size() > 0)
+            if(welcomeModel.getStatic_links() != null)
             {
-                if(StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
-                    hvpLinks.setVisibility(View.VISIBLE);
-                    WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks());
-                    hvpLinks.setAdapter(quickRepliesAdapter);
-                }
-                else
+                if(welcomeModel.getStarter_box().isShow())
                 {
-                    rvLinks.setVisibility(View.VISIBLE);
-                    WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(WelcomeScreenActivity.this, rvLinks);
-                    welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
-                    rvLinks.setAdapter(welcomeStaticLinkListAdapter);
+                    if(welcomeModel.getStatic_links().getLinks() != null && welcomeModel.getStatic_links().getLinks().size() > 0)
+                    {
+                        rlLinks.setVisibility(View.VISIBLE);
+
+                        if(StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
+                            hvpLinks.setVisibility(View.VISIBLE);
+                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks());
+                            hvpLinks.setAdapter(quickRepliesAdapter);
+                        }
+                        else
+                        {
+                            rvLinks.setVisibility(View.VISIBLE);
+                            WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(WelcomeScreenActivity.this, rvLinks);
+                            welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
+                            rvLinks.setAdapter(welcomeStaticLinkListAdapter);
+                        }
+                    }
+                    else
+                        rlLinks.setVisibility(View.GONE);
                 }
             }
         }

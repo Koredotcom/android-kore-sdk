@@ -19,13 +19,11 @@
         app:layout_editor_absoluteX="0dp"
         app:layout_editor_absoluteY="81dp" />
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/botCustomButtonList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"
         android:listSelector="@android:color/transparent"
-        android:scrollbars="none"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"

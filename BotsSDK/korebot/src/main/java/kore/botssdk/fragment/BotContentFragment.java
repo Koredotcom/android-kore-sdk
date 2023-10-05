@@ -368,6 +368,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                             editor.putString(BotResponse.TIME_STAMP_TXT_COLOR, bodyModel.getTime_stamp().getColor());
                         }
 
+                        SDKConfiguration.Client.timeStampBottom = !bodyModel.getTime_stamp().getPosition().equalsIgnoreCase(BundleUtils.TOP);
                         SDKConfiguration.setTimeStampsRequired(bodyModel.getTime_stamp().isShow());
                     }
 

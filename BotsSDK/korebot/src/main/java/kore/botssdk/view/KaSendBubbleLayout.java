@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import java.util.Arrays;
 import java.util.Collections;
 
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
@@ -137,8 +138,16 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         left = (int)(containerWidth - (14 * dp1 + bubbleTextMediaLayout.getMeasuredWidth()));
         top += bubbleTextMediaLayouMarginTop+BUBBLE_TOP_BORDER;
 
-        LayoutUtils.layoutChild(timeStampsTextView, containerWidth - (int)(timeStampsTextView.getMeasuredWidth() + bubbleTextMediaLayouMarginRight + dp10), top);
-        LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top + timeStampsTextView.getMeasuredHeight());
+        if(SDKConfiguration.Client.timeStampBottom)
+        {
+            LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
+            LayoutUtils.layoutChild(timeStampsTextView, containerWidth - (int)(timeStampsTextView.getMeasuredWidth() + bubbleTextMediaLayouMarginRight + (5 * dp1)), top + bubbleTextMediaLayout.getMeasuredHeight());
+        }
+        else
+        {
+            LayoutUtils.layoutChild(timeStampsTextView, containerWidth - (int)(timeStampsTextView.getMeasuredWidth() + bubbleTextMediaLayouMarginRight + + (5 * dp1)), top);
+            LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top + timeStampsTextView.getMeasuredHeight() + (int)(5 * dp1));
+        }
 
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
     }

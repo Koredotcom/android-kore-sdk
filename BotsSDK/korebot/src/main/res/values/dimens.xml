@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="toast_y_offset_default">64dip</dimen>
+    <dimen name="toast_y_offset_default">64dp</dimen>
 
     <dimen name="profile_presence_status">11dp</dimen>
     <dimen name="profile_presence_border_width">1dp</dimen>
@@ -50,6 +50,7 @@
     <dimen name="dimen_35dp">35dp</dimen>
     <dimen name="dimen_14dp">14dp</dimen>
     <dimen name="dimen_15dp">15dp</dimen>
+    <dimen name="dimen_16dp">16dp</dimen>
     <dimen name="dimen_12dp">12dp</dimen>
     <dimen name="dimen_10dp">10dp</dimen>
     <dimen name="dimen_8dp">8dp</dimen>

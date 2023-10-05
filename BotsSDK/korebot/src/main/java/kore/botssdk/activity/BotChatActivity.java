@@ -87,6 +87,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
+import kore.botssdk.models.BrandingBodyTimeStampModel;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.CalEventsTemplateModel;
@@ -126,6 +127,7 @@ import retrofit2.Response;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnknownNullness")
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
                                         TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener
@@ -147,7 +149,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
-    private final Gson gson = new Gson();
+    final Gson gson = new Gson();
     //Fragment Approch
     FrameLayout composerView;
     BottomPanelFragment composerFragment;
@@ -157,13 +159,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     final Handler messageHandler = new Handler();
     private String fileUrl;
     ArrayList<BrandingNewModel> arrBrandingNewDos;
-    private WebHookResponseDataModel webHookResponseDataModel;
-    private BotMetaModel botMetaModel;
-    private Runnable runnable;
+    WebHookResponseDataModel webHookResponseDataModel;
+    BotMetaModel botMetaModel;
+    Runnable runnable;
     private final int poll_delay = 2000;
     private String lastMsgId = "";
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"template\",\"payload\":{\"type\":\"template\",\"payload\":{\"template_type\":\"carousel\",\"carousel_type\":\"stacked\",\"elements\":[{\"topSection\":{\"title\":\"237458\"},\"middleSection\":{\"description\":\"Auto\"},\"bottomSection\":{\"title\":\"Premium Amount\",\"description\":\"$400\"},\"buttons\":[{\"type\":\"postback\",\"title\":\"Buy now\",\"payload\":\"DEVELOPER_DEFINED_PAYLOAD_0\"}]},{\"topSection\":{\"title\":\"57884884\"},\"middleSection\":{\"description\":\"Car\"},\"bottomSection\":{\"title\":\"Premium Amount\",\"description\":\"$900\"},\"buttons\":[{\"type\":\"postback\",\"title\":\"Buy now\",\"payload\":\"DEVELOPER_DEFINED_PAYLOAD_0\"}]},{\"topSection\":{\"title\":\"12345\"},\"middleSection\":{\"description\":\"Bus\"},\"bottomSection\":{\"title\":\"Premium Amount\",\"description\":\"$34123\"},\"buttons\":[{\"type\":\"postback\",\"title\":\"Buy now\",\"payload\":\"DEVELOPER_DEFINED_PAYLOAD_0\"}]},{\"topSection\":{\"title\":\"78472C\"},\"middleSection\":{\"description\":\"Car\"},\"bottomSection\":{\"title\":\"Premium Amount\",\"description\":\"$330\"},\"buttons\":[{\"type\":\"postback\",\"title\":\"Buy now\",\"payload\":\"DEVELOPER_DEFINED_PAYLOAD_0\"}]}]}}},\"cInfo\":{\"body\":\"{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"template_type\\\":\\\"carousel\\\",\\\"carousel_type\\\":\\\"stacked\\\",\\\"elements\\\":[{\\\"topSection\\\":{\\\"title\\\":\\\"237458\\\"},\\\"middleSection\\\":{\\\"description\\\":\\\"Auto\\\"},\\\"bottomSection\\\":{\\\"title\\\":\\\"Premium Amount\\\",\\\"description\\\":\\\"$400\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buy now\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"}]},{\\\"topSection\\\":{\\\"title\\\":\\\"57884884\\\"},\\\"middleSection\\\":{\\\"description\\\":\\\"Car\\\"},\\\"bottomSection\\\":{\\\"title\\\":\\\"Premium Amount\\\",\\\"description\\\":\\\"$900\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buy now\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"}]},{\\\"topSection\\\":{\\\"title\\\":\\\"12345\\\"},\\\"middleSection\\\":{\\\"description\\\":\\\"Bus\\\"},\\\"bottomSection\\\":{\\\"title\\\":\\\"Premium Amount\\\",\\\"description\\\":\\\"$34123\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buy now\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"}]},{\\\"topSection\\\":{\\\"title\\\":\\\"78472C\\\"},\\\"middleSection\\\":{\\\"description\\\":\\\"Car\\\"},\\\"bottomSection\\\":{\\\"title\\\":\\\"Premium Amount\\\",\\\"description\\\":\\\"$330\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buy now\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"}]}]}}\"}}],\"messageId\":\"ms-da7997f5-db02-5a74-b891-9cae754a7652\",\"sessionId\":\"651bb3afe4c5b16efdb63b7d\",\"botInfo\":{\"taskBotId\":\"st-61e2f38d-e1c0-58ed-ba0d-f7139a671c9e\",\"chatBot\":\"SDK\",\"hostDomain\":\"wss://sit-bots.kore.ai:443\",\"userId\":\"u-17c9a588-ff37-571f-92b4-bd2d2487d27b\"},\"createdOn\":\"2023-10-03T06:25:10.509Z\",\"m-traceid\":\"RTM-TRACE-8INYV86HB 1696314309893\",\"xTraceId\":\"d71b3120-8f09-41de-8961-4e79290240fd\",\"icon\":\"https://sit-bots.kore.ai/api/getMediaStream/market/f-8e0f52ae-769c-5915-90c0-d9e0e2a98ad5.png?n=9171757444&s=Im5tVk8xazRTWllETTEzUDlqUVhxTU5vSDJ2T0xuZk5FMUZGeFJWQ282aDQ9Ig$$\",\"traceId\":\"1c6ffb9f776d03bf\",\"timestamp\":1696314310564}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -271,8 +274,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             nBuilder = new NotificationCompat.Builder(this);
         }
 
-        nBuilder
-                .setContentTitle(title)
+        nBuilder.setContentTitle(title)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setColor(Color.parseColor("#009dab"))
                 .setContentText(pushMessage)
@@ -336,24 +338,21 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         BrandingRestBuilder.setContext(BotChatActivity.this);
     }
 
-    private void updateTitleBar() {
+    void updateTitleBar() {
 //        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot + " - anonymous" : chatBot);
 //        getSupportActionBar().setSubtitle(botName);
     }
 
-    private void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
+    void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
-        String titleMsg = "";
         switch (socketConnectionEvents) {
             case CONNECTING:
-                titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.VISIBLE);
                 updateActionBar();
                 break;
             case CONNECTED:
                 /*if(isItFirstConnect)
                     botClient.sendMessage("welcomedialog");*/
-                titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
                 updateActionBar();
@@ -361,7 +360,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
-                titleMsg = getString(R.string.socket_disconnected);
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
                 composeFooterFragment.updateUI();
@@ -369,7 +367,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 break;
 
             default:
-                titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.GONE);
                 updateActionBar();
 
@@ -491,7 +488,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void updateActionBar() {
+    void updateActionBar() {
         if (actionBarTitleUpdateHandler == null) {
             actionBarTitleUpdateHandler = new Handler();
         }
@@ -684,7 +681,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         lastMsgId = botResponse.getMessageId();
 
                     botContentFragment.addMessageToBotChatAdapter(botResponse);
-                    textToSpeech(botResponse);
+//                    textToSpeech(botResponse);
                     botContentFragment.setQuickRepliesIntoFooter(botResponse);
                     botContentFragment.showCalendarIntoFooter(botResponse);
                 }
@@ -769,7 +766,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void getBrandingDataFromTxt()
     {
         BotBrandingModel botOptionsModel = null;
-
         try
         {
             InputStream is = getResources().openRawResource(R.raw.branding_response);
@@ -1251,7 +1247,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    private void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
+    void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
     {
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
@@ -1340,7 +1336,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    private void postPollingData(String pollId)
+    void postPollingData(String pollId)
     {
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
@@ -1446,7 +1442,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return hsh;
     }
 
-    private void startSendingPo11(String pollId)
+    void startSendingPo11(String pollId)
     {
         handler.postDelayed(runnable = new Runnable() {
             public void run()
@@ -1473,7 +1469,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return uniqueID;
     }
 
-    private void stopSendingPolling()
+    void stopSendingPolling()
     {
         handler.removeCallbacks(runnable);
     }

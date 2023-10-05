@@ -11,9 +11,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.kore.korebot.model.ResponsePayload;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -27,6 +32,7 @@ public class LinkTemplateView extends CustomTemplateView {
     private TextView tvPdfName;
     private Context context;
     private ProgressBar pbDownload;
+    private Gson gson;
 
     public LinkTemplateView(Context context) {
         super(context);
@@ -34,17 +40,20 @@ public class LinkTemplateView extends CustomTemplateView {
     }
 
     @Override
-    public void populateTemplate(PayloadInner payloadInner, boolean isLast) {
-        if (payloadInner != null)
+    public void populateTemplate(String botResponse, boolean isLast) {
+        Type botResp = new TypeToken<ResponsePayload>() {}.getType();
+        ResponsePayload responsePayload = gson.fromJson(botResponse, botResp);
+
+        if (responsePayload != null)
         {
-            tvPdfName.setText(payloadInner.getFileName());
+            tvPdfName.setText(responsePayload.getFileName());
             ivPdfDownload.setOnClickListener(v -> {
-                File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + payloadInner.getFileName());
-                if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
+                File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + responsePayload.getFileName());
+                if (!StringUtils.isNullOrEmpty(responsePayload.getUrl())) {
                     ivPdfDownload.setVisibility(GONE);
                     pbDownload.setVisibility(VISIBLE);
 
-                    if(writeBase64ToDisk(payloadInner.getUrl(), fileLocation))
+                    if(writeBase64ToDisk(responsePayload.getUrl(), fileLocation))
                     {
                         ivPdfDownload.setVisibility(VISIBLE);
                         pbDownload.setVisibility(GONE);

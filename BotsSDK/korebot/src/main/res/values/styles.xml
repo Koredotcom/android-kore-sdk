@@ -92,6 +92,11 @@
         <item name="colorAccent">#393939</item>
     </style>
 
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+
     <style name="WidgetDialog" parent="@android:style/Theme.Dialog">
 
         <item name="android:layout_width">fill_parent</item>

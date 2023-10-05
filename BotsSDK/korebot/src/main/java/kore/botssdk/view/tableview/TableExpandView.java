@@ -33,11 +33,6 @@ import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
 public class TableExpandView<T> extends LinearLayout {
-    private final int DEFAULT_COLUMN_COUNT = 4;
-    private final int DEFAULT_HEADER_ELEVATION = 1;
-    private final LayoutTransition layoutTransition;
-    private TableDataRowBackgroundProvider<? super T> dataRowBackgroundProvider =
-            TableDataRowBackgroundProviders.similarRowColor(0x00000000);
     private TableColumnModel columnModel;
     protected TableHeaderView tableHeaderView;
     protected ExpandableListView tableDataView;
@@ -82,7 +77,7 @@ public class TableExpandView<T> extends LinearLayout {
         setupTableHeaderView(attributes);
         setupTableDataView(attributes, styleAttributes);
         setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.round_rect, context.getTheme()));
-        layoutTransition = new LayoutTransition();
+        LayoutTransition layoutTransition = new LayoutTransition();
     }
 
     /**
@@ -252,8 +247,7 @@ public class TableExpandView<T> extends LinearLayout {
      * @param backgroundProvider The {@link TableDataRowBackgroundProvider} that shall be used.
      */
     public void setDataRowBackgroundProvider(final TableDataRowBackgroundProvider<? super T> backgroundProvider) {
-        dataRowBackgroundProvider = backgroundProvider;
-//        tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
+        //        tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
     }
 
     /**
@@ -512,7 +506,9 @@ public class TableExpandView<T> extends LinearLayout {
     @SuppressLint("CustomViewStyleable")
     private void setAttributes(final AttributeSet attributes) {
         final TypedArray styledAttributes = getContext().obtainStyledAttributes(attributes, R.styleable.TableView);
+        int DEFAULT_HEADER_ELEVATION = 1;
         headerElevation = styledAttributes.getInt(R.styleable.TableView_tableView_headerElevation, DEFAULT_HEADER_ELEVATION);
+        int DEFAULT_COLUMN_COUNT = 4;
         final int columnCount = styledAttributes.getInt(R.styleable.TableView_tableView_columnCount, DEFAULT_COLUMN_COUNT);
         columnModel = new TableColumnWeightModel(columnCount);
 

@@ -77,29 +77,6 @@ public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTa
         else return Gravity.CENTER;
     }
 
-//    private View renderString(int columnIndex, final String value, String header) {
-//        LinearLayout renderView = new LinearLayout(getContext());
-//        renderView.setOrientation(LinearLayout.VERTICAL);
-//        renderView.setGravity(Gravity.CENTER_VERTICAL);
-//
-//        final TextView headerTextView = new TextView(getContext());
-//        headerTextView.setText(header);
-//        headerTextView.setTextSize(HEADER_TEXT_SIZE);
-//        headerTextView.setTextColor(Color.LTGRAY);
-//        headerTextView.setGravity(Gravity.CENTER);
-//        renderView.addView(headerTextView);
-//
-//        final TextView textView = new TextView(getContext());
-//        textView.setText(value);
-//        textView.setTextSize(TEXT_SIZE);
-//        textView.setTextColor(Color.BLACK);
-//        textView.setGravity(Gravity.CENTER);
-//        renderView.addView(textView);
-//
-//        renderView.setPadding(0 , 30, 0, 30);
-//        return renderView;
-//    }
-
     private View renderString(int columnIndex, final String value, String header, boolean showDivider) {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_responsive_child_layout, null);
         TextView tvColumnName1 = renderView.findViewById(R.id.tvColumnName1);
@@ -117,26 +94,10 @@ public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTa
         return renderView;
     }
 
-//    private View renderGroupString(int columnIndex, final String value) {
-//        final TextView textView = new TextView(getContext());
-//        textView.setText(value);
-//        textView.setPadding(0, 30, 0, 30);
-//        textView.setTextSize(TEXT_SIZE);
-//        textView.setTextColor(Color.BLACK);
-//        textView.setGravity(Gravity.CENTER);
-//        return textView;
-//    }
-
     private View renderGroupString(int columnIndex, final String value) {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_responsive_group_layout, null);
         TextView tvViewGroup1 = renderView.findViewById(R.id.tvViewGroup1);
-
-//        final TextView textView = new TextView(getContext());
         tvViewGroup1.setText(value);
-//        textView.setPadding(0, 30, 0, 30);
-//        textView.setTextSize(TEXT_SIZE);
-//        textView.setTextColor(Color.BLACK);
-//        textView.setGravity(Gravity.CENTER);
         return renderView;
     }
 }

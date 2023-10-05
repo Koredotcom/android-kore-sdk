@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +55,7 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
             public void onClick(View v) {
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null)
                 {
-                    String quickReplyPayload = null;
+                    String quickReplyPayload;
                     try
                     {
                         BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
@@ -113,13 +112,11 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
     }
 
     public static class QuickReplyViewHolder extends RecyclerView.ViewHolder {
-        private final TextView quickReplyTitle;
-        private final ImageView quickReplyImage;
-        private final RelativeLayout quickReplyRoot;
+        final TextView quickReplyTitle;
+        final RelativeLayout quickReplyRoot;
 
         public QuickReplyViewHolder(View view) {
             super(view);
-            quickReplyImage = view.findViewById(R.id.quick_reply_item_image);
             quickReplyTitle = view.findViewById(R.id.quick_reply_item_text);
             quickReplyRoot = view.findViewById(R.id.quick_reply_item_root);
         }

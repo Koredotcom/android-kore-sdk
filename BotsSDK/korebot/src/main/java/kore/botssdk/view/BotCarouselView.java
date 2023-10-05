@@ -1,12 +1,12 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -16,21 +16,19 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.view.viewUtils.DimensionUtil;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
 
 /**
  * Created by Pradeep Mahato on 13-July-17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-
-public class BotCarouselView extends ViewGroup {
+@SuppressLint("UnknownNullness")
+public class BotCarouselView extends LinearLayout {
 
     HeightAdjustableViewPager carouselViewpager;
+//    HorizontalInfiniteCycleViewPager carouselViewpager;
     int dp1;
 
-    private int layoutWidth, layoutHeight;
-    private int carouselViewWidth, carouselViewHeight;
+    private int carouselViewWidth;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -55,12 +53,14 @@ public class BotCarouselView extends ViewGroup {
     private void init() {
         dp1 = (int) DimensionUtil.dp1;
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_view, this, true);
+//        View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.bot_carousel_infinite, this, true);
         carouselViewpager = inflatedView.findViewById(R.id.carouselViewpager);
-        carouselViewpager.setAddExtraHeight(true);
-        TypedValue typedValue = new TypedValue();
+//        carouselViewpager.setAddExtraHeight(true);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
-        carouselViewHeight = (int) getResources().getDimension(R.dimen.carousel_layout_height);
-
+        // Disable clip to padding
+//        carouselViewpager.setClipToPadding(false);
+//        // set padding manually, the more you set the padding the more you see of prev & next page
+//        carouselViewpager.setPadding(40 * dp1, 0, 20, 0);
         carouselViewpager.setPageMargin(pageMargin);
 
     }
@@ -69,37 +69,13 @@ public class BotCarouselView extends ViewGroup {
     }
 
     public void populateCarouselView(ArrayList<? extends BotCarouselModel> botCarouselModelArrayList, String type) {
-        if (composeFooterInterface != null && activityContext != null) {
-//            if (carouselViewpager.getAdapter() == null) {
-                carouselViewpager.setOffscreenPageLimit(4);
-                botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
-                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-                botCarouselAdapter.setType(type);
-                carouselViewpager.setAdapter(botCarouselAdapter);
-                botCarouselAdapter.notifyDataSetChanged();
-                carouselViewpager.setSwipeLocked(botCarouselModelArrayList != null && botCarouselModelArrayList.size() ==1);
-        /*        for(int i=0;i<carouselViewpager.getChildCount();i++){
-                    View view = carouselViewpager.getChildAt(i).findViewById(R.id.carousel_item_root);
-                    ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                    layoutParams.height = botCarouselAdapter.getMaxChildHeight();
-                    view.setLayoutParams(layoutParams);
-                    invalidate();
-                }*/
-
-//            } else {
-//                botCarouselAdapter = (BotCarouselAdapter) carouselViewpager.getAdapter();
-//                botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
-//                botCarouselAdapter.notifyDataSetChanged();
-//            }
+        if (composeFooterInterface != null && activityContext != null)
+        {
+            botCarouselAdapter = new BotCarouselAdapter(composeFooterInterface, invokeGenericWebViewInterface, activityContext);
+            botCarouselAdapter.setBotCarouselModels(botCarouselModelArrayList);
+            botCarouselAdapter.setType(type);
+            carouselViewpager.setAdapter(botCarouselAdapter);
         }
-    }
-
-    public void setLayoutWidth(int layoutWidth) {
-        this.layoutWidth = layoutWidth;
-    }
-
-    public void setLayoutHeight(int layoutHeight) {
-        this.layoutHeight = layoutHeight;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -114,49 +90,4 @@ public class BotCarouselView extends ViewGroup {
         this.activityContext = activityContext;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
-        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
-        int totalHeight = getPaddingTop();
-        int totalWidth = getPaddingLeft();
-
-        int childWidthSpec;
-        int childHeightSpec;
-        int contentWidth = 0;
-
-
-
-
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-        // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
-        MeasureUtils.measure(carouselViewpager, childWidthSpec, wrapSpec);
-
-        totalHeight += carouselViewpager.getMeasuredHeight()+getPaddingBottom()+getPaddingTop();
-        int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
-
-        super.onMeasure(widthMeasureSpec, parentHeightSpec);
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-        final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
-
-        //get the available size of child view
-        int childLeft = 0;
-        int childTop = 0;
-
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                LayoutUtils.layoutChild(child, childLeft, childTop);
-                childTop += child.getMeasuredHeight();
-            }
-        }
-    }
 }

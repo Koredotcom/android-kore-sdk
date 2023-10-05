@@ -1,0 +1,83 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/carousel_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="@dimen/carousel_view_cardCornerRadius"
+    card_view:cardElevation="2dp"
+    card_view:cardUseCompatPadding="true">
+
+    <FrameLayout
+        android:background="@drawable/rectangle_4dpradius"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <kore.botssdk.views.CustomTextViewBold
+            android:id="@+id/carousel_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:padding="@dimen/dimen_10dp"
+            android:tag="regular"
+            android:text="@string/title"
+            android:textColor="@color/kora_grey"
+            android:textSize="@dimen/text_size_sub_header" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/carousel_item_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carousel_item_title"
+            android:maxLines="3"
+            android:padding="@dimen/dimen_10dp"
+            android:tag="regular"
+            android:text="@string/app_name"
+            android:textColor="@color/color_8b93a0"
+            android:textSize="14sp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/carousel_bottom_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carousel_item_subtitle"
+            android:maxLines="3"
+            android:padding="@dimen/dimen_10dp"
+            android:tag="regular"
+            android:text="@string/app_name"
+            android:textColor="@color/kora_grey"
+            android:textSize="14sp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/carousel_bottom_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/carousel_item_subtitle"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/carousel_bottom_title"
+            android:gravity="end"
+            android:maxLines="3"
+            android:padding="@dimen/dimen_10dp"
+            android:tag="regular"
+            android:text="@string/app_name"
+            android:textColor="@color/kora_grey"
+            android:textSize="14sp" />
+
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/carouselButtonListview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:divider="@color/color_efefef"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="true"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

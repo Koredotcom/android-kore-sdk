@@ -171,6 +171,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     String jwt;
     ImageView ivAttachemnt;
     String outLineColor;
+    BotBrandingModel botBrandingModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -278,7 +279,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         Bundle bundle = getArguments();
         if (bundle != null)
         {
-            BotBrandingModel botBrandingModel = (BotBrandingModel) bundle.getSerializable(BundleUtils.BRANDING);
+            botBrandingModel = (BotBrandingModel) bundle.getSerializable(BundleUtils.BRANDING);
             if(botBrandingModel != null)
             {
                 if(botBrandingModel.getFooter() != null)
@@ -371,8 +372,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 {
                     OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
                     bottomSheetDialog.setisFromFullView(false);
-                    bottomSheetDialog.setSkillName("skillName","trigger");
+                    bottomSheetDialog.setSkillName("skillName");
                     bottomSheetDialog.setData(botOptionsModel);
+                    bottomSheetDialog.setBrandingModel(botBrandingModel);
                     bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.show(((FragmentActivity) requireActivity()).getSupportFragmentManager(), "add_tags");
                 }

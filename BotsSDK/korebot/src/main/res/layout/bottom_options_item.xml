@@ -1,44 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bot_list_item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_5dp"
-    android:background="@drawable/bottom_right_rounded_rectangle"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="@dimen/dimen_15dp">
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="@dimen/dimen_30dp"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/bottom_option_image"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:clickable="false"
+        android:contentDescription="@string/title"
+        android:visibility="gone" />
 
-        <!-- Item image -->
-        <ImageView
-            android:id="@+id/bottom_option_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="5dp"
-            android:clickable="false"
-            android:scaleType="centerCrop" />
-
-    </LinearLayout>
-
-    <TextView
+    <kore.botssdk.views.CustomTextViewSemiBold
         android:id="@+id/bottom_option_name"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
-        android:layout_toRightOf="@id/bot_list_item_image"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_weight="1"
         android:clickable="false"
-        android:ellipsize="end"
         android:maxLines="1"
-        android:text="Title"
-        android:textColor="@color/left_bubble_text_color"
-        android:textSize="@dimen/text_size_sub_header" />
+        android:text="@string/title"
+        android:textColor="@color/neutral"
+        android:textSize="@dimen/text_size_small" />
 
+    <ImageView
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:clickable="false"
+        android:contentDescription="@string/title"
+        android:scaleType="centerCrop"
+        android:src="@drawable/right_arrow_iconn"
+        android:visibility="visible"
+        app:tint="@color/bgBlueSignup" />
 
 </LinearLayout>

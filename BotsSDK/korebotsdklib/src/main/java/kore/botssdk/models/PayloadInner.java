@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
+import kore.botssdk.utils.StringUtils;
 
 /**
  * Created by Ramachandra Pradeep on 12/15/2016.
@@ -76,6 +77,11 @@ public class PayloadInner {
     private String fileName;
     private boolean url_present;
     private boolean isSortEnabled;
+    private String carousel_type;
+
+    public String getCarousel_type() {
+        return carousel_type;
+    }
 
     public boolean isSortEnabled() {
         return isSortEnabled;
@@ -476,8 +482,12 @@ public class PayloadInner {
         this.carouselElements = carouselElements;
     }
 
+    public ArrayList<BotCarouselStackedModel> getCarouselStackedElements() {
+        return carouselStackedElements;
+    }
     private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotCarouselModel> carouselElements;
+    private ArrayList<BotCarouselStackedModel> carouselStackedElements;
     private ArrayList<ContactTemplateModel> contactTemplateModels;
     private ArrayList<CardTemplateModel> cardTemplateModels;
     private ArrayList<BotListModel> listElements;
@@ -783,9 +793,16 @@ public class PayloadInner {
                 elementsAsString = gson.toJson(elements);
                 if(!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)){
                     if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
-                        Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
-                        }.getType();
-                        carouselElements = gson.fromJson(elementsAsString, carouselType);
+                        if(!StringUtils.isNullOrEmpty(getCarousel_type()) && getCarousel_type().equalsIgnoreCase(BotResponse.CAROUSEL_STACKED))
+                        {
+                            Type carouselType = new TypeToken<ArrayList<BotCarouselStackedModel>>() {}.getType();
+                            carouselStackedElements = gson.fromJson(elementsAsString, carouselType);
+                        }
+                        else
+                        {
+                            Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {}.getType();
+                            carouselElements = gson.fromJson(elementsAsString, carouselType);
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
                         Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
                         }.getType();
