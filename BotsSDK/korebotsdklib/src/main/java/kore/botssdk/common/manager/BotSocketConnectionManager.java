@@ -11,9 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -409,11 +407,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         else
             botClient.sendMessage(message);
 
-        try {
-            new Gson().getAdapter(JsonElement.class).fromJson(message);
-            message = null;
-        } catch (IOException ignored) {
-        }
+        if (message.startsWith("{") || message.startsWith("[")) message = null;
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
@@ -512,7 +506,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
         }
-
     }
 
     @Override
@@ -522,7 +515,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botClient.disconnect();
         if (ttsSynthesizer != null) {
             ttsSynthesizer.stopTextToSpeech();
-
         }
     }
 

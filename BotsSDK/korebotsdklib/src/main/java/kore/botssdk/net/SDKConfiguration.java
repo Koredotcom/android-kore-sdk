@@ -140,11 +140,32 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-786711e4-ca1f-594e-ba49-23dcfb5a6667";
 
         // Zebra 2.0
-        public static String client_id = "cs-a33be01d-339b-5c6b-a0e0-0e2852f5800f";
-        public static String client_secret = "lvJ6adHZurroIulKDeZS1BMPmLsvebB8HULWtLa4DVs=";
+//        public static String client_id = "cs-a33be01d-339b-5c6b-a0e0-0e2852f5800f";
+//        public static String client_secret = "lvJ6adHZurroIulKDeZS1BMPmLsvebB8HULWtLa4DVs=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "EX_Zebra_V2.0";
+//        public static String bot_id = "st-512a879f-de23-5733-ba66-98865586ea85";
+
+        // Zebra 2.1
+        public static String client_id = "cs-092fd732-20b1-50f6-9fa6-b60a21c8bbeb";
+        public static String client_secret = "UlkGX6ZBMk/Yy3SUJbl4EuoUXfB2zhkyJTwuofmnNRo=";
         public static String identity = "anilkumar.routhu@kore.com";
-        public static String bot_name = "EX_Zebra_V2.0";
-        public static String bot_id = "st-512a879f-de23-5733-ba66-98865586ea85";
+        public static String bot_name = "EX_Zebra_V2.1";
+        public static String bot_id = "st-382ffb09-63d8-5bc3-b614-4b6a10b6fc83";
+
+        // UB_EX_V3_RA
+//        public static String client_id = "cs-1e38e7d9-20bd-579a-9a7c-9ec6777a39e2";
+//        public static String client_secret = "Ryx1U4CDP/tozxD4+0EdzsUl78qU7m72iNVdRUQXdHY=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "UB_EX_V3_RA";
+//        public static String bot_id = "st-333122c9-4be8-5261-8b7e-6a3c2ad8cc0d";
+
+        // UB_EX_V2_RA
+//        public static String client_id = "cs-b4c13a30-7b70-5b40-a667-ea8773160e0e";
+//        public static String client_secret = "JGP60F61ECea1/nRwpFaVaJ8aBUfi6OCHnP8COLS12c=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "UB_EX_V2_RA";
+//        public static String bot_id = "st-6a3544ee-a79a-5a0a-a1e2-d1d10f8b834f";
 
 //        public static String client_id = "cs-57153166-5b96-5f3b-b7fd-f1d4e47138e7";
 //        public static String client_secret = "1SsQ5l4LtbOSwLpO2w+a+oKs1Ef6syhd66GicheJKrg=";
@@ -155,16 +176,20 @@ public class SDKConfiguration {
         public static boolean enablePanel = false;
         public static boolean isWebHook = false;
 
-        public static String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+//        public static String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+//        public static String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
         public static String webHook_identity = "sudheer.jampana@kore.com";
         public static String webHook_bot_name = "WebhookRajBot";//"Android test";//"NewTemplates";
-        public static String webHook_bot_id = "st-fd0f5024-2318-56fe-8354-555e1786133e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+//        public static String webHook_bot_id = "st-fd0f5024-2318-56fe-8354-555e1786133e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
 
         //Weebhook
         // for webhook based communication use following option
         public static String webhookURL = "https://qa1-bots.kore.ai/chatbot/v2/webhook/st-ea1b128f-7895-581a-8c87-bbfe3b9f1ff1";
         public static int apiVersion = 2;
+
+        public static String webHook_client_id = "cs-092fd732-20b1-50f6-9fa6-b60a21c8bbeb";
+        public static String webHook_client_secret = "UlkGX6ZBMk/Yy3SUJbl4EuoUXfB2zhkyJTwuofmnNRo=";
+        public static String webHook_bot_id = "st-382ffb09-63d8-5bc3-b614-4b6a10b6fc83";
         //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b',
         //webhookURL:'https://qa-bots.kore.ai/chatbot/hooks/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
         //webhookURL:'https://qa-bots.kore.ai/chatbot/v2/webhook/st-5840c71a-ec0b-516e-8d9a-f9e608ea8c4b/hookInstance/ivrInst-62c362b9-5f88-5ec5-9f3f-7c0eb9801e70'
