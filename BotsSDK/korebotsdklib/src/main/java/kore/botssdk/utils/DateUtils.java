@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Pradeep Mahato on 09-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 

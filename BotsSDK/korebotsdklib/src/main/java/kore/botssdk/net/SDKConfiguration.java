@@ -97,6 +97,7 @@ public class SDKConfiguration {
     }
 
     public static class BubbleColors {
+        public static boolean isArabic = false;
         public static  String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {

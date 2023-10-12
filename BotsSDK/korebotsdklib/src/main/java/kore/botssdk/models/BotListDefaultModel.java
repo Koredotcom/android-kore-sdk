@@ -3,7 +3,6 @@ package kore.botssdk.models;
 import java.util.HashMap;
 
 /**
- * Created by Pradeep Mahato on 21/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotListDefaultModel {

@@ -87,17 +87,6 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN  + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN+timeStampsTextView.getMeasuredHeight();
     }
 
-/*
-    @Override
-    protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
-        try {
-            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn(), false));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-*/
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int maxAllowedWidth = MeasureSpec.getSize(widthMeasureSpec);

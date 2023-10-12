@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
@@ -12,9 +14,7 @@ import java.util.List;
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 import kore.botssdk.utils.StringUtils;
 
-/**
- * Created by Ramachandra Pradeep on 12/15/2016.
- */
+@SuppressLint("UnknownNullness")
 public class PayloadInner {
 
     public void setTemplate_type(String template_type) {
@@ -26,10 +26,6 @@ public class PayloadInner {
 
     public String getFeatureId() {
         return featureId;
-    }
-
-    public void setFeatureId(String featureId) {
-        this.featureId = featureId;
     }
 
     public void setText(String text) {
@@ -53,7 +49,7 @@ public class PayloadInner {
     private String boxShadow;
     private String seeMore;
     private String seeMoreTitle;
-    private int moreCount = 0;
+    private final int moreCount = 0;
     private String subtitle;
     private String image_url;
     private boolean is_end;
@@ -61,6 +57,7 @@ public class PayloadInner {
     private String view;
     private String messageTodisplay;
     private boolean sliderView;
+    private boolean showViewMore;
     private String description;
     private Object headerOptions;
     private BotFormFieldButtonModel fieldButton;
@@ -77,7 +74,21 @@ public class PayloadInner {
     private String fileName;
     private boolean url_present;
     private boolean isSortEnabled;
+    private int limit;
+
+    public int getLimit() {
+        return limit;
+    }
+
     private String carousel_type;
+
+    public boolean isShowViewMore() {
+        return showViewMore;
+    }
+
+    public boolean isSliderView() {
+        return sliderView;
+    }
 
     public String getCarousel_type() {
         return carousel_type;
@@ -87,16 +98,8 @@ public class PayloadInner {
         return isSortEnabled;
     }
 
-    public void setSortEnabled(boolean sortEnabled) {
-        isSortEnabled = sortEnabled;
-    }
-
     public boolean isUrl_present() {
         return url_present;
-    }
-
-    public void setUrl_present(boolean url_present) {
-        this.url_present = url_present;
     }
 
     public String getFileName() {
@@ -108,14 +111,6 @@ public class PayloadInner {
 
     public String getText_message() {
         return text_message;
-    }
-
-    public void setText_message(String text_message) {
-        this.text_message = text_message;
-    }
-
-    public void setFieldButton(BotFormFieldButtonModel fieldButton) {
-        this.fieldButton = fieldButton;
     }
 
     public BotFormFieldButtonModel getFieldButton() {
@@ -130,29 +125,12 @@ public class PayloadInner {
         this.is_end = is_end;
     }
 
-    public void setSliderView(boolean sliderView) {
-        this.sliderView = sliderView;
-    }
-
-    public boolean getSliderView()
-    {
-        return sliderView;
-    }
-
     public String getComposeText() {
         return composeText;
     }
 
-    public void setComposeText(String composeText) {
-        this.composeText = composeText;
-    }
-
     public boolean isNewVolley() {
         return isNewVolley;
-    }
-
-    public void setNewVolley(boolean newVolley) {
-        isNewVolley = newVolley;
     }
 
     private boolean isNewVolley;
@@ -161,19 +139,10 @@ public class PayloadInner {
         return focus;
     }
 
-    public void setFocus(String focus) {
-        this.focus = focus;
-    }
     private static final Gson gson = new Gson();
-    public boolean shouldHideComposeBar() {
-        return hideComposeBar;
-    }
 
     public void setShowComposeBar(boolean hideComposeBar) {
-        this.hideComposeBar = hideComposeBar;
     }
-
-    private boolean hideComposeBar = false;
 
     public String getLayout() {
         return layout;
@@ -185,14 +154,6 @@ public class PayloadInner {
 
     public boolean isStacked() {
         return stacked;
-    }
-
-    public void setStacked(boolean stacked) {
-        this.stacked = stacked;
-    }
-
-    public void setMoreCount(int moreCount) {
-        this.moreCount = moreCount;
     }
 
     public int getMoreCount() {
@@ -496,9 +457,10 @@ public class PayloadInner {
     private ArrayList<BotTableListModel> tableListElements;
     private ArrayList<WidgetListElementModel> widgetlistElements;
     private ArrayList<DropDownElementsModel> dropDownElementsModels;
+    private ArrayList<AdvancedMultiSelectModel> advancedMultiSelectModels;
 
-    public void setWidgetlistElements(ArrayList<WidgetListElementModel> widgetlistElements) {
-        this.widgetlistElements = widgetlistElements;
+    public ArrayList<AdvancedMultiSelectModel> getAdvancedMultiSelectModels() {
+        return advancedMultiSelectModels;
     }
 
     public ArrayList<WidgetListElementModel> getWidgetlistElements() {
@@ -934,6 +896,12 @@ public class PayloadInner {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
                     }
+                    else if(BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE.equals(template_type))
+                    {
+                        Type listType = new TypeToken<ArrayList<AdvancedMultiSelectModel>>() {
+                        }.getType();
+                        advancedMultiSelectModels = gson.fromJson(elementsAsString, listType);
+                    }
                 }else{
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)
                     Type listType = new TypeToken<ArrayList<KoraUniversalSearchModel>>(){}.getType();
@@ -1152,7 +1120,11 @@ public class PayloadInner {
         this.userSuggestion = userSuggestion;
     }
 
-    public class Skill{
+    public boolean getSliderView() {
+        return sliderView;
+    }
+
+    public static class Skill{
         public String getName() {
             return name;
         }

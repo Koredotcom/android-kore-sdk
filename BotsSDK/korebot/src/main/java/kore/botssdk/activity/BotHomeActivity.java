@@ -35,7 +35,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.HorizontalInfiniteCycleViewPager;
 
 /**
- * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{

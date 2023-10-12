@@ -39,6 +39,7 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
@@ -57,7 +58,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
  */
 public class TextMediaLayout extends ViewGroup {
 
-    private TextView botContentTextView;
+    TextView botContentTextView;
     private float restrictedLayoutWidth;
     public int gravity = 0;
     public int widthStyle = 0;
@@ -65,7 +66,7 @@ public class TextMediaLayout extends ViewGroup {
     private final Context mContext;
     private int linkTextColor;
     private Typeface medium, regular;
-    private GradientDrawable rightDrawable, leftDrawable;
+    private GradientDrawable rightDrawable, leftDrawable, arRightDrawable, arLeftDrawable;
     private SharedPreferences sharedPreferences;
     private boolean isClicable;
     private final String REGEX_CHAR = "%%.*?%%";
@@ -113,6 +114,19 @@ public class TextMediaLayout extends ViewGroup {
 
         rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_right_bubble_bg, getContext().getTheme());
         leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
+
+        arRightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_ar_right_bubble_bg, getContext().getTheme());
+
+        if(arRightDrawable != null) {
+            arRightDrawable.setColor(Color.parseColor(rightbgColor));
+            arRightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightbgColor));
+        }
+
+        arLeftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_ar_left_bubble_bg, getContext().getTheme());
+        if(arLeftDrawable != null) {
+            arLeftDrawable.setColor(Color.parseColor(leftbgColor));
+            arLeftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+        }
 
         //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
         float[] roundedRadii = { 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
@@ -456,15 +470,30 @@ public class TextMediaLayout extends ViewGroup {
     }
 
     public void setGravityAndTypeFace(){
-        if (gravity == BubbleConstants.GRAVITY_LEFT) {
-            //   botContentTextView.setGravity(Gravity.START);
-            botContentTextView.setTypeface(medium);
-            botContentTextView.setBackground(leftDrawable);
-        } else {
-            // botContentTextView.setGravity(Gravity.END);
-            botContentTextView.setTypeface(regular);
-            botContentTextView.setBackground(rightDrawable);
+        if(SDKConfiguration.BubbleColors.isArabic)
+        {
+            if(gravity != BubbleConstants.GRAVITY_LEFT)
+                botContentTextView.setBackground(arLeftDrawable);
+            else
+                botContentTextView.setBackground(arRightDrawable);
         }
+        else
+        {
+            if(gravity == BubbleConstants.GRAVITY_LEFT)
+                botContentTextView.setBackground(leftDrawable);
+            else
+                botContentTextView.setBackground(rightDrawable);
+        }
+
+//        if (gravity == BubbleConstants.GRAVITY_LEFT) {
+//            //   botContentTextView.setGravity(Gravity.START);
+//            botContentTextView.setTypeface(medium);
+//            botContentTextView.setBackground(leftDrawable);
+//        } else {
+//            // botContentTextView.setGravity(Gravity.END);
+//            botContentTextView.setTypeface(regular);
+//            botContentTextView.setBackground(rightDrawable);
+//        }
     }
 
     protected void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {

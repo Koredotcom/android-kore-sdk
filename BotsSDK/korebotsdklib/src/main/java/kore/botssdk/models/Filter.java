@@ -5,10 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by Ramachandra Pradeep on 08-Mar-19.
- */
-
 public class Filter implements Serializable {
 
     private String id;

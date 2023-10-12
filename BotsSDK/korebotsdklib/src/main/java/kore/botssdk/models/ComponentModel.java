@@ -1,8 +1,5 @@
 package kore.botssdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 12/15/2016.
- */
 public class ComponentModel {
 
     private String type;

@@ -2,10 +2,6 @@ package kore.botssdk.models;
 
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 03-Oct-18.
- */
-
 public class Component {
     private String id;
     private String cT;

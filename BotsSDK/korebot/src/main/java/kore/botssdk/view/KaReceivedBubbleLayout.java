@@ -40,7 +40,6 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 
 
 /**
- * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
@@ -174,6 +173,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         , cardTemplateView.getMeasuredWidth()
                         , emptyTemplateView.getMeasuredWidth()
                         , botCarouselStacked.getMeasuredWidth()
+                        , advancedMultiSelectView.getMeasuredWidth()
                         //Add new template above
                 )) + BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
@@ -225,6 +225,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + cardTemplateView.getMeasuredHeight()
                 + emptyTemplateView.getMeasuredHeight()
                 + botCarouselStacked.getMeasuredHeight()
+                + advancedMultiSelectView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER + (int) (botButtonView.getMeasuredHeight() != 0 ||
                 meetingSlotsView.getMeasuredHeight() != 0 ? dp2 : 0);
@@ -275,6 +276,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 + cardTemplateView.getMeasuredHeight()
                 + emptyTemplateView.getMeasuredHeight()
                 + botCarouselStacked.getMeasuredHeight()
+                + advancedMultiSelectView.getMeasuredHeight()
                 //Add new template above
                 + BUBBLE_CONTENT_BOTTOM_MARGIN;
 
@@ -325,6 +327,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 || cardTemplateView.getMeasuredHeight() > 0
                 || emptyTemplateView.getMeasuredHeight() > 0
                 || botCarouselStacked.getMeasuredHeight() > 0
+                || advancedMultiSelectView.getMeasuredHeight() > 0
                 ;
     }
 
@@ -417,6 +420,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         cardTemplateView.populateCardsView(null);
         cardTemplateView.setVisibility(GONE);
         emptyTemplateView.setVisibility(GONE);
+        advancedMultiSelectView.populateData(null, false);
+        advancedMultiSelectView.setVisibility(GONE);
     }
 
     @Override
@@ -763,6 +768,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     buttonDeepLinkTemplateView.populateButtonDeepLinkView(payInner, isLastItem);
                     bubbleTextMediaLayout.populateText("");
                 }
+                else if(BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type()))
+                {
+                    advancedMultiSelectView.setVisibility(View.VISIBLE);
+                    advancedMultiSelectView.populateData(payInner, isLastItem);
+                    bubbleTextMediaLayout.populateText(payInner.getHeading());
+                }
                 else if(BotResponse.TEMPLATE_BENEFICIARY.equalsIgnoreCase(payInner.getTemplate_type())){
                     botBeneficiaryTemplateView.setVisibility(View.VISIBLE);
                     botBeneficiaryTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
@@ -1047,6 +1058,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(buttonDeepLinkTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(cardTemplateView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(emptyTemplateView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(advancedMultiSelectView, childWidthSpec, wrapSpec);
 
         /*
          * For Widget List Templates
@@ -1146,6 +1158,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         layoutView(buttonDeepLinkTemplateView, top, left, arrayList);
         layoutView(cardTemplateView, top, left, arrayList);
         layoutView(emptyTemplateView, top, left, arrayList);
+        layoutView(advancedMultiSelectView, top, left, arrayList);
 
         top = Collections.max(arrayList);
         LayoutUtils.layoutChild(timeLineView, 0, top);

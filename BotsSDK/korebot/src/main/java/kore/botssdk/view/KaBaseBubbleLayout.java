@@ -40,7 +40,6 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 
 
 /**
- * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 @SuppressLint("UnknownNullness")
@@ -126,7 +125,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected VerticalListView verticalListView;
     protected AttendeeSlotSelectionView attendeeSlotSelectionView;
 
-    //Added by Sudheer
+    //Added new
     protected HorizontalBarChartView horizontalBarChartView;
     protected BotFormTemplateView botFormTemplateView;
     protected BotListViewTemplateView botListViewTemplateView;
@@ -150,6 +149,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotButtonLinkTemplateView botButtonLinkTemplateView;
     protected CardTemplateView cardTemplateView;
     protected EmptyTemplateView emptyTemplateView;
+    protected AdvancedMultiSelectView advancedMultiSelectView;
 
 
     //    protected int[] dimens;
@@ -459,6 +459,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         emptyTemplateView = ViewProvider.getEmptyTemplateView(context);
         addView(emptyTemplateView);
+
+        advancedMultiSelectView = ViewProvider.getAdvancedMultiSelectView(context);
+        advancedMultiSelectView.setComposeFooterInterface(composeFooterInterface);
+        addView(advancedMultiSelectView);
     }
 
 
@@ -585,6 +589,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if(cardTemplateView != null){
             cardTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(advancedMultiSelectView != null){
+            advancedMultiSelectView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
@@ -667,6 +674,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (cardTemplateView != null) {
             cardTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (advancedMultiSelectView != null) {
+            advancedMultiSelectView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

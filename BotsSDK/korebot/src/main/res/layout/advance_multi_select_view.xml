@@ -3,7 +3,6 @@
     android:id="@+id/multi_select_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/round_rect"
     android:orientation="vertical"
     android:paddingBottom="2dp">
 
@@ -13,4 +12,13 @@
         android:layout_height="wrap_content"
         android:divider="@null"
         android:visibility="visible" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/tvViewMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:text="@string/view_more"
+        android:textColor="@color/right_bubble_unselected"
+        android:visibility="gone"/>
 </LinearLayout>

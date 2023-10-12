@@ -2,9 +2,6 @@ package kore.botssdk.models;
 
 import java.net.URI;
 
-/**
- * Created by Ramachandra Pradeep on 15-May-19.
- */
 public class BotSocketOptions {
     public String getProtocol() {
         return protocol;

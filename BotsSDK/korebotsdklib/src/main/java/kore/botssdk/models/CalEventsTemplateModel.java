@@ -7,10 +7,6 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 02-Aug-18.
- */
-
 public class CalEventsTemplateModel extends BaseCalenderTemplateModel implements Cloneable {
 
     private Duration duration;

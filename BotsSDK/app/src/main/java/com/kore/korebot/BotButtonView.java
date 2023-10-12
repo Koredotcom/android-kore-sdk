@@ -11,7 +11,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.view.CustomTemplateView;
 
 /**
- * Created by Pradeep Mahato on 21/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class BotButtonView extends CustomTemplateView {

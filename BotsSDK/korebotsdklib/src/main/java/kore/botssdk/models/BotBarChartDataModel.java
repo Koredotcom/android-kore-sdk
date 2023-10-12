@@ -2,10 +2,6 @@ package kore.botssdk.models;
 
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 11-Apr-18.
- */
-
 public class BotBarChartDataModel {
     private String title;
     private List<Float> values;

@@ -1,5 +1,6 @@
 package kore.botssdk.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AdvancedListTemplateView;
+import kore.botssdk.view.AdvancedMultiSelectView;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BankingFeedbackTemplateView;
@@ -65,10 +67,6 @@ import kore.botssdk.view.TimeLineTextView;
 import kore.botssdk.view.UniversalSearchView;
 import kore.botssdk.view.VerticalListView;
 import kore.botssdk.view.WelcomeSummaryView;
-
-/**
- * Created by Shiva Krishna on 11/20/2017.
- */
 
 public class ViewProvider {
     private static final int TEXTVIEW_ID = 1980081;
@@ -470,6 +468,13 @@ public class ViewProvider {
 
     public static EmptyTemplateView getEmptyTemplateView(Context context){
         EmptyTemplateView multiSelectView = new EmptyTemplateView(context);
+        multiSelectView.setId(LIST_ID);
+        return multiSelectView;
+    }
+
+    @SuppressLint("UnknownNullness")
+    public static AdvancedMultiSelectView getAdvancedMultiSelectView(Context context){
+        AdvancedMultiSelectView multiSelectView = new AdvancedMultiSelectView(context);
         multiSelectView.setId(LIST_ID);
         return multiSelectView;
     }

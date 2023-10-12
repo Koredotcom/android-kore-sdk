@@ -123,6 +123,8 @@
     <string name="tab2">Tab2</string>
     <string name="ask_for_help">Ask for help</string>
     <string name="hi">hi</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_all">Select All</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_rect_feedback">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_multi_item"
+        android:layout_width="@dimen/dimen_30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:button="@drawable/multi_checkbox_drawable"
+        android:gravity="center"
+        android:padding="10dp" />
+
+    <ImageView
+        android:id="@+id/ivAdvMultiSelect"
+        android:layout_width="@dimen/dimen_40dp"
+        android:layout_height="@dimen/dimen_40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_toEndOf="@+id/check_multi_item"
+        android:contentDescription="@string/hello" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_toEndOf="@+id/ivAdvMultiSelect"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:minWidth="300dp"
+        android:minHeight="30dp"
+        android:tag="medium"
+        android:text="@string/hello"
+        android:textColor="#404051"
+        android:textSize="@dimen/text_size_normal" />
+
+</RelativeLayout>

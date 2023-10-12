@@ -2,10 +2,6 @@ package kore.botssdk.models;
 
 import java.util.HashMap;
 
-/**
- * Created by Ramachandra Pradeep on 09-Feb-18.
- */
-
 public class FormActionTemplate {
 
 

@@ -79,6 +79,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_BUTTON_LINK = "buttonLinkTemplate";
     public static final String TEMPLATE_BENEFICIARY = "beneficiaryTemplate";
     public static final String CARD_TEMPLATE = "cardTemplate";
+    public static final String ADVANCED_MULTI_SELECT_TEMPLATE = "advanced_multi_select";
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";

@@ -22,6 +22,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.KaBaseBubbleContainer;
@@ -170,8 +171,7 @@ final Context context;
     public int getItemViewType(int position) {
 
         BaseBotMessage baseBotMessage = getItem(position);
-
-        if (baseBotMessage.isSend()) {
+        if (SDKConfiguration.BubbleColors.isArabic != baseBotMessage.isSend()) {
             return BUBBLE_RIGHT_LAYOUT;
         } else {
             return BUBBLE_LEFT_LAYOUT;
