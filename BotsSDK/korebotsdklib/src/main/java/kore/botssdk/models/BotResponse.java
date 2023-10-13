@@ -93,6 +93,8 @@ public class BotResponse extends BaseBotMessage {
 
     // When (google/O365)token expires bot returns this template
     public static final String TEMPLATE_TYPE_SESSION_EXPIRED = "session_expired";
+    public static final String  TEMPLATE_TYPE_BOT_ACTIVE = "Bot_Active";
+    public static final String  TEMPLATE_TYPE_BOT_KIT_UNREACHABLE = "botKitUnreachable";
 
     public static final String MESSAGE_TYPE_OUTGOING = "outgoing";
     public static final String MESSAGE_TYPE_INCOMING = "incoming";

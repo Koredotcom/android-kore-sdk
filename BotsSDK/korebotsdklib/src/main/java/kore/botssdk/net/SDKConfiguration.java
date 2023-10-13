@@ -74,6 +74,10 @@ public class SDKConfiguration {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
         }
 
+        public static String getKoreBotServerUrl() {
+            return KORE_BOT_SERVER_URL;
+        }
+
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
@@ -167,7 +171,7 @@ public class SDKConfiguration {
 //        public static String bot_name = "UB_EX_V2_RA";
 //        public static String bot_id = "st-6a3544ee-a79a-5a0a-a1e2-d1d10f8b834f";
 
-//        public static String client_id = "cs-57153166-5b96-5f3b-b7fd-f1d4e47138e7";
+        //        public static String client_id = "cs-57153166-5b96-5f3b-b7fd-f1d4e47138e7";
 //        public static String client_secret = "1SsQ5l4LtbOSwLpO2w+a+oKs1Ef6syhd66GicheJKrg=";
 //        public static String identity = "anilkumar.routhu@kore.com";
 //        public static String bot_name = "Retail Employee Assist";
@@ -176,7 +180,7 @@ public class SDKConfiguration {
         public static boolean enablePanel = false;
         public static boolean isWebHook = false;
 
-//        public static String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        //        public static String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
 //        public static String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
         public static String webHook_identity = "sudheer.jampana@kore.com";
         public static String webHook_bot_name = "WebhookRajBot";//"Android test";//"NewTemplates";
