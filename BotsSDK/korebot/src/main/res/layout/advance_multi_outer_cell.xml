@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/multi_select_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="2dp">
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvMultiSelectTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_12dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:minWidth="300dp"
+        android:minHeight="30dp"
+        android:text="@string/select_all"
+        android:textColor="@color/kora_grey"
+        android:textSize="@dimen/text_size_sub_header" />
+
+    <RelativeLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_select_all"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:button="@drawable/multi_checkbox_drawable"
+            android:gravity="center"
+            android:padding="10dp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_12dp"
+            android:layout_toEndOf="@+id/check_select_all"
+            android:ellipsize="end"
+            android:gravity="center_vertical|start"
+            android:maxLines="1"
+            android:minWidth="300dp"
+            android:minHeight="30dp"
+            android:text="@string/select_all"
+            android:textColor="@color/kora_grey"
+            android:textSize="@dimen/text_size_normal" />
+
+    </RelativeLayout>
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/adv_multi_select_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:divider="@color/white"
+        android:dividerHeight="@dimen/dimen_10dp"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <kore.botssdk.views.CustomTextViewSemiBold
+            android:id="@+id/tvCancel"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:background="@drawable/theme_1_button_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_20dp"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:text="@string/cancel"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/text_size_small"
+            android:visibility="visible" />
+
+        <kore.botssdk.views.CustomTextViewSemiBold
+            android:id="@+id/botCustomListViewButton"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:alpha=".5"
+            android:background="@drawable/theme_1_button_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dimen_20dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_20dp"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:text="@string/show_more"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_small"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

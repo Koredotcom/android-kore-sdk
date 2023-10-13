@@ -4,27 +4,30 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.adapter.AdvanceMultiSelectCollectionsAdapter;
 import kore.botssdk.adapter.AdvancedMultiSelectAdapter;
+import kore.botssdk.listener.AdvanceMultiSelectListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.MultiSelectAllListner;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.viewUtils.DimensionUtil;
 
 @SuppressLint("UnknownNullness")
-public class AdvancedMultiSelectView extends LinearLayout {
+public class AdvancedMultiSelectView extends LinearLayout implements AdvanceMultiSelectListner {
     private AutoExpandListView autoExpandListView;
-    private View multiSelectLayout;
+    View multiSelectLayout;
     AdvancedMultiSelectAdapter multiSelectButtonAdapter;
-    TextView tvViewMore;
-
+    TextView tvViewMore, tvAdvanceDone;
+    ArrayList<AdvanceMultiSelectCollectionModel> allCheckedItems = new ArrayList<>();
     public AdvancedMultiSelectView(Context context) {
         super(context);
         init(context);
@@ -53,17 +56,13 @@ public class AdvancedMultiSelectView extends LinearLayout {
     private void init(Context context) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.advance_multi_select_view, this, true);
         autoExpandListView = view.findViewById(R.id.multi_select_list);
+        LinearLayout llAdvanceSection = view.findViewById(R.id.llAdvanceSection);
         autoExpandListView.setVerticalScrollBarEnabled(false);
         multiSelectLayout = view.findViewById(R.id.multi_select_layout);
         tvViewMore = view.findViewById(R.id.tvViewMore);
-        float dp1 = (int) DimensionUtil.dp1;
+        tvAdvanceDone = view.findViewById(R.id.tvAdvanceDone);
     }
 
-
-    public void setMultiSelectLayoutAlpha(boolean isEnabled) {
-        multiSelectLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
-        multiSelectButtonAdapter.setEnabled(isEnabled);
-    }
 
     public void populateData(final PayloadInner payloadInner, boolean isEnabled) {
 
@@ -71,21 +70,12 @@ public class AdvancedMultiSelectView extends LinearLayout {
         {
             multiSelectLayout.setVisibility(VISIBLE);
 
-            ArrayList<AdvanceMultiSelectCollectionModel> items = new ArrayList<>();
             multiSelectButtonAdapter = new AdvancedMultiSelectAdapter(getContext());
             multiSelectButtonAdapter.setMultiSelectModels(payloadInner.getAdvancedMultiSelectModels());
             multiSelectButtonAdapter.setEnabled(isEnabled);
             multiSelectButtonAdapter.setComposeFooterInterface(composeFooterInterface);
+            multiSelectButtonAdapter.setAdvanceMultiListner(AdvancedMultiSelectView.this);
             autoExpandListView.setAdapter(multiSelectButtonAdapter);
-
-//            if(payloadInner.getCheckedParentItems() != null) {
-//                multiSelectButtonAdapter.setCheckAll(payloadInner.getCheckedParentItems());
-//
-//                if(items != null && payloadInner.getCheckedParentItems().size() == items.size())
-//                    check_select_all.setChecked(true);
-//            }
-
-            multiSelectLayout.setAlpha(isEnabled ? 1.0f : 0.5f);
 
             if(payloadInner.getAdvancedMultiSelectModels().size() > payloadInner.getLimit())
                 tvViewMore.setVisibility(VISIBLE);
@@ -98,12 +88,62 @@ public class AdvancedMultiSelectView extends LinearLayout {
                 }
             });
 
+            tvAdvanceDone.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StringBuilder stringBuffer = new StringBuilder();
+                    stringBuffer.append("Here are the selected items : ");
+                    for (int i = 0; i < allCheckedItems.size(); i++)
+                    {
+                        stringBuffer.append(allCheckedItems.get(i).getValue());
+
+                        if(i != allCheckedItems.size())
+                            stringBuffer.append(",");
+                    }
+
+                    multiSelectLayout.setAlpha(0.5f);
+                    composeFooterInterface.onSendClick(stringBuffer.toString(), stringBuffer.toString(), true);
+                }
+            });
+
         } else {
             autoExpandListView.setAdapter(null);
             multiSelectLayout.setVisibility(GONE);
         }
     }
 
-    public void setRestrictedMaxWidth(float restrictedMaxWidth) {
+    @Override
+    public void itemSelected(AdvanceMultiSelectCollectionModel checkedItems) {
+
+        if (!allCheckedItems.contains(checkedItems)) {
+            allCheckedItems.add(checkedItems);
+        } else {
+            allCheckedItems.remove(checkedItems);
+        }
+
+        if(allCheckedItems.size() > 0)
+            tvAdvanceDone.setVisibility(VISIBLE);
+        else
+            tvAdvanceDone.setVisibility(GONE);
+    }
+
+    @Override
+    public void allItemsSelected(boolean addOrRemove, ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
+        if(addOrRemove)
+        {
+            allCheckedItems.addAll(checkedItems);
+        }
+        else
+        {
+            for (int i = 0; i < checkedItems.size(); i++)
+            {
+                allCheckedItems.remove(checkedItems.get(i));
+            }
+        }
+
+        if(allCheckedItems.size() > 0)
+            tvAdvanceDone.setVisibility(VISIBLE);
+        else
+            tvAdvanceDone.setVisibility(GONE);
     }
 }

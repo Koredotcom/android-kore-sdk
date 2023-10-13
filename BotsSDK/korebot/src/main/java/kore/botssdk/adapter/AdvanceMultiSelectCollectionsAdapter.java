@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.AdvanceMultiSelectListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.MultiSelectAllListner;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
@@ -33,12 +34,13 @@ import kore.botssdk.utils.Utility;
 @SuppressLint("UnknownNullness")
 public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
 
-    ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels = new ArrayList<>();
+    ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels;
     ComposeFooterInterface composeFooterInterface;
     private final LayoutInflater ownLayoutInflator;
     private final Context context;
     ArrayList<AdvanceMultiSelectCollectionModel> checkedItems = new ArrayList<>();
-    MultiSelectAllListner checkAllListner;
+    AdvanceMultiSelectListner multiSelectListner;
+    MultiSelectAllListner multiSelectAllListner;
 
     public boolean isEnabled() {
         return isEnabled;
@@ -48,6 +50,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
         isEnabled = enabled;
     }
 
+    CheckBox selectAll;
     boolean isEnabled;
     private final int dp1;
 
@@ -130,6 +133,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
+            holder.checkBox.setFocusableInTouchMode(false);
         }
     }
 
@@ -137,6 +141,10 @@ public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
         this.checkedItems = new ArrayList<>();
         this.checkedItems.addAll(checkedItems);
         this.notifyDataSetChanged();
+    }
+
+    public void setCheckBoxAll(CheckBox selectAll) {
+        this.selectAll = selectAll;
     }
 
     public void unCheckAll()
@@ -156,14 +164,19 @@ public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
         return false;
     }
 
-    public void setCheckAllListner(MultiSelectAllListner checkAllListner) {
-        this.checkAllListner = checkAllListner;
+    public void setAdvanceMultiListner(AdvanceMultiSelectListner checkAllListner) {
+        this.multiSelectListner = checkAllListner;
+    }
+
+    public void setMultiListner(MultiSelectAllListner checkAllListner) {
+        this.multiSelectAllListner = checkAllListner;
     }
 
     private final View.OnClickListener itemSelectionListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (isEnabled) {
+            if (isEnabled)
+            {
                 AdvanceMultiSelectCollectionModel item = (AdvanceMultiSelectCollectionModel) v.getTag();
                 if (((CompoundButton) v).isChecked()) {
                     checkedItems.add(item);
@@ -172,13 +185,30 @@ public class AdvanceMultiSelectCollectionsAdapter extends BaseAdapter {
                 }
 
                 if (checkedItems.size() == multiSelectModels.size()) {
-                    if (checkAllListner != null)
-                        checkAllListner.isSelectAll(true, checkedItems);
+                    if (multiSelectListner != null)
+                        multiSelectListner.itemSelected(item);
+
+                    if (multiSelectAllListner != null)
+                        multiSelectAllListner.isSelectAll(true, checkedItems);
+
+                    if(selectAll != null) {
+                        selectAll.setChecked(true);
+                        selectAll.setTag(true);
+                    }
                 } else {
-                    if (checkAllListner != null)
-                        checkAllListner.isSelectAll(false, checkedItems);
+                    if (multiSelectListner != null)
+                        multiSelectListner.itemSelected(item);
+
+                    if (multiSelectAllListner != null)
+                        multiSelectAllListner.isSelectAll(false, checkedItems);
+
+                    if(selectAll != null) {
+                        selectAll.setChecked(false);
+                        selectAll.setTag(false);
+                    }
                 }
-            } else {
+            }
+            else {
                 ((CompoundButton) v).setChecked(false);
             }
         }

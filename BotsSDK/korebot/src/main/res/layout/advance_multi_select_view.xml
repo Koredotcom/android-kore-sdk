@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/multi_select_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="2dp">
 
@@ -13,12 +13,31 @@
         android:divider="@null"
         android:visibility="visible" />
 
+    <LinearLayout
+        android:id="@+id/llAdvanceSection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
     <kore.botssdk.views.CustomTextView
         android:id="@+id/tvViewMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:text="@string/view_more"
         android:textColor="@color/right_bubble_unselected"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
+    <kore.botssdk.views.CustomTextViewBold
+        android:id="@+id/tvAdvanceDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:background="@drawable/button_drawable"
+        android:gravity="center"
+        android:text="@string/done"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 </LinearLayout>
