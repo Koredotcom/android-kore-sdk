@@ -151,18 +151,18 @@ public class SDKConfiguration {
 //        public static String bot_id = "st-512a879f-de23-5733-ba66-98865586ea85";
 
         // Zebra 2.1
-        public static String client_id = "cs-092fd732-20b1-50f6-9fa6-b60a21c8bbeb";
-        public static String client_secret = "UlkGX6ZBMk/Yy3SUJbl4EuoUXfB2zhkyJTwuofmnNRo=";
-        public static String identity = "anilkumar.routhu@kore.com";
-        public static String bot_name = "EX_Zebra_V2.1";
-        public static String bot_id = "st-382ffb09-63d8-5bc3-b614-4b6a10b6fc83";
+//        public static String client_id = "cs-092fd732-20b1-50f6-9fa6-b60a21c8bbeb";
+//        public static String client_secret = "UlkGX6ZBMk/Yy3SUJbl4EuoUXfB2zhkyJTwuofmnNRo=";
+//        public static String identity = "anilkumar.routhu@kore.com";
+//        public static String bot_name = "EX_Zebra_V2.1";
+//        public static String bot_id = "st-382ffb09-63d8-5bc3-b614-4b6a10b6fc83";
 
         // UB_EX_V3_RA
-//        public static String client_id = "cs-1e38e7d9-20bd-579a-9a7c-9ec6777a39e2";
-//        public static String client_secret = "Ryx1U4CDP/tozxD4+0EdzsUl78qU7m72iNVdRUQXdHY=";
-//        public static String identity = "anilkumar.routhu@kore.com";
-//        public static String bot_name = "UB_EX_V3_RA";
-//        public static String bot_id = "st-333122c9-4be8-5261-8b7e-6a3c2ad8cc0d";
+        public static String client_id = "cs-1e38e7d9-20bd-579a-9a7c-9ec6777a39e2";
+        public static String client_secret = "Ryx1U4CDP/tozxD4+0EdzsUl78qU7m72iNVdRUQXdHY=";
+        public static String identity = "anilkumar.routhu@kore.com";
+        public static String bot_name = "UB_EX_V3_RA";
+        public static String bot_id = "st-333122c9-4be8-5261-8b7e-6a3c2ad8cc0d";
 
         // UB_EX_V2_RA
 //        public static String client_id = "cs-b4c13a30-7b70-5b40-a667-ea8773160e0e";
