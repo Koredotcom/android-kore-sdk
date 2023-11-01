@@ -145,6 +145,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BankingFeedbackTemplateView bankingFeedbackTemplateView;
     protected BotContactTemplateView botContactTemplateView;
     protected BotCustomTableView botCustomTableView;
+    protected AdvancedListTemplateView advancedListTemplateView;
     //    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
@@ -434,6 +435,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bankingFeedbackTemplateView = ViewProvider.getBankingFeedbackTemplateView(context);
         bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(bankingFeedbackTemplateView);
+
+        advancedListTemplateView = ViewProvider.getAdvancedListTemplateView(context);
+        advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        addView(advancedListTemplateView);
     }
 
 
@@ -565,6 +570,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (productInventoryActionFormView != null) {
             productInventoryActionFormView.setComposeFooterInterface(composeFooterInterface);
         }
+        if(advancedListTemplateView != null){
+            advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -630,6 +638,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         if (bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+        if (advancedListTemplateView != null) {
+            advancedListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

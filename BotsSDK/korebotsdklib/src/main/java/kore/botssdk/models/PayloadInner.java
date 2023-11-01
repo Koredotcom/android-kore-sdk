@@ -411,6 +411,19 @@ public class PayloadInner {
     private ArrayList<DropDownElementsModel> dropDownElementsModels;
     private ArrayList<NearByStockAvailableStoreModel> nearByStockAvailableStores;
     private String productInventoryActionFormTitle;
+    private ArrayList<AdvancedListModel> listItems;
+    private int listItemDisplayCount;
+    private String seeMoreTitle;
+
+    public ArrayList<AdvancedListModel> getListItems() {
+        return listItems;
+    }
+    public int getListItemDisplayCount() {
+        return listItemDisplayCount;
+    }
+    public String getSeeMoreTitle() {
+        return seeMoreTitle;
+    }
 
     public void setWidgetlistElements(ArrayList<WidgetListElementModel> widgetlistElements) {
         this.widgetlistElements = widgetlistElements;

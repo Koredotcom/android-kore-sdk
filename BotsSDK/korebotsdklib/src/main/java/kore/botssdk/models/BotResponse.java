@@ -78,6 +78,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_BANKING_FEEDBACK = "bankingFeedbackTemplate";
     public static final String CONTACT_CARD_TEMPLATE = "contactCardTemplate";
     public static final String CUSTOM_TABLE_TEMPLATE = "custom_table";
+    public static final String ADVANCED_LIST_TEMPLATE = "advancedListTemplate";
 
 
     //widgets

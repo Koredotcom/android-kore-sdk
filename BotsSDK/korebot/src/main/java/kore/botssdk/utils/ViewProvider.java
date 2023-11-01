@@ -17,6 +17,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.view.AdvancedListTemplateView;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BankingFeedbackTemplateView;
@@ -424,6 +425,12 @@ public class ViewProvider {
         AgentTransferTemplateView agentTransferTemplateView = new AgentTransferTemplateView(context);
         agentTransferTemplateView.setId(BubbleConstants.AGENT_TRANSFER_TEMPLATE_ID);
         return agentTransferTemplateView;
+    }
+
+    public static AdvancedListTemplateView getAdvancedListTemplateView(Context context) {
+        AdvancedListTemplateView feedbackTemplateView = new AdvancedListTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
+        return feedbackTemplateView;
     }
 
     public static BotTypingStatusView getBotReplyWaitView(Context context) {
