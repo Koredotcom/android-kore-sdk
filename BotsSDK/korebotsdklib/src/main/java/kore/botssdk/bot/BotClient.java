@@ -8,12 +8,14 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import dagger.hilt.android.EntryPointAccessors;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import kore.botssdk.delegate.LoginTokenDelegate;
+import kore.botssdk.delegate.LoginTokenDelegateEntryPoint;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.RestResponse;
@@ -30,6 +32,10 @@ import kore.botssdk.websocket.SocketWrapper;
  * Gateway for clients to interact with Bots.
  */
 public class BotClient {
+
+    public static final String BOT_TOKEN = "botToken";
+    public static final String HR_ACCESS_TOKEN = "hrAccessToken";
+    public static final String ITSM_ACCESS_TOKEN = "itsmAccessToken";
     private Context mContext;
 
     public RestResponse.BotCustomData getCustomData() {
@@ -51,6 +57,9 @@ public class BotClient {
     }
 
     private BotInfoModel botInfoModel;
+
+    private LoginTokenDelegate delegate = null;
+
     private BotClient() {
     }
 
@@ -60,20 +69,30 @@ public class BotClient {
     public BotClient(Context mContext) {
         this.customData = new RestResponse.BotCustomData();
         this.mContext = mContext.getApplicationContext();
+        inject();
     }
-    public BotClient(Context mContext, RestResponse.BotCustomData customData){
+
+    public BotClient(Context mContext, RestResponse.BotCustomData customData) {
         this.mContext = mContext;
         this.customData = customData;
-
+        inject();
     }
 
+    private void inject() {
+        LoginTokenDelegateEntryPoint entryPoint = EntryPointAccessors.fromApplication(
+                mContext.getApplicationContext(),
+                LoginTokenDelegateEntryPoint.class
+        );
+        delegate = entryPoint.getLoginTokenDelegate();
+    }
 
     public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
                                               String url, String botUserId, String auth) {
 //        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken,botInfoModel, socketConnectionListener,url, botUserId, auth);
+        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
+        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken, botInfoModel, socketConnectionListener, url, botUserId, auth);
     }
+
     /**
      * Connection for anonymous user
      *
@@ -82,14 +101,15 @@ public class BotClient {
     public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
 
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel,  socketConnectionListener,null);
+        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener, null);
     }
 
 
-    public void shouldAttemptToReconnect(boolean value){
+    public void shouldAttemptToReconnect(boolean value) {
         SocketWrapper.getInstance(mContext).shouldAttemptToReconnect(value);
     }
+
     /**
      * Connection for anonymous user
      *
@@ -99,47 +119,47 @@ public class BotClient {
                                                   String taskBotId, SocketConnectionListener socketConnectionListener, BotSocketOptions options) {
 
         String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
-        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener,options);
+        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener, options);
     }
 
 
-
-    public String generateJWT(String email,String secret,String clientId, boolean isAnonymousUser){
+    public String generateJWT(String email, String secret, String clientId, boolean isAnonymousUser) {
         long curTime = System.currentTimeMillis();
-        long expTime = curTime+86400000;
+        long expTime = curTime + 86400000;
 //        hsh.put("clientSecret",clientSecret);
 
-        return Jwts.builder().claim("iss", clientId).claim("iat",curTime).claim("exp",expTime)
-                .claim("aud","https://idproxy.kore.com/authorize").claim("sub", email).claim("isAnonymous", isAnonymousUser).
-                        signWith(SignatureAlgorithm.HS256,secret.getBytes()).compact();
+        return Jwts.builder().claim("iss", clientId).claim("iat", curTime).claim("exp", expTime)
+                .claim("aud", "https://idproxy.kore.com/authorize").claim("sub", email).claim("isAnonymous", isAnonymousUser).
+                signWith(SignatureAlgorithm.HS256, secret.getBytes()).compact();
     }
 
-    public String generateJWTForAPI(String email,String secret,String clientId, boolean isAnonymousUser){
+    public String generateJWTForAPI(String email, String secret, String clientId, boolean isAnonymousUser) {
         long curTime = System.currentTimeMillis();
-        long expTime = curTime+86400000;
+        long expTime = curTime + 86400000;
 
         return Jwts.builder()
-                .setHeaderParam("typ","JWT")
+                .setHeaderParam("typ", "JWT")
                 .claim("iat", curTime)
-                .claim("exp",expTime)
-                .claim("aud","https://idproxy.kore.com/authorize")
+                .claim("exp", expTime)
+                .claim("aud", "https://idproxy.kore.com/authorize")
                 .claim("iss", clientId)
                 .claim("sub", email)
                 .claim("isAnonymous", isAnonymousUser)
                 .claim("userIdentity", email)
                 .claim("appId", clientId)
-                .signWith(SignatureAlgorithm.HS256,secret.getBytes())
+                .signWith(SignatureAlgorithm.HS256, secret.getBytes())
                 .compact();
     }
 
-    public  String getAccessToken(){
+    public String getAccessToken() {
         return SocketWrapper.getInstance(mContext).getAccessToken();
     }
 
-    public  String getUserId(){
+    public String getUserId() {
         return SocketWrapper.getInstance(mContext).getBotUserId();
     }
+
     /**
      * [MANDATORY] Invoke this method to disconnect the previously connected socket connection.
      */
@@ -154,6 +174,14 @@ public class BotClient {
         return SocketWrapper.getInstance(mContext).isConnected();
     }
 
+    private void setCustomData() {
+        customData.put(BOT_TOKEN, getAccessToken());
+        if (delegate != null) {
+            customData.put(HR_ACCESS_TOKEN, delegate.getLoginToken(mContext));
+            customData.put(ITSM_ACCESS_TOKEN, delegate.getLoginToken(mContext));
+        }
+    }
+
     /**
      * Method to send messages over socket.
      * It uses FIFO pattern to first send if any pending requests are present
@@ -165,13 +193,10 @@ public class BotClient {
      * @param msg
      */
     public void sendMessage(String msg) {
-
         if (msg != null && !msg.isEmpty()) {
-
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
-            customData.put("botToken",getAccessToken());
+            setCustomData();
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
             botPayLoad.setBotInfo(botInfoModel);
@@ -201,15 +226,14 @@ public class BotClient {
      */
     public void sendMessage(String msg, ArrayList<HashMap<String, String>> attachements) {
 
-        if (msg != null && !msg.isEmpty())
-        {
+        if (msg != null && !msg.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
 
-            if(attachements != null && attachements.size() > 0)
+            if (attachements != null && attachements.size() > 0)
                 botMessage = new RestResponse.BotMessage(msg, attachements);
 
-            customData.put("botToken",getAccessToken());
+            setCustomData();
 
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
@@ -223,13 +247,11 @@ public class BotClient {
 
             Log.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
-        }
-        else if(attachements != null && attachements.size() > 0)
-        {
+        } else if (attachements != null && attachements.size() > 0) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage("", attachements);
 
-            customData.put("botToken",getAccessToken());
+            setCustomData();
 
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
@@ -247,18 +269,18 @@ public class BotClient {
 
     }
 
-    public void updateAuthToken(String accessToken){
-        if(customData != null){
-            customData.put("kmToken",accessToken);
+    public void updateAuthToken(String accessToken) {
+        if (customData != null) {
+            customData.put("kmToken", accessToken);
         }
     }
 
-    public void sendFormData(String payLoad,String message) {
+    public void sendFormData(String payLoad, String message) {
 
         if (payLoad != null && !payLoad.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
-            customData.put("botToken",getAccessToken());
+            setCustomData();
             botMessage.setCustomData(customData);
             botMessage.setParams(Utils.jsonToMap(payLoad));
             botPayLoad.setMessage(botMessage);
