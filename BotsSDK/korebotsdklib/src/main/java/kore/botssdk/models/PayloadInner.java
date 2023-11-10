@@ -72,6 +72,16 @@ public class PayloadInner {
     private ArrayList<FeedbackListModel> feedbackList;
     private String text_message;
 
+    private ArrayList<ArticleListModel> articleListModels;
+
+    public void setArticleListModels(ArrayList<ArticleListModel> articleListModels) {
+        this.articleListModels = articleListModels;
+    }
+
+    public ArrayList<ArticleListModel> getArticleListModels() {
+        return articleListModels;
+    }
+
     public String getText_message() {
         return text_message;
     }
@@ -418,9 +428,11 @@ public class PayloadInner {
     public ArrayList<AdvancedListModel> getListItems() {
         return listItems;
     }
+
     public int getListItemDisplayCount() {
         return listItemDisplayCount;
     }
+
     public String getSeeMoreTitle() {
         return seeMoreTitle;
     }
@@ -831,6 +843,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<NearByStockAvailableStoreModel>>() {
                         }.getType();
                         nearByStockAvailableStores = gson.fromJson(elementsAsString, listType);
+                    } else if (BotResponse.ARTICLE_LIST_TEMPLATE.equalsIgnoreCase(template_type)) {
+                        Type listType = new TypeToken<ArrayList<ArticleListModel>>() {
+                        }.getType();
+                        articleListModels = gson.fromJson(elementsAsString, listType);
                     } else if (BotResponse.TEMPLATE_PROD_INVENTORY_ACTION_FORM.equals(template_type)) {
                         productInventoryActionFormTitle = elementsAsString;
                     }

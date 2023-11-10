@@ -104,13 +104,16 @@
     <string name="items_left_only">Only %d left</string>
     <string name="store_info">Store info</string>
     <string name="form_field_name">Name *</string>
+    <string name="form_field_phone_number">Phone Number *</string>
+    <string name="email">Email *</string>
     <string name="provide_your_input">Provide your input</string>
     <string name="hint_phone_number">+911234567890</string>
+    <string name="hint_email">Enter your email address</string>
     <string name="send_direction">Send Direction</string>
     <string name="action_reserve">Reserve</string>
-    <string name="form_field_phone_number">Phone Number *</string>
     <string name="msg_invalid_user_name">Please enter valid user name</string>
     <string name="msg_invalid_phone_number">Please enter valid phone number</string>
+    <string name="msg_invalid_email">Please enter valid email</string>
     <string name="user_details">User Details</string>
     <string name="google_static_map_image_error_msg">There is a possibility of Google api key mismatch or internet issue. Please check!</string>
     <string name="more">More</string>

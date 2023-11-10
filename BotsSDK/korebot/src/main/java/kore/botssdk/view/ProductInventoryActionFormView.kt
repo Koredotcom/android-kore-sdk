@@ -18,6 +18,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils
 class ProductInventoryActionFormView : ViewGroup {
     companion object {
         private val REGEX_PHONE_NUMBER_VALIDATION = "\\+[0-9]{11,13}".toRegex()
+        private val REGEX_EMAIL_ADDRESS = "^([\\w-_\\.]{3,40})+@(([\\w-]{2,20})+\\.)+[\\w-]{2,20}\$".toRegex()
     }
 
     private var restrictedMaxWidth = 0f
@@ -39,27 +40,30 @@ class ProductInventoryActionFormView : ViewGroup {
 
     private fun init() {
         binding = ProductInventoryActionFormBinding.inflate(LayoutInflater.from(context), this, true)
-//        addView(binding.root)
         binding.actionSendDirections.setOnClickListener {
             submitAction(binding.actionSendDirections.text.toString())
         }
         binding.actionReserve.setOnClickListener {
-            submitAction(binding.actionReserve.text.toString()+"s")
+            submitAction(binding.actionReserve.text.toString() + "s")
         }
     }
 
     private fun submitAction(action: String) {
         val isValidUserName = binding.userName.toString().trim().isNotEmpty()
         val isValidPhoneNumber = binding.phoneNumber.text.toString().trim().matches(REGEX_PHONE_NUMBER_VALIDATION)
+        val isValidEmail = binding.email.text.toString().trim().matches(REGEX_EMAIL_ADDRESS)
         if (!isValidUserName) {
             Toast.makeText(context, context.getString(R.string.msg_invalid_user_name), Toast.LENGTH_LONG).show()
         } else if (!isValidPhoneNumber) {
             Toast.makeText(context, context.getString(R.string.msg_invalid_phone_number), Toast.LENGTH_LONG).show()
+        } else if (!isValidEmail) {
+            Toast.makeText(context, context.getString(R.string.msg_invalid_email), Toast.LENGTH_LONG).show()
         } else {
             selectedItemId?.let {
                 val request = ProductInventoryActionFormRequest(
                     binding.userName.text.toString(),
                     binding.phoneNumber.text.toString(),
+                    binding.email.text.toString(),
                     it,
                     action
                 )

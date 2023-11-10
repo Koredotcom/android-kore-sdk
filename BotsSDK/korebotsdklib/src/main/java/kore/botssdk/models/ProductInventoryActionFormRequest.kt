@@ -10,6 +10,9 @@ data class ProductInventoryActionFormRequest(
     @SerializedName("phoneNumber")
     val phoneNumber: String,
 
+    @SerializedName("email")
+    val email: String,
+
     @SerializedName("itemId")
     val id: String,
 

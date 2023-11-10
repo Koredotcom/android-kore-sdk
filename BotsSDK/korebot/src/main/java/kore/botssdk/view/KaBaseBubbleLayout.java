@@ -146,6 +146,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected BotContactTemplateView botContactTemplateView;
     protected BotCustomTableView botCustomTableView;
     protected AdvancedListTemplateView advancedListTemplateView;
+    protected ArticleTemplateView articleTemplateView;
     //    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
@@ -570,8 +571,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (productInventoryActionFormView != null) {
             productInventoryActionFormView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(advancedListTemplateView != null){
+        if (advancedListTemplateView != null) {
             advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
+        }
+
+        if (articleTemplateView != null) {
+            articleTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
     }
 
@@ -641,6 +646,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
         if (advancedListTemplateView != null) {
             advancedListTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        }
+
+        if (articleTemplateView != null) {
+            articleTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
     }
 

@@ -19,6 +19,7 @@ import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AdvancedListTemplateView;
 import kore.botssdk.view.AgentTransferTemplateView;
+import kore.botssdk.view.ArticleTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
 import kore.botssdk.view.BankingFeedbackTemplateView;
 import kore.botssdk.view.BarChartView;
@@ -431,6 +432,12 @@ public class ViewProvider {
         AdvancedListTemplateView feedbackTemplateView = new AdvancedListTemplateView(context);
         feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
         return feedbackTemplateView;
+    }
+
+    public static ArticleTemplateView getArticleListTemplateView(Context context){
+        ArticleTemplateView feedbackTemplateView = new ArticleTemplateView(context);
+        feedbackTemplateView.setId(BubbleConstants.FEEDBACK_TEMPLATE_ID);
+        return  feedbackTemplateView;
     }
 
     public static BotTypingStatusView getBotReplyWaitView(Context context) {

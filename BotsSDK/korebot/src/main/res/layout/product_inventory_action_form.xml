@@ -70,6 +70,32 @@
         android:textColor="#121212"
         android:textSize="14sp" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/email"
+        android:textColor="#121212"
+        android:textSize="12sp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/form_input_bg"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:lines="1"
+        android:maxLength="14"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:textColor="#121212"
+        android:textSize="14sp" />
+
     <kore.botssdk.views.CustomTextView
         android:id="@+id/action_send_directions"
         android:layout_width="match_parent"

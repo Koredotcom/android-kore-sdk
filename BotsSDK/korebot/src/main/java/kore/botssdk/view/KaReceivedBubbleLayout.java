@@ -135,7 +135,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
         // headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth();
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_PROFILE_PIC_MARGIN_LEFT + BUBBLE_LEFT_PROFILE_PIC + BUBBLE_LEFT_PROFILE_PIC_MARGIN_RIGHT
-                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView != null ? botCarouselView.getMeasuredWidth() : 0, verticalListView != null ? verticalListView.getMeasuredWidth() : 0, timeStampsTextView.getMeasuredWidth(), timeLineView.getMeasuredWidth(),
+                + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0], botCarouselView != null ? botCarouselView.getMeasuredWidth() : 0, verticalListView != null ? verticalListView.getMeasuredWidth() : 0, timeStampsTextView.getMeasuredWidth(), timeLineView.getMeasuredWidth(), articleTemplateView != null ? articleTemplateView.getMeasuredWidth() : 0,
                 meetingSlotsView != null ? meetingSlotsView.getMeasuredWidth() : 0, multiSelectView != null ? multiSelectView.getMeasuredWidth() : 0, attendeeSlotSelectionView != null ? attendeeSlotSelectionView.getMeasuredWidth() : 0, meetingConfirmationView != null ? meetingConfirmationView.getMeasuredWidth() : 0, botButtonView != null ? botButtonView.getMeasuredWidth() : 0, tableView != null ? tableView.getMeasuredWidth() : 0, responsiveTableView.getMeasuredWidth(), responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredWidth() : 0,
                 lineChartView != null ? lineChartView.getMeasuredWidth() : 0, barChartView != null ? barChartView.getMeasuredWidth() : 0, (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredWidth() : 0), stackedBarChatView != null ? stackedBarChatView.getMeasuredWidth() : 0, (koraCarouselView != null ? koraCarouselView.getMeasuredWidth() : 0), botListViewTemplateView != null ? botListViewTemplateView.getMeasuredWidth() : 0, botCustomTableView != null ? botCustomTableView.getMeasuredWidth() : 0,
                 botListTemplateView != null ? botListTemplateView.getMeasuredWidth() : 0, contactInfoView != null ? contactInfoView.getMeasuredWidth() : 0, botPieChartView != null ? botPieChartView.getMeasuredWidth() : 0, welcomeSummaryView != null ? welcomeSummaryView.getMeasuredWidth() : 0, (botFormTemplateView != null ? botFormTemplateView.getMeasuredWidth() : 0), botTableListTemplateView.getMeasuredWidth(), botQuickRepliesTemplateView.getMeasuredWidth(),
@@ -147,7 +147,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         maxBubbleDimen[0] = maxContentDimen[0];
 
         maxBubbleDimen[1] = BUBBLE_SEPARATION_DISTANCE + BUBBLE_TOP_BORDER + BUBBLE_CONTENT_TOP_MARGIN +
-                textMediaDimen[1] + (botCarouselView != null ? botCarouselView.getMeasuredHeight() : 0) + (meetingSlotsView != null ? meetingSlotsView.getMeasuredHeight() : 0) + (multiSelectView != null ? multiSelectView.getMeasuredHeight() : 0) + (verticalListView != null ? verticalListView.getMeasuredHeight() : 0) + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + advancedListTemplateView.getMeasuredHeight() +
+                textMediaDimen[1] + (botCarouselView != null ? botCarouselView.getMeasuredHeight() : 0) + (meetingSlotsView != null ? meetingSlotsView.getMeasuredHeight() : 0) + (multiSelectView != null ? multiSelectView.getMeasuredHeight() : 0) + (verticalListView != null ? verticalListView.getMeasuredHeight() : 0) + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + advancedListTemplateView.getMeasuredHeight() + (articleTemplateView != null ? articleTemplateView.getMeasuredHeight() : 0) +
                 (meetingConfirmationView != null ? meetingConfirmationView.getMeasuredHeight() : 0) + (attendeeSlotSelectionView != null ? attendeeSlotSelectionView.getMeasuredHeight() : 0) + (botPieChartView != null ? botPieChartView.getMeasuredHeight() : 0) + (tableView != null ? tableView.getMeasuredHeight() : 0) + responsiveTableView.getMeasuredHeight() + (responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredHeight() : 0) +
                 (lineChartView != null ? lineChartView.getMeasuredHeight() : 0) + (barChartView != null ? barChartView.getMeasuredHeight() : 0) + (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredHeight() : 0) + (stackedBarChatView != null ? stackedBarChatView.getMeasuredHeight() : 0) + (koraCarouselView != null ? koraCarouselView.getMeasuredHeight() : 0) + (botCustomTableView != null ? botCustomTableView.getMeasuredHeight() : 0)
                 + (botListViewTemplateView != null ? botListViewTemplateView.getMeasuredHeight() : 0) + botTableListTemplateView.getMeasuredHeight() + botQuickRepliesTemplateView.getMeasuredHeight() + agentTransferTemplateView.getMeasuredHeight() + feedbackTemplateView.getMeasuredHeight() + (botContactTemplateView != null ? botContactTemplateView.getMeasuredHeight() : 0) + (nearByStockAvailableStoreListView != null ? nearByStockAvailableStoreListView.getMeasuredHeight() : 0) +
@@ -160,7 +160,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             maxBubbleDimen[1] = maxBubbleDimen[1] + (int) dp15;
         }
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + (botCarouselView != null ? botCarouselView.getMeasuredHeight() : 0) + (verticalListView != null ? verticalListView.getMeasuredHeight() : 0)
-                + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + (botButtonView != null ? botButtonView.getMeasuredHeight() : 0) + (botListTemplateView != null ? botListTemplateView.getMeasuredHeight() : 0) + (botPieChartView != null ? botPieChartView.getMeasuredHeight() : 0) + advancedListTemplateView.getMeasuredHeight() +
+                + cpvSenderImage.getMeasuredHeight() + timeLineView.getMeasuredHeight() + (botButtonView != null ? botButtonView.getMeasuredHeight() : 0) + (botListTemplateView != null ? botListTemplateView.getMeasuredHeight() : 0) + (botPieChartView != null ? botPieChartView.getMeasuredHeight() : 0) + advancedListTemplateView.getMeasuredHeight() + (articleTemplateView != null ? articleTemplateView.getMeasuredHeight() : 0) +
                 (tableView != null ? tableView.getMeasuredHeight() : 0) + responsiveTableView.getMeasuredHeight() + (responsiveExpandTableView != null ? responsiveExpandTableView.getMeasuredHeight() : 0) + (lineChartView != null ? lineChartView.getMeasuredHeight() : 0) + (botCustomTableView != null ? botCustomTableView.getMeasuredHeight() : 0)
                 + (barChartView != null ? barChartView.getMeasuredHeight() : 0) + (horizontalBarChartView != null ? horizontalBarChartView.getMeasuredHeight() : 0) + (stackedBarChatView != null ? stackedBarChatView.getMeasuredHeight() : 0) + (koraCarouselView != null ? koraCarouselView.getMeasuredHeight() : 0) + agentTransferTemplateView.getMeasuredHeight() + (botContactTemplateView != null ? botContactTemplateView.getMeasuredHeight() : 0) + (nearByStockAvailableStoreListView != null ? nearByStockAvailableStoreListView.getMeasuredHeight() : 0) +
                 (productInventoryActionFormView != null ? productInventoryActionFormView.getMeasuredHeight() : 0) +
@@ -180,7 +180,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                 (lineChartView != null && lineChartView.getMeasuredHeight() > 0) || (barChartView != null && barChartView.getMeasuredHeight() > 0) || (horizontalBarChartView != null && horizontalBarChartView.getMeasuredHeight() > 0) || (stackedBarChatView != null && stackedBarChatView.getMeasuredHeight() > 0) || (koraCarouselView != null && koraCarouselView.getMeasuredHeight() > 0) /*|| listWidgetView.getMeasuredHeight() > 0*/ ||
                 (tableView != null && tableView.getMeasuredHeight() > 0) || responsiveTableView.getMeasuredHeight() > 0 || (responsiveExpandTableView != null && responsiveExpandTableView.getMeasuredHeight() > 0) || agentTransferTemplateView.getMeasuredHeight() > 0 || feedbackTemplateView.getMeasuredHeight() > 0 || botListWidgetTemplateView.getMeasuredHeight() > 0 ||
                 (welcomeSummaryView != null && welcomeSummaryView.getMeasuredHeight() > 0) || (koraSummaryHelpView != null && koraSummaryHelpView.getMeasuredHeight() > 0) || (universalSearchView != null && universalSearchView.getMeasuredHeight() > 0) || (multiSelectView != null && multiSelectView.getMeasuredHeight() > 0) || botQuickRepliesTemplateView.getMeasuredHeight() > 0 || botDropDownTemplateView.getMeasuredHeight() > 0 ||
-                imageTemplateView.getMeasuredHeight() > 0 || bankingFeedbackTemplateView.getMeasuredHeight() > 0 || (botContactTemplateView != null && botContactTemplateView.getMeasuredHeight() > 0) || (nearByStockAvailableStoreListView != null && nearByStockAvailableStoreListView.getMeasuredHeight() > 0) || (productInventoryActionFormView != null && productInventoryActionFormView.getMeasuredHeight() > 0)) {
+                imageTemplateView.getMeasuredHeight() > 0 || bankingFeedbackTemplateView.getMeasuredHeight() > 0 || (botContactTemplateView != null && botContactTemplateView.getMeasuredHeight() > 0) || (nearByStockAvailableStoreListView != null && nearByStockAvailableStoreListView.getMeasuredHeight() > 0) || (productInventoryActionFormView != null && productInventoryActionFormView.getMeasuredHeight() > 0) || (articleTemplateView != null && articleTemplateView.getMeasuredHeight() > 0)) {
             return true;
         }
 
@@ -353,6 +353,10 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         if (advancedListTemplateView != null) {
             advancedListTemplateView.setVisibility(GONE);
             advancedListTemplateView.populateAdvancedListTemplateView(null);
+        }
+        if (articleTemplateView != null) {
+            articleTemplateView.setVisibility(GONE);
+            articleTemplateView.populateArticleListTemplateView(null);
         }
     }
 
@@ -797,6 +801,16 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         productInventoryActionFormView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth() - BUBBLE_CONTENT_RIGHT_LIST_MARGIN);
                         productInventoryActionFormView.showInputForm(payInner.getProductInventoryActionFormTitle());
                     }
+                } else if (BotResponse.ARTICLE_LIST_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())) {
+                    if (articleTemplateView == null) {
+                        articleTemplateView = ViewProvider.getArticleListTemplateView(context);
+                        articleTemplateView.setComposeFooterInterface(composeFooterInterface);
+                        articleTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+                        addView(articleTemplateView);
+                    }
+                    articleTemplateView.setVisibility(View.VISIBLE);
+                    articleTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth());
+                    articleTemplateView.populateArticleListTemplateView(payInner);
                 } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                     if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()))
                         bubbleTextMediaLayout.populateText(payInner.getText());
@@ -1126,8 +1140,12 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             MeasureUtils.measure(productInventoryActionFormView, wrapSpec, wrapSpec);
         }
 
-        if(advancedListTemplateView != null){
+        if (advancedListTemplateView != null) {
             MeasureUtils.measure(advancedListTemplateView, wrapSpec, wrapSpec);
+        }
+
+        if (articleTemplateView != null) {
+            MeasureUtils.measure(articleTemplateView, wrapSpec, wrapSpec);
         }
 
         initializeBubbleDimensionalParametersPhase1(); //Initiliaze params
@@ -1278,6 +1296,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         if (productInventoryActionFormView != null) {
             layoutView(productInventoryActionFormView, top, left, arrayList);
         }
+        if (articleTemplateView != null) {
+            layoutView(articleTemplateView, top, left, arrayList);
+        }
 
         left = bubbleTextMediaLayout.getLeft();
         top = Collections.max(arrayList);
@@ -1286,7 +1307,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             left = cpvSenderImage.getRight() + (int) (9 * dp1);
             top = top + (int) (1 * dp1);
         }
-
 
         LayoutUtils.layoutChild(timeStampsTextView, left, top);
         LayoutUtils.layoutChild(timeLineView, 0, top);
