@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SDKConfiguration.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
-        SDKConfiguration.setCustomTemplateView("button", new BotButtonView(MainActivity.this));
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
@@ -31,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
                 if(!SDKConfiguration.Client.isWebHook)
                 {
                     SDKConfiguration.Client.identity = UUID.randomUUID().toString();
-                    BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
                     launchBotChatActivity();
                 }
                 else
@@ -47,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
      * Launching BotchatActivity where user can interact with bot
      *
      */
-    private void launchBotChatActivity(){
+    void launchBotChatActivity(){
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
