@@ -213,8 +213,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         {
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
-        else
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -334,7 +334,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 //        getSupportActionBar().setSubtitle(botName);
     }
 
-    private void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
+    void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
         String titleMsg = "";
         switch (socketConnectionEvents) {
@@ -378,13 +378,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void onEvent(String jwt)
     {
         this.jwt = jwt;
-        if(botContentFragment != null)
-            botContentFragment.setJwtTokenForWebHook(jwt);
+        if(SDKConfiguration.Client.isWebHook) {
+            if (botContentFragment != null)
+                botContentFragment.setJwtTokenForWebHook(jwt);
 
-        if(composeFooterFragment != null)
-            composeFooterFragment.setJwtToken(jwt);
+            if (composeFooterFragment != null)
+                composeFooterFragment.setJwtToken(jwt);
 
-        getWebHookMeta();
+            getWebHookMeta();
+        }
     }
 
     public void onEvent(SocketDataTransferModel data) {
@@ -620,7 +622,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
      * payload processing
      */
 
-    private void processPayload(String payload, BotResponse botLocalResponse) {
+    void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
 
         try {
@@ -1193,7 +1195,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return "";
     }
 
-    private void getBrandingDetails() {
+    void getBrandingDetails() {
         Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
