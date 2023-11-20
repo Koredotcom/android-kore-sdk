@@ -142,16 +142,15 @@ public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
         textView.setTextColor(textColor);
         textView.setSingleLine();
         textView.setGravity(getGravity(columnIndex));
-        textView.setEllipsize(TextUtils.TruncateAt.END);
 
         return textView;
     }
 
     private int getGravity(int columnIndex){
         if(alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
-            return Gravity.LEFT;
+            return Gravity.START;
         else if(alignment[columnIndex].equals("right"))
-            return Gravity.RIGHT;
+            return Gravity.END;
         else return Gravity.CENTER;
     }
 }

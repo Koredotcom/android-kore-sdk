@@ -1,11 +1,11 @@
 package kore.botssdk.view;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -19,34 +19,10 @@ import kore.botssdk.models.KnowledgeDetailModel;
 import kore.botssdk.models.KoraSearchDataSetModel;
 import kore.botssdk.models.KoraSearchResultsModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.viewUtils.DimensionUtil;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
-
-/**
- * Created by Shiva Krishna on 2/5/2018.
- */
-
-
-
-public class KoraCarouselView extends ViewGroup {
+@SuppressLint("UnknownNullness")
+public class KoraCarouselView extends LinearLayout {
     private Context mContext;
-    private float dp1;
     private HeightAdjustableViewPager carousalView;
-    private KoraCarousalAdapter koraCarousalAdapter;
-    private KoraMiniTableAdapter koraMiniTableAdapter;
-//    private String template_type;
-
-
-    public Activity getActivityContext() {
-        return activityContext;
-    }
-
-    public void setActivityContext(Activity activityContext) {
-        this.activityContext = activityContext;
-    }
-
-    Activity activityContext;
 
     public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
         return invokeGenericWebViewInterface;
@@ -85,66 +61,11 @@ public class KoraCarouselView extends ViewGroup {
     }
 
     private void init() {
-        dp1 = DimensionUtil.dp1;
         View view  = LayoutInflater.from(getContext()).inflate(R.layout.kora_carousel_view, this, true);
         carousalView = view.findViewById(R.id.carouselViewpager);
-//        carousalView.setAddExtraHeight(true);
         int pageMargin = (int) getResources().getDimension(R.dimen.carousel_item_page_margin);
 
         carousalView.setPageMargin(pageMargin);
-
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
-        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
-        int totalHeight = 0;//getPaddingTop();
-        int totalWidth = getPaddingLeft();
-
-        int childWidthSpec;
-        int childHeightSpec;
-        int contentWidth = 0;
-        int childHeight;
-
-        /*
-         * For Carousel ViewPager Layout
-         */
-
-
-        childWidthSpec = MeasureSpec.makeMeasureSpec(maxAllowedWidth, MeasureSpec.AT_MOST);
-       // childHeightSpec = MeasureSpec.makeMeasureSpec( childHeight , MeasureSpec.EXACTLY);
-        MeasureUtils.measure(carousalView, childWidthSpec, wrapSpec);
-
-        totalHeight += carousalView.getMeasuredHeight();
-        /*if(carousalView.getMeasuredHeight() !=0 ){
-            totalHeight+=1*dp1;
-        }*/
-        int parentHeightSpec = MeasureSpec.makeMeasureSpec( totalHeight, MeasureSpec.EXACTLY);
-        int parentWidthSpec = MeasureSpec.makeMeasureSpec(childWidthSpec, MeasureSpec.AT_MOST);
-        setMeasuredDimension(parentWidthSpec, parentHeightSpec);
-
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-        final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
-
-        //get the available size of child view
-        int childLeft = 0;
-        int childTop = 0;
-
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
-                LayoutUtils.layoutChild(child, childLeft, childTop);
-                childTop += child.getMeasuredHeight();
-            }
-        }
     }
 
     public void prepareDataSetAndPopulate(KoraSearchResultsModel koraSearchResultsModel) {
@@ -177,17 +98,15 @@ public class KoraCarouselView extends ViewGroup {
             }
 
             carousalView.setOffscreenPageLimit(4);
-            //            if (carouselViewpager.getAdapter() == null) {
-            koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, activityContext, invokeGenericWebViewInterface, composeFooterInterface);
+            KoraCarousalAdapter koraCarousalAdapter = new KoraCarousalAdapter(koraSearchDataSetModels, mContext, invokeGenericWebViewInterface, composeFooterInterface);
             carousalView.setAdapter(koraCarousalAdapter);
             koraCarousalAdapter.notifyDataSetChanged();
             carousalView.setSwipeLocked(koraSearchDataSetModels.size() == 1);
-
         }
     }
 
     public void populateMiniTable(String template_type, PayloadInner payloadInner) {
-//        this.template_type = template_type;
+        KoraMiniTableAdapter koraMiniTableAdapter;
         if(payloadInner != null) {
             carousalView.setOffscreenPageLimit(4);
             koraMiniTableAdapter = new KoraMiniTableAdapter(payloadInner.getMiniTableDataModels(), mContext, template_type);
@@ -198,10 +117,5 @@ public class KoraCarouselView extends ViewGroup {
             carousalView.setAdapter(null);
             koraMiniTableAdapter = null;
         }
-
     }
-
-
-
-
 }
