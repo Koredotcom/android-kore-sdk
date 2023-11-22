@@ -6,12 +6,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
-import com.google.gson.Gson
 import kore.botssdk.R
 import kore.botssdk.databinding.ProductInventoryActionFormBinding
 import kore.botssdk.extensions.dpToPx
 import kore.botssdk.listener.ComposeFooterInterface
-import kore.botssdk.models.ProductInventoryActionFormRequest
 import kore.botssdk.view.viewUtils.LayoutUtils
 import kore.botssdk.view.viewUtils.MeasureUtils
 
@@ -19,6 +17,7 @@ class ProductInventoryActionFormView : ViewGroup {
     companion object {
         private val REGEX_PHONE_NUMBER_VALIDATION = "\\+[0-9]{11,13}".toRegex()
         private val REGEX_EMAIL_ADDRESS = "^([\\w-_\\.]{3,40})+@(([\\w-]{2,20})+\\.)+[\\w-]{2,20}\$".toRegex()
+        private const val REQUEST_FORM_DATA = "userName:%s|email:%s|itemId:%s|actionName:%s"
     }
 
     private var restrictedMaxWidth = 0f
@@ -50,24 +49,25 @@ class ProductInventoryActionFormView : ViewGroup {
 
     private fun submitAction(action: String) {
         val isValidUserName = binding.userName.toString().trim().isNotEmpty()
-        val isValidPhoneNumber = binding.phoneNumber.text.toString().trim().matches(REGEX_PHONE_NUMBER_VALIDATION)
+//        val isValidPhoneNumber = binding.phoneNumber.text.toString().trim().matches(REGEX_PHONE_NUMBER_VALIDATION)
         val isValidEmail = binding.email.text.toString().trim().matches(REGEX_EMAIL_ADDRESS)
         if (!isValidUserName) {
             Toast.makeText(context, context.getString(R.string.msg_invalid_user_name), Toast.LENGTH_LONG).show()
-        } else if (!isValidPhoneNumber) {
+        }/* else if (!isValidPhoneNumber) {
             Toast.makeText(context, context.getString(R.string.msg_invalid_phone_number), Toast.LENGTH_LONG).show()
-        } else if (!isValidEmail) {
+        } */else if (!isValidEmail) {
             Toast.makeText(context, context.getString(R.string.msg_invalid_email), Toast.LENGTH_LONG).show()
         } else {
             selectedItemId?.let {
-                val request = ProductInventoryActionFormRequest(
+                val request = String.format(
+                    REQUEST_FORM_DATA,
                     binding.userName.text.toString(),
-                    binding.phoneNumber.text.toString(),
+//                    binding.phoneNumber.text.toString(),
                     binding.email.text.toString(),
                     it,
                     action
                 )
-                composeFooterInterface?.onSendClick(Gson().toJson(request), false)
+                composeFooterInterface?.onSendClick(request, false)
             }
         }
     }
@@ -75,7 +75,7 @@ class ProductInventoryActionFormView : ViewGroup {
     fun showInputForm(id: String?) {
         selectedItemId = id
         binding.userName.setText("")
-        binding.phoneNumber.setText("")
+//        binding.phoneNumber.setText("")
         binding.root.isVisible = !id.isNullOrEmpty()
     }
 

@@ -350,7 +350,7 @@ public class MarkdownUtil {
             while (true) {
                 indexP1 = text.indexOf(delimiter, NumberUtils.max(new int[]{indexP1, indexP2}) + 1);
 
-                if (indexP1 == -1) {
+                if (indexP1 == -1 || indexP1 + 1 >= text.length()) {
                     exit = true;
                     break;
                 }
@@ -407,7 +407,7 @@ public class MarkdownUtil {
             }
 
             StringBuilder builder = new StringBuilder(text);
-            char c = text.charAt(index+2);
+            char c = text.charAt(index + 2);
             if (Character.isDigit(c) && Integer.parseInt(c + "") <= 6) {
 
 
@@ -441,7 +441,7 @@ public class MarkdownUtil {
                 }
 
                 text = builder.toString();
-            }else{
+            } else {
                 break;
             }
         } while (true);

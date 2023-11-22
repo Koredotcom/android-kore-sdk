@@ -14,6 +14,10 @@ fun RecyclerView.verticalSmoothScrollTo(position: Int, snapPreference: Int) {
     )
 }
 
+fun RecyclerView.verticalScrollTo(position: Int) {
+    layoutManager?.scrollToPosition(position)
+}
+
 fun RecyclerView.clearItemDecorations() {
     repeat(itemDecorationCount) { removeItemDecorationAt(it) }
 }

@@ -48,6 +48,7 @@ import retrofit2.Response;
 
 public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
+    private static final String RESERVE_SEND_DIRECTION_REQ_FORMAT = "|email:";
     private BotClient botClient;
     private TTSSynthesizer ttsSynthesizer;
     private static BotSocketConnectionManager botSocketConnectionManager;
@@ -63,8 +64,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     private SocketChatListener chatListener;
     private RestResponse.BotCustomData botCustomData;
-
-
     private final String LOG_TAG = getClass().getSimpleName();
     private Gson gson = new Gson();
     private boolean isWithAuth;
@@ -407,7 +406,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         else
             botClient.sendMessage(message);
 
-        if (message.startsWith("{") || message.startsWith("[")) message = null;
+        if (message.contains(RESERVE_SEND_DIRECTION_REQ_FORMAT)) message = null;
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();

@@ -51,6 +51,7 @@
         android:layout_marginTop="24dp"
         android:text="@string/form_field_phone_number"
         android:textColor="#121212"
+        android:visibility="gone"
         android:textSize="12sp" />
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -61,6 +62,7 @@
         android:layout_marginTop="6dp"
         android:background="@drawable/form_input_bg"
         android:hint="@string/hint_phone_number"
+        android:visibility="gone"
         android:inputType="phone"
         android:lines="1"
         android:maxLength="14"
@@ -89,7 +91,6 @@
         android:hint="@string/hint_email"
         android:inputType="textEmailAddress"
         android:lines="1"
-        android:maxLength="14"
         android:maxLines="1"
         android:paddingHorizontal="12dp"
         android:paddingVertical="6dp"

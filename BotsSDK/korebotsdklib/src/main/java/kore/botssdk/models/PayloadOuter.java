@@ -10,6 +10,8 @@ public class PayloadOuter {
     private String text;
     private String speech_hint;
 
+    private String template_type;
+
     public String getSpeech_hint() {
         return speech_hint;
     }
@@ -35,5 +37,9 @@ public class PayloadOuter {
 
     public void setPayload(PayloadInner payload) {
         this.payload = payload;
+    }
+
+    public String getTemplateType() {
+        return this.template_type;
     }
 }

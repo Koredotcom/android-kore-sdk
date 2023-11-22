@@ -186,7 +186,7 @@ public class KaMediaUtils {
         if (fileName != null && fileName.indexOf(".") > 0)
             fileName = fileName.substring(0, fileName.lastIndexOf("."));
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date()),
-                appDirPath = getAppDir();
+                appDirPath = getAppDir().replace(" ", "%20");
         File mediaFile = null;
         int attemptCount = 0;
         while(mediaFile == null || mediaFile.exists()) {

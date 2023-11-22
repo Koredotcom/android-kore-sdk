@@ -66,6 +66,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private final int CAMERA_CAPTURE = 1;
     public static final int THUMBNAIL_WIDTH=320;
     public static final int THUMNAIL_HEIGHT=240;
+    public static final String EXTRA_PICK_TYPE = "pickType";
+    public static final String EXTRA_FILE_CONTEXT = "fileContext";
+    public static final String EXTRA_MEDIA_TYPE = "mediaType";
 
     public static final String THUMBNAIL_FILE_PATH = "filePathThumbnail";
     //keep track of cropping intent
@@ -110,7 +113,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             Log.d(LOG_TAG, "onCreate() :: extras :: imagePickType ::::" + imagePickType);
             fileContext = extras.getString(BundleConstants.FILE_CONTEXT);
             Log.d(LOG_TAG, "onCreate() :: extras :: fileContext ::::" + fileContext);
-            MEDIA_TYPE = extras.containsKey("mediaType") ? extras.getString("mediaType") : MEDIA_TYPE_IMAGE;
+            MEDIA_TYPE = extras.containsKey(EXTRA_MEDIA_TYPE) ? extras.getString(EXTRA_MEDIA_TYPE) : MEDIA_TYPE_IMAGE;
         }
         checkForPermissionAccessAndRequest();
     }

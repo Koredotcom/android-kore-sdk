@@ -425,6 +425,10 @@ public class PayloadInner {
     private int listItemDisplayCount;
     private String seeMoreTitle;
 
+    public boolean isTemplateFound(String type){
+        return template_type.equalsIgnoreCase(type);
+    }
+
     public ArrayList<AdvancedListModel> getListItems() {
         return listItems;
     }
