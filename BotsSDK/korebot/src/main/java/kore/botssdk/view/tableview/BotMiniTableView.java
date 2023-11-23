@@ -1,10 +1,8 @@
 package kore.botssdk.view.tableview;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -37,6 +35,7 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
  *
  * @author ISchwarz
  */
+@SuppressLint("UnknownNullness")
 public class BotMiniTableView extends TableView<MiniTableModel> {
 
 
@@ -114,10 +113,10 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
     public void addDataAdapterForTable(PayloadInner data, String[] alignment) {
 
         List<MiniTableModel> lists = new ArrayList<>();
-        int size = ((ArrayList) data.getElements()).size();
+        int size = ((ArrayList<?>) data.getElements()).size();
         for (int j = 0; j < size; j++) {
             MiniTableModel model = new MiniTableModel();
-            model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) data.getElements()).get(j))).get("Values")));
+            model.setElements(((ArrayList)(((LinkedTreeMap<?, ?>)((ArrayList<?>) data.getElements()).get(j))).get("Values")));
             lists.add(model);
         }
         BotTableAdapter tableAdapter = new BotTableAdapter(context, lists,alignment, null, null);
@@ -128,7 +127,6 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int count = getChildCount();
-        int parentWidth = getMeasuredWidth();
 
         //get the available size of child view
         int childLeft = 0;//this.getPaddingLeft();
@@ -152,15 +150,15 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            int height = 0;
-            height = getListViewHeightBasedOnChildren(tableDataView);
-            height += tableHeaderView.getMeasuredHeight();
-
-            if (height != 0 ) {
-                height = height + (int) (25 * dp1);
-            }
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
-            LogUtils.d("IKIDO","On measure called for botminitab , The total height is "+ height);
+//            int height = 0;
+//            height = getListViewHeightBasedOnChildren(tableDataView);
+//            height += tableHeaderView.getMeasuredHeight();
+//
+//            if (height != 0 ) {
+//                height = height + (int) (25 * dp1);
+//            }
+//            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
+//            LogUtils.d("IKIDO","On measure called for botminitab , The total height is "+ height);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;
