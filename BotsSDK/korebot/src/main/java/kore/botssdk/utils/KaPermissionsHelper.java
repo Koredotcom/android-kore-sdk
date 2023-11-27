@@ -12,16 +12,19 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+
 /**
  * Created by Shiva Krishna on 11/15/2017.
  */
 public class KaPermissionsHelper {
     public static final int GET_ACCOUNT_PERMISSION = 82;
-    public static boolean hasPermission(Activity activity,String... permission) {
+
+    public static boolean hasPermission(Activity activity, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
         if (Build.VERSION.SDK_INT >= 23) {
             int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
+            for (int i = 0; i < permissionLength; i++) {
                 shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
                         ActivityCompat.checkSelfPermission(activity, permission[i]) == PackageManager.PERMISSION_GRANTED;
             }
@@ -29,11 +32,23 @@ public class KaPermissionsHelper {
         return shouldShowRequestPermissionRationale;
     }
 
-    public static boolean hasPermission(Context context,String... permission) {
+    public static boolean hasMediaPermission(Activity activity, ArrayList<String> permissions) {
+        boolean shouldShowRequestPermissionRationale = true;
+        if (Build.VERSION.SDK_INT >= 23) {
+            int permissionLength = permissions.size();
+            for (int i = 0; i < permissionLength; i++) {
+                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                        ActivityCompat.checkSelfPermission(activity, permissions.get(i)) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return shouldShowRequestPermissionRationale;
+    }
+
+    public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
         if (Build.VERSION.SDK_INT >= 23) {
             int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
+            for (int i = 0; i < permissionLength; i++) {
                 shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
                         ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
             }
@@ -52,10 +67,9 @@ public class KaPermissionsHelper {
     }
 
     /**
-     *
-     * @param activity : For which activity
+     * @param activity    : For which activity
      * @param requestCode : The user's request code
-     * @param permission : List of desired permissions.
+     * @param permission  : List of desired permissions.
      */
     public static void requestForPermission(Activity activity, int requestCode, String... permission) {
         boolean shouldShowRequestPermissionRationale = shouldShowRationale(activity, permission);
@@ -66,6 +80,18 @@ public class KaPermissionsHelper {
         } else {
             ActivityCompat.requestPermissions(activity, permission,
                     requestCode);
+        }
+    }
+
+    public static void requestForMediaPermissions(Activity activity, int requestCode, ArrayList<String> permissions) {
+        String[] permission = new String[permissions.size()];
+        permission = permissions.toArray(permission);
+        boolean shouldShowRequestPermissionRationale = shouldShowRationale(activity, permission);
+
+        if (shouldShowRequestPermissionRationale) {
+            ActivityCompat.requestPermissions(activity, permission, requestCode);
+        } else {
+            ActivityCompat.requestPermissions(activity, permission, requestCode);
         }
     }
 
@@ -125,7 +151,7 @@ public class KaPermissionsHelper {
     }
 
     public static boolean hasPermissionForLocation(final Activity activity) {
-        return KaPermissionsHelper.hasPermission(activity,Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+        return KaPermissionsHelper.hasPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
     public static void startInstalledAppDetailsActivity(final Activity activity) {
@@ -142,17 +168,18 @@ public class KaPermissionsHelper {
         activity.startActivity(intent);
     }
 
-    public static void firstTimeAskingPermission(Context context, String permission, boolean isFirstTime){
-        SharedPreferenceUtils.getInstance(context).putKeyValue(permission,isFirstTime);
+    public static void firstTimeAskingPermission(Context context, String permission, boolean isFirstTime) {
+        SharedPreferenceUtils.getInstance(context).putKeyValue(permission, isFirstTime);
     }
 
-    public static void firstTimeAskingPermission(Context context, String[] permissions, boolean isFirstTime){
+    public static void firstTimeAskingPermission(Context context, String[] permissions, boolean isFirstTime) {
         SharedPreferenceUtils sharedPreferenceUtils = SharedPreferenceUtils.getInstance(context);
         for (String permission : permissions) {
-            sharedPreferenceUtils.putKeyValue(permission,isFirstTime);
+            sharedPreferenceUtils.putKeyValue(permission, isFirstTime);
         }
     }
-    public static boolean isFirstTimeAskingPermission(Context context, String permission){
+
+    public static boolean isFirstTimeAskingPermission(Context context, String permission) {
         return SharedPreferenceUtils.getInstance(context).getKeyValue(permission, true);
     }
 
