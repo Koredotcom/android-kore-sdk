@@ -26,6 +26,7 @@ public class AdvancedListTemplateView extends LinearLayout {
     final LinearLayout botCustomListRoot;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    float restrictedMaxWidth;
     private final ImageView ivSorting;
     private AdvancedListAdapter botListTemplateAdapter;
 
@@ -108,4 +109,12 @@ public class AdvancedListTemplateView extends LinearLayout {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
+    public void setRestrictedMaxWidth(float restrictedMaxWidth) {
+        this.restrictedMaxWidth = restrictedMaxWidth;
+        post(() -> {
+            LinearLayout.LayoutParams params = (LayoutParams) botCustomListRoot.getLayoutParams();
+            params.width = (int) this.restrictedMaxWidth;
+            setLayoutParams(params);
+        });
+    }
 }

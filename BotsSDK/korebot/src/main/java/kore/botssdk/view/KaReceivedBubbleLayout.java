@@ -531,6 +531,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     lineChartView.setData(payInner);
                 } else if (BotResponse.ADVANCED_LIST_TEMPLATE.equalsIgnoreCase(payInner.getTemplate_type())) {
                     advancedListTemplateView.setVisibility(View.VISIBLE);
+                    advancedListTemplateView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth());
                     advancedListTemplateView.populateAdvancedListTemplateView(payInner);
                 } else if (BotResponse.TEMPLATE_TYPE_BARCHART.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.populateText(payInner.getText());
