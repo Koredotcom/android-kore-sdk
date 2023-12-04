@@ -602,6 +602,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         addView(listWidgetView);
                     }
                     listWidgetView.setVisibility(View.VISIBLE);
+                    listWidgetView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth());
                     listWidgetView.populateListWidgetData(payInner);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_DROPDOWN.equalsIgnoreCase(payInner.getTemplate_type())) {
