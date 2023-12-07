@@ -10,9 +10,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing emailcompletions."</string>
     <string name="need_login">You’d need to login to view the content</string>
     <string name="title_activity_ka_sign_up">Sign in</string>
     <string name="sign_google">Sign in with Google</string>
@@ -96,7 +94,7 @@
         <item>Sort by Recommended</item>
         <item>Sort by Modified Time</item>
     </string-array>
-    <string name="title_activity_share_info_activity">Share with...</string>
+    <string name="title_activity_share_info_activity">Share with…</string>
     <string name="title_activity_teach_educate_activity">Train Kora</string>
     <string name="hint_text_basic">All are valid questions! Kora can help answer these common questions asked around the office, saving you  time and energy from having to keep answering them.</string>
     <string name="step_1_write_your_article">Step 1: Write your knowledge article</string>
@@ -256,10 +254,10 @@
     <string name="mention_required">\@mention  Required</string>
     <string name="mention_name_pop_up_desc">Please provide an @mention name. The @mention name can be used to effectively grab team members’ attention when added to an article</string>
     <string name="invalid_team_name">Invalid Team Name</string>
-    <string name="invalid_team_name_desc">Please ensure your team name adheres to the following guidelines: \n(1) Starts with a letter or number. \n(2) Contains 2 or more characters. \n(3) Can contain A–Z, a-z, 0-9, and ‘-‘</string>
+    <string name="invalid_team_name_desc">Please ensure your team name adheres to the following guidelines: \n(1) Starts with a letter or number. \n(2) Contains 2 or more characters. \n(3) Can contain A–Z, a–z, 0–9, and ‘-‘</string>
 
     <string name="invalid_mention">Invalid @mention</string>
-    <string name="invalid_mention_desc">Please ensure your @mention name adheres to the following guidelines: \n(1) Starts with a letter or number. \n(2) Contains 2 or more characters. \n(3) Can contain a-z, 0-9 </string>
+    <string name="invalid_mention_desc">Please ensure your @mention name adheres to the following guidelines: \n(1) Starts with a letter or number. \n(2) Contains 2 or more characters. \n(3) Can contain a–z, 0–9 </string>
     <string name="delete_team_title">Delete Team?</string>
     <string name="leave_team_title">Leave Team?</string>
     <string name="delete_team_desc">By deleting a team, team members will no longer be able to access articles shared with the team. Would you like to continue?</string>
@@ -296,13 +294,13 @@
     <string name="dnd_hint">When enabled, all incoming notifications will be silenced for the selected period of time.</string>
     <string name="out_of_office">Out Of Office</string>
     <string name="out_of_office_hint">When enabled, people who send you messages and tasks will be notified that you are currently on vacation. Do not disturb is enabled and current city sharing will be disabled.</string>
-    <string name="current_city_hint">Allow people to see your current city in your profile or by asking kora \"Where is %s ?\" Only the city name is revealed and not your actual location for privacy.</string>
+    <string name="current_city_hint">Allow people to see your current city in your profile or by asking kora \“Where is %s ?\” Only the city name is revealed and not your actual location for privacy.</string>
     <string name="current_city">Current City</string>
     <string name="share_with">Share With</string>
     <string name="work_hours_text">Work Hours</string>
-    <string name="work_hours_hint">Allow people to see your working hours in your profile and by asking Kora \"What is %s\'s schedule today?\"</string>
+    <string name="work_hours_hint">Allow people to see your working hours in your profile and by asking Kora \“What is %s\'s schedule today?\”</string>
     <string name="work_address">Work Address</string>
-    <string name="work_address_hint">Allow people to see your work address in your profile and by simply asking Kora \"What is %s\'s work address?\"</string>
+    <string name="work_address_hint">Allow people to see your work address in your profile and by simply asking Kora \“What is %s\'s work address?\”</string>
     <string name="experience_settings">EXPERIENCE</string>
     <string name="default_input">Default Input</string>
     <string name="default_output">Default Output</string>
@@ -432,7 +430,7 @@
     <string name="valid_pwd">Please enter valid password</string>
     <string name="share_empty_view">No one to play with? Just search and add people or teams</string>
     <string name="add_tags_hint">Add or change tags to your post so that it’s easy to search and organise</string>
-    <string name="add_tags_info">Adding upto 5 tags is usually enough to get visibility in search results</string>
+    <string name="add_tags_info">Adding up to 5 tags is usually enough to get visibility in search results</string>
     <string name="hint_train_image">Train Kora to present this knowledge article as an answer to your question. Add unique ways of asking a questions regarding this knowledge article.</string>
 
     <string name="search_hint_knowledge_share">Type name</string>
@@ -570,7 +568,7 @@
     <string name="app_update_not_now_text">not now</string>
     <string name="app_update_never_text">never</string>
     <string name="app_id_for_update">com.kora.android</string>
-    <string name="video_preview">Loading preview...</string>
+    <string name="video_preview">Loading preview…</string>
     <string name="remove_photo_lbl">Remove profile image</string>
     <string name="change_profile_image_lbl">Change profile image</string>
     <string name="select_profile_image_lbl">Add profile image</string>
@@ -613,5 +611,5 @@
     <string name="time_stamp_years">y</string>
     <string name="view_more">View more</string>
     <string name="show_more"><u>Show more</u></string>
-    <string name="please_wait">Please wait...</string>
+    <string name="please_wait">Please wait…</string>
 </resources>

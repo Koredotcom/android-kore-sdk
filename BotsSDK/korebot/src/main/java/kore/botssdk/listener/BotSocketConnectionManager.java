@@ -348,9 +348,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             this.isWithAuth = false;
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
-//            this.socketUpdateListener = socketUpdateListener;
-            /*if (!botsSpiceManager.isStarted())
-                botsSpiceManager.start(this.mContext);*/
             initiateConnection();
         }
     }
@@ -363,7 +360,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     private void initiateConnection() {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
-//            Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
             connection_state = DISCONNECTED;
 //            KoreEventCenter.post(connection_state);
             if(chatListener != null){

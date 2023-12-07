@@ -9,6 +9,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -58,7 +60,9 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
     @Override
     protected void onCreate(@NonNull Bundle data) {
         super.onCreate(data);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.welcome_screen);
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         llOuterHeader = findViewById(R.id.llOuterHeader);
         llStartConversation = findViewById(R.id.llStartConversation);
         lvPromotions = findViewById(R.id.lvPromotions);
@@ -243,15 +247,17 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), null);
 
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+        bundle.putBoolean(BundleUtils.IS_FROM_WELCOME, true);
         if((botOptionsModel != null) && (botOptionsModel.getHeader() != null))
             bundle.putSerializable(BundleUtils.BRANDING, botOptionsModel);
 
         bundle.putString(BundleUtils.BOT_NAME_INITIALS, SDKConfiguration.Client.bot_name.charAt(0)+"");
         intent.putExtras(bundle);
-
         startActivity(intent);
+        finish();
     }
 }

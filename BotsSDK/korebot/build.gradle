@@ -86,4 +86,5 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.3'
     implementation 'org.apache.httpcomponents:httpcore:4.4.6'
     implementation 'org.apache.httpcomponents:httpmime:4.3.6'
+    implementation 'com.github.ybq:Android-SpinKit:1.1.0'
 }

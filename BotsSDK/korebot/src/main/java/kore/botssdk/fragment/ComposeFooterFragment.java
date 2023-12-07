@@ -191,7 +191,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListener();
         setListenerExplicitly();
         toggleTTSButton();
-        getBundleInfo(view);
+        getBundleInfo();
         return view;
     }
 
@@ -275,7 +275,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         return requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
-     void getBundleInfo(View view) {
+    public void setBotBrandingModel(BotBrandingModel botBrandingModel)
+    {
+        this.botBrandingModel = botBrandingModel;
+    }
+
+     void getBundleInfo() {
         Bundle bundle = getArguments();
         if (bundle != null)
         {

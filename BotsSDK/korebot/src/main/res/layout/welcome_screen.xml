@@ -78,7 +78,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_10dp"
                     android:background="@drawable/welcome_start_conv_bg"
-                    android:onClick="launchBotChatActivity"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@+id/rvStarterButtons"
                     app:layout_constraintTop_toBottomOf="@+id/rvStarterButtons">

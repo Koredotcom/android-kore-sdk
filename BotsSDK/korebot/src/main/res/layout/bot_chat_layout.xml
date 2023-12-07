@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+
     <ImageView
         android:id="@+id/ivChaseBackground"
         android:layout_width="match_parent"
@@ -11,21 +12,23 @@
         android:layout_centerInParent="true"
         android:background="@mipmap/background"
         android:contentDescription="@string/app_name"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/ivChaseLogo"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_centerInParent="true"
-        android:contentDescription="@string/app_name"
         android:background="@drawable/ic_launcher"
-        android:visibility="gone"/>
+        android:contentDescription="@string/app_name"
+        android:visibility="gone" />
 
     <RelativeLayout
+        android:id="@+id/rlChatWindow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chatLayoutPanelContainer">
+        android:layout_above="@+id/chatLayoutPanelContainer"
+        android:visibility="gone">
 
         <!-- For the footer -->
         <FrameLayout
@@ -70,10 +73,11 @@
     <FrameLayout
         android:id="@+id/chatLayoutPanelContainer"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/readReceiptGrey"
-        android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
 
 </RelativeLayout>

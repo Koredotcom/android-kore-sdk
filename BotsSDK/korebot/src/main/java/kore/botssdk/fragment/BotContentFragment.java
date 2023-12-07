@@ -476,8 +476,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
             mBotNameInitials = bundle.getString(BundleUtils.BOT_NAME_INITIALS, "B");
             mBotIconId = bundle.getInt(BundleUtils.BOT_ICON_ID, -1);
-            botBrandingModel = (BotBrandingModel) bundle.getSerializable(BundleUtils.BRANDING);
         }
+    }
+
+    public void setBotBrandingModel(BotBrandingModel botBrandingModel)
+    {
+        this.botBrandingModel = botBrandingModel;
     }
 
     public void showTypingStatus(BotResponse botResponse) {

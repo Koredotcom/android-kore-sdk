@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SDKConfiguration.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
-        SDKConfiguration.setCustomTemplateView("button", new BotButtonView(MainActivity.this));
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
@@ -48,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
      * Launching BotchatActivity where user can interact with bot
      *
      */
-    private void launchBotChatActivity(){
-        Intent intent = new Intent(getApplicationContext(), WelcomeScreenActivity.class);
+    void launchBotChatActivity(){
+        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

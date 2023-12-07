@@ -126,6 +126,7 @@
     <string name="cancel">Cancel</string>
     <string name="select_all">Select All</string>
     <string name="done">Done</string>
+    <string name="loading_data">Please wait...</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

@@ -15,7 +15,7 @@
         android:theme="@style/Theme.BotsSDK"
         tools:replace="android:icon,android:theme">
         <activity
-            android:name="kore.botssdk.activity.WelcomeScreenActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="kore.botssdk.activity.BotChatActivity"
-            android:theme="@style/Theme.BotsSDK"/>
+<!--        <activity android:name="kore.botssdk.activity.BotChatActivity"-->
+<!--            android:theme="@style/Theme.BotsSDK"/>-->
     </application>
 
 </manifest>
