@@ -154,6 +154,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
     }
 
+    @Override
+    public void onFirstTimeReconnect() {
+
+    }
+
     private void makeJwtCallWithConfig(final boolean isRefresh) {
         try {
             String jwt = botClient.generateJWT(SDKConfiguration.Client.identity, SDKConfiguration.Client.client_secret, SDKConfiguration.Client.client_id, SDKConfiguration.Server.IS_ANONYMOUS_USER);

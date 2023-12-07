@@ -55,7 +55,7 @@ public final class SocketWrapper {
         this.mIsReconnectionAttemptNeeded = mIsReconnectionAttemptNeeded;
     }
 
-    private boolean mIsReconnectionAttemptNeeded = true;
+    private boolean mIsReconnectionAttemptNeeded = false;
     private boolean isConnecting = false;
 
 //    private String url;
@@ -93,6 +93,8 @@ public final class SocketWrapper {
      */
     private int mReconnectionCount = 0;
 
+    private boolean isFirstTimeConnect = true;
+
     /**
      * Restricting outside object creation
      */
@@ -115,7 +117,7 @@ public final class SocketWrapper {
 //            synchronized (SocketWrapper.class) {
 //                if(pKorePresenceInstance == null) {
             pKorePresenceInstance = new SocketWrapper(mContext);
-            pKorePresenceInstance.mIsReconnectionAttemptNeeded = true;
+//            pKorePresenceInstance.mIsReconnectionAttemptNeeded = true;
 //                }
 //            }
         }
@@ -302,6 +304,9 @@ public final class SocketWrapper {
      */
     public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel,
                                  final SocketConnectionListener socketConnectionListener, BotSocketOptions options) {
+        if (mIsReconnectionAttemptNeeded) return;
+        mIsReconnectionAttemptNeeded = true;
+        isFirstTimeConnect = true;
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.JWTToken = sJwtGrant;
@@ -331,8 +336,7 @@ public final class SocketWrapper {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        Log.d("HI", "on error");
-                        mIsReconnectionAttemptNeeded = true;
+                        Log.d(LOG_TAG, "on error: " + throwable.getMessage());
                         reconnectAttempt();
                     }
 
@@ -366,7 +370,13 @@ public final class SocketWrapper {
                 mConnection.connect(url, new WebSocketConnectionHandler() {
                     @Override
                     public void onOpen() {
-//                        Log.d(LOG_TAG, "Connection Open.");
+                        isFirstTimeConnect = false;
+                        Log.d(LOG_TAG, "Connection Open.");
+                        if (!mIsReconnectionAttemptNeeded) {
+                            isConnecting = false;
+                            disConnect();
+                            return;
+                        }
                         if (socketConnectionListener != null) {
                             socketConnectionListener.onOpen(isReconnectionAttaempt);
                         } else {
@@ -467,6 +477,11 @@ public final class SocketWrapper {
      * Reconnect to socket
      */
     private void reconnect() {
+        if (isFirstTimeConnect) {
+            mIsReconnectionAttemptNeeded = false;
+            socketConnectionListener.onFirstTimeReconnect();
+            return;
+        }
         if (accessToken != null) {
             //Reconnection for valid credential
             reconnectForAuthenticUser();
@@ -477,7 +492,6 @@ public final class SocketWrapper {
     }
 
     private Observable<RestResponse.RTMUrl> getRtmUrlReconnectForAuthenticUser(String accessToken) {
-
 
         return Observable.create(new ObservableOnSubscribe<RestResponse.RTMUrl>() {
             @Override
@@ -554,6 +568,8 @@ public final class SocketWrapper {
 
                     @Override
                     public void onError(Throwable throwable) {
+                        Log.d(LOG_TAG, "on error: " + throwable.getMessage());
+                        reconnectAttempt();
                     }
 
                     @Override
@@ -659,6 +675,8 @@ public final class SocketWrapper {
 
                     @Override
                     public void onError(Throwable throwable) {
+                        Log.d(LOG_TAG, "on error: " + throwable.getMessage());
+                        reconnectAttempt();
                     }
 
                     @Override
@@ -711,11 +729,10 @@ public final class SocketWrapper {
                     if (mIsReconnectionAttemptNeeded && !isConnected()) {
                         reconnect();
 //                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
-                        mReconnectDelay = getReconnectDelay();
-                        _handler.postDelayed(this, mReconnectDelay);
+//                        mReconnectDelay = getReconnectDelay();
+//                        _handler.postDelayed(this, mReconnectDelay);
                         Log.d(LOG_TAG, "#### trying to reconnect");
                     }
-
                 }
             };
             _handler.postDelayed(r, mReconnectDelay);

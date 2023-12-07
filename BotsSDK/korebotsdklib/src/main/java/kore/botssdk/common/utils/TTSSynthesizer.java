@@ -148,6 +148,11 @@ public class TTSSynthesizer {
         }
 
         @Override
+        public void onFirstTimeReconnect() {
+
+        }
+
+        @Override
         public void onRawTextMessage(byte[] payload) {
             Log.d(LOG_TAG, "Message received is 2 " + payload);
         }

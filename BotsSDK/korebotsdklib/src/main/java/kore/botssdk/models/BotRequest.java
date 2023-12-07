@@ -37,5 +37,4 @@ public class BotRequest extends BaseBotMessage {
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
     }
-
 }

@@ -52,8 +52,11 @@ public interface SocketConnectionListener {
      *//*
     void onConnected(String message);
 	
-	*//**
+	*/
+
+    /**
      * Callback for when user Disconnected
      *//*
 	void onDisconnected(String reason);*/
+    public void onFirstTimeReconnect();
 }

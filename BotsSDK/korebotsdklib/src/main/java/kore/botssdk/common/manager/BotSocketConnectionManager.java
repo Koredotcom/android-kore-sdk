@@ -108,13 +108,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         botUserId = botClient.getUserId();
         botClient.sendMessage(null);
 //        socketUpdateListener.onConnectionUpdated();
-
     }
-
 
     @Override
     public void onClose(int code, String reason) {
-        connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
+        connection_state = CONNECTION_STATE.DISCONNECTED;
 //        KoreEventCenter.post(connection_state);
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, false);
@@ -129,6 +127,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_TEXT_MESSAGE, payload, null, false));
         }
+    }
+
+    @Override
+    public void onFirstTimeReconnect() {
+        checkConnectionAndRetryForSignify(context, true);
     }
 
     public static void killInstance() {
@@ -647,10 +650,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             /*botCustomData.put("kmUId", userId);
             botCustomData.put("kmToken", accessToken);*/
             botClient = new BotClient(context, botCustomData);
-            if (!isFirstTime) {
-                if (chatListener != null) {
-                    chatListener.onConnectionStateChanged(CONNECTING, false);
-                }
+            if (chatListener != null) {
+                chatListener.onConnectionStateChanged(CONNECTING, !isFirstTime);
+            }
+            if (isFirstTime) {
                 initiateConnection();
             } else {
                 refreshJwtToken();
