@@ -114,6 +114,20 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Dialog">
+        <!-- Fill the screen -->
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
+
+        <!-- No backgrounds, titles or window float -->
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+
+        <!-- Just to prove it's working -->
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="Theme.UserDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -122,7 +136,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:windowBackground">@drawable/transparant_image</item>
+        <item name="android:windowBackground">@null</item>
     </style>
 
     <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">

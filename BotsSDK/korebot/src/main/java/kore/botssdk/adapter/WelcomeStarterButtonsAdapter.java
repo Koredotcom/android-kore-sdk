@@ -69,7 +69,8 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
                                 invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                             }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())){
                                 composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
-                            }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())){
+                            }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
+                                    || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())){
                                 invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
                             }else{
                                 composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);

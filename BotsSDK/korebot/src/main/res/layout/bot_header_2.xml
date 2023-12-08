@@ -73,9 +73,21 @@
         android:id="@+id/ivBotSupport"
         android:layout_width="@dimen/dimen_20dp"
         android:layout_height="@dimen/dimen_20dp"
+        android:layout_toStartOf="@+id/ivBotClose"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:background="@drawable/support"
+        android:contentDescription="@string/start_conversation" />
+
+    <ImageView
+        android:id="@+id/ivBotClose"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/dimen_5dp"
-        android:background="@drawable/support"
+        android:background="@drawable/ic_close"
         android:contentDescription="@string/start_conversation" />
 
     <ImageView

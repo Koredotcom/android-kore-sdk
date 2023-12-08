@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,10 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.models.BrandingQuickStartButtonButtonsModel;
+import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 
 public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeStaticLinkListAdapter.StaticViewHolder> {
     private ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList;
@@ -37,6 +41,40 @@ public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeSt
         BrandingQuickStartButtonButtonsModel quickReplyTemplate = quickReplyTemplateArrayList.get(position);
         staticViewHolder.link_title.setText(quickReplyTemplate.getTitle());
         staticViewHolder.link_desc.setText(quickReplyTemplate.getDescription());
+
+        staticViewHolder.quick_reply_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(composeFooterInterface != null && invokeGenericWebViewInterface != null)
+                {
+                    String quickReplyPayload;
+                    try
+                    {
+                        BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
+                        if(!StringUtils.isNullOrEmpty(buttonActionModel.getValue()))
+                        {
+                            quickReplyPayload = buttonActionModel.getValue();
+
+                            if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(buttonActionModel.getType())) {
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
+                            } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())){
+                                invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
+                            }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())){
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
+                            }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
+                                    || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())){
+                                invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
+                            }else{
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
+                            }
+                        }
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -69,11 +107,13 @@ public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeSt
     public static class StaticViewHolder extends RecyclerView.ViewHolder {
         final TextView link_title;
         final TextView link_desc;
+        RelativeLayout quick_reply_view;
 
         public StaticViewHolder(@NonNull View itemView) {
             super(itemView);
             link_title = itemView.findViewById(R.id.link_title);
             link_desc = itemView.findViewById(R.id.link_desc);
+            quick_reply_view = itemView.findViewById(R.id.quick_reply_view);
         }
     }
 }
