@@ -74,6 +74,14 @@ public class SDKConfiguration {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
         }
 
+        public static void setWebhookBaseUrl(String webhookBaseUrl) {
+            koreAPIUrl = webhookBaseUrl;
+        }
+
+        public static String getWebhookBaseUrl() {
+            return koreAPIUrl;
+        }
+
         public static String getKoreBotServerUrl() {
             return KORE_BOT_SERVER_URL;
         }
@@ -104,7 +112,7 @@ public class SDKConfiguration {
         public static Boolean IS_PRESENCE_SSL = true;
         public static String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
         public static String Branding_SERVER_URL = "https://bankingassistant-qa-bots.kore.ai/";
-        public static String koreAPIUrl = "https://qa1-bots.kore.ai/";
+        public static String koreAPIUrl = "https://qa1-bots.kore.ai/"; // Webhook base url
     }
 
     public static class Client {
