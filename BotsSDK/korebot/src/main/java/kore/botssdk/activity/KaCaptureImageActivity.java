@@ -284,7 +284,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 startActivityForResult(videoPickerIntent, CHOOSE_VIDEO);
             } else if (imagePickType.equals(CHOOSE_TYPE_FILE)) {
                 Intent videoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                String mime[] = {"text/plain",
+                String mime[] = {"text/plain", "application/json",
                         "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                         "application/vnd.ms-excel", "application/vnd.ms-excel.sheet.binary.macroenabled.12", "application/rtf",
                         "application/vnd.ms-excel.sheet.macroenabled.12", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

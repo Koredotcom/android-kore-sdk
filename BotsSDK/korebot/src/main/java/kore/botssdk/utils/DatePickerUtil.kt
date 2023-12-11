@@ -1,6 +1,7 @@
 package kore.botssdk.utils
 
 import android.annotation.SuppressLint
+import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -9,7 +10,7 @@ import java.util.Calendar
 class DatePickerUtil {
     companion object {
         private const val LOG_TAG = "DatePickerUtil"
-        fun showRangeDatePicker(title: String, fragmentManager: FragmentManager, onDateSelected: (selectedDates: String) -> Unit) {
+        fun showRangeDatePicker(title: String, fragmentManager: FragmentManager, onDateSelected: (selectedDates: String) -> Unit): MaterialDatePicker<Pair<Long, Long>> {
             val constraintsBuilder = CalendarConstraints.Builder()
             constraintsBuilder.setValidator(DateValidatorFuture())
             val builder = MaterialDatePicker.Builder.dateRangePicker()
@@ -17,8 +18,8 @@ class DatePickerUtil {
             builder.setCalendarConstraints(constraintsBuilder.build())
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             builder.setTheme(kore.botssdk.R.style.MyMaterialCalendarTheme)
+            val picker = builder.build()
             try {
-                val picker = builder.build()
                 picker.show(fragmentManager, picker.toString())
                 picker.addOnPositiveButtonClickListener { selection ->
                     val startDate = selection.first
@@ -45,9 +46,10 @@ class DatePickerUtil {
             } catch (e: IllegalArgumentException) {
                 LogUtils.e(LOG_TAG, e.message)
             }
+            return picker
         }
 
-        fun showDatePicker(title: String, fragmentManager: FragmentManager, onDatesSelected: (selectedDates: String) -> Unit) {
+        fun showDatePicker(title: String, fragmentManager: FragmentManager, onDatesSelected: (selectedDates: String) -> Unit): MaterialDatePicker<Long> {
             val constraintsBuilder = CalendarConstraints.Builder()
             constraintsBuilder.setValidator(DateValidatorFuture())
             val builder = MaterialDatePicker.Builder.datePicker()
@@ -55,8 +57,8 @@ class DatePickerUtil {
             builder.setCalendarConstraints(constraintsBuilder.build())
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             builder.setTheme(kore.botssdk.R.style.MyMaterialCalendarTheme)
+            val picker = builder.build()
             try {
-                val picker = builder.build()
                 picker.show(fragmentManager, picker.toString())
                 picker.addOnPositiveButtonClickListener { selection ->
                     val calendar = Calendar.getInstance()
@@ -72,6 +74,7 @@ class DatePickerUtil {
             } catch (e: IllegalArgumentException) {
                 LogUtils.e(LOG_TAG, e.message)
             }
+            return picker
         }
     }
 }
