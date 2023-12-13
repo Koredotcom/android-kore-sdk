@@ -15,7 +15,7 @@
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="@dimen/dimen_5dp"
-        android:background="@drawable/theme_1_button_bg"
+        android:background="@drawable/template_button_bg"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dimen_15dp"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="Hello"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold" />
     </LinearLayout>

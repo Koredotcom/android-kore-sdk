@@ -45,7 +45,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         layoutInflater = LayoutInflater.from(context);
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
-        quickReplyFontColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor);
+//        quickReplyFontColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor);
         dp1= (int)AppControl.getInstance(context).getDimensionUtil().dp1;
     }
 
@@ -56,9 +56,9 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground();
         gradientDrawable.setStroke(dp1, quickWidgetColor);
         gradientDrawable.setColor(fillColor);
-        QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
-        viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);
-        return viewHolder;
+//        QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
+//        viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);
+        return new QuickReplyViewHolder(convertView);
     }
 
     @Override

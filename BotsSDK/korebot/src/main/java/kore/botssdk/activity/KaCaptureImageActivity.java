@@ -347,7 +347,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_MANAGE_APP_ALL_FILES_ACCESS) {
-            Log.e("Callled", "result " + resultCode);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
                 showEnableAllFilesAccess();
             } else {

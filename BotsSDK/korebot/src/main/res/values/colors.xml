@@ -10,6 +10,8 @@
     <color name="colorPrimary">@color/colorPrimaryKa</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="template_button_fill_color">#00A0AD</color>
+
 <!--    Associated Bank Theme-->
     <color name="colorPrimaryKa_associated">#0ea84d</color>
     <color name="colorPrimaryDark_associated">#0ea84d</color>

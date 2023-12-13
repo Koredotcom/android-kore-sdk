@@ -1,12 +1,16 @@
 package kore.botssdk.view;
 
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -18,7 +22,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,7 +43,6 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -49,8 +51,6 @@ import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
-
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 /**
  * Created by Pradeep Mahato on 31-May-16.
@@ -81,6 +81,7 @@ public class TextMediaLayout extends LinearLayout {
     private final String REGEX_SIMLEY = ":)";
     private final String REGEX_THUMSUB = ":thumbsup";
     private final String REGEX_SAD = ":(";
+    private final String REGEX_PHONE_NUMBER = "(\\+[0-9]{9,13})|((\\+[0-9]{1,3})-(\\([0-9]{3}\\))-([0-9]{3})-([0-9]{4}))";
 
     public void setClicable(boolean clicable) {
         isClicable = clicable;
@@ -219,6 +220,8 @@ public class TextMediaLayout extends LinearLayout {
                     new MarkdownImageTagHandler(mContext, botContentTextView, textualContent), new MarkdownTagHandler());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
             URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+
+            makeClickablePhoneNumbers(strBuilder);
 
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
@@ -390,11 +393,11 @@ public class TextMediaLayout extends LinearLayout {
                     botContentTextView.setText(strBuilder);
             }
 
-            if(isPencilSpanClick)
+//            if(isPencilSpanClick)
                 botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
-            else
-//                botContentTextView.setMovementMethod(null);
-                botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
+//            else
+////                botContentTextView.setMovementMethod(null);
+//                botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
@@ -416,6 +419,8 @@ public class TextMediaLayout extends LinearLayout {
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
             URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
+            makeClickablePhoneNumbers(strBuilder);
+
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
@@ -424,13 +429,12 @@ public class TextMediaLayout extends LinearLayout {
                 botContentTextView.setTextColor(Color.parseColor(rightTextColor));
 
             botContentTextView.setText(strBuilder);
-            botContentTextView.setMovementMethod(null);
+            botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
             botContentTextView.setVisibility(GONE);
         }
-
     }
 
     public void populateErrorText(String textualContent, String color) {
@@ -442,12 +446,14 @@ public class TextMediaLayout extends LinearLayout {
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
             URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
 
+            makeClickablePhoneNumbers(strBuilder);
+
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
             botContentTextView.setTextColor(Color.parseColor(color));
             botContentTextView.setText(strBuilder);
-            botContentTextView.setMovementMethod(null);
+            botContentTextView.setMovementMethod(LinkMovementMethod.getInstance());
             botContentTextView.setVisibility(VISIBLE);
         } else {
             botContentTextView.setText("");
@@ -482,6 +488,28 @@ public class TextMediaLayout extends LinearLayout {
         };
         strBuilder.setSpan(clickable, start, end, flags);
         strBuilder.removeSpan(span);
+    }
+
+    private void makeClickablePhoneNumbers(SpannableStringBuilder inputText) {
+        Pattern pattern = Pattern.compile(REGEX_PHONE_NUMBER);
+        Matcher matcher = pattern.matcher(inputText);
+
+        while (matcher.find()) {
+            String phoneNumber = inputText.subSequence(matcher.start(), matcher.end()).toString();
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View view) {
+                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+//                    if (dialIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                        getContext().startActivity(dialIntent);
+//                    } else {
+//                        Toast.makeText(getContext(), "No calling app found!", Toast.LENGTH_LONG).show();
+//                    }
+                }
+            };
+
+            inputText.setSpan(clickableSpan, matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
     }
 
     public TextView getBotContentTextView() {

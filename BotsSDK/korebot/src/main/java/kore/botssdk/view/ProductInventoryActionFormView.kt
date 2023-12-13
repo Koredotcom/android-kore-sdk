@@ -15,7 +15,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils
 
 class ProductInventoryActionFormView : ViewGroup {
     companion object {
-        private val REGEX_PHONE_NUMBER_VALIDATION = "\\+[0-9]{11,13}".toRegex()
+        private val REGEX_PHONE_NUMBER_VALIDATION = "\\+[0-9]{9,13}".toRegex()
         private val REGEX_EMAIL_ADDRESS = "^([\\w-_\\.]{3,40})+@(([\\w-]{2,20})+\\.)+[\\w-]{2,20}\$".toRegex()
         private const val REQUEST_FORM_DATA = "userName:%s|phoneNumber:%s|email:%s|itemId:%s|actionName:%s"
     }
