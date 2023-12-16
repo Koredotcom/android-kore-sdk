@@ -1,8 +1,14 @@
 package kore.botssdk.utils;
 
+import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
+import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,6 +18,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -23,8 +32,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
@@ -38,10 +52,10 @@ import kore.botssdk.models.KoreMedia;
 
 public class KaMediaUtils {
     public static final String MEDIA_APP_FOLDER = "Kore";
-    public static final String DOWNLOADED_IMAGE_FOLDER="Kore Image";
-    public static final String DOWNLOADED_AUDIO_FOLDER="Kore Audio";
-    public static final String DOWNLOADED_VIDEO_FOLDER="Kore Video";
-    public static final String DOWNLOADED_DOCUMENT_FOLDER="Kore Document";
+    public static final String DOWNLOADED_IMAGE_FOLDER = "Kore Image";
+    public static final String DOWNLOADED_AUDIO_FOLDER = "Kore Audio";
+    public static final String DOWNLOADED_VIDEO_FOLDER = "Kore Video";
+    public static final String DOWNLOADED_DOCUMENT_FOLDER = "Kore Document";
     public static final String DOWNLOAD_ARCHIVE_FOLDER = "Kore Archieve";
     public static final String TEMP_FOLDER = "Kore Temp";
     String DIR_TYPE_TEMP = "temp";
@@ -52,16 +66,17 @@ public class KaMediaUtils {
     static File mediaStorageDownloadsDir = null;
     private static String userId = null;
     static int PRIVATE_MODE = 0;
+
     public static class KaEnvironment {
         public static File getExternalStorageDirectory() {
             File f;
-                f = Environment.getExternalStorageDirectory();
+            f = Environment.getExternalStorageDirectory();
             return f;
         }
 
         public static File getExternalStoragePublicDirectory(String path) {
 
-                return Environment.getExternalStoragePublicDirectory(path);
+            return Environment.getExternalStoragePublicDirectory(path);
         }
     }
 
@@ -71,9 +86,9 @@ public class KaMediaUtils {
             if (mExternalStorageAvailable && mExternalStorageWriteable) {
 //                KoreLogger.debugLog(LOG_TAG, "Storage available for read write");
                 String path = "";
-                if(Build.VERSION.SDK_INT  > Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
                     path = KaEnvironment.getExternalStoragePublicDirectory(/*"/" + Constants.MEDIA_APP_FOLDER + */"/" + userId).getPath();
-                }else {
+                } else {
                     path = KaEnvironment.getExternalStorageDirectory() + "/" + MEDIA_APP_FOLDER + "/" + userId;
 
                 } //File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Constants.KORE_APP_FOLDER);
@@ -181,28 +196,29 @@ public class KaMediaUtils {
     /**
      * Create a File for saving an image or video
      */
-    public static File getOutputMediaFile(String type,String fileName) throws NoExternalStorageException, NoWriteAccessException {
+    public static File getOutputMediaFile(String type, String fileName) throws NoExternalStorageException, NoWriteAccessException {
         // Create a media file name
         if (fileName != null && fileName.indexOf(".") > 0)
             fileName = fileName.substring(0, fileName.lastIndexOf("."));
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date()),
-                appDirPath = getAppDir().replace(" ", "%20");
-        File mediaFile = null;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.getDefault()).format(new Date()),
+                appDirPath = getAppDir();
+        File mediaFile = new File(appDirPath);
         int attemptCount = 0;
-        while(mediaFile == null || mediaFile.exists()) {
+        if (!mediaFile.exists()) mediaFile.mkdirs();
+        while (mediaFile.exists()) {
             String name = StringUtils.isNullOrEmptyWithTrim(fileName) ? timeStamp : fileName;
-            if(attemptCount !=0){
-                name = name+attemptCount;
+            if (attemptCount != 0) {
+                name = name + attemptCount;
             }
             attemptCount++;
             if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_AUDIO)) {
-                mediaFile = new File(appDirPath + File.separator +  name + getMediaExtension(KoreMedia.MEDIA_TYPE_AUDIO, false));
+                mediaFile = new File(appDirPath + File.separator + name + getMediaExtension(KoreMedia.MEDIA_TYPE_AUDIO, false));
             } else if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
-                mediaFile = new File(appDirPath + File.separator +  name + getMediaExtension(KoreMedia.MEDIA_TYPE_VIDEO, false));
+                mediaFile = new File(appDirPath + File.separator + name + getMediaExtension(KoreMedia.MEDIA_TYPE_VIDEO, false));
             } else if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
                 mediaFile = new File(appDirPath + File.separator + name + getMediaExtension(KoreMedia.MEDIA_TYPE_IMAGE, false));
             } else if (type.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_ARCHIVE)) {
-                mediaFile = new File(appDirPath + File.separator +  name + ".kore");    //".kore"
+                mediaFile = new File(appDirPath + File.separator + name + ".kore");    //".kore"
             } else {
                 mediaFile = new File(appDirPath + File.separator + name + "." + type);    //".kore"
                 //return null;
@@ -265,10 +281,10 @@ public class KaMediaUtils {
     }
 
 
-    public static String saveFileToKoreWithStream(Context mContext,Uri uri,String fileName,String extn){
-        try{
+    public static String saveFileToKoreWithStream(Context mContext, Uri uri, String fileName, String extn) {
+        try {
             ContentResolver contentResolver = mContext.getContentResolver();
-            File file =  KaMediaUtils.getOutputMediaFile(BitmapUtils.obtainMediaTypeOfExtn(extn),fileName);
+            File file = KaMediaUtils.getOutputMediaFile(BitmapUtils.obtainMediaTypeOfExtn(extn), fileName);
             InputStream inputStream = contentResolver.openInputStream(uri);
             OutputStream out = new FileOutputStream(file);
 
@@ -281,10 +297,10 @@ public class KaMediaUtils {
 
             inputStream.close();
             out.close();
-            Log.d("file create","success scenario"+fileName+extn);
+            Log.d("file create", "success scenario" + fileName + extn);
             return file.getAbsolutePath();
-        }catch (Exception e){
-            Log.d("file create","fail scenario");
+        } catch (Exception e) {
+            Log.d("file create", "fail scenario");
             e.printStackTrace();
         }
         return null;
@@ -318,8 +334,7 @@ public class KaMediaUtils {
         }
     }
 
-    public static void saveFileFromUrlToKorePath(Context context, String sourceFilePath)
-    {
+    public static void saveFileFromUrlToKorePath(Context context, String sourceFilePath) {
         new DownloadFileFromURL(context).execute(sourceFilePath);
     }
 
@@ -383,7 +398,7 @@ public class KaMediaUtils {
         if (cursor.getCount() > 0) {
             int image_column_index = cursor
                     .getColumnIndex(MediaStore.Video.Media._ID);
-            if(image_column_index != - 1) {
+            if (image_column_index != -1) {
                 String file = cursor.getString(image_column_index);
                 photoId = cursor.getInt(image_column_index);
             }
@@ -415,7 +430,6 @@ public class KaMediaUtils {
     public static String getRealPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
@@ -432,13 +446,14 @@ public class KaMediaUtils {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
+                String id = DocumentsContract.getDocumentId(uri);
+                id = id.substring(id.lastIndexOf(":") + 1);
 
                 if (!TextUtils.isEmpty(id)) {
                     if (id.startsWith("raw:")) {
                         return id.replaceFirst("raw:", "");
                     }
+                    if (id.contains("/Download/")) return id;
 
                     String[] contentUriPrefixesToTry = new String[]{
                             "content://downloads/public_downloads",
@@ -453,7 +468,9 @@ public class KaMediaUtils {
                             if (path != null) {
                                 return path;
                             }
-                        } catch (Exception e) {}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     /*try {
                         final Uri contentUri = ContentUris.withAppendedId(
@@ -475,7 +492,7 @@ public class KaMediaUtils {
                 final String[] split = docId.split(":");
                 final String type = split[0];
 
-                Uri contentUri = null;
+                Uri contentUri = uri;
                 if ("image".equals(type)) {
                     contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 } else if ("video".equals(type)) {
@@ -503,6 +520,9 @@ public class KaMediaUtils {
             if (isDeviceContactsUri(uri))
                 return uri.getLastPathSegment();
 
+            if (isGoogleDriveDocument(uri)) {
+                return null;
+            }
 
             return getDataColumn(context, uri, null, null);
         }
@@ -513,6 +533,9 @@ public class KaMediaUtils {
         return null;
     }
 
+    private static boolean isGoogleDriveDocument(Uri uri) {
+        return "com.google.android.apps.docs.storage.legacy".equals(uri.getAuthority());
+    }
 
 
     /**
@@ -527,25 +550,32 @@ public class KaMediaUtils {
      */
     public static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
-
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {
                 column
         };
-
         try {
+            grantUriPermissionToPackage(context, uri);
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (cursor != null)
                 cursor.close();
         }
         return null;
+    }
+
+    private static void grantUriPermissionToPackage(Context context, Uri uri) {
+        int flags = FLAG_GRANT_READ_URI_PERMISSION;
+        context.grantUriPermission(context.getPackageName(), uri, flags);
+        context.getContentResolver().takePersistableUriPermission(uri, flags);
     }
 
 
@@ -653,13 +683,12 @@ public class KaMediaUtils {
 
     /**
      * Background Async Task to download file
-     * */
+     */
     static class DownloadFileFromURL extends AsyncTask<String, String, String> {
 
         private Context context;
 
-        public DownloadFileFromURL(Context context)
-        {
+        public DownloadFileFromURL(Context context) {
             this.context = context;
         }
 

@@ -73,6 +73,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     public static final String EXTRA_PICK_TYPE = "pickType";
     public static final String EXTRA_FILE_CONTEXT = "fileContext";
     public static final String EXTRA_MEDIA_TYPE = "mediaType";
+    public static final String EXTRA_DOCUMENT_MIME = "documentMime";
 
     public static final String THUMBNAIL_FILE_PATH = "filePathThumbnail";
     //keep track of cropping intent
@@ -284,16 +285,23 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 startActivityForResult(videoPickerIntent, CHOOSE_VIDEO);
             } else if (imagePickType.equals(CHOOSE_TYPE_FILE)) {
                 Intent videoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-                String mime[] = {"text/plain", "application/json",
+                String[] mime = {"text/plain", "application/json",
                         "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                         "application/vnd.ms-excel", "application/vnd.ms-excel.sheet.binary.macroenabled.12", "application/rtf",
                         "application/vnd.ms-excel.sheet.macroenabled.12", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                         "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.template.macroEnabled.12",
                         "application/vnd.ms-excel.addin.macroEnabled.12", "application/vnd.ms-powerpoint", "application/vnd.oasis.opendocument.text",
                         "application/vnd.openxmlformats-officedocument.presentationml.presentation", "audio/*"};
+                Bundle extras = getIntent().getExtras();
+                if (extras.containsKey(EXTRA_DOCUMENT_MIME) && extras.getStringArray(EXTRA_DOCUMENT_MIME) != null) {
+                    mime = getIntent().getExtras().getStringArray(EXTRA_DOCUMENT_MIME);
+                }
                 videoPickerIntent.setType("text/*");
                 videoPickerIntent.putExtra(Intent.EXTRA_MIME_TYPES, mime);
                 videoPickerIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                videoPickerIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                videoPickerIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                videoPickerIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 startActivityForResult(videoPickerIntent, CHOOSE_FILE);
             }
 
@@ -341,7 +349,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         }
         return cameraImgUri;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -602,7 +609,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             super.onPostExecute(s);
             dismissProgress();
             if (MEDIA_FILE_PATH != null) {
-                MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1, MEDIA_FILE_PATH.length());
+                MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
             }
             finishOperation(null, fileExtn, resultCode);
         }

@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -145,9 +146,18 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
         viewHolder.botItemButton = (TextView) view.findViewById(R.id.text_view);
 
 //        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setStroke((int)(2*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        viewHolder.botItemButton.setTextColor(isEnabled ? Color.parseColor(textColor) : Color.parseColor(disabledColour));
+        changeBackgroundTintColor(viewHolder.botItemButton, isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+//        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setStroke((int)(2*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        viewHolder.botItemButton.setTextColor(isEnabled ? Color.parseColor(textColor) : Color.parseColor(disabledTextColor));
         view.setTag(viewHolder);
+    }
+
+    private void changeBackgroundTintColor(View view, int tintColor) {
+        // Create a ColorStateList with the specified tint color
+        ColorStateList colorStateList = ColorStateList.valueOf(tintColor);
+
+        // Apply the colorStateList as the background tint
+        view.setBackgroundTintList(colorStateList);
     }
 
     public void setBotButtonModels(ArrayList<BotButtonModel> botButtonModels) {

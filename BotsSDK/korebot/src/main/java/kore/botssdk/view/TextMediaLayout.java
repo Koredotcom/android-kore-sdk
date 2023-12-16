@@ -81,7 +81,7 @@ public class TextMediaLayout extends LinearLayout {
     private final String REGEX_SIMLEY = ":)";
     private final String REGEX_THUMSUB = ":thumbsup";
     private final String REGEX_SAD = ":(";
-    private final String REGEX_PHONE_NUMBER = "(\\+[0-9]{9,13})|((\\+[0-9]{1,3})-(\\([0-9]{3}\\))-([0-9]{3})-([0-9]{4}))";
+    private final String REGEX_PHONE_NUMBER = "(\\+[0-9]{9,13})|((\\+[0-9]{1,3})-((\\(|)[0-9]{3}(\\)|))-([0-9]{3})-([0-9]{4}))";
 
     public void setClicable(boolean clicable) {
         isClicable = clicable;
