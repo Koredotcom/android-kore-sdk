@@ -3,6 +3,7 @@ package kore.botssdk.activity;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.KaMediaUtils.isGoogleDrivePhotos;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -55,7 +56,6 @@ import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
-import kore.botssdk.utils.ToastUtils;
 
 
 /**
@@ -377,9 +377,13 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                         setResult(resultCode, resultIntent);
                         finish();
                     }
-
                 } else if (requestCode == CHOOSE_IMAGE) {
                     Uri selectedImage = data.getData();
+                    if (isGoogleDrivePhotos(selectedImage)) {
+                        SaveFileTask saveFileTask = new SaveFileTask(selectedImage, resultCode);
+                        saveFileTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
+                        return;
+                    }
                     /*if (fileContext.equalsIgnoreCase(KoreContact.PROFILE) && selectedImage != null) {
                         FetchImageDataAndCrop fetchImageDataAndCrop = new FetchImageDataAndCrop(selectedImage);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
@@ -387,9 +391,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                         else
                             fetchImageDataAndCrop.execute((Void[]) null);
                     } else */
-                    if ((fileContext.equalsIgnoreCase(FOR_MESSAGE) || fileContext.equalsIgnoreCase(FOR_PROFILE)) && selectedImage != null) {
+                    if (fileContext != null && (fileContext.equalsIgnoreCase(FOR_MESSAGE) || fileContext.equalsIgnoreCase(FOR_PROFILE)) && selectedImage != null) {
                         getImageForGalleryFooter(selectedImage, resultCode);
-                    } else if (selectedImage == null) {
+                    } else {
                         finishAndCancelOperation();
                     }
                 } else if (requestCode == CHOOSE_IMAGE_VIDEO) {
@@ -690,7 +694,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
             String filePath = getPath(this, imageUri);
             if (filePath == null) {
-                ToastUtils.showToast(this, "File path is null");
+                SaveFileTask saveFileTask = new SaveFileTask(imageUri, resultCode);
+                saveFileTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
+//                ToastUtils.showToast(this, "Please select a valid file!");
+//                finish();
                 return;
             }
             File file = new File(filePath);
@@ -1078,12 +1085,21 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
+                String id = DocumentsContract.getDocumentId(uri);
+                if (id.startsWith("raw:")) {
+                    id = id.replaceFirst("raw:", "");
+                } else if (id.startsWith("msf:")) {
+                    id = id.replaceFirst("msf:", "");
+                }
+                if (id.contains("/Download/")) return id;
 
-                final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
+                try {
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (Exception e) {
+                    return null;
+                }
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {

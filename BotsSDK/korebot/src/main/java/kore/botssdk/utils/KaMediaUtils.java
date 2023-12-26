@@ -538,6 +538,11 @@ public class KaMediaUtils {
     }
 
 
+    public static boolean isGoogleDrivePhotos(Uri uri) {
+        return "com.google.android.apps.docs.storage".equals(uri.getAuthority());
+    }
+
+
     /**
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
