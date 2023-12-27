@@ -36,9 +36,9 @@ import kore.botssdk.view.viewUtils.BubbleViewUtil;
 /**
  * edit : Only for bots SDK
  */
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
-//    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
+    //    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
     Context context;
     private Activity activityContext;
     private LayoutInflater ownLayoutInflater;
@@ -87,25 +87,24 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     }
 
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ViewHolder(ownLayoutInflater.inflate( i == BUBBLE_RIGHT_LAYOUT ?  R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null),i);
+        return new ViewHolder(ownLayoutInflater.inflate(i == BUBBLE_RIGHT_LAYOUT ? R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null), i);
     }
 
-    private boolean isClickable(int position, BaseBotMessage message){
+    private boolean isClickable(int position, BaseBotMessage message) {
         boolean clickable = false;
-        if(!message.isSend()){
+        if (!message.isSend()) {
             BotResponse resp = (BotResponse) message;
             ComponentModel model = resp.getMessage().get(0).getComponent();
             if (model != null && model.getPayload() != null && model.getPayload().getPayload() != null) {
                 PayloadOuter outer = model.getPayload();
                 PayloadInner inner = outer.getPayload();
-                if(!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)){
-                    clickable = (position == getItemCount() -2) ;
-                }else{
-                    clickable = (position == getItemCount() -1) ;
+                if (!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)) {
+                    clickable = (position == getItemCount() - 2);
+                } else {
+                    clickable = (position == getItemCount() - 1);
                 }
             }
         }
@@ -114,36 +113,36 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.baseBubbleContainer.setAlpha(isAlpha && position != getItemCount() -1 ? 0.4f : 1.0f);
-        holder.baseBubbleContainer.setViewActive(!isAlpha || position == getItemCount()-1);
+        holder.baseBubbleContainer.setAlpha(isAlpha && position != getItemCount() - 1 ? 0.4f : 1.0f);
+        holder.baseBubbleContainer.setViewActive(!isAlpha || position == getItemCount() - 1);
         holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.baseBubbleLayout.setContinuousMessage(position == 0 || checkIsContinuous(position));
         holder.baseBubbleLayout.setGroupMessage(false);
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
-        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position));
+        holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position));
         holder.textView.setText(getItem(position).getFormattedDate());
 
-        if(Collections.isEmpty(headersMap)) {
+        if (Collections.isEmpty(headersMap)) {
             prepareHeaderMap();
         }
         //TODO Need to re visit : Handled crash in a bad way(if you change time zone and come back app crashing)
         boolean fDate = false;
         try {
             fDate = headersMap.get(getItem(position).getFormattedDate()) == position;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         holder.headerView.setVisibility(getItem(position) != null && fDate ? View.VISIBLE : View.GONE);
-        if(selectedItem == position){
+        if (selectedItem == position) {
             holder.baseBubbleLayout.setTimeStampVisible();
         }
-        if(getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
+        if (getItemViewType(position) == BUBBLE_RIGHT_LAYOUT) {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if(selectedItem != -1){
+                    if (selectedItem != -1) {
                         notifyItemChanged(selectedItem);
                     }
                     selectedItem = position;
@@ -162,9 +161,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     }
 
     private boolean checkIsContinuous(int position) {
-        if(getItem(position).isSend() && getItem(position-1).isSend()){
+        if (getItem(position).isSend() && getItem(position - 1).isSend()) {
             return true;
-        }else return !getItem(position).isSend() && !getItem(position - 1).isSend();
+        } else return !getItem(position).isSend() && !getItem(position - 1).isSend();
     }
 
 
@@ -208,15 +207,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     }
 
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         KaBaseBubbleContainer baseBubbleContainer;
         KaBaseBubbleLayout baseBubbleLayout;
         View headerView;
         TextView textView;
-        public ViewHolder(View view,int viewType){
+
+        public ViewHolder(View view, int viewType) {
             super(view);
-            if ( viewType== BUBBLE_RIGHT_LAYOUT) {
+            if (viewType == BUBBLE_RIGHT_LAYOUT) {
                 // Right Side
                 baseBubbleLayout = (KaSendBubbleLayout) view.findViewById(R.id.sendBubbleLayout);
                 baseBubbleContainer = (KaSendBubbleContainer) view.findViewById(R.id.send_bubble_layout_container);
@@ -232,11 +231,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
     }
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
-        if(!baseBotMessageArrayList.contains(baseBotMessage))
+        if (!baseBotMessageArrayList.contains(baseBotMessage))
             baseBotMessageArrayList.add(baseBotMessage);
 
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-            headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() -1);
+            headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() - 1);
         }
         SelectionUtils.resetSelectionTasks();
         SelectionUtils.resetSelectionSlots();
@@ -244,17 +243,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        headersMap.clear();
+        baseBotMessageArrayList.clear();
+    }
 
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         prepareHeaderMap();
-        if(selectedItem != -1) {
-            selectedItem = selectedItem + list.size()-1;
+        if (selectedItem != -1) {
+            selectedItem = selectedItem + list.size() - 1;
         }
         notifyItemRangeInserted(0, list.size() - 1);
     }
-
 
 
     public void setActivityContext(Activity activityContext) {
