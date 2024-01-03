@@ -30,8 +30,7 @@ public class AdvancedListTemplateView extends LinearLayout {
     private final ImageView ivSorting;
     private AdvancedListAdapter botListTemplateAdapter;
 
-    public AdvancedListTemplateView(Context context)
-    {
+    public AdvancedListTemplateView(Context context) {
         super(context);
         LayoutInflater.from(getContext()).inflate(R.layout.advancelist_view, this, true);
         botCustomListRoot = findViewById(R.id.botCustomListRoot);
@@ -46,25 +45,20 @@ public class AdvancedListTemplateView extends LinearLayout {
     }
 
     public void populateAdvancedListTemplateView(PayloadInner payloadInner) {
-        if(payloadInner != null)
-        {
-            if(!StringUtils.isNullOrEmpty(payloadInner.getTitle()))
-            {
+        if (payloadInner != null) {
+            if (!StringUtils.isNullOrEmpty(payloadInner.getTitle())) {
                 botListViewTitle.setVisibility(VISIBLE);
                 botListViewTitle.setText(payloadInner.getTitle());
             }
 
-            if(!StringUtils.isNullOrEmpty(payloadInner.getDescription()))
-            {
+            if (!StringUtils.isNullOrEmpty(payloadInner.getDescription())) {
                 tvDescription.setVisibility(VISIBLE);
                 tvDescription.setText(payloadInner.getDescription());
             }
 
-            if (payloadInner.getListItems() != null && payloadInner.getListItems().size() > 0)
-            {
+            if (payloadInner.getListItems() != null && payloadInner.getListItems().size() > 0) {
 
-                if (autoExpandListView.getAdapter() == null)
-                {
+                if (autoExpandListView.getAdapter() == null) {
                     botListTemplateAdapter = new AdvancedListAdapter(getContext(), autoExpandListView);
                     botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
                     botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -77,17 +71,17 @@ public class AdvancedListTemplateView extends LinearLayout {
                 autoExpandListView.setAdapter(botListTemplateAdapter);
                 botCustomListRoot.setVisibility(VISIBLE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getSeeMoreTitle()) && payloadInner.getListItemDisplayCount() != 0 && payloadInner.getListItemDisplayCount() < payloadInner.getListItems().size())
-                {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getSeeMore()) && payloadInner.getListItemDisplayCount() != 0 && payloadInner.getListItemDisplayCount() < payloadInner.getListItems().size()) {
                     botCustomListViewButton.setVisibility(VISIBLE);
-                    botCustomListViewButton.setText(payloadInner.getSeeMoreTitle());
                     botCustomListViewButton.setTextColor(getContext().getColor(R.color.color_blue_1_1));
+                } else {
+                    botCustomListViewButton.setVisibility(GONE);
                 }
 
                 botCustomListViewButton.setOnClickListener(v -> {
                     AdvancedListActionSheetFragment bottomSheetDialog = new AdvancedListActionSheetFragment();
                     bottomSheetDialog.setTitle(payloadInner.getTitle());
-                    bottomSheetDialog.setSkillName("skillName","trigger");
+                    bottomSheetDialog.setSkillName("skillName", "trigger");
                     bottomSheetDialog.setData(payloadInner.getListItems());
                     bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
