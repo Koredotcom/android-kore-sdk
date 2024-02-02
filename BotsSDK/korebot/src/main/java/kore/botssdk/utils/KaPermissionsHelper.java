@@ -20,38 +20,30 @@ import java.util.ArrayList;
 public class KaPermissionsHelper {
     public static final int GET_ACCOUNT_PERMISSION = 82;
 
-    public static boolean hasPermission(Activity activity, String... permission) {
+    public static boolean hasPermission(Activity activity, String... permissions) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i = 0; i < permissionLength; i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(activity, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String permission : permissions) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }
 
     public static boolean hasMediaPermission(Activity activity, ArrayList<String> permissions) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permissions.size();
-            for (int i = 0; i < permissionLength; i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(activity, permissions.get(i)) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String permission : permissions) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }
 
     public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i = 0; i < permissionLength; i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        int permissionLength = permission.length;
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }

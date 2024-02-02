@@ -131,9 +131,10 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private void initMediaRuntimePermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             runtimeMediaPermissions.add(Manifest.permission.READ_MEDIA_IMAGES);
+        } else {
+            runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            runtimeMediaPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
-        runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        runtimeMediaPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
     private void checkForPermissionAccessAndRequest() {
@@ -191,15 +192,13 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     private boolean checkForPermissionAccess() {
         if (CHOOSE_TYPE_CAMERA.equalsIgnoreCase(imagePickType)) {
-
-            return KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return KaPermissionsHelper.hasMediaPermission(this, runtimeMediaPermissions);
         } else if (CHOOSE_TYPE_IMAGE_VIDEO.equalsIgnoreCase(imagePickType) ||
                 CHOOSE_TYPE_GALLERY.equalsIgnoreCase(imagePickType) ||
                 CHOOSE_TYPE_VIDEO_GALLERY.equalsIgnoreCase((imagePickType))) {
-
-            return KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            return KaPermissionsHelper.hasMediaPermission(this, runtimeMediaPermissions);
         } else if (CHOOSE_TYPE_FILE.equalsIgnoreCase(imagePickType)) {
-            return KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*, Manifest.permission.RECORD_AUDIO*/);
+            return KaPermissionsHelper.hasMediaPermission(this, runtimeMediaPermissions);
         } else {
             Log.e(LOG_TAG, "no pickType found. Please assign one and invoke this activity, again.");
             return false;
