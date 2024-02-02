@@ -42,6 +42,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -140,6 +141,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botSocketConnectionManager.stopAlertMsgTimer();
             botSocketConnectionManager.shutDownConnection();
         }
+    }
+
+    public void shouldAttemptToReconnect(boolean value) {
+        SocketWrapper.getInstance(context).shouldAttemptToReconnect(value);
     }
 
     @Override
@@ -633,6 +638,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void checkConnectionAndRetryForSignify(Context context, boolean isFirstTime) {
         ///here going to refresh jwt token from chat activity and it should not
+        if (botClient != null && botClient.isConnected()) return;
         if (botClient == null) {
             this.context = context;
             if (botCustomData == null) {
@@ -656,14 +662,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if (isFirstTime) {
                 initiateConnection();
             } else {
-                refreshJwtToken();
+                botClient.reconnectAttempt(botSocketConnectionManager);
             }
             return;
         }
-        if (connection_state == DISCONNECTED)
+        if (isFirstTime && connection_state == DISCONNECTED) {
             initiateConnection();
-        else if (connection_state == CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED) {
-            refreshJwtToken();
+        } else {
+            botClient.reconnectAttempt(botSocketConnectionManager);
         }
     }
 

@@ -233,6 +233,10 @@ public final class SocketWrapper {
 
     }
 
+    public void setSocketConnectionListener(SocketConnectionListener listener) {
+        socketConnectionListener = listener;
+    }
+
 
     /**
      * Method to invoke connection for authenticated user
@@ -715,7 +719,9 @@ public final class SocketWrapper {
      *
      * @reurn
      */
-    private void reconnectAttempt() {
+    public void reconnectAttempt() {
+        if (isConnecting) return;
+
 //        mIsImmediateFetchActionNeeded = true;
         mReconnectDelay = getReconnectDelay();
         try {
