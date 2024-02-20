@@ -973,8 +973,9 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
          * For minitable
          */
         childWidthSpec = MeasureSpec.makeMeasureSpec((int) screenWidth , MeasureSpec.EXACTLY);
-//        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (koraCarouselView.getMeasuredHeight()), MeasureSpec.EXACTLY);
+        childHeightSpec = MeasureSpec.makeMeasureSpec((int) (botCarouselView.getMeasuredHeight()), MeasureSpec.EXACTLY);
         MeasureUtils.measure(koraCarouselView, childWidthSpec, wrapSpec);
+        MeasureUtils.measure(botCarouselView, childWidthSpec, childHeightSpec);
 
         /**
          * for line chart
@@ -1041,7 +1042,6 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         MeasureUtils.measure(meetingSlotsView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(multiSelectView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(botButtonView, childWidthSpec, wrapSpec);
-        MeasureUtils.measure(botCarouselView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(meetingConfirmationView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(verticalListView, childWidthSpec, wrapSpec);
         MeasureUtils.measure(attendeeSlotSelectionView, childWidthSpec, wrapSpec);

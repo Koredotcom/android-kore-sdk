@@ -88,7 +88,7 @@ public class RestBuilder {
                     .readTimeout(60, TimeUnit.SECONDS)
                     .addInterceptor(interceptor)
                     .dispatcher(dispatcher)
-                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+//                    .interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
                     //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
                     .build();
 //        }

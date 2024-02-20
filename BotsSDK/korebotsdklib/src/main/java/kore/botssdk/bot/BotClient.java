@@ -273,6 +273,10 @@ public class BotClient {
         if (payLoad != null && !payLoad.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
+
+            if(customData == null)
+                customData = new RestResponse.BotCustomData();
+
             customData.put("botToken",getAccessToken());
             botMessage.setCustomData(customData);
             botMessage.setParams(Utils.jsonToMap(payLoad));
