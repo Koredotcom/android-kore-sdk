@@ -18,13 +18,13 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class XAxisRenderer extends AxisRenderer {
-    protected XAxis mXAxis;
-    protected Path mRenderGridLinesPath = new Path();
+    protected final XAxis mXAxis;
+    protected final Path mRenderGridLinesPath = new Path();
     protected float[] mRenderGridLinesBuffer = new float[2];
-    protected RectF mGridClippingRect = new RectF();
-    protected float[] mRenderLimitLinesBuffer = new float[2];
-    protected RectF mLimitLineClippingRect = new RectF();
-    float[] mLimitLineSegmentsBuffer = new float[4];
+    protected final RectF mGridClippingRect = new RectF();
+    protected final float[] mRenderLimitLinesBuffer = new float[2];
+    protected final RectF mLimitLineClippingRect = new RectF();
+    final float[] mLimitLineSegmentsBuffer = new float[4];
     private final Path mLimitLinePath = new Path();
 
     public XAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
@@ -225,7 +225,7 @@ public class XAxisRenderer extends AxisRenderer {
             position[1] = 0.0F;
 
             for(int i = 0; i < limitLines.size(); ++i) {
-                LimitLine l = (LimitLine)limitLines.get(i);
+                LimitLine l = limitLines.get(i);
                 if (l.isEnabled()) {
                     int clipRestoreCount = c.save();
                     this.mLimitLineClippingRect.set(this.mViewPortHandler.getContentRect());
@@ -262,7 +262,7 @@ public class XAxisRenderer extends AxisRenderer {
         String label = limitLine.getLabel();
         if (label != null && !label.equals("")) {
             this.mLimitLinePaint.setStyle(limitLine.getTextStyle());
-            this.mLimitLinePaint.setPathEffect((PathEffect)null);
+            this.mLimitLinePaint.setPathEffect(null);
             this.mLimitLinePaint.setColor(limitLine.getTextColor());
             this.mLimitLinePaint.setStrokeWidth(0.5F);
             this.mLimitLinePaint.setTextSize(limitLine.getTextSize());

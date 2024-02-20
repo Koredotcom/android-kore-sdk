@@ -7,7 +7,7 @@ import kore.botssdk.models.WidgetBaseDataModel;
 public class PanelDataLRUCache {
 
     private static PanelDataLRUCache mInstance = null;
-    HashMap<String, Node> hashMap;
+    final HashMap<String, Node> hashMap;
     Node start;
     Node end;
 

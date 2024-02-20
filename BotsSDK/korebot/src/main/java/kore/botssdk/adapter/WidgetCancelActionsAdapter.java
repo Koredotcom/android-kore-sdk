@@ -29,12 +29,12 @@ import kore.botssdk.utils.Utility;
 
 public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCancelActionsAdapter.WidgetCancelViewHolder> {
 
-    WidgetDialogActivity widgetDialogActivity;
+    final WidgetDialogActivity widgetDialogActivity;
     List<WCalEventsTemplateModel.Action> actionList;
-    WCalEventsTemplateModel model;
-    Activity mainContext;
-    boolean isFromFullView;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    final WCalEventsTemplateModel model;
+    final Activity mainContext;
+    final boolean isFromFullView;
+    final VerticalListViewActionHelper verticalListViewActionHelper;
 
     public WidgetCancelActionsAdapter(Activity mainContext, WidgetDialogActivity widgetDialogActivity,
                                       WCalEventsTemplateModel model, boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper
@@ -42,17 +42,15 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.mainContext = mainContext;
-
         this.isFromFullView = isFromFullView;
         //   this.actionList = model.getActions();
         this.verticalListViewActionHelper = verticalListViewActionHelper;
-        notifyDataSetChanged();
     }
 
 
     public void setActionItems(List<WCalEventsTemplateModel.Action> actionList) {
         this.actionList = actionList;
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, (actionList.size() - 1));
     }
 
     @NonNull
@@ -121,7 +119,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         KoreEventCenter.post(new DissMissBaseSheet());
         KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,true));
         (widgetDialogActivity).dismiss();
-        if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
+        if (mainContext != null && isFromFullView) {
             mainContext.finish();
         }
     }
@@ -131,8 +129,8 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         return actionList != null ? actionList.size() : 0;
     }
 
-    class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_actions;
+    static class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
+        final TextView tv_actions;
 
         public WidgetCancelViewHolder(@NonNull View itemView) {
             super(itemView);

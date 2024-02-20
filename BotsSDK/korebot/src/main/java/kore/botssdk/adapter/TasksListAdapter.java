@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,33 +36,17 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
     private boolean isExpanded = false;
     private final int DATA_FOUND = 1;
     private final int NO_DATA = 0;
-    private String nodata_meesage = "";
+    private final String nodata_meesage = "";
 
     public String getNodata_meesage() {
         return nodata_meesage;
     }
 
-    public void setNodata_meesage(String nodata_meesage) {
-        this.nodata_meesage = nodata_meesage;
-    }
-
     //created for widget
-    private boolean from_widget = false;
+    private final boolean from_widget = false;
 
     public boolean isFrom_widget() {
         return from_widget;
-    }
-
-    public void setFrom_widget(boolean from_widget) {
-        this.from_widget = from_widget;
-    }
-
-    public void addTaskTemplateModels(ArrayList<TaskTemplateModel> models) {
-        this.models.addAll(models);
-    }
-
-    public ArrayList<String> getSelectedTasks() {
-        return selectedTasks;
     }
 
     public void setSelectedTasks(ArrayList<String> selectedTasks) {
@@ -86,20 +71,12 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         return NO_DATA;
     }
 
-    public void addSelectedTasks(ArrayList<String> tasks) {
-        selectedTasks.addAll(tasks);
-    }
-
     private boolean isShowButton() {
         return showButton;
     }
 
-    public void setShowButton(boolean showButton) {
-        this.showButton = showButton;
-    }
-
-    private TaskTemplateResponse taskTemplateResponse;
-    private boolean showButton;
+    private final TaskTemplateResponse taskTemplateResponse;
+    private final boolean showButton;
     private ArrayList<TaskTemplateModel> models;
 
     public TasksListAdapter(Context context, TaskTemplateResponse taskTemplateResponse, boolean showButtons) {
@@ -107,8 +84,8 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         this.taskTemplateResponse = taskTemplateResponse;
         this.showButton = showButtons;
         this.models = taskTemplateResponse.getTaskData();
-        selectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_on);
-        unSelectedCheck = context.getResources().getDrawable(R.mipmap.checkbox_off);
+        selectedCheck = ResourcesCompat.getDrawable(context.getResources() , R.mipmap.checkbox_on, context.getTheme());
+        unSelectedCheck = ResourcesCompat.getDrawable(context.getResources() , R.mipmap.checkbox_off, context.getTheme());
     }
 
     @NonNull
@@ -154,7 +131,7 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                     String tempOwnerUserId = models.get(position).getOwner().get_id();
                     String tempAssigneeUserId = models.get(position).getAssignee().get_id();
                     if (Utility.userId.equals(tempOwnerUserId) && Utility.userId.equals(tempAssigneeUserId)) {
-                        holder.taskViewLayoutBinding.creatorView.setText("You");
+                        holder.taskViewLayoutBinding.creatorView.setText(R.string.you);
                         holder.taskViewLayoutBinding.assigneeView.setVisibility(View.INVISIBLE);
                     } else {
                         holder.taskViewLayoutBinding.creatorView.setText(Utility.userId.equals(tempOwnerUserId) ? "You" : models.get(position).getOwner().getNameInFirstNameFormat());
@@ -188,26 +165,6 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
 
                         if (selectedTasks != null && selectedTasks.size() > 0) {
                             updateThings(taskTemplateModel);
-                        } else {
-                /*            WidgetDialogActivityTask dialogActivity = new WidgetDialogActivityTask(context, taskTemplateModel, taskTemplateModel);
-
-                            dialogActivity.show();
-
-                            dialogActivity.findViewById(R.id.img_cancel).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-                                    dialogActivity.dissmissanim();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            dialogActivity.dismiss();
-                                        }
-                                    }, 400);
-
-                                }
-                            });*/
-
                         }
                     }
                 }
@@ -238,7 +195,6 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
                 SelectionUtils.setSelectedTasks(selectedTasks);
                 if (verticalListViewActionHelper != null)
                     verticalListViewActionHelper.tasksSelectedOrDeselected(selectedTasks.size() > 0);
-                notifyDataSetChanged();
             }
         }
     }
@@ -282,14 +238,9 @@ public class TasksListAdapter extends RecyclerView.Adapter implements RecyclerVi
         return taskTemplateResponse;
     }
 
-    public void setTaskTemplateResponse(TaskTemplateResponse taskTemplateResponse) {
-        this.taskTemplateResponse = taskTemplateResponse;
-    }
-
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TaskViewLayoutBinding taskViewLayoutBinding;
+        final TaskViewLayoutBinding taskViewLayoutBinding;
 
         public ViewHolder(@NonNull TaskViewLayoutBinding binding) {
             super(binding.getRoot());

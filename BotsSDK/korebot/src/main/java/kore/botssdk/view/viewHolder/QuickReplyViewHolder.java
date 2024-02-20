@@ -20,9 +20,9 @@ public class QuickReplyViewHolder extends RecyclerView.ViewHolder{
 
     public QuickReplyViewHolder(View view) {
         super(view);
-        quickReplyImage = (ImageView) view.findViewById(R.id.quick_reply_item_image);
-        quickReplyTitle = (TextView) view.findViewById(R.id.quick_reply_item_text);
-        quickReplyRoot = (LinearLayout) view.findViewById(R.id.quick_reply_item_root);
+        quickReplyImage = view.findViewById(R.id.quick_reply_item_image);
+        quickReplyTitle = view.findViewById(R.id.quick_reply_item_text);
+        quickReplyRoot = view.findViewById(R.id.quick_reply_item_root);
     }
 
     public TextView getQuickReplyTitle() {

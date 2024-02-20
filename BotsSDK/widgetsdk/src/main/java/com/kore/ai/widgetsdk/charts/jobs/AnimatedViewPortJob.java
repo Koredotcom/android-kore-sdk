@@ -10,7 +10,7 @@ import com.kore.ai.widgetsdk.charts.utils.Transformer;
 import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 
 public abstract class AnimatedViewPortJob extends ViewPortJob implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-    protected ObjectAnimator animator;
+    protected final ObjectAnimator animator;
     protected float phase;
     protected float xOrigin;
     protected float yOrigin;

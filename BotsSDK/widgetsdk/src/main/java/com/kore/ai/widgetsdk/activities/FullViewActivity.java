@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.view.Menu;
@@ -14,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.view.ActionMode;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,8 +25,6 @@ import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.ChartListWidgetAdapter;
 import com.kore.ai.widgetsdk.adapters.DefaultWidgetAdapter;
 import com.kore.ai.widgetsdk.adapters.ListWidgetAdapter;
-import com.kore.ai.widgetsdk.events.KoreEventCenter;
-import com.kore.ai.widgetsdk.events.ShootUtteranceEvent;
 import com.kore.ai.widgetsdk.listeners.RecyclerViewDataAccessor;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
@@ -36,14 +34,12 @@ import com.kore.ai.widgetsdk.models.BotResponse;
 import com.kore.ai.widgetsdk.models.CalEventsTemplateModel;
 import com.kore.ai.widgetsdk.models.ContactViewListModel;
 import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
-import com.kore.ai.widgetsdk.models.MultiAction;
 import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 import com.kore.ai.widgetsdk.models.Widget;
 import com.kore.ai.widgetsdk.models.WidgetListElementModel;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
-import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
 
 import java.lang.reflect.Type;
@@ -55,7 +51,7 @@ import java.util.HashMap;
 public class FullViewActivity extends KaAppCompatActivity implements VerticalListViewActionHelper {
     RecyclerView recyclerView;
     String type;
-    Gson gson = new Gson();
+    final Gson gson = new Gson();
     private ActionMode actionMode;
     private RecyclerView actionsContainer;
     //    private View footerContainer;
@@ -156,9 +152,9 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
         if (fromWidget) {
             if (type != null) {
                 if (type.equals(BotResponse.TEMPLATE_TYPE_FILES_LOOKUP_WIDGET))
-                    openWidget.setIcon(getResources().getDrawable(R.drawable.ic_drive_widget));
+                    openWidget.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_drive_widget, getTheme()));
                 else if (type.equals(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET) || type.equals(BotResponse.TEMPLATE_TYPE_CAL_EVENTS))
-                    openWidget.setIcon(getResources().getDrawable(R.drawable.ic_calendar_widget));
+                    openWidget.setIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_calendar_widget, getTheme()));
                 else
                     openWidget.setVisible(false);
             }
@@ -205,14 +201,9 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
         recyclerView.setItemAnimator(null);
         adapter.setHasStableIds(true);
         recyclerView.setAdapter(adapter);
-        /*if (adapter instanceof AnnouncementAdapter) {
-            DividerItemDecoration itemDecorator = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-            itemDecorator.setDrawable(ContextCompat.getDrawable(this, kore.botssdk.R.drawable.inset_65_divider));
-            recyclerView.addItemDecoration(itemDecorator);
-        }*/
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
         ((RecyclerViewDataAccessor) adapter).setExpanded(true);
-        adapter.notifyDataSetChanged();
+        adapter.notifyAll();
     }
 
     @Override
@@ -223,6 +214,7 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
     @Override
     public void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel) {
         LinkedTreeMap<String, String> map = (LinkedTreeMap<String, String>) botCaourselButtonModel.getCustomData().get("redirectUrl");
+        assert map != null;
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get("mob")));
         startActivity(browserIntent);
     }
@@ -326,29 +318,11 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
 
     private void finishActionMode() {
         actionMode = null;
-//        SelectionUtils.resetSelectionTasks();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //hold current color of status bar
-            //set your gray color
-            getWindow().setStatusBarColor(getResources().getColor(R.color.white));
-        }
+        //hold current color of status bar
+        //set your gray color
+        getWindow().setStatusBarColor(getResources().getColor(R.color.white));
     }
 
-
-    private void postMultiAction(ArrayList<String> selectedTasks, MultiAction botButtonModel, boolean appendUtterance){
-        HashMap<String, Object> hashMap = new HashMap<>();
-//                hashMap.put("action", ((MultiAction) botButtonModel).getTitle());
-        hashMap.put("ids", selectedTasks);
-        //    hashMap.put("isFullView",true);
-        ShootUtteranceEvent event = new ShootUtteranceEvent();
-        event.setScrollUpNeeded(appendUtterance);
-        event.setMessage((appendUtterance? Constants.SKILL_UTTERANCE:"")+((MultiAction) botButtonModel).getUtterance());
-        event.setBody((appendUtterance? Constants.SKILL_UTTERANCE:"")+((MultiAction) botButtonModel).getUtterance());
-        event.setPayLoad(gson.toJson(hashMap));
-        KoreEventCenter.post(event);
-        actionMode.finish();
-        finish();
-    }
 
     @Override
     public void finish() {

@@ -9,7 +9,7 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class TriangleShapeRenderer implements IShapeRenderer {
-    protected Path mTrianglePathBuffer = new Path();
+    protected final Path mTrianglePathBuffer = new Path();
 
     public TriangleShapeRenderer() {
     }

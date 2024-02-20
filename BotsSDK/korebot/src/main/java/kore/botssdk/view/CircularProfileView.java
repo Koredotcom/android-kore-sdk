@@ -12,6 +12,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -24,6 +26,7 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.drawables.ProfileDrawable;
 import kore.botssdk.utils.StringConstants;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 /**
  * Created by tapasya on 01/10/15.
@@ -79,7 +82,7 @@ public class CircularProfileView extends RoundedImageView {
         //Essentials
         this.mContext = context;
         if (!isInEditMode()) {
-            dp1 = (int) AppControl.getInstance(getContext()).getDimensionUtil().dp1;
+            dp1 = (int) DimensionUtil.dp1;
             SDK = android.os.Build.VERSION.SDK_INT;
             DEFAULT_HEIGHT = dp1 * 52;
             DEFAULT_WIDTH = dp1 * 52;
@@ -96,12 +99,13 @@ public class CircularProfileView extends RoundedImageView {
             hasBorder = attr.getBoolean(R.styleable.CircularProfileView_has_border, false);
             borderColor = attr.getColor(R.styleable.CircularProfileView_border_color, 0xffffffff);
             borderStrokeWidth = attr.getInt(R.styleable.CircularProfileView_border_width, 0);
+            attr.recycle();
         } else {
             CPV_TEXT_SIZE = 17 * dp1;
             PROFILE_DRAWABLE_PADDING = 0;
         }
 
-        setPadding(PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING); //TODO work on refining this later..
+        setPadding(PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING);
 
         int[] attrsArray = new int[]{
                 android.R.attr.id, // 0
@@ -185,7 +189,7 @@ public class CircularProfileView extends RoundedImageView {
     }
 
     public void populateLayout(int drawableId, boolean b) {
-        populateLayout("", null, getResources().getDrawable(drawableId), -1, -1, b);
+        populateLayout("", null, ResourcesCompat.getDrawable(getContext().getResources(), drawableId, getContext().getTheme()), -1, -1, b);
     }
 
     public void populateLayout(String nameInitials, String url, Drawable d, int imageRes,
@@ -253,7 +257,6 @@ public class CircularProfileView extends RoundedImageView {
         float xCenter = (width - (getPaddingLeft() + getPaddingRight())) / 2f;
         float yCenter = (height - (getPaddingTop() + getPaddingBottom())) / 2f;
         circlePath = new Path();
-        // TODO revisit this
         circlePath.addCircle(xCenter + getPaddingLeft(), yCenter + getPaddingTop(), width / 2f, Path.Direction.CCW);
     }
 
@@ -293,18 +296,18 @@ public class CircularProfileView extends RoundedImageView {
         this.borderColor = borderColor;
     }
 
-    Target viewTarget = new Target() {
+    final Target viewTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
             setImageDrawable(null);
             updateWithPic(bitmap);
-            setBackgroundDrawable(null);
+            setBackgroundResource(0);
         }
 
         @Override
         public void onBitmapFailed(Exception e, Drawable errorDrawable) {
             setImageDrawable(null);
-            setBackgroundDrawable(null);
+            setBackgroundResource(0);
             setDefaultBackground(profileColor, initials);
         }
 
@@ -312,7 +315,7 @@ public class CircularProfileView extends RoundedImageView {
         @Override
         public void onPrepareLoad(Drawable drawable) {
             setImageDrawable(null);
-            setBackgroundDrawable(null);
+            setBackgroundResource(0);
             setDefaultBackground(profileColor, initials);
         }
     };

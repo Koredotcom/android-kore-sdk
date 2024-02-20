@@ -27,10 +27,10 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     ArrayList<BotTableListModel> botTableListModels = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflator;
-    Context context;
-    RoundedCornersTransform roundedCornersTransform;
-    ListView parentListView;
+    final LayoutInflater ownLayoutInflator;
+    final Context context;
+    final RoundedCornersTransform roundedCornersTransform;
+    final ListView parentListView;
     int count = 0;
 
     public BotTableListTemlateAdapter(Context context, ListView parentListView, int count) {
@@ -44,7 +44,7 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (botTableListModels != null) {
-            return botTableListModels.size() > count ? count : botTableListModels.size();
+            return Math.min(botTableListModels.size(), count);
         } else {
             return 0;
         }
@@ -68,7 +68,7 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_table_list_view, null);
+            convertView = View.inflate(context, R.layout.bot_table_list_view, null);
         }
 
         if (convertView.getTag() == null) {
@@ -154,9 +154,9 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
 
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.bot_list_item_desc = (TextView) view.findViewById(R.id.bot_list_item_desc);
-        holder.botTableListView = (AutoExpandListView) view.findViewById(R.id.botTableListView);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.bot_list_item_desc = view.findViewById(R.id.bot_list_item_desc);
+        holder.botTableListView = view.findViewById(R.id.botTableListView);
         view.setTag(holder);
     }
 

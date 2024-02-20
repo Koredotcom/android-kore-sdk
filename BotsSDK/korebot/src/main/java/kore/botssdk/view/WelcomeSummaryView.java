@@ -132,7 +132,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
         dp1 = (int) DimensionUtil.dp1;
         welcomeChatSummaryViewBinding.setViewBase(this);
 
-        welcomeChatSummaryList = ((RecyclerView)findViewById(R.id.weather_chat_LV));
+        welcomeChatSummaryList = findViewById(R.id.weather_chat_LV);
         myRecyclerViewAdapter = new WelcomeSummaryRecyclerAdapter(getContext());
         myRecyclerViewAdapter.setExpanded(false);
         myRecyclerViewAdapter.setVerticalListViewActionHelper(this);

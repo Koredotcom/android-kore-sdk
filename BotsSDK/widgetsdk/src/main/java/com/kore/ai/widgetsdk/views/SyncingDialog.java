@@ -16,7 +16,7 @@ public class SyncingDialog extends Dialog {
 
     TextView syncDialogLoadingTextView;
     TextView syncDialogPreparingDeviceTextView;
-    Context context;
+    final Context context;
 
     protected SyncingDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
@@ -45,8 +45,8 @@ public class SyncingDialog extends Dialog {
     }
 
     private void findView(){
-        syncDialogLoadingTextView = (TextView) findViewById(R.id.syncDialogLoadingTextView);
-        syncDialogPreparingDeviceTextView = (TextView) findViewById(R.id.syncDialogPreparingDeviceTextView);
+        syncDialogLoadingTextView = findViewById(R.id.syncDialogLoadingTextView);
+        syncDialogPreparingDeviceTextView = findViewById(R.id.syncDialogPreparingDeviceTextView);
 
         KaFontUtils.applyCustomFont(context, syncDialogLoadingTextView);
         KaFontUtils.applyCustomFont(context, syncDialogPreparingDeviceTextView);

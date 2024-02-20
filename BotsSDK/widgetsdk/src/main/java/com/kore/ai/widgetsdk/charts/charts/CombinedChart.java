@@ -45,7 +45,7 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     }
 
     public CombinedData getCombinedData() {
-        return (CombinedData)this.mData;
+        return this.mData;
     }
 
     public void setData(CombinedData data) {
@@ -66,23 +66,23 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
     }
 
     public LineData getLineData() {
-        return this.mData == null ? null : ((CombinedData)this.mData).getLineData();
+        return this.mData == null ? null : this.mData.getLineData();
     }
 
     public BarData getBarData() {
-        return this.mData == null ? null : ((CombinedData)this.mData).getBarData();
+        return this.mData == null ? null : this.mData.getBarData();
     }
 
     public ScatterData getScatterData() {
-        return this.mData == null ? null : ((CombinedData)this.mData).getScatterData();
+        return this.mData == null ? null : this.mData.getScatterData();
     }
 
     public CandleData getCandleData() {
-        return this.mData == null ? null : ((CombinedData)this.mData).getCandleData();
+        return this.mData == null ? null : this.mData.getCandleData();
     }
 
     public BubbleData getBubbleData() {
-        return this.mData == null ? null : ((CombinedData)this.mData).getBubbleData();
+        return this.mData == null ? null : this.mData.getBubbleData();
     }
 
     public boolean isDrawBarShadowEnabled() {
@@ -123,8 +123,8 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Com
         if (this.mMarker != null && this.isDrawMarkersEnabled() && this.valuesToHighlight()) {
             for(int i = 0; i < this.mIndicesToHighlight.length; ++i) {
                 Highlight highlight = this.mIndicesToHighlight[i];
-                IDataSet set = ((CombinedData)this.mData).getDataSetByHighlight(highlight);
-                Entry e = ((CombinedData)this.mData).getEntryForHighlight(highlight);
+                IDataSet set = this.mData.getDataSetByHighlight(highlight);
+                Entry e = this.mData.getEntryForHighlight(highlight);
                 if (e != null) {
                     int entryIndex = set.getEntryIndex(e);
                     if (!((float)entryIndex > (float)set.getEntryCount() * this.mAnimator.getPhaseX())) {

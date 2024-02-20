@@ -157,7 +157,7 @@ public abstract class Utils {
             }
 
             number *= (float)POW_10[digitCount];
-            long lval = (long)Math.round(number);
+            long lval = Math.round(number);
             int ind = out.length - 1;
             int charCount = 0;
             boolean decimalPointAdded = false;
@@ -202,9 +202,9 @@ public abstract class Utils {
 
     public static float roundToNextSignificant(double number) {
         if (!Double.isInfinite(number) && !Double.isNaN(number) && number != 0.0D) {
-            float d = (float)Math.ceil((double)((float)Math.log10(number < 0.0D ? -number : number)));
+            float d = (float)Math.ceil((float)Math.log10(number < 0.0D ? -number : number));
             int pw = 1 - (int)d;
-            float magnitude = (float)Math.pow(10.0D, (double)pw);
+            float magnitude = (float)Math.pow(10.0D, pw);
             long shifted = Math.round(number * (double)magnitude);
             return (float)shifted / magnitude;
         } else {
@@ -213,8 +213,8 @@ public abstract class Utils {
     }
 
     public static int getDecimals(float number) {
-        float i = roundToNextSignificant((double)number);
-        return Float.isInfinite(i) ? 0 : (int)Math.ceil(-Math.log10((double)i)) + 2;
+        float i = roundToNextSignificant(number);
+        return Float.isInfinite(i) ? 0 : (int)Math.ceil(-Math.log10(i)) + 2;
     }
 
     public static int[] convertIntegers(List<Integer> integers) {
@@ -227,7 +227,7 @@ public abstract class Utils {
         int count = to.length < from.size() ? to.length : from.size();
 
         for(int i = 0; i < count; ++i) {
-            to[i] = (Integer)from.get(i);
+            to[i] = from.get(i);
         }
 
     }
@@ -236,7 +236,7 @@ public abstract class Utils {
         String[] ret = new String[strings.size()];
 
         for(int i = 0; i < ret.length; ++i) {
-            ret[i] = (String)strings.get(i);
+            ret[i] = strings.get(i);
         }
 
         return ret;
@@ -246,7 +246,7 @@ public abstract class Utils {
         int count = to.length < from.size() ? to.length : from.size();
 
         for(int i = 0; i < count; ++i) {
-            to[i] = (String)from.get(i);
+            to[i] = from.get(i);
         }
 
     }
@@ -267,8 +267,8 @@ public abstract class Utils {
     }
 
     public static void getPosition(MPPointF center, float dist, float angle, MPPointF outputPoint) {
-        outputPoint.x = (float)((double)center.x + (double)dist * Math.cos(Math.toRadians((double)angle)));
-        outputPoint.y = (float)((double)center.y + (double)dist * Math.sin(Math.toRadians((double)angle)));
+        outputPoint.x = (float)((double)center.x + (double)dist * Math.cos(Math.toRadians(angle)));
+        outputPoint.y = (float)((double)center.y + (double)dist * Math.sin(Math.toRadians(angle)));
     }
 
     public static void velocityTrackerPointerUpCleanUpIfNecessary(MotionEvent ev, VelocityTracker tracker) {
@@ -296,11 +296,7 @@ public abstract class Utils {
 
     @SuppressLint({"NewApi"})
     public static void postInvalidateOnAnimation(View view) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            view.postInvalidateOnAnimation();
-        } else {
-            view.postInvalidateDelayed(10L);
-        }
+        view.postInvalidateOnAnimation();
 
     }
 
@@ -418,7 +414,7 @@ public abstract class Utils {
     }
 
     public static void drawMultilineText(Canvas c, String text, float x, float y, TextPaint paint, FSize constrainedToSize, MPPointF anchor, float angleDegrees) {
-        StaticLayout textLayout = new StaticLayout(text, 0, text.length(), paint, (int)Math.max(Math.ceil((double)constrainedToSize.width), 1.0D), Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, false);
+        StaticLayout textLayout = new StaticLayout(text, 0, text.length(), paint, (int)Math.max(Math.ceil(constrainedToSize.width), 1.0D), Layout.Alignment.ALIGN_NORMAL, 1.0F, 0.0F, false);
         drawMultilineText(c, textLayout, x, y, paint, anchor, angleDegrees);
     }
 
@@ -437,7 +433,7 @@ public abstract class Utils {
     }
 
     public static FSize getSizeOfRotatedRectangleByRadians(float rectangleWidth, float rectangleHeight, float radians) {
-        return FSize.getInstance(Math.abs(rectangleWidth * (float)Math.cos((double)radians)) + Math.abs(rectangleHeight * (float)Math.sin((double)radians)), Math.abs(rectangleWidth * (float)Math.sin((double)radians)) + Math.abs(rectangleHeight * (float)Math.cos((double)radians)));
+        return FSize.getInstance(Math.abs(rectangleWidth * (float)Math.cos(radians)) + Math.abs(rectangleHeight * (float)Math.sin(radians)), Math.abs(rectangleWidth * (float)Math.sin(radians)) + Math.abs(rectangleHeight * (float)Math.cos(radians)));
     }
 
     public static int getSDKInt() {

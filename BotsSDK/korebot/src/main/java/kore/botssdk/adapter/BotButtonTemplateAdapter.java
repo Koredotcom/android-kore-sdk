@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -27,31 +26,28 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
  */
 public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();
-    private LayoutInflater ownLayoutInflater = null;
-    private final String splashColour;
-    private final String disabledColour;
-    private final String textColor;
-    private final String disabledTextColor;
+    private String splashColour, textColor, disabledTextColor;
+    private String disabledColour;
     private boolean isEnabled;
-    private final SharedPreferences sharedPreferences;
     private final float dp1;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final Context context;
 
     public BotButtonTemplateAdapter(Context context)
     {
-        ownLayoutInflater = LayoutInflater.from(context);
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        this.context = context;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
         disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
         textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
         disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
 
-//        splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-//        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
-//        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
-//        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
+        splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
+        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
+        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
+        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
 
         dp1 = DimensionUtil.dp1;
     }
@@ -79,7 +75,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflater.inflate(R.layout.meeting_slot_button, null);
+            convertView = View.inflate(context, R.layout.meeting_slot_button, null);
         }
 
         if (convertView.getTag() == null) {
@@ -143,7 +139,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 
     private void initializeViewHolder(View view) {
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.botItemButton = (TextView) view.findViewById(R.id.text_view);
+        viewHolder.botItemButton = view.findViewById(R.id.text_view);
 
 //        ((GradientDrawable) viewHolder.botItemButton.getBackground()).setColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
         ((GradientDrawable) viewHolder.botItemButton.getBackground()).setStroke((int)(2*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));

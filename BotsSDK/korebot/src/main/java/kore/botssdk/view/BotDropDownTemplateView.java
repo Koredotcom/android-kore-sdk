@@ -152,7 +152,7 @@ public class BotDropDownTemplateView extends LinearLayout {
             if (convertView == null || convertView.getTag() == null) {
                 convertView = inflater.inflate(R.layout.bot_drop_down_item_cell, null);
                 holder = new ViewHolder();
-                holder.more_txt_view = (TextView) convertView.findViewById(R.id.more_txt_view);
+                holder.more_txt_view = convertView.findViewById(R.id.more_txt_view);
                 convertView.setTag(holder);
             } else
                 holder = (ViewHolder) convertView.getTag();

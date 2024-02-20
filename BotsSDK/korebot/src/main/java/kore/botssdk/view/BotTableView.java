@@ -176,16 +176,16 @@ public class BotTableView extends TableView<MiniTableModel> {
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             int height = 0;
-            height = getListViewHeightBasedOnChildren(tableDataView);
-            height += tableHeaderView.getMeasuredHeight();
+//            height = getListViewHeightBasedOnChildren(tableDataView);
+//            height += tableHeaderView.getMeasuredHeight();
 
-            if (height != 0 ) {
-                if(tableDataView != null && tableDataView.getAdapter() != null && tableDataView.getAdapter().getCount() > 4)
-                    height = height + (int) (85 * dp1);
-                else
-                    height = height + (int) (30 * dp1);
-            }
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
+//            if (height != 0 ) {
+//                if(tableDataView != null && tableDataView.getAdapter() != null && tableDataView.getAdapter().getCount() >= 4)
+//                    height = height + (int) (85 * dp1);
+//                else
+//                    height = height + (int) (30 * dp1);
+//            }
+//            heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
     /*        for(int i = 0; i < getChildCount(); i++) {
                 View child = getChildAt(i);
                 child.getLayoutParams().height = height;

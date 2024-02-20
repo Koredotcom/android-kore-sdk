@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -80,17 +82,19 @@ public class BotFormTemplateView extends ViewGroup {
         KaFontUtils.applyCustomFont(getContext(), view);
         multiSelectLayout = view.findViewById(R.id.multi_select_layout);
         tvform_template_title = view.findViewById(R.id.tvform_template_title);
-        btfieldButton = (TextView) view.findViewById(R.id.btfieldButton);
+        btfieldButton = view.findViewById(R.id.btfieldButton);
         dp1 = (int) DimensionUtil.dp1;
 
         sharedPreferences = getSharedPreferences(context);
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
 
-        leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
-        leftDrawable.setColor(Color.parseColor(leftbgColor));
-        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(leftbgColor));
-        multiSelectLayout.setBackground(leftDrawable);
+        leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
+       if(leftDrawable != null) {
+           leftDrawable.setColor(Color.parseColor(leftbgColor));
+           leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+           multiSelectLayout.setBackground(leftDrawable);
+       }
     }
 
 
@@ -153,15 +157,13 @@ public class BotFormTemplateView extends ViewGroup {
                     if (composeFooterInterface != null && isEnabled)
                     {
                         int listLength = autoExpandListView.getChildCount();
-                        StringBuffer sb = new StringBuffer();
+                        StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < listLength; i++)
                         {
                             v = autoExpandListView.getChildAt(i);
-                            EditText et = (EditText) v.findViewById(R.id.edtFormInput);
+                            EditText et = v.findViewById(R.id.edtFormInput);
                             sb.append(et.getText().toString());
                         }
-//                        StringBuffer sb = new StringBuffer();
-//                        sb.append(holder.edtFormInput.getText().toString());
                         composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(),false);
                     }
                 }
@@ -176,12 +178,12 @@ public class BotFormTemplateView extends ViewGroup {
 
     private String getDotMessage(String strPassword)
     {
-        String strDots = "";
+        StringBuilder strDots = new StringBuilder();
         for (int i = 0; i< strPassword.length(); i++)
         {
-            strDots = strDots+"•";
+            strDots.append("•");
         }
-        return strDots;
+        return strDots.toString();
     }
 
     @Override

@@ -36,8 +36,8 @@ public class TimeLineTextView extends ViewGroup {
     String UNREAD_TIMELINE_TEXT;
     int[] colorLeft;
     int[] colorRight;
-    float[] positionLeft = new float[]{0f, 0f};
-    float[] positionRight = new float[]{0f, 0f};
+    final float[] positionLeft = new float[]{0f, 0f};
+    final float[] positionRight = new float[]{0f, 0f};
 
     public TimeLineTextView(Context context) {
         this(context, null);

@@ -29,7 +29,7 @@ import kore.botssdk.view.tableview.model.MiniTableModel;
 
 public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
-    private static final int TEXT_SIZE = 14;
+    private static final int TEXT_SIZE = 12;
     private final String[] alignment;
     private final ComposeFooterInterface composeFooterInterface;
     private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -67,9 +67,9 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     private int getGravity(int columnIndex){
         if(alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
-            return Gravity.START;
+            return Gravity.START|Gravity.CENTER_VERTICAL;
         else if(alignment[columnIndex].equals("right"))
-            return Gravity.END;
+            return Gravity.END|Gravity.CENTER_VERTICAL;
         else return Gravity.CENTER;
     }
 
@@ -82,9 +82,10 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
     private View renderString(int columnIndex, final String value) {
         final TextView textView = new TextView(getContext());
         textView.setText(value);
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(10, 20, 10, 20);
         textView.setTextSize(TEXT_SIZE);
         textView.setTextColor(Color.BLACK);
+        textView.setMaxLines(2);
         textView.setGravity(getGravity(columnIndex));
         return textView;
     }
@@ -92,7 +93,7 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
     private View renderString(int columnIndex, final ArrayList value) {
 
         final TextView textView = new TextView(getContext());
-        textView.setPadding(20, 10, 20, 10);
+        textView.setPadding(5, 20, 10, 20);
         textView.setTextSize(TEXT_SIZE);
         textView.setTextColor(Color.BLACK);
         textView.setGravity(getGravity(columnIndex));

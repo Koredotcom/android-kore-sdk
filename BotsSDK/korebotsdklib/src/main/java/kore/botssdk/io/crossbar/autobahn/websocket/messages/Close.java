@@ -3,7 +3,7 @@ package kore.botssdk.io.crossbar.autobahn.websocket.messages;
 /// WebSockets close to send or received.
 public class Close extends Message {
 
-    public int mCode;
+    public final int mCode;
     public String mReason;
     // Not to be delivered on the wire, only for local use.
     public boolean mIsReply;

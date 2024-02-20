@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -39,7 +40,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
 //    private ProgressDialog mLoader;
-    private static SyncingDialog mLoader;
+    private SyncingDialog mLoader;
     protected Toolbar toolbar;
     protected int DP1;
     protected static final int ELEVATION_VALUE_EIGHT = 8;
@@ -69,7 +70,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
 
     protected void setupActionBar() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         //toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(getResources().getString(R.string.app_name));
    /*     try {
@@ -86,7 +87,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp));
+        getSupportActionBar().setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_arrow_back_black_24dp, getTheme()));
     }
 
     public Toolbar getToolBar() {
@@ -102,13 +103,10 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                AppUtils.showHideVirtualKeyboard(this,null,false);
-                return super.onOptionsItemSelected(item);
-            default:
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+            AppUtils.showHideVirtualKeyboard(this, null, false);
+            return super.onOptionsItemSelected(item);
         }
         return false;
     }

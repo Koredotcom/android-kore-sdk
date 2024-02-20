@@ -10,8 +10,19 @@ import kore.botssdk.R;
 
 public class KnowledgeCollectionViewHolder extends RecyclerView.ViewHolder {
 
-       public TextView icon_view,peopleicon, root_title_view, count_view, star_textview, title_view, sub_view, search_view, percent_view;
-        public View header,divider,view_suggest,view_click;
+       public final TextView icon_view;
+    public final TextView peopleicon;
+    public final TextView root_title_view;
+    public final TextView count_view;
+    public final TextView star_textview;
+    public final TextView title_view;
+    public final TextView sub_view;
+    public final TextView search_view;
+    public final TextView percent_view;
+        public final View header;
+    public final View divider;
+    public final View view_suggest;
+    public final View view_click;
 
         public KnowledgeCollectionViewHolder(@NonNull View itemView) {
             super(itemView);

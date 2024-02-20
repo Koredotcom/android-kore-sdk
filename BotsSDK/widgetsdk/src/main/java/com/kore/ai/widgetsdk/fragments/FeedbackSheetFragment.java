@@ -60,9 +60,9 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
     Button submit_button;
     ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
     TextView label_view, sub_text, closeBtnPanel;
-    String id;
+    final String id;
     FeedBackAdapter adapter;
-    Context context;
+    final Context context;
 
     public FeedbackSheetFragment(int position, String id, Context context) {
         this.position = position;
@@ -341,7 +341,7 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
                 //  d.setCanceledOnTouchOutside(false);
                 // d.setCancelable(false);
 
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(R.id.design_bottom_sheet);
                 // FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 //   bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
                 bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);

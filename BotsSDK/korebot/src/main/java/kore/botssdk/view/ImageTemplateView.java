@@ -1,6 +1,7 @@
 package kore.botssdk.view;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,12 +18,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VideoView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -55,7 +57,6 @@ public class ImageTemplateView extends LinearLayout
     float dp1;
     private LinearLayout llAttachment;
     private VideoView vvAttachment, vvFullScreen;
-    private MediaController mediacontroller;
     private ImageView ivPlayPauseIcon;
     private double current_pos, total_duration;
     private double current_audio_pos, total_audio_duration;
@@ -97,30 +98,30 @@ public class ImageTemplateView extends LinearLayout
     {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.image_template, this, true);
         KaFontUtils.applyCustomFont(getContext(), view);
-        llAttachment = (LinearLayout) view.findViewById(R.id.llAttachment);
-        ivImage = (ImageView) view.findViewById(R.id.ivImage);
-        tvFileName = (TextView) view.findViewById(R.id.tvFileName);
+        llAttachment = view.findViewById(R.id.llAttachment);
+        ivImage = view.findViewById(R.id.ivImage);
+        tvFileName = view.findViewById(R.id.tvFileName);
         dp1 = DimensionUtil.dp1;
-        vvAttachment = (VideoView) view.findViewById(R.id.vvAttachment);
-        ivPlayPauseIcon = (ImageView) view.findViewById(R.id.ivPlayPauseIcon);
-        sbVideo = (SeekBar) view.findViewById(R.id.sbVideo);
-        tvVideoTiming = (TextView) view.findViewById(R.id.tvVideoTiming);
-        rlVideo = (RelativeLayout) view.findViewById(R.id.rlVideo);
-        wvAudio = (WebView) view.findViewById(R.id.wvAudio);
-        llAudio = (LinearLayout) view.findViewById(R.id.llAudio);
-        ivAudioPlayPauseIcon = (ImageView) view.findViewById(R.id.ivAudioPlayPauseIcon);
-        tvAudioVideoTiming = (TextView) view.findViewById(R.id.tvAudioVideoTiming);
-        sbAudioVideo = (SeekBar) view.findViewById(R.id.sbAudioVideo);
-        llPlayControls = (LinearLayout) view.findViewById(R.id.llPlayControls);
-        ivFullScreen = (ImageView) view.findViewById(R.id.ivFullScreen);
-        ivVideoMore = (ImageView) findViewById(R.id.ivVideoMore);
-        ivAudioMore = (ImageView) findViewById(R.id.ivAudioMore);
-        tvVideoTitle = (TextView) findViewById(R.id.tvVideoTitle);
+        vvAttachment = view.findViewById(R.id.vvAttachment);
+        ivPlayPauseIcon = view.findViewById(R.id.ivPlayPauseIcon);
+        sbVideo = view.findViewById(R.id.sbVideo);
+        tvVideoTiming = view.findViewById(R.id.tvVideoTiming);
+        rlVideo = view.findViewById(R.id.rlVideo);
+        wvAudio = view.findViewById(R.id.wvAudio);
+        llAudio = view.findViewById(R.id.llAudio);
+        ivAudioPlayPauseIcon = view.findViewById(R.id.ivAudioPlayPauseIcon);
+        tvAudioVideoTiming = view.findViewById(R.id.tvAudioVideoTiming);
+        sbAudioVideo = view.findViewById(R.id.sbAudioVideo);
+        llPlayControls = view.findViewById(R.id.llPlayControls);
+        ivFullScreen = view.findViewById(R.id.ivFullScreen);
+        ivVideoMore = findViewById(R.id.ivVideoMore);
+        ivAudioMore = findViewById(R.id.ivAudioMore);
+        tvVideoTitle = findViewById(R.id.tvVideoTitle);
 
         popUpView = LayoutInflater.from(getContext()).inflate(R.layout.theme_change_layout, null);
-        tvTheme1 = (TextView) popUpView.findViewById(R.id.tvTheme1);
-        tvTheme2 = (TextView) popUpView.findViewById(R.id.tvTheme2);
-        vTheme = (View) popUpView.findViewById(R.id.vTheme);
+        tvTheme1 = popUpView.findViewById(R.id.tvTheme1);
+        tvTheme2 = popUpView.findViewById(R.id.tvTheme2);
+        vTheme = popUpView.findViewById(R.id.vTheme);
         tvTheme1.setText("Download");
         tvTheme2.setVisibility(View.GONE);
         vTheme.setVisibility(View.GONE);
@@ -131,11 +132,13 @@ public class ImageTemplateView extends LinearLayout
         KoreEventCenter.register(this);
         sharedPreferences = getSharedPreferences();
         leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
-        leftDrawable = (GradientDrawable) getContext().getResources().getDrawable(R.drawable.theme1_left_bubble_bg);
+        leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
 
-        leftDrawable.setColor(Color.parseColor(leftbgColor));
-        leftDrawable.setStroke((int) (1*dp1), Color.parseColor(leftbgColor));
-        llAttachment.setBackground(leftDrawable);
+        if(leftDrawable != null) {
+            leftDrawable.setColor(Color.parseColor(leftbgColor));
+            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+            llAttachment.setBackground(leftDrawable);
+        }
 
         ivVideoMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +186,7 @@ public class ImageTemplateView extends LinearLayout
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
 
+    @SuppressLint("ClickableViewAccessibility")
     public void populateData(final PayloadInner payloadInner, String templateType)
     {
         if(payloadInner != null && templateType != null)
@@ -245,7 +249,7 @@ public class ImageTemplateView extends LinearLayout
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
                         } catch(Exception e) {
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }
                     else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
@@ -257,7 +261,7 @@ public class ImageTemplateView extends LinearLayout
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
                         } catch(Exception e) {
-                            System.out.println(e);
+                            e.printStackTrace();
                         }
                     }
 
@@ -279,7 +283,7 @@ public class ImageTemplateView extends LinearLayout
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             player.seekTo(1);
-                            ivAudioPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_paly_black));
+                            ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(),R.drawable.ic_paly_black, getContext().getTheme()));
                             ivAudioPlayPauseIcon.setTag(true);
                         }
                     });
@@ -292,23 +296,23 @@ public class ImageTemplateView extends LinearLayout
                         {
                             if((boolean)v.getTag())
                             {
-                                ivAudioPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_pause_black));
+                                ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_pause_black, getContext().getTheme()));
                                 try
                                 {
                                     player.start();
                                 } catch(Exception e) {
-                                    System.out.println(e);
+                                    e.printStackTrace();
                                 }
                                 v.setTag(false);
                             }
                             else
                             {
-                                ivAudioPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_paly_black));
+                                ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_paly_black, getContext().getTheme()));
                                 try
                                 {
                                     player.pause();
                                 } catch(Exception e) {
-                                    System.out.println(e);
+                                    e.printStackTrace();
                                 }
                                 v.setTag(true);
                             }
@@ -386,7 +390,7 @@ public class ImageTemplateView extends LinearLayout
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             vvAttachment.seekTo(1);
-                            ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
+                            ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_play_icon, getContext().getTheme()));
                             ivPlayPauseIcon.setTag(true);
                         }
                     });
@@ -406,14 +410,14 @@ public class ImageTemplateView extends LinearLayout
                         {
                             if((boolean)v.getTag())
                             {
-                                ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_pause_icon));
+                                ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_pause_icon, getContext().getTheme()));
                                 vvAttachment.requestFocus();
                                 vvAttachment.start();
                                 v.setTag(false);
                             }
                             else
                             {
-                                ivPlayPauseIcon.setImageDrawable(getContext().getDrawable(R.drawable.ic_play_icon));
+                                ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_play_icon, getContext().getTheme()));
                                 vvAttachment.pause();
                                 v.setTag(true);
                             }
@@ -569,9 +573,6 @@ public class ImageTemplateView extends LinearLayout
         current_audio_pos = player.getCurrentPosition();
         total_audio_duration = player.getDuration();
 
-        //display video duration
-//        total.setText(timeConversion((long) total_duration));
-//        current.setText(timeConversion((long) current_pos));
         sbAudioVideo.setMax((int) total_audio_duration);
         final Handler handler = new Handler();
 

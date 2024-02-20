@@ -6,7 +6,7 @@ import android.view.View;
 
 public class ViewPortHandler {
     protected final Matrix mMatrixTouch = new Matrix();
-    protected RectF mContentRect = new RectF();
+    protected final RectF mContentRect = new RectF();
     protected float mChartWidth = 0.0F;
     protected float mChartHeight = 0.0F;
     private float mMinScaleY = 1.0F;
@@ -19,8 +19,8 @@ public class ViewPortHandler {
     private float mTransY = 0.0F;
     private float mTransOffsetX = 0.0F;
     private float mTransOffsetY = 0.0F;
-    protected float[] valsBufferForFitScreen = new float[9];
-    protected Matrix mCenterViewPortMatrixBuffer = new Matrix();
+    protected final float[] valsBufferForFitScreen = new float[9];
+    protected final Matrix mCenterViewPortMatrixBuffer = new Matrix();
     protected final float[] matrixBuffer = new float[9];
 
     public ViewPortHandler() {

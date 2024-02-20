@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="#EBEBEB"
@@ -13,8 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="Tap to Speak"
-        android:textSize="21dp" />
+        android:text="@string/tap_to_speak"
+        android:textSize="21sp"
+        tools:ignore="RelativeOverlap" />
 
     <kore.botssdk.view.RippleView
         android:id="@+id/rec_audio"
@@ -27,15 +29,17 @@
             android:id="@+id/rec_audio_img"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:contentDescription="@string/tap_to_speak"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_mic_black_24dp" />
+            android:src="@mipmap/ic_mic_black_24dp" />
     </kore.botssdk.view.RippleView>
 
     <ImageView
         android:id="@+id/stop_speak"
         android:layout_width="wrap_content"
+        android:contentDescription="@string/tap_to_speak"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:padding="10dp"
         android:src="@drawable/ic_close_black_24dp" />
 

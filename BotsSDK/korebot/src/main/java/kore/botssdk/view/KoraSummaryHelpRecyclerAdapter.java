@@ -76,7 +76,7 @@ public class KoraSummaryHelpRecyclerAdapter extends RecyclerView.Adapter<KoraSum
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public SummaryHelpListItemBinding itemRowBinding;
+        public final SummaryHelpListItemBinding itemRowBinding;
 
         public ViewHolder(SummaryHelpListItemBinding itemRowBinding) {
             super(itemRowBinding.getRoot());

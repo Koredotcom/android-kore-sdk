@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +35,9 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
     private final PayloadInner payloadInner;
     private TableColumnModel columnModel;
     private final Context mContext;
-    int dp1;
+    final int dp1;
     private static final int TEXT_SIZE = 14;
     private Dialog dialog;
-//    private TableDataRowBackgroundProvider<? super T> rowBackgroundProvider;
-
 
     /**
      * Creates a new TableDataAdapter.
@@ -216,7 +213,6 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
         {
             for (int columnIndex = 0; columnIndex < 2; columnIndex++)
             {
-                int column = columnIndex;
                 View groupView = getGroupedView(groupPosition, columnIndex, rowView);
                 if (groupView == null) {
                     groupView = new TextView(getContext());
@@ -228,14 +224,9 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
 
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 layoutParams.gravity = Gravity.CENTER_VERTICAL;
-//                layoutParams.setMarginStart(50 * dp1);
 
                 View imgView = renderArrowView();
-//                ImageView ivArrow = new ImageView(getContext());
-//                ivArrow.setBackgroundDrawable(getContext().getResources().getDrawable(R.mipmap.ic_arrow_table_resp_right));
-//                ivArrow.setLayoutParams(layoutParams);
                 imgView.setLayoutParams(cellLayoutParams);
-//                ivArrow.setVisibility(View.VISIBLE);
                 parentGroupView.addView(groupView);
 
                 if(columnIndex == 1)
@@ -246,7 +237,6 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
 
             for (int columnIndex = 0; columnIndex < 2; columnIndex++)
             {
-                int column = columnIndex;
                 View cellView = getCellView(groupPosition, columnIndex, rowView, false);
                 if (cellView == null) {
                     cellView = new TextView(getContext());
@@ -288,7 +278,7 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
             textView.setTextColor(Color.BLUE);
             textView.setGravity(Gravity.CENTER);
 
-            final int cellWidth = columnModel.getColumnWidth(0, ((int)(tableWidth * 4)));
+            final int cellWidth = columnModel.getColumnWidth(0, tableWidth * 4);
             final LinearLayout.LayoutParams cellLayoutParams = new LinearLayout.LayoutParams(cellWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
             cellLayoutParams.setMargins(0,11 * dp1,0,0);
             textView.setLayoutParams(cellLayoutParams);
@@ -310,7 +300,7 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
         dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.tableview_dialog);
 
-        LinearLayout llTableView = (LinearLayout)dialog.findViewById(R.id.llTableView);
+        LinearLayout llTableView = dialog.findViewById(R.id.llTableView);
 
         BotTableView tableView = new BotTableView(getContext());
         tableView.setData(payloadInner);
@@ -331,7 +321,6 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
         final int tableWidth = parent.getWidth();
 
         for (int columnIndex = 2; columnIndex < columnModel.getColumnCount(); columnIndex++) {
-            int column = columnIndex;
             View cellView = getCellView(groupPosition, columnIndex, rowView, true);
             if (cellView == null) {
                 cellView = new TextView(getContext());
@@ -389,22 +378,16 @@ public abstract class TableRespExpandDataAdapter<T> extends BaseExpandableListAd
 
     private View renderArrowView() {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_responsive_group_layout, null);
-        TextView tvViewGroup1 = (TextView)renderView.findViewById(R.id.tvViewGroup1);
-        ImageView ivArrow = (ImageView)renderView.findViewById(R.id.ivArrowView);
+        TextView tvViewGroup1 = renderView.findViewById(R.id.tvViewGroup1);
+        ImageView ivArrow = renderView.findViewById(R.id.ivArrowView);
         ivArrow.setVisibility(View.VISIBLE);
-//        final TextView textView = new TextView(getContext());
-//        tvViewGroup1.setText(value);
-//        textView.setPadding(0, 30, 0, 30);
-//        textView.setTextSize(TEXT_SIZE);
-//        textView.setTextColor(Color.BLACK);
-//        textView.setGravity(Gravity.CENTER);
-            return renderView;
+        return renderView;
     }
 
     private View renderChildArrowView(boolean showDivider) {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_resp_child_arrow_view, null);
-        ImageView ivArrowView = (ImageView)renderView.findViewById(R.id.ivArrowView);
-        ImageView ivChildArrowDivider = (ImageView)renderView.findViewById(R.id.ivChildArrowDivider);
+        ImageView ivArrowView = renderView.findViewById(R.id.ivArrowView);
+        ImageView ivChildArrowDivider = renderView.findViewById(R.id.ivChildArrowDivider);
         ivArrowView.setVisibility(View.VISIBLE);
         ivChildArrowDivider.setVisibility(View.GONE);
 

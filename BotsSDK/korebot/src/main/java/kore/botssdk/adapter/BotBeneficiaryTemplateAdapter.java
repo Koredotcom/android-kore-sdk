@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +16,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 
@@ -30,23 +31,18 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
-
-    private String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
     private ArrayList<BotBeneficiaryModel> botListModelArrayList = new ArrayList<>();
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ListClickableListner listClickableListner;
-    private LayoutInflater ownLayoutInflator;
-    private Context context;
-    private RoundedCornersTransform roundedCornersTransform;
-    private ListView parentListView;
-    private GradientDrawable bgDrawable;
+    private final Context context;
+    private final RoundedCornersTransform roundedCornersTransform;
+    private final ListView parentListView;
     private int count = 0;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
     private boolean isClickable = true;
 
     public BotBeneficiaryTemplateAdapter(Context context, ListView parentListView, int count) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
@@ -82,7 +78,7 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.beneficiary_cell, null);
+            convertView = View.inflate( context, R.layout.beneficiary_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -102,8 +98,10 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
 
         if(sharedPreferences != null)
         {
-            GradientDrawable rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
-            rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rect_feedback, context.getTheme());
+            if(rightDrawable != null)
+                rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+
             holder.botListItemTitle.setTextColor(Color.parseColor("#000000"));
         }
 
@@ -151,9 +149,9 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
 
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
 
         view.setTag(holder);
     }

@@ -59,7 +59,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected boolean mHighLightPerTapEnabled = true;
     private boolean mDragDecelerationEnabled = true;
     private float mDragDecelerationFrictionCoef = 0.9F;
-    protected DefaultValueFormatter mDefaultValueFormatter = new DefaultValueFormatter(0);
+    protected final DefaultValueFormatter mDefaultValueFormatter = new DefaultValueFormatter(0);
     protected Paint mDescPaint;
     protected Paint mInfoPaint;
     protected XAxis mXAxis;
@@ -90,7 +90,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     public static final int PAINT_HOLE = 13;
     public static final int PAINT_CENTER_TEXT = 14;
     public static final int PAINT_LEGEND_LABEL = 18;
-    protected ArrayList<Runnable> mJobs = new ArrayList();
+    protected final ArrayList<Runnable> mJobs = new ArrayList();
     private boolean mUnbind = false;
 
     public Chart(Context context) {
@@ -163,7 +163,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         this.mData = null;
         this.mOffsetsCalculated = false;
         this.mIndicesToHighlight = null;
-        this.mChartTouchListener.setLastHighlighted((Highlight)null);
+        this.mChartTouchListener.setLastHighlighted(null);
         this.invalidate();
     }
 
@@ -265,7 +265,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         if (highs != null && highs.length > 0 && highs[0] != null) {
             this.mChartTouchListener.setLastHighlighted(highs[0]);
         } else {
-            this.mChartTouchListener.setLastHighlighted((Highlight)null);
+            this.mChartTouchListener.setLastHighlighted(null);
         }
 
     }
@@ -292,7 +292,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         if (dataSetIndex >= 0 && dataSetIndex < this.mData.getDataSetCount()) {
             this.highlightValue(new Highlight(x, y, dataSetIndex), callListener);
         } else {
-            this.highlightValue((Highlight)null, callListener);
+            this.highlightValue(null, callListener);
         }
 
     }
@@ -842,9 +842,9 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     public void setHardwareAccelerationEnabled(boolean enabled) {
         if (enabled) {
-            this.setLayerType(View.LAYER_TYPE_HARDWARE, (Paint)null);
+            this.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         } else {
-            this.setLayerType(View.LAYER_TYPE_SOFTWARE, (Paint)null);
+            this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
     }
@@ -859,7 +859,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
 
     private void unbindDrawables(View view) {
         if (view.getBackground() != null) {
-            view.getBackground().setCallback((Drawable.Callback)null);
+            view.getBackground().setCallback(null);
         }
 
         if (view instanceof ViewGroup) {

@@ -49,10 +49,10 @@ public class BotContactTemplateView extends ViewGroup {
 
     private void init() {
         LayoutInflater.from(getContext()).inflate(R.layout.bot_custom_list, this, true);
-        botCustomListRoot = (LinearLayout) findViewById(R.id.botCustomListRoot);
-        autoExpandListView = (AutoExpandListView) findViewById(R.id.botCustomListView);
-        botCustomListViewButton = (TextView) findViewById(R.id.botCustomListViewButton);
-        botListViewTitle = (TextView) findViewById(R.id.botListViewTitle);
+        botCustomListRoot = findViewById(R.id.botCustomListRoot);
+        autoExpandListView = findViewById(R.id.botCustomListView);
+        botCustomListViewButton = findViewById(R.id.botCustomListViewButton);
+        botListViewTitle = findViewById(R.id.botListViewTitle);
         dp1 = (int) DimensionUtil.dp1;
         layoutItemHeight = getResources().getDimension(R.dimen.list_item_view_height);
 

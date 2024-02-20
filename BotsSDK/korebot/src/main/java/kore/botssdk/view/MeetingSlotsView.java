@@ -78,10 +78,10 @@ public class MeetingSlotsView extends ViewGroup {
 
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.meeting_slots_template, this, true);
-        autoExpandListView = (AutoExpandListView) view.findViewById(R.id.slots_list);
+        autoExpandListView = view.findViewById(R.id.slots_list);
         KaFontUtils.applyCustomFont(getContext(), view);
         meetingLayout = view.findViewById(R.id.meeting_layout);
-        button1 = (TextView) view.findViewById(R.id.button1);
+        button1 = view.findViewById(R.id.button1);
         button2 = view.findViewById(R.id.button2);
         dp1 = (int) DimensionUtil.dp1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

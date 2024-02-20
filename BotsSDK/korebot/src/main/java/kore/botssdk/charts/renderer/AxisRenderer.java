@@ -10,8 +10,8 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public abstract class AxisRenderer extends Renderer {
-    protected AxisBase mAxis;
-    protected Transformer mTrans;
+    protected final AxisBase mAxis;
+    protected final Transformer mTrans;
     protected Paint mGridPaint;
     protected Paint mAxisLabelPaint;
     protected Paint mAxisLinePaint;
@@ -75,15 +75,15 @@ public abstract class AxisRenderer extends Renderer {
 
     protected void computeAxisValues(float min, float max) {
         int labelCount = this.mAxis.getLabelCount();
-        double range = (double)Math.abs(max - min);
+        double range = Math.abs(max - min);
         if (labelCount != 0 && !(range <= 0.0D) && !Double.isInfinite(range)) {
             double rawInterval = range / (double)labelCount;
-            double interval = (double) Utils.roundToNextSignificant(rawInterval);
+            double interval = Utils.roundToNextSignificant(rawInterval);
             if (this.mAxis.isGranularityEnabled()) {
                 interval = interval < (double)this.mAxis.getGranularity() ? (double)this.mAxis.getGranularity() : interval;
             }
 
-            double intervalMagnitude = (double)Utils.roundToNextSignificant(Math.pow(10.0D, (double)((int)Math.log10(interval))));
+            double intervalMagnitude = Utils.roundToNextSignificant(Math.pow(10.0D, (int)Math.log10(interval)));
             int intervalSigDigit = (int)(interval / intervalMagnitude);
             if (intervalSigDigit > 5) {
                 interval = Math.floor(10.0D * intervalMagnitude);
@@ -93,7 +93,7 @@ public abstract class AxisRenderer extends Renderer {
             float offset;
             int i;
             if (this.mAxis.isForceLabelsEnabled()) {
-                interval = (double)((float)range / (float)(labelCount - 1));
+                interval = (float)range / (float)(labelCount - 1);
                 this.mAxis.mEntryCount = labelCount;
                 if (this.mAxis.mEntries.length < labelCount) {
                     this.mAxis.mEntries = new float[labelCount];

@@ -170,11 +170,11 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
                 bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
                 bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) (200 * dp1));
+                bottomSheetBehavior.setPeekHeight(200 * dp1);
             }
 
         });
@@ -203,49 +203,33 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     @Override
     public void onClick(View v)
     {
-        switch (v.getId())
-        {
-            case R.id.icon_1:
-            {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(0);
-                position = 1;
-                updateData();
-            }
-            break;
-            case R.id.icon_2:
-            {
-                resetAll();
-                loademojis(1);
-                position = 2;
-                updateData();
-            }
-            break;
-            case R.id.icon_3:
-            {
-                resetAll();
-                loademojis(2);
-                position = 3;
-                updateData();
-            }
-            break;
-            case R.id.icon_4:
-            {
-                resetAll();
-                loademojis(3);
-                position = 4;
-                updateData();
-            }
-            break;
-            case R.id.icon_5:
-            {
-                resetAll();
-                loademojis(4);
-                position = 5;
-                updateData();
-            }
-            break;
+        int id = v.getId();
+        if (id == R.id.icon_1) {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(0);
+            position = 1;
+            updateData();
+        } else if (id == R.id.icon_2) {
+            resetAll();
+            loademojis(1);
+            position = 2;
+            updateData();
+        } else if (id == R.id.icon_3) {
+            resetAll();
+            loademojis(2);
+            position = 3;
+            updateData();
+        } else if (id == R.id.icon_4) {
+            resetAll();
+            loademojis(3);
+            position = 4;
+            updateData();
+        } else if (id == R.id.icon_5) {
+            resetAll();
+            loademojis(4);
+            position = 5;
+            updateData();
         }
     }
 
@@ -258,14 +242,14 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
             tvGlad.setText(payloadInner.getMessageTodisplay());
             rlCommentBox.setVisibility(View.GONE);
             tvCommentTitle.setVisibility(View.GONE);
-            bottomSheetBehavior.setPeekHeight((int) (300 * dp1));
+            bottomSheetBehavior.setPeekHeight(300 * dp1);
         }
         else
         {
             tvGlad.setVisibility(View.GONE);
             tvCommentTitle.setVisibility(View.VISIBLE);
             rlCommentBox.setVisibility(View.VISIBLE);
-            bottomSheetBehavior.setPeekHeight((int) (400 * dp1));
+            bottomSheetBehavior.setPeekHeight(400 * dp1);
         }
 
     }

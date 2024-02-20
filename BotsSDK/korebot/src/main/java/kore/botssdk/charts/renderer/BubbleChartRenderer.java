@@ -21,7 +21,7 @@ import kore.botssdk.charts.utils.Utils;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
-    protected BubbleDataProvider mChart;
+    protected final BubbleDataProvider mChart;
     private final float[] sizeBuffer = new float[4];
     private final float[] pointBuffer = new float[2];
     private final float[] _hsvBuffer = new float[3];
@@ -51,7 +51,7 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
     }
 
     protected float getShapeSize(float entrySize, float maxSize, float reference, boolean normalizeSize) {
-        float factor = normalizeSize ? (maxSize == 0.0F ? 1.0F : (float)Math.sqrt((double)(entrySize / maxSize))) : entrySize;
+        float factor = normalizeSize ? (maxSize == 0.0F ? 1.0F : (float)Math.sqrt(entrySize / maxSize)) : entrySize;
         float shapeSize = reference * factor;
         return shapeSize;
     }
@@ -70,7 +70,7 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
             float referenceSize = Math.min(maxBubbleHeight, maxBubbleWidth);
 
             for(int j = this.mXBounds.min; j <= this.mXBounds.range + this.mXBounds.min; ++j) {
-                BubbleEntry entry = (BubbleEntry)dataSet.getEntryForIndex(j);
+                BubbleEntry entry = dataSet.getEntryForIndex(j);
                 this.pointBuffer[0] = entry.getX();
                 this.pointBuffer[1] = entry.getY() * phaseY;
                 trans.pointValuesToPixel(this.pointBuffer);
@@ -97,7 +97,7 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
                 float lineHeight = (float)Utils.calcTextHeight(this.mValuePaint, "1");
 
                 for(int i = 0; i < dataSets.size(); ++i) {
-                    IBubbleDataSet dataSet = (IBubbleDataSet)dataSets.get(i);
+                    IBubbleDataSet dataSet = dataSets.get(i);
                     if (this.shouldDrawValues(dataSet) && dataSet.getEntryCount() >= 1) {
                         this.applyValueTextStyle(dataSet);
                         float phaseX = Math.max(0.0F, Math.min(1.0F, this.mAnimator.getPhaseX()));
@@ -120,7 +120,7 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
                             }
 
                             if (this.mViewPortHandler.isInBoundsLeft(x) && this.mViewPortHandler.isInBoundsY(y)) {
-                                BubbleEntry entry = (BubbleEntry)dataSet.getEntryForIndex(j / 2 + this.mXBounds.min);
+                                BubbleEntry entry = dataSet.getEntryForIndex(j / 2 + this.mXBounds.min);
                                 if (dataSet.isDrawValuesEnabled()) {
                                     this.drawValue(c, formatter.getBubbleLabel(entry), x, y + 0.5F * lineHeight, valueTextColor);
                                 }
@@ -156,9 +156,9 @@ public class BubbleChartRenderer extends BarLineScatterCandleBubbleRenderer {
 
         for(int var7 = 0; var7 < var6; ++var7) {
             Highlight high = var5[var7];
-            IBubbleDataSet set = (IBubbleDataSet)bubbleData.getDataSetByIndex(high.getDataSetIndex());
+            IBubbleDataSet set = bubbleData.getDataSetByIndex(high.getDataSetIndex());
             if (set != null && set.isHighlightEnabled()) {
-                BubbleEntry entry = (BubbleEntry)set.getEntryForXValue(high.getX(), high.getY());
+                BubbleEntry entry = set.getEntryForXValue(high.getX(), high.getY());
                 if (entry.getY() == high.getY() && this.isInBoundsX(entry, set)) {
                     Transformer trans = this.mChart.getTransformer(set.getAxisDependency());
                     this.sizeBuffer[0] = 0.0F;

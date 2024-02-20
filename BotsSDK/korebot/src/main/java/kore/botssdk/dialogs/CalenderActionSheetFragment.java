@@ -30,7 +30,7 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class CalenderActionSheetFragment extends BottomSheetDialogFragment
 {
-    String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
+    final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
     private View view;
     private boolean isFromFullView;
     private VerticalListViewActionHelper verticalListViewActionHelper;
@@ -117,7 +117,7 @@ public class CalenderActionSheetFragment extends BottomSheetDialogFragment
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
                 bottomSheet.getLayoutParams().height = ((int) ((AppControl.getInstance(getContext()).getDimensionUtil().screenHeight/4)+50) * dp1);
                 BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);

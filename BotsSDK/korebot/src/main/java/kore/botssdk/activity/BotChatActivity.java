@@ -1,8 +1,8 @@
 package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
-import static kore.botssdk.FCM.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
 
@@ -19,7 +19,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,8 +28,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Process;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -45,9 +44,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.kore.ai.widgetsdk.models.PanelBaseModel;
-import com.kore.ai.widgetsdk.models.PanelResponseData;
-import com.kore.ai.widgetsdk.views.widgetviews.CustomBottomSheetBehavior;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -60,6 +56,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
@@ -81,6 +78,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.listener.ThemeChangeListener;
+import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
@@ -103,7 +101,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.WebHookRequestModel;
 import kore.botssdk.models.WebHookResponseDataModel;
-import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
@@ -118,7 +115,6 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
@@ -130,11 +126,12 @@ import retrofit2.Response;
  * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnknownNullness")
 public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface,
                                         QuickReplyFragment.QuickReplyInterface,
                                         TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener
 {
-    String LOG_TAG = BotChatActivity.class.getSimpleName();
+    final String LOG_TAG = BotChatActivity.class.getSimpleName();
     FrameLayout chatLayoutFooterContainer;
     FrameLayout chatLayoutContentContainer;
     FrameLayout chatLayoutPanelContainer;
@@ -142,7 +139,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     FragmentTransaction fragmentTransaction;
     final Handler handler = new Handler();
     String chatBot, taskBotId, jwt;
-    Handler actionBarTitleUpdateHandler;
     BotClient botClient;
     BotContentFragment botContentFragment;
     ComposeFooterFragment composeFooterFragment;
@@ -151,28 +147,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotContentFragmentUpdate botContentFragmentUpdate;
     ComposeFooterUpdate composeFooterUpdate;
     boolean isItFirstConnect = true;
-    private final Gson gson = new Gson();
-    //For Bottom Panel
-    private final String packageName = "com.kore.koreapp";
-    private final String appName = "Kore";
-    //Fragment Approch
-    private FrameLayout composerView;
-    private CustomBottomSheetBehavior mBottomSheetBehavior;
-    private BottomPanelFragment composerFragment;
-    private SharedPreferences sharedPreferences;
+    final Gson gson = new Gson();
+    SharedPreferences sharedPreferences;
     private ImageView ivChaseBackground, ivChaseLogo;
-    protected int compressQualityInt = 100;
-    protected Attachment attachment;
-    Handler messageHandler = new Handler();
-    protected static long totalFileSize;
+    protected final int compressQualityInt = 100;
+    final Handler messageHandler = new Handler();
     private String fileUrl;
-    private ArrayList<BrandingNewModel> arrBrandingNewDos;
-    private WebHookResponseDataModel webHookResponseDataModel;
-    private BotMetaModel botMetaModel;
-    private Runnable runnable;
+    ArrayList<BrandingNewModel> arrBrandingNewDos;
+    WebHookResponseDataModel webHookResponseDataModel;
+    BotMetaModel botMetaModel;
+    Runnable runnable;
     private final int poll_delay = 2000;
-    private String lastMsgId = "";
-    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"text\",\"payload\":{\"text\":\"An eSIM or *Embedded Subscriber Identity* Module is a digital SIM card. An eSIM can be downloaded to a device over Wi-Fi or Mobile Connection. It allows users to switch between carriers and plans without swapping the physical SIM card.\"}},\"cInfo\":{\"body\":\"An eSIM or Embedded Subscriber Identity Module is a digital SIM card. An eSIM can be downloaded to a device over Wi-Fi or Mobile Connection. It allows users to switch between carriers and plans without swapping the physical SIM card.\"}}],\"messageId\":\"ms-26c20cf6-8065-5194-a464-e8d599a8715e\",\"sessionId\":\"6552134a25aeac569caa20d2\",\"botInfo\":{\"chatBot\":\"Sia\",\"taskBotId\":\"st-7160c6de-4984-5e2c-a18f-01fc4a075190\",\"hostDomain\":\"https://eu-bots.kore.ai\",\"os\":\"Windows\",\"device\":\"Other\",\"userId\":\"u-c96f2f9b-d7a7-544a-8316-588f03803044\"},\"createdOn\":\"2023-11-13T12:15:40.735Z\",\"xTraceId\":\"df9ac10a-8ec3-4918-b214-52ec18e4c4df\",\"icon\":\"https://eu-bots.kore.ai/api/getMediaStream/market/f-e94a9ed5-2c29-5321-ad20-b691e862520f.png?n=4420779226&s=Ik0zTGU1eC9KR2VzRk5uUHBUamVucTJSZDFjaXNXdWhlUFcvV20ySTNYMFE9Ig$$\",\"traceId\":\"fde96d029db23f0a\",\"timestamp\":1699877740757}";
+    String lastMsgId = "";
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,6 +170,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         findViews();
         getBundleInfo();
         getDataFromTxt();
+        getBrandingDataFromTxt();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -209,8 +198,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
 
-        updateTitleBar();
-
         botClient = new BotClient(this);
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
@@ -221,8 +208,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         {
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
-        else
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -235,7 +222,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    SocketChatListener sListener = new SocketChatListener() {
+    final SocketChatListener sListener = new SocketChatListener() {
         @Override
         public void onMessage(BotResponse botResponse) {
             processPayload("", botResponse);
@@ -247,7 +234,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 getBrandingDetails();
             }
 
-            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID)));
+            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", getUniqueDeviceId(BotChatActivity.this)));
 
             updateTitleBar(state);
         }
@@ -269,7 +256,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void postNotification(String title, String pushMessage) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder nBuilder = null;
+        NotificationCompat.Builder nBuilder;
         if(Build.VERSION.SDK_INT >= 26){
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service","Kore_Android",importance);
@@ -325,55 +312,38 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void findViews() {
-        chatLayoutFooterContainer = (FrameLayout) findViewById(R.id.chatLayoutFooterContainer);
-        chatLayoutContentContainer = (FrameLayout) findViewById(R.id.chatLayoutContentContainer);
-        chatLayoutPanelContainer   = (FrameLayout) findViewById(R.id.chatLayoutPanelContainer);
-        taskProgressBar = (ProgressBar) findViewById(R.id.taskProgressBar);
-        ivChaseBackground = (ImageView) findViewById(R.id.ivChaseBackground);
-        ivChaseLogo = (ImageView) findViewById(R.id.ivChaseLogo);
+        chatLayoutFooterContainer = findViewById(R.id.chatLayoutFooterContainer);
+        chatLayoutContentContainer = findViewById(R.id.chatLayoutContentContainer);
+        chatLayoutPanelContainer   = findViewById(R.id.chatLayoutPanelContainer);
+        taskProgressBar = findViewById(R.id.taskProgressBar);
+        ivChaseBackground = findViewById(R.id.ivChaseBackground);
+        ivChaseLogo = findViewById(R.id.ivChaseLogo);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         RestBuilder.setContext(BotChatActivity.this);
         WebHookRestBuilder.setContext(BotChatActivity.this);
         BrandingRestBuilder.setContext(BotChatActivity.this);
     }
 
-    private void updateTitleBar() {
-//        String botName = (chatBot != null && !chatBot.isEmpty()) ? chatBot : ((SDKConfiguration.Server.IS_ANONYMOUS_USER) ? chatBot + " - anonymous" : chatBot);
-//        getSupportActionBar().setSubtitle(botName);
-    }
+    void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
-    private void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
-
-        String titleMsg = "";
         switch (socketConnectionEvents) {
             case CONNECTING:
-                titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.VISIBLE);
-                updateActionBar();
                 break;
             case CONNECTED:
-                /*if(isItFirstConnect)
-                    botClient.sendMessage("welcomedialog");*/
-                titleMsg = getString(R.string.socket_connected);
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
-                updateActionBar();
 
                 break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED:
-                titleMsg = getString(R.string.socket_disconnected);
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
                 composeFooterFragment.updateUI();
-                updateActionBar();
                 break;
 
             default:
-                titleMsg = getString(R.string.socket_connecting);
                 taskProgressBar.setVisibility(View.GONE);
-                updateActionBar();
-
         }
     }
 
@@ -386,13 +356,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void onEvent(String jwt)
     {
         this.jwt = jwt;
-        if(botContentFragment != null)
-            botContentFragment.setJwtTokenForWebHook(jwt);
+        if(SDKConfiguration.Client.isWebHook) {
+            if (botContentFragment != null)
+                botContentFragment.setJwtTokenForWebHook(jwt);
 
-        if(composeFooterFragment != null)
-            composeFooterFragment.setJwtToken(jwt);
+            if (composeFooterFragment != null)
+                composeFooterFragment.setJwtToken(jwt);
 
-        getWebHookMeta();
+            getWebHookMeta();
+        }
     }
 
     public void onEvent(SocketDataTransferModel data) {
@@ -467,10 +439,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void externalReadWritePermission(String fileUrl)
     {
         this.fileUrl = fileUrl;
-        if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-        }
-        else
-        {
+        if (!KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST,
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
@@ -482,7 +451,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
@@ -495,32 +464,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void updateActionBar() {
-        if (actionBarTitleUpdateHandler == null) {
-            actionBarTitleUpdateHandler = new Handler();
-        }
-
-        actionBarTitleUpdateHandler.removeCallbacks(actionBarUpdateRunnable);
-        actionBarTitleUpdateHandler.postDelayed(actionBarUpdateRunnable, 4000);
-
-    }
-
-    Runnable actionBarUpdateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateTitleBar();
-        }
-    };
-
     @Override
     protected void onPause() {
         BotApplication.activityPaused();
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
-
-
-
 
     @Override
     public void onSendClick(String message,boolean isFromUtterance) {
@@ -575,7 +524,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else
             {
-//                BotSocketConnectionManager.getInstance().stopTextToSpeech();
                 addSentMessageToChat(message);
                 sendWebHookMessage(false, message, attachments);
             }
@@ -763,6 +711,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return botOptionsModel;
     }
 
+    public void getBrandingDataFromTxt()
+    {
+        BotBrandingModel botOptionsModel = null;
+
+        try
+        {
+            InputStream is = getResources().openRawResource(R.raw.branding_response);
+            Reader reader = new InputStreamReader(is);
+            botOptionsModel = gson.fromJson(reader, BotBrandingModel.class);
+            LogUtils.e("Options Size", botOptionsModel.getGeneral().getSize() + "" );
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public void displayMessage(String text, String type, String messageId)
     {
         if(!lastMsgId.equalsIgnoreCase(messageId))
@@ -916,10 +881,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void textToSpeech(BotResponse botResponse) {
+    void textToSpeech(BotResponse botResponse) {
         if (isTTSEnabled() && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = "";
-            BotResponseMessage msg = ((BotResponse) botResponse).getTempMessage();
             ComponentModel componentModel = botResponse.getMessage().get(0).getComponent();
             if (componentModel != null) {
                 String compType = componentModel.getType();
@@ -963,42 +927,28 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void toggleQuickRepliesVisiblity(){
         quickReplyFragment.toggleQuickReplyContainer(View.GONE);
     }
-
+    @SuppressLint("MissingPermission")
     protected boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        return netInfo != null && netInfo.isConnected();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network nw = connectivityManager.getActiveNetwork();
+        if (nw == null) return false;
+        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
+        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     private void attachFragments() {
 
         if(SDKConfiguration.Client.enablePanel)
         {
-            composerView = findViewById(R.id.chatLayoutPanelContainer);
+            //Fragment Approch
+            FrameLayout composerView = findViewById(R.id.chatLayoutPanelContainer);
             composerView.setVisibility(VISIBLE);
-            composerFragment = new BottomPanelFragment();
+            BottomPanelFragment composerFragment = new BottomPanelFragment();
             composerFragment.setArguments(getIntent().getExtras());
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
             composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
         }
-    }
-
-    private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
-        PanelBaseModel model = null;
-        if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
-            for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
-                if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
-                    model = new PanelBaseModel();
-                    panel.setItemClicked(true);
-                    model.setData(panel);
-                    return model;
-                }
-            }
-
-        }
-
-        return model;
     }
 
     @Override
@@ -1013,7 +963,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         if(payload != null){
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         }else{
-            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+            BotSocketConnectionManager.getInstance().sendMessage(message, null);
         }
 
         toggleQuickRepliesVisiblity();
@@ -1124,76 +1074,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-//    protected class SaveCapturedImageTask extends AsyncTask<String, String, String> {
-//
-//        private final String filePath;
-//        private final String fileName;
-//        private final String filePathThumbnail;
-//        private String orientation;
-//
-//        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
-//            this.filePath = filePath;
-//            this.fileName = fileName;
-//            this.filePathThumbnail = filePathThumbnail;
-//        }
-//
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-//            String extn = null;
-//            OutputStream fOut = null;
-//
-//            if (filePath != null) {
-//                extn = filePath.substring(filePath.lastIndexOf(".") + 1);
-//                Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-////                    compressImage(filePath);
-//                if (thePic != null) {
-//                    try {
-//                        // compress the image
-//                        File _file = new File(filePath);
-//
-//                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-//                        fOut = new FileOutputStream(_file);
-//
-//                        thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
-//                        thePic = rotateIfNecessary(filePath, thePic);
-//                        orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-//                        fOut.flush();
-//                        fOut.close();
-//                    } catch (Exception e) {
-//                        LogUtils.e(LOG_TAG, e.toString());
-//                    }
-//                    finally {
-//                        try {
-//                            assert fOut != null;
-//                            fOut.close();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//            return extn;
-//        }
-//
-//
-//        @Override
-//        protected void onPostExecute(String extn) {
-//
-//        }
-//    }
-
-    private long getFileMaxSize() {
-        long FILE_MAX_SIZE = getFileLimit();
-        if (FILE_MAX_SIZE != -1) {
-            FILE_MAX_SIZE = FILE_MAX_SIZE * 1024 * 1024;
-        }
-
-        return FILE_MAX_SIZE;
-    }
-
     @SuppressLint("HandlerLeak")
+    final
     Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public synchronized void handleMessage(Message msg) {
@@ -1253,18 +1135,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }, 400);
     }
 
-    private int getFileLimit() {
-        attachment = SharedPreferenceUtils.getInstance(this).getAttachmentPref("");
-
-        int file_limit = -1;
-        if (attachment != null) {
-            file_limit = attachment.getSize();
-        }
-
-        return file_limit;
-    }
-
-    private String getComponentId(String componentType) {
+    String getComponentId(String componentType) {
         if(componentType != null)
         {
             if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
@@ -1278,7 +1149,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return "";
     }
 
-    private void getBrandingDetails() {
+    void getBrandingDetails() {
         Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1","en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
             @Override
@@ -1328,7 +1199,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    private void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
+    void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments)
     {
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
@@ -1339,7 +1210,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     webHookResponseDataModel = response.body();
                     taskProgressBar.setVisibility(View.GONE);
                     composeFooterFragment.enableSendButton();
-                    updateActionBar();
 
                     if(webHookResponseDataModel != null && webHookResponseDataModel.getData() != null &&
                             webHookResponseDataModel.getData().size() > 0)
@@ -1385,7 +1255,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 {
                     taskProgressBar.setVisibility(View.GONE);
                     composeFooterFragment.enableSendButton();
-                    updateActionBar();
                 }
             }
 
@@ -1417,7 +1286,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         });
     }
 
-    private void postPollingData(String pollId)
+    void postPollingData(String pollId)
     {
         Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
@@ -1428,8 +1297,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     webHookResponseDataModel = response.body();
                     taskProgressBar.setVisibility(View.GONE);
                     composeFooterFragment.enableSendButton();
-                    updateActionBar();
-//                    getBrandingDetails();
 
                     if(webHookResponseDataModel != null && webHookResponseDataModel.getData() != null &&
                             webHookResponseDataModel.getData().size() > 0)
@@ -1523,7 +1390,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return hsh;
     }
 
-    private void startSendingPo11(String pollId)
+    void startSendingPo11(String pollId)
     {
         handler.postDelayed(runnable = new Runnable() {
             public void run()
@@ -1534,7 +1401,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }, poll_delay);
     }
 
-    private void stopSendingPolling()
+    public String getUniqueDeviceId(Context context) {
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+            if (uniqueID == null)
+            {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.apply();
+            }
+        }
+        return uniqueID;
+    }
+
+    void stopSendingPolling()
     {
         handler.removeCallbacks(runnable);
     }

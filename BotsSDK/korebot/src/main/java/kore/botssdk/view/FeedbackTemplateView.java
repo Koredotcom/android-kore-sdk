@@ -149,49 +149,33 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     @Override
     public void onClick(View v)
     {
-        switch (v.getId())
-        {
-            case R.id.icon_1:
-            {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(0);
-                position = 1;
-                updateData();
-            }
-            break;
-            case R.id.icon_2:
-            {
-                resetAll();
-                loademojis(1);
-                position = 2;
-                updateData();
-            }
-            break;
-            case R.id.icon_3:
-            {
-                resetAll();
-                loademojis(2);
-                position = 3;
-                updateData();
-            }
-            break;
-            case R.id.icon_4:
-            {
-                resetAll();
-                loademojis(3);
-                position = 4;
-                updateData();
-            }
-            break;
-            case R.id.icon_5:
-            {
-                resetAll();
-                loademojis(4);
-                position = 5;
-                updateData();
-            }
-            break;
+        int id = v.getId();
+        if (id == R.id.icon_1) {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(0);
+            position = 1;
+            updateData();
+        } else if (id == R.id.icon_2) {
+            resetAll();
+            loademojis(1);
+            position = 2;
+            updateData();
+        } else if (id == R.id.icon_3) {
+            resetAll();
+            loademojis(2);
+            position = 3;
+            updateData();
+        } else if (id == R.id.icon_4) {
+            resetAll();
+            loademojis(3);
+            position = 4;
+            updateData();
+        } else if (id == R.id.icon_5) {
+            resetAll();
+            loademojis(4);
+            position = 5;
+            updateData();
         }
     }
 

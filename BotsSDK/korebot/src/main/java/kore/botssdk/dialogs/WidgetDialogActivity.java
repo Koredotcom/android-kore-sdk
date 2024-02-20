@@ -32,16 +32,16 @@ import kore.botssdk.models.WidgetDialogModel;
 public class WidgetDialogActivity extends Dialog {
 
     private ImageView img_cancel;
-    WidgetDialogModel widgetDialogModel;
+    final WidgetDialogModel widgetDialogModel;
     TextView txtTitle, tv_time, txtPlace, tv_users;
     View sideBar;
     final int TIMER_START_MINUTE = 5 * 60;
     RecyclerView recycler_actions;
-    WCalEventsTemplateModel model;
-    Context mContext;
+    final WCalEventsTemplateModel model;
+    final Context mContext;
     private final boolean isFromFullView;
     Handler someHandler;
-    VerticalListViewActionHelper verticalListViewActionHelper;
+    final VerticalListViewActionHelper verticalListViewActionHelper;
     WidgetCancelActionsAdapter adapter;
     boolean flagMeetingInProgress;
     long starttime, endtimer;
@@ -152,7 +152,7 @@ public class WidgetDialogActivity extends Dialog {
         }
     }
 
-    Runnable runnable = new Runnable() {
+    final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             //Current time stamp
@@ -198,7 +198,7 @@ public class WidgetDialogActivity extends Dialog {
             case 1:
 
                 //meeting in progress
-                if (flagMeetingInProgress == false) {
+                if (!flagMeetingInProgress) {
 
                     flagMeetingInProgress = true;
                     adapter.setActionItems(sortShowingAction(true));
@@ -209,7 +209,7 @@ public class WidgetDialogActivity extends Dialog {
             case -1:
                 //meeting need to start
 
-                if (flagMeetingInProgress == false) {
+                if (!flagMeetingInProgress) {
                     flagMeetingInProgress = true;
                     adapter.setActionItems(sortShowingAction(true));
                     adapter.notifyDataSetChanged();

@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> implements IHighlighter {
-    protected com.kore.ai.widgetsdk.charts.highlight.BarHighlighter barHighlighter;
+    protected final com.kore.ai.widgetsdk.charts.highlight.BarHighlighter barHighlighter;
 
     public CombinedHighlighter(CombinedDataProvider chart, BarDataProvider barChart) {
         super(chart);
@@ -21,10 +21,10 @@ public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> 
 
     protected List<Highlight> getHighlightsAtXValue(float xVal, float x, float y) {
         this.mHighlightBuffer.clear();
-        List<BarLineScatterCandleBubbleData> dataObjects = ((CombinedDataProvider)this.mChart).getCombinedData().getAllData();
+        List<BarLineScatterCandleBubbleData> dataObjects = this.mChart.getCombinedData().getAllData();
 
         for(int i = 0; i < dataObjects.size(); ++i) {
-            ChartData dataObject = (ChartData)dataObjects.get(i);
+            ChartData dataObject = dataObjects.get(i);
             if (this.barHighlighter != null && dataObject instanceof BarData) {
                 Highlight high = this.barHighlighter.getHighlight(x, y);
                 if (high != null) {
@@ -35,7 +35,7 @@ public class CombinedHighlighter extends ChartHighlighter<CombinedDataProvider> 
                 int j = 0;
 
                 for(int dataSetCount = dataObject.getDataSetCount(); j < dataSetCount; ++j) {
-                    IDataSet dataSet = ((BarLineScatterCandleBubbleData)dataObjects.get(i)).getDataSetByIndex(j);
+                    IDataSet dataSet = dataObjects.get(i).getDataSetByIndex(j);
                     if (dataSet.isHighlightEnabled()) {
                         List<Highlight> highs = this.buildHighlights(dataSet, j, xVal, DataSet.Rounding.CLOSEST);
                         Iterator var11 = highs.iterator();

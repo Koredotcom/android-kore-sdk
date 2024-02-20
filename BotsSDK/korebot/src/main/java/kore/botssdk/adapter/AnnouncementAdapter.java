@@ -32,7 +32,7 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     private static final int DATA_FOUND = 1;
     private static final int NO_DATA = 0;
     private static final int MESSAGE = 2;
-    Context context;
+    final Context context;
     String msg;
     boolean isFromWidget;
     Drawable errorIcon;
@@ -184,19 +184,19 @@ public class AnnouncementAdapter extends RecyclerView.Adapter implements Recycle
     }
 
     public static class AnnouncementViewHolder extends RecyclerView.ViewHolder {
-        AnnouncementCardLayoutBinding binding;
+        final AnnouncementCardLayoutBinding binding;
 
         public AnnouncementViewHolder(@NonNull AnnouncementCardLayoutBinding binding) {
-            super((View) binding.getRoot());
+            super(binding.getRoot());
             this.binding = binding;
 
         }
     }
 
     class EmptyAnnocementViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_message;
-        RelativeLayout view_action;
-        ImageView img_icon;
+        final TextView tv_message;
+        final RelativeLayout view_action;
+        final ImageView img_icon;
 
         public EmptyAnnocementViewHolder(@NonNull View itemView) {
             super(itemView);

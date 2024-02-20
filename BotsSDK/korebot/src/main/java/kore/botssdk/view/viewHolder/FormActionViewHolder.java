@@ -13,13 +13,13 @@ import kore.botssdk.R;
  */
 
 public class FormActionViewHolder extends RecyclerView.ViewHolder{
-    TextView formActionTitle;
-    LinearLayout formActionRoot;
+    final TextView formActionTitle;
+    final LinearLayout formActionRoot;
 
     public FormActionViewHolder(View view) {
         super(view);
-        formActionTitle = (TextView) view.findViewById(R.id.form_action_item_text);
-        formActionRoot = (LinearLayout) view.findViewById(R.id.form_action_item_root);
+        formActionTitle = view.findViewById(R.id.form_action_item_text);
+        formActionRoot = view.findViewById(R.id.form_action_item_root);
     }
 
     public TextView getFormActionTitle() {

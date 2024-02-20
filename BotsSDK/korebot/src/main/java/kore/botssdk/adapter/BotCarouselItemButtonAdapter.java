@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,8 @@ import kore.botssdk.utils.KaFontUtils;
 public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
     ArrayList<BotCaourselButtonModel> botCaourselButtonModels = new ArrayList<>();
-    Context context;
-    LayoutInflater ownLayoutInflater;
+    final Context context;
+    final LayoutInflater ownLayoutInflater;
 
     public BotCarouselItemButtonAdapter(Context context) {
         this.context = context;
@@ -50,7 +51,11 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = ownLayoutInflater.inflate(R.layout.bot_carousel_item_button_layout, null);
+
+        if (convertView == null) {
+            convertView = View.inflate(context, R.layout.bot_carousel_item_button_layout, null);
+        }
+
         KaFontUtils.applyCustomFont(context,convertView);
         if (convertView.getTag() == null) {
             initializeViewHolder(convertView);
@@ -74,14 +79,11 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
     /**
      * View Holder Initialization
      */
-    private View initializeViewHolder(View view) {
+    private void initializeViewHolder(View view) {
 
         ViewHolder holder = new ViewHolder();
 
-        holder.botCarouselItemButton = (Button) view.findViewById(R.id.bot_carousel_item_button);
+        holder.botCarouselItemButton = view.findViewById(R.id.bot_carousel_item_button);
         view.setTag(holder);
-
-        return view;
-
     }
 }

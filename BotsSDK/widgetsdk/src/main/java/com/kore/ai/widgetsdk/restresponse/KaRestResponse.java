@@ -191,8 +191,8 @@ public class KaRestResponse {
     }
 
     public static class Meta{
-        public String timezone;
-        public String locale;
+        public final String timezone;
+        public final String locale;
         public Meta(String timezone, String locale){
             this.timezone = timezone;
             this.locale = locale;

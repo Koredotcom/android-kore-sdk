@@ -41,7 +41,7 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public abstract class KaBaseBubbleLayout extends ViewGroup {
-    Context context;
+    final Context context;
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -75,32 +75,32 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_DOWN_BORDER = 0;
     protected int BUBBLE_LEFT_BORDER = 0;
     protected int BUBBLE_RIGHT_BORDER = 0;
-    protected int BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT = 0;
+    protected final int BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT = 0;
     protected int BUBBLE_CONTENT_LEFT_BORDER = 0; //TODO remove this...
     protected int BUBBLE_CONTENT_RIGHT_BORDER = 0; //TODO remove this...
     protected int BUBBLE_LEFT_PROFILE_PIC = 0;
-    protected int BUBBLE_SEPARATION_DISTANCE = 0;
+    protected final int BUBBLE_SEPARATION_DISTANCE = 0;
     protected int BUBBLE_GROUPING_TIMELINE = 0;
     protected int BUBBLE_READ_RECEIPT = 0;
     protected int BUBBLE_CONTENT_RIGHT_LIST_MARGIN = 50;
 
     Paint paint;
 
-    protected int RIGHT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected);
-    protected int RIGHT_COLOR_UNSELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleUnSelected);
-    protected int LEFT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected);
-    protected int LEFT_COLOR_UNSELECTED =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected);
-    protected int BUBBLE_WHITE_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.whiteColor);
-    protected int LEFT_BUBBLE_BORDER_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleBorderColor);
-    protected int LEFT_BUBBLE_LINK_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
-    protected int RIGHT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor);
-    protected int LEFT_TEXT_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
-    protected int RIGHT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor);
+    protected final int RIGHT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected);
+    protected final int RIGHT_COLOR_UNSELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleUnSelected);
+    protected final int LEFT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected);
+    protected final int LEFT_COLOR_UNSELECTED =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected);
+    protected final int BUBBLE_WHITE_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.whiteColor);
+    protected final int LEFT_BUBBLE_BORDER_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleBorderColor);
+    protected final int LEFT_BUBBLE_LINK_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
+    protected final int RIGHT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor);
+    protected final int LEFT_TEXT_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
+    protected final int RIGHT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor);
 
 
 
 
-    protected int WHITE_COLOR = 0xffffffff;
+    protected final int WHITE_COLOR = 0xffffffff;
 //    public static String NON_KORE_COLOR = "#AEBFC4";
 
     protected TextMediaLayout bubbleTextMediaLayout;
@@ -150,6 +150,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected ResultsTemplateView resultsTemplateView;
     protected BotButtonLinkTemplateView botButtonLinkTemplateView;
     protected CardTemplateView cardTemplateView;
+    protected EmptyTemplateView emptyTemplateView;
 
 
     //    protected int[] dimens;
@@ -254,7 +255,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             } else {
                 paint.setColor(LEFT_COLOR_UNSELECTED);
             }
-        } else if (!isLeftSide()) {
+        } else {
             if (isSelected()) {
                 paint.setColor(RIGHT_COLOR_SELECTED);
             } else {
@@ -465,6 +466,9 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         cardTemplateView = ViewProvider.getCardTemplateView(context);
         cardTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(cardTemplateView);
+
+        emptyTemplateView = ViewProvider.getEmptyTemplateView(context);
+        addView(emptyTemplateView);
     }
 
 

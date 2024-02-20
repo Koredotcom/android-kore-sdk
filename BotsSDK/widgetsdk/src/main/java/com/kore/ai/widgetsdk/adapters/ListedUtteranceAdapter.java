@@ -18,7 +18,7 @@ public class ListedUtteranceAdapter extends BaseAdapter {
     private final Context mContext;
     private ArrayList<String> utterancesList;
     // private HashMap<String, KoreContact> contactHashMap;
-    LayoutInflater layoutInflater;
+    final LayoutInflater layoutInflater;
 
     public ListedUtteranceAdapter(Context mContext) {
         this.mContext = mContext;
@@ -65,7 +65,7 @@ public class ListedUtteranceAdapter extends BaseAdapter {
     }
 
     private void populateData(SharesViewHolder holder, int position) {
-        String dataObj = (String) getItem(position);
+        String dataObj = getItem(position);
         holder.utterance_view.setText(dataObj);
     }
 

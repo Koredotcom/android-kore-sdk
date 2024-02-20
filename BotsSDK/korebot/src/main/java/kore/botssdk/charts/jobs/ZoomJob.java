@@ -10,14 +10,14 @@ import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class ZoomJob extends ViewPortJob {
-    private static final ObjectPool<ZoomJob> pool = ObjectPool.create(1, new ZoomJob((ViewPortHandler)null, 0.0F, 0.0F, 0.0F, 0.0F, (Transformer)null, (YAxis.AxisDependency)null, (View)null));
+    private static final ObjectPool<ZoomJob> pool = ObjectPool.create(1, new ZoomJob(null, 0.0F, 0.0F, 0.0F, 0.0F, null, null, null));
     protected float scaleX;
     protected float scaleY;
     protected YAxis.AxisDependency axisDependency;
-    protected Matrix mRunMatrixBuffer = new Matrix();
+    protected final Matrix mRunMatrixBuffer = new Matrix();
 
     public static ZoomJob getInstance(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue, Transformer trans, YAxis.AxisDependency axis, View v) {
-        ZoomJob result = (ZoomJob)pool.get();
+        ZoomJob result = pool.get();
         result.xValue = xValue;
         result.yValue = yValue;
         result.scaleX = scaleX;
@@ -57,7 +57,7 @@ public class ZoomJob extends ViewPortJob {
     }
 
     protected ObjectPool.Poolable instantiate() {
-        return new ZoomJob((ViewPortHandler)null, 0.0F, 0.0F, 0.0F, 0.0F, (Transformer)null, (YAxis.AxisDependency)null, (View)null);
+        return new ZoomJob(null, 0.0F, 0.0F, 0.0F, 0.0F, null, null, null);
     }
 
     static {

@@ -36,7 +36,7 @@ public class BubbleDataSet extends BarLineScatterCandleBubbleDataSet<BubbleEntry
         List<BubbleEntry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((BubbleEntry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         com.kore.ai.widgetsdk.charts.data.BubbleDataSet copied = new com.kore.ai.widgetsdk.charts.data.BubbleDataSet(entries, this.getLabel());

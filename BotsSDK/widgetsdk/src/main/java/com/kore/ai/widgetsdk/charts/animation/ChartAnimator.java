@@ -19,14 +19,14 @@ public class ChartAnimator {
     private ObjectAnimator xAnimator(int duration, Easing.EasingFunction easing) {
         ObjectAnimator animatorX = ObjectAnimator.ofFloat(this, "phaseX", 0.0F, 1.0F);
         animatorX.setInterpolator(easing);
-        animatorX.setDuration((long)duration);
+        animatorX.setDuration(duration);
         return animatorX;
     }
 
     private ObjectAnimator yAnimator(int duration, Easing.EasingFunction easing) {
         ObjectAnimator animatorY = ObjectAnimator.ofFloat(this, "phaseY", 0.0F, 1.0F);
         animatorY.setInterpolator(easing);
-        animatorY.setDuration((long)duration);
+        animatorY.setDuration(duration);
         return animatorY;
     }
 

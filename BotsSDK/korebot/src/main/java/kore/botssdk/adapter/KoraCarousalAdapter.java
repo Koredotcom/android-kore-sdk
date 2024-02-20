@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -21,13 +22,13 @@ import kore.botssdk.view.viewUtils.KoraCarousalViewHelper;
 /**
  * Created by Shiva Krishna on 2/8/2018.
  */
-
+@SuppressLint("UnknownNullness")
 public class KoraCarousalAdapter extends PagerAdapter {
-    Context mContext;
+    final Context mContext;
     ArrayList<KoraSearchDataSetModel> data;
-    InvokeGenericWebViewInterface genericWebViewInterface;
-    ComposeFooterInterface composeFooterInterface;
-    LayoutInflater ownLayoutInflater;
+    final InvokeGenericWebViewInterface genericWebViewInterface;
+    final ComposeFooterInterface composeFooterInterface;
+    final LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
     public KoraCarousalAdapter(ArrayList<KoraSearchDataSetModel> koraSearchDataSetModels, Context mContext, InvokeGenericWebViewInterface webViewInterface, ComposeFooterInterface composeFooterInterface){
         super();

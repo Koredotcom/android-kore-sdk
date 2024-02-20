@@ -35,7 +35,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
         this.mBarBuffers = new HorizontalBarBuffer[barData.getDataSetCount()];
 
         for(int i = 0; i < this.mBarBuffers.length; ++i) {
-            IBarDataSet set = (IBarDataSet)barData.getDataSetByIndex(i);
+            IBarDataSet set = barData.getDataSetByIndex(i);
             this.mBarBuffers[i] = new HorizontalBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1), barData.getDataSetCount(), set.isStacked());
         }
 
@@ -55,8 +55,8 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
             float barWidthHalf = barWidth / 2.0F;
             int i = 0;
 
-            for(int count = Math.min((int)Math.ceil((double)((float)dataSet.getEntryCount() * phaseX)), dataSet.getEntryCount()); i < count; ++i) {
-                BarEntry e = (BarEntry)dataSet.getEntryForIndex(i);
+            for(int count = Math.min((int)Math.ceil((float)dataSet.getEntryCount() * phaseX), dataSet.getEntryCount()); i < count; ++i) {
+                BarEntry e = dataSet.getEntryForIndex(i);
                 float x = e.getX();
                 this.mBarShadowRectBuffer.top = x - barWidthHalf;
                 this.mBarShadowRectBuffer.bottom = x + barWidthHalf;
@@ -109,7 +109,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
             boolean drawValueAboveBar = this.mChart.isDrawValueAboveBarEnabled();
 
             for(int i = 0; i < this.mChart.getBarData().getDataSetCount(); ++i) {
-                IBarDataSet dataSet = (IBarDataSet)dataSets.get(i);
+                IBarDataSet dataSet = dataSets.get(i);
                 if (this.shouldDrawValues(dataSet)) {
                     boolean isInverted = this.mChart.isInverted(dataSet.getAxisDependency());
                     this.applyValueTextStyle(dataSet);
@@ -130,7 +130,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                             }
 
                             if (this.mViewPortHandler.isInBoundsX(buffer.buffer[j]) && this.mViewPortHandler.isInBoundsBottom(buffer.buffer[j + 1])) {
-                                BarEntry entry = (BarEntry)dataSet.getEntryForIndex(j / 4);
+                                BarEntry entry = dataSet.getEntryForIndex(j / 4);
                                 float val = entry.getY();
                                 String formattedValue = formatter.getBarLabel(entry);
                                 float valueTextWidth = (float)Utils.calcTextWidth(this.mValuePaint, formattedValue);
@@ -168,7 +168,7 @@ public class HorizontalBarChartRenderer extends BarChartRenderer {
                                     break label213;
                                 }
 
-                                BarEntry entry = (BarEntry)dataSet.getEntryForIndex(index);
+                                BarEntry entry = dataSet.getEntryForIndex(index);
                                 int color = dataSet.getValueTextColor(index);
                                 vals = entry.getYVals();
                                 float py;

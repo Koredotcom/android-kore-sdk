@@ -235,7 +235,7 @@ public class HorizontalBarChartView extends ViewGroup implements OnChartValueSel
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    protected RectF mOnValueSelectedRectF = new RectF();
+    protected final RectF mOnValueSelectedRectF = new RectF();
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {

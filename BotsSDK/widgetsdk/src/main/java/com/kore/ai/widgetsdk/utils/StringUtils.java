@@ -68,7 +68,7 @@ public final class StringUtils {
         int size = str.length();
 
         for (int i = 0; i < size; i++) {
-            int _num = (int) str.charAt(i);
+            int _num = str.charAt(i);
             num += _num + _num % (i + 1);
         }
 
@@ -124,9 +124,8 @@ public final class StringUtils {
     }
 
     public static String getInitials(String fn, String ln) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "");
-        stringBuilder.append(!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
-        return stringBuilder.toString().trim();
+        String stringBuilder = String.valueOf(!StringUtils.isNullOrEmptyWithTrim(fn) ? fn.charAt(0) : "") +
+                (!StringUtils.isNullOrEmptyWithTrim(ln) ? ln.charAt(0) : "");
+        return stringBuilder.trim();
     }
 }

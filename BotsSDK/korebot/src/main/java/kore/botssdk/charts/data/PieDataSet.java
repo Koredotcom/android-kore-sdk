@@ -37,7 +37,7 @@ public class PieDataSet extends kore.botssdk.charts.data.DataSet<PieEntry> imple
         List<PieEntry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((PieEntry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         kore.botssdk.charts.data.PieDataSet copied = new kore.botssdk.charts.data.PieDataSet(entries, this.getLabel());

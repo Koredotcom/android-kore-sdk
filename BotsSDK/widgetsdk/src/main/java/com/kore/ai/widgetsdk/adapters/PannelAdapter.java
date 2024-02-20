@@ -152,10 +152,11 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
     }
 
     class RViewHoldeer extends RecyclerView.ViewHolder {
-        TextView img_icon,txtTitle;
-        ImageView img_skill;
-        ViewGroup item;
-        ImageView unreadIcon;
+        final TextView img_icon;
+        final TextView txtTitle;
+        final ImageView img_skill;
+        final ViewGroup item;
+        final ImageView unreadIcon;
 
         public RViewHoldeer(@NonNull View itemView) {
             super(itemView);

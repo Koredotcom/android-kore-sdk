@@ -130,14 +130,14 @@ public class KnowledgeDetailModel implements Serializable {
 
     public String getFormattedModifiedDate() {
         if (formattedModifiedDate == null) {
-            formattedModifiedDate = DateUtils.formattedSentDateV6((Long) lastMod);
+            formattedModifiedDate = DateUtils.formattedSentDateV6(lastMod);
         }
         return formattedModifiedDate;
     }
 
     public String getFormattedHeaderDate() {
         if (formattedHeaderDate == null) {
-            formattedHeaderDate = DateUtils.formattedSentDateV8((Long) lastMod, false);
+            formattedHeaderDate = DateUtils.formattedSentDateV8(lastMod, false);
         }
         return formattedHeaderDate;
     }

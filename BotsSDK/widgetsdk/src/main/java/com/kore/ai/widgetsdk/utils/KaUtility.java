@@ -62,11 +62,11 @@ public class KaUtility {
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
 
         View layout = inflater.inflate(R.layout.custom_toast_pin,
-                (ViewGroup) ((Activity) context).findViewById(R.id.root_pin));
+                ((Activity) context).findViewById(R.id.root_pin));
 
         // set a message
 
-        TextView text = (TextView) layout.findViewById(R.id.text);
+        TextView text = layout.findViewById(R.id.text);
         text.setText(message);
 
         // Toast...
@@ -127,7 +127,7 @@ public class KaUtility {
                     KaUtility.launchWebUrl(context, (String) (data.get("url")));
                     break;
                 case "dial":
-                    KaUtility.launchDialer(context, "tel:" + (String) (data.get("dial")));
+                    KaUtility.launchDialer(context, "tel:" + data.get("dial"));
                     break;
                 case "open_form":
                     KaUtility.launchTakeNotes(context, (String) (data.get("meetingId")), (String) (data.get("eId")));
@@ -182,14 +182,15 @@ public class KaUtility {
     public static int isTitleAndPanelNameMatch(String pname, String panelName) {
         if(pname.equalsIgnoreCase(panelName))
             return View.GONE;
-            return View.VISIBLE;
+
+        return View.VISIBLE;
     }
 
     public enum Features {MEETINGS, KNOWLEDGE, TASKS, SKILLS, UNIVERSAL_SEARCH}
 
-    public static LinkedHashMap<Features, String> featureDescriptionMap = new LinkedHashMap<>();
-    public static LinkedHashMap<Features, String> featureTitleMap = new LinkedHashMap<>();
-    public static HashMap<Features, String> featureVideosMap = new HashMap<>();
+    public static final LinkedHashMap<Features, String> featureDescriptionMap = new LinkedHashMap<>();
+    public static final LinkedHashMap<Features, String> featureTitleMap = new LinkedHashMap<>();
+    public static final HashMap<Features, String> featureVideosMap = new HashMap<>();
 
     //    private String rooturl = "https://qa-app.kora.ai/static/videos/";
     private static final String[] videoLinks = new String[]{

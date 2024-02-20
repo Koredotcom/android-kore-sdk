@@ -14,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -49,15 +51,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     private BottomSheetDialog bottomSheetDialog;
     private boolean showHeader = false;
     private LinearLayout llTabHeader;
-    private SharedPreferences sharedPreferences;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
-        this.trigger = trigger;
     }
 
     private String skillName;
-    private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -70,7 +70,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         llTabHeader = view.findViewById(R.id.llTabHeader);
         llBottomLayout = view.findViewById(R.id.llBottomLayout);
-        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
@@ -78,7 +78,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this.dp1 = (int) DimensionUtil.dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
-            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, 0);
+            botListTemplateAdapter = new BotListViewTemplateAdapter(requireActivity(), lvMoreData, 0);
             lvMoreData.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -95,11 +95,11 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         tvTab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab1.setTextColor(getResources().getColor(R.color.white));
+                tvTab1.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.bottom_sheet_button_bg, requireActivity().getTheme()));
+                tvTab1.setTextColor(requireActivity().getColor(R.color.white));
 
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab2.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
+                tvTab2.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.calender_view_background, requireActivity().getTheme()));
+                tvTab2.setTextColor(requireActivity().getColor(R.color.footer_color_dark_grey));
 
                 botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
             }
@@ -108,11 +108,11 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         tvTab2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvTab2.setBackground(getResources().getDrawable(R.drawable.bottom_sheet_button_bg));
-                tvTab2.setTextColor(getResources().getColor(R.color.white));
+                tvTab2.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.bottom_sheet_button_bg, requireActivity().getTheme()));
+                tvTab2.setTextColor(requireActivity().getColor(R.color.white));
 
-                tvTab1.setBackground(getResources().getDrawable(R.drawable.calender_view_background));
-                tvTab1.setTextColor(getResources().getColor(R.color.footer_color_dark_grey));
+                tvTab1.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.calender_view_background, requireActivity().getTheme()));
+                tvTab1.setTextColor(requireActivity().getColor(R.color.footer_color_dark_grey));
 
                 botListTemplateAdapter.setBotListModelArrayList(model.getTab2());
             }
@@ -143,6 +143,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     }
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
@@ -150,11 +151,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = (FrameLayout) d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
-                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight((int) (500 * dp1));
+                if(bottomSheet != null) {
+                    bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+                    BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                    bottomSheetBehavior.setPeekHeight(500 * dp1);
+                }
             }
 
         });

@@ -21,21 +21,18 @@ import kore.botssdk.view.viewHolder.FormActionViewHolder;
 
 public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolder> {
     private ArrayList<FormActionTemplate> formActionTemplateArrayList;
-    Context context;
-    LayoutInflater layoutInflater;
-    RecyclerView parentRecyclerView;
-
+    final Context context;
+    final RecyclerView parentRecyclerView;
     ComposeFooterInterface composeFooterInterface;
 
     public FormActionsAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
-        layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public FormActionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View convertView = layoutInflater.inflate(R.layout.form_action_item_layout, null);
+        View convertView = View.inflate(context, R.layout.form_action_item_layout, null);
         KaFontUtils.applyCustomFont(context,convertView);
         return new FormActionViewHolder(convertView);
     }

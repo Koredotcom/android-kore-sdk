@@ -5,28 +5,10 @@ public abstract class AbstractBuffer<T> {
     public final float[] buffer;
     protected float phaseX = 1.0F;
     protected float phaseY = 1.0F;
-    protected int mFrom = 0;
-    protected int mTo = 0;
 
     public AbstractBuffer(int size) {
         this.index = 0;
         this.buffer = new float[size];
-    }
-
-    public void limitFrom(int from) {
-        if (from < 0) {
-            from = 0;
-        }
-
-        this.mFrom = from;
-    }
-
-    public void limitTo(int to) {
-        if (to < 0) {
-            to = 0;
-        }
-
-        this.mTo = to;
     }
 
     public void reset() {

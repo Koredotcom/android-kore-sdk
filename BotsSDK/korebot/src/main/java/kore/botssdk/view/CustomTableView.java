@@ -38,7 +38,7 @@ public class CustomTableView extends ViewGroup {
     private void init(){
         LayoutInflater.from(mContext).inflate(R.layout.bot_table_view, this, true);
         dp1 = (int) DimensionUtil.dp1;
-        mTable = (TableLayout) findViewById(R.id.tableView);
+        mTable = findViewById(R.id.tableView);
 //        setBackgroundColor(Color.BLUE);
     }
 

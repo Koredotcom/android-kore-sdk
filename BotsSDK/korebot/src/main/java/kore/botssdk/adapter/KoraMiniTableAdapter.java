@@ -20,9 +20,9 @@ import kore.botssdk.view.tableview.BotMiniTableView;
  */
 
 public class KoraMiniTableAdapter extends PagerAdapter {
-    Context mContext;
-    ArrayList<BotMiniTableModel> data;
-    LayoutInflater ownLayoutInflater;
+    final Context mContext;
+    final ArrayList<BotMiniTableModel> data;
+    final LayoutInflater ownLayoutInflater;
     float pageWidth = 1.0f;
     private final String template_type;
     public KoraMiniTableAdapter(ArrayList<BotMiniTableModel> miniTableModels, Context mContext, String template_type){
@@ -55,21 +55,10 @@ public class KoraMiniTableAdapter extends PagerAdapter {
         //Set layoutParams
         String[] alignment = mTable.addHeaderAdapter(data.get(position).getPrimary());
         mTable.addDataAdapter(template_type, data.get(position).getAdditional(),alignment);
-//                tableContainer.addView(mTable, index);
         container.addView(mTable);
         KaFontUtils.applyCustomFont(mContext,mTable);
-        /*final View carouselItemLayout;
-        if(data.get(position).getViewType() == KoraSearchDataSetModel.ViewType.EMAIL_VIEW) {
-            carouselItemLayout = ownLayoutInflater.inflate(R.layout.kora_email_view, container, false);
-        }else {
-            carouselItemLayout = ownLayoutInflater.inflate(R.layout.kora_knowledge_view, container, false);
-        }
-        KaFontUtils.applyCustomFont(mContext,carouselItemLayout);
-        KoraCarousalViewHelper.initializeViewHolder(carouselItemLayout,data.get(position).getViewType());
-        KoraCarousalViewHelper.populateStuffs((KoraCarousalViewHelper.KoraCarousalViewHolder) carouselItemLayout.getTag(), composeFooterInterface, genericWebViewInterface, data.get(position), mContext);*/
 
         return mTable;
-
     }
 
     @Override

@@ -9,9 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import kore.botssdk.R;
 
 public class MeetingNotesViewHolder extends RecyclerView.ViewHolder {
-        public View header;
-        public View click_view;
-       public TextView icon_view,root_title_view,count_view,title_view,date_view,creator_view,task_view;
+        public final View header;
+        public final View click_view;
+       public final TextView icon_view;
+    public final TextView root_title_view;
+    public final TextView count_view;
+    public final TextView title_view;
+    public final TextView date_view;
+    public final TextView creator_view;
+    public final TextView task_view;
         public MeetingNotesViewHolder(@NonNull View itemView) {
             super(itemView);
             icon_view=itemView.findViewById(R.id.icon_view);

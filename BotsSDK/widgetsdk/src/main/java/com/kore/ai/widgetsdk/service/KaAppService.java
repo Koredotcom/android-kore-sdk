@@ -47,7 +47,7 @@ public class KaAppService extends Service {
     }
 
     //For network monitor
-    BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -6,7 +6,7 @@ import kore.botssdk.io.crossbar.autobahn.websocket.exceptions.WebSocketException
 /// WebSockets reader detected WS protocol violation.
 public class ProtocolViolation extends Message {
 
-    public WebSocketException mException;
+    public final WebSocketException mException;
 
     public ProtocolViolation(WebSocketException e) {
         mException = e;

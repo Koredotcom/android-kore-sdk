@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,14 +50,11 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
-
-    WidgetActionSheetFragment widgetDialogActivity;
+    final WidgetActionSheetFragment widgetDialogActivity;
     Object actionList;
-    Object model;
-    Activity mainContext;
-    boolean isFromFullView;
-
-
+    final Object model;
+    final Activity mainContext;
+    final boolean isFromFullView;
     private String skillName;
     private final String trigger;
     private final VerticalListViewActionHelper verticalListViewActionHelper;
@@ -104,13 +100,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
         this.isFromFullView = isFromFullView;
-        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public WidgetCancelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(widgetDialogActivity.getContext()).inflate(R.layout.widget_cancel_laout, parent, false);
         return new WidgetCancelViewHolder(v);
     }
@@ -122,7 +116,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         hashMap.put("tIds", ((WTaskTemplateModel) model).getId());
         KoreEventCenter.post(new CancelEvent((append_uttrance ? Constants.SKILL_UTTERANCE : "") + ((List<CalEventsTemplateModel.Action>) actionList).get(position).getUtterance(), new Gson().toJson(hashMap), 0, true));
         (widgetDialogActivity).dismiss();
-        if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
+        if (mainContext != null && isFromFullView) {
             mainContext.finish();
         }
         dissmissbaseSheet();
@@ -254,24 +248,6 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
                         buttonAction(act.getUtterance(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
                                 (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-                        /*if (Utility.checkIsSkillKora()) {
-                            EntityEditEvent event = new EntityEditEvent();
-                            event.setMessage("" + act.getUtterance());
-                            event.setPayLoad(null);
-                            KoreEventCenter.post(event);
-
-                        } else {
-                            DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    EntityEditEvent event = new EntityEditEvent();
-                                    event.setMessage("" + act.getUtterance());
-                                    event.setPayLoad(null);
-                                    KoreEventCenter.post(event);
-                                    dialog.dismiss();
-                                }
-                            });
-                        }*/
                     }
                 });
             }
@@ -346,12 +322,9 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
     public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i = 0; i < permissionLength; i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }
@@ -364,8 +337,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NO_HISTORY
-                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY);
             context.startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
@@ -385,7 +357,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 if (utterance.startsWith("tel:")) {
                     launchDialer(mainContext, utterance);
                 } else if (utterance.startsWith("mailto:")) {
-                    showEmailIntent((Activity) mainContext, utterance.split(":")[1]);
+                    showEmailIntent(mainContext, utterance.split(":")[1]);
                 }
                 return;
             }
@@ -425,7 +397,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         KoreEventCenter.post(new DissMissBaseSheet());
         KoreEventCenter.post(new CancelEvent((append_uttrance ? Constants.SKILL_UTTERANCE : "") + ((WCalEventsTemplateModel) model).getActions().get(position).getUtterance(), new Gson().toJson(hashMap), 0, true));
         (widgetDialogActivity).dismiss();
-        if (mainContext != null && mainContext instanceof Activity && isFromFullView) {
+        if (mainContext != null && isFromFullView) {
             mainContext.finish();
         }
     }
@@ -435,35 +407,35 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         if (model instanceof WTaskTemplateModel) {
             return actionList != null ? ((List<CalEventsTemplateModel.Action>) actionList).size() : 0;
         } else if (model instanceof WCalEventsTemplateModel) {
-            return model != null && actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
+            return actionList != null ? ((WCalEventsTemplateModel) model).getActions().size() : 0;
         } else if (model instanceof Widget.Element) {
-            return model != null && actionList != null ? ((Widget.Element) model).getActions().size() : 0;
+            return actionList != null ? ((Widget.Element) model).getActions().size() : 0;
         } else if (model instanceof WidgetListElementModel) {
             if(!isFromListMenu)
-                return model != null && ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
+                return ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
             else
-                return model != null && ((WidgetListElementModel) model).getValue() != null &&((WidgetListElementModel) model).getValue().getMenu() != null ? ((WidgetListElementModel) model).getValue().getMenu().size() : 0;
+                return ((WidgetListElementModel) model).getValue() != null && ((WidgetListElementModel) model).getValue().getMenu() != null ? ((WidgetListElementModel) model).getValue().getMenu().size() : 0;
         }
         else if(model instanceof BaseChartModel)
         {
             BaseChartModel ba=(BaseChartModel)model;
-            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ?ba.getHeaderOptions().getMenu().size():0;
         }else if(model instanceof WidgetListModel)
         {
             WidgetListModel ba=(WidgetListModel)model;
-            return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ?ba.getHeaderOptions().getMenu().size():0;
         }
         else if(model instanceof PayloadInner)
         {
             PayloadInner ba=(PayloadInner)model;
             if(ba.getHeaderOptions() instanceof HeaderOptionsModel)
-                return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&((HeaderOptionsModel)ba.getHeaderOptions()).getMenu()!=null)?((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().size():0;
+                return actionList != null && ba.getHeaderOptions() != null && ((HeaderOptionsModel) ba.getHeaderOptions()).getMenu() != null ?((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().size():0;
         }
         return 0;
     }
 
-    class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_actions;
+    static class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
+        final TextView tv_actions;
 
         public WidgetCancelViewHolder(@NonNull View itemView) {
             super(itemView);

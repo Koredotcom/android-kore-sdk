@@ -14,15 +14,15 @@ import kore.botssdk.charts.interfaces.datasets.ILineDataSet;
 import kore.botssdk.charts.interfaces.datasets.IScatterDataSet;
 
 public class Transformer {
-    protected Matrix mMatrixValueToPx = new Matrix();
-    protected Matrix mMatrixOffset = new Matrix();
-    protected ViewPortHandler mViewPortHandler;
+    protected final Matrix mMatrixValueToPx = new Matrix();
+    protected final Matrix mMatrixOffset = new Matrix();
+    protected final ViewPortHandler mViewPortHandler;
     protected float[] valuePointsForGenerateTransformedValuesScatter = new float[1];
     protected float[] valuePointsForGenerateTransformedValuesBubble = new float[1];
     protected float[] valuePointsForGenerateTransformedValuesLine = new float[1];
     protected float[] valuePointsForGenerateTransformedValuesCandle = new float[1];
-    protected Matrix mPixelToValueMatrixBuffer = new Matrix();
-    float[] ptsBuffer = new float[2];
+    protected final Matrix mPixelToValueMatrixBuffer = new Matrix();
+    final float[] ptsBuffer = new float[2];
     private final Matrix mMBuffer1 = new Matrix();
     private final Matrix mMBuffer2 = new Matrix();
 
@@ -135,7 +135,7 @@ public class Transformer {
         float[] valuePoints = this.valuePointsForGenerateTransformedValuesCandle;
 
         for(int j = 0; j < count; j += 2) {
-            CandleEntry e = (CandleEntry)data.getEntryForIndex(j / 2 + from);
+            CandleEntry e = data.getEntryForIndex(j / 2 + from);
             if (e != null) {
                 valuePoints[j] = e.getX();
                 valuePoints[j + 1] = e.getHigh() * phaseY;
@@ -157,7 +157,7 @@ public class Transformer {
 
     public void pathValuesToPixel(List<Path> paths) {
         for(int i = 0; i < paths.size(); ++i) {
-            this.pathValueToPixel((Path)paths.get(i));
+            this.pathValueToPixel(paths.get(i));
         }
 
     }
@@ -208,7 +208,7 @@ public class Transformer {
         Matrix m = this.getValueToPixelMatrix();
 
         for(int i = 0; i < rects.size(); ++i) {
-            m.mapRect((RectF)rects.get(i));
+            m.mapRect(rects.get(i));
         }
 
     }
@@ -234,16 +234,16 @@ public class Transformer {
         this.ptsBuffer[0] = x;
         this.ptsBuffer[1] = y;
         this.pixelsToValue(this.ptsBuffer);
-        outputPoint.x = (double)this.ptsBuffer[0];
-        outputPoint.y = (double)this.ptsBuffer[1];
+        outputPoint.x = this.ptsBuffer[0];
+        outputPoint.y = this.ptsBuffer[1];
     }
 
     public MPPointD getPixelForValues(float x, float y) {
         this.ptsBuffer[0] = x;
         this.ptsBuffer[1] = y;
         this.pointValuesToPixel(this.ptsBuffer);
-        double xPx = (double)this.ptsBuffer[0];
-        double yPx = (double)this.ptsBuffer[1];
+        double xPx = this.ptsBuffer[0];
+        double yPx = this.ptsBuffer[1];
         return MPPointD.getInstance(xPx, yPx);
     }
 

@@ -106,8 +106,9 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
     }
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private TextView botListItemTitle, botListItemSubtitle;
-        private ImageView botListItemImage;
+        private final TextView botListItemTitle;
+        private final TextView botListItemSubtitle;
+        private final ImageView botListItemImage;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);

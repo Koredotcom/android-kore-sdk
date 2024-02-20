@@ -30,13 +30,13 @@ public class StackedValueFormatter extends ValueFormatter {
             float[] vals = entry.getYVals();
             if (vals != null) {
                 if (vals[vals.length - 1] == value) {
-                    return this.mFormat.format((double)entry.getY()) + this.mSuffix;
+                    return this.mFormat.format(entry.getY()) + this.mSuffix;
                 }
 
                 return "";
             }
         }
 
-        return this.mFormat.format((double)value) + this.mSuffix;
+        return this.mFormat.format(value) + this.mSuffix;
     }
 }

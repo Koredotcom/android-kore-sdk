@@ -28,7 +28,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
         if (this.mGestureDetector.onTouchEvent(event)) {
             return true;
         } else {
-            if (((PieRadarChartBase)this.mChart).isRotationEnabled()) {
+            if (this.mChart.isRotationEnabled()) {
                 float x = event.getX();
                 float y = event.getY();
                 switch(event.getAction()) {
@@ -36,7 +36,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
                         this.startAction(event);
                         this.stopDeceleration();
                         this.resetVelocity();
-                        if (((PieRadarChartBase)this.mChart).isDragDecelerationEnabled()) {
+                        if (this.mChart.isDragDecelerationEnabled()) {
                             this.sampleVelocity(x, y);
                         }
 
@@ -45,7 +45,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
                         this.mTouchStartPoint.y = y;
                         break;
                     case 1:
-                        if (((PieRadarChartBase)this.mChart).isDragDecelerationEnabled()) {
+                        if (this.mChart.isDragDecelerationEnabled()) {
                             this.stopDeceleration();
                             this.sampleVelocity(x, y);
                             this.mDecelerationAngularVelocity = this.calculateVelocity();
@@ -55,22 +55,22 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
                             }
                         }
 
-                        ((PieRadarChartBase)this.mChart).enableScroll();
+                        this.mChart.enableScroll();
                         this.mTouchMode = 0;
                         this.endAction(event);
                         break;
                     case 2:
-                        if (((PieRadarChartBase)this.mChart).isDragDecelerationEnabled()) {
+                        if (this.mChart.isDragDecelerationEnabled()) {
                             this.sampleVelocity(x, y);
                         }
 
                         if (this.mTouchMode == 0 && distance(x, this.mTouchStartPoint.x, y, this.mTouchStartPoint.y) > Utils.convertDpToPixel(8.0F)) {
                             this.mLastGesture = ChartGesture.ROTATE;
                             this.mTouchMode = 6;
-                            ((PieRadarChartBase)this.mChart).disableScroll();
+                            this.mChart.disableScroll();
                         } else if (this.mTouchMode == 6) {
                             this.updateGestureRotation(x, y);
-                            ((PieRadarChartBase)this.mChart).invalidate();
+                            this.mChart.invalidate();
                         }
 
                         this.endAction(event);
@@ -83,7 +83,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
 
     public void onLongPress(MotionEvent me) {
         this.mLastGesture = ChartGesture.LONG_PRESS;
-        OnChartGestureListener l = ((PieRadarChartBase)this.mChart).getOnChartGestureListener();
+        OnChartGestureListener l = this.mChart.getOnChartGestureListener();
         if (l != null) {
             l.onChartLongPressed(me);
         }
@@ -96,15 +96,15 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
 
     public boolean onSingleTapUp(MotionEvent e) {
         this.mLastGesture = ChartGesture.SINGLE_TAP;
-        OnChartGestureListener l = ((PieRadarChartBase)this.mChart).getOnChartGestureListener();
+        OnChartGestureListener l = this.mChart.getOnChartGestureListener();
         if (l != null) {
             l.onChartSingleTapped(e);
         }
 
-        if (!((PieRadarChartBase)this.mChart).isHighlightPerTapEnabled()) {
+        if (!this.mChart.isHighlightPerTapEnabled()) {
             return false;
         } else {
-            Highlight high = ((PieRadarChartBase)this.mChart).getHighlightByTouchPoint(e.getX(), e.getY());
+            Highlight high = this.mChart.getHighlightByTouchPoint(e.getX(), e.getY());
             this.performHighlight(high, e);
             return true;
         }
@@ -116,10 +116,10 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
 
     private void sampleVelocity(float touchLocationX, float touchLocationY) {
         long currentTime = AnimationUtils.currentAnimationTimeMillis();
-        this._velocitySamples.add(new PieRadarChartTouchListener.AngularVelocitySample(currentTime, ((PieRadarChartBase)this.mChart).getAngleForPoint(touchLocationX, touchLocationY)));
+        this._velocitySamples.add(new PieRadarChartTouchListener.AngularVelocitySample(currentTime, this.mChart.getAngleForPoint(touchLocationX, touchLocationY)));
         int i = 0;
 
-        for(int count = this._velocitySamples.size(); i < count - 2 && currentTime - ((PieRadarChartTouchListener.AngularVelocitySample)this._velocitySamples.get(i)).time > 1000L; ++i) {
+        for(int count = this._velocitySamples.size(); i < count - 2 && currentTime - this._velocitySamples.get(i).time > 1000L; ++i) {
             this._velocitySamples.remove(0);
             --i;
             --count;
@@ -131,12 +131,12 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
         if (this._velocitySamples.isEmpty()) {
             return 0.0F;
         } else {
-            PieRadarChartTouchListener.AngularVelocitySample firstSample = (PieRadarChartTouchListener.AngularVelocitySample)this._velocitySamples.get(0);
-            PieRadarChartTouchListener.AngularVelocitySample lastSample = (PieRadarChartTouchListener.AngularVelocitySample)this._velocitySamples.get(this._velocitySamples.size() - 1);
+            PieRadarChartTouchListener.AngularVelocitySample firstSample = this._velocitySamples.get(0);
+            PieRadarChartTouchListener.AngularVelocitySample lastSample = this._velocitySamples.get(this._velocitySamples.size() - 1);
             PieRadarChartTouchListener.AngularVelocitySample beforeLastSample = firstSample;
 
             for(int i = this._velocitySamples.size() - 1; i >= 0; --i) {
-                beforeLastSample = (PieRadarChartTouchListener.AngularVelocitySample)this._velocitySamples.get(i);
+                beforeLastSample = this._velocitySamples.get(i);
                 if (beforeLastSample.angle != lastSample.angle) {
                     break;
                 }
@@ -168,11 +168,11 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
     }
 
     public void setGestureStartAngle(float x, float y) {
-        this.mStartAngle = ((PieRadarChartBase)this.mChart).getAngleForPoint(x, y) - ((PieRadarChartBase)this.mChart).getRawRotationAngle();
+        this.mStartAngle = this.mChart.getAngleForPoint(x, y) - this.mChart.getRawRotationAngle();
     }
 
     public void updateGestureRotation(float x, float y) {
-        ((PieRadarChartBase)this.mChart).setRotationAngle(((PieRadarChartBase)this.mChart).getAngleForPoint(x, y) - this.mStartAngle);
+        this.mChart.setRotationAngle(this.mChart.getAngleForPoint(x, y) - this.mStartAngle);
     }
 
     public void stopDeceleration() {
@@ -182,9 +182,9 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
     public void computeScroll() {
         if (this.mDecelerationAngularVelocity != 0.0F) {
             long currentTime = AnimationUtils.currentAnimationTimeMillis();
-            this.mDecelerationAngularVelocity *= ((PieRadarChartBase)this.mChart).getDragDecelerationFrictionCoef();
+            this.mDecelerationAngularVelocity *= this.mChart.getDragDecelerationFrictionCoef();
             float timeInterval = (float)(currentTime - this.mDecelerationLastTime) / 1000.0F;
-            ((PieRadarChartBase)this.mChart).setRotationAngle(((PieRadarChartBase)this.mChart).getRotationAngle() + this.mDecelerationAngularVelocity * timeInterval);
+            this.mChart.setRotationAngle(this.mChart.getRotationAngle() + this.mDecelerationAngularVelocity * timeInterval);
             this.mDecelerationLastTime = currentTime;
             if ((double)Math.abs(this.mDecelerationAngularVelocity) >= 0.001D) {
                 Utils.postInvalidateOnAnimation(this.mChart);
@@ -196,7 +196,7 @@ public class PieRadarChartTouchListener extends ChartTouchListener<PieRadarChart
     }
 
     private class AngularVelocitySample {
-        public long time;
+        public final long time;
         public float angle;
 
         public AngularVelocitySample(long time, float angle) {

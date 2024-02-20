@@ -1,69 +1,46 @@
 package kore.botssdk.view.tableview;
 
-import android.animation.Animator;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.app.Dialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.tableview.colorizers.TableDataRowColorizer;
-import kore.botssdk.view.tableview.listeners.OnScrollListener;
-import kore.botssdk.view.tableview.listeners.SwipeToRefreshListener;
-import kore.botssdk.view.tableview.listeners.TableDataClickListener;
-import kore.botssdk.view.tableview.listeners.TableDataLongClickListener;
 import kore.botssdk.view.tableview.listeners.TableHeaderClickListener;
 import kore.botssdk.view.tableview.model.TableColumnModel;
 import kore.botssdk.view.tableview.model.TableColumnWeightModel;
 import kore.botssdk.view.tableview.providers.TableDataRowBackgroundProvider;
 import kore.botssdk.view.tableview.toolkit.TableDataRowBackgroundProviders;
 
-
+@SuppressLint("UnknownNullness")
 public class TableView<T> extends LinearLayout {
-
-    private final String LOG_TAG = TableView.class.getName();
-
-    private final int DEFAULT_COLUMN_COUNT = 4;
-    private final int DEFAULT_HEADER_ELEVATION = 1;
-//    private static final int DEFAULT_HEADER_COLOR = 0xFFCCCCCC;
-
-    /*private final Set<TableDataLongClickListener<T>> dataLongClickListeners = new HashSet<>();
-    private final Set<TableDataClickListener<T>> dataClickListeners = new HashSet<>();
-    private final Set<OnScrollListener> onScrollListeners = new HashSet<>();*/
-    private final LayoutTransition layoutTransition;
 
     private TableDataRowBackgroundProvider<? super T> dataRowBackgroundProvider =
             TableDataRowBackgroundProviders.similarRowColor(0x00000000);
-    private TableColumnModel columnModel;
+    TableColumnModel columnModel;
+
     protected TableHeaderView tableHeaderView;
-    protected ListView tableDataView;
+    protected AutoExpandListView tableDataView;
     private TableDataAdapter<T> tableDataAdapter;
     private TableHeaderAdapter tableHeaderAdapter;
-    private final float dp1;
-    private PayloadInner payloadInner;
     private int headerElevation;
-    private String propertyName = "y";
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-//    private int headerColor;
+    //    private int headerColor;
 
 
     /**
@@ -96,13 +73,11 @@ public class TableView<T> extends LinearLayout {
      */
     public TableView(final Context context, final AttributeSet attributes, final int styleAttributes) {
         super(context, attributes, styleAttributes);
-        this.dp1 = AppControl.getInstance().getDimensionUtil().density;
         setOrientation(LinearLayout.VERTICAL);
         setAttributes(attributes);
         setupTableHeaderView(attributes);
         setupTableDataView(attributes, styleAttributes);
-        setBackground(context.getDrawable(R.drawable.round_rect));
-        layoutTransition = new LayoutTransition();
+        setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.round_rect, context.getTheme()));
     }
 
     /**
@@ -114,7 +89,7 @@ public class TableView<T> extends LinearLayout {
         this.tableHeaderView = headerView;
 
         tableHeaderView.setAdapter(tableHeaderAdapter);
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         tableHeaderView.setId(R.id.table_header_view);
 
         if (getChildCount() == 2) {
@@ -143,24 +118,8 @@ public class TableView<T> extends LinearLayout {
      */
     public void setHeaderVisible(boolean visible, int animationDuration) {
         if (visible && !isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveInAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, 0));
-                moveInAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.APPEARING, moveInAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             addView(tableHeaderView, 0);
         } else if (!visible && isHeaderVisible()) {
-            if (animationDuration > 0) {
-                final Animator moveOutAnimator = ObjectAnimator.ofPropertyValuesHolder((Object) null, PropertyValuesHolder.ofFloat(propertyName, -tableHeaderView.getHeight()));
-                moveOutAnimator.setDuration(animationDuration);
-                layoutTransition.setAnimator(LayoutTransition.DISAPPEARING, moveOutAnimator);
-                setLayoutTransition(layoutTransition);
-            } else {
-                setLayoutTransition(null);
-            }
             removeView(tableHeaderView);
         }
     }
@@ -185,15 +144,12 @@ public class TableView<T> extends LinearLayout {
 
     public void setPayloadInner(PayloadInner payloadInner)
     {
-        this.payloadInner = payloadInner;
     }
 
     public void setTableComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
     }
 
     public void setTableInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     /**
@@ -205,53 +161,6 @@ public class TableView<T> extends LinearLayout {
         return tableDataView.getEmptyView();
     }
 
-    /**
-     * Gives information whether the swipe to refresh feature shall be enabled or not.
-     *
-     * @return Boolean indication whether the swipe to refresh feature shall be enabled or not.
-     */
-   /* public boolean isSwipeToRefreshEnabled() {
-        return swipeRefreshLayout.isEnabled();
-    }*/
-
-    /**
-     * Toggles the swipe to refresh feature to the user.
-     *
-     * @param enabled Whether the swipe to refresh feature shall be enabled or not.
-     */
-   /* public void setSwipeToRefreshEnabled(final boolean enabled) {
-        swipeRefreshLayout.setEnabled(enabled);
-    }*/
-
-    /**
-     * Sets the {@link SwipeToRefreshListener} for this table view. If there is already a {@link SwipeToRefreshListener}
-     * set it will be replaced.
-     *
-     * @param listener The {@link SwipeToRefreshListener} that is called when the user triggers the refresh action.
-     */
-    /*public void setSwipeToRefreshListener(final SwipeToRefreshListener listener) {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                listener.onRefresh(new SwipeToRefreshListener.RefreshIndicator() {
-                    @Override
-                    public void hide() {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                    @Override
-                    public void show() {
-                        swipeRefreshLayout.setRefreshing(true);
-                    }
-
-                    @Override
-                    public boolean isVisible() {
-                        return swipeRefreshLayout.isRefreshing();
-                    }
-                });
-            }
-        });
-    }*/
 
     /**
      * Sets the given resource as background of the table header.
@@ -304,74 +213,6 @@ public class TableView<T> extends LinearLayout {
         dataRowBackgroundProvider = backgroundProvider;
         tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
     }
-
-    /**
-     * Adds a {@link TableDataClickListener} to this table. This listener gets notified every time the user clicks
-     * a certain data item.
-     *
-     * @param listener The listener that should be added as click listener.
-     */
-    /*public void addDataClickListener(final TableDataClickListener<T> listener) {
-        dataClickListeners.add(listener);
-    }*/
-
-    /**
-     * Adds a {@link TableDataLongClickListener} to this table. This listener gets notified every time the user clicks
-     * long on a certain data item.
-     *
-     * @param listener The listener that should be added as long click listener.
-     */
-    /*public void addDataLongClickListener(final TableDataLongClickListener<T> listener) {
-        dataLongClickListeners.add(listener);
-    }*/
-
-    /**
-     * Adds a {@link OnScrollListener} to this table view.
-     *
-     * @param onScrollListener The {@link OnScrollListener} that shall be added.
-     */
-   /* public void addOnScrollListener(final OnScrollListener onScrollListener) {
-        onScrollListeners.add(onScrollListener);
-    }
-*/
-    /**
-     * Removes a {@link OnScrollListener} from this table view.
-     *
-     * @param onScrollListener The {@link OnScrollListener} that shall be removed.
-     */
-   /* public void removeOnScrollListener(final OnScrollListener onScrollListener) {
-        onScrollListeners.remove(onScrollListener);
-    }*/
-
-    /**
-     * Removes the given {@link TableDataClickListener} from the click listeners of this table.
-     *
-     * @param listener The listener that should be removed.
-     * @deprecated This method has been deprecated in the version 2.2.0 for naming alignment reasons. Use the method
-     * {@link TableView#removeDataClickListener(TableDataClickListener)} instead.
-     */
-    /*@Deprecated
-    public void removeTableDataClickListener(final TableDataClickListener<T> listener) {
-        dataClickListeners.remove(listener);
-    }*/
-
-    /**
-     * Removes the given {@link TableDataClickListener} from the click listeners of this table.
-     *
-     * @param listener The listener that should be removed.
-     */
-    /*public void removeDataClickListener(final TableDataClickListener<T> listener) {
-        dataClickListeners.remove(listener);
-    }*/
-
-    /**
-     * Removes the given {@link TableDataLongClickListener} from the long click listeners of this table.
-     *
-     * @param listener The listener that should be removed.
-     */
-    /*public void removeDataLongClickListener(final TableDataLongClickListener<T> listener) {
-        dataLongClickListeners.remove(listener);
-    }*/
 
     /**
      * Adds the given {@link TableHeaderClickListener} to this table.
@@ -551,9 +392,9 @@ public class TableView<T> extends LinearLayout {
 
     private void setAttributes(final AttributeSet attributes) {
         final TypedArray styledAttributes = getContext().obtainStyledAttributes(attributes, R.styleable.TableView);
-
-//        headerColor = styledAttributes.getInt(R.styleable.TableView_tableView_headerColor, DEFAULT_HEADER_COLOR);
+        int DEFAULT_HEADER_ELEVATION = 1;
         headerElevation = styledAttributes.getInt(R.styleable.TableView_tableView_headerElevation, DEFAULT_HEADER_ELEVATION);
+        int DEFAULT_COLUMN_COUNT = 4;
         final int columnCount = styledAttributes.getInt(R.styleable.TableView_tableView_columnCount, DEFAULT_COLUMN_COUNT);
         columnModel = new TableColumnWeightModel(columnCount);
 
@@ -563,17 +404,16 @@ public class TableView<T> extends LinearLayout {
     private void setupTableHeaderView(final AttributeSet attributes) {
         tableHeaderAdapter = new DefaultTableHeaderAdapter(getContext());
         final TableHeaderView tableHeaderView = new TableHeaderView(getContext());
-        tableHeaderView.setBackground(getContext().getDrawable(R.drawable.round_rect_table_header));
+        tableHeaderView.setBackground(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.round_rect_table_header, getContext().getTheme()));
         setHeaderView(tableHeaderView);
     }
 
     private void setupTableDataView(final AttributeSet attributes, final int styleAttributes) {
-        final LayoutParams dataViewLayoutParams = new LayoutParams(getWidthAttribute(attributes), LayoutParams.WRAP_CONTENT);
 
         tableDataAdapter = new DefaultTableDataAdapter(getContext());
         tableDataAdapter.setRowBackgroundProvider(dataRowBackgroundProvider);
 
-        tableDataView = new ListView(getContext(), attributes, styleAttributes);
+        tableDataView = new AutoExpandListView(getContext(), attributes, styleAttributes);
         tableDataView.setVerticalScrollBarEnabled(false);
         tableDataView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         tableDataView.setAdapter(tableDataAdapter);
@@ -628,38 +468,11 @@ public class TableView<T> extends LinearLayout {
     }
 
     /**
-     * The {@link TableHeaderAdapter} that is used while the view is in edit mode.
-     *
-     * @author ISchwarz
-     */
-    /*private class EditModeTableHeaderAdapter extends TableHeaderAdapter {
-
-        private final float TEXT_SIZE = 18;
-
-        public EditModeTableHeaderAdapter(final Context context) {
-            super(context, columnModel);
-        }
-
-        @Override
-        public View getHeaderView(final int columnIndex, final ViewGroup parentView) {
-            final TextView textView = new TextView(getContext());
-            textView.setText(getResources().getString(R.string.default_header, columnIndex));
-            textView.setPadding(20, 40, 20, 40);
-            textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-            textView.setTextSize(TEXT_SIZE);
-            return textView;
-        }
-
-    }*/
-
-    /**
      * The {@link TableDataAdapter} that is used while the view is in edit mode.
      *
      * @author ISchwarz
      */
     private class EditModeTableDataAdapter extends TableDataAdapter<T> {
-
-        private final float TEXT_SIZE = 16;
 
         public EditModeTableDataAdapter(final Context context) {
             super(context, columnModel, new ArrayList<T>());
@@ -670,6 +483,7 @@ public class TableView<T> extends LinearLayout {
             final TextView textView = new TextView(getContext());
             textView.setText(getResources().getString(R.string.default_cell, columnIndex, rowIndex));
             textView.setPadding(20, 10, 20, 10);
+            float TEXT_SIZE = 16;
             textView.setTextSize(TEXT_SIZE);
             return textView;
         }

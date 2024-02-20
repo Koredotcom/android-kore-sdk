@@ -34,7 +34,7 @@ public class CandleDataSet extends LineScatterCandleRadarDataSet<CandleEntry> im
         List<CandleEntry> entries = new ArrayList();
 
         for(int i = 0; i < this.mValues.size(); ++i) {
-            entries.add(((CandleEntry)this.mValues.get(i)).copy());
+            entries.add(this.mValues.get(i).copy());
         }
 
         com.kore.ai.widgetsdk.charts.data.CandleDataSet copied = new com.kore.ai.widgetsdk.charts.data.CandleDataSet(entries, this.getLabel());

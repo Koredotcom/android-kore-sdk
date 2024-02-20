@@ -57,14 +57,12 @@ public class CursorQueryWrapper {
         Cursor cursor = null;
         Log.d(tag, "Starting query");
         try {
-            StringBuilder bld = new StringBuilder(
-                    "Running query");
-            bld.append("\nUri: ").append(uri.toString());
-            bld.append("\nProjection: ").append(projection == null ? "null" : TextUtils.join(", ", projection));
-            bld.append("\nSelection: ").append(selection);
-            bld.append("\nSelectionArgs: ").append("null");
-            bld.append("\nSortOrder: ").append(sortOrder);
-            Log.d(tag, bld.toString());
+            String bld = "Running query" + "\nUri: " + uri.toString() +
+                    "\nProjection: " + (projection == null ? "null" : TextUtils.join(", ", projection)) +
+                    "\nSelection: " + selection +
+                    "\nSelectionArgs: " + "null" +
+                    "\nSortOrder: " + sortOrder;
+            Log.d(tag, bld);
             cursor = queryInterface.query(context, uri, projection, selection, selectionArgs, sortOrder);
             if (cursor == null) {
                 Log.e(tag, "Cannot process the query. The cursor is null as a result of some error.");

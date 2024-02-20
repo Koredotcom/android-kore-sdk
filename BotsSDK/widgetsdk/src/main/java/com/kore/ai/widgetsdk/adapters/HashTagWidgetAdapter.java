@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class HashTagWidgetAdapter extends RecyclerView.Adapter {
 
-    FragmentActivity activity;
+    final FragmentActivity activity;
 
     public ArrayList<TrendingHashTagModel> getHashTagList() {
         return hashList;
@@ -38,8 +38,8 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
     }
 
     private ArrayList<TrendingHashTagModel> hashList;
-    int DATA = 1;
-    int NO_DATA = 0;
+    final int DATA = 1;
+    final int NO_DATA = 0;
     private static final int MESSAGE = 2;
     boolean isFullView;
     String msg;
@@ -153,9 +153,9 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
     }
 
     class HashViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_hashtag;
-        TextView tv_numberofviews;
-        View rootView;
+        final TextView tv_hashtag;
+        final TextView tv_numberofviews;
+        final View rootView;
 
         public HashViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -166,8 +166,8 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
     }
 
     class EmptyHashViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_message;
-        ImageView img_icon;
+        final TextView tv_message;
+        final ImageView img_icon;
 
         public EmptyHashViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -40,7 +40,7 @@ public class QuickReplyFragment extends Fragment {
     }
 
     private void findViews(View view) {
-        quick_reply_container = (LinearLayout) view.findViewById(R.id.quick_reply_container);
+        quick_reply_container = view.findViewById(R.id.quick_reply_container);
         quick_reply_container.setVisibility(View.GONE);
     }
 

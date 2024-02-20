@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,21 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
-
     private ArrayList<BotButtonModel> quickReplyTemplateArrayList;
-    Context context;
-    private final LayoutInflater layoutInflater;
+    final Context context;
     private final RecyclerView parentRecyclerView;
-
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int quickWidgetColor;
@@ -37,17 +33,16 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
     public AgentQuickOptionsTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
-        layoutInflater = LayoutInflater.from(context);
         quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         quickReplyFontColor = Color.parseColor("#000000");
-        dp1= (int) AppControl.getInstance(context).getDimensionUtil().dp1;
+        dp1= (int) DimensionUtil.dp1;
     }
 
     @NonNull
     @Override
     public QuickReplyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View convertView = layoutInflater.inflate(R.layout.quick_replies_item_cell, null);
+        View convertView = View.inflate(context, R.layout.quick_replies_item_cell, null);
         QuickReplyViewHolder viewHolder = new QuickReplyViewHolder(convertView);
         viewHolder.getQuickReplyTitle().setTextColor(quickReplyFontColor);
         return viewHolder;

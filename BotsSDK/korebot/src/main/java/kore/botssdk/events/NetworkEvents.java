@@ -12,8 +12,8 @@ import android.net.NetworkInfo;
 public class NetworkEvents {
 
     public static class NetworkConnectivityEvent {
-        NetworkInfo networkInfo;
-        boolean networkConnectivity;
+        final NetworkInfo networkInfo;
+        final boolean networkConnectivity;
 
         public NetworkConnectivityEvent(NetworkInfo networkInfo) {
             this.networkInfo = networkInfo;

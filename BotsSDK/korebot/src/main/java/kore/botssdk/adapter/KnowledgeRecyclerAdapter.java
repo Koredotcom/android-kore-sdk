@@ -49,13 +49,10 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private static final KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
-    private static int dp1;
 
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {
         this.knowledgeDetailModels = knowledgeDetailModels;
         this.context = context;
-        dp1 = (int) DimensionUtil.dp1;
-        notifyDataSetChanged();
         setHasStableIds(true);
     }
 
@@ -63,7 +60,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == DATA_CARD_FLAG) {
-            return new ViewHolder((KnowledgeItemViewBinding) DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
+            return new ViewHolder(DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.knowledge_item_view, parent, false));
         } else {
             return new EmptyWidgetViewHolder(LayoutInflater.from(context).inflate(R.layout.card_empty_widget_layout, parent, false));
 
@@ -121,14 +118,8 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
         return EMPTY_CARD_FLAG;
     }
 
-    /*@Override
-    public long getItemId(int position) {
-        return position;
-    }*/
     WidgetViewMoreEnum widgetViewMoreEnum;
-    public void setViewMoreEnum(WidgetViewMoreEnum widgetViewMoreEnum) {
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
-    }
+
     @Override
     public int getItemCount() {
         if(widgetViewMoreEnum!=null&&widgetViewMoreEnum==WidgetViewMoreEnum.EXPAND_VIEW){
@@ -151,7 +142,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     }
 
     @Override
-    public ArrayList getData() {
+    public ArrayList<KnowledgeDetailModel> getData() {
         return knowledgeDetailModels;
     }
 
@@ -170,7 +161,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        KnowledgeItemViewBinding knowledgeItemViewBinding;
+        final KnowledgeItemViewBinding knowledgeItemViewBinding;
 
         public ViewHolder(@NonNull KnowledgeItemViewBinding itemView) {
             super(itemView.getRoot());

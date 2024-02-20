@@ -9,7 +9,7 @@ import com.kore.ai.widgetsdk.charts.utils.Utils;
 import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 
 public class TriangleShapeRenderer implements IShapeRenderer {
-    protected Path mTrianglePathBuffer = new Path();
+    protected final Path mTrianglePathBuffer = new Path();
 
     public TriangleShapeRenderer() {
     }

@@ -72,13 +72,6 @@ public class Utils {
         return "v" + getVersion(context);
     }
 
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
@@ -306,7 +299,7 @@ public class Utils {
         long seconds = _seconds % 60;
 
         if (hours > 0) {
-            buffer.append(String.format("%02d", hours));
+            buffer.append(String.format(Locale.US, "%02d", hours));
             buffer.append(":");
 
         } else {
@@ -314,7 +307,7 @@ public class Utils {
         }
 
         if (minutes > 0) {
-            buffer.append(String.format("%02d", minutes));
+            buffer.append(String.format(Locale.US, "%02d", minutes));
             buffer.append(":");
 
         } else {
@@ -322,7 +315,7 @@ public class Utils {
         }
 
         if (seconds > 0) {
-            buffer.append(String.format("%02d", seconds));
+            buffer.append(String.format(Locale.US, "%02d", seconds));
         } else {
             buffer.append("00");
         }

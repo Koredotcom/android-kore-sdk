@@ -52,7 +52,7 @@ public class MarkerView extends RelativeLayout implements IMarker {
     }
 
     public Chart getChartView() {
-        return this.mWeakChart == null ? null : (Chart)this.mWeakChart.get();
+        return this.mWeakChart == null ? null : this.mWeakChart.get();
     }
 
     public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {

@@ -26,7 +26,7 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
     }
 
     public LineData getLineData() {
-        return (LineData)this.mData;
+        return this.mData;
     }
 
     protected void onDetachedFromWindow() {

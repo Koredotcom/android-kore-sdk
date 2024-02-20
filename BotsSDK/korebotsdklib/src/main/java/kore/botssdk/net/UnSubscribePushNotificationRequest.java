@@ -12,8 +12,8 @@ import retrofit2.Response;
 public class UnSubscribePushNotificationRequest {
 
     private final String accessToken;
-    private String userId;
-    private HashMap<String, Object> request;
+    private final String userId;
+    private final HashMap<String, Object> request;
 
     public UnSubscribePushNotificationRequest(String userId, String accessToken, HashMap<String, Object> request) {
         this.userId = userId;

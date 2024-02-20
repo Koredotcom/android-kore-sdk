@@ -1,14 +1,6 @@
 package kore.botssdk.view.tableview.colorizers;
 
-/**
- * A interface for a table data row background color provider. This enables easy coloring of
- * the rows of a .
- *
- * @author ISchwarz
- * @deprecated The {@link TableDataRowColorizer} is deprecated. Use
- * {@link } instead.
- */
-@Deprecated
+
 public interface TableDataRowColorizer<T> {
 
     /**

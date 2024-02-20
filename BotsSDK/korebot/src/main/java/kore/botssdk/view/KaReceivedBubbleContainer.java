@@ -38,7 +38,7 @@ public class KaReceivedBubbleContainer extends KaBaseBubbleContainer {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        receivedBubbleLayout = (KaReceivedBubbleLayout) findViewById(R.id.receivedBubbleLayout);
+        receivedBubbleLayout = findViewById(R.id.receivedBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
         headerLayout.setVisibility(VISIBLE);
         dp1 = (int) DimensionUtil.dp1;

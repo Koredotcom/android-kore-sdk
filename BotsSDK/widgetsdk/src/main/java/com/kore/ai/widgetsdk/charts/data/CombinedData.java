@@ -147,7 +147,7 @@ public class CombinedData extends BarLineScatterCandleBubbleData<IBarLineScatter
     }
 
     public BarLineScatterCandleBubbleData getDataByIndex(int index) {
-        return (BarLineScatterCandleBubbleData)this.getAllData().get(index);
+        return this.getAllData().get(index);
     }
 
     public void notifyDataChanged() {

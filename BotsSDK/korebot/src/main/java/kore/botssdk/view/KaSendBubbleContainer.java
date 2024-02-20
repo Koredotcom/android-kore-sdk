@@ -39,7 +39,7 @@ public class KaSendBubbleContainer extends KaBaseBubbleContainer {
         super.onFinishInflate();
 
         //Find views...
-        sendBubbleLayout = (KaSendBubbleLayout) findViewById(R.id.sendBubbleLayout);
+        sendBubbleLayout = findViewById(R.id.sendBubbleLayout);
         headerLayout = findViewById(R.id.headerLayout);
         dp1 = (int) DimensionUtil.dp1;
 

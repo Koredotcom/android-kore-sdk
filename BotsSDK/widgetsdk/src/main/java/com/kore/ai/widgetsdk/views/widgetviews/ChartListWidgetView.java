@@ -76,8 +76,8 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
     private WidgetsModel mWidget;
     private final String name;
     final Handler handler = new Handler();
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    Context context;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
+    final Context context;
     PanelLevelData panelData;
     public ChartListWidgetView(Context context, UpdateRefreshItem mListener, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);

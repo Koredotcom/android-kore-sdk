@@ -28,9 +28,9 @@ public class BotTableListInnerAdapter extends BaseAdapter
     private final Context context;
     private final ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels;
     String LOG_TAG = BotTableListInnerAdapter.class.getSimpleName();
-    LayoutInflater ownLayoutInflator;
+    final LayoutInflater ownLayoutInflator;
     ListView parentListView;
-    RoundedCornersTransform roundedCornersTransform;
+    final RoundedCornersTransform roundedCornersTransform;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int dp1;
@@ -170,11 +170,11 @@ public class BotTableListInnerAdapter extends BaseAdapter
 
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
-        holder.botListItemRoot = (LinearLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.bot_list_item_cost = (TextView) view.findViewById(R.id.bot_list_item_cost);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.bot_list_item_cost = view.findViewById(R.id.bot_list_item_cost);
         view.setTag(holder);
     }
 

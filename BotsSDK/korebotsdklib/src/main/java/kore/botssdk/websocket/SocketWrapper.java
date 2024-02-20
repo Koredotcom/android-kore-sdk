@@ -43,11 +43,11 @@ public final class SocketWrapper{
     private final String LOG_TAG = "SocketWrapper";//
 
     public static SocketWrapper pKorePresenceInstance;
-    private SocketConnectionListener socketConnectionListener = null;
+    SocketConnectionListener socketConnectionListener = null;
 
 //    private final WebSocketConnection mConnection = new WebSocketConnection();
     private final IWebSocket mConnection = new WebSocketConnection();
-    private static Timer timer = new Timer();
+    static Timer timer = new Timer();
 
     public boolean ismIsReconnectionAttemptNeeded() {
         return mIsReconnectionAttemptNeeded;
@@ -57,8 +57,8 @@ public final class SocketWrapper{
         this.mIsReconnectionAttemptNeeded = mIsReconnectionAttemptNeeded;
     }
 
-    private boolean mIsReconnectionAttemptNeeded = true;
-    private boolean isConnecting = false;
+    boolean mIsReconnectionAttemptNeeded = true;
+    boolean isConnecting = false;
 
 //    private String url;
 //    private URI uri;
@@ -88,12 +88,12 @@ public final class SocketWrapper{
     /**
      * initial reconnection delay 1 Sec
      */
-    private int mReconnectDelay = 1000;
+    int mReconnectDelay = 1000;
 
     /**
      * initial reconnection count
      */
-    private int mReconnectionCount = 0;
+    int mReconnectionCount = 0;
 
     /**
      * Restricting outside object creation
@@ -259,7 +259,7 @@ public final class SocketWrapper{
 
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {try {
-                            connectToSocket(rtmUrl.getUrl(), false);
+                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false"), false);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
@@ -319,7 +319,7 @@ public final class SocketWrapper{
                     @Override
                     public void onNext(RestResponse.RTMUrl rtmUrl) {
                         try {
-                            connectToSocket(rtmUrl.getUrl(),false);
+                            connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false"),false);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
@@ -345,7 +345,7 @@ public final class SocketWrapper{
      * @param url : to connect the socket to
      * @throws URISyntaxException
      */
-    private void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
+    void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
         if((isConnecting || isConnected())) return;
         isConnecting = true;
         if (url != null) {
@@ -418,7 +418,7 @@ public final class SocketWrapper{
             }
         }
     }
-    private void startSendingPong(){
+    void startSendingPong(){
         TimerTask tTask = new TimerTask() {
             @Override
             public void run() {
@@ -443,7 +443,7 @@ public final class SocketWrapper{
     /**
      *  Reconnect to socket
      */
-    private void reconnect() {
+    void reconnect() {
         if (accessToken != null) {
             //Reconnection for valid credential
             reconnectForAuthenticUser();
@@ -673,7 +673,7 @@ public final class SocketWrapper{
      *
      * @reurn
      */
-    private void reconnectAttempt() {
+    void reconnectAttempt() {
 //        mIsImmediateFetchActionNeeded = true;
         mReconnectDelay = getReconnectDelay();
         try {
@@ -705,7 +705,7 @@ public final class SocketWrapper{
      *
      * @return
      */
-    private int getReconnectDelay() {
+    int getReconnectDelay() {
         mReconnectionCount++;
         LogUtils.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
         if (mReconnectionCount > 6) mReconnectionCount = 1;

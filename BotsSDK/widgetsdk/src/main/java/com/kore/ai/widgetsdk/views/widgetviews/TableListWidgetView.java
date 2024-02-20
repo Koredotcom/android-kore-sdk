@@ -3,6 +3,7 @@ package com.kore.ai.widgetsdk.views.widgetviews;
 import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 import static com.kore.ai.widgetsdk.utils.KaUtility.showEmailIntent;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
@@ -64,6 +66,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+@SuppressLint("ViewConstructor")
 public class TableListWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private float dp1;
     public ImageView menu_btn,icon_image_load;
@@ -102,8 +105,8 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
     private WidgetsModel mWidget;
     private final String name;
     private String trigger;
-    WidgetViewMoreEnum widgetViewMoreEnum;
-    Context context;
+    final WidgetViewMoreEnum widgetViewMoreEnum;
+    final Context context;
     public TableListWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.context=context;
@@ -360,34 +363,12 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
 
                     @Override
                     public void onNext(WidgetTableListDataModel model) {
-//                        WidgetListDataModel botOptionsModel = gson.fromJson(resp, WidgetListDataModel.class);
                         afterDataLoad(model);
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         progress.setVisibility(View.GONE);
-                        if (e.getMessage().equalsIgnoreCase("410") || e.getMessage().equalsIgnoreCase("401"))
-                        {
-                            //KoreEventCenter.post(new OnTokenExpired());
-                        }
-
-                        String msg;
-                        Drawable drawable=null;
-                        if (!NetworkUtility.isNetworkConnectionAvailable(TableListWidgetView.this.getContext())) {
-                            //No Internet Connect
-                            msg=getResources().getString(R.string.no_internet_connection);
-                            drawable=getResources().getDrawable(R.drawable.no_internet);
-                        } else {
-                            //Oops some thing went wrong
-                            msg=getResources().getString(R.string.oops);
-                            drawable=getResources().getDrawable(R.drawable.oops_icon);
-                        }
-//                        listWidgetAdapter.setWidget(null);
-//                        listWidgetAdapter.setMessage(msg,drawable);
-//                        view_more.setVisibility(GONE);
-//                        list_widget_root_recycler.setAdapter(listWidgetAdapter);
-//                        listWidgetAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -403,7 +384,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
         utterance = utt;
 
         if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+        if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
             if(utterance.startsWith("tel:")){
                 KaUtility.launchDialer(getContext(),utterance);
             }else if(utterance.startsWith("mailto:")){
@@ -430,7 +411,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             utterance = button.getUtterance();
         }
         if(utterance == null)return;
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
+        if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
             if(utterance.startsWith("tel:")){
                 KaUtility.launchDialer(getContext(),utterance);
             }else if(utterance.startsWith("mailto:")){
@@ -570,7 +551,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             }
 
         }
-        if (model != null && model.getData().get(0).getRecords() != null && model.getData().get(0).getRecords().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
+        if (model.getData().get(0).getRecords() != null && model.getData().get(0).getRecords().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
             listWidgetAdapter = new BotTableListTemlateAdapter(getContext(), model.getData().get(0).getRecords().size());
             if (model.getData().get(0).getRecords() != null && model.getData().get(0).getRecords().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
@@ -584,43 +565,35 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
             listWidgetAdapter.notifyDataSetChanged();
         }
         else if(model.getData().get(0).getTemplateType().equals("loginURL")){
-            if(model != null ) {
-                listWidgetAdapter.setBotListModelArrayList(null);
+            listWidgetAdapter.setBotListModelArrayList(null);
 //                listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
-                list_widget_root_recycler.setAdapter(listWidgetAdapter);
+            list_widget_root_recycler.setAdapter(listWidgetAdapter);
 //                listWidgetAdapter.setLoginNeeded(true);
-            }
         }
         else if(model.getData().get(0).getTemplateType().equals("form"))
         {
-            if(model != null)
-            {
-                list_widget_root_recycler.setVisibility(GONE);
-                llFormData.setVisibility(VISIBLE);
-                tvFillForm.setText(mWidget.getTitle());
+            list_widget_root_recycler.setVisibility(GONE);
+            llFormData.setVisibility(VISIBLE);
+            tvFillForm.setText(mWidget.getTitle());
 
-                tvFillForm.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
-                            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
-                            intent.putExtra("url", model.getData().get(0).getFormLink());
-                            intent.putExtra("header",mWidget.getTitle());
-                            ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                        }else{
-                            Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
-                        }
+            tvFillForm.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                        Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+                        intent.putExtra("url", model.getData().get(0).getFormLink());
+                        intent.putExtra("header",mWidget.getTitle());
+                        ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    }else{
+                        Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
                     }
-                });
-            }
+                }
+            });
         }
         else {
             listWidgetAdapter.setBotListModelArrayList(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.notifyDataSetChanged();
         }
-        //KoreEventCenter.post(new ShowLayoutEvent(0));
     }
-
-
 }

@@ -18,7 +18,7 @@ public class IndexAxisValueFormatter extends ValueFormatter {
 
     public IndexAxisValueFormatter(Collection<String> values) {
         if (values != null) {
-            this.setValues((String[])values.toArray(new String[values.size()]));
+            this.setValues(values.toArray(new String[values.size()]));
         }
 
     }

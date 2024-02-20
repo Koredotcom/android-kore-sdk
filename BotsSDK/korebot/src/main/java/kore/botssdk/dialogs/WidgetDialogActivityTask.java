@@ -21,13 +21,13 @@ import kore.botssdk.models.WTaskTemplateModel;
 public class WidgetDialogActivityTask extends Dialog {
 
     private ImageView img_cancel;
-    WTaskTemplateModel widgetDialogModel;
+    final WTaskTemplateModel widgetDialogModel;
     ImageView checkbox;
 
     RecyclerView recycler_actions;
-    Context mContext;
-    WTaskTemplateModel model;
-    boolean isFromFullView;
+    final Context mContext;
+    final WTaskTemplateModel model;
+    final boolean isFromFullView;
 
 
     /* public WidgetDialogActivity(@NonNull Context context) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -91,20 +92,17 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
 
     private void init() {
         contactInfoViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.contact_info_view, this, true);
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()) + BundleConstants.TRANSPERANCY_50_PERCENT);
         contactInfoViewBinding.getRoot().setBackground(shape);
 
-
-        LayerDrawable shape1 = (LayerDrawable) getResources().getDrawable(R.drawable.contact_card_background_style);
+        LayerDrawable shape1 = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.contact_card_background_style, getContext().getTheme());
         contactInfoViewBinding.contactTop.setBackground(shape1);
 
-
-
-
         dp1 = (int) DimensionUtil.dp1;
-        splashColor = getContext().getResources().getColor(R.color.splash_color);
+        splashColor = ContextCompat.getColor(getContext(), R.color.splash_color);
         contactInfoViewBinding.setViewBase(this);
 
         showMore = findViewById(R.id.view_more_contact);
@@ -113,11 +111,12 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         sourceIcon = findViewById(R.id.sourceIcon);
         source = findViewById(R.id.source);
         sourceIcon.setTypeface(ResourcesCompat.getFont(getContext(), R.font.icomoon));
-        contactListRecyclerView = ((RecyclerView)findViewById(R.id.contactListView));
+        contactListRecyclerView = findViewById(R.id.contactListView);
     }
 
     public void onEvent(ProfileColorUpdateEvent event){
-        LayerDrawable shape = (LayerDrawable) getResources().getDrawable(R.drawable.shadow_layer_background);
+        LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
+        assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
         outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
         contactInfoViewBinding.getRoot().setBackground(shape);
@@ -254,7 +253,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
     public void expandOrCollapse(){
         if (myRecyclerViewAdapter != null && !myRecyclerViewAdapter.isExpanded()) {
             myRecyclerViewAdapter.setExpanded(true);
-            showMore.setText("View less");
+            showMore.setText(R.string.view_less);
             viewMoreIV.setText(getResources().getText(R.string.icon_e914));
             contactListRecyclerView.postDelayed(new Runnable() {
                 @Override
@@ -264,7 +263,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
             }, 200);
         }else {
             myRecyclerViewAdapter.setExpanded(false);
-            showMore.setText("View more");
+            showMore.setText(R.string.view_more);
             viewMoreIV.setText(getResources().getText(R.string.icon_e961));
         }
     }

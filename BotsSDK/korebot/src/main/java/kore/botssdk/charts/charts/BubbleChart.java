@@ -26,6 +26,6 @@ public class BubbleChart extends BarLineChartBase<BubbleData> implements BubbleD
     }
 
     public BubbleData getBubbleData() {
-        return (BubbleData)this.mData;
+        return this.mData;
     }
 }

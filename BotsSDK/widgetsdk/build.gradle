@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 
 android {
     useLibrary 'org.apache.http.legacy'
-    compileSdkVersion 33
+    compileSdkVersion 34
     //    dataBinding {
 //        enabled = true
 //    }
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 24
+        targetSdkVersion 34
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

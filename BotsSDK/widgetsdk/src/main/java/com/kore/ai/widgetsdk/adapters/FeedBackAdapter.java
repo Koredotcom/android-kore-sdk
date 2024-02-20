@@ -28,11 +28,11 @@ import java.util.List;
 public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBackViewHolder> {
 
 
-    Context context;
-    List<FeedbackDataResponse.Option> options;
+    final Context context;
+    final List<FeedbackDataResponse.Option> options;
     FeedbackSheetFragment object;
     FeedBackButtonState feedBackButtonState;
-    RecyclerView recyclerView;
+    final RecyclerView recyclerView;
 
     public FeedBackAdapter(Context context, List<FeedbackDataResponse.Option> options, RecyclerView recyclerView) {
         this.context = context;
@@ -188,9 +188,9 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
 
     class FeedBackViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tv_question;
-        EditText edt_freetext;
-        CheckBox checkBox_btn;
+        final TextView tv_question;
+        final EditText edt_freetext;
+        final CheckBox checkBox_btn;
 
         public FeedBackViewHolder(@NonNull View itemView) {
             super(itemView);

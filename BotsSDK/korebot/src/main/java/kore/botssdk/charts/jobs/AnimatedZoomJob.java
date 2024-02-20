@@ -13,17 +13,17 @@ import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.AnimatorListener {
-    private static final ObjectPool<AnimatedZoomJob> pool = ObjectPool.create(8, new AnimatedZoomJob((ViewPortHandler)null, (View)null, (Transformer)null, (YAxis)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L));
-    protected float zoomOriginX;
-    protected float zoomOriginY;
-    protected float zoomCenterX;
-    protected float zoomCenterY;
+    private static final ObjectPool<AnimatedZoomJob> pool = ObjectPool.create(8, new AnimatedZoomJob(null, null, null, null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L));
+    protected final float zoomOriginX;
+    protected final float zoomOriginY;
+    protected final float zoomCenterX;
+    protected final float zoomCenterY;
     protected YAxis yAxis;
     protected float xAxisRange;
-    protected Matrix mOnAnimationUpdateMatrixBuffer = new Matrix();
+    protected final Matrix mOnAnimationUpdateMatrixBuffer = new Matrix();
 
     public static AnimatedZoomJob getInstance(ViewPortHandler viewPortHandler, View v, Transformer trans, YAxis axis, float xAxisRange, float scaleX, float scaleY, float xOrigin, float yOrigin, float zoomCenterX, float zoomCenterY, float zoomOriginX, float zoomOriginY, long duration) {
-        AnimatedZoomJob result = (AnimatedZoomJob)pool.get();
+        AnimatedZoomJob result = pool.get();
         result.mViewPortHandler = viewPortHandler;
         result.xValue = scaleX;
         result.yValue = scaleY;
@@ -83,6 +83,6 @@ public class AnimatedZoomJob extends AnimatedViewPortJob implements Animator.Ani
     }
 
     protected ObjectPool.Poolable instantiate() {
-        return new AnimatedZoomJob((ViewPortHandler)null, (View)null, (Transformer)null, (YAxis)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L);
+        return new AnimatedZoomJob(null, null, null, null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0L);
     }
 }

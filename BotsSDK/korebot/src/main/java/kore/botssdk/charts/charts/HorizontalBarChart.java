@@ -24,7 +24,7 @@ import kore.botssdk.utils.LogUtils;
 
 public class HorizontalBarChart extends BarChart {
     private final RectF mOffsetsBuffer = new RectF();
-    protected float[] mGetPositionBuffer = new float[2];
+    protected final float[] mGetPositionBuffer = new float[2];
 
     public HorizontalBarChart(Context context) {
         super(context);
@@ -105,13 +105,13 @@ public class HorizontalBarChart extends BarChart {
     }
 
     public void getBarBounds(BarEntry e, RectF outputRect) {
-        IBarDataSet set = (IBarDataSet)((BarData)this.mData).getDataSetForEntry(e);
+        IBarDataSet set = this.mData.getDataSetForEntry(e);
         if (set == null) {
             outputRect.set(1.4E-45F, 1.4E-45F, 1.4E-45F, 1.4E-45F);
         } else {
             float y = e.getY();
             float x = e.getX();
-            float barWidth = ((BarData)this.mData).getBarWidth();
+            float barWidth = this.mData.getBarWidth();
             float top = x - barWidth / 2.0F;
             float bottom = x + barWidth / 2.0F;
             float left = y >= 0.0F ? y : 0.0F;
@@ -147,13 +147,13 @@ public class HorizontalBarChart extends BarChart {
 
     public float getLowestVisibleX() {
         this.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(this.mViewPortHandler.contentLeft(), this.mViewPortHandler.contentBottom(), this.posForGetLowestVisibleX);
-        float result = (float)Math.max((double)this.mXAxis.mAxisMinimum, this.posForGetLowestVisibleX.y);
+        float result = (float)Math.max(this.mXAxis.mAxisMinimum, this.posForGetLowestVisibleX.y);
         return result;
     }
 
     public float getHighestVisibleX() {
         this.getTransformer(YAxis.AxisDependency.LEFT).getValuesByTouchPoint(this.mViewPortHandler.contentLeft(), this.mViewPortHandler.contentTop(), this.posForGetHighestVisibleX);
-        float result = (float)Math.min((double)this.mXAxis.mAxisMaximum, this.posForGetHighestVisibleX.y);
+        float result = (float)Math.min(this.mXAxis.mAxisMaximum, this.posForGetHighestVisibleX.y);
         return result;
     }
 

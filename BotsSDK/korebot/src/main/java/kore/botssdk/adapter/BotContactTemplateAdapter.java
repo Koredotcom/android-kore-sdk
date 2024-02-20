@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,13 +30,11 @@ public class BotContactTemplateAdapter extends BaseAdapter {
     ArrayList<ContactTemplateModel> botListModelArrayList = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    LayoutInflater ownLayoutInflator;
-    Context context;
-    CircleTransform roundedCornersTransform;
-    ListView parentListView;
+    final Context context;
+    final CircleTransform roundedCornersTransform;
+    final ListView parentListView;
 
     public BotContactTemplateAdapter(Context context, ListView parentListView) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new CircleTransform();
         this.parentListView = parentListView;
@@ -46,7 +43,7 @@ public class BotContactTemplateAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         if (botListModelArrayList != null) {
-            return botListModelArrayList.size() >3 ? 3 : botListModelArrayList.size();
+            return Math.min(botListModelArrayList.size(), 3);
         } else {
             return 0;
         }
@@ -70,7 +67,7 @@ public class BotContactTemplateAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.contact_card_template_cell, null);
+            convertView = View.inflate(context, R.layout.contact_card_template_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -136,11 +133,11 @@ public class BotContactTemplateAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
 
-        holder.botListItemRoot = (RelativeLayout) view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = (ImageView) view.findViewById(R.id.bot_list_item_image);
-        holder.botListItemTitle = (TextView) view.findViewById(R.id.bot_list_item_title);
-        holder.botListItemSubtitle = (TextView) view.findViewById(R.id.bot_list_item_subtitle);
-        holder.bot_list_item_email = (TextView) view.findViewById(R.id.bot_list_item_email);
+        holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
+        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+        holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
+        holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
+        holder.bot_list_item_email = view.findViewById(R.id.bot_list_item_email);
         view.setTag(holder);
     }
 

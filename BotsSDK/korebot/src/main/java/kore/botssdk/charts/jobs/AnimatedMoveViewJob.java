@@ -8,10 +8,10 @@ import kore.botssdk.charts.utils.Transformer;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
 public class AnimatedMoveViewJob extends AnimatedViewPortJob {
-    private static final ObjectPool<AnimatedMoveViewJob> pool = ObjectPool.create(4, new AnimatedMoveViewJob((ViewPortHandler)null, 0.0F, 0.0F, (Transformer)null, (View)null, 0.0F, 0.0F, 0L));
+    private static final ObjectPool<AnimatedMoveViewJob> pool = ObjectPool.create(4, new AnimatedMoveViewJob(null, 0.0F, 0.0F, null, null, 0.0F, 0.0F, 0L));
 
     public static AnimatedMoveViewJob getInstance(ViewPortHandler viewPortHandler, float xValue, float yValue, Transformer trans, View v, float xOrigin, float yOrigin, long duration) {
-        AnimatedMoveViewJob result = (AnimatedMoveViewJob)pool.get();
+        AnimatedMoveViewJob result = pool.get();
         result.mViewPortHandler = viewPortHandler;
         result.xValue = xValue;
         result.yValue = yValue;
@@ -43,7 +43,7 @@ public class AnimatedMoveViewJob extends AnimatedViewPortJob {
     }
 
     protected ObjectPool.Poolable instantiate() {
-        return new AnimatedMoveViewJob((ViewPortHandler)null, 0.0F, 0.0F, (Transformer)null, (View)null, 0.0F, 0.0F, 0L);
+        return new AnimatedMoveViewJob(null, 0.0F, 0.0F, null, null, 0.0F, 0.0F, 0L);
     }
 
     static {

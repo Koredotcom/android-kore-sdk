@@ -206,9 +206,7 @@ public class StackedBarChatView extends ViewGroup implements OnChartValueSelecte
         // have as many colors as stack-values per entry
         int[] colors = new int[stacksize];
 
-        for (int i = 0; i < colors.length; i++) {
-            colors[i] = ColorTemplate.MATERIAL_COLORS[i];
-        }
+        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, colors.length);
 
         return colors;
     }
