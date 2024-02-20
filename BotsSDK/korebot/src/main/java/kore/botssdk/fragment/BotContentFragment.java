@@ -171,6 +171,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 android.R.color.holo_red_light);
 
 
+        botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0,0);
+        botsBubblesListView.setItemViewCacheSize(100);
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
