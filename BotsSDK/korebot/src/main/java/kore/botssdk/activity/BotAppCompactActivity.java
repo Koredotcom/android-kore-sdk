@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,7 +14,7 @@ import kore.botssdk.utils.ToastUtils;
 /**
  * Created by Ramachandra Pradeep on 27-Mar-18.
  */
-
+@SuppressLint("UnknownNullness")
 public class BotAppCompactActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = getClass().getSimpleName();

@@ -93,7 +93,7 @@ public class BotButtonLinkTemplateView extends LinearLayout implements RadioList
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void populateButtonList(PayloadInner payloadInner, final boolean enabled, int type)
+    public void populateButtonList(PayloadInner payloadInner, int type)
     {
         final BotButtonLinkTemplateAdapter buttonTypeAdapter;
         if (payloadInner != null && payloadInner.getButtons() != null)

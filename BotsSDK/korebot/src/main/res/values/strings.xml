@@ -83,14 +83,14 @@
         p.dashed {border-style: dashed;}
         </style>
         <body>
-        <p class="+"dashed"+">A dashed border.</p>
+        <p class=“+”dashed“+”>A dashed border.</p>
         </body>
         ]]>
     </string>
 
     <string name="border1">
     <![CDATA[
-        <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
+        <div style=“display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;”>Sushanth</div>
      ]]>
     </string>
     <string name="save">Save</string>
@@ -110,7 +110,69 @@
     <string name="no_files">No Files</string>
     <string name="you">You</string>
     <string name="view_less">View less</string>
-    <string name="message">Message...</string>
+    <string name="y">y</string>
+    <string name="schedue_meeting">schedue meeting</string>
+    <string name="bot_sdk_demo">Bot SDK Demo</string>
+    <string name="start_using_the_bots">Start using the Bots</string>
+    <string name="see_more">See More</string>
+    <string name="hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card">Hi Shan, I am here to answer\n your questions about credit card.</string>
+    <string name="kevin_peterson">Kevin Peterson</string>
+    <string name="_9_00_am_to_10_15_am">9:00 AM to 10:15 AM</string>
+    <string name="decline">Decline</string>
+    <string name="text">Text</string>
+    <string name="option">Option</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="select">Select</string>
+    <string name="button">Button</string>
+    <string name="stripped_shirt">Stripped Shirt</string>
+    <string name="_40_99">$40.99</string>
+    <string name="buy">Buy</string>
+    <string name="hello">Hello</string>
+    <string name="message">Message…</string>
+    <string name="please_enter_email">Please enter email</string>
+    <string name="hold_and_drag">Hold and drag</string>
+    <string name="what_would_you_like_to_do">What would you like to do?</string>
+    <string name="meeting_notes">Meeting Notes</string>
+    <string name="dial_in">DIAL IN</string>
+    <string name="notes">NOTES</string>
+    <string name="join">JOIN</string>
+    <string name="_00_00_00_00">00:00/00:00</string>
+    <string name="suggested">SUGGESTED</string>
+    <string name="your_articles">Your Articles</string>
+    <string name="_100_match">100% Match</string>
+    <string name="shopping_theme">Shopping theme</string>
+    <string name="logo_theme">Logo theme</string>
+    <string name="widget_theme">Widget Theme</string>
+    <string name="available_slots">Available Slots</string>
+    <string name="choose">Choose</string>
+    <string name="no_options">No Options</string>
+    <string name="web_pages">Web Pages</string>
+    <string name="loading">Loading…</string>
+    <string name="kore_login_icon">kore_login_icon</string>
+    <string name="done">DONE</string>
+    <string name="title">Title</string>
+    <string name="no_hashtags">No Hashtags</string>
+    <string name="login">Login</string>
+    <string name="hi">hi</string>
+    <string name="most_popular_slot">Most Popular Slot</string>
+    <string name="send_slots">Send Slots</string>
+    <string name="selected_slots">Selected Slots</string>
+    <string name="suggested_faq">Suggested FAQ</string>
+    <string name="tab1">Tab1</string>
+    <string name="tab2">Tab2</string>
+    <string name="knowledge_title">knowledge title</string>
+    <string name="knowledge_description">knowledge description</string>
+    <string name="tags">#tags</string>
+    <string name="_1_attachment">1 Attachment</string>
+    <string name="my_video">My Video</string>
+    <string name="image_name">Image Name</string>
+    <string name="testing">Testing</string>
+    <string name="ok">OK</string>
+    <string name="email">email</string>
+    <string name="upi_id">UPI ID</string>
+    <string name="bot_chat_bubble_background_color">Bot Chat bubble background color</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="to_reorder_the_widgets">to reorder the widgets</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

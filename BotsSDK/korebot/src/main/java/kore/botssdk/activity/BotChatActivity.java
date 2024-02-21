@@ -284,7 +284,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
         bundle.putString(BundleUtils.PICK_TYPE, "Notification");
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS, SDKConfiguration.Client.bot_name.charAt(0)+"");
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_MUTABLE);
         nBuilder.setContentIntent(pendingIntent);
@@ -702,7 +702,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             InputStream is = getResources().openRawResource(R.raw.option);
             Reader reader = new InputStreamReader(is);
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
-            LogUtils.e("Options Size", botOptionsModel.getTasks().size() + "" );
+            LogUtils.e("Options Size", String.valueOf(botOptionsModel.getTasks().size()));
         }
         catch (Exception e)
         {
@@ -713,14 +713,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     public void getBrandingDataFromTxt()
     {
-        BotBrandingModel botOptionsModel = null;
-
+        BotBrandingModel botOptionsModel;
         try
         {
             InputStream is = getResources().openRawResource(R.raw.branding_response);
             Reader reader = new InputStreamReader(is);
             botOptionsModel = gson.fromJson(reader, BotBrandingModel.class);
-            LogUtils.e("Options Size", botOptionsModel.getGeneral().getSize() + "" );
         }
         catch (Exception e)
         {

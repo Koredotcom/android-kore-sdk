@@ -32,13 +32,10 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 
-/**
- * Created by Pradeep Mahato on 31-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
+@SuppressLint("UnknownNullness")
 public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
     private Button launchBotBtn;
-    private EditText etIdentity;
+    EditText etIdentity;
     private static final int ERROR_DIALOG_REQUEST_CODE = 1;
     private boolean retryProviderInstall;
 
@@ -116,12 +113,12 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
      * Launching BotchatActivity where user can interact with bot
      *
      */
-    private void launchBotChatActivity(){
+    void launchBotChatActivity(){
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS,SDKConfiguration.Client.bot_name.charAt(0)+"");
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
 
         startActivity(intent);
@@ -162,7 +159,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
         }
     }
 
-    private void onProviderInstallerNotAvailable() {
+    void onProviderInstallerNotAvailable() {
         // This is reached if the provider can't be updated for some reason.
         // App should consider all HTTP communication to be vulnerable and take
         // appropriate action.

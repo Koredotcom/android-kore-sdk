@@ -109,8 +109,6 @@ public class TextMediaLayout extends ViewGroup {
         String rightbgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
 
-        //Transparency 15%
-        int transparency = 0x26000000;
         rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_right_bubble_bg, getContext().getTheme());
 
         if(rightDrawable != null) {

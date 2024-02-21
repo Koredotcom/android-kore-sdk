@@ -18,7 +18,7 @@
         android:layout_marginRight="40dp"
         android:background="@drawable/button_drawable"
         android:paddingLeft="20dp"
-        android:text="Get Started"
+        android:text="@string/get_started"
         android:paddingTop="10dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp"

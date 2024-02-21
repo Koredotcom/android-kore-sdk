@@ -3,7 +3,6 @@ package kore.botssdk.activity;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ConsoleMessage;
@@ -21,7 +20,7 @@ import androidx.core.content.res.ResourcesCompat;
 import kore.botssdk.R;
 import kore.botssdk.utils.StringUtils;
 
-@SuppressLint("SetJavaScriptEnabled")
+@SuppressLint({"SetJavaScriptEnabled", "UnKnownNullness"})
 public class GenericWebViewActivity extends BotAppCompactActivity {
 
     String actionbarTitle;
@@ -103,9 +102,6 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
                 @Override
                 public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                    Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
-                            + consoleMessage.lineNumber() + " of "
-                            + consoleMessage.sourceId());
                     return super.onConsoleMessage(consoleMessage);
                 }
 

@@ -508,7 +508,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     else
                     {
                         botButtonLinkTemplateView.setVisibility(View.VISIBLE);
-                        botButtonLinkTemplateView.populateButtonList(payInner, 1);
+                        botButtonLinkTemplateView.populateButtonList(payInner, 0);
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.setClicable(isLastItem);

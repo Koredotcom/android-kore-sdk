@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,7 +51,6 @@ import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
-import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KoreContact;
 import kore.botssdk.models.KoreMedia;
@@ -64,9 +62,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 
-/**
- * Created by Shiva Krishna on 4/5/2018.
- */
+@SuppressLint("UnknownNullness")
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
 
     public static final int THUMBNAIL_WIDTH=320;
@@ -77,7 +73,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private String fileContext = null;
     private static boolean NORMAL_PORTRAIT;
     private final int compressQualityInt = 100;
-    private OrientationEventListener mOrientationEventListener;
     private String MEDIA_TYPE = MEDIA_TYPE_IMAGE;
     private String MEDIA_FILENAME;
     private String MEDIA_FILE_PATH;
@@ -604,7 +599,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         }
     }
 
-    private void finishAndCancelOperation() {
+    void finishAndCancelOperation() {
         if (resultIntent == null) resultIntent = new Intent();
         resultIntent.putExtra("action", "IMAGE_CANCEL");
         resultIntent.putExtra("fileName", "");
@@ -858,7 +853,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     @Override
     protected void onResume() {
         super.onResume();
-        mOrientationEventListener = new OrientationEventListener(this) {
+        //inverted
+        //inverted land
+        OrientationEventListener mOrientationEventListener = new OrientationEventListener(this) {
 
             @Override
             public void onOrientationChanged(int orientation) {
