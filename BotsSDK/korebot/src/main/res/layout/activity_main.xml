@@ -17,7 +17,7 @@
             android:paddingLeft="50dp"
             android:paddingBottom="50dp"
             android:gravity="center_horizontal"
-            android:text="Bot SDK Demo"
+            android:text="@string/bot_sdk_demo"
             android:textSize="26sp"
             android:textStyle="bold"
             android:textColor="#000000"
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="Start using the Bots"
+            android:text="@string/start_using_the_bots"
             android:background="@drawable/button_drawable"
             android:textColor="@android:color/white"/>
 

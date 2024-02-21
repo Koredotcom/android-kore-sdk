@@ -29,7 +29,8 @@
             android:layout_height="50dp"
             android:layout_gravity="top"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/app_name" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -91,7 +92,9 @@
                     android:minHeight="24dp"
                     android:padding="5dp"
                     android:clickable="true"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:contentDescription="@string/app_name"
+                    android:focusable="true" />
                 <ImageView
                     android:id="@+id/icon_image"
                     android:layout_width="wrap_content"
@@ -103,7 +106,9 @@
                     android:textSize="18sp"
                     android:padding="5dp"
                     android:clickable="true"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:contentDescription="@string/app_name"
+                    android:focusable="true" />
 
                 <LinearLayout
                     android:id="@+id/tv_values_layout"
@@ -182,7 +187,8 @@
             android:layout_gravity="end|bottom"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="5dp"
-            app:srcCompat="@drawable/ic_arrow_drop_up_24px" />
+            app:srcCompat="@drawable/ic_arrow_drop_up_24px"
+            android:contentDescription="@string/app_name" />
     </LinearLayout>
 
 

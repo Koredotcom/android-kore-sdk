@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Option"
+        android:text="@string/option"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_normal" />
 </LinearLayout>

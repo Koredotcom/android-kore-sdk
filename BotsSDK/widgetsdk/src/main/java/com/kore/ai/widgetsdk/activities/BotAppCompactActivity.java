@@ -20,27 +20,15 @@ public class BotAppCompactActivity extends AppCompatActivity {
 
    // SpiceManager spiceManager = new SpiceManager(BotRestService.class);
     public void finish() {
-       /* if(this.spiceManager.isStarted()) {
-            this.spiceManager.shouldStop();
-        }*/
         super.finish();
     }
 
     protected void onCreate(Bundle data) {
         super.onCreate(data);
-        /*if(!this.spiceManager.isStarted()) {
-            this.spiceManager.start(getApplicationContext());
-        }*/
     }
-
-    /*public SpiceManager getSpiceManager() {
-        return this.spiceManager;
-    }*/
-
 
     protected void showProgress(String msg, boolean isCancelable) {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
-//            dismissProgress();
             return;
         }
 

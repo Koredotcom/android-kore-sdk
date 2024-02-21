@@ -30,11 +30,7 @@ public class RectangleCompos implements Shape {
 //        point.x = target.getView().getX();
 //        point.y = target.getView().getY();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            canvas.drawRoundRect(point.x-10, point.y-18, point.x + target.getView().getWidth()+10, point.y + target.getView().getHeight()+16, 60, 60, paint);
-        } else {
-            canvas.drawRect(point.x, point.y, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), paint);
-        }
+        canvas.drawRoundRect(point.x - 10, point.y - 18, point.x + target.getView().getWidth() + 10, point.y + target.getView().getHeight() + 16, 60, 60, paint);
 
 
         //copied from circle

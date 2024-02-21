@@ -18,7 +18,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/reorder_icon" />
+        app:srcCompat="@drawable/reorder_icon"
+        android:importantForAccessibility="no" />
 
     <LinearLayout
         android:id="@+id/r_layout"
@@ -37,7 +38,7 @@
             android:gravity="center"
             android:minHeight="20dp"
 
-            android:text="Hold and drag "
+            android:text="@string/hold_and_drag"
             android:textColor="@color/color_167_169_190"
             android:textSize="14sp" />
 
@@ -45,7 +46,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="1dp"
-            app:srcCompat="@drawable/widget_menu" />
+            app:srcCompat="@drawable/widget_menu"
+            android:importantForAccessibility="no" />
 
         <TextView
 
@@ -54,7 +56,7 @@
 
             android:gravity="center"
             android:minHeight="20dp"
-            android:text=" to reorder the widgets"
+            android:text="@string/to_reorder_the_widgets"
             android:textColor="@color/color_167_169_190"
             android:textSize="14sp" />
     </LinearLayout>

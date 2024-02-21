@@ -490,11 +490,7 @@ public class TEditor extends WebView {
     }
 
     private void load(String trigger) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            evaluateJavascript(trigger, null);
-        } else {
-            loadUrl(trigger);
-        }
+        evaluateJavascript(trigger, null);
     }
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {

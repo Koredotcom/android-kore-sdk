@@ -68,7 +68,7 @@
             android:drawableEnd="@drawable/right_arrow_iconn"
             android:drawableTint="@color/color_blue_1_1"
             android:gravity="center|end"
-            android:text="See More"
+            android:text="@string/see_more"
             android:textColor="@color/color_blue_1_1"
             android:visibility="gone" />
     </LinearLayout>

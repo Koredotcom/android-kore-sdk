@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -57,6 +58,7 @@ public class HeightAdjustableViewPager extends ViewPager {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return !swipeLocked && super.onTouchEvent(event);

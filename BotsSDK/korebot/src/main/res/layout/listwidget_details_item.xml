@@ -12,7 +12,8 @@
         android:layout_height="@dimen/dimen_20dp"
         android:layout_marginLeft="@dimen/dimen_5dp"
         android:layout_marginTop="@dimen/dimen_5dp"
-        android:layout_marginBottom="@dimen/dimen_5dp" />
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/tvBtnText"

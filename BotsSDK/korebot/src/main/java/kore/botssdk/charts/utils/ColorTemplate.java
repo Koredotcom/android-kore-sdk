@@ -23,7 +23,7 @@ public class ColorTemplate {
         int color = (int)Long.parseLong(hex.replace("#", ""), 16);
         int r = color >> 16 & 255;
         int g = color >> 8 & 255;
-        int b = color >> 0 & 255;
+        int b = color & 255;
         return Color.rgb(r, g, b);
     }
 

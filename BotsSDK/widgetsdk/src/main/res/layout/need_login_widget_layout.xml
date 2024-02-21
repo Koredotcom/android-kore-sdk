@@ -21,7 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="140dp"
         android:id="@+id/img_icon"
-        app:srcCompat="@drawable/need_login" />
+        app:srcCompat="@drawable/need_login"
+        android:importantForAccessibility="no" />
 
     <Button
         android:id="@+id/login_button"
@@ -29,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:tag="medium"
-        android:text="Login"
+        android:text="@string/login"
         android:background="@drawable/cancel_action_back"
         android:textColor="#FFFFFF"
         android:textSize="17sp"

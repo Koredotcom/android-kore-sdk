@@ -421,7 +421,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         resultsTemplateView.setVisibility(GONE);
         pdfDownloadView.populatePdfView(null);
         pdfDownloadView.setVisibility(GONE);
-        botButtonLinkTemplateView.populateButtonList(null,false, 0);
+        botButtonLinkTemplateView.populateButtonList(null, 0);
         botButtonLinkTemplateView.setVisibility(View.GONE);
         botBeneficiaryTemplateView.setVisibility(GONE);
         botBeneficiaryTemplateView.populateListTemplateView(null,null, null, 0, null, null);
@@ -508,8 +508,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     else
                     {
                         botButtonLinkTemplateView.setVisibility(View.VISIBLE);
-                        botButtonLinkTemplateView.setRestrictedMaxWidth(screenWidth - 28 * dp1 );
-                        botButtonLinkTemplateView.populateButtonList(payInner,isLastItem, 1);
+                        botButtonLinkTemplateView.populateButtonList(payInner, 1);
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.setClicable(isLastItem);

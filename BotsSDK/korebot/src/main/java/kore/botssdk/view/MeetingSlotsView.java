@@ -84,10 +84,8 @@ public class MeetingSlotsView extends ViewGroup {
         button1 = view.findViewById(R.id.button1);
         button2 = view.findViewById(R.id.button2);
         dp1 = (int) DimensionUtil.dp1;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            button1.setLetterSpacing(0.06f);
-            button2.setLetterSpacing(0.06f);
-        }
+        button1.setLetterSpacing(0.06f);
+        button2.setLetterSpacing(0.06f);
     }
 
 

@@ -20,7 +20,7 @@ import de.greenrobot.event.EventBus;
 
 public class KaAppService extends Service {
 
-    private boolean isFirstTime = true;
+    boolean isFirstTime = true;
     @Override
     public void onCreate() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -51,7 +51,6 @@ public class KaAppService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-//            boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             boolean hasConnectivity = (activeNetworkInfo!= null && activeNetworkInfo.isConnected());
@@ -60,21 +59,18 @@ public class KaAppService extends Service {
                 if(!isFirstTime) {
                     onConnectionFound(activeNetworkInfo);
                 }
-                isFirstTime = false;
-//                Log.d("IKIDO","On connection found");
             } else {
                 if(!isFirstTime) {
                     onConnectionLost(activeNetworkInfo);
                 }
-                isFirstTime = false;
-//                Log.d("IKIDO","On connection lost");
             }
+            isFirstTime = false;
         }
     };
-    private void onConnectionFound(NetworkInfo activeNetworkInfo) {
+    void onConnectionFound(NetworkInfo activeNetworkInfo) {
         EventBus.getDefault().post(new NetworkEvents.NetworkConnectivityEvent(activeNetworkInfo, true));
     }
-    private void onConnectionLost(NetworkInfo activeNetworkInfo){
+    void onConnectionLost(NetworkInfo activeNetworkInfo){
         EventBus.getDefault().post(new NetworkEvents.NetworkConnectivityEvent(activeNetworkInfo, false));
     }
 

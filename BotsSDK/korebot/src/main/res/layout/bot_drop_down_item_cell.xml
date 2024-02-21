@@ -11,11 +11,12 @@
         android:layout_height="46dp"
         android:gravity="center_vertical"
         android:ellipsize="end"
-        android:paddingLeft="@dimen/dimen_10dp"
+        android:paddingStart="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_10dp"
         android:singleLine="true"
-        android:text="Select"
+        android:text="@string/select"
         android:textColor="@color/black"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
 </LinearLayout>
 

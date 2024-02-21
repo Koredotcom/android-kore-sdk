@@ -45,9 +45,9 @@
             android:layout_marginStart="10dp"
             android:minHeight="40dp"
             android:tag="bold"
-            android:text="Send Slots"
+            android:text="@string/send_slots"
             android:textAllCaps="true"
             android:textColor="@color/splash_color"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
     </LinearLayout>
 </RelativeLayout>

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold"
@@ -27,17 +27,18 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_10dp"
-            android:background="@drawable/ic_close_black_24dp" />
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:background="@drawable/ic_close_black_24dp"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvfeedback_template_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="Testing"
+        android:text="@string/testing"
         android:textColor="#404051"
         android:textSize="@dimen/text_size_sub_header"
         android:textStyle="bold" />
@@ -62,7 +63,7 @@
         android:id="@+id/tvGlad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
         android:fontFamily="@font/latoregular"
@@ -82,7 +83,7 @@
             android:id="@+id/tvCommentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:text="@string/whatcanbeimproved"
             android:textSize="@dimen/text_size_sub_header" />
@@ -102,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
+                android:labelFor="@+id/etFeedbackComment"
                 android:gravity="top"/>
 
         </RelativeLayout>

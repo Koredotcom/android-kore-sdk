@@ -25,7 +25,8 @@
             android:minWidth="60dp"
             android:minHeight="60dp"
             android:scaleType="centerCrop"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:importantForAccessibility="no" />
 
 
         <LinearLayout
@@ -47,7 +48,7 @@
                 android:maxLines="1"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                android:text="Subtitle"
+                android:text="@string/subtitle"
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_sub_header"
                 android:visibility="visible" />
@@ -62,7 +63,7 @@
                 android:ellipsize="end"
                 android:textStyle="bold"
                 android:maxLines="2"
-                android:text="Title"
+                android:text="@string/title"
                 android:alpha=".8"
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_normal" />
@@ -76,6 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_15dp"
-        android:background="@drawable/ic_transaction_line" />
+        android:background="@drawable/ic_transaction_line"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

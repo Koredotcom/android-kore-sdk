@@ -1,10 +1,7 @@
 package com.kore.ai.widgetsdk.utils;
 
-/**
- * Created by Shiva Krishna on 10/23/2017.
- */
 
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
@@ -18,18 +15,14 @@ import androidx.core.content.res.ResourcesCompat;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.net.SDKConfiguration;
 
+@SuppressLint("UnknownNullness")
 public class KaFontUtils {
-
-    private static final String LOG_TAG = KaFontUtils.class.getSimpleName();
-
     private static Typeface robotoLight;
     private static Typeface robotoLightItalic;
     private static Typeface robotoRegular;
     private static Typeface robotoRegularItalic;
     private static Typeface robotoMedium;
     private static Typeface robotoMediumItalic;
-    private static Typeface robotoSemiBold;
-    private static Typeface robotoSemiBoldItalic;
     private static Typeface robotoBold;
     private static Typeface robotoBoldItalic;
     private static Typeface robotoExtraBold;
@@ -51,10 +44,9 @@ public class KaFontUtils {
                 for (int count = 0; count <= viewGroup.getChildCount(); count++) {
                     applyCustomFont(context, viewGroup.getChildAt(count));
                 }
-            } else if (root instanceof TextView || root instanceof Button || root instanceof EditText) {
-                TextView myview = (TextView) root;
-                setCustomFont(myview, context);
-
+            } else if (root instanceof TextView) {
+                TextView myView = (TextView) root;
+                setCustomFont(myView, context);
             }
         }
     }
@@ -113,12 +105,6 @@ public class KaFontUtils {
     }
 
 
-    public static void setCustomTypeface(TextView view,String tag,Context context){
-        if(SDKConfiguration.isApplyFontStyle()) {
-            view.setTypeface(getCustomTypeface(tag, context));
-        }
-    }
-
     public static Typeface getCustomTypeface(String tag, Context context) {
 
         switch (tag) {
@@ -176,16 +162,13 @@ public class KaFontUtils {
     }
 
     public static Typeface resolveTypeface(int typefaceValue, Context context) {
-        String typefaceTag = null;
+        String typefaceTag;
         switch (typefaceValue) {
             case 0:
                 typefaceTag = KaFontUtils.ROBOTO_LIGHT;
                 break;
             case 1:
                 typefaceTag = KaFontUtils.ROBOTO_LIGHT_ITALICS;
-                break;
-            case 2:
-                typefaceTag = KaFontUtils.ROBOTO_REGULAR;
                 break;
             case 3:
                 typefaceTag = KaFontUtils.ROBOTO_REGULAR_ITALICS;

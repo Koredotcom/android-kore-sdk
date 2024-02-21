@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Hi Shan, I am here to answer\n your questions about credit card."
+            android:text="@string/hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_normal" />
 
@@ -41,7 +41,8 @@
                 android:id="@+id/ivAgentImage"
                 android:layout_width="@dimen/agent_image_size"
                 android:layout_height="@dimen/agent_image_size"
-                android:layout_marginRight="@dimen/dimen_10dp" />
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:importantForAccessibility="no" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
                     android:id="@+id/tvAgentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kevin Peterson"
+                    android:text="@string/kevin_peterson"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_sub_header"
                     android:textStyle="bold" />
@@ -61,7 +62,7 @@
                     android:id="@+id/tvAgentRole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Kevin Peterson"
+                    android:text="@string/kevin_peterson"
                     android:textColor="@color/footerdivider_color"
                     android:textSize="@dimen/dimen_12dp" />
             </LinearLayout>

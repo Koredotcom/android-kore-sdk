@@ -363,7 +363,6 @@ public class PieChartRenderer extends DataRenderer {
                             }
 
                             labelPtx = pt2x - offset;
-                            labelPty = pt1y;
                         } else {
                             pt2x = pt1x + polyline2Width;
                             pt2y = pt1y;
@@ -373,8 +372,8 @@ public class PieChartRenderer extends DataRenderer {
                             }
 
                             labelPtx = pt2x + offset;
-                            labelPty = pt1y;
                         }
+                        labelPty = pt1y;
 
                         if (dataSet.getValueLineColor() != 1122867) {
                             if (dataSet.isUsingSliceColorAsValueLineColor()) {

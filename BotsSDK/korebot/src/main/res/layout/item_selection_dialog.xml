@@ -26,7 +26,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_toStartOf="@+id/img_cancel"
                 android:gravity="start"
-                android:text="What would you like to do?"
+                android:text="@string/what_would_you_like_to_do"
                 android:textColor="@color/color_626281"
                 android:textSize="19sp"
                 android:textStyle="bold" />
@@ -40,7 +40,8 @@
                 android:paddingRight="15dp"
                 android:paddingBottom="15dp"
                 android:layout_centerVertical="true"
-                app:srcCompat="@drawable/cancel_widget" />
+                app:srcCompat="@drawable/cancel_widget"
+                android:importantForAccessibility="no" />
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
@@ -123,13 +124,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:drawableStart="@drawable/vector_location_icon"
                             android:drawablePadding="5dp"
                             android:ellipsize="end"
                             android:gravity="center|start"
                             android:maxLines="1"
                             android:textColor="@color/color_728296"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            app:drawableStartCompat="@drawable/vector_location_icon" />
 
 
                         <TextView
@@ -137,13 +138,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="14dp"
-                            android:drawableStart="@drawable/vector_person"
                             android:drawablePadding="5dp"
                             android:ellipsize="end"
                             android:gravity="center|start"
                             android:maxLines="1"
                             android:textColor="@color/color_728296"
-                            android:textSize="13sp" />
+                            android:textSize="13sp"
+                            app:drawableStartCompat="@drawable/vector_person" />
 
 
 <!--

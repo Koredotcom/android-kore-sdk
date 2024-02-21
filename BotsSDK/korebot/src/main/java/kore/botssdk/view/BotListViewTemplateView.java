@@ -77,20 +77,10 @@ public class BotListViewTemplateView extends LinearLayout {
         {
             BotListViewTemplateAdapter botListTemplateAdapter = null;
 
-            if(!StringUtils.isNullOrEmpty(seeMore))
-            {
-                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
-                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
-                else
-                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
-            }
+            if(moreCount != 0 && botListModelArrayList.size() > moreCount)
+                botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
             else
-            {
-                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
-                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, moreCount);
-                else
-                    botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
-            }
+                botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
 
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);

@@ -12,9 +12,9 @@
         android:id="@+id/tvform_template_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="Testing"
+        android:text="@string/testing"
         android:textColor="#404051"
         android:textSize="@dimen/text_size_header"
         android:textStyle="bold"/>
@@ -37,5 +37,5 @@
         android:layout_weight="0"
         android:textStyle="bold"
         android:background="@drawable/form_button_bg"
-        android:text="Ok" />
+        android:text="@string/ok" />
 </LinearLayout>

@@ -5,8 +5,6 @@ public class WidgetConstants {
     public final static byte CLOUD_TEMPLATE = 0;
     public final static byte FILES_TEMPLATE = 1;
     public final static byte MEETINGS_TEMPLATE = 2;
-  //  public final static byte TASKS_TEMPLATE = 3;
-   // public final static byte OVER_DUE_TASK_TEMPLATE = 4;
     public final static byte BUTTON_TEMPLATE = 5;
     public final static byte HASH_TAG_TEMPLATE = 6;
     public final static byte ARTICLES_TEMPLATE = 7;
@@ -48,10 +46,6 @@ public class WidgetConstants {
     public final static String TABLE_LIST_WIDGET = "tableList";
     public final static String STANDARD = "standard";
     public final static String FORM = "form";
-
-
-    //public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";
-    //public final static String OVER_DUE_TASK_TEMPLATE_SERVER = "overdueTasks";
     public final static String HASH_TAG_TEMPLATE_SERVER = "hashtag_list";
 
     public final static String ARTICLES_TEMPLATE_SERVER = "knowledge_list";

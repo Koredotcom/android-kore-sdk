@@ -150,26 +150,6 @@ public abstract class TableResponsiveDataAdapter<T> extends ArrayAdapter<T> {
     @Override
     public final View getView(final int rowIndex, final View convertView, final ViewGroup parent) {
         final LinearLayout rowView = new LinearLayout(getContext());
-//        GridView gvChildView = (GridView)rowView.findViewById(R.id.gvChildViews);
-
-//        final AbsListView.LayoutParams rowLayoutParams = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        rowView.setLayoutParams(rowLayoutParams);
-//        rowView.setGravity(Gravity.CENTER_VERTICAL);
-
-//        T rowData = null;
-//        try {
-//            rowData = getItem(rowIndex);
-//        } catch (final IndexOutOfBoundsException e) {
-//            Log.w(LOG_TAG, "No row date available for row with index " + rowIndex + ". " +
-//                    "Caught Exception: " + e.getMessage());
-//        }
-//
-//        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-//            rowView.setBackgroundDrawable(rowBackgroundProvider.getRowBackground(rowIndex, rowData));
-//        } else {
-//            rowView.setBackground(rowBackgroundProvider.getRowBackground(rowIndex, rowData));
-//        }
-
 
         final int tableWidth = parent.getWidth();
 

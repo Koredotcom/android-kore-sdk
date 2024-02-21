@@ -25,9 +25,9 @@
             android:minWidth="300dp"
             android:minHeight="25dp"
             android:tag="medium"
-            android:text="Hello"
+            android:text="@string/hello"
             android:textColor="#404051"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,6 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_30dp"
                 android:background="@null"
+                android:labelFor="@+id/edtFormInput"
                 android:inputType="textPassword"
                 android:textColorHint="@color/readReceiptGrey"
                 android:textColor="#404051"
@@ -49,10 +50,10 @@
                 android:id="@+id/btfieldButton"
                 android:layout_width="@dimen/carousel_view_button_height_individual"
                 android:layout_height="@dimen/dimen_28dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/dimen_3dp"
                 android:background="@drawable/form_button_bg"
-                android:text="Ok"
+                android:text="@string/ok"
                 android:visibility="gone"/>
         </RelativeLayout>
     </LinearLayout>

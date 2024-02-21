@@ -76,7 +76,9 @@
                                 android:minWidth="24dp"
                                 android:minHeight="24dp"
                                 android:padding="5dp"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                android:importantForAccessibility="no"
+                                android:focusable="true" />
 
                             <ImageView
                                 android:id="@+id/icon_image"
@@ -87,7 +89,8 @@
                                 android:src="@mipmap/ic_more_vert_black_24dp"
                                 android:textColor="@color/color_7a799a"
                                 android:textSize="18sp"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                android:importantForAccessibility="no" />
 
                             <LinearLayout
                                 android:id="@+id/tv_values_layout"
@@ -159,7 +162,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerInParent="true"
                     android:visibility="gone"
-                    app:srcCompat="@drawable/vector_menu" />
+                    app:srcCompat="@drawable/vector_menu"
+                    android:importantForAccessibility="no" />
 
             </RelativeLayout>
 
@@ -210,13 +214,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:srcCompat="@drawable/no_meeting"
-                        android:visibility="gone"/>
+                        android:visibility="gone"
+                        android:importantForAccessibility="no" />
 
                     <TextView
                         android:id="@+id/tvFillForm"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Fill the Form"
+                        android:text="@string/fill_the_form"
                         android:textSize="@dimen/text_size_sub_header"
                         android:gravity="center"
                         android:padding="@dimen/dimen_10dp"
@@ -237,9 +242,9 @@
                     android:id="@+id/botCustomListViewButton"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:layout_marginRight="@dimen/dimen_10_dp"
-                    android:gravity="right|center_vertical"
-                    android:text="more"
+                    android:layout_marginEnd="@dimen/dimen_10_dp"
+                    android:gravity="end|center_vertical"
+                    android:text="@string/more"
                     android:textColor="@android:color/holo_blue_dark"
                     android:visibility="gone" />
 
@@ -249,7 +254,7 @@
                     android:layout_height="60dp"
                     android:background="@drawable/list_view_template_bg"
                     android:gravity="center"
-                    android:text="Show more"
+                    android:text="@string/show_more"
                     android:textColor="@android:color/holo_blue_dark"
                     android:visibility="gone" />
 
@@ -284,7 +289,7 @@
                             android:fontFamily="@font/latoregular"
                             android:gravity="center_vertical"
                             android:paddingStart="10dp"
-                            android:text="See more"
+                            android:text="@string/see_more"
                             android:textColor="#4741fa"
                             android:textSize="14sp" />
 
@@ -295,7 +300,8 @@
                             android:layout_marginTop="2dp"
                             android:layout_marginRight="3dp"
                             android:gravity="center_vertical"
-                            app:srcCompat="@drawable/ic_baseline_chevron_right_blue_24px">
+                            app:srcCompat="@drawable/ic_baseline_chevron_right_blue_24px"
+                            android:importantForAccessibility="no">
 
                         </ImageView>
                     </LinearLayout>

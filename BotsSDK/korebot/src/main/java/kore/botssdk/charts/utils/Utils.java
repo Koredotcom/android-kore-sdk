@@ -394,9 +394,6 @@ public abstract class Utils {
             c.save();
             c.translate(translateX, translateY);
             c.rotate(angleDegrees);
-            c.translate(drawOffsetX, drawOffsetY);
-            textLayout.draw(c);
-            c.restore();
         } else {
             if (anchor.x != 0.0F || anchor.y != 0.0F) {
                 drawOffsetX -= drawWidth * anchor.x;
@@ -406,10 +403,10 @@ public abstract class Utils {
             drawOffsetX += x;
             drawOffsetY += y;
             c.save();
-            c.translate(drawOffsetX, drawOffsetY);
-            textLayout.draw(c);
-            c.restore();
         }
+        c.translate(drawOffsetX, drawOffsetY);
+        textLayout.draw(c);
+        c.restore();
 
         paint.setTextAlign(originalTextAlign);
     }

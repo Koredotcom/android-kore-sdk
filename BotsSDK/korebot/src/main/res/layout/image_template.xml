@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/dimen_5dp"
-            android:text="My Video"
+            android:text="@string/my_video"
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_sub_header"
             android:visibility="gone" />
@@ -30,7 +30,8 @@
             android:maxWidth="250dp"
             android:maxHeight="150dp"
             android:src="@drawable/ic_video_icon"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:importantForAccessibility="no" />
 
         <RelativeLayout
             android:id="@+id/rlVideo"
@@ -71,7 +72,8 @@
                         android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_25dp"
                         android:layout_marginLeft="@dimen/dimen_7dp"
-                        android:src="@drawable/ic_play_icon" />
+                        android:src="@drawable/ic_play_icon"
+                        android:importantForAccessibility="no" />
 
                     <kore.botssdk.views.CustomTextView
                         android:id="@+id/tvVideoTiming"
@@ -81,7 +83,7 @@
                         android:layout_marginLeft="@dimen/dimen_10dp"
                         android:layout_toRightOf="@+id/ivPlayPauseIcon"
                         android:layout_weight="1"
-                        android:text="00:00/00:00"
+                        android:text="@string/_00_00_00_00"
                         android:textColor="@color/white"
                         android:textSize="@dimen/text_size_small" />
 
@@ -92,7 +94,8 @@
                         android:layout_above="@+id/sbVideo"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/dimen_7dp"
-                        android:src="@drawable/ic_fullscreen_icon" />
+                        android:src="@drawable/ic_fullscreen_icon"
+                        android:importantForAccessibility="no" />
 
                     <ImageView
                         android:id="@+id/ivVideoMore"
@@ -100,7 +103,8 @@
                         android:layout_height="@dimen/dimen_25dp"
                         android:layout_marginRight="@dimen/dimen_10dp"
                         android:layout_weight="0"
-                        android:src="@drawable/ic_more_vert_white_24dp" />
+                        android:src="@drawable/ic_more_vert_white_24dp"
+                        android:importantForAccessibility="no" />
 
                 </LinearLayout>
 
@@ -140,7 +144,8 @@
                     android:id="@+id/ivAudioPlayPauseIcon"
                     android:layout_width="@dimen/dimen_25dp"
                     android:layout_height="@dimen/dimen_25dp"
-                    android:src="@drawable/ic_paly_black" />
+                    android:src="@drawable/ic_paly_black"
+                    android:importantForAccessibility="no" />
 
                 <kore.botssdk.views.CustomTextView
                     android:id="@+id/tvAudioVideoTiming"
@@ -150,7 +155,7 @@
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_toRightOf="@+id/ivPlayPauseIcon"
                     android:layout_weight="0"
-                    android:text="00:00/00:00"
+                    android:text="@string/_00_00_00_00"
                     android:textColor="@color/txtFontBlack"
                     android:textSize="@dimen/text_size_small" />
 
@@ -171,7 +176,8 @@
                     android:layout_width="@dimen/dimen_25dp"
                     android:layout_height="@dimen/dimen_25dp"
                     android:layout_weight="0"
-                    android:src="@drawable/ic_more_vert_black_24dp" />
+                    android:src="@drawable/ic_more_vert_black_24dp"
+                    android:importantForAccessibility="no" />
 
             </LinearLayout>
 
@@ -196,7 +202,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="@dimen/dimen_5dp"
-            android:text="Image Name"
+            android:text="@string/image_name"
             android:visibility="gone" />
 
     </LinearLayout>

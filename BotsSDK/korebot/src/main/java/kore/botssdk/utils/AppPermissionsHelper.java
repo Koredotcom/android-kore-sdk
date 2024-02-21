@@ -49,20 +49,17 @@ public class AppPermissionsHelper {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static void requestForPermission(Activity activity, int requestCode, String... permission) {
         boolean shouldShowRequestPermissionRationale = shouldShowRationale(activity, permission);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (shouldShowRequestPermissionRationale) {
+        if (shouldShowRequestPermissionRationale) {
 
-                activity.requestPermissions(permission,
-                        requestCode);
+            activity.requestPermissions(permission,
+                    requestCode);
 
-            } else {
-                activity.requestPermissions(permission,
-                        requestCode);
-            }
+        } else {
+            activity.requestPermissions(permission,
+                    requestCode);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static boolean shouldShowRationale(Activity activity, String... permission) {
         boolean shouldShowRequestPermissionRationale = false;
         for (String aPermission : permission) {

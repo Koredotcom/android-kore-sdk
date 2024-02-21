@@ -18,7 +18,8 @@
             android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:src="@mipmap/imageplaceholder_left" />
+            android:src="@mipmap/imageplaceholder_left"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/knowledge_title"
@@ -28,7 +29,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="knowledge title" />
+            android:text="@string/knowledge_title" />
 
         <TextView
             android:id="@+id/knowledge_description"
@@ -38,7 +39,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="2dp"
-            android:text="knowledge description" />
+            android:text="@string/knowledge_description" />
 
         <TextView
             android:id="@+id/hash_tags_view"
@@ -48,7 +49,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp"
-            android:text="#tags" />
+            android:text="@string/tags" />
 
         <RelativeLayout
             android:id="@+id/knowledge_meta"
@@ -75,7 +76,7 @@
                 android:layout_below="@+id/created_date"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="knowledge description" />
+                android:text="@string/knowledge_description" />
 
             <TextView
                 android:id="@+id/creator_info"

@@ -46,35 +46,30 @@ public class Rectangle implements Shape {
 
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            switch (target.getWidgetEnum()) {
-                case DEFAULT:
-                    canvas.drawRoundRect(point.x, point.y, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), 50, 50, paint);
-                    break;
+        switch (target.getWidgetEnum()) {
+            case DEFAULT:
+                canvas.drawRoundRect(point.x, point.y, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), 50, 50, paint);
+                break;
 
-                case TITLE:
-                    canvas.drawRoundRect(point.x, point.y - newcalY, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), 15, 15, paint);
+            case TITLE:
+                canvas.drawRoundRect(point.x, point.y - newcalY, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), 15, 15, paint);
 
-                    break;
-                case TITLE_BUTTOON:
-                    canvas.drawRoundRect(point.x - 18, point.y - newcalY, point.x + target.getView().getWidth() + 14, point.y + target.getView().getHeight(), 15, 15, paint);
+                break;
+            case TITLE_BUTTOON:
+                canvas.drawRoundRect(point.x - 18, point.y - newcalY, point.x + target.getView().getWidth() + 14, point.y + target.getView().getHeight(), 15, 15, paint);
 
-                    break;
-                case TITLE_BUTTOON2:
+                break;
+            case TITLE_BUTTOON2:
+                canvas.drawRoundRect(point.x - 18, point.y - newcalY, point.x + target.getView().getWidth() - 15, point.y + target.getView().getHeight(), 15, 15, paint);
+
+            case ROOT_AND_INNER_RECYCLER:
+                if (point1 != null) {
+                    canvas.drawRoundRect(point1.x, point.y - newcalY, point1.x + target.getRecy().getWidth(), point1.y + newcalY + target.getView().getHeight(), 15, 15, paint);
+                } else {
                     canvas.drawRoundRect(point.x - 18, point.y - newcalY, point.x + target.getView().getWidth() - 15, point.y + target.getView().getHeight(), 15, 15, paint);
+                }
+                break;
 
-                case ROOT_AND_INNER_RECYCLER:
-                    if(point1!=null) {
-                        canvas.drawRoundRect(point1.x, point.y - newcalY, point1.x + target.getRecy().getWidth(), point1.y+newcalY + target.getView().getHeight(), 15, 15, paint);
-                    }else
-                    {
-                        canvas.drawRoundRect(point.x - 18, point.y - newcalY, point.x + target.getView().getWidth() - 15, point.y + target.getView().getHeight(), 15, 15, paint);
-                    }
-                    break;
-
-            }
-        } else {
-            canvas.drawRect(point.x, point.y, point.x + target.getView().getWidth(), point.y + target.getView().getHeight(), paint);
         }
 
 

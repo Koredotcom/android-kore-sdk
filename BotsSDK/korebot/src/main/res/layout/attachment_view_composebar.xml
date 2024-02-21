@@ -14,7 +14,8 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="12dp"
-        android:scaleType="fitXY" />
+        android:scaleType="fitXY"
+        android:importantForAccessibility="no" />
 
 
     <LinearLayout
@@ -29,7 +30,8 @@
 
             android:layout_width="14dp"
             android:layout_height="14dp"
-            app:srcCompat="@drawable/close_filled" />
+            app:srcCompat="@drawable/close_filled"
+            android:importantForAccessibility="no" />
     </LinearLayout>
     <!--    -->
 </RelativeLayout>

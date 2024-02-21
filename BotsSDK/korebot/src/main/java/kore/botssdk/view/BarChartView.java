@@ -1,7 +1,7 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.RectF;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,7 +33,7 @@ import kore.botssdk.view.viewUtils.MeasureUtils;
 /**
  * Created by Ramachandra Pradeep on 11-Apr-18.
  */
-
+@SuppressLint("UnknownNullness")
 public class BarChartView extends ViewGroup implements OnChartValueSelectedListener {
     private BarChart mChart;
     private final Context mContext;
@@ -112,10 +112,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         int startYear = 1;
         int groupCount = 4;
         labelCount = 0;
-//        String[] company = {"Company A","Company B","Company C","Company D"};
-//        int endYear = startYear + groupCount;
         ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
-//        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
         BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
@@ -209,16 +206,10 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int maxAllowedWidth = parentWidth;
-        int wrapSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-
-        int totalHeight = getPaddingTop();
-        int totalWidth = getPaddingLeft();
+        int maxAllowedWidth = MeasureSpec.getSize(widthMeasureSpec);
 
         int childWidthSpec;
         int childHeightSpec;
-        int contentWidth = 0;
 
         /*
          * For Pie View Layout
@@ -230,25 +221,8 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    protected RectF mOnValueSelectedRectF = new RectF();
-
     @Override
     public void onValueSelected(Entry e, Highlight highlight) {
-       /* if (e == null)
-            return;
-
-        RectF bounds = mOnValueSelectedRectF;
-        mChart.getBarBounds((BarEntry) e, bounds);
-        MPPointF position = mChart.getPosition(e, YAxis.AxisDependency.LEFT);
-
-        Log.i("bounds", bounds.toString());
-        Log.i("position", position.toString());
-
-        Log.i("x-index",
-                "low: " + mChart.getLowestVisibleX() + ", high: "
-                        + mChart.getHighestVisibleX());
-
-        MPPointF.recycleInstance(position);*/
     }
 
     @Override

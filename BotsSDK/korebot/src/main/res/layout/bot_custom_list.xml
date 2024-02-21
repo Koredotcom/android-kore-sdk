@@ -24,9 +24,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:paddingTop="@dimen/dimen_10dp"
-            android:paddingRight="@dimen/dimen_20dp"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingStart="@dimen/dimen_5dp"
             android:paddingBottom="@dimen/dimen_10dp"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_normal"
             android:visibility="gone" />

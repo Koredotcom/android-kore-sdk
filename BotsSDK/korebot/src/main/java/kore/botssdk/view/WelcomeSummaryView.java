@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+@SuppressLint("UnknownNullness")
 public class WelcomeSummaryView extends ViewGroup implements VerticalListViewActionHelper {
 
     private ComposeFooterInterface composeFooterInterface;
@@ -266,9 +268,6 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
 
                 }
 
-                /*if(composeFooterInterface != null)
-                    composeFooterInterface.onSendClick(model.getPayload(),true);*/
-
             }else if(!StringUtils.isNullOrEmpty(model.getType())&& model.getType().equals("open_form")){
                 if(composeFooterInterface != null)
                     composeFooterInterface.launchActivityWithBundle(BotResponse.WELCOME_SUMMARY_VIEW_NOTIFICAION,null);
@@ -279,21 +278,4 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
 
     }
-
-   /* public Drawable getTitleIcon(WelcomeChatSummaryModel mdl){
-        switch(mdl.getIconId()){
-            case "meeting":
-                return getResources().getDrawable(R.drawable.widget_calender);
-            case "form":
-                return getResources().getDrawable(R.drawable.ic_notification_active);
-            case "overdue":
-                return getResources().getDrawable(R.drawable.ic_overdue);
-            case "email":
-                return getResources().getDrawable(R.drawable.ic_emails);
-            case "upcoming_tasks":
-                return getResources().getDrawable(R.drawable.ic_tasks);
-            default:
-                return getResources().getDrawable(R.drawable.ic_tasks);
-        }
-    }*/
 }

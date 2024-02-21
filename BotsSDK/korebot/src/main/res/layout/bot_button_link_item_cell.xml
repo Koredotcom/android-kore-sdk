@@ -12,7 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_deeplink__1_"
-        android:layout_marginEnd="@dimen/dimen_7dp"/>
+        android:layout_marginEnd="@dimen/dimen_7dp"
+        android:importantForAccessibility="no" />
 
     <kore.botssdk.views.CustomTextViewBold
         android:id="@+id/more_txt_view"
@@ -21,7 +22,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:padding="@dimen/dimen_5dp"
-        android:text="Select"
+        android:text="@string/select"
         android:maxLines="2"
         android:textColor="#2e6fc5"
         android:textSize="@dimen/text_size_small" />

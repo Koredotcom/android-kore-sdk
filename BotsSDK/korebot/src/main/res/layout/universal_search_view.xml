@@ -40,13 +40,13 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
-                    android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
                     android:gravity="center_vertical"
                     android:paddingStart="7dp"
-                    android:text="See All Results"
+                    android:paddingEnd="@dimen/dimen_7dp"
+                    android:text="@string/see_all_results"
                     android:textColor="#737d87"
-                    android:textSize="@dimen/dimen_12dp"
-                     />
+                    android:textSize="@dimen/text_size_small"
+                    app:drawableEndCompat="@drawable/ic_baseline_chevron_right_24px" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

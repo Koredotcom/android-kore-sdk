@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_7dp"
             android:textColor="@color/colorSelected"
-            android:text="Test"
+            android:text="@string/title"
             android:visibility="invisible"/>
 
         <ImageView
@@ -28,12 +28,14 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:background="@mipmap/ic_arrow_table_resp_right"/>
+            android:background="@mipmap/ic_arrow_table_resp_right"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected"/>
+        android:background="@color/colorSelected"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

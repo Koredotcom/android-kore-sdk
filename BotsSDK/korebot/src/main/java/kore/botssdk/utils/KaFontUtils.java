@@ -1,16 +1,10 @@
 package kore.botssdk.utils;
 
-/**
- * Created by Shiva Krishna on 10/23/2017.
- */
-
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -18,18 +12,14 @@ import androidx.core.content.res.ResourcesCompat;
 import kore.botssdk.R;
 import kore.botssdk.net.SDKConfiguration;
 
+@SuppressLint("UnknownNullness")
 public class KaFontUtils {
-
-    private static final String LOG_TAG = KaFontUtils.class.getSimpleName();
-
     private static Typeface robotoLight;
     private static Typeface robotoLightItalic;
     private static Typeface robotoRegular;
     private static Typeface robotoRegularItalic;
     private static Typeface robotoMedium;
     private static Typeface robotoMediumItalic;
-    private static Typeface robotoSemiBold;
-    private static Typeface robotoSemiBoldItalic;
     private static Typeface robotoBold;
     private static Typeface robotoBoldItalic;
     private static Typeface robotoExtraBold;
@@ -51,10 +41,9 @@ public class KaFontUtils {
                 for (int count = 0; count <= viewGroup.getChildCount(); count++) {
                     applyCustomFont(context, viewGroup.getChildAt(count));
                 }
-            } else if (root instanceof TextView || root instanceof Button || root instanceof EditText) {
-                TextView myview = (TextView) root;
-                setCustomFont(myview, context);
-
+            } else if (root instanceof TextView) {
+                TextView myView = (TextView) root;
+                setCustomFont(myView, context);
             }
         }
     }
@@ -170,40 +159,4 @@ public class KaFontUtils {
         }
     }
 
-    public static Typeface resolveTypeface(int typefaceValue, Context context) {
-        String typefaceTag = null;
-        switch (typefaceValue) {
-            case 0:
-                typefaceTag = KaFontUtils.ROBOTO_LIGHT;
-                break;
-            case 1:
-                typefaceTag = KaFontUtils.ROBOTO_LIGHT_ITALICS;
-                break;
-            case 2:
-                typefaceTag = KaFontUtils.ROBOTO_REGULAR;
-                break;
-            case 3:
-                typefaceTag = KaFontUtils.ROBOTO_REGULAR_ITALICS;
-                break;
-            case 4:
-                typefaceTag = KaFontUtils.ROBOTO_MEDIUM;
-                break;
-            case 5:
-                typefaceTag = KaFontUtils.ROBOTO_MEDIUM_ITALICS;
-                break;
-            case 6:
-                typefaceTag = KaFontUtils.ROBOTO_BOLD;
-                break;
-            case 7:
-                typefaceTag = KaFontUtils.ROBOTO_BOLD_ITALICS;
-                break;
-            case 8:
-                typefaceTag = KaFontUtils.ROBOTO_EXTRA_BOLD;
-                break;
-            default:
-                typefaceTag = KaFontUtils.ROBOTO_REGULAR;
-                break;
-        }
-        return KaFontUtils.getCustomTypeface(typefaceTag, context);
-    }
 }

@@ -37,9 +37,9 @@
             android:minHeight="30dp"
 
             android:tag="medium"
-            android:text="Hello"
+            android:text="@string/hello"
             android:textColor="#404051"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <View

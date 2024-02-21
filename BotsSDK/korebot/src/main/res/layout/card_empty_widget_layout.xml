@@ -16,7 +16,8 @@
         android:id="@+id/img_icon"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
-        app:srcCompat="@drawable/no_meeting" />
+        app:srcCompat="@drawable/no_meeting"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/tv_message"

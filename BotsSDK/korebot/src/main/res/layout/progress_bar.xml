@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:contentDescription="kore_login_icon"
+        android:contentDescription="@string/kore_login_icon"
         app:srcCompat= "@mipmap/ic_notification" />
 
 
@@ -37,9 +37,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
         android:tag="medium"
-        android:text="Loading data..."
+        android:text="@string/loading_data"
         android:textColor= "#4741fa"
-        android:textSize="20dp" />
+        android:textSize="20sp" />
 
 
         <TextView

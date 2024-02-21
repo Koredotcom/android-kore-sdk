@@ -249,7 +249,7 @@ class WebSocketWriter extends Handler {
                 payload = new byte[2];
             }
 
-            if (payload != null && payload.length > 125) {
+            if (payload.length > 125) {
                 throw new WebSocketException("close payload exceeds 125 octets");
             }
 

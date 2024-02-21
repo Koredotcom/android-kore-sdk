@@ -58,7 +58,8 @@
                     android:layout_height="24dp"
                     android:visibility="gone"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/vector_menu" />
+                    app:srcCompat="@drawable/vector_menu"
+                    android:importantForAccessibility="no" />
                 <include layout="@layout/pin_layout" />
                 </LinearLayout>
             </RelativeLayout>
@@ -94,14 +95,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
                     android:layout_marginEnd="10dp"
-                    android:drawableEnd="@drawable/ic_baseline_chevron_right_24px"
                     android:fontFamily="@font/latoregular"
                     android:gravity="center_vertical"
                     android:paddingStart="10dp"
                     android:text="@string/view_more"
                     android:textColor="#737d87"
                     android:textSize="@dimen/dimen_12_dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:drawableEndCompat="@drawable/ic_baseline_chevron_right_24px" />
             </LinearLayout>
 
             <LinearLayout
@@ -117,13 +118,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/no_meeting"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
 
                 <TextView
                     android:id="@+id/tvFillForm"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Fill the Form"
+                    android:text="@string/fill_the_form"
                     android:textSize="@dimen/text_size_sub_header"
                     android:gravity="center"
                     android:padding="@dimen/dimen_10dp"

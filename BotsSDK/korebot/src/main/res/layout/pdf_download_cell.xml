@@ -21,7 +21,8 @@
         android:minHeight="60dp"
         android:scaleType="centerCrop"
         android:src="@drawable/download"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:importantForAccessibility="no" />
 
 
     <kore.botssdk.views.CustomTextView
@@ -34,7 +35,7 @@
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="Title"
+        android:text="@string/title"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_normal" />
 
