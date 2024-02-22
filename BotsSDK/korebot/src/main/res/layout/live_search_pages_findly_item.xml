@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dimen_7dp"
-        android:text="Suggested FAQ"
+        android:text="@string/suggested_faq"
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_sub_header"
         android:visibility="gone" />
@@ -32,7 +32,8 @@
             android:layout_width="60dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,7 +54,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Title"
+                    android:text="@string/title"
                     android:textColor="@color/txtFontBlack"
                     android:textSize="@dimen/text_size_normal" />
 
@@ -64,7 +65,8 @@
                     android:layout_marginLeft="@dimen/dimen_5dp"
                     android:layout_marginTop="@dimen/dimen_3dp"
                     android:background="@drawable/ic_launch_24px2"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
             </LinearLayout>
 
             <kore.botssdk.views.CustomTextView
@@ -76,7 +78,7 @@
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Title"
+                android:text="@string/title"
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_normal" />
 
@@ -88,7 +90,7 @@
                 android:layout_marginTop="@dimen/dimen_3dp"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:text="Title"
+                android:text="@string/title"
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_normal"
                 android:visibility="gone" />
@@ -112,7 +114,8 @@
             android:layout_width="@dimen/dimen_30dp"
             android:layout_height="@dimen/dimen_30dp"
             android:layout_gravity="center"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:importantForAccessibility="no" />
 
 
         <kore.botssdk.views.CustomTextViewBold
@@ -124,7 +127,7 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold" />

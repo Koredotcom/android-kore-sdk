@@ -41,13 +41,15 @@
             android:layout_width="@dimen/dimen_7dp"
             android:layout_height="@dimen/dimen_7dp"
             android:layout_gravity="center_vertical"
-            android:background="@mipmap/ic_arrow_table_resp_down" />
+            android:background="@mipmap/ic_arrow_table_resp_down"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivChildArrowDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected" />
+        android:background="@color/colorSelected"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

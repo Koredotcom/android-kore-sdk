@@ -12,7 +12,7 @@
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_5dp"
-        android:text="Bot Chat bubble background color" />
+        android:text="@string/bot_chat_bubble_background_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +40,8 @@
             android:layout_width="@dimen/dimen_25dp"
             android:layout_height="@dimen/dimen_25dp"
             android:layout_marginRight="@dimen/dimen_5dp"
-            android:background="@drawable/theme_color"/>
+            android:background="@drawable/theme_color"
+            android:importantForAccessibility="no" />
 
     </LinearLayout>
 

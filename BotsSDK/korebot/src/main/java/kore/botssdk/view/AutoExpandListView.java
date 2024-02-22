@@ -5,20 +5,22 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+
 public class AutoExpandListView extends ListView {
 
     boolean expanded = true;
 
-    public AutoExpandListView(Context context, AttributeSet attrs,
-                    int defaultStyle) {
+    public AutoExpandListView(@NonNull Context context, @NonNull AttributeSet attrs,
+                              int defaultStyle) {
         super(context, attrs, defaultStyle);
     }
 
-    public AutoExpandListView(Context context){
+    public AutoExpandListView(@NonNull Context context){
         super(context,null);
     }
 
-    public AutoExpandListView(Context context, AttributeSet attrs) {
+    public AutoExpandListView(@NonNull Context context, @NonNull AttributeSet attrs) {
         super(context, attrs);
     }
 

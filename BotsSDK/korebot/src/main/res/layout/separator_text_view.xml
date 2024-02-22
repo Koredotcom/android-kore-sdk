@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:minHeight="42dp"
     android:layout_marginStart="10dp"
-    android:text="Available Slots"
+    android:text="@string/available_slots"
     android:textAllCaps="true"
     android:textColor="@color/color_485260"
     android:textSize="13sp" />

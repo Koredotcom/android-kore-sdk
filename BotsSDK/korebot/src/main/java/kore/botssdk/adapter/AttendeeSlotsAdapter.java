@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import static kore.botssdk.utils.DateUtils.getSlotsDate;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -24,17 +25,13 @@ import kore.botssdk.models.MeetingSlotModel;
 import kore.botssdk.utils.SelectionUtils;
 
 
-/**
- * Created by Shiva Krishna on 6/15/2018.
- */
-
 public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdapter.ViewHolder> {
 
-    public void setNormalSlots(ArrayList<MeetingSlotModel.Slot> normalSlots) {
+    public void setNormalSlots(@NonNull ArrayList<MeetingSlotModel.Slot> normalSlots) {
         this.normalSlots = normalSlots;
     }
 
-    public void setPopularSlots(ArrayList<MeetingSlotModel.Slot> popularSlots) {
+    public void setPopularSlots(@NonNull ArrayList<MeetingSlotModel.Slot> popularSlots) {
         this.popularSlots = popularSlots;
     }
 
@@ -46,23 +43,23 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
     private final int selectedColor;
     private final int unSelectedColor;
     private final LayoutInflater layoutInflater;
-    private ArrayList<MeetingSlotModel.Slot> selectedSlots = new ArrayList<>();
-    private final SlotSelectionListener slotSelectionListener;
-    private boolean isEnabled = false;
-    private void addOrRemoveSelectedSlot(MeetingSlotModel.Slot slot){
+    ArrayList<MeetingSlotModel.Slot> selectedSlots = new ArrayList<>();
+    final SlotSelectionListener slotSelectionListener;
+    boolean isEnabled = false;
+    void addOrRemoveSelectedSlot(MeetingSlotModel.Slot slot){
         if(selectedSlots.contains(slot)){
             selectedSlots.remove(slot);
         }else{
             selectedSlots.add(slot);
         }
     }
-    public void addSelectedSlots(ArrayList<MeetingSlotModel.Slot> slots){
+    public void addSelectedSlots(@NonNull ArrayList<MeetingSlotModel.Slot> slots){
         selectedSlots.addAll(slots);
     }
 
 
 
-    public AttendeeSlotsAdapter(Context mContext,SlotSelectionListener slotSelectionListener) {
+    public AttendeeSlotsAdapter(@NonNull Context mContext, @NonNull SlotSelectionListener slotSelectionListener) {
         layoutInflater = LayoutInflater.from(mContext);
         selectedCheck = ResourcesCompat.getDrawable(mContext.getResources() , R.mipmap.checkbox_on, mContext.getTheme());
         unSelectedCheck = ResourcesCompat.getDrawable(mContext.getResources() , R.mipmap.checkbox_off, mContext.getTheme());
@@ -138,6 +135,7 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
         }
     }
 
+    @SuppressLint("UnknownNullness")
     public MeetingSlotModel.Slot getItem(int position) {
         if(popularSlots.size() > 0 && position == 0){
             return null;
@@ -165,13 +163,12 @@ public class AttendeeSlotsAdapter extends RecyclerView.Adapter<AttendeeSlotsAdap
     }
 
 
-
-
+    @NonNull
     public ArrayList<MeetingSlotModel.Slot> getSelectedSlots() {
         return selectedSlots;
     }
 
-    public void setSelectedSlots(ArrayList<MeetingSlotModel.Slot> selectedSlots) {
+    public void setSelectedSlots(@NonNull ArrayList<MeetingSlotModel.Slot> selectedSlots) {
         this.selectedSlots = selectedSlots;
     }
 

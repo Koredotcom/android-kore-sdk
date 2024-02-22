@@ -33,7 +33,8 @@
         android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
 
-        app:srcCompat="@drawable/widget_menu" />
+        app:srcCompat="@drawable/widget_menu"
+        android:importantForAccessibility="no" />
 
 
 </RelativeLayout>

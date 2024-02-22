@@ -76,7 +76,7 @@
                     android:background="@drawable/button_drawable_stroke"
                     android:gravity="center"
                     android:tag="bold"
-                    android:text="Decline"
+                    android:text="@string/decline"
                     android:textColor="@color/splash_color"
                     android:textSize="15sp" />
             </LinearLayout>

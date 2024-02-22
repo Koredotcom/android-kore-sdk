@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +13,7 @@ import kore.botssdk.utils.StringUtils;
 /**
  * Created by Ramachandra Pradeep on 08-Mar-19.
  */
-
+@SuppressLint("UnknownNullness")
 public class Widget implements Serializable,Cloneable {
 
 
@@ -236,14 +238,6 @@ public class Widget implements Serializable,Cloneable {
     public void setTheme(String theme) {
         this.theme = theme;
     }
-/*
-    public String getApi() {
-        return api;
-    }
-
-    public void setApi(String api) {
-        this.api = api;
-    }*/
     @SerializedName("hook")
     @Expose
     private Hook hook;
@@ -320,77 +314,6 @@ public class Widget implements Serializable,Cloneable {
 
     }
 
-    /*public class Params implements Serializable{
-
-        @SerializedName("q")
-        @Expose
-        private String q;
-
-        public String getQ() {
-            return q;
-        }
-
-        public void setQ(String q) {
-            this.q = q;
-        }
-
-        @SerializedName("tz")
-        @Expose
-        private String tz;
-        @SerializedName("filter")
-        @Expose
-        private String filter;
-        @SerializedName("offSet")
-        @Expose
-        private String offSet;
-        @SerializedName("limit")
-        @Expose
-        private String limit;
-
-        public String getSkillId() {
-            return skillId;
-        }
-
-        public void setSkillId(String skillId) {
-            this.skillId = skillId;
-        }
-
-        private String skillId;
-
-        public String getTz() {
-            return tz;
-        }
-
-        public void setTz(String tz) {
-            this.tz = tz;
-        }
-
-        public String getFilter() {
-            return filter;
-        }
-
-        public void setFilter(String filter) {
-            this.filter = filter;
-        }
-
-        public String getOffSet() {
-            return offSet;
-        }
-
-        public void setOffSet(String offSet) {
-            this.offSet = offSet;
-        }
-
-        public String getLimit() {
-            return limit;
-        }
-
-        public void setLimit(String limit) {
-            this.limit = limit;
-        }
-
-    }*/
-
     public static class Tz implements Serializable {
 
         @SerializedName("default")
@@ -417,64 +340,6 @@ public class Widget implements Serializable,Cloneable {
         }
 
     }
-
-   /* public class Body implements Serializable{
-
-        @SerializedName("filter")
-        @Expose
-        private Filter filter;
-        @SerializedName("tz")
-        @Expose
-        private Tz tz;
-
-        public Filter getFilter() {
-            return filter;
-        }
-
-        public void setFilter(Filter filter) {
-            this.filter = filter;
-        }
-
-        public Tz getTz() {
-            return tz;
-        }
-
-        public void setTz(Tz tz) {
-            this.tz = tz;
-        }
-
-    }*/
-
-    /*public class Element implements Serializable{
-        @SerializedName("title")
-        @Expose
-        private String title;
-
-        @SerializedName("subTitle")
-        @Expose
-        private String sub_title;
-
-        @SerializedName("icon")
-        @Expose
-        private String icon;
-
-        @SerializedName("filter")
-        @Expose
-        private Button filter;
-
-    }
-
-    public class Button extends MultiAction{
-        private String theme;
-
-        public String getTheme() {
-            return theme;
-        }
-
-        public void setTheme(String theme) {
-            this.theme = theme;
-        }
-    }*/
 
     public static class Element implements Serializable{
 

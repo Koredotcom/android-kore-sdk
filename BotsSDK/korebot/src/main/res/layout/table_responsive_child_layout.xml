@@ -32,6 +32,7 @@
         android:id="@+id/ivChildDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected"/>
+        android:background="@color/colorSelected"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

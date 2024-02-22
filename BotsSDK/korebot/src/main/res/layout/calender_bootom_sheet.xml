@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_normal"
             android:textStyle="bold"
@@ -26,7 +26,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_close_black_24dp" />
+            android:background="@drawable/ic_close_black_24dp"
+            android:importantForAccessibility="no" />
     </LinearLayout>
 
     <DatePicker
@@ -47,7 +48,7 @@
         android:background="@color/rippelColor"
         android:padding="@dimen/dimen_15dp"
         android:gravity="center"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_sub_header"
         android:textStyle="bold" />

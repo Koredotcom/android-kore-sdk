@@ -23,8 +23,8 @@
         android:layout_marginStart="15dp"
         android:fontFamily="@font/latoregular"
         android:gravity="center_vertical"
-        android:text="Please Wait..."
+        android:text="@string/please_wait"
         android:textColor="@color/color_485260"
-        android:textSize="@dimen/dimen_15dp" />
+        android:textSize="@dimen/text_size_sub_header" />
 
 </LinearLayout>

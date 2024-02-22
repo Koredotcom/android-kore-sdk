@@ -89,20 +89,10 @@ public class BotListWidgetTemplateView extends ViewGroup {
         {
             BotListWidgetTemplateAdapter botListTemplateAdapter = null;
 
-            if(!StringUtils.isNullOrEmpty(seeMore))
-            {
-                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
-                    botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, moreCount);
-                else
-                    botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
-            }
+            if(moreCount != 0 && botListModelArrayList.size() > moreCount)
+                botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, moreCount);
             else
-            {
-                if(moreCount != 0 && botListModelArrayList.size() > moreCount)
-                    botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, moreCount);
-                else
-                    botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
-            }
+                botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
 
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);

@@ -8,6 +8,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -18,11 +20,11 @@ import kore.botssdk.utils.KaFontUtils;
 public class BankingFeedbackTemplateAdapter extends BaseAdapter
 {
     private final Context context;
-    private ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels;
-    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels;
+    final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
     private final boolean isEnabled;
 
-    public BankingFeedbackTemplateAdapter(Context context, ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled)
+    public BankingFeedbackTemplateAdapter(@NonNull Context context, @NonNull ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels, @NonNull FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled)
     {
         this.context = context;
         this.feedbackExperienceContentModels = feedbackExperienceContentModels;
@@ -103,13 +105,13 @@ public class BankingFeedbackTemplateAdapter extends BaseAdapter
         return convertView;
     }
 
-    public void refresh(ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels)
+    public void refresh(@NonNull ArrayList<FeedbackExperienceContentModel> feedbackExperienceContentModels)
     {
         this.feedbackExperienceContentModels = feedbackExperienceContentModels;
         notifyDataSetChanged();
     }
 
-    private class ExperienceItemViewHolder {
+    static class ExperienceItemViewHolder {
         TextView tvExperience;
         CheckBox rbSelect;
         LinearLayout llExperience;

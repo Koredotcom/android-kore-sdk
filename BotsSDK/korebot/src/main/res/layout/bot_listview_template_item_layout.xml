@@ -14,13 +14,12 @@
         android:id="@+id/bot_list_item_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:clickable="false"
         android:minWidth="60dp"
         android:minHeight="60dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:importantForAccessibility="no" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,28 +31,23 @@
             android:id="@+id/bot_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/bot_list_item_image"
             android:clickable="false"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Title"
             android:textColor="@color/left_bubble_text_color"
-            android:textSize="14dp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/bot_list_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bot_list_item_title"
-            android:layout_toRightOf="@id/bot_list_item_image"
             android:clickable="false"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text="Subtitle"
             android:textColor="@color/footer_color_dark_grey"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -62,14 +56,12 @@
         android:id="@+id/bot_list_item_cost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:layout_toRightOf="@id/bot_list_item_image"
+        android:layout_marginEnd="15dp"
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Title"
         android:textColor="@color/listview_cost"
-        android:textSize="14dp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 </LinearLayout>

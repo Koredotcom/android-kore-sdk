@@ -358,7 +358,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         botContactTemplateView.populateContactTemplateView(null,"");
         multiSelectView.populateData(null,false);
         multiSelectView.setVisibility(GONE);
-        attendeeSlotSelectionView.populateData(-1, null, false);
+        attendeeSlotSelectionView.populateData(null, false);
         attendeeSlotSelectionView.setVisibility(GONE);
         meetingConfirmationView.populateData(null);
         meetingConfirmationView.setVisibility(GONE);
@@ -421,7 +421,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
         resultsTemplateView.setVisibility(GONE);
         pdfDownloadView.populatePdfView(null);
         pdfDownloadView.setVisibility(GONE);
-        botButtonLinkTemplateView.populateButtonList(null,false, 0);
+        botButtonLinkTemplateView.populateButtonList(null, 0);
         botButtonLinkTemplateView.setVisibility(View.GONE);
         botBeneficiaryTemplateView.setVisibility(GONE);
         botBeneficiaryTemplateView.populateListTemplateView(null,null, null, 0, null, null);
@@ -508,8 +508,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     else
                     {
                         botButtonLinkTemplateView.setVisibility(View.VISIBLE);
-                        botButtonLinkTemplateView.setRestrictedMaxWidth(screenWidth - 28 * dp1 );
-                        botButtonLinkTemplateView.populateButtonList(payInner,isLastItem, 1);
+                        botButtonLinkTemplateView.populateButtonList(payInner, 0);
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
                     bubbleTextMediaLayout.setClicable(isLastItem);
@@ -710,7 +709,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     ArrayList<AttendeeSlotTemplateModel> meetingTemplateModels = payInner.getAttendeeSlotTemplateModels();
                     if (meetingTemplateModels != null && meetingTemplateModels.size() > 0) {
                         attendeeSlotSelectionView.setVisibility(View.VISIBLE);
-                        attendeeSlotSelectionView.populateData(position, meetingTemplateModels.get(0), isLastItem);
+                        attendeeSlotSelectionView.populateData(meetingTemplateModels.get(0), isLastItem);
                     }
                     bubbleTextMediaLayout.populateText(payInner.getText());
                 } else if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_CANCEL_EVENT.equalsIgnoreCase(payInner.getTemplate_type())) {

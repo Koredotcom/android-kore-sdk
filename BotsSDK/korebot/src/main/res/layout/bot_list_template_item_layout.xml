@@ -19,7 +19,8 @@
         android:clickable="false"
         android:minHeight="60dp"
         android:minWidth="60dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/bot_list_item_title"
@@ -29,8 +30,8 @@
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="Title"
-        android:textSize="14dp"
+        android:text="@string/title"
+        android:textSize="14sp"
         android:textColor="@color/left_bubble_text_color"
          />
 
@@ -46,9 +47,9 @@
         android:paddingBottom="2dp"
         android:paddingTop="2dp"
         android:visibility="gone"
-        android:text="Subtitle"
+        android:text="@string/subtitle"
         android:textColor="@color/footer_color_dark_grey"
-        android:textSize="12dp" />
+        android:textSize="12sp" />
 
     <Button
         android:id="@+id/bot_list_item_button"

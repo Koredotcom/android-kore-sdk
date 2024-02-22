@@ -135,33 +135,6 @@ public abstract class KaBaseFragment extends Fragment {
         AppUtils.toggleVirtualKeyboard(getActivity(), InputMethodManager.SHOW_FORCED, 0);
     }
 
-    /**
-     * Method to hide softkeyboard on touching view
-     *
-     * @param view
-     */
-    public void onTouchHideKeyboard(final View view) {
-        //Set up touch listener for non-text box views to hide keyboard.
-        if (!(view instanceof EditText)) {
-            view.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    //Activity SignUpActivity=(Activity) v.getContext();
-                    hideSoftKeyBoard(view);
-                    return false;
-                }
-
-            });
-        }
-        //If view happens to be a layout container, iterate over children and seed recursion.
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                onTouchHideKeyboard(innerView);
-            }
-        }
-    }
-
     public void invalidateActionBar(FragmentActivity fragmentActivity) {
         if (fragmentActivity != null) {
             fragmentActivity.supportInvalidateOptionsMenu();
@@ -169,10 +142,6 @@ public abstract class KaBaseFragment extends Fragment {
     }
 
     public Gson gson = new Gson();
-
-    public void showErrorToast(Throwable throwable) {
-
-    }
 
     private void showUserInteractionPopUpOrToast(String code, String message) {
         switch (code.trim()) {

@@ -34,10 +34,10 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     private final List<Widget.Button> buttons;
     private final Context mContext;
 
-    private String skillName;
+    String skillName;
     private final String trigger;
 
-    public ButtonListAdapter(Context context, List<Widget.Button> buttons, String trigger) {
+    public ButtonListAdapter(@NonNull Context context, @NonNull List<Widget.Button> buttons, @NonNull String trigger) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
@@ -53,7 +53,6 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
-//        holder.ll.setVisibility(View.VISIBLE);
         Widget.Button btn = buttons.get(i);
 
         holder.tv.setText(btn.getTitle());
@@ -63,23 +62,10 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
             holder.tv.setTextColor(Color.parseColor("#3942f6"));
         }
 
-       /* String utt = null;
-        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
-            utt = btn.getPayload();
-        }
-        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
-            utt = btn.getUtterance();
-        }
-        final String utterance = utt;*/
-
         holder.tv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-//                buttonAction(utterance);
-
-                buttonAction(btn, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
+                buttonAction(btn, TextUtils.isEmpty(Constants.SKILL_SELECTION) || !StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION));
             }
         });
     }
@@ -94,75 +80,69 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonViewHolder> {
         this.isFullView=isFullView;
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tv;
-//        private LinearLayout ll;
+    public static class ButtonViewHolder extends RecyclerView.ViewHolder {
+        final TextView tv;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.buttonTV);
-//            ll = itemView.findViewById(R.id.buttonsLayout);
-
         }
     }
 
 
-    public void buttonAction(Widget.Button btn, boolean appendUtterance){
-        if(btn != null) {
-            if(btn.getType()!=null  && btn.getType().equals("url")){
-                String url = btn.getUrl();
-                if (url != null && !url.isEmpty()) {
-                    if (!url.startsWith("http")) {
-                        url = "http://" + url.toLowerCase();
-                    }
-                    if (NetworkUtility.isNetworkConnectionAvailable(mContext)) {
-                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                        intent.putExtra("url", url);
-                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-
-                        mContext.startActivity(intent);
-                    } else {
-                        Toast.makeText(mContext, "Check your internet connection and please try again",Toast.LENGTH_LONG).show();
-                    }
+    public void buttonAction(@NonNull Widget.Button btn, boolean appendUtterance){
+        if (btn.getType() != null && btn.getType().equals("url")) {
+            String url = btn.getUrl();
+            if (url != null && !url.isEmpty()) {
+                if (!url.startsWith("http")) {
+                    url = "http://" + url.toLowerCase();
                 }
-            }else {
-                 String utterance = null;
-        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
-            utterance = btn.getPayload();
-        }
-        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utterance == null){
-            utterance = btn.getUtterance();
-        }
-                EntityEditEvent event = new EntityEditEvent();
-                StringBuffer msg = new StringBuffer();
-                HashMap<String, Object> hashMap = new HashMap<>();
-                hashMap.put("refresh", Boolean.TRUE);
-                if (appendUtterance && trigger != null)
-                    msg = msg.append(trigger).append(" ");
-                msg.append(utterance);
-                event.setMessage(msg.toString());
-                event.setPayLoad(new Gson().toJson(hashMap));
-                event.setScrollUpNeeded(true);
-                KoreEventCenter.post(event);
+                if (NetworkUtility.isNetworkConnectionAvailable(mContext)) {
+                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                    intent.putExtra("url", url);
+                    intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
 
-                try {
-
-
-                    if (isFullView) {
-                        ((Activity) mContext).finish();
-                    }
-                } catch (Exception e) {
-
+                    mContext.startActivity(intent);
+                } else {
+                    Toast.makeText(mContext, "Check your internet connection and please try again", Toast.LENGTH_LONG).show();
                 }
+            }
+        } else {
+            String utterance = null;
+            if (!StringUtils.isNullOrEmpty(btn.getPayload())) {
+                utterance = btn.getPayload();
+            }
+            if (!StringUtils.isNullOrEmpty(btn.getUtterance()) && utterance == null) {
+                utterance = btn.getUtterance();
+            }
+            EntityEditEvent event = new EntityEditEvent();
+            StringBuffer msg = new StringBuffer();
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("refresh", Boolean.TRUE);
+            if (appendUtterance && trigger != null)
+                msg = msg.append(trigger).append(" ");
+            msg.append(utterance);
+            event.setMessage(msg.toString());
+            event.setPayLoad(new Gson().toJson(hashMap));
+            event.setScrollUpNeeded(true);
+            KoreEventCenter.post(event);
+
+            try {
+                if (isFullView) {
+                    ((Activity) mContext).finish();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
+    @NonNull
     public String getSkillName() {
         return skillName;
     }
 
-    public void setSkillName(String skillName) {
+    public void setSkillName(@NonNull String skillName) {
         this.skillName = skillName;
     }
 

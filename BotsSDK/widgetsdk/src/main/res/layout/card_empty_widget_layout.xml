@@ -17,7 +17,8 @@
         android:layout_marginBottom="20dp"
         android:layout_gravity="center"
         android:visibility="visible"
-        app:srcCompat="@drawable/no_meeting" />
+        app:srcCompat="@drawable/no_meeting"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/tv_message"

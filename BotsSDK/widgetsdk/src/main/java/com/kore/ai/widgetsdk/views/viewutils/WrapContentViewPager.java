@@ -29,16 +29,6 @@ public class WrapContentViewPager extends ViewPager {
         });
     }
 
-   /*@Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        View child = getChildAt(getCurrentItem());
-        if (child != null) {
-            child.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-            int h = child.getMeasuredHeight();
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
-        }
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }*/
    @Override
    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
        super.onMeasure(widthMeasureSpec, heightMeasureSpec);

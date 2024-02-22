@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -50,7 +51,7 @@
         android:src="@drawable/circle_shimmer"
         android:layout_gravity="center"
 
-        />
+        android:importantForAccessibility="no" />
 
 </RelativeLayout>
 
@@ -145,28 +146,28 @@
                     android:layout_height="wrap_content"
 
                     android:layout_marginTop="7dp"
-                    android:drawableStart="@drawable/ic_comments_right"
                     android:drawablePadding="7dp"
                     android:layout_marginStart="8dp"
                     android:minWidth="80dp"
                     android:singleLine="true"
                     android:text="@{Long.toString(annoucement.NComments)}"
                     android:textColor="@color/color_626281"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:drawableStartCompat="@drawable/ic_comments_right" />
                 <TextView
                     android:id="@+id/tv_upvotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="7dp"
-                    android:drawableStart="@drawable/upvote"
                     android:drawablePadding="7dp"
                     android:minWidth="80dp"
                     android:singleLine="true"
 
                     android:text="@{Long.toString(annoucement.NUpVotes)}"
                     android:textColor="@color/color_626281"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:drawableStartCompat="@drawable/upvote" />
 
 
 

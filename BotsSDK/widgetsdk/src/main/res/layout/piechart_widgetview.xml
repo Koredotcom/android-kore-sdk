@@ -73,7 +73,9 @@
                                 android:minWidth="24dp"
                                 android:minHeight="24dp"
                                 android:padding="5dp"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                android:importantForAccessibility="no"
+                                android:focusable="true" />
 
                             <ImageView
                                 android:id="@+id/icon_image"
@@ -84,7 +86,8 @@
                                 android:src="@mipmap/ic_more_vert_black_24dp"
                                 android:textColor="@color/color_7a799a"
                                 android:textSize="18sp"
-                                android:visibility="gone" />
+                                android:visibility="gone"
+                                android:importantForAccessibility="no" />
 
                             <LinearLayout
                                 android:id="@+id/tv_values_layout"

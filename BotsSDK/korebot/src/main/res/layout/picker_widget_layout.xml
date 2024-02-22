@@ -15,9 +15,9 @@
         android:gravity="center"
         android:tag="bold"
         android:textStyle="bold"
-        android:text="DONE"
+        android:text="@string/done"
         android:textColor="#1432ff"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
 
     <ListView

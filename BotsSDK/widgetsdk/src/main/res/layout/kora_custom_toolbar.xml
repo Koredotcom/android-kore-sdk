@@ -34,7 +34,8 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:importantForAccessibility="no" />
 
 
 
@@ -44,17 +45,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:drawableEnd="@drawable/ic_more"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxWidth="300dp"
                 android:maxLines="1"
                 android:paddingStart="10dp"
+                android:paddingEnd="@dimen/dimen_10dp"
                 android:singleLine="true"
-                android:text="Kora"
+                android:text="@string/kora"
                 android:textColor="@color/color_485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableEndCompat="@drawable/ic_more" />
         </LinearLayout>
 
 
@@ -102,7 +104,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:drawableEnd="@drawable/ic_navigate_next_black_24dp"
                 android:drawablePadding="5dp"
                 android:ellipsize="middle"
                 android:text=""
@@ -113,7 +114,8 @@
                 android:singleLine="true"
 
                 android:textColor="@color/color_485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableEndCompat="@drawable/ic_navigate_next_black_24dp" />
         </LinearLayout>
 
     </RelativeLayout>

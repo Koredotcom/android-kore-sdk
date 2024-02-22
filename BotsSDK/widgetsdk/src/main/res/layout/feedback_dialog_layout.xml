@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/latoregular"
-            android:text="How was your experience ?"
+            android:text="@string/how_was_your_experience"
             android:textColor="#000000"
             android:textSize="13sp">
 
@@ -46,7 +46,8 @@
                 android:layout_height="20dp"
                 android:id="@+id/close"
                 android:layout_gravity="end"
-                app:srcCompat="@drawable/ic_close" />
+                app:srcCompat="@drawable/ic_close"
+                android:importantForAccessibility="no" />
 
         </LinearLayout>
 
@@ -57,7 +58,8 @@
             android:layout_height="50dp"
             android:layout_below="@+id/label_view"
             android:layout_marginStart="-6dp"
-            app:srcCompat="@drawable/feedback_icon_1">
+            app:srcCompat="@drawable/feedback_icon_1"
+            android:importantForAccessibility="no">
 
         </ImageView>
 
@@ -67,7 +69,8 @@
             android:layout_height="50dp"
             android:layout_below="@+id/label_view"
             android:layout_toEndOf="@+id/icon_1"
-            app:srcCompat="@drawable/feedback_icon_2">
+            app:srcCompat="@drawable/feedback_icon_2"
+            android:importantForAccessibility="no">
 
         </ImageView>
 
@@ -77,7 +80,8 @@
             android:layout_height="50dp"
             android:layout_below="@+id/label_view"
             android:layout_toEndOf="@+id/icon_2"
-            app:srcCompat="@drawable/feedback_icon_3">
+            app:srcCompat="@drawable/feedback_icon_3"
+            android:importantForAccessibility="no">
 
         </ImageView>
 
@@ -87,7 +91,8 @@
             android:layout_height="50dp"
             android:layout_below="@+id/label_view"
             android:layout_toEndOf="@+id/icon_3"
-            app:srcCompat="@drawable/feedback_icon_4">
+            app:srcCompat="@drawable/feedback_icon_4"
+            android:importantForAccessibility="no">
 
         </ImageView>
 
@@ -97,7 +102,8 @@
             android:layout_height="50dp"
             android:layout_below="@+id/label_view"
             android:layout_toEndOf="@+id/icon_4"
-            app:srcCompat="@drawable/feedback_icon_5">
+            app:srcCompat="@drawable/feedback_icon_5"
+          android:importantForAccessibility="no">
 
         </ImageView>
       <!--  <pl.droidsonroids.gif.GifImageButton

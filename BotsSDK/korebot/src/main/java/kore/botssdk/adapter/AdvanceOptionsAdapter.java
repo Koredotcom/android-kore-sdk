@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
@@ -23,13 +23,11 @@ import kore.botssdk.utils.LogUtils;
 
 public class AdvanceOptionsAdapter extends BaseAdapter {
     private final Context context;
-    private ArrayList<AdvanceOptionsModel> contentModels = null;
-    private final LayoutInflater layoutInflater;
+    private final ArrayList<AdvanceOptionsModel> contentModels;
 
-    protected AdvanceOptionsAdapter(Context context, ArrayList<AdvanceOptionsModel> contentModels) {
+    protected AdvanceOptionsAdapter(@NonNull Context context, @NonNull ArrayList<AdvanceOptionsModel> contentModels) {
         this.context = context;
         this.contentModels = contentModels;
-        this.layoutInflater = LayoutInflater.from(context);
         KoreEventCenter.register(this);
     }
 
@@ -112,6 +110,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         }
     }
 
+    @NonNull
     public ArrayList<AdvanceOptionsModel> getData() {
         return contentModels;
     }
@@ -128,14 +127,14 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void onEvent(AdvanceListRefreshEvent advanceListRefreshEvent) {
+    public void onEvent(@NonNull AdvanceListRefreshEvent advanceListRefreshEvent) {
         LogUtils.e("Testing", advanceListRefreshEvent.getPayLoad());
         notifyDataSetChanged();
     }
 
-    private static class DetailsViewHolder {
-        private TextView tvBtnText;
-        private ImageView ivOptions;
-        private LinearLayout llOptions;
+    static class DetailsViewHolder {
+        TextView tvBtnText;
+        ImageView ivOptions;
+        LinearLayout llOptions;
     }
 }

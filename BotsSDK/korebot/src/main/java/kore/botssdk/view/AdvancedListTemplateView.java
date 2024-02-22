@@ -91,7 +91,7 @@ public class AdvancedListTemplateView extends LinearLayout {
                 botCustomListViewButton.setOnClickListener(v -> {
                     AdvancedListActionSheetFragment bottomSheetDialog = new AdvancedListActionSheetFragment();
                     bottomSheetDialog.setTitle(payloadInner.getTitle());
-                    bottomSheetDialog.setSkillName("skillName","trigger");
+                    bottomSheetDialog.setSkillName("skillName");
                     bottomSheetDialog.setData(payloadInner.getListItems());
                     bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

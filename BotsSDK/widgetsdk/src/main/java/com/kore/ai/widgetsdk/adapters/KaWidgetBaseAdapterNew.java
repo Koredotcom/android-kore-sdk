@@ -40,20 +40,16 @@ import com.kore.ai.widgetsdk.views.widgetviews.TrendingHashTagView;
 
 import java.util.HashMap;
 
-
+@SuppressWarnings("UnKnownNullness")
 public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements UpdateRefreshItem, VerticalListViewActionHelper {
 
-    private final Context kaWidgetFragmentContext;
     private final Context activityObj;
     private final WidgetViewMoreEnum widgetViewMoreEnum;
     PanelLevelData panelData;
-    public boolean isFirstLaunch() {
-        return isFirstLaunch;
-    }
+
     public void setFirstLaunch(boolean firstLaunch) {
-        isFirstLaunch = firstLaunch;
     }
-    private boolean isFirstLaunch;
+
     private final String skillName;
     private String jwtToken;
     public PanelBaseModel getWidget() {
@@ -78,10 +74,8 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     private PanelBaseModel widgetTemp = null;
 
     public KaWidgetBaseAdapterNew(Context kaWidgetFragmentContext, WidgetViewMoreEnum widgetViewMoreEnum, boolean isFirstLaunch, String skillName) {
-        this.kaWidgetFragmentContext = kaWidgetFragmentContext;
-        activityObj = this.kaWidgetFragmentContext;
+        activityObj = kaWidgetFragmentContext;
         this.widgetViewMoreEnum = widgetViewMoreEnum;
-        this.isFirstLaunch = isFirstLaunch;
         this.skillName = skillName;
     }
 
@@ -145,10 +139,6 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
 //                QuickActionWidgetView actionWidgetView = new QuickActionWidgetView(parent.getContext(), skillName);
 //                return new QuickActionViewHolder(actionWidgetView);
 
-            case WidgetConstants.PIE_CHART_TEMPLATE:
-                PieChartWidgetView pieChartWidgetView = new PieChartWidgetView(parent.getContext(),skillName);
-                return new PieChartViewHolder(pieChartWidgetView);
-
             case WidgetConstants.BAR_CHART_TEMPLATE:
                 BarChartWidgetView barChartWidgetView = new BarChartWidgetView(parent.getContext());
                 return new BarChartViewHolder(barChartWidgetView);
@@ -165,9 +155,6 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             case WidgetConstants.FORM_TEMPLATE:
                 FormWidgetView formWidgetView = new FormWidgetView(parent.getContext(), widget.getData().getName());
                 return new FormWidgetViewHolder(formWidgetView);
-            /*case EDIT_TEMPLATE_TEMP:
-                view = LayoutInflater.from(kaWidgetFragmentContext).inflate(R.layout.widget_edit_button, parent, false);
-                return new EditViewHolder(view);*/
             default:
                 PieChartWidgetView pieChartWidgetView1 = new PieChartWidgetView(parent.getContext(),skillName);
                 return new PieChartViewHolder(pieChartWidgetView1);
@@ -180,54 +167,16 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-//        if ((holder instanceof GenericWidgetViewHolder && getItemViewType(position) == WidgetConstants.TASK_LIST_TEMPLATE) ||
-//
-//                (holder instanceof GenericWidgetViewHolder && getItemViewType(position) == WidgetConstants.FILES_TEMPLATE)) {
-//            ((GenericWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position), position, getItemViewType(position), false,panelData);
-//
-//        } else
-        if (holder instanceof GenericWidgetSingleViewHolder) {
-//            ((GenericWidgetSingleViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position), false,panelData);
-        } else if (holder instanceof ArticleWidgetViewHolder) {
-//            ((ArticleWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position), position, false,panelData);
-        } else if (holder instanceof MeetingViewHolder) {
+        if (holder instanceof MeetingViewHolder) {
             ((MeetingViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData);
-        } else if (holder instanceof SkillViewHolder) {
-//            ((SkillViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData);
         }
         else if (holder instanceof FormWidgetViewHolder) {
             ((FormWidgetViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position),panelData, jwtToken);
         }
-//        else if (holder instanceof AnnouncementViewHolder) {
-////            ((AnnouncementViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position), false,panelData);
-//        }
         else if (holder instanceof DefaultViewHolder) {
             ((DefaultViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData, jwtToken);
-        } else if (holder instanceof ChartListViewHolder) {
-//            ((ChartListViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position),panelData);
         }
-//        else if (holder instanceof WeatherViewHolder) {
-////            ((WeatherViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position));
-////            ((WeatherViewHolder) holder).getCustomView().setComposeFooterInterface((PanelMainActivity) activityObj);
-//        } else if (holder instanceof QuickActionViewHolder) {
-////            ((QuickActionViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position));
-//        }
-        else if (holder instanceof EditViewHolder) {
-
-            EditViewHolder editViewHolder=(EditViewHolder)holder;
-
-            editViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-//                    Intent intent=new Intent(kaWidgetFragmentContext, WidgetReOrderActivity.class);
-//                    intent.putExtra("data",widget);
-//
-//                    kaWidgetFragmentContext.startActivity(intent);
-
-                }
-            });
-        }else if (holder instanceof PieChartViewHolder) {
+        else if (holder instanceof PieChartViewHolder) {
             ((PieChartViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position),panelData,jwtToken);
         }else if (holder instanceof BarChartViewHolder) {
             ((BarChartViewHolder) holder).getCustomView().setWidget(widget.getData().getName(),widget.getData().getWidgets().get(position),panelData, jwtToken);
@@ -326,30 +275,8 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-
-    class EditViewHolder extends RecyclerView.ViewHolder {
-
-        View btnEdit;
-        public EditViewHolder(@NonNull View itemView) {
-            super(itemView);
-//            btnEdit=itemView.findViewById(R.id.btnEdit);
-        }
-    }
-
-    private Drawable changeColorOfDrawable(Context context, int colorCode) {
-        Drawable drawable = ContextCompat.getDrawable(context, R.drawable.round_shape_common);
-        try {
-            ((GradientDrawable) drawable).setColor(context.getResources().getColor(colorCode));
-            return drawable;
-        } catch (Exception e) {
-            return drawable;
-        }
-    }
-
     @Override
     public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
-//        KaUtility.launchViewDetailsActivity((Activity) activityObj, extras, false);
-
     }
 
     @Override
@@ -412,60 +339,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
 
     }
 
-
-//    public class WeatherViewHolder extends RecyclerView.ViewHolder {
-//        private WelcomeSummaryWidgetView customView;
-//
-//        public WeatherViewHolder(View v) {
-//            super(v);
-//            customView = (WelcomeSummaryWidgetView) v;
-//        }
-//
-//        public WelcomeSummaryWidgetView getCustomView() {
-//            return customView;
-//        }
-//    }
-//
-//    public class WeatherViewGreetingHolder extends RecyclerView.ViewHolder {
-//        private WelcomeSummaryGreeting customView;
-//
-//        public WeatherViewGreetingHolder(View v) {
-//            super(v);
-//            customView = (WelcomeSummaryGreeting) v;
-//        }
-//
-//        public WelcomeSummaryGreeting getCustomView() {
-//            return customView;
-//        }
-//    }
-//
-//    public class WelcomeSummaryViewHolder extends RecyclerView.ViewHolder {
-//        private WelcomeSummaryViewWidget customView;
-//
-//        public WelcomeSummaryViewHolder(View v) {
-//            super(v);
-//            customView = (WelcomeSummaryViewWidget) v;
-//        }
-//
-//        public WelcomeSummaryViewWidget getCustomView() {
-//            return customView;
-//        }
-//    }
-//
-//    public class QuickActionViewHolder extends RecyclerView.ViewHolder {
-//        private QuickActionWidgetView customView;
-//
-//        public QuickActionViewHolder(View v) {
-//            super(v);
-//            customView = (QuickActionWidgetView) v;
-//        }
-//
-//        public QuickActionWidgetView getCustomView() {
-//            return customView;
-//        }
-//    }
-
-    public class MeetingViewHolder extends RecyclerView.ViewHolder {
+    public static class MeetingViewHolder extends RecyclerView.ViewHolder {
         private final MeetingWidgetView customView;
 
         public MeetingViewHolder(View v) {
@@ -478,7 +352,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class ChartListViewHolder extends RecyclerView.ViewHolder {
+    public static class ChartListViewHolder extends RecyclerView.ViewHolder {
         private final ChartListWidgetView customView;
 
         public ChartListViewHolder(View v) {
@@ -491,7 +365,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class DefaultViewHolder extends RecyclerView.ViewHolder {
+    public static class DefaultViewHolder extends RecyclerView.ViewHolder {
         private final DefaultWidgetView customView;
 
         public DefaultViewHolder(View v) {
@@ -504,7 +378,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class PieChartViewHolder extends RecyclerView.ViewHolder {
+    public static class PieChartViewHolder extends RecyclerView.ViewHolder {
         private final PieChartWidgetView customView;
 
         public PieChartViewHolder(View v) {
@@ -516,7 +390,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             return customView;
         }
     }
-    public class BarChartViewHolder extends RecyclerView.ViewHolder {
+    public static class BarChartViewHolder extends RecyclerView.ViewHolder {
         private final BarChartWidgetView customView;
 
         public BarChartViewHolder(View v) {
@@ -529,7 +403,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class FormWidgetViewHolder extends RecyclerView.ViewHolder {
+    public static class FormWidgetViewHolder extends RecyclerView.ViewHolder {
         private final FormWidgetView customView;
 
         public FormWidgetViewHolder(View v) {
@@ -541,7 +415,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             return customView;
         }
     }
-    public class LineChartViewHolder extends RecyclerView.ViewHolder {
+    public static class LineChartViewHolder extends RecyclerView.ViewHolder {
         private final LineChartWidgetView customView;
 
         public LineChartViewHolder(View v) {
@@ -554,7 +428,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class ListWidgetViewHolder extends RecyclerView.ViewHolder {
+    public static class ListWidgetViewHolder extends RecyclerView.ViewHolder {
         private final ListWidgetView customView;
 
         public ListWidgetViewHolder(View v) {
@@ -567,7 +441,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class TableListWidgetViewHolder extends RecyclerView.ViewHolder {
+    public static class TableListWidgetViewHolder extends RecyclerView.ViewHolder {
         private final TableListWidgetView customView;
 
         public TableListWidgetViewHolder(View v) {
@@ -580,7 +454,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class HashTagViewHolder extends RecyclerView.ViewHolder {
+    public static class HashTagViewHolder extends RecyclerView.ViewHolder {
         private final TrendingHashTagView customView;
 
         public HashTagViewHolder(View v) {
@@ -606,7 +480,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
 //        }
 //    }
 
-    public class SkillViewHolder extends RecyclerView.ViewHolder {
+    public static class SkillViewHolder extends RecyclerView.ViewHolder {
         private final SkillWidgetView customView;
 
         public SkillViewHolder(View v) {
@@ -619,7 +493,7 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
         }
     }
 
-    public class GenericWidgetSingleViewHolder extends RecyclerView.ViewHolder {
+    public static class GenericWidgetSingleViewHolder extends RecyclerView.ViewHolder {
         private final GenericWidgetView customView;
 
         public GenericWidgetSingleViewHolder(View v) {

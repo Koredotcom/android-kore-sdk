@@ -122,7 +122,7 @@ public class ImageTemplateView extends LinearLayout
         tvTheme1 = popUpView.findViewById(R.id.tvTheme1);
         tvTheme2 = popUpView.findViewById(R.id.tvTheme2);
         vTheme = popUpView.findViewById(R.id.vTheme);
-        tvTheme1.setText("Download");
+        tvTheme1.setText(R.string.download);
         tvTheme2.setVisibility(View.GONE);
         vTheme.setVisibility(View.GONE);
 

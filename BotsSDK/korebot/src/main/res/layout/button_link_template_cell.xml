@@ -23,9 +23,9 @@
             android:id="@+id/tvButtonTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
             android:layout_weight="1"
-            android:text="UPI ID"
+            android:text="@string/upi_id"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_normal"
             android:textStyle="bold" />
@@ -34,7 +34,8 @@
             android:id="@+id/ivLinkForward"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrowforward" />
+            android:src="@drawable/ic_arrowforward"
+            android:importantForAccessibility="no" />
 
     </LinearLayout>
 

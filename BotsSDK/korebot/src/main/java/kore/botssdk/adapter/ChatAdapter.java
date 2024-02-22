@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -26,24 +27,16 @@ import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.KaBaseBubbleContainer;
 import kore.botssdk.view.KaBaseBubbleLayout;
-import kore.botssdk.view.KaReceivedBubbleContainer;
-import kore.botssdk.view.KaReceivedBubbleLayout;
-import kore.botssdk.view.KaSendBubbleContainer;
-import kore.botssdk.view.KaSendBubbleLayout;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 
-/**
- * edit : Only for bots SDK
- */
-public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder>  {
-
-//    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
-final Context context;
+@SuppressLint("UnknownNullness")
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+    final Context context;
     private Activity activityContext;
     private final LayoutInflater ownLayoutInflater;
     private final HashMap<String, Integer> headersMap = new HashMap<>();
     private boolean isAlpha = false;
-    private int selectedItem = -1;
+    int selectedItem = -1;
 
 
     public ComposeFooterInterface getComposeFooterInterface() {
@@ -66,14 +59,7 @@ final Context context;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int BUBBLE_CONTENT_LAYOUT_WIDTH;
     private final int BUBBLE_CONTENT_LAYOUT_HEIGHT;
-
-
-    public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
-        return baseBotMessageArrayList;
-    }
-
     private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
-
     private static final int BUBBLE_LEFT_LAYOUT = 0;
     private static final int BUBBLE_RIGHT_LAYOUT = BUBBLE_LEFT_LAYOUT + 1;
 
@@ -86,25 +72,24 @@ final Context context;
     }
 
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ViewHolder(ownLayoutInflater.inflate( i == BUBBLE_RIGHT_LAYOUT ?  R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null),i);
+        return new ViewHolder(ownLayoutInflater.inflate(i == BUBBLE_RIGHT_LAYOUT ? R.layout.ka_bubble_layout_right : R.layout.ka_bubble_layout_left, null), i);
     }
 
-    private boolean isClickable(int position, BaseBotMessage message){
+    private boolean isClickable(int position, BaseBotMessage message) {
         boolean clickable = false;
-        if(!message.isSend()){
+        if (!message.isSend()) {
             BotResponse resp = (BotResponse) message;
             ComponentModel model = resp.getMessage().get(0).getComponent();
             if (model != null && model.getPayload() != null && model.getPayload().getPayload() != null) {
                 PayloadOuter outer = model.getPayload();
                 PayloadInner inner = outer.getPayload();
-                if(!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)){
-                    clickable = (position == getItemCount() -2) ;
-                }else{
-                    clickable = (position == getItemCount() -1) ;
+                if (!StringUtils.isNullOrEmpty(inner.getTemplate_type()) && inner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)) {
+                    clickable = (position == getItemCount() - 2);
+                } else {
+                    clickable = (position == getItemCount() - 1);
                 }
             }
         }
@@ -113,35 +98,35 @@ final Context context;
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        holder.baseBubbleContainer.setAlpha(isAlpha && position != getItemCount() -1 ? 0.4f : 1.0f);
-        holder.baseBubbleContainer.setViewActive(!isAlpha || position == getItemCount()-1);
+        holder.baseBubbleContainer.setAlpha(isAlpha && position != getItemCount() - 1 ? 0.4f : 1.0f);
+        holder.baseBubbleContainer.setViewActive(!isAlpha || position == getItemCount() - 1);
         holder.baseBubbleContainer.setDimensions(BUBBLE_CONTENT_LAYOUT_WIDTH, BUBBLE_CONTENT_LAYOUT_HEIGHT);
         holder.baseBubbleLayout.setContinuousMessage(position == 0 || checkIsContinuous(position));
         holder.baseBubbleLayout.setGroupMessage(false);
         holder.baseBubbleLayout.setComposeFooterInterface(composeFooterInterface);
         holder.baseBubbleLayout.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.baseBubbleLayout.setActivityContext(activityContext);
-        holder.baseBubbleLayout.fillBubbleLayout(position,position == getItemCount() -1 , getItem(position));
+        holder.baseBubbleLayout.fillBubbleLayout(position, position == getItemCount() - 1, getItem(position));
         holder.textView.setText(getItem(position).getFormattedDate());
 
-        if(headersMap.isEmpty()) {
+        if (headersMap.isEmpty()) {
             prepareHeaderMap();
         }
         boolean fDate = false;
         try {
             fDate = headersMap.get(getItem(holder.getBindingAdapterPosition()).getFormattedDate()) == holder.getBindingAdapterPosition();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         holder.headerView.setVisibility(getItem(holder.getBindingAdapterPosition()) != null && fDate ? View.VISIBLE : View.GONE);
-        if(selectedItem == holder.getBindingAdapterPosition()){
+        if (selectedItem == holder.getBindingAdapterPosition()) {
             holder.baseBubbleLayout.setTimeStampVisible();
         }
-        if(getItemViewType(holder.getBindingAdapterPosition()) == BUBBLE_RIGHT_LAYOUT) {
+        if (getItemViewType(holder.getBindingAdapterPosition()) == BUBBLE_RIGHT_LAYOUT) {
             holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    if(selectedItem != -1){
+                    if (selectedItem != -1) {
                         notifyItemChanged(selectedItem);
                     }
                     selectedItem = holder.getBindingAdapterPosition();
@@ -153,16 +138,17 @@ final Context context;
                 @Override
                 public void onClick(View v) {
                     BotRequest botRequest = (BotRequest) getItem(holder.getBindingAdapterPosition());
-                    if(composeFooterInterface != null)  composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
+                    if (composeFooterInterface != null)
+                        composeFooterInterface.copyMessageToComposer(botRequest.getMessage().getBody(), false);
                 }
             });
         }
     }
 
     private boolean checkIsContinuous(int position) {
-        if(getItem(position).isSend() && getItem(position-1).isSend()){
+        if (getItem(position).isSend() && getItem(position - 1).isSend()) {
             return true;
-        }else return !getItem(position).isSend() && !getItem(position - 1).isSend();
+        } else return !getItem(position).isSend() && !getItem(position - 1).isSend();
     }
 
 
@@ -206,15 +192,15 @@ final Context context;
     }
 
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         final KaBaseBubbleContainer baseBubbleContainer;
         final KaBaseBubbleLayout baseBubbleLayout;
         final View headerView;
         final TextView textView;
-        public ViewHolder(View view,int viewType){
+
+        public ViewHolder(View view, int viewType) {
             super(view);
-            if ( viewType== BUBBLE_RIGHT_LAYOUT) {
+            if (viewType == BUBBLE_RIGHT_LAYOUT) {
                 // Right Side
                 baseBubbleLayout = view.findViewById(R.id.sendBubbleLayout);
                 baseBubbleContainer = view.findViewById(R.id.send_bubble_layout_container);
@@ -230,29 +216,27 @@ final Context context;
     }
 
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
-        if(!baseBotMessageArrayList.contains(baseBotMessage))
+        if (!baseBotMessageArrayList.contains(baseBotMessage))
             baseBotMessageArrayList.add(baseBotMessage);
 
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-            headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() -1);
+            headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() - 1);
         }
         SelectionUtils.resetSelectionTasks();
         SelectionUtils.resetSelectionSlots();
         isAlpha = false;
-        notifyItemInserted(baseBotMessageArrayList.size() -1);
+        notifyItemInserted(baseBotMessageArrayList.size() - 1);
     }
-
 
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         prepareHeaderMap();
-        if(selectedItem != -1) {
-            selectedItem = selectedItem + list.size()-1;
+        if (selectedItem != -1) {
+            selectedItem = selectedItem + list.size() - 1;
         }
         notifyItemRangeInserted(0, list.size() - 1);
     }
-
 
 
     public void setActivityContext(Activity activityContext) {
@@ -264,10 +248,7 @@ final Context context;
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-                headersMap.put(baseBotMessage.getFormattedDate(), i);
-            }
+            headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
         }
-
     }
 }

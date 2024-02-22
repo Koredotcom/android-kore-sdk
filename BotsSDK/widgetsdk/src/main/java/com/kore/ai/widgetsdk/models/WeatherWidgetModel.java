@@ -1,10 +1,12 @@
 package com.kore.ai.widgetsdk.models;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-
+@SuppressLint("UnknownNullness")
 public class WeatherWidgetModel {
 
     @SerializedName("header")
@@ -33,7 +35,7 @@ return elements;
 public void setElements(List<ActionItem> elements) {
 this.elements = elements;
 }
-    public class Header {
+    public static class Header {
 
         @SerializedName("title")
         @Expose
@@ -70,77 +72,5 @@ this.elements = elements;
         }
 
     }
-/*   public class Element {
-
-        @SerializedName("title")
-        @Expose
-        private String title;
-        @SerializedName("message")
-        @Expose
-        private String message;
-        @SerializedName("weather")
-        @Expose
-        private Weather weather;
-        @SerializedName("type")
-        @Expose
-        private String type;
-        @SerializedName("iconId")
-        @Expose
-        private String iconId;
-        @SerializedName("payload")
-        @Expose
-        private String payload;
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public Weather getWeather() {
-            return weather;
-        }
-
-        public void setWeather(Weather weather) {
-            this.weather = weather;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getIconId() {
-            return iconId;
-        }
-
-        public void setIconId(String iconId) {
-            this.iconId = iconId;
-        }
-
-        public String getPayload() {
-            return payload;
-        }
-
-        public void setPayload(String payload) {
-            this.payload = payload;
-        }
-
-
-}*/
-
 
 }

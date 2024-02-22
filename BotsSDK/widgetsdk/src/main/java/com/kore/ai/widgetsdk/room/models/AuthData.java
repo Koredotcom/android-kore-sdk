@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.room.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -9,6 +11,7 @@ import androidx.room.PrimaryKey;
  * Created by Ramachandra Pradeep on 20-Jul-18.
  */
 
+@SuppressLint("UnknownNullness")
 @Entity(tableName = "auth_data")
 public class AuthData {
 

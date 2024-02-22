@@ -2,6 +2,8 @@ package kore.botssdk.charts.data;
 
 import android.graphics.drawable.Drawable;
 
+import androidx.annotation.NonNull;
+
 import kore.botssdk.charts.highlight.Range;
 
 public class BarEntry extends Entry {
@@ -56,15 +58,16 @@ public class BarEntry extends Entry {
 
     public kore.botssdk.charts.data.BarEntry copy() {
         kore.botssdk.charts.data.BarEntry copied = new kore.botssdk.charts.data.BarEntry(this.getX(), this.getY(), this.getData());
-        copied.setVals(this.mYVals);
+        copied.setmYVals(this.mYVals);
         return copied;
     }
 
+    @NonNull
     public float[] getYVals() {
         return this.mYVals;
     }
 
-    public void setVals(float[] vals) {
+    public void setmYVals(@NonNull float[] vals) {
         this.setY(calcSum(vals));
         this.mYVals = vals;
         this.calcPosNegSum();
@@ -75,7 +78,7 @@ public class BarEntry extends Entry {
         return super.getY();
     }
 
-    public Range[] getRanges() {
+    public Range[] getmRanges() {
         return this.mRanges;
     }
 

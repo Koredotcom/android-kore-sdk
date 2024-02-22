@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,16 +29,15 @@ import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
+@SuppressLint("UnknownNullness")
 public class BotFormTemplateView extends ViewGroup {
-    private AutoExpandListView autoExpandListView;
+    AutoExpandListView autoExpandListView;
     private View multiSelectLayout;
-    private BotFormTemplateAdapter botFormTemplateAdapter;
     private float dp1;
-    private TextView tvform_template_title;
-    private TextView btfieldButton;
+    private TextView tvForm_template_title;
+    private TextView btFieldButton;
     private SharedPreferences sharedPreferences;
-    private String leftbgColor, leftTextColor;
-    private GradientDrawable leftDrawable;
+    private String leftTextColor;
 
     public BotFormTemplateView(Context context) {
         super(context);
@@ -72,7 +72,7 @@ public class BotFormTemplateView extends ViewGroup {
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
 
     private void init(Context context) {
@@ -81,18 +81,18 @@ public class BotFormTemplateView extends ViewGroup {
         autoExpandListView.setVerticalScrollBarEnabled(false);
         KaFontUtils.applyCustomFont(getContext(), view);
         multiSelectLayout = view.findViewById(R.id.multi_select_layout);
-        tvform_template_title = view.findViewById(R.id.tvform_template_title);
-        btfieldButton = view.findViewById(R.id.btfieldButton);
+        tvForm_template_title = view.findViewById(R.id.tvform_template_title);
+        btFieldButton = view.findViewById(R.id.btfieldButton);
         dp1 = (int) DimensionUtil.dp1;
 
         sharedPreferences = getSharedPreferences(context);
-        leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
 
-        leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
+        GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
        if(leftDrawable != null) {
-           leftDrawable.setColor(Color.parseColor(leftbgColor));
-           leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+           leftDrawable.setColor(Color.parseColor(leftBgColor));
+           leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
            multiSelectLayout.setBackground(leftDrawable);
        }
     }
@@ -131,26 +131,25 @@ public class BotFormTemplateView extends ViewGroup {
             if(payloadInner.getBotFormTemplateModels() != null && payloadInner.getBotFormTemplateModels().size()>0)
                 items.addAll(payloadInner.getBotFormTemplateModels());
 
-            tvform_template_title.setText(payloadInner.getHeading());
-            botFormTemplateAdapter = new BotFormTemplateAdapter(getContext(), payloadInner.getBotFormTemplateModels());
+            tvForm_template_title.setText(payloadInner.getHeading());
+            BotFormTemplateAdapter botFormTemplateAdapter = new BotFormTemplateAdapter(getContext(), payloadInner.getBotFormTemplateModels());
             botFormTemplateAdapter.setBotFormTemplates(items);
             botFormTemplateAdapter.setEnabled(isEnabled);
             botFormTemplateAdapter.setTextColor(leftTextColor);
-            botFormTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             autoExpandListView.setAdapter(botFormTemplateAdapter);
             botFormTemplateAdapter.notifyDataSetChanged();
 
             if(!StringUtils.isNullOrEmpty(leftTextColor))
             {
-                tvform_template_title.setTextColor(Color.parseColor(leftTextColor));
-                btfieldButton.setTextColor(Color.parseColor(leftTextColor));
+                tvForm_template_title.setTextColor(Color.parseColor(leftTextColor));
+                btFieldButton.setTextColor(Color.parseColor(leftTextColor));
             }
 
             if(payloadInner.getFieldButton() != null)
                 if(!StringUtils.isNullOrEmpty(payloadInner.getFieldButton().getTitle()))
-                    btfieldButton.setText(payloadInner.getFieldButton().getTitle());
+                    btFieldButton.setText(payloadInner.getFieldButton().getTitle());
 
-            btfieldButton.setOnClickListener(new OnClickListener() {
+            btFieldButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v)
                 {
@@ -176,7 +175,7 @@ public class BotFormTemplateView extends ViewGroup {
         }
     }
 
-    private String getDotMessage(String strPassword)
+    String getDotMessage(String strPassword)
     {
         StringBuilder strDots = new StringBuilder();
         for (int i = 0; i< strPassword.length(); i++)

@@ -51,7 +51,7 @@ import java.util.List;
 public class FeedbackSheetFragment extends BottomSheetDialogFragment implements FeedBackButtonState {
 
 
-    private BottomSheetBehavior bottomSheetBehavior;
+    BottomSheetBehavior bottomSheetBehavior;
     ArrayList<FeedbackDataModel> listData = new ArrayList<>();
     RecyclerView recycler_feedback;
     LinearLayoutManager layoutManager;
@@ -350,27 +350,19 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
                 bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                     @Override
                     public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-
                         // Check Logs to see how bottom sheets behaves
                         switch (newState) {
-                            case BottomSheetBehavior.STATE_COLLAPSED:
-
-                                break;
                             case BottomSheetBehavior.STATE_DRAGGING:
-
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                                 bottomSheetBehavior.setPeekHeight(bottomSheet.getHeight());
-
                                 break;
+                            case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                            case BottomSheetBehavior.STATE_SETTLING:
+                            case BottomSheetBehavior.STATE_COLLAPSED:
                             case BottomSheetBehavior.STATE_EXPANDED:
                                 break;
                             case BottomSheetBehavior.STATE_HIDDEN:
                                 dismiss();
-                                break;
-                            case BottomSheetBehavior.STATE_SETTLING:
-                                break;
-                            case BottomSheetBehavior.STATE_HALF_EXPANDED:
                                 break;
                         }
                     }

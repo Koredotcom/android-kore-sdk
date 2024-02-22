@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,9 +26,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
 public class BotContactTemplateAdapter extends BaseAdapter {
-
-    String LOG_TAG = BotContactTemplateAdapter.class.getSimpleName();
-
     ArrayList<ContactTemplateModel> botListModelArrayList = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -34,7 +33,7 @@ public class BotContactTemplateAdapter extends BaseAdapter {
     final CircleTransform roundedCornersTransform;
     final ListView parentListView;
 
-    public BotContactTemplateAdapter(Context context, ListView parentListView) {
+    public BotContactTemplateAdapter(@NonNull Context context, @NonNull ListView parentListView) {
         this.context = context;
         this.roundedCornersTransform = new CircleTransform();
         this.parentListView = parentListView;
@@ -118,15 +117,15 @@ public class BotContactTemplateAdapter extends BaseAdapter {
         }
     }
 
-    public void setBotListModelArrayList(ArrayList<ContactTemplateModel> botListModelArrayList) {
+    public void setBotListModelArrayList(@NonNull ArrayList<ContactTemplateModel> botListModelArrayList) {
         this.botListModelArrayList = botListModelArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
@@ -141,7 +140,7 @@ public class BotContactTemplateAdapter extends BaseAdapter {
         view.setTag(holder);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         RelativeLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

@@ -1,9 +1,9 @@
 package com.kore.ai.widgetsdk.charts.renderer;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathEffect;
 import android.graphics.RectF;
 
 import com.kore.ai.widgetsdk.charts.components.LimitLine;
@@ -15,6 +15,7 @@ import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
 
 import java.util.List;
 
+@SuppressLint("UnknownNullness")
 public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
     protected final Path mDrawZeroLinePathBuffer = new Path();
     protected final Path mRenderLimitLinesPathBuffer = new Path();
@@ -55,13 +56,9 @@ public class YAxisRendererHorizontalBarChart extends YAxisRenderer {
             float textHeight = (float)Utils.calcTextHeight(this.mAxisLabelPaint, "Q");
             YAxis.AxisDependency dependency = this.mYAxis.getAxisDependency();
             YAxis.YAxisLabelPosition labelPosition = this.mYAxis.getLabelPosition();
-            float yPos = 0.0F;
+            float yPos;
             if (dependency == YAxis.AxisDependency.LEFT) {
-                if (labelPosition == YAxis.YAxisLabelPosition.OUTSIDE_CHART) {
-                    yPos = this.mViewPortHandler.contentTop() - baseYOffset;
-                } else {
-                    yPos = this.mViewPortHandler.contentTop() - baseYOffset;
-                }
+                yPos = this.mViewPortHandler.contentTop() - baseYOffset;
             } else if (labelPosition == YAxis.YAxisLabelPosition.OUTSIDE_CHART) {
                 yPos = this.mViewPortHandler.contentBottom() + textHeight + baseYOffset;
             } else {

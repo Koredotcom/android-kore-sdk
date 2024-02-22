@@ -22,25 +22,15 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.listener.AdvanceButtonClickListner;
-import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AdvanceListTableModel;
 
 public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateListAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons;
-    private final Context mContext;
-    private AdvanceOptionsAdapter advanceOptionsAdapter;
-    private final ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
-    public CardTemplateListAdapter(Context context, ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public CardTemplateListAdapter(@NonNull Context context, @NonNull ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
-        mContext = context;
-        this.composeFooterInterface = composeFooterInterface;
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     @NonNull
@@ -88,10 +78,6 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
         }
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
     @Override
     public int getItemCount() {
         return buttons != null ? buttons.size() : 0;
@@ -104,9 +90,9 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
     }
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvBtnText;
-        private final TextView tvDescriptionTitle;
-        private final ImageView ivListBtnIcon;
+        final TextView tvBtnText;
+        final TextView tvDescriptionTitle;
+        final ImageView ivListBtnIcon;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -114,10 +100,5 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
             tvDescriptionTitle = itemView.findViewById(R.id.tvDescriptionTitle);
             ivListBtnIcon = itemView.findViewById(R.id.ivListBtnIcon);
         }
-    }
-
-
-    public void setListAdapter(AdvanceOptionsAdapter listAdapter) {
-        this.advanceOptionsAdapter = listAdapter;
     }
 }

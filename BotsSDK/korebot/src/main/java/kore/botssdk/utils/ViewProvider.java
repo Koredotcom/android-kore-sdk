@@ -1,22 +1,14 @@
 package kore.botssdk.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.AdvancedListTemplateView;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.AttendeeSlotSelectionView;
@@ -43,7 +35,6 @@ import kore.botssdk.view.CardTemplateView;
 import kore.botssdk.view.ContactInfoView;
 import kore.botssdk.view.EmptyTemplateView;
 import kore.botssdk.view.FeedbackTemplateView;
-import kore.botssdk.view.FormActionView;
 import kore.botssdk.view.HorizontalBarChartView;
 import kore.botssdk.view.ImageTemplateView;
 import kore.botssdk.view.KoraCarouselView;
@@ -56,7 +47,6 @@ import kore.botssdk.view.MeetingSlotsView;
 import kore.botssdk.view.MultiSelectView;
 import kore.botssdk.view.PdfDownloadView;
 import kore.botssdk.view.PieChartView;
-import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.ResultsTemplateView;
 import kore.botssdk.view.StackedBarChatView;
 import kore.botssdk.view.TextMediaLayout;
@@ -68,11 +58,10 @@ import kore.botssdk.view.WelcomeSummaryView;
 /**
  * Created by Shiva Krishna on 11/20/2017.
  */
-
+@SuppressLint("UnknownNullness")
 public class ViewProvider {
     private static final int TEXTVIEW_ID = 1980081;
     private static final int LIST_ID = 1980045;
-    public static final int TEXT_MEDIA_LAYOUT_ID = 73733614;
     private static final int CAROUSEL_VIEW_ID = 1980053;
     private static final int BUTTON_VIEW_ID = 1980098;
     private static final int PIECHART_VIEW_ID = 19800123;
@@ -87,107 +76,10 @@ public class ViewProvider {
     private static final int KORA_SUMMARY_HELP_VIEW_ID = 19800787;
     private static final int FILES_CAROUSAL_VIEW_ID = 19800678;
     private static final int ATTENDEE_SLOT_VIEW_ID = 1980075;
-    private static final int QUICK_RPVIEW = 1988881;
     private static final int TIMELINE_VIEW_ID = 1980094;
     private static final int UNIVERSAL_SEARCH_VIEW_ID = 1980099;
-    public static final int TASK_VIEW_ID = 1981234;
     private static final int TABLE_RESPONSIVE_VIEW_ID = 19800350;
 
-
-    public static Path RoundedRect(
-            float left, float top, float right, float bottom, float rx, float ry,
-            boolean tl, boolean tr, boolean br, boolean bl
-    ){
-        Path path = new Path();
-        if (rx < 0) rx = 0;
-        if (ry < 0) ry = 0;
-        float width = right - left;
-        float height = bottom - top;
-        if (rx > width / 2) rx = width / 2;
-        if (ry > height / 2) ry = height / 2;
-        float widthMinusCorners = (width - (2 * rx));
-        float heightMinusCorners = (height - (2 * ry));
-
-        path.moveTo(right, top + ry);
-        if (tr)
-            path.rQuadTo(0, -ry, -rx, -ry);//top-right corner
-        else{
-            path.rLineTo(0, -ry);
-            path.rLineTo(-rx,0);
-        }
-        path.rLineTo(-widthMinusCorners, 0);
-        if (tl)
-            path.rQuadTo(-rx, 0, -rx, ry); //top-left corner
-        else{
-            path.rLineTo(-rx, 0);
-            path.rLineTo(0,ry);
-        }
-        path.rLineTo(0, heightMinusCorners);
-
-        if (bl)
-            path.rQuadTo(0, ry, rx, ry);//bottom-left corner
-        else{
-            path.rLineTo(0, ry);
-            path.rLineTo(rx,0);
-        }
-
-        path.rLineTo(widthMinusCorners, 0);
-        if (br)
-            path.rQuadTo(rx, 0, rx, -ry); //bottom-right corner
-        else{
-            path.rLineTo(rx,0);
-            path.rLineTo(0, -ry);
-        }
-
-        path.rLineTo(0, -heightMinusCorners);
-
-        path.close();//Given close, last lineto can be removed.
-
-        return path;
-    }
-    public static void drawRoundRect(Canvas canvas, RectF rect, Paint paint,
-                                    int leftTop, int rightTop, int leftBottom,
-                                     int rightBottom) {
-        float[] roundRadius = new float[8];
-        roundRadius[0] = leftTop;
-        roundRadius[1] = leftTop;
-        roundRadius[2] = rightTop;
-        roundRadius[3] = rightTop;
-        roundRadius[4] = rightBottom;
-        roundRadius[5] = rightBottom;
-        roundRadius[6] = leftBottom;
-        roundRadius[7] = leftBottom;
-
-        Path path = new Path();
-        path.addRoundRect(rect, roundRadius, Path.Direction.CCW);
-        canvas.drawPath(path, paint);
-    }
-
-
-    public static QuickReplyView getQuickReplyView(Context context, ArrayList<QuickReplyTemplate> data, ComposeFooterInterface listener, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        if (context != null) {
-            QuickReplyView quickReplyView = new QuickReplyView(context);
-            quickReplyView.setId(QUICK_RPVIEW);
-            quickReplyView.setComposeFooterInterface(listener);
-            quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            quickReplyView.populateQuickReplyView(data);
-            return quickReplyView;
-        } else {
-            return null;
-        }
-    }
-
-    public static FormActionView getFormActionView(Context context, ArrayList<FormActionTemplate> data, ComposeFooterInterface listener) {
-        if (context != null) {
-            FormActionView formActionView = new FormActionView(context);
-            formActionView.setId(QUICK_RPVIEW);
-            formActionView.setComposeFooterInterface(listener);
-            formActionView.populateFormActionView(data);
-            return formActionView;
-        } else {
-            return null;
-        }
-    }
 
     public static BotButtonView getBotButtonView(Context context, ComposeFooterInterface listener) {
         BotButtonView botButtonView = new BotButtonView(context);
@@ -338,10 +230,7 @@ public class ViewProvider {
         textView.setId(TIMELINE_VIEW_ID);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         textView.setLayoutParams(layoutParams);
-        //textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,12);
-        //textView.setTextColor(Color.parseColor("#B0B0B0"));
         textView.setTag(KaFontUtils.ROBOTO_MEDIUM);
-      //  KaFontUtils.setCustomTypeface(textView,KaFontUtils.ROBOTO_MEDIUM,context);
         return textView;
     }
 

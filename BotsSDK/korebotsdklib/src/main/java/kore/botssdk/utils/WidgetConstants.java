@@ -5,8 +5,6 @@ public class WidgetConstants {
     public final static byte CLOUD_TEMPLATE = 0;
     public final static byte FILES_TEMPLATE = 1;
     public final static byte MEETINGS_TEMPLATE = 2;
-  //  public final static byte TASKS_TEMPLATE = 3;
-   // public final static byte OVER_DUE_TASK_TEMPLATE = 4;
     public final static byte BUTTON_TEMPLATE = 5;
     public final static byte HASH_TAG_TEMPLATE = 6;
     public final static byte ARTICLES_TEMPLATE = 7;
@@ -28,21 +26,6 @@ public class WidgetConstants {
 
     public static final byte HEADLINE_TEMPLATE=25;
     public static final String HEADLINE_TEMPLATE_SERVER="headlines";
-
-
-
-
-
-/*    public final static String CLOUD_TEMPLATE_SERVER = "wether";
-    public final static String FILES_TEMPLATE_SERVER = "cloudFiles";
-    public final static String MEETINGS_TEMPLATE_SERVER = "upcomingMeetings";
-    public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";
-    public final static String OVER_DUE_TASK_TEMPLATE_SERVER = "overdueTasks";
-    public final static String HASH_TAG_TEMPLATE_SERVER = "TrendingHashTag";
-    public final static String ARTICLES_TEMPLATE_SERVER = "Article";
-    public final static String ANNOUNCEMENTS_TEMPLATE_SERVER = "Announcement";
-    public final static String SKILL_WIDGET = "ks-9fb269b9-35da-566a-9c1f-77b480b9c1b9";*/
-
     public final static String SUMMARY_CARD_SUMMARY = "summarycard";
 
     public final static String CLOUD_TEMPLATE_SERVER = "weathergreeting";
@@ -60,11 +43,6 @@ public class WidgetConstants {
     public final static String BAR_CHART="barchart";
     public final static String LINE_CHART="linechart";
     public final static String LIST_WIDGET = "list";
-
-
-
-    //public final static String TASKS_TEMPLATE_SERVER = "upcomingTasks";
-    //public final static String OVER_DUE_TASK_TEMPLATE_SERVER = "overdueTasks";
     public final static String HASH_TAG_TEMPLATE_SERVER = "hashtag_list";
 
     public final static String ARTICLES_TEMPLATE_SERVER = "knowledge_list";

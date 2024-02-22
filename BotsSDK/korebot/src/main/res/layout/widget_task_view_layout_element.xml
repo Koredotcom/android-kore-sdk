@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -12,7 +13,7 @@
         <import type="android.view.View" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
 
@@ -28,8 +29,9 @@
             android:layout_alignParentStart="true"
             android:layout_centerInParent="true"
 
-            android:paddingStart="10dp"
             android:gravity="center_vertical|start"
+            android:importantForAccessibility="no"
+            android:paddingStart="10dp"
             android:src="@mipmap/checkbox_off"
             android:tag="@{widgetTask.id}" />
 
@@ -38,7 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:paddingStart="10dp"
             android:layout_marginTop="14dp"
             android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/checkbox"
@@ -46,6 +47,7 @@
             android:fontFamily="@font/latoregular"
             android:gravity="start"
             android:maxLines="1"
+            android:paddingStart="10dp"
             android:tag="bold"
             android:text="@{widgetTask.title}"
             android:textColor="@color/color_1a1a1a"
@@ -58,16 +60,16 @@
             android:layout_below="@+id/title_view"
             android:layout_alignStart="@+id/title_view"
             android:layout_marginTop="10dp"
-            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
-            android:drawablePadding="10dp"
-            android:paddingStart="10dp"
             android:layout_marginEnd="5dp"
+            android:drawablePadding="10dp"
             android:fontFamily="@font/latoregular"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:tag="medium"
             android:text="@{DateUtils.getDateWithTime(widgetTask.data.dueDate)}"
             android:textColor="@{widgetTask.isOverDue ? @color/color_red : @color/color_485260}"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/ic_baseline_watch_later_24px" />
 
 
         <TextView
@@ -78,17 +80,17 @@
             android:layout_alignStart="@+id/date_view"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="5dp"
-            android:paddingStart="10dp"
-            android:drawableStart="@drawable/ic_baseline_person_24px"
-            android:drawableEnd="@drawable/ic_triangle_2"
             android:drawablePadding="10dp"
             android:ellipsize="end"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:singleLine="true"
             android:tag="medium"
             android:text="@{widgetTask.data.owner.nameInFirstNameFormat}"
             android:textColor="@color/color_485260"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableEndCompat="@drawable/ic_triangle_2"
+            app:drawableStartCompat="@drawable/ic_baseline_person_24px" />
 
         <TextView
             android:id="@+id/assignee_view"
@@ -97,6 +99,7 @@
             android:layout_alignBaseline="@+id/creator_view"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="@dimen/dimen_14dp"
             android:layout_toEndOf="@+id/creator_view"
             android:ellipsize="end"
             android:gravity="center|start"
@@ -104,7 +107,6 @@
             android:tag="medium"
             android:text="@{widgetTask.data.assignee.getNameInFirstNameFormat}"
             android:textColor="@color/color_485260"
-            android:layout_marginBottom="@dimen/dimen_14dp"
             android:textSize="13dp" />
 
         <!--<View

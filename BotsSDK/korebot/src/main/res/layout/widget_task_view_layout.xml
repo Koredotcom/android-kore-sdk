@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -12,7 +13,7 @@
         <import type="android.view.View" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
 
@@ -31,7 +32,8 @@
             android:gravity="center_vertical|start"
             android:paddingStart="10dp"
             android:src="@mipmap/checkbox_off"
-            android:tag="@{widgetTask.id}" />
+            android:tag="@{widgetTask.id}"
+            android:importantForAccessibility="no" />
 
         <RelativeLayout
             android:id="@+id/view_p"
@@ -68,7 +70,8 @@
                 android:gravity="center"
                 android:layout_marginTop="14dp"
                 android:layout_alignParentEnd="true"
-                android:src="@mipmap/ic_more_vert_black_24dp"/>
+                android:src="@mipmap/ic_more_vert_black_24dp"
+                android:importantForAccessibility="no" />
 
         </RelativeLayout>
 
@@ -81,14 +84,14 @@
             android:layout_alignStart="@+id/view_p"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
-            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
             android:drawablePadding="10dp"
             android:gravity="center"
             android:paddingStart="10dp"
             android:tag="medium"
             android:text="@{DateUtils.getDateWithTime(widgetTask.data.dueDate)}"
             android:textColor="@{widgetTask.isOverDue ? @color/color_red : @color/color_485260}"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/ic_baseline_watch_later_24px" />
 
 
         <TextView
@@ -99,7 +102,6 @@
             android:layout_alignStart="@+id/date_view"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="5dp"
-            android:drawableStart="@drawable/ic_baseline_person_24px"
 
             android:drawablePadding="10dp"
             android:ellipsize="end"
@@ -108,7 +110,8 @@
             android:singleLine="true"
             android:tag="medium"
             android:textColor="@color/color_485260"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/ic_baseline_person_24px" />
 
         <TextView
             android:id="@+id/assignee_view"
@@ -119,7 +122,6 @@
             android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/creator_view"
             android:ellipsize="end"
-            android:drawableStart="@drawable/ic_triangle_2"
             android:gravity="center|start"
             android:singleLine="true"
 
@@ -127,7 +129,8 @@
             android:drawablePadding="10dp"
 
             android:textColor="@color/color_485260"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/ic_triangle_2" />
 
         <View
             android:layout_width="match_parent"

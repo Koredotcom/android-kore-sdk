@@ -14,29 +14,21 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
-import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
-    private ArrayList<BotButtonModel> quickReplyTemplateArrayList;
+    ArrayList<BotButtonModel> quickReplyTemplateArrayList;
     final Context context;
-    private final RecyclerView parentRecyclerView;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final int quickWidgetColor;
-    private final int fillColor;
+    final RecyclerView parentRecyclerView;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int quickReplyFontColor;
-    private final int dp1;
 
-    public AgentQuickOptionsTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
+    public AgentQuickOptionsTemplateAdapter(@NonNull Context context, @NonNull RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
-        quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
-        fillColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
         quickReplyFontColor = Color.parseColor("#000000");
-        dp1= (int) DimensionUtil.dp1;
     }
 
     @NonNull
@@ -57,7 +49,7 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
         holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position =  parentRecyclerView.getChildPosition(v);
+                int position =  parentRecyclerView.getChildAdapterPosition(v);
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     BotButtonModel quickReplyTemplate = quickReplyTemplateArrayList.get(position);
                     if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getType())) {
@@ -95,15 +87,15 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
         }
     }
 
-    public void setAgentQuickReplyTemplateArrayList(ArrayList<BotButtonModel> quickReplyTemplateArrayList) {
+    public void setAgentQuickReplyTemplateArrayList(@NonNull ArrayList<BotButtonModel> quickReplyTemplateArrayList) {
         this.quickReplyTemplateArrayList = quickReplyTemplateArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 }

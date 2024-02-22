@@ -9,7 +9,7 @@
         android:id="@+id/tv_widget_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Widget Theme" />
+        android:text="@string/widget_theme" />
 
     <Spinner
         android:id="@+id/spWidgetThemes"

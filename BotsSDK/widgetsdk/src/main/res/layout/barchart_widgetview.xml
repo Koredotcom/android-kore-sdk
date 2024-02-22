@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="36dp"
                 android:paddingStart="10dp"
+                android:paddingEnd="@dimen/dimen_5dp"
                 android:paddingTop="10dp">
 
                 <TextView

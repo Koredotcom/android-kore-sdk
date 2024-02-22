@@ -16,8 +16,6 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
 
 
     protected Context mContext;
-//    public SocketUpdateListener socketUpdateListener;
-//    public boolean isWithAuth;
 
     public JWTTokenResponse getJwtKeyResponse() {
         return jwtKeyResponse;

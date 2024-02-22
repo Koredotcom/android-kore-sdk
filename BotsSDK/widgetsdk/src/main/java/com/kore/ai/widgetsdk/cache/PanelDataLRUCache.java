@@ -1,9 +1,12 @@
 package com.kore.ai.widgetsdk.cache;
 
+import android.annotation.SuppressLint;
+
 import com.kore.ai.widgetsdk.models.WidgetBaseDataModel;
 
 import java.util.HashMap;
 
+@SuppressLint("UnknownNullness")
 public class PanelDataLRUCache {
 
     private static PanelDataLRUCache mInstance = null;
@@ -13,23 +16,27 @@ public class PanelDataLRUCache {
 
     static final int CACHE_SIZE = 15;
 
-    private PanelDataLRUCache(){
+    private PanelDataLRUCache() {
         hashMap = new HashMap<>();
     }
 
-    public synchronized static PanelDataLRUCache getInstance(){
-        if(mInstance == null)
+    public synchronized static PanelDataLRUCache getInstance() {
+        if (mInstance == null)
             mInstance = new PanelDataLRUCache();
         return mInstance;
     }
+
     public WidgetBaseDataModel getEntry(String key) {
         if (hashMap.containsKey(key)) // Key Already Exist, just update the
         {
             Node entry = hashMap.get(key);
-            removeNode(entry);
-            addAtTop(entry);
-            return entry.value;
+            if (entry != null) {
+                removeNode(entry);
+                addAtTop(entry);
+                return entry.value;
+            }
         }
+
         return null;
     }
 
@@ -37,9 +44,11 @@ public class PanelDataLRUCache {
         if (hashMap.containsKey(key)) // Key Already Exist, just update the value and move it to top
         {
             Node entry = hashMap.get(key);
-            entry.value = value;
-            removeNode(entry);
-            addAtTop(entry);
+            if (entry != null) {
+                entry.value = value;
+                removeNode(entry);
+                addAtTop(entry);
+            }
         } else {
             Node newNode = new Node();
             newNode.left = null;
@@ -69,6 +78,7 @@ public class PanelDataLRUCache {
         if (end == null)
             end = start;
     }
+
     public void removeNode(Node node) {
 
         if (node.left != null) {
@@ -82,10 +92,5 @@ public class PanelDataLRUCache {
         } else {
             end = node.left;
         }
-    }
-
-    public void clearAll() {
-        if(hashMap != null)
-            hashMap.clear();
     }
 }

@@ -54,7 +54,7 @@ import retrofit2.Response;
 @SuppressLint("ViewConstructor")
 public class GenericWidgetView extends LinearLayout {
 
-    private ProgressBar linear_progress;
+    ProgressBar linear_progress;
     private RecyclerView autoExpandListView;
     private TextView view_more, txtTitle;
     private float dp1;

@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
@@ -18,45 +17,28 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RadioListListner;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 
 public class BotButtonLinkTemplateAdapter extends BaseAdapter {
     private final ArrayList<BotButtonModel> botButtonModels;
-    private String splashColour, disabledColour, textColor, disabledTextColor;
     private boolean isEnabled;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int type;
-    private RadioListListner radioListListner;
+    RadioListListner radioListListner;
     private final Context context;
 
-    public BotButtonLinkTemplateAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, int type)
+    public BotButtonLinkTemplateAdapter(@NonNull Context context, @NonNull ArrayList<BotButtonModel> botButtonModels, int type)
     {
         this.context = context;
         this.botButtonModels = botButtonModels;
         this.type = type;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-
-        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
-        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
-        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
-        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
-
-        splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
-        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
-        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
     }
 
     @Override
     public int getCount() {
-        if (botButtonModels != null) {
-            return botButtonModels.size();
-        } else {
-            return 0;
-        }
+        return botButtonModels.size();
     }
 
     @Override
@@ -136,18 +118,15 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
         });
     }
 
-    public void setRadioListInterface(RadioListListner radioListListner) {
+    public void setRadioListInterface(@NonNull RadioListListner radioListListner) {
         this.radioListListner = radioListListner;
     }
 
-    public void setCheckedPosition(int checkedPosition) {
-    }
-
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
@@ -157,10 +136,6 @@ public class BotButtonLinkTemplateAdapter extends BaseAdapter {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
-    }
-
-    public void setLang(String lang)
-    {
     }
 
     public static class ViewHolder {

@@ -67,7 +67,7 @@ public class PdfDownloadView extends LinearLayout {
 
     private void init(Context context) {
         this.context = context;
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.pdf_download_view, this, true);
+        View view = LayoutInflater.from(context).inflate(R.layout.pdf_download_view, this, true);
         lvPdfs = view.findViewById(R.id.lvPdfs);
         ivPdfDownload = view.findViewById(R.id.ivPdfDownload);
         pbDownload = view.findViewById(R.id.pbDownload);

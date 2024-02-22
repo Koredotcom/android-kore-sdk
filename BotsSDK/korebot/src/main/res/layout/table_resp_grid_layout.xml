@@ -43,7 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dimen_35dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_arrow_drop_down_table_resp_24px" />
+            android:background="@drawable/ic_arrow_drop_down_table_resp_24px"
+            android:importantForAccessibility="no" />
 
     </LinearLayout>
 
@@ -51,6 +52,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected" />
+        android:background="@color/colorSelected"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

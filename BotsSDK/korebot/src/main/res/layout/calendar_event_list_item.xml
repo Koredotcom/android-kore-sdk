@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_deails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -52,7 +53,8 @@
                 android:layout_marginTop="5dp"
                 android:src="@mipmap/checkbox_off"
 
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -101,26 +103,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:drawableStart="@drawable/vector_location_icon"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:maxLines="1"
                 android:textColor="#485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/vector_location_icon" />
 
 
             <TextView
                 android:id="@+id/tv_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/vector_person"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:singleLine="true"
                 android:textColor="#485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/vector_person" />
 
             <TextView
                 android:id="@+id/tv_meeting_note"
@@ -131,16 +133,16 @@
                 android:paddingRight="@dimen/dimen_14dp"
                 android:paddingLeft="7dp"
                 android:layout_marginTop="@dimen/dimen_8dp"
-                android:drawableStart="@drawable/ic_meeting_notes"
                 android:drawablePadding="7dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:singleLine="true"
                 android:textColor="#485260"
-                android:text="Meeting Notes"
+                android:text="@string/meeting_notes"
                 android:background="@drawable/meeting_notes_border"
                 android:visibility="gone"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/ic_meeting_notes" />
 
 
 

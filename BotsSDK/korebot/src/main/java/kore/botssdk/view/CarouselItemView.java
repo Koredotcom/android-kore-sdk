@@ -119,7 +119,7 @@ public class CarouselItemView extends ViewGroup {
 
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getContext());
             carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
-            botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            botCarouselItemButtonAdapter.setBotCarouselButtonModels(botCarouselModel.getButtons());
 
         }
     }

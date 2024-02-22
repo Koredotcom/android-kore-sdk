@@ -19,24 +19,20 @@ public class KaPermissionsHelper {
     public static final int GET_ACCOUNT_PERMISSION = 82;
     public static boolean hasPermission(Activity activity,String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(activity, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        int permissionLength = permission.length;
+        for (int i=0;i<permissionLength;i++) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(activity, permission[i]) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }
 
     public static boolean hasPermission(Context context,String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        int permissionLength = permission.length;
+        for (int i=0;i<permissionLength;i++) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }

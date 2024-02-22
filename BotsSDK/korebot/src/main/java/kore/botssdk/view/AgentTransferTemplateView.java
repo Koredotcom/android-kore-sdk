@@ -1,5 +1,6 @@
 package kore.botssdk.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +28,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.CircleTransform;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
+@SuppressLint("UnknownNullness")
 public class AgentTransferTemplateView extends LinearLayout
 {
     private TextView tvAgentCardText;
@@ -34,12 +37,12 @@ public class AgentTransferTemplateView extends LinearLayout
     private TextView tvAgentRole;
     float dp1, layoutItemHeight = 0;
     private CircleTransform circleTransform;
-    float restrictedMaxWidth, restrictedMaxHeight;
+    float restrictedMaxWidth;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private RecyclerView rvAgentButtons;
     private LinearLayout llAgentDetails;
-    int maxWidth, listViewHeight;
+    int listViewHeight;
 
     public AgentTransferTemplateView(Context context) {
         super(context);
@@ -85,7 +88,7 @@ public class AgentTransferTemplateView extends LinearLayout
                 rvAgentButtons.setVisibility(View.VISIBLE);
                 llAgentDetails.setVisibility(View.GONE);
 
-                AgentQuickOptionsTemplateAdapter quickRepliesAdapter = null;
+                AgentQuickOptionsTemplateAdapter quickRepliesAdapter;
                 if (rvAgentButtons.getAdapter() == null) {
                     quickRepliesAdapter = new AgentQuickOptionsTemplateAdapter(getContext(), rvAgentButtons);
                     rvAgentButtons.setAdapter(quickRepliesAdapter);
@@ -94,9 +97,8 @@ public class AgentTransferTemplateView extends LinearLayout
                 }
 
                 quickRepliesAdapter = (AgentQuickOptionsTemplateAdapter) rvAgentButtons.getAdapter();
-
                 quickRepliesAdapter.setAgentQuickReplyTemplateArrayList(payloadInner.getButtons());
-                quickRepliesAdapter.notifyDataSetChanged();
+                quickRepliesAdapter.notifyItemRangeChanged(0, payloadInner.getButtons().size());
                 listViewHeight = (int)(60 * (payloadInner.getButtons().size()/2) * dp1);
             }
             else
@@ -116,10 +118,6 @@ public class AgentTransferTemplateView extends LinearLayout
         }
     }
 
-    public void setRestrictedMaxHeight(float restrictedMaxHeight) {
-        this.restrictedMaxHeight = restrictedMaxHeight;
-    }
-
     public void setRestrictedMaxWidth(float restrictedMaxWidth) {
         this.restrictedMaxWidth = restrictedMaxWidth;
     }
@@ -132,7 +130,7 @@ public class AgentTransferTemplateView extends LinearLayout
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+    public static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
         private final int verticalSpaceHeight;
 
@@ -141,8 +139,8 @@ public class AgentTransferTemplateView extends LinearLayout
         }
 
         @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
+        public void getItemOffsets(Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
+                                   @NonNull RecyclerView.State state) {
             outRect.bottom = verticalSpaceHeight;
         }
     }

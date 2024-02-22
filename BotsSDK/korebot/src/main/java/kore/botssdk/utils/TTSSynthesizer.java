@@ -1,14 +1,14 @@
 package kore.botssdk.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.util.Base64;
-import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import kore.botssdk.speechtotext.TtsWebSocketWrapper;
@@ -18,13 +18,13 @@ import kore.botssdk.websocket.SocketConnectionListener;
  * Created by Pradeep Mahato on 19-May-17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-
+@SuppressLint("UnknownNullness")
 public class TTSSynthesizer {
 
-    private TextToSpeech textToSpeech;
+    TextToSpeech textToSpeech;
 
     private final Context context;
-    private final MediaPlayer mediaPlayer = new MediaPlayer();
+    final MediaPlayer mediaPlayer = new MediaPlayer();
     public static final String LOG_TAG = TTSSynthesizer.class.getSimpleName();
     public final ArrayList<String> que = new ArrayList<>();
     public boolean ttsEnabled = true;
@@ -76,7 +76,7 @@ public class TTSSynthesizer {
         }
     }
 
-    private void initializeWebSocket(){
+    void initializeWebSocket(){
         TtsWebSocketWrapper.getInstance(context).connect(sListener);
     }
 
@@ -95,11 +95,7 @@ public class TTSSynthesizer {
 
     private void speakViaNative(String textualMessage) {
        // stopTextToSpeechNative();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
-        } else {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null);
-        }
+        textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
     }
 
     public void stopTextToSpeech() {
@@ -112,10 +108,8 @@ public class TTSSynthesizer {
 
     private void stopTextToSpeechSDK() {
         que.clear();
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
+        mediaPlayer.stop();
+        mediaPlayer.reset();
     }
 
     private void stopTextToSpeechNative() {
@@ -147,12 +141,12 @@ public class TTSSynthesizer {
 
         @Override
         public void onRawTextMessage(byte[] payload) {
-            LogUtils.d(LOG_TAG, "Message received is 2 " + payload);
+            LogUtils.d(LOG_TAG, "Message received is 2 " + Arrays.toString(payload));
         }
 
         @Override
         public void onBinaryMessage(byte[] payload) {
-            LogUtils.d(LOG_TAG, "Message received is 3 " + payload);
+            LogUtils.d(LOG_TAG, "Message received is 3 " + Arrays.toString(payload));
             String audio = Base64.encodeToString(payload,
                     Base64.NO_WRAP);
             que.add(audio);
@@ -161,7 +155,7 @@ public class TTSSynthesizer {
             }
         }
     };
-    private void PlayAudio(String audio){
+    void PlayAudio(String audio){
         try
         {
             String url = "data:audio/mp3;base64,"+audio;

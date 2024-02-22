@@ -585,7 +585,7 @@ public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout
             if (viewParent instanceof CoordinatorLayout) {
                 CoordinatorLayout parent = (CoordinatorLayout) viewParent;
                 int childCount = parent.getChildCount();
-                if (Build.VERSION.SDK_INT >= 16 && expanded) {
+                if (expanded) {
                     if (this.importantForAccessibilityMap != null) {
                         return;
                     }

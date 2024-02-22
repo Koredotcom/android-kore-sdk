@@ -10,6 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -21,9 +23,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
-public class BotTableListTemlateAdapter extends BaseAdapter {
-
-    String LOG_TAG = BotListTemplateAdapter.class.getSimpleName();
+public class BotTableListTemplateAdapter extends BaseAdapter {
     ArrayList<BotTableListModel> botTableListModels = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -31,9 +31,9 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     final Context context;
     final RoundedCornersTransform roundedCornersTransform;
     final ListView parentListView;
-    int count = 0;
+    final int count;
 
-    public BotTableListTemlateAdapter(Context context, ListView parentListView, int count) {
+    public BotTableListTemplateAdapter(@NonNull Context context, @NonNull ListView parentListView, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
@@ -139,16 +139,16 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
         }
     }
 
-    public void setBotListModelArrayList(ArrayList<BotTableListModel> botListModelArrayList) {
+    public void setBotListModelArrayList(@NonNull ArrayList<BotTableListModel> botListModelArrayList) {
         this.botTableListModels = botListModelArrayList;
         notifyDataSetChanged();
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
@@ -160,7 +160,7 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
         view.setTag(holder);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         TextView botListItemTitle;
         TextView bot_list_item_desc;
         AutoExpandListView botTableListView;

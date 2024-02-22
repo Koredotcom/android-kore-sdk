@@ -34,17 +34,16 @@
                 android:layout_width="@dimen/dimen_25dp"
                 android:layout_height="@dimen/dimen_25dp"
                 android:layout_marginLeft="@dimen/dimen_10dp"
-                android:src="@drawable/ic_pause_icon" />
+                android:src="@drawable/ic_pause_icon"
+                android:importantForAccessibility="no" />
 
             <kore.botssdk.views.CustomTextView
                 android:id="@+id/tvVideoTiming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/sbVideo"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:layout_toRightOf="@+id/ivPlayPauseIcon"
+                android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_weight="1"
-                android:text="00:00/00:00"
+                android:text="@string/_00_00_00_00"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small" />
 
@@ -55,14 +54,16 @@
                 android:layout_above="@+id/sbVideo"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/dimen_15dp"
-                android:src="@drawable/ic_exit_fullscreen_icon" />
+                android:src="@drawable/ic_exit_fullscreen_icon"
+                android:importantForAccessibility="no" />
 
             <ImageView
                 android:id="@+id/ivVideoMore"
                 android:layout_width="@dimen/dimen_25dp"
                 android:layout_height="@dimen/dimen_25dp"
                 android:layout_weight="0"
-                android:src="@drawable/ic_more_vert_white_24dp" />
+                android:src="@drawable/ic_more_vert_white_24dp"
+                android:importantForAccessibility="no" />
 
         </LinearLayout>
 

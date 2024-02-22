@@ -15,7 +15,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:tag="medium"
-        android:text="hi"
+        android:text="@string/hi"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/text_size_normal"
         android:textStyle="bold" />

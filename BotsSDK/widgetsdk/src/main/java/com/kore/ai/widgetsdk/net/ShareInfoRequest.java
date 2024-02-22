@@ -38,9 +38,6 @@ public class ShareInfoRequest {
     public void loadDataFromNetwork() {
         Call<KaRestResponse.ShareResponse> request;
         switch (methodType) {
-            case 1:
-                request = KaRestBuilder.getKaRestAPI().shareInfo(Utils.ah(accessToken), userId, kid, notify, payload);
-                break;
             case 2:
                 request = KaRestBuilder.getKaRestAPI().updateSharePrivilege(Utils.ah(accessToken), userId, kid, payload);
                 break;

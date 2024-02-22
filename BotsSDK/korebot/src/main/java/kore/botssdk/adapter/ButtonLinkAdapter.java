@@ -1,10 +1,10 @@
 package kore.botssdk.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.RadioListListner;
@@ -28,42 +27,35 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
+@SuppressLint("UnknownNullness")
 public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.DeepLinkViewHolder>
 {
     private final Context context;
     private final ArrayList<BotButtonModel> arrPdfDownloadModels;
-    private final LayoutInflater ownLayoutInflator;
-    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final LayoutInflater layoutInflater;
+    final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int dp1;
-    private final boolean isLastItem;
-    private int checkedPosition = -1;
-    private final RadioListListner radioListListner;
-    private final ComposeFooterInterface composeFooterInterface;
-    private String quickWidgetColor,fillColor,quickReplyFontColor;
-    private final SharedPreferences sharedPreferences;
+    int checkedPosition = -1;
+    final RadioListListner radioListListner;
+    final ComposeFooterInterface composeFooterInterface;
+    private String quickWidgetColor;
+    private String fillColor;
 
-    public ButtonLinkAdapter(Context context, ArrayList<BotButtonModel> arrPdfDownloadModels, InvokeGenericWebViewInterface invokeGenericWebViewInterface, boolean isLastItem, int checkedPosition, RadioListListner radioListListner, ComposeFooterInterface composeFooterInterface)
+    public ButtonLinkAdapter(Context context, ArrayList<BotButtonModel> arrPdfDownloadModels, InvokeGenericWebViewInterface invokeGenericWebViewInterface, int checkedPosition, ComposeFooterInterface composeFooterInterface, RadioListListner radioListListner)
     {
         this.context = context;
         this.arrPdfDownloadModels = arrPdfDownloadModels;
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-        this.layoutInflater = LayoutInflater.from(context);
-        this.isLastItem = isLastItem;
         this.checkedPosition = checkedPosition;
         this.radioListListner = radioListListner;
         this.composeFooterInterface = composeFooterInterface;
         this.dp1= (int) DimensionUtil.dp1;
-        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         quickWidgetColor = SDKConfiguration.BubbleColors.quickReplyTextColor;
         fillColor = SDKConfiguration.BubbleColors.quickReplyColor;
-        quickReplyFontColor = "#3F51B5";
 
         fillColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, fillColor);
         quickWidgetColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, quickWidgetColor);
-        quickReplyFontColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, quickReplyFontColor);
     }
 
     @Override
@@ -160,7 +152,7 @@ public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.De
         });
     }
 
-    class DeepLinkViewHolder extends RecyclerView.ViewHolder{
+    static class DeepLinkViewHolder extends RecyclerView.ViewHolder{
         final ImageView ivLinkForward;
         final TextView tvButtonTitle;
         final LinearLayout llButtonDeepLink;

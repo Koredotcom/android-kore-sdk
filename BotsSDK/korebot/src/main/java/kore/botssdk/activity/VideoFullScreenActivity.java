@@ -4,6 +4,7 @@ import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUND
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,16 +33,17 @@ import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 
+@SuppressLint("UnknownNullness")
 public class VideoFullScreenActivity extends BotAppCompactActivity
 {
-    private VideoView vvFullScreen;
-    private String videoUrl;
-    private ImageView ivPlayPauseIcon;
-    private TextView tvVideoTiming;
-    private SeekBar sbVideo;
-    private double current_pos, total_duration;
-    private PopupWindow popupWindow;
-    private ImageView ivVideoMore;
+    VideoView vvFullScreen;
+    String videoUrl;
+    ImageView ivPlayPauseIcon;
+    TextView tvVideoTiming;
+    SeekBar sbVideo;
+    double current_pos, total_duration;
+    PopupWindow popupWindow;
+    ImageView ivVideoMore;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -204,10 +206,10 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
 
     public void onEvent(double currentPos)
     {
-        Log.e("Current Position", currentPos+"");
+        Log.e("Current Position", String.valueOf(currentPos));
     }
 
-    private boolean checkForPermissionAccessAndRequest()
+    boolean checkForPermissionAccessAndRequest()
     {
         if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return true;

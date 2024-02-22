@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="Web Pages"
+        android:text="@string/web_pages"
         android:textAllCaps="true"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_normal"

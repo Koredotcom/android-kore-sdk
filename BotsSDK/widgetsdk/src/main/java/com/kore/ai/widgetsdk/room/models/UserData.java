@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.room.models;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
  * Created by Ramachandra Pradeep on 19-Jul-18.
  */
 
+@SuppressLint("UnknownNullness")
 @Entity(tableName = "user_data")
 public class UserData {
 
@@ -36,11 +39,6 @@ public class UserData {
     public static final String ORG_LOGO_URL = "org_logo_url";
     public static final String ENROLL_TYPE = "enroll_type";
     public static final String ROLLS = "admin_roles";
-
-    public static final String SSO_GOOGLE = "google";
-    public static final String SSO_365 = "AzureAD";
-    public static final String SSO_365_EXCHAGE = "ews";
-
 
     @PrimaryKey
     @ColumnInfo(name = USER_ID)
@@ -230,6 +228,7 @@ public class UserData {
     public void setlName(String lName) {
         this.lName = lName;
     }
+
     public String getId() {
         return id;
     }

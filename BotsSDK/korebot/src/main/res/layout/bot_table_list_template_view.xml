@@ -23,18 +23,15 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dimen_10dp"
-        android:layout_below="@+id/botCustomListView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:background="#ffffff" />
 
     <TextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginRight="@dimen/dimen_10dp"
-        android:gravity="right|center_vertical"
-        android:text="more"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:gravity="end|center_vertical"
+        android:text="@string/more"
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="visible" />
 
@@ -44,7 +41,7 @@
         android:layout_height="60dp"
         android:background="@drawable/list_view_template_bg"
         android:gravity="center"
-        android:text="Show more"
+        android:text="@string/show_more"
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="gone" />
 

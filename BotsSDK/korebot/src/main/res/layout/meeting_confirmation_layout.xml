@@ -36,15 +36,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:drawableStart="@drawable/ic_baseline_watch_later_24px"
             android:drawablePadding="5dp"
 
             android:ellipsize="end"
             android:gravity="start|top"
             android:maxLines="1"
-            android:text="Selected Slots"
+            android:text="@string/selected_slots"
             android:textColor="#757587"
-            android:textSize="10sp" />
+            android:textSize="11sp"
+            app:drawableStartCompat="@drawable/ic_baseline_watch_later_24px" />
 
         <TextView
             android:id="@+id/time_slots"
@@ -61,21 +61,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:drawableStart="@drawable/vector_location_icon"
             android:drawablePadding="5dp"
             android:gravity="center|start"
             android:textColor="#485260"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            app:drawableStartCompat="@drawable/vector_location_icon" />
 
 
         <TextView
             android:id="@+id/tv_users"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/vector_person"
             android:drawablePadding="5dp"
             android:gravity="center|start"
             android:textColor="#485260"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            app:drawableStartCompat="@drawable/vector_person" />
     </LinearLayout>
 </LinearLayout>

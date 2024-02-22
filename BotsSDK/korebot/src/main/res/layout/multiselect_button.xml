@@ -17,8 +17,8 @@
         android:maxLines="1"
         android:minWidth="300dp"
         android:tag="medium"
-        android:text="hi"
+        android:text="@string/hi"
         android:textColor="@color/splash_color"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:textStyle="bold" />
 </LinearLayout>

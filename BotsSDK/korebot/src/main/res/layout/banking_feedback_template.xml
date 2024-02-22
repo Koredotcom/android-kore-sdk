@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="Text"
+        android:text="@string/text"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_header"
         android:textStyle="bold" />
@@ -25,14 +25,15 @@
         android:background="@color/white"
         android:clickable="true"
         android:divider="@android:color/transparent"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:focusable="true" />
 
     <kore.botssdk.views.CustomTextView
         android:id="@+id/tvEmpathyMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_15dp"
-        android:text="Text"
+        android:text="@string/text"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_sub_header"
         android:visibility="invisible" />

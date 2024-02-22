@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -33,14 +33,14 @@
             android:layout_below="@+id/title"
             android:layout_alignStart="@+id/title"
             android:layout_marginTop="10dp"
-            android:drawableStart="@drawable/vector_location_icon"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="@{meetingModel.where}"
             android:visibility="@{meetingModel.locVisibility}"
             android:textColor="@color/color_404051"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/vector_location_icon" />
 
         <TextView
             android:id="@+id/persons"
@@ -49,12 +49,12 @@
             android:layout_below="@+id/location_view"
             android:layout_alignStart="@+id/title"
             android:layout_marginTop="10dp"
-            android:drawableStart="@drawable/vector_person"
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:maxLines="1"
             android:text="@{meetingModel.getparticipantsAsString()}"
             android:textColor="@color/color_404051"
-            android:textSize="13dp" />
+            android:textSize="13dp"
+            app:drawableStartCompat="@drawable/vector_person" />
     </RelativeLayout>
 </layout>

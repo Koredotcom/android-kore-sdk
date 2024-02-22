@@ -15,11 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_10dp"
         android:maxLines="2"
-        android:text="Title"
         android:textColor="@color/txtFontBlack"
         android:textStyle="bold"
         android:visibility="gone"
-        android:textSize="@dimen/dimen_15dp"/>
+        android:textSize="15sp"/>
 
     <kore.botssdk.view.AutoExpandListView
         android:id="@+id/botCustomListView"
@@ -46,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center"
-        android:text="Show more"
+        android:text="@string/show_more"
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="gone" />
 

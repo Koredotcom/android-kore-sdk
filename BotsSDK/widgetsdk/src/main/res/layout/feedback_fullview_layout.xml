@@ -145,7 +145,7 @@
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/button_feedback"
                 android:clickable="false"
-                android:text="SUBMIT"
+                android:text="@string/submit"
                 android:textColor="#FFFFFF"
                 android:textSize="17sp"
                 android:textStyle="normal" />

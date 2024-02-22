@@ -8,6 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 
 public class AnnoucementResModel implements Serializable {
 
@@ -127,9 +128,9 @@ public class AnnoucementResModel implements Serializable {
             } else {
                 int remaining = getSharedList().size() - 1;
                 if(remaining > 1)
-                    return String.format("%1$s and %2$d others",getSharedList().get(0).getName() , remaining);
+                    return String.format(Locale.ENGLISH, "%1$s and %2$d others",getSharedList().get(0).getName() , remaining);
                 else
-                    return String.format("%1$s and %2$d other",getSharedList().get(0).getName() , remaining);
+                    return String.format(Locale.ENGLISH,"%1$s and %2$d other",getSharedList().get(0).getName() , remaining);
 
             }
         }

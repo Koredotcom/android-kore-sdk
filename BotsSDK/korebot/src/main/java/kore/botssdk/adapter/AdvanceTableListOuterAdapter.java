@@ -1,14 +1,11 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,13 +20,11 @@ public class AdvanceTableListOuterAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<AdvanceListTableModel> arrAdvanceListTableModels;
-    private final LayoutInflater layoutInflater;
 
-    public AdvanceTableListOuterAdapter(Context context, ArrayList<AdvanceListTableModel> arrAdvanceListTableModels)
+    public AdvanceTableListOuterAdapter(@NonNull Context context, @NonNull ArrayList<AdvanceListTableModel> arrAdvanceListTableModels)
     {
         this.context = context;
         this.arrAdvanceListTableModels = arrAdvanceListTableModels;
-        this.layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -67,7 +62,7 @@ public class AdvanceTableListOuterAdapter extends BaseAdapter
         return convertView;
     }
 
-    private static class DetailsViewHolder {
-        private RecyclerView rvTableList;
+    static class DetailsViewHolder {
+        RecyclerView rvTableList;
     }
 }

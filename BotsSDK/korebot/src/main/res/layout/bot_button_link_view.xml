@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/theme1_left_bubble_bg"
-        android:text="Title"
+        android:text="@string/title"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_sub_header" />
 

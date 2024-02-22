@@ -48,7 +48,8 @@
             android:layout_marginLeft="@dimen/dimen_10_dp"
             android:layout_marginRight="3dp"
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_help" />
+            app:srcCompat="@drawable/ic_help"
+            android:importantForAccessibility="no" />
 
         <MultiAutoCompleteTextView
             android:id="@+id/edit_text"
@@ -84,7 +85,8 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_15_dp"
             android:src="@drawable/new_send_background"
-            android:tag="medium" />
+            android:tag="medium"
+            android:importantForAccessibility="no" />
 
         <ImageView
             android:id="@+id/mike_icon"
@@ -195,7 +197,8 @@
                     android:layout_marginRight="24dp"
                     android:layout_marginBottom="16dp"
 
-                    app:srcCompat="@drawable/ic_keyboard" />
+                    app:srcCompat="@drawable/ic_keyboard"
+                    android:importantForAccessibility="no" />
 
                 <ImageView
                     android:id="@+id/speaker_text"
@@ -205,7 +208,8 @@
                     android:layout_marginRight="21dp"
                     android:layout_marginBottom="16dp"
                     android:layout_marginLeft="24dp"
-                    app:srcCompat="@drawable/microphone" />
+                    app:srcCompat="@drawable/microphone"
+                    android:importantForAccessibility="no" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -223,7 +227,8 @@
             android:layout_marginBottom="12dp"
 
             android:visibility="visible"
-            app:srcCompat="@drawable/ic_help" />
+            app:srcCompat="@drawable/ic_help"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:id="@+id/linearLayoutProgress"
@@ -253,7 +258,8 @@
             android:layout_marginRight="40dp"
             android:layout_marginBottom="12dp"
 
-            app:srcCompat="@drawable/ic_tasks" />
+            app:srcCompat="@drawable/ic_tasks"
+            android:importantForAccessibility="no" />
     </RelativeLayout>
 
     <ListView

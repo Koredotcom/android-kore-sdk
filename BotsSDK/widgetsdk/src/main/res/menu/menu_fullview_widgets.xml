@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/open_app"
-        android:title="Add"
+        android:title="@string/add"
         android:icon="@drawable/ic_calendar_widget"
         customnamespace:showAsAction="always"/>
 

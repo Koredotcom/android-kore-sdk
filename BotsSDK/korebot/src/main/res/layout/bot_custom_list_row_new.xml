@@ -13,7 +13,7 @@
         android:id="@+id/imageUrl"
         android:src="@drawable/ic_launcher"
         android:background="@drawable/rectangle_background"
-        />
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/title"
@@ -25,7 +25,7 @@
         android:paddingLeft="10dp"
         android:textColor="#222222"
         android:textStyle="bold"
-        android:text="Stripped Shirt"
+        android:text="@string/stripped_shirt"
         />
 
     <TextView
@@ -39,7 +39,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="2dp"
         android:layout_below="@id/title"
-        android:text="$40.99"
+        android:text="@string/_40_99"
         />
 
 
@@ -47,13 +47,13 @@
         android:id="@+id/productDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:textColor="#0076ff"
         android:layout_below="@id/imageUrl"
-        android:text="Buy"
+        android:text="@string/buy"
         android:paddingBottom="4dp"
         android:textStyle="bold"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>
 

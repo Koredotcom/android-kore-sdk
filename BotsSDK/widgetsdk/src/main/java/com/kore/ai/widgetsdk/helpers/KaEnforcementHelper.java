@@ -72,19 +72,9 @@ public class KaEnforcementHelper {
 
     private void onEntAdminSettingsChanged(String errMsg, int errorCode) {
         switch (errorCode) {
-            case KaAuthErrorCodes.REFRESH_TOKEN_CODE:
-                /*Context mContext = KoreAppControl.getInstance().getTopActivityContext();
-                if (mContext != null) {
-                    Intent refreshTokenIntent = new Intent(mContext, KoreService.class);
-                    refreshTokenIntent.putExtra(KoreService.SERVICE_ID, ServiceIds.SERVICE_REFRESH_TOKEN);
-                    mContext.startService(refreshTokenIntent);
-                }*/
-                break;
-
             case KaAuthErrorCodes.PASSWORD_POLICY_CHANGED_CODE:
             case KaAuthErrorCodes.PASSWORD_EXPIRED_CODE:
                 showChoiceDialogBox(errMsg, errorCode);
-
                 break;
 
             case KaAuthErrorCodes.ADMIN_PASSWORD_RESET_CODE:
@@ -97,18 +87,11 @@ public class KaEnforcementHelper {
             case KaAuthErrorCodes.PERMISSIONS_CHANGED:
             case KaAuthErrorCodes.COMPULSORY_LOGOUT:
             case KaAuthErrorCodes.ACCOUNT_DELETED:
-                showAcceptDialogBox(errMsg, errorCode);
-                break;
-
-            case KaAuthErrorCodes.ERR_LOGIN_SUSPENDED_USER:
-                //Don't show any popup for this case, as this is handling from calling part of service call.
-                break;
             case KaAuthErrorCodes.MDM_AUTHENTICATION_REQUIRED:
             case KaAuthErrorCodes.MDM_UPDATED:
                 showAcceptDialogBox(errMsg, errorCode);
                 break;
             default:
-//                showAcceptDialogBox(errMsg, errorCode);
                 break;
         }
     }

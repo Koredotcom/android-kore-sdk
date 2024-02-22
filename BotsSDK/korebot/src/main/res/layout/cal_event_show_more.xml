@@ -17,9 +17,9 @@
         android:gravity="center"
         android:tag="bold"
         android:singleLine="true"
-        android:text="SHOW MORE"
+        android:text="@string/show_more"
         android:textColor="@color/splash_color"
-        android:textSize="15dp" />
+        android:textSize="15sp" />
 
 </LinearLayout>
 

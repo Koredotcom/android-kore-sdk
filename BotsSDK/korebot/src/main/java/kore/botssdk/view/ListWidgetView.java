@@ -110,7 +110,7 @@ public class ListWidgetView extends LinearLayout {
         });
 
         dp1 = (int) Utility.convertDpToPixel(context, 1);
-        listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
+        listWidgetAdapter = new ListWidgetAdapter(getContext(), "");
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {

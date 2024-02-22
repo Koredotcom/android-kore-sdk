@@ -20,7 +20,8 @@
         android:minHeight="32dp"
         android:textSize="22sp"
         android:gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/img_icon"

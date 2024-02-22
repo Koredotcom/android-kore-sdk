@@ -13,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
@@ -27,13 +29,11 @@ public class AdvanceListdetailsAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<Widget.Button> contentModels;
-    private final LayoutInflater layoutInflater;
 
-    protected AdvanceListdetailsAdapter(Context context, ArrayList<Widget.Button> contentModels)
+    protected AdvanceListdetailsAdapter(@NonNull Context context, @NonNull ArrayList<Widget.Button> contentModels)
     {
         this.context = context;
         this.contentModels = contentModels;
-        this.layoutInflater = LayoutInflater.from(context);
     }
     @Override
     public int getCount()
@@ -102,9 +102,9 @@ public class AdvanceListdetailsAdapter extends BaseAdapter
         }
     }
 
-    private static class DetailsViewHolder {
-        private TextView tvBtnText;
-        private ImageView ivListBtnIcon;
+    static class DetailsViewHolder {
+        TextView tvBtnText;
+        ImageView ivListBtnIcon;
 
     }
 }

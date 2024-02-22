@@ -24,7 +24,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/imageplaceholder_left" />
+                android:src="@mipmap/imageplaceholder_left"
+                android:importantForAccessibility="no" />
 
             <FrameLayout
                 android:id="@+id/offer_price_fl"

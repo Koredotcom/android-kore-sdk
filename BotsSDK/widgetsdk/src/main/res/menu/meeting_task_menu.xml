@@ -12,18 +12,18 @@
 
     <item
         android:id="@+id/done"
-        android:title="Done"
+        android:title="@string/done"
         android:visible="true"
         customnamespace:showAsAction="always" />
     <item
         android:id="@+id/share"
         android:icon="@drawable/ic_icon_share_grey"
-        android:title="Share"
+        android:title="@string/share"
         android:visible="false"
         customnamespace:showAsAction="always" />
     <item
         android:id="@+id/edit"
-        android:title="Edit"
+        android:title="@string/edit"
         android:visible="false"
         customnamespace:showAsAction="always" />
 

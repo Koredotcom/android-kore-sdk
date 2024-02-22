@@ -1,5 +1,6 @@
 package kore.botssdk.dialogs;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -27,49 +29,41 @@ import kore.botssdk.adapter.AdvancedListAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
+@SuppressLint("UnknownNullness")
 public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
-    private TextView tvOptionsTitle;
-    private View view;
-    private boolean isFromFullView;
     private ArrayList<AdvancedListModel> model;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
-    private ListView lvMoreData;
     private int dp1;
-    private LinearLayout llCloseBottomSheet, llBottomLayout;
+
     public String getSkillName() {
         return skillName;
     }
-    private BottomSheetDialog bottomSheetDialog;
-    private SharedPreferences sharedPreferences;
+    BottomSheetDialog bottomSheetDialog;
     private String title;
 
-    public void setSkillName(String skillName, String trigger) {
+    public void setSkillName(String skillName) {
         this.skillName = skillName;
-        this.trigger = trigger;
     }
 
     private String skillName;
-    private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.advances_action_sheet, container,false);
-        lvMoreData = view.findViewById(R.id.lvMoreData);
-        llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        llBottomLayout = view.findViewById(R.id.llBottomLayout);
-        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
-        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        View view = inflater.inflate(R.layout.advances_action_sheet, container, false);
+        ListView lvMoreData = view.findViewById(R.id.lvMoreData);
+        LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
+        TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
@@ -114,6 +108,7 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
     }
 
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
@@ -123,14 +118,15 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
                 BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
                 FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
-                BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight(bottomSheet.getLayoutParams().height);
-                bottomSheetBehavior.setDraggable(false);
+                if(bottomSheet != null) {
+                    bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+                    BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                    bottomSheetBehavior.setPeekHeight(bottomSheet.getLayoutParams().height);
+                    bottomSheetBehavior.setDraggable(false);
+                }
             }
         });
 
-        // Do something with your dialog like setContentView() or whatever
         return bottomSheetDialog;
     }
 
@@ -144,10 +140,5 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
 
     public void setData(ArrayList<AdvancedListModel> taskTemplateModel, boolean isFromListMenu){
         model = taskTemplateModel;
-        this.isFromListMenu = isFromListMenu;
-    }
-
-    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }

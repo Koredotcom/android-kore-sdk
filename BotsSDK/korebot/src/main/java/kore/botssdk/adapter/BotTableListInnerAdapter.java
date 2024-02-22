@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.squareup.picasso.Picasso;
@@ -33,7 +34,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int dp1;
 
-    protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels)
+    protected BotTableListInnerAdapter(@NonNull Context context, @NonNull ArrayList<BotTableListRowItemsModel> botTableListRowItemsModels)
     {
         this.context = context;
         this.botTableListRowItemsModels = botTableListRowItemsModels;
@@ -156,11 +157,11 @@ public class BotTableListInnerAdapter extends BaseAdapter
 
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
@@ -174,7 +175,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
         view.setTag(holder);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

@@ -45,10 +45,10 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
     private final ArrayList<CardTemplateModel> arrCardTemplateModels;
     private final Context context;
     private final LayoutInflater layoutInflater;
-    private final PopupWindow popupWindow;
+    final PopupWindow popupWindow;
     private final View popUpView;
 
-    public CardTemplateAdapter(Context context, ArrayList<CardTemplateModel> arrCardTemplateModels)
+    public CardTemplateAdapter(@NonNull Context context, @NonNull ArrayList<CardTemplateModel> arrCardTemplateModels)
     {
         this.arrCardTemplateModels = arrCardTemplateModels;
         this.context = context;
@@ -161,13 +161,13 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                     AdvanceListTableModel.AdvanceTableRowDataModel headerOptions = cardTemplateModel.getCardHeading().getHeaderExtraInfo();
 
                     if(!StringUtils.isNullOrEmpty(headerOptions.getTitle())) {
-                        holder.tvheaderExtraTitle.setVisibility(View.VISIBLE);
-                        holder.tvheaderExtraTitle.setText(headerOptions.getTitle());
+                        holder.tvHeaderExtraTitle.setVisibility(View.VISIBLE);
+                        holder.tvHeaderExtraTitle.setText(headerOptions.getTitle());
                     }
 
                     if(!StringUtils.isNullOrEmpty(headerOptions.getIcon()))
                     {
-                        holder.ivheaderExtra.setVisibility(View.VISIBLE);
+                        holder.ivHeaderExtra.setVisibility(View.VISIBLE);
 
                         try {
                             String imageData;
@@ -176,12 +176,12 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                                 imageData = imageData.substring(imageData.indexOf(",") + 1);
                                 byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
                                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                                holder.ivheaderExtra.setImageBitmap(decodedByte);
+                                holder.ivHeaderExtra.setImageBitmap(decodedByte);
                             } else {
-                                Picasso.get().load(headerOptions.getIcon()).transform(new RoundedCornersTransform()).into(holder.ivheaderExtra);
+                                Picasso.get().load(headerOptions.getIcon()).transform(new RoundedCornersTransform()).into(holder.ivHeaderExtra);
                             }
                         } catch (Exception e) {
-                            holder.ivheaderExtra.setVisibility(GONE);
+                            holder.ivHeaderExtra.setVisibility(GONE);
                         }
                     }
 
@@ -200,18 +200,18 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                             }
                         });
 
-                        holder.ivheaderExtra.setOnClickListener(new View.OnClickListener() {
+                        holder.ivHeaderExtra.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                popupWindow.showAsDropDown(holder.tvheaderExtraTitle, -170, 0);
+                                popupWindow.showAsDropDown(holder.tvHeaderExtraTitle, -170, 0);
                             }
                         });
                     }
                 }
                 else
                 {
-                    holder.tvheaderExtraTitle.setVisibility(GONE);
-                    holder.ivheaderExtra.setVisibility(GONE);
+                    holder.tvHeaderExtraTitle.setVisibility(GONE);
+                    holder.ivHeaderExtra.setVisibility(GONE);
                 }
             }
 
@@ -224,7 +224,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         cardTemplateModel.getCardType().equalsIgnoreCase("list"))
                     holder.rvDescription.setLayoutManager(new GridLayoutManager(context, 3));
 
-                holder.rvDescription.setAdapter(new CardTemplateListAdapter(context, cardTemplateModel.getCardDescription(), null, null));
+                holder.rvDescription.setAdapter(new CardTemplateListAdapter(context, cardTemplateModel.getCardDescription()));
             }
 
             if(cardTemplateModel.getButtons() != null && cardTemplateModel.getButtons().size() > 0)
@@ -353,9 +353,9 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                 holder.llCardView.setLayoutParams(buttonLayoutParams);
             }
 
+            GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
             if(cardTemplateModel.getCardContentStyles() != null)
             {
-                GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
                 if (rightDrawable != null) {
 
                     if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardContentStyles().getBackground_color()))
@@ -392,7 +392,6 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
             }
             else
             {
-                GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
                 if(rightDrawable != null)
                 {
                     rightDrawable.setColor(Color.parseColor("#ffffff"));
@@ -417,7 +416,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
     }
 
     @Override
-    public void advanceButtonClick(ArrayList<AdvanceOptionsModel> viewType) {
+    public void advanceButtonClick(@NonNull ArrayList<AdvanceOptionsModel> viewType) {
 
     }
 
@@ -428,12 +427,12 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView bot_list_item_image, ivheaderExtra;
-        private final TextView bot_list_item_title, bot_list_item_subtitle, tvOnlyTitle, tvCardButton, tvheaderExtraTitle;
-        private final RelativeLayout rlTitle;
-        private final RecyclerView rvDescription;
-        private final LinearLayout llCardView, llCardViewTop;
-        private final View vBorder;
+        final ImageView bot_list_item_image, ivHeaderExtra;
+        final TextView bot_list_item_title, bot_list_item_subtitle, tvOnlyTitle, tvCardButton, tvHeaderExtraTitle;
+        final RelativeLayout rlTitle;
+        final RecyclerView rvDescription;
+        final LinearLayout llCardView, llCardViewTop;
+        final View vBorder;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -447,8 +446,8 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
             rvDescription = itemView.findViewById(R.id.rvDescription);
             tvCardButton = itemView.findViewById(R.id.tvCardButton);
             vBorder = itemView.findViewById(R.id.vBorder);
-            ivheaderExtra = itemView.findViewById(R.id.ivheaderExtra);
-            tvheaderExtraTitle = itemView.findViewById(R.id.tvheaderExtraTitle);
+            ivHeaderExtra = itemView.findViewById(R.id.ivheaderExtra);
+            tvHeaderExtraTitle = itemView.findViewById(R.id.tvheaderExtraTitle);
         }
     }
 }

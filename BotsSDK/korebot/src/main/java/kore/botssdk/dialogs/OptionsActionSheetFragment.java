@@ -96,7 +96,6 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
             rvViewMore.setAdapter(bottomOptionsCycleAdapter);
             bottomOptionsCycleAdapter.setComposeFooterInterface(composeFooterInterface);
             bottomOptionsCycleAdapter.setContext(getActivity());
-            bottomOptionsCycleAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         } else {
             bottomOptionsCycleAdapter = (BottomOptionsCycleAdapter) rvViewMore.getAdapter();
         }

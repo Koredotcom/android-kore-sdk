@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -44,9 +45,9 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="3dp"
-            android:drawableEnd="@drawable/right_arrow_iconn"
             android:drawablePadding="8dp"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            app:drawableEndCompat="@drawable/right_arrow_iconn" />
     </RelativeLayout>
 
     <LinearLayout
@@ -71,7 +72,8 @@
                android:layout_alignParentEnd="true"
                 android:layout_marginStart="5dp"
                 android:layout_marginBottom="5dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:id="@+id/title"
@@ -124,28 +126,26 @@
                 android:id="@+id/eye_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_views"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
 
                 android:maxLines="1"
 
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:drawableStartCompat="@drawable/ic_views" />
 
             <TextView
                 android:id="@+id/chat_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/eye_count"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_comments_right"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:drawableStartCompat="@drawable/ic_comments_right" />
 
 
             <TextView
@@ -153,13 +153,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/chat_count"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/upvote"
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:drawableStartCompat="@drawable/upvote" />
 
 
             <TextView
@@ -167,14 +166,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/like_count"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/downvote"
 
                 android:drawablePadding="7dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                app:drawableStartCompat="@drawable/downvote" />
         </LinearLayout>
 
     </LinearLayout>
@@ -204,7 +202,7 @@
             android:fontFamily="@font/latoregular"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="Your Articles"
+            android:text="@string/your_articles"
             android:textSize="12sp" />
 
 
@@ -215,7 +213,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:fontFamily="@font/latoregular"
-            android:text="100% Match"
+            android:text="@string/_100_match"
             android:textSize="13sp" />
 
     </RelativeLayout>

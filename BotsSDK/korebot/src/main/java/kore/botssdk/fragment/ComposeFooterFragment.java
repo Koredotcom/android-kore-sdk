@@ -497,21 +497,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    /*private void startAudioRecordingSafe() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-//                editTextMessage.setHint("Start talking...");
-                showTapToSpeakFragment();
-
-            } else {
-                requestMicrophonePermission();
-            }
-        } else {
-//            editTextMessage.setHint("Start talking...");
-            showTapToSpeakFragment();
-        }
-    }*/
-
     private void requestMicrophonePermission() {
         AppPermissionsHelper.requestForPermission(requireActivity(), new String[]{
                 Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);

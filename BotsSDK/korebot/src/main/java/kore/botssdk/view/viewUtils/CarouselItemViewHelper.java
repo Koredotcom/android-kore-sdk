@@ -108,7 +108,7 @@ public class CarouselItemViewHelper {
             if(botCarouselModel.getButtons() != null) {
                 BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
                 carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
-                botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+                botCarouselItemButtonAdapter.setBotCarouselButtonModels(botCarouselModel.getButtons());
             }
 
             String price = Utils.isNullOrEmpty(botCarouselModel.getPrice())?"":botCarouselModel.getPrice();
@@ -149,7 +149,7 @@ public class CarouselItemViewHelper {
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             carouselViewHolder.carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
            // carouselViewHolder.carouselButtonListview.getLayoutParams().height = (int)(botCarouselModel.getButtons() != null ? botCarouselModel.getButtons().size() * (48 * dp1) : 0);
-            botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+            botCarouselItemButtonAdapter.setBotCarouselButtonModels(botCarouselModel.getButtons());
             carouselViewHolder.carouselButtonListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

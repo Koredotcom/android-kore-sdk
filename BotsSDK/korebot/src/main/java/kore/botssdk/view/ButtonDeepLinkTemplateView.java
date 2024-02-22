@@ -90,7 +90,7 @@ public class ButtonDeepLinkTemplateView extends LinearLayout implements RadioLis
                     break;
             }
 
-            lvButtonLink.setAdapter(new ButtonLinkAdapter(getContext(), buttonLinkTemplateModels, invokeGenericWebViewInterface, isLastItem, payloadInner.getCheckedPosition(), ButtonDeepLinkTemplateView.this, composeFooterInterface));
+            lvButtonLink.setAdapter(new ButtonLinkAdapter(getContext(), buttonLinkTemplateModels, invokeGenericWebViewInterface, payloadInner.getCheckedPosition(), composeFooterInterface, ButtonDeepLinkTemplateView.this));
         }
     }
 

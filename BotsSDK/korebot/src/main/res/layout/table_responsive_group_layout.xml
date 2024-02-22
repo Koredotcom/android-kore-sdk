@@ -29,13 +29,15 @@
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:visibility="gone"
             android:layout_height="wrap_content"
-            android:background="@mipmap/ic_arrow_table_resp_right"/>
+            android:background="@mipmap/ic_arrow_table_resp_right"
+            android:importantForAccessibility="no" />
 
     </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/colorSelected"/>
+        android:background="@color/colorSelected"
+        android:importantForAccessibility="no" />
 
 </LinearLayout>

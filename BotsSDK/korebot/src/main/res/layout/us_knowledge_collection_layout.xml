@@ -47,9 +47,9 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginTop="3dp"
-            android:drawableEnd="@drawable/right_arrow_iconn"
             android:drawablePadding="8dp"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            app:drawableEndCompat="@drawable/right_arrow_iconn" />
     </RelativeLayout>
 
     <LinearLayout
@@ -67,7 +67,8 @@
             android:layout_height="12dp"
             android:layout_alignParentStart="true"
             android:textColor="@color/color_e48015"
-            app:srcCompat="@drawable/sugestive_icon" />
+            app:srcCompat="@drawable/sugestive_icon"
+            android:importantForAccessibility="no" />
 
         <TextView
             android:id="@+id/star_textview"
@@ -77,7 +78,7 @@
             android:layout_marginEnd="5dp"
             android:fontFamily="@font/latosemibold"
             android:gravity="center"
-            android:text="SUGGESTED"
+            android:text="@string/suggested"
             android:textColor="@color/color_e48015"
             android:textSize="11sp" />
     </LinearLayout>

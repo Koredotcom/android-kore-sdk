@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_deails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -52,7 +53,8 @@
                 android:layout_marginTop="5dp"
                 android:src="@mipmap/checkbox_off"
 
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -120,7 +122,8 @@
                     android:minHeight="24dp"
                     android:src="@mipmap/ic_more_vert_black_24dp"
                     android:textColor="@color/color_7a799a"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:importantForAccessibility="no" />
             </RelativeLayout>
 
             <LinearLayout
@@ -139,7 +142,8 @@
                     android:layout_height="6dp"
                     android:layout_marginEnd="5dp"
                     android:src="@drawable/meeting_dot"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:importantForAccessibility="no" />
 
                 <TextView
                     android:id="@+id/time_tostart_text"
@@ -156,26 +160,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:drawableStart="@drawable/vector_location_icon"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:maxLines="1"
                 android:textColor="#485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/vector_location_icon" />
 
 
             <TextView
                 android:id="@+id/tv_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/vector_person"
                 android:drawablePadding="5dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:singleLine="true"
                 android:textColor="#485260"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                app:drawableStartCompat="@drawable/vector_person" />
 
             <TextView
                 android:id="@+id/tv_meeting_note"
@@ -183,19 +187,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_8dp"
                 android:background="@drawable/meeting_notes_border"
-                android:drawableStart="@drawable/ic_meeting_notes"
                 android:drawablePadding="7dp"
                 android:ellipsize="end"
                 android:gravity="center|start"
                 android:paddingLeft="7dp"
                 android:paddingTop="2dp"
-                android:paddingRight="@dimen/dimen_14dp"
+                android:paddingEnd="@dimen/dimen_14dp"
                 android:paddingBottom="2dp"
                 android:singleLine="true"
-                android:text="Meeting Notes"
+                android:text="@string/meeting_notes"
                 android:textColor="#485260"
                 android:textSize="13sp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_meeting_notes" />
 
 
             <HorizontalScrollView
@@ -236,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latobold"
                         android:letterSpacing="0.1"
-                        android:text="DIAL IN"
+                        android:text="@string/dial_in"
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 
@@ -272,7 +276,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latobold"
                         android:letterSpacing="0.1"
-                        android:text="JOIN"
+                        android:text="@string/join"
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 
@@ -308,7 +312,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latobold"
                         android:letterSpacing="0.1"
-                        android:text="NOTES"
+                        android:text="@string/notes"
                         android:textColor="@color/splash_background_color"
                         android:textSize="14sp" />
 

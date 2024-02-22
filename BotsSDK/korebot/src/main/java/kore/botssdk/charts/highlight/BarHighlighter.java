@@ -1,12 +1,14 @@
 package kore.botssdk.charts.highlight;
 
+import android.annotation.SuppressLint;
+
 import kore.botssdk.charts.data.BarData;
 import kore.botssdk.charts.data.BarEntry;
 import kore.botssdk.charts.data.BarLineScatterCandleBubbleData;
 import kore.botssdk.charts.interfaces.dataprovider.BarDataProvider;
 import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
 import kore.botssdk.charts.utils.MPPointD;
-
+@SuppressLint("UnknownNullness")
 public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
     public BarHighlighter(BarDataProvider chart) {
         super(chart);
@@ -33,10 +35,9 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
         BarEntry entry = set.getEntryForXValue(xVal, yVal);
         if (entry == null) {
             return null;
-        } else if (entry.getYVals() == null) {
-            return high;
         } else {
-            Range[] ranges = entry.getRanges();
+            entry.getYVals();
+            Range[] ranges = entry.getmRanges();
             if (ranges.length > 0) {
                 int stackIndex = this.getClosestStackIndex(ranges, yVal);
                 MPPointD pixels = this.mChart.getTransformer(set.getAxisDependency()).getPixelForValues(high.getX(), ranges[stackIndex].to);
@@ -52,11 +53,8 @@ public class BarHighlighter extends ChartHighlighter<BarDataProvider> {
     protected int getClosestStackIndex(Range[] ranges, float value) {
         if (ranges != null && ranges.length != 0) {
             int stackIndex = 0;
-            Range[] var4 = ranges;
-            int var5 = ranges.length;
 
-            for(int var6 = 0; var6 < var5; ++var6) {
-                Range range = var4[var6];
+            for (Range range : ranges) {
                 if (range.contains(value)) {
                     return stackIndex;
                 }
