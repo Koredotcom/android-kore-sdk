@@ -97,7 +97,7 @@ public class KoraCarousalViewHelper {
             createdInfo.setText(emailModel.getDate() != null && emailModel.getDate().contains("+") ?emailModel.getDate().substring(0,emailModel.getDate().indexOf("+")):emailModel.getDate());
             BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(activityContext);
             listView.setAdapter(botCarouselItemButtonAdapter);
-            botCarouselItemButtonAdapter.setBotCaourselButtonModels(emailModel.getButtons() != null ? emailModel.getButtons() : new ArrayList<>());
+            botCarouselItemButtonAdapter.setBotCarouselButtonModels(emailModel.getButtons() != null ? emailModel.getButtons() : new ArrayList<>());
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

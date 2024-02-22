@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,17 +40,17 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
+@SuppressLint("UnknownNullness")
 public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<Widget.Button> buttons;
     private final Context mContext;
     private String skillName;
     private final String type;
-    private final AdvanceButtonClickListner advanceButtonClickListner;
-    private AdvanceOptionsAdapter advanceOptionsAdapter;
-    private final ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private PopupWindow popupWindow;
+    final AdvanceButtonClickListner advanceButtonClickListner;
+    AdvanceOptionsAdapter advanceOptionsAdapter;
+    final ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int count;
 
     public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -192,9 +191,9 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     }
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tv;
-        private final ImageView ivBtnImage;
-        private final LinearLayout layout_deails;
+        final TextView tv;
+        final ImageView ivBtnImage;
+        final LinearLayout layout_deails;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);

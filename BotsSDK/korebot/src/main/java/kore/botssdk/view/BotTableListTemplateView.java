@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotTableListTemlateAdapter;
+import kore.botssdk.adapter.BotTableListTemplateAdapter;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -59,14 +59,14 @@ public class BotTableListTemplateView extends LinearLayout {
     public void populateListTemplateView(ArrayList<BotTableListModel> botListModelArrayList)
     {
         if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
-            BotTableListTemlateAdapter botListTemplateAdapter;
+            BotTableListTemplateAdapter botListTemplateAdapter;
             if (autoExpandListView.getAdapter() == null) {
-                botListTemplateAdapter = new BotTableListTemlateAdapter(getContext(), autoExpandListView, 4);
+                botListTemplateAdapter = new BotTableListTemplateAdapter(getContext(), autoExpandListView, 4);
                 autoExpandListView.setAdapter(botListTemplateAdapter);
                 botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
                 botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             } else {
-                botListTemplateAdapter = (BotTableListTemlateAdapter) autoExpandListView.getAdapter();
+                botListTemplateAdapter = (BotTableListTemplateAdapter) autoExpandListView.getAdapter();
             }
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.notifyDataSetChanged();

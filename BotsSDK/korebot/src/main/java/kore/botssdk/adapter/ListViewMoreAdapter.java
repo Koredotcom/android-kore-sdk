@@ -35,14 +35,14 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
 
-    public ListViewMoreAdapter(ArrayList<BotListModel> model) {
+    public ListViewMoreAdapter(@NonNull ArrayList<BotListModel> model) {
         this.model = model;
         this.roundedCornersTransform = new RoundedCornersTransform();
 
     }
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.bot_listview_template_item_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
@@ -53,7 +53,7 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotListModel botListModel = model.get(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
@@ -103,7 +103,7 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         final TextView botListItemSubtitle;
         final TextView bot_list_item_cost;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.botListItemRoot = itemView.findViewById(R.id.bot_list_item_root);
             this.botListItemImage = itemView.findViewById(R.id.bot_list_item_image);

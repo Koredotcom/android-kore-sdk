@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
     final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
     private final boolean isEnabled;
 
-    public BankingFeedbackButtonsAdapter(ArrayList<BotButtonModel> botButtonModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled) {
+    public BankingFeedbackButtonsAdapter(@NonNull ArrayList<BotButtonModel> botButtonModels, @NonNull FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled) {
         this.botButtonModels = botButtonModels;
         this.feedbackExperienceUpdateListner = feedbackExperienceUpdateListner;
         this.isEnabled = isEnabled;
@@ -61,7 +60,7 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvButton;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.tvButton = itemView.findViewById(R.id.tvButton);
         }

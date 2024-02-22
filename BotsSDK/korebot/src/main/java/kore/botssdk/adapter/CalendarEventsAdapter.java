@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 import static kore.botssdk.utils.DateUtils.getDateinDayFormat;
 import static kore.botssdk.utils.DateUtils.getTimeInAmPm;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -53,50 +54,36 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 
-/**
- * Created by Ramachandra Pradeep on 02-Aug-18.
- */
-
+@SuppressLint("UnknownNullness")
 public class CalendarEventsAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
-    ArrayList<String> selectedIds = null;
+    final ArrayList<String> selectedIds;
     private CalEventsTemplateModel.Duration _cursor;
 
-    public ArrayList<CalEventsTemplateModel> getEventList() {
-        return eventList;
-    }
-
-    public void setEventList(ArrayList<CalEventsTemplateModel> eventList) {
-        if (eventList != null) {
-            this.eventList.clear();
-            this.eventList.addAll(eventList);
-            this.title = "SHOW MORE";
-
-        }
+    public void setEventList(@NonNull ArrayList<CalEventsTemplateModel> eventList) {
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
     }
 
     ArrayList<CalEventsTemplateModel> eventList = new ArrayList<>();
-    private LayoutInflater inflater = null;
-    private final int EVENTS_LIST_LIMIT = 3;
-    private String title = "SHOW MORE";
-    private EventSelectionListener eventSelectionListener;
-    private final Context mContext;
-    private final int DATA_FOUND = 1;
+    private final LayoutInflater inflater;
+    final Context mContext;
     private final int EMPTY_CARD = 0;
 
+    @NonNull
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(@NonNull String type) {
         this.type = type;
     }
 
-    private String type;
-    private final boolean isEnabled;
-    private ComposeFooterInterface composeFooterInterface;
-    private final Gson gson = new Gson();
+    String type;
+    final boolean isEnabled;
+    ComposeFooterInterface composeFooterInterface;
+    final Gson gson = new Gson();
     private boolean isFromWidget;
 
     public boolean isFromWidget() {
@@ -108,11 +95,6 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
     private final Drawable insetDivider;
     private final Drawable normalDivider;
-
-    public void setFromWidget(boolean fromWidget) {
-        isFromWidget = fromWidget;
-    }
-
 
     public CalendarEventsAdapter(Context mContext, String type, boolean isEnabled) {
         this.mContext = mContext;
@@ -137,7 +119,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     @Override
     public int getItemViewType(int position) {
         if (eventList != null && eventList.size() > 0) {
-            return DATA_FOUND;
+            return 1;
         }
 
         return EMPTY_CARD;
@@ -157,14 +139,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
 
-    public String checkStringNull(String value) {
+    @NonNull
+    public String checkStringNull(@NonNull String value) {
 
-        if (value != null && !value.trim().equalsIgnoreCase("")) {
+        if (!value.trim().equalsIgnoreCase("")) {
             return value.trim();
         }
         return "";
-
-
     }
 
     @Override
@@ -201,7 +182,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             }
 
-            if(!StringUtils.isNullOrEmpty(model.getReqTextToDisplay()))
+            if (!StringUtils.isNullOrEmpty(model.getReqTextToDisplay()))
                 holder.tv_time.setText(model.getReqTextToDisplay());
             else {
                 String str = DateUtils.calendar_list_format_2.format(model.getDuration().getStart()) + "\n" + DateUtils.calendar_list_format_2.format(model.getDuration().getEnd());
@@ -211,14 +192,14 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
 
             holder.tv_users.setText(getFormatedAttendiesFromList(model.getAttendees()));
 
-            if(StringUtils.isNullOrEmpty(model.getMeetingNoteId())){
+            if (StringUtils.isNullOrEmpty(model.getMeetingNoteId())) {
                 holder.tv_meeting_notes.setVisibility(View.GONE);
-            }else{
+            } else {
                 holder.tv_meeting_notes.setVisibility(View.VISIBLE);
                 holder.tv_meeting_notes.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        verticalListViewActionHelper.meetingNotesNavigation(mContext,model.getMeetingNoteId(),model.getEventId());
+                        verticalListViewActionHelper.meetingNotesNavigation(mContext, model.getMeetingNoteId(), model.getEventId());
                     }
                 });
             }
@@ -230,13 +211,13 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 holder.txtDateTime.setVisibility(GONE);
             }
 
-            if(model.getColor()!=null)
+            if (model.getColor() != null)
                 holder.sideBar.setBackgroundColor(Color.parseColor(model.getColor()));
 
             if (position < getItemCount() - 1) {
                 holder.divider.setBackground(getItem(position + 1).isShowDate() ? insetDivider : normalDivider);
             }
-            if(position == eventList.size()-1 && eventList.size()<=3)
+            if (position == eventList.size() - 1 && eventList.size() <= 3)
                 holder.divider.setVisibility(View.GONE);
             holder.innerlayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -258,10 +239,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                 @Override
                 public void onClick(View v) {
                     if (BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET.equalsIgnoreCase(type) || isFromWidget()) {
-                        //from left widget click
-
-                        if (selectedIds != null && selectedIds.size() > 0 && verticalListViewActionHelper != null) {
-                            // multiple item can be selected after long press and single click on other items
+                        if (selectedIds.size() > 0 && verticalListViewActionHelper != null) {
                             if (selectedIds.contains(model.getEventId())) {
                                 selectedIds.remove(model.getEventId());
                             } else {
@@ -277,7 +255,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             widgetDialogModel.setTitle(checkStringNull(holder.txtTitle.getText() != null ? holder.txtTitle.getText().toString().trim() : ""));
                             widgetDialogModel.setColor(checkStringNull(model.getColor()));
 
-                            final WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null, false,verticalListViewActionHelper);
+                            final WidgetDialogActivity dialogActivity = new WidgetDialogActivity(mContext, widgetDialogModel, null, false, verticalListViewActionHelper);
 
                             dialogActivity.show();
 
@@ -307,20 +285,20 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getDefaultAction().getUrl()));
                             try {
                                 mContext.startActivity(browserIntent);
-                            }catch (ActivityNotFoundException ex){
+                            } catch (ActivityNotFoundException ex) {
                                 ex.printStackTrace();
                             }
-                        }else if(model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")){
+                        } else if (model.getDefaultAction() != null && model.getDefaultAction().getType() != null && model.getDefaultAction().getType().equals("postback")) {
                             String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
                             if (composeFooterInterface != null) {
-                                composeFooterInterface.sendWithSomeDelay(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle())?message:model.getDefaultAction().getTitle(),
+                                composeFooterInterface.sendWithSomeDelay(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle()) ? message : model.getDefaultAction().getTitle(),
                                         model.getDefaultAction().getPayload(), 0, false);
                             } else {
-                                KoreEventCenter.post(new CancelEvent(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle())?message:model.getDefaultAction().getTitle(),
+                                KoreEventCenter.post(new CancelEvent(StringUtils.isNullOrEmpty(model.getDefaultAction().getTitle()) ? message : model.getDefaultAction().getTitle(),
                                         model.getDefaultAction().getPayload(), 0, false));
                                 ((Activity) mContext).finish();
                             }
-                        }else {
+                        } else {
                             HashMap<String, String> hashMap = new HashMap<>();
                             hashMap.put("meetingId", model.getEventId());
                             String message = model.getTitle() + " : " + getDateinDayFormat((long) model.getDuration().getStart()) + ", " + getTimeInAmPm((long) model.getDuration().getStart()) + " - " + getTimeInAmPm((long) model.getDuration().getEnd());
@@ -367,27 +345,26 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         if (eventList != null) {
             try {
                 this.eventList = expandEventList(eventList);
-            }catch (Exception e)
-            {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             this.eventList = sortEventList(eventList);
 
-            if(eventList.size()>3){
-                if(verticalListViewActionHelper!=null)
+            if (eventList.size() > 3) {
+                if (verticalListViewActionHelper != null)
                     verticalListViewActionHelper.meetingWidgetViewMoreVisibility(true);
             }
         }
     }
 
-    private ArrayList<CalEventsTemplateModel> expandEventList(ArrayList<CalEventsTemplateModel> eventList){
+    private ArrayList<CalEventsTemplateModel> expandEventList(ArrayList<CalEventsTemplateModel> eventList) {
         ArrayList<CalEventsTemplateModel> reqData = new ArrayList<>();
         for (CalEventsTemplateModel data : eventList) {
             long _start = (long) data.getDuration().getStart();
             long _end = (long) data.getDuration().getEnd();
 
             //getting the days count, observed different values if we pass the timestamo directly so we are giving the that day early hours 00:00AM
-            int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime()- DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
+            int _days = DateUtils.getDays(mContext, DateUtils.getDDMMYYYY((long) data.getDuration().getEnd()).getTime() - DateUtils.getDDMMYYYY((long) data.getDuration().getStart()).getTime());
 
             Date eventStartDate = DateUtils.getDDMMYYYY(_start);
 
@@ -395,25 +372,24 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
             Date cursorEndDate = DateUtils.getDDMMYYYY((long) _cursor.getEnd());
 
             //CHECK FOR MORE THAN A DAY EVENT
-            if(_days>0) {
+            if (_days > 0) {
 
                 long _ostart = _start;
 
                 double st = 0;
-                double ed = 0;
+                double ed;
 
                 for (int i = 0; i <= _days; i++) {
-                    if(eventStartDate != null)
-                    {
-                        if(eventStartDate.compareTo(cursorStartDate)<0){
-                            _start += (24*60*60*1000);
+                    if (eventStartDate != null) {
+                        if (eventStartDate.compareTo(cursorStartDate) < 0) {
+                            _start += (24 * 60 * 60 * 1000);
                             _start = Objects.requireNonNull(DateUtils.getDDMMYYYY(_start)).getTime();
                             eventStartDate = DateUtils.getDDMMYYYY(_start);
                             continue;
                         }
                     }
 
-                    if(Objects.requireNonNull(DateUtils.getDDMMYYYY((long) st)).compareTo(cursorEndDate) == 0) {
+                    if (Objects.requireNonNull(DateUtils.getDDMMYYYY((long) st)).compareTo(cursorEndDate) == 0) {
                         break;
                     }
 
@@ -424,8 +400,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         e.printStackTrace();
                     }
 
-                    if(_data != null)
-                    {
+                    if (_data != null) {
                         String txt = "";
 
                         if (i == 0) {
@@ -448,8 +423,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                             } else {
                                 if (Objects.requireNonNull(DateUtils.getDDMMYYYY(_start)).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
                                     txt = "All Day";
-                                }
-                                else {
+                                } else {
                                     txt = "Till\n" + DateUtils.calendar_list_format_2.format(_data.getDuration().getEnd()) + "\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                                 }
                                 _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart, _end));
@@ -462,9 +436,9 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                         } else {
                             txt = "All Day\nDay (" + (i + 1) + "/" + (_days + 1) + ")";
                             _data.setReqTextToDisplay(txt);
-                            if(_data.isAllDay()){
+                            if (_data.isAllDay()) {
                                 _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDate(_ostart, _end));
-                            }else{
+                            } else {
                                 _data.setReqTextToDisplayForDetails(DateUtils.getMorethanDayDateTime(_ostart, _end));
                             }
 
@@ -487,8 +461,8 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     }
 
                 }//inner for
-            }else{
-                if(StringUtils.isNullOrEmpty(data.getReqTextToDisplay()) && Objects.requireNonNull(DateUtils.getDDMMYYYY(_start)).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
+            } else {
+                if (StringUtils.isNullOrEmpty(data.getReqTextToDisplay()) && Objects.requireNonNull(DateUtils.getDDMMYYYY(_start)).compareTo(DateUtils.getDDMMYYYY(_end)) == 0 && DateUtils.getOneDayMiliseconds(_end - _start) >= 23.98f) {
                     data.setReqTextToDisplay("All Day");
                     data.setReqTextToDisplayForDetails(DateUtils.getDayDate(_start));
                 }
@@ -551,14 +525,10 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
         _cursor = cursor;
     }
 
-    public CalEventsTemplateModel.Duration getCursorDuration(){
+    public CalEventsTemplateModel.Duration getCursorDuration() {
         return _cursor;
     }
 
-
-    public interface EventSelectionListener {
-        void onEventSelected(String url);
-    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView rowIndex;
@@ -596,11 +566,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
     }
 
 
-    private CalEventsTemplateModel gModel;
-    private final int CAL_PERMISSION_REQUEST = 3221;
-
-
-    private void launchWebView(String htmlLink) {
+    void launchWebView(String htmlLink) {
         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
         intent.putExtra("url", htmlLink);
         intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
@@ -619,7 +585,7 @@ public class CalendarEventsAdapter extends RecyclerView.Adapter implements Recyc
                     return String.format(Locale.US, "%1$s and %2$d others",
                             userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
                 else
-                    return String.format(Locale.US,"%1$s and %2$d other",
+                    return String.format(Locale.US, "%1$s and %2$d other",
                             userDetailModels.get(0).getName() != null ? userDetailModels.get(0).getName() : userDetailModels.get(0).getEmail(), remaining);
             }
         }

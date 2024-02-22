@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,14 +31,14 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-
+@SuppressLint("UnknownNullness")
 public class BotListViewTemplateAdapter extends BaseAdapter {
     private ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final Context context;
     private final RoundedCornersTransform roundedCornersTransform;
-    private final ListView parentListView;
+    final ListView parentListView;
     private final int count;
     private final SharedPreferences sharedPreferences;
 
@@ -189,7 +190,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         view.setTag(holder);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

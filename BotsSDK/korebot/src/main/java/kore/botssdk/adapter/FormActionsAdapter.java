@@ -1,10 +1,10 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -15,30 +15,27 @@ import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewHolder.FormActionViewHolder;
 
-/**
- * Created by Ramachandra Pradeep on 09-Feb-18.
- */
-
 public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolder> {
-    private ArrayList<FormActionTemplate> formActionTemplateArrayList;
+    ArrayList<FormActionTemplate> formActionTemplateArrayList;
     final Context context;
     final RecyclerView parentRecyclerView;
     ComposeFooterInterface composeFooterInterface;
 
-    public FormActionsAdapter(Context context, RecyclerView parentRecyclerView) {
+    public FormActionsAdapter(@NonNull Context context, @NonNull RecyclerView parentRecyclerView) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
     }
 
+    @NonNull
     @Override
-    public FormActionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FormActionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View convertView = View.inflate(context, R.layout.form_action_item_layout, null);
         KaFontUtils.applyCustomFont(context,convertView);
         return new FormActionViewHolder(convertView);
     }
 
     @Override
-    public void onBindViewHolder(FormActionViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FormActionViewHolder holder, int position) {
         final FormActionTemplate formActionTemplate = formActionTemplateArrayList.get(position);
 
         holder.getFormActionTitle().setText(formActionTemplate.getTitle());
@@ -46,7 +43,7 @@ public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolde
         holder.getFormActionRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position =  parentRecyclerView.getChildPosition(v);
+                int position =  parentRecyclerView.getChildAdapterPosition(v);
                 FormActionTemplate formTemplate = formActionTemplateArrayList.get(position);
                 if(formTemplate != null){
                     composeFooterInterface.onFormActionButtonClicked(formTemplate);
@@ -70,11 +67,11 @@ public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolde
             return formActionTemplateArrayList.size();
         }
     }
-    public void setQuickReplyTemplateArrayList(ArrayList<FormActionTemplate> formActionTemplateArrayList) {
+    public void setQuickReplyTemplateArrayList(@NonNull ArrayList<FormActionTemplate> formActionTemplateArrayList) {
         this.formActionTemplateArrayList = formActionTemplateArrayList;
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 

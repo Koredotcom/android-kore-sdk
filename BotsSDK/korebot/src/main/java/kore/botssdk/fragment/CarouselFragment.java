@@ -78,7 +78,7 @@ public class CarouselFragment extends Fragment {
             if(botCarouselModel.getButtons() != null) {
                 BotCarouselItemButtonAdapter botCarouselItemButtonAdapter = new BotCarouselItemButtonAdapter(getActivity());
                 carouselButtonListview.setAdapter(botCarouselItemButtonAdapter);
-                botCarouselItemButtonAdapter.setBotCaourselButtonModels(botCarouselModel.getButtons());
+                botCarouselItemButtonAdapter.setBotCarouselButtonModels(botCarouselModel.getButtons());
             }
         }
     }

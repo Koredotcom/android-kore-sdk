@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,35 +7,32 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.utils.KaFontUtils;
-
-/**
- * Created by Pradeep Mahato on 14/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
-    ArrayList<BotCaourselButtonModel> botCaourselButtonModels = new ArrayList<>();
+    ArrayList<BotCaourselButtonModel> botCarouselButtonModels = new ArrayList<>();
     final Context context;
     final LayoutInflater ownLayoutInflater;
 
-    public BotCarouselItemButtonAdapter(Context context) {
+    public BotCarouselItemButtonAdapter(@NonNull Context context) {
         this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return botCaourselButtonModels != null ? botCaourselButtonModels.size() : 0;
+        return botCarouselButtonModels != null ? botCarouselButtonModels.size() : 0;
     }
 
     @Override
     public BotCaourselButtonModel getItem(int position) {
-        return botCaourselButtonModels.get(position);
+        return botCarouselButtonModels.get(position);
     }
 
     @Override
@@ -44,8 +40,8 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
         return position;
     }
 
-    public void setBotCaourselButtonModels(ArrayList<BotCaourselButtonModel> botCaourselButtonModels) {
-        this.botCaourselButtonModels = botCaourselButtonModels;
+    public void setBotCarouselButtonModels(@NonNull ArrayList<BotCaourselButtonModel> botCarouselButtonModels) {
+        this.botCarouselButtonModels = botCarouselButtonModels;
         notifyDataSetChanged();
     }
 

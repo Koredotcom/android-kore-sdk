@@ -26,7 +26,6 @@ import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
@@ -80,7 +79,7 @@ public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
 
         if(model != null)
         {
-            botListTemplateAdapter = new ListWidgetAdapter(getActivity(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
+            botListTemplateAdapter = new ListWidgetAdapter(getActivity(), "");
             rvViewMore.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setData(model);
             botListTemplateAdapter.setPreviewLength(model.size());

@@ -26,7 +26,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
     final Context context;
     final AttachmentListner attachmentListner;
-    public ComposebarAttachmentAdapter(Context context, AttachmentListner attachmentListner)
+    public ComposebarAttachmentAdapter(@NonNull Context context, @NonNull AttachmentListner attachmentListner)
     {
         this.context=context;
         this.attachmentListner=attachmentListner;
@@ -41,13 +41,13 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
     @Override
     public void onBindViewHolder(@NonNull ImageAttachView holder, int position) {
-        String fileExtn=dataList.get(position).get("fileExtn");
-        if(FileUtils.ImageTypes().contains(fileExtn)|| FileUtils.VideoTypes().contains(fileExtn))
+        String fileExtension=dataList.get(position).get("fileExtn");
+        if(FileUtils.ImageTypes().contains(fileExtension)|| FileUtils.VideoTypes().contains(fileExtension))
         {
             Glide.with(context).load(dataList.get(position).get("localFilePath")).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.attach_view));
 
            }else {
-            holder.attach_view.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtn) ? fileExtn.toLowerCase() : ""));
+            holder.attach_view.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtension) ? fileExtension.toLowerCase() : ""));
         }
         holder.close_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +65,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     }
 
     final ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
-    public void addAttachment(HashMap<String, String> attachmentKey) {
+    public void addAttachment(@NonNull HashMap<String, String> attachmentKey) {
         dataList.add(attachmentKey);
         notifyItemRangeInserted(0, dataList.size() - 1);
     }
@@ -75,6 +75,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         dataList.clear();
     }
 
+    @NonNull
     public ArrayList<HashMap<String, String>> getData() {
         return dataList;
     }

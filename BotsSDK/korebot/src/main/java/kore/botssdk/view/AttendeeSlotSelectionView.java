@@ -68,7 +68,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
 
     private void init() {
@@ -99,7 +99,7 @@ public class AttendeeSlotSelectionView extends ViewGroup implements AttendeeSlot
     }
 
 
-    public void populateData(final int viewPosition, final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
+    public void populateData(final AttendeeSlotTemplateModel meetingTemplateModel, final boolean isEnabled) {
         View rootView = attendeeSlotSelectionViewBinding.getRoot();
         if (meetingTemplateModel != null) {
             attendeeSlotSelectionViewBinding.setMeetingModel(meetingTemplateModel.getMeetingDetails());

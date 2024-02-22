@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotBeneficiaryTemplateAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -103,9 +102,9 @@ public class BotBeneficiaryTemplateView extends ViewGroup implements ListClickab
                 view.setAlpha((payloadInner.isIs_end() ? 0.4f : 1.0f));
 
             if(moreCount != 0 && botListModelArrayList.size() > moreCount)
-                botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(getContext(), autoExpandListView, moreCount);
+                botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(getContext(), moreCount);
             else
-                botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(getContext(), autoExpandListView, botListModelArrayList.size());
+                botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(getContext(), botListModelArrayList.size());
 
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);

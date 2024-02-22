@@ -28,18 +28,12 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.WidgetViewMoreEnum;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.KaRoundedCornersTransform;
-
-
-/**
- * Created by Shiva Krishna Kongara on 06-feb-19.
- */
 
 public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
 
     private final Context context;
-    private ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
+    ArrayList<KnowledgeDetailModel> knowledgeDetailModels;
     private boolean isExpanded;
     private final int EMPTY_CARD_FLAG = 0;
     String msg;
@@ -47,7 +41,7 @@ public class KnowledgeRecyclerAdapter extends RecyclerView.Adapter implements Re
     private final int DATA_CARD_FLAG = 1;
     private final int MESSAGE = 2;
 
-    private VerticalListViewActionHelper verticalListViewActionHelper;
+    VerticalListViewActionHelper verticalListViewActionHelper;
     private static final KaRoundedCornersTransform roundedCornersTransform = new KaRoundedCornersTransform();
 
     public KnowledgeRecyclerAdapter(ArrayList<KnowledgeDetailModel> knowledgeDetailModels, Context context) {

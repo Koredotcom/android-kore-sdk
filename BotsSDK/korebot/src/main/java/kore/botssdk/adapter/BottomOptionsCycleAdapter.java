@@ -30,33 +30,26 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotOptionModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder>{
     private final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
-    private List<BotOptionModel> model;
-    private final RoundedCornersTransform roundedCornersTransform;
+    List<BotOptionModel> model;
     private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private BottomSheetDialog bottomSheetDialog;
+    BottomSheetDialog bottomSheetDialog;
     private Context context;
     private SharedPreferences sharedPreferences;
     private float dp1;
-
-    // RecyclerView recyclerView;
-    public BottomOptionsCycleAdapter(List<BotOptionModel> model) {
+    public BottomOptionsCycleAdapter(@NonNull List<BotOptionModel> model) {
         this.model = model;
-        this.roundedCornersTransform = new RoundedCornersTransform();
     }
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem= layoutInflater.inflate(R.layout.bottom_options_item, parent, false);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
@@ -65,7 +58,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotOptionModel botListModel = model.get(position);
         holder.bottom_option_image.setVisibility(View.GONE);
 
@@ -116,25 +109,21 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         });
     }
 
-    public void setBotListModelArrayList(BottomSheetDialog bottomSheetDialog, List<BotOptionModel> botOptionModels) {
+    public void setBotListModelArrayList(@NonNull BottomSheetDialog bottomSheetDialog, @NonNull List<BotOptionModel> botOptionModels) {
         this.model = botOptionModels;
         this.bottomSheetDialog = bottomSheetDialog;
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setContext(Context context)
+    public void setContext(@NonNull Context context)
     {
         this.context = context;
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    private void sendMessageText(String message, String payLoad) {
+    void sendMessageText(String message, String payLoad) {
         if (composeFooterInterface != null) {
             composeFooterInterface.onSendClick(message.trim(), payLoad, false);
         } else {
@@ -153,7 +142,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         final TextView bottom_option_name;
         final LinearLayout bot_list_item_root;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.bottom_option_image = itemView.findViewById(R.id.bottom_option_image);
             this.bottom_option_name = itemView.findViewById(R.id.bottom_option_name);

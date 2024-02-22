@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
@@ -32,20 +33,12 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
     private ArrayList<BotBeneficiaryModel> botListModelArrayList = new ArrayList<>();
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ListClickableListner listClickableListner;
     private final Context context;
-    private final RoundedCornersTransform roundedCornersTransform;
-    private final ListView parentListView;
-    private int count = 0;
+    private final int count;
     private final SharedPreferences sharedPreferences;
-    private boolean isClickable = true;
 
-    public BotBeneficiaryTemplateAdapter(Context context, ListView parentListView, int count) {
+    public BotBeneficiaryTemplateAdapter(@NonNull Context context, int count) {
         this.context = context;
-        this.roundedCornersTransform = new RoundedCornersTransform();
-        this.parentListView = parentListView;
         this.count = count;
         this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
@@ -129,21 +122,18 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
         holder.botListItemSubtitle.setText(botListModel.getTitle());
     }
 
-    public void setBotListModelArrayList(ArrayList<BotBeneficiaryModel> botListModelArrayList) {
+    public void setBotListModelArrayList(@NonNull ArrayList<BotBeneficiaryModel> botListModelArrayList) {
         this.botListModelArrayList = botListModelArrayList;
         notifyDataSetChanged();
     }
 
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
+    public void setComposeFooterInterface(@NonNull ComposeFooterInterface composeFooterInterface) {
     }
 
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
     }
 
-    public void setListClickableInterface(ListClickableListner listClickableInterface) {
-        this.listClickableListner = listClickableInterface;
+    public void setListClickableInterface(@NonNull ListClickableListner listClickableInterface) {
     }
 
     private void initializeViewHolder(View view) {
@@ -158,10 +148,9 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
 
     public void setListClickable(boolean b)
     {
-        this.isClickable = b;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         ImageView botListItemImage;
         TextView botListItemTitle;
         TextView botListItemSubtitle;
