@@ -60,4 +60,8 @@ public class BrandingWelcomeModel implements Serializable {
     public boolean isShow() {
         return show;
     }
+
+    public void setShow(boolean show) {
+        this.show = show;
+    }
 }

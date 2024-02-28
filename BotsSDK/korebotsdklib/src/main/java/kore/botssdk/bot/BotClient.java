@@ -192,6 +192,39 @@ public class BotClient {
 //        sendQueMessages();
     }
 
+    public void sendMessage(Object msg) {
+
+        if (msg != null) {
+
+            RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+            customData.put("botToken",getAccessToken());
+            customData.put("rtmType", "mobile");
+
+            botPayLoad.setMessage(botMessage);
+            botPayLoad.setEvent("event");
+
+            if(botInfoModel != null)
+                botPayLoad.setBotInfo(botInfoModel);
+            else
+            {
+                botInfoModel = new BotInfoModel(SDKConfiguration.Client.bot_name,SDKConfiguration.Client.bot_id,customData);
+                botPayLoad.setBotInfo(botInfoModel);
+            }
+
+            RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+            botPayLoad.setMeta(meta);
+
+            Gson gson = new Gson();
+            String jsonPayload = gson.toJson(botPayLoad);
+
+            Log.d("BotClient", "Payload : " + jsonPayload);
+            SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
+//            BotRequestPool.getBotRequestStringArrayList().add(jsonPayload);
+        }
+//        sendQueMessages();
+    }
+
     /**
      * Method to send messages over socket.
      * It uses FIFO pattern to first send if any pending requests are present

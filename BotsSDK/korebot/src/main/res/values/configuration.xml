@@ -1,0 +1,32 @@
+<resources>
+
+    <!--debug settings-->
+    <string name="enable_debug_mode">0</string>
+    <string name="predefined_config_mode">0</string>
+    <string name="default_dialer_number" />
+
+    <string name="default_redirect_call_user" />
+
+    <string name="sip_account_user_name_default" />
+    <string name="sip_account_password_default" />
+    <string name="sip_account_display_name_default" />
+    <string name="sip_account_domain_default" />
+    <string name="sip_account_proxy_default" />
+    <string name="sip_account_port_default">5080</string>
+    <string name="sip_account_transport_default">UDP</string>
+
+
+    <string name="sip_default_chat_contact" />
+    <string name="sip_default_chat_message">test message</string>
+    <string name="sip_default_second_call" />
+    <string name="sip_default_transfer_call" />
+    <!--default settings HIDDEN,VERBOSE,DEBUG,INFO,WARN,ERROR,NONE -->
+    <string name="log_level_default">DEBUG</string>
+
+    <string name="oauth_enable">0</string>
+    <string name="oauth_url">https://webrtcoauth.audiocodes.com/auth/</string>
+    <string name="oauth_realm">demo</string>
+    <string name="oauth_client_id">WebRTCDemo</string>
+
+
+</resources>

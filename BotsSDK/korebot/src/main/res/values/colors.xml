@@ -3,6 +3,12 @@
     <!--<color name="colorAccent">#2f91e5</color>--><!-- HSBC - #db0012, BMC Helix - #2f91e5 -->
     <color name="bgBlueSignup">#3F51B5</color>
     <color name="bgLightBlue">#9fa8da</color>
+    <color name="green">#00ff00</color>
+    <color name="grey">#808080</color>
+    <color name="ac">#124680</color>
+    <color name="red">#FF0000</color>
+    <color name="incoming_call_reject">#BB0000</color>
+    <color name="incoming_call_accept">#00BB00</color>
 
 <!--    General Theme-->
     <color name="colorPrimaryKa">#3F51B5</color>

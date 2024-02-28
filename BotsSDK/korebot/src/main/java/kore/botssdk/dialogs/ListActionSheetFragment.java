@@ -36,14 +36,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
     private View view;
     private boolean isFromFullView;
-    private BotListViewMoreDataModel model;
+    BotListViewMoreDataModel model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
     private ListView lvMoreData;
     private int dp1;
-    private TextView tvTab1, tvTab2;
+    TextView tvTab1, tvTab2;
     private LinearLayout llCloseBottomSheet, llBottomLayout;
     public String getSkillName() {
         return skillName;
@@ -71,7 +70,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         llTabHeader = view.findViewById(R.id.llTabHeader);
         llBottomLayout = view.findViewById(R.id.llBottomLayout);
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-
+        lvMoreData.setVisibility(View.VISIBLE);
         if(sharedPreferences != null)
             llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#FFFFFF")));
 
@@ -176,7 +175,6 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
     public void setData(BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu){
         model = taskTemplateModel;
-        this.isFromListMenu = isFromListMenu;
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {

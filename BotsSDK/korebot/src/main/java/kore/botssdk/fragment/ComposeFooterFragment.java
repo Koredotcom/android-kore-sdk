@@ -278,6 +278,47 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     public void setBotBrandingModel(BotBrandingModel botBrandingModel)
     {
         this.botBrandingModel = botBrandingModel;
+        if(botBrandingModel != null)
+        {
+            if(botBrandingModel.getFooter() != null)
+            {
+                if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getLayout()))
+                {
+                    if(botBrandingModel.getFooter().getLayout().equalsIgnoreCase(BundleUtils.KEYPAD))
+                        keyboard_img.performClick();
+                    else
+                        rec_audio_img.performClick();
+                }
+
+                if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getBg_color())) {
+                    rlFooter.setBackgroundColor(Color.parseColor(botBrandingModel.getFooter().getBg_color()));
+                }
+
+                if(botBrandingModel.getFooter().getCompose_bar() != null)
+                {
+                    VectorDrawable stroke = (VectorDrawable)mainContentLayout.getBackground();
+                    VectorDrawable solidColor = (VectorDrawable)editTextMessage.getBackground();
+
+                    if(solidColor != null && !StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getBg_color()))
+                    {
+                        solidColor.setTint(Color.parseColor(botBrandingModel.getFooter().getCompose_bar().getBg_color()));
+                        editTextMessage.setBackground(solidColor);
+                    }
+
+                    if(stroke != null && !StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getOutline_color()))
+                    {
+                        outLineColor = botBrandingModel.getFooter().getCompose_bar().getOutline_color();
+                        stroke.setTint(Color.parseColor(botBrandingModel.getFooter().getCompose_bar().getOutline_color()));
+                        mainContentLayout.setBackground(stroke);
+                    }
+
+                    if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getPlaceholder()))
+                    {
+                        editTextMessage.setHint(botBrandingModel.getFooter().getCompose_bar().getPlaceholder());
+                    }
+                }
+            }
+        }
     }
 
      void getBundleInfo() {
@@ -285,47 +326,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         if (bundle != null)
         {
             botBrandingModel = (BotBrandingModel) bundle.getSerializable(BundleUtils.BRANDING);
-            if(botBrandingModel != null)
-            {
-                if(botBrandingModel.getFooter() != null)
-                {
-                    if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getLayout()))
-                    {
-                        if(botBrandingModel.getFooter().getLayout().equalsIgnoreCase(BundleUtils.KEYPAD))
-                            keyboard_img.performClick();
-                        else
-                            rec_audio_img.performClick();
-                    }
 
-                    if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getBg_color())) {
-                        rlFooter.setBackgroundColor(Color.parseColor(botBrandingModel.getFooter().getBg_color()));
-                    }
-
-                    if(botBrandingModel.getFooter().getCompose_bar() != null)
-                    {
-                        VectorDrawable stroke = (VectorDrawable)mainContentLayout.getBackground();
-                        VectorDrawable solidColor = (VectorDrawable)editTextMessage.getBackground();
-
-                        if(solidColor != null && !StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getBg_color()))
-                        {
-                            solidColor.setTint(Color.parseColor(botBrandingModel.getFooter().getCompose_bar().getBg_color()));
-                            editTextMessage.setBackground(solidColor);
-                        }
-
-                        if(stroke != null && !StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getOutline_color()))
-                        {
-                            outLineColor = botBrandingModel.getFooter().getCompose_bar().getOutline_color();
-                            stroke.setTint(Color.parseColor(botBrandingModel.getFooter().getCompose_bar().getOutline_color()));
-                            mainContentLayout.setBackground(stroke);
-                        }
-
-                        if(!StringUtils.isNullOrEmpty(botBrandingModel.getFooter().getCompose_bar().getPlaceholder()))
-                        {
-                            editTextMessage.setHint(botBrandingModel.getFooter().getCompose_bar().getPlaceholder());
-                        }
-                    }
-                }
-            }
         }
     }
 

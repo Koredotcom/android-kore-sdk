@@ -36,37 +36,43 @@ public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTa
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView, boolean showDivider) {
-        String  str;
-        if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double){
-            str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
-        }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
-            str = (String) getRowData(rowIndex).getElements().get(columnIndex);
-        }else{
-            str = "";
+        try {
+            String  str;
+            if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double){
+                str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
+            }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
+                str = (String) getRowData(rowIndex).getElements().get(columnIndex);
+            }else{
+                str = "";
+            }
+
+            return renderString(columnIndex,str, headers[columnIndex], showDivider);
         }
-
-        View renderedView = null;
-        renderedView = renderString(columnIndex,str, headers[columnIndex], showDivider);
-
-        return renderedView;
+        catch (Exception e)
+        {
+            return renderGroupString(columnIndex,"");
+        }
     }
 
     @Override
     public View getGroupedView(int rowIndex, int columnIndex, ViewGroup parentView)
     {
-        String  str;
-        if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double){
-            str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
-        }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
-            str = (String) getRowData(rowIndex).getElements().get(columnIndex);
-        }else{
-            str = "";
+        try {
+            String  str;
+            if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double){
+                str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
+            }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
+                str = (String) getRowData(rowIndex).getElements().get(columnIndex);
+            }else{
+                str = "";
+            }
+
+            return renderGroupString(columnIndex,str);
         }
-
-        View renderedView = null;
-        renderedView = renderGroupString(columnIndex,str);
-
-        return renderedView;
+        catch (Exception e)
+        {
+            return renderGroupString(columnIndex,"");
+        }
     }
 
     private int getGravity(int columnIndex){
@@ -76,6 +82,29 @@ public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTa
             return Gravity.RIGHT;
         else return Gravity.CENTER;
     }
+
+//    private View renderString(int columnIndex, final String value, String header) {
+//        LinearLayout renderView = new LinearLayout(getContext());
+//        renderView.setOrientation(LinearLayout.VERTICAL);
+//        renderView.setGravity(Gravity.CENTER_VERTICAL);
+//
+//        final TextView headerTextView = new TextView(getContext());
+//        headerTextView.setText(header);
+//        headerTextView.setTextSize(HEADER_TEXT_SIZE);
+//        headerTextView.setTextColor(Color.LTGRAY);
+//        headerTextView.setGravity(Gravity.CENTER);
+//        renderView.addView(headerTextView);
+//
+//        final TextView textView = new TextView(getContext());
+//        textView.setText(value);
+//        textView.setTextSize(TEXT_SIZE);
+//        textView.setTextColor(Color.BLACK);
+//        textView.setGravity(Gravity.CENTER);
+//        renderView.addView(textView);
+//
+//        renderView.setPadding(0 , 30, 0, 30);
+//        return renderView;
+//    }
 
     private View renderString(int columnIndex, final String value, String header, boolean showDivider) {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_responsive_child_layout, null);
@@ -94,10 +123,26 @@ public class BotRespExpandTableAdapter extends TableRespExpandDataAdapter<MiniTa
         return renderView;
     }
 
+//    private View renderGroupString(int columnIndex, final String value) {
+//        final TextView textView = new TextView(getContext());
+//        textView.setText(value);
+//        textView.setPadding(0, 30, 0, 30);
+//        textView.setTextSize(TEXT_SIZE);
+//        textView.setTextColor(Color.BLACK);
+//        textView.setGravity(Gravity.CENTER);
+//        return textView;
+//    }
+
     private View renderGroupString(int columnIndex, final String value) {
         LinearLayout renderView = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.table_responsive_group_layout, null);
         TextView tvViewGroup1 = renderView.findViewById(R.id.tvViewGroup1);
+
+//        final TextView textView = new TextView(getContext());
         tvViewGroup1.setText(value);
+//        textView.setPadding(0, 30, 0, 30);
+//        textView.setTextSize(TEXT_SIZE);
+//        textView.setTextColor(Color.BLACK);
+//        textView.setGravity(Gravity.CENTER);
         return renderView;
     }
 }

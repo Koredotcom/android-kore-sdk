@@ -1,10 +1,10 @@
 package kore.botssdk.view.tableview;
 
 import static android.widget.LinearLayout.LayoutParams;
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,11 +156,7 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
                     "Caught Exception: " + e.getMessage());
         }
 
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-            rowView.setBackgroundDrawable(rowBackgroundProvider.getRowBackground(rowIndex, rowData));
-        } else {
-            rowView.setBackground(rowBackgroundProvider.getRowBackground(rowIndex, rowData));
-        }
+        rowView.setBackground(rowBackgroundProvider.getRowBackground(rowIndex, rowData));
 
 
         final int tableWidth = parent.getWidth();
@@ -172,7 +168,7 @@ public abstract class TableDataAdapter<T> extends ArrayAdapter<T> {
             }
 
             final int cellWidth = columnModel.getColumnWidth(columnIndex, tableWidth);
-            final LayoutParams cellLayoutParams = new LayoutParams(cellWidth, LayoutParams.WRAP_CONTENT);
+            final LayoutParams cellLayoutParams = new LayoutParams(cellWidth, (int) (50 * dp1));
             cellView.setLayoutParams(cellLayoutParams);
             rowView.addView(cellView);
         }

@@ -59,7 +59,11 @@ dependencies {
         exclude module: 'com.github.PhilJay'
     }
 
-    implementation 'com.google.android.material:material:1.11.0-alpha02'
+    implementation(project(':webrtcsdk-release')){
+        exclude module: 'support-v4'
+    }
+
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.makeramen:roundedimageview:2.2.0'

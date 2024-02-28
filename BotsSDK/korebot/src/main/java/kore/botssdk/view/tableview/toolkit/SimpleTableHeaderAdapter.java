@@ -1,8 +1,8 @@
 package kore.botssdk.view.tableview.toolkit;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +17,16 @@ import kore.botssdk.view.tableview.TableHeaderAdapter;
  *
  * @author ISchwarz
  */
+@SuppressLint("UnknownNullness")
 public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
 
     private final String[] headers;
     private final String[] alignment;
-    private int paddingLeft = 20;
+    private int paddingLeft = 5;
     private int paddingTop = 30;
-    private int paddingRight = 20;
+    private int paddingRight = 5;
     private int paddingBottom = 30;
-    private int textSize = 14;
+    private int textSize = 12;
     private int typeface = Typeface.BOLD;
     private int textColor = 0x99000000;
 
@@ -128,6 +129,7 @@ public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
         this.textColor = textColor;
     }
 
+
     @Override
     public View getHeaderView(final int columnIndex, final ViewGroup parentView) {
         final TextView textView = new TextView(getContext());
@@ -142,16 +144,15 @@ public final class SimpleTableHeaderAdapter extends TableHeaderAdapter {
         textView.setTextColor(textColor);
         textView.setSingleLine();
         textView.setGravity(getGravity(columnIndex));
-        textView.setEllipsize(TextUtils.TruncateAt.END);
 
         return textView;
     }
 
     private int getGravity(int columnIndex){
         if(alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
-            return Gravity.LEFT;
+            return Gravity.START;
         else if(alignment[columnIndex].equals("right"))
-            return Gravity.RIGHT;
+            return Gravity.END;
         else return Gravity.CENTER;
     }
 }

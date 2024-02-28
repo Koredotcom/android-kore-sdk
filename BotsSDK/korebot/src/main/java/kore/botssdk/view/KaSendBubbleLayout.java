@@ -50,12 +50,12 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     @Override
     protected void initializeBubbleBorderPass1() {
         BUBBLE_CONTENT_TOP_MARGIN = 0;
-        BUBBLE_CONTENT_BOTTOM_MARGIN = BubbleUI ? (int)(8 * dp1) : (int)(21 * dp1);
+//        BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(8 * dp1);
         BUBBLE_LEFT_PROFILE_PIC = 0;
         if (isContinuousMessage) {
             BUBBLE_TOP_BORDER = 0;
         } else {
-            BUBBLE_TOP_BORDER = (int) (10 * dp1);
+            BUBBLE_TOP_BORDER = (int) (2 * dp1);
         }
         BUBBLE_LEFT_BORDER = 0;
         BUBBLE_RIGHT_BORDER = BubbleUI ? (int) (2 * dp6 + dp6 + 2 * dp1) : 0;

@@ -5,7 +5,7 @@
     android:id="@+id/rlHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/black">
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llInnerHeader"
@@ -17,8 +17,6 @@
         android:paddingTop="@dimen/dimen_25dp"
         android:paddingEnd="@dimen/dimen_15dp"
         android:paddingBottom="@dimen/dimen_15dp"
-        app:layout_constraintStart_toStartOf="@+id/ivBotLogo"
-        app:layout_constraintTop_toBottomOf="@+id/ivBotLogo"
         tools:ignore="MissingConstraints">
 
         <kore.botssdk.views.CustomTextViewBold
@@ -65,7 +63,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/ivBotLogo"
+        android:id="@+id/ivWelcomeLogo"
         android:layout_width="@dimen/welcome_icon_size"
         android:layout_height="@dimen/welcome_icon_size"
         android:layout_marginStart="@dimen/dimen_15dp"

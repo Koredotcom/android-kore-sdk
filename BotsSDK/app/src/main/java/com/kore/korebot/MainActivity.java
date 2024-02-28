@@ -1,7 +1,9 @@
 package com.kore.korebot;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -10,12 +12,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.UUID;
 
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.activity.WelcomeScreenActivity;
+import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
+import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
 public class MainActivity extends AppCompatActivity {
+
+    String TAG = MainActivity.class.getName();
+    private static boolean isPermissionRequestActive;
+    static boolean allPermissionsGranted=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,71 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        appPermissionCheck();
+    }
+
+    private void appPermissionCheck()
+    {
+
+        Log.d(TAG, "Check requestAllPermissions");
+        isPermissionRequestActive = true;
+        PermissionRequest permissionRequest =  new PermissionRequest()
+        {
+            @Override
+            public void granted()
+            {
+                Log.d(TAG, " PermissionRequest: granted");
+            }
+            @Override
+            public void revoked()
+            {
+                //Can close app if not all permission is approved
+                Log.d(TAG, " PermissionRequest: revoked");
+            }
+
+            @Override
+            public void allResults(boolean allGranted) {
+                allPermissionsGranted=allGranted;
+            }
+        };
+        PermissionManager.getInstance().requestAllPermissions(MainActivity.this, permissionRequest);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if(requestCode == PermissionManager.REQUEST_CODE_ASK_PERMISSIONS)
+        {
+            int grantedRes=0;
+            for (int i =0; i< permissions.length; i++)
+            {
+                String permision = permissions[i];
+                int grantResult = grantResults[i];
+                boolean isLastPermission = i == (permissions.length-1);
+
+                Log.d(TAG, "onRequestPermissionsResult: permision: "+permision);
+                Log.d(TAG, "onRequestPermissionsResult: grantResult: "+grantResult);
+                Log.d(TAG, "isLastPermission: "+isLastPermission);
+
+                //calculate results results
+                grantedRes+=grantResult;
+
+                switch (grantResult)
+                {
+                    case PackageManager.PERMISSION_GRANTED:
+                        PermissionManager.getInstance().getPermissionRequestList().get(i).granted();
+                        break;
+                    case PackageManager.PERMISSION_DENIED:
+                        PermissionManager.getInstance().getPermissionRequestList().get(i).revoked();
+                        break;
+
+                }
+            }
+
+            if(permissions.length>0) {
+                PermissionManager.getInstance().getPermissionRequestList().get(permissions.length - 1).allResults(grantedRes == 0);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     /**

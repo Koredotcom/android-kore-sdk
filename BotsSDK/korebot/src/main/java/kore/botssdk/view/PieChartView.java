@@ -143,8 +143,6 @@ public class PieChartView extends ViewGroup {
             dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
         }
 
-
-
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
@@ -153,7 +151,6 @@ public class PieChartView extends ViewGroup {
         mChart.setData(data);
         mChart.highlightValues(null);
         mChart.invalidate();
-
     }
 
     @Override

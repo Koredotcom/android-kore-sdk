@@ -94,29 +94,27 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         BotListModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if(sharedPreferences != null)
-        {
-            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources() , R.drawable.rounded_rect_feedback, context.getTheme());
-           if(rightDrawable != null)
-           {
-               rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-               String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-               if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
-               {
-                   rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                   holder.botListItemRoot.setBackground(rightDrawable);
-               }
-               else
-               {
-                   rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
-                   holder.botListItemRoot.setBackground(rightDrawable);
-               }
-           }
-
-            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
-        }
-
-
+//        if(sharedPreferences != null)
+//        {
+//            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources() , R.drawable.rounded_rect_feedback, context.getTheme());
+//           if(rightDrawable != null)
+//           {
+//               rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+//               String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+//               if(themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1))
+//               {
+//                   rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+//                   holder.botListItemRoot.setBackground(rightDrawable);
+//               }
+//               else
+//               {
+//                   rightDrawable.setStroke((int) (2*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+//                   holder.botListItemRoot.setBackground(rightDrawable);
+//               }
+//           }
+//
+//            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+//        }
 
         if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
@@ -137,8 +135,8 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
 
-            if(sharedPreferences != null)
-                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+//            if(sharedPreferences != null)
+//                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
 
         holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {

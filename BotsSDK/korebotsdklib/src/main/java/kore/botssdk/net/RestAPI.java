@@ -91,8 +91,8 @@ public interface RestAPI {
     Call<BotHistory> getBotHistory(@Header("Authorization") String token, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset, @Query("forward") boolean forward);
 
     // Get JWT Token
-    @GET("api/websdkthemes/st-b0439232-9345-508f-a1fb-cfcb5099c1fa/activetheme")
-    Call<BotActiveThemeModel> getBrandingNewDetails(@Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
+    @GET("api/websdkthemes/{botId}/activetheme")
+    Call<BotActiveThemeModel> getBrandingNewDetails(@Path("botId") String bot_Id, @Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
 
     // Send WebHook Message
     @POST("chatbot/v2/webhook/{streamId}")

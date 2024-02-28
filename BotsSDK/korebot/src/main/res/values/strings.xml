@@ -136,6 +136,149 @@
         <item>Attach Document</item>
     </string-array>
 
+    //Audio codes
+    <string name="login_textview_username_text">User Name:</string>
+    <string name="login_textview_password_text">Password:</string>
+    <string name="login_textview_displayname_text">Display Name:</string>
+    <string name="login_textview_domain_text">Domain:</string>
+    <string name="login_textview_sipaddress_text">Sip Address:</string>
+    <string name="login_textview_port_text">Port:</string>
+    <string name="login_textview_transport_text">Transport Type:</string>
+    <string name="login_textview_turnserver_text">Turn Server:</string>
+    <string name="login_textview_stunserver_text">Stun Server:</string>
+    <string name="oauth_error">OAuth failed</string>
+    <string name="login_textview_oauth_error">Your login has expired, please login again</string>
 
+    <string name="login_checkbox_oauth_text">OAuth enable</string>
+    <string name="login_textview_oauth_url_text">OAuth url</string>
+    <string name="login_textview_oauth_realm_text">OAuth realm</string>
+    <string name="login_textview_oauth_clientid_text">OAuth client id</string>
+
+    <string name="login_checkbox_autologin_text">Autologin (false = click to call)</string>
+    <string name="login_checkbox_call_disconnect_text">Disconnect on broken call</string>
+    <string name="login_checkbox_push_text">Use push for incoming calls</string>
+    <string name="login_checkbox_video_hardware_text">Video hardware (H264)</string>
+
+    <string name="login_button_login_text">Login</string>
+    <string name="login_button_start_text">Start</string>
+    <string name="login_button_advanced_text">Advanced</string>
+
+    <string name="login_textview_second_call_text">Second call</string>
+    <string name="login_textview_transfer_call_text">Transfer call</string>
+
+    <!--notification-->
+    <string name="notification_text_prefix">Client is </string>
+    <string name="notification_text_connected">CONNECTED</string>
+    <string name="notification_text_disconnected">DISCONNECTED</string>
+    <string name="notification_text_in_call">In call</string>
+
+    <!--settings screen-->
+    <string name="settings_button_general">General</string>
+    <string name="settings_button_account">Account</string>
+    <string name="settings_button_call_stats">Call stats</string>
+
+    <!--permission denied-->
+    <string name="permission_denied_button_text">Some of the application\'s permissions have been rejected.\nThe application may not function properly until they are all granted.\nPlease either choose to manually change the permission or continue with the current state anyway.</string>
+    <string name="permission_denied_button_continue">Continue</string>
+    <string name="permission_denied_button_edit">Edit</string>
+
+    <!--settings screen-->
+    <string name="general_settings_textview_dtmf_type_text">DTMF type:</string>
+    <string name="general_settings_textview_log_level_type_text">Log level:</string>
+    <string name="general_settings_textview_auto_redirect_text">Auto redirect:</string>
+    <string name="general_settings_textview_redirect_call_text">Redirect call:</string>
+
+    <string name="general_settings_button_save_text">Save</string>
+    <string name="incoming_video_call">Incoming video call…</string>
+    <string name="incoming_audio_call">Incoming audio call…</string>
+
+    <!--account screen-->
+    <string name="account_textview_status_prefix">Status:</string>
+    <string name="account_textview_status_connected">CONNECTED</string>
+    <string name="account_textview_status_disconnected">DISCONNECTED</string>
+
+    <!--call stats screen-->
+    <string name="call_stats_textview_stats_title">Call Statistics</string>
+
+    <string name="call_stats_textview_packets_received_header">Packets received:</string>
+    <string name="call_stats_textview_bytes_received_header">Bytes received:</string>
+    <string name="call_stats_textview_packets_lost_header">Packets Lost:</string>
+    <string name="call_stats_textview_jitter_header">Jitter:</string>
+    <string name="call_stats_textview_fraction_lost_header">Fraction Lost:</string>
+    <string name="call_stats_textview_packets_sent_header">Packets Sent:</string>
+    <string name="call_stats_textview_bytes_sent_header">Bytes Sent:</string>
+
+    <!--incoming call screen-->
+    <string name="incoming_call_textview_call_state">Incoming call</string>
+    <string name="incoming_call_button_decline_text">Reject</string>
+    <string name="incoming_call_button_answer_text">Answer</string>
+    <string name="incoming_call_button_answer_video_text">Answer Video</string>
+    <string name="incoming_call_button_answer_video_notification_text">Video</string>
+
+    <!--call screen-->
+    <string name="call_textview_call_state">Call</string>
+    <string name="call_button_add_call">Add call</string>
+    <string name="call_button_audio_route">Toggle route</string>
+    <string name="call_button_mute">Mute</string>
+    <string name="call_button_switch_camera">camera</string>
+    <string name="call_button_dtmf">DTMF</string>
+    <string name="call_button_hold">Hold</string>
+    <string name="call_button_switch_call">Switch</string>
+    <string name="call_button_end_call">End</string>
+    <string name="session_null_error">Session is null</string>
+    <string name="no_remote_contact">Remote contact is not defined</string>
+
+
+    <!--Tabs-->
+    <string name="tabs_dialer_title">Dialer</string>
+    <string name="tabs_recents_title">Recents</string>
+    <string name="tabs_contacts_title">Contacts</string>
+    <string name="tabs_chat_title">Chat</string>
+    <string name="tabs_settings_title">Settings</string>
+
+    <!--tab dialer-->
+    <string name="dialer_button_call_text">Call</string>
+    <string name="dialer_button_video_call_text">Video Call</string>
+    <string name="no_registration">The client is currently not registered</string>
+
+    <!--tab recents-->
+    <string name="recent_menu_option_delete_all">Delete All</string>
+
+    <!--tab chat-->
+    <string name="chat_contact">Contact:</string>
+    <string name="chat_message">Message:</string>
+    <string name="chat_last_message_contact">from:</string>
+    <string name="chat_last_message_text">Message:</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_message_sent">Message sent</string>
+
+    <!--tablet info-->
+    <string name="tablet_info_status_name">Online Status:</string>
+    <string name="tablet_info_display_name">Display Name:</string>
+    <string name="tablet_info_user_name">User Name:</string>
+
+    <!--menu-->
+    <string name="menu_option_settings">Settings</string>
+    <string name="menu_option_exit">Exit</string>
+
+
+    <!--gen string-->
+    <string name="gen_today">Today</string>
+    <string name="gen_hours_short">hrs</string>
+    <string name="gen_minutes_short">mins</string>
+    <string name="gen_seconds_short">secs</string>
+    <string name="_1">1</string>
+    <string name="agent_name">Agent Name</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="testing">Testing</string>
+    <string name="title">Title</string>
+    <string name="poweredby">Powered by</string>
+    <string name="my_video">My Video</string>
+    <string name="audio_more_options">audio more options</string>
+    <string name="image_name">Image Name</string>
+    <string name="_00_00_00_00">00:00/00:00</string>
+    <string name="audio_play_pause_icon">audio play pause icon</string>
 
 </resources>

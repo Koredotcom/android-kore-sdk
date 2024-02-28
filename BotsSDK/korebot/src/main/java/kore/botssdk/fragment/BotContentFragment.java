@@ -98,6 +98,7 @@ import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.views.DotsTextView;
+import kore.botssdk.views.LoadingDots;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -112,6 +113,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
     LinearLayout botTypingStatusRl;
+    LoadingDots ldDots;
     CircularProfileView botTypingStatusIcon;
     DotsTextView typingStatusItemDots;
     ComposeFooterInterface composeFooterInterface;
@@ -204,178 +206,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
             }
         });
-
-        if(botBrandingModel != null)
-        {
-            BrandingHeaderModel headerModel = botBrandingModel.getHeader();
-
-            if(headerModel != null)
-            {
-                if (headerModel.getSize().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM))
-                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_2, null));
-                else if (headerModel.getSize().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE))
-                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_3, null));
-                else
-                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
-
-                if(!StringUtils.isNullOrEmpty(headerModel.getBg_color()))
-                    llBotHeader.setBackgroundColor(Color.parseColor(headerModel.getBg_color()));
-            }
-            else
-                llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
-
-            TextView tvBotTitle = llBotHeader.findViewById(R.id.tvBotTitle);
-            TextView tvBotDesc = llBotHeader.findViewById(R.id.tvBotDesc);
-            ImageView ivBotAvatar = llBotHeader.findViewById(R.id.ivBotAvatar);
-            ImageView ivBotHelp = llBotHeader.findViewById(R.id.ivBotHelp);
-            ImageView ivBotSupport = llBotHeader.findViewById(R.id.ivBotSupport);
-            ImageView ivBotClose = llBotHeader.findViewById(R.id.ivBotClose);
-
-            ivBotAvatar.setVisibility(View.GONE);
-            ivBotHelp.setVisibility(View.GONE);
-            ivBotSupport.setVisibility(View.GONE);
-            ivBotClose.setVisibility(View.GONE);
-
-            if(headerModel != null)
-            {
-                if(headerModel.getTitle() != null && !StringUtils.isNullOrEmpty(headerModel.getTitle().getName())) {
-                    tvBotTitle.setText(headerModel.getTitle().getName());
-                    if(!StringUtils.isNullOrEmpty(headerModel.getTitle().getColor())) {
-                        tvBotTitle.setTextColor(Color.parseColor(headerModel.getTitle().getColor()));
-                    }
-                }
-
-                if(headerModel.getSub_title() != null && !StringUtils.isNullOrEmpty(headerModel.getSub_title().getName())) {
-                    tvBotDesc.setText(headerModel.getSub_title().getName());
-                    if(!StringUtils.isNullOrEmpty(headerModel.getSub_title().getColor())) {
-                        tvBotDesc.setTextColor(Color.parseColor(headerModel.getSub_title().getColor()));
-                    }
-                }
-
-                if(headerModel.getIcon() != null && headerModel.getIcon().isShow()) {
-                    ivBotAvatar.setVisibility(View.VISIBLE);
-                }
-
-                if(headerModel.getButtons() != null)
-                {
-                    if(headerModel.getButtons().getHelp() != null && headerModel.getButtons().getHelp().isShow())
-                    {
-                        ivBotHelp.setVisibility(View.VISIBLE);
-
-                        ivBotHelp.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(headerModel.getButtons().getHelp().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getType()))
-                                {
-                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())
-                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
-                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getHelp().getAction().getValue());
-                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
-                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getValue()))
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getValue(),false);
-                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getTitle())) {
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getTitle(),false);
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-                    if(headerModel.getButtons().getLive_agent() != null && headerModel.getButtons().getLive_agent().isShow()) {
-                        ivBotSupport.setVisibility(View.VISIBLE);
-
-                        ivBotSupport.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if(headerModel.getButtons().getLive_agent().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getType()))
-                                {
-                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())
-                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
-                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getLive_agent().getAction().getValue());
-                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
-                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getValue()))
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getValue(),false);
-                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getTitle())) {
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getTitle(),false);
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    }
-
-                    if(headerModel.getButtons().getClose() != null && headerModel.getButtons().getClose().isShow()) {
-                        ivBotClose.setVisibility(View.VISIBLE);
-
-                        ivBotClose.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                BotSocketConnectionManager.killInstance();
-                                requireActivity().finish();
-                            }
-                        });
-                    }
-                }
-            }
-
-            if(botBrandingModel.getBody() != null)
-            {
-                BrandingBodyModel bodyModel = botBrandingModel.getBody();
-
-                if(bodyModel != null)
-                {
-                    if(bodyModel.getBackground() != null && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getType()))
-                    {
-                        if(BundleConstants.COLOR.equalsIgnoreCase(bodyModel.getBackground().getType()) &&
-                                !StringUtils.isNullOrEmpty(bodyModel.getBackground().getColor())) {
-                            rlBody.setBackgroundColor(Color.parseColor(bodyModel.getBackground().getColor()));
-                        }
-                        else if(!StringUtils.isNullOrEmpty(bodyModel.getBackground().getImg())){
-                            Glide.with(requireActivity())
-                                .load(bodyModel.getBackground().getImg())
-                                .into(new CustomTarget<Drawable>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        rlBody.setBackground(resource);
-                                    }
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {}
-                            });
-                        }
-                    }
-
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    if(bodyModel.getUser_message() != null) {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getBg_color())) {
-                            editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, bodyModel.getUser_message().getBg_color());
-                        }
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getColor())) {
-                            editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, bodyModel.getUser_message().getColor());
-                        }
-                    }
-                    if(bodyModel.getBot_message() != null) {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getBg_color())) {
-                            editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, bodyModel.getBot_message().getBg_color());
-                        }
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getColor())) {
-                            editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, bodyModel.getBot_message().getColor());
-                        }
-                    }
-                    if(bodyModel.getTime_stamp() != null )
-                    {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getTime_stamp().getColor())) {
-                            editor.putString(BotResponse.TIME_STAMP_TXT_COLOR, bodyModel.getTime_stamp().getColor());
-                        }
-
-                        SDKConfiguration.Client.timeStampBottom = !bodyModel.getTime_stamp().getPosition().equalsIgnoreCase(BundleUtils.TOP);
-                        SDKConfiguration.setTimeStampsRequired(bodyModel.getTime_stamp().isShow());
-                    }
-
-                    editor.apply();
-                }
-            }
-        }
     }
 
     public void findThemeViews(View view) {
@@ -482,6 +312,186 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public void setBotBrandingModel(BotBrandingModel botBrandingModel)
     {
         this.botBrandingModel = botBrandingModel;
+
+        if(botBrandingModel != null)
+        {
+            BrandingHeaderModel headerModel = botBrandingModel.getHeader();
+
+            if(headerModel != null)
+            {
+                if (headerModel.getSize().equalsIgnoreCase(BundleUtils.COMPACT))
+                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
+                else if (headerModel.getSize().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE))
+                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_3, null));
+                else
+                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_2, null));
+
+                if(!StringUtils.isNullOrEmpty(headerModel.getBg_color()))
+                    llBotHeader.setBackgroundColor(Color.parseColor(headerModel.getBg_color()));
+            }
+            else
+                llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
+
+            TextView tvBotTitle = llBotHeader.findViewById(R.id.tvBotTitle);
+            TextView tvBotDesc = llBotHeader.findViewById(R.id.tvBotDesc);
+            ImageView ivBotAvatar = llBotHeader.findViewById(R.id.ivBotAvatar);
+            ImageView ivBotHelp = llBotHeader.findViewById(R.id.ivBotHelp);
+            ImageView ivBotSupport = llBotHeader.findViewById(R.id.ivBotSupport);
+            ImageView ivBotClose = llBotHeader.findViewById(R.id.ivBotClose);
+            ImageView ivBotArrowBack = llBotHeader.findViewById(R.id.ivBotArrowBack);
+
+            ivBotAvatar.setVisibility(View.GONE);
+            ivBotHelp.setVisibility(View.GONE);
+            ivBotSupport.setVisibility(View.GONE);
+            ivBotClose.setVisibility(View.GONE);
+
+            ivBotArrowBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    composeFooterInterface.sendWithSomeDelay(BundleUtils.OPEN_WELCOME, "", 0, false);
+                }
+            });
+
+            if(headerModel != null)
+            {
+                if(headerModel.getTitle() != null && !StringUtils.isNullOrEmpty(headerModel.getTitle().getName())) {
+                    tvBotTitle.setText(headerModel.getTitle().getName());
+                    if(!StringUtils.isNullOrEmpty(headerModel.getTitle().getColor())) {
+                        tvBotTitle.setTextColor(Color.parseColor(headerModel.getTitle().getColor()));
+                    }
+                }
+
+                if(headerModel.getSub_title() != null && !StringUtils.isNullOrEmpty(headerModel.getSub_title().getName())) {
+                    tvBotDesc.setText(headerModel.getSub_title().getName());
+                    if(!StringUtils.isNullOrEmpty(headerModel.getSub_title().getColor())) {
+                        tvBotDesc.setTextColor(Color.parseColor(headerModel.getSub_title().getColor()));
+                    }
+                }
+
+                if(headerModel.getIcon() != null && headerModel.getIcon().isShow()) {
+                    ivBotAvatar.setVisibility(View.VISIBLE);
+                }
+
+                if(headerModel.getButtons() != null)
+                {
+                    if(headerModel.getButtons().getHelp() != null && headerModel.getButtons().getHelp().isShow())
+                    {
+                        ivBotHelp.setVisibility(View.VISIBLE);
+
+                        ivBotHelp.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(headerModel.getButtons().getHelp().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getType()))
+                                {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())
+                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getHelp().getAction().getValue());
+                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getValue(),false);
+                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getTitle(),false);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if(headerModel.getButtons().getLive_agent() != null && headerModel.getButtons().getLive_agent().isShow()) {
+                        ivBotSupport.setVisibility(View.VISIBLE);
+
+                        ivBotSupport.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(headerModel.getButtons().getLive_agent().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getType()))
+                                {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())
+                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                        invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getLive_agent().getAction().getValue());
+                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getValue(),false);
+                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getTitle(),false);
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if(headerModel.getButtons().getClose() != null && headerModel.getButtons().getClose().isShow()) {
+                        ivBotClose.setVisibility(View.VISIBLE);
+
+                        ivBotClose.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                BotSocketConnectionManager.killInstance();
+                                requireActivity().finish();
+                            }
+                        });
+                    }
+                }
+            }
+
+            if(botBrandingModel.getBody() != null)
+            {
+                BrandingBodyModel bodyModel = botBrandingModel.getBody();
+
+                if(bodyModel != null)
+                {
+                    if(bodyModel.getBackground() != null && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getType()))
+                    {
+                        if(BundleConstants.COLOR.equalsIgnoreCase(bodyModel.getBackground().getType()) &&
+                                !StringUtils.isNullOrEmpty(bodyModel.getBackground().getColor())) {
+                            rlBody.setBackgroundColor(Color.parseColor(bodyModel.getBackground().getColor()));
+                        }
+                        else if(!StringUtils.isNullOrEmpty(bodyModel.getBackground().getImg())){
+                            Glide.with(requireActivity())
+                                    .load(bodyModel.getBackground().getImg())
+                                    .into(new CustomTarget<Drawable>() {
+                                        @Override
+                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                            rlBody.setBackground(resource);
+                                        }
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {}
+                                    });
+                        }
+                    }
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    if(bodyModel.getUser_message() != null) {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getBg_color())) {
+                            editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, bodyModel.getUser_message().getBg_color());
+                        }
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getColor())) {
+                            editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, bodyModel.getUser_message().getColor());
+                        }
+                    }
+                    if(bodyModel.getBot_message() != null) {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getBg_color())) {
+                            editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, bodyModel.getBot_message().getBg_color());
+                        }
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getColor())) {
+                            editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, bodyModel.getBot_message().getColor());
+                        }
+                    }
+                    if(bodyModel.getTime_stamp() != null )
+                    {
+                        if(!StringUtils.isNullOrEmpty(bodyModel.getTime_stamp().getColor())) {
+                            editor.putString(BotResponse.TIME_STAMP_TXT_COLOR, bodyModel.getTime_stamp().getColor());
+                        }
+
+                        SDKConfiguration.Client.timeStampBottom = !bodyModel.getTime_stamp().getPosition().equalsIgnoreCase(BundleUtils.TOP);
+                        SDKConfiguration.setTimeStampsRequired(bodyModel.getTime_stamp().isShow());
+                    }
+
+                    editor.apply();
+                }
+            }
+        }
     }
 
     public void showTypingStatus(BotResponse botResponse) {
@@ -629,9 +639,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);
+        ldDots = view.findViewById(R.id.ldDots);
         botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
-        typingStatusItemDots = view.findViewById(R.id.typing_status_item_dots);
-        typingStatusItemDots.setTextColor(Color.BLACK);
     }
 
     private void scrollToBottom() {

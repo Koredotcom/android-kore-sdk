@@ -15,6 +15,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -48,10 +49,12 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -63,6 +66,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -85,6 +89,9 @@ import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
 import kore.botssdk.application.BotApplication;
+import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
+import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
+import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
@@ -118,6 +125,8 @@ import kore.botssdk.models.BrandingWelcomeModel;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
+import kore.botssdk.models.EventMessageModel;
+import kore.botssdk.models.EventModel;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
@@ -145,6 +154,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.HeightAdjustableViewPager;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -193,7 +203,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     BotBrandingModel botOptionsModel;
     BotActiveThemeModel botActiveThemeModel;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"template\",\"payload\":{\"type\":\"template\",\"payload\":{\"template_type\":\"advanced_multi_select\",\"heading\":\"Please select items to proceed\",\"description\":\"Premium Brands\",\"sliderView\":true,\"showViewMore\":true,\"limit\":1,\"elements\":[{\"collectionTitle\":\"Collection 1\",\"collection\":[{\"title\":\"Classic Adidas Collection\",\"description\":\"German Company\",\"value\":\"Adidas\",\"image_url\":\"https://cdn.britannica.com/94/193794-050-0FB7060D/Adidas-logo.jpg\"},{\"title\":\"Classic Puma Collection\",\"value\":\"Puma\",\"description\":\"German Company\",\"image_url\":\"https://www.myredqueen.com/45056-home_default/gucci-white-logo-t-shirt.jpg\"},{\"title\":\"Classic Nike Collection\",\"description\":\"American Company\",\"value\":\"Nike\",\"image_url\":\"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg\"}]},{\"collectionTitle\":\"Collection 2\",\"collection\":[{\"title\":\"Classic Rolls Royce Collection\",\"value\":\"Roll Royce\",\"description\":\"London Company\",\"image_url\":\"https://i.pinimg.com/236x/bd/40/f6/bd40f62bad0e38dd46f9aeaa6a95d80e.jpg\"},{\"title\":\"Classic Audi Collection\",\"value\":\"Audi\",\"description\":\"German Company\",\"image_url\":\"https://www.car-logos.org/wp-content/uploads/2011/09/audi.png\"},{\"title\":\"Classic lamborghini Collection\",\"value\":\"lamborghini\",\"description\":\"Italy Company\",\"image_url\":\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBeoerEQ7F5Mlh4S7u0uvEcPAlQ-J0s6V-__tBJ7JPc6KCZo9&usqp=CAU\"}]},{\"collectionTitle\":\"Collection 3\",\"collection\":[{\"title\":\"Classic Rolex Collection\",\"value\":\"Rolex\",\"description\":\"Switzerland Company\",\"image_url\":\"https://image.shutterstock.com/image-photo/kiev-ukraine-may-13-2015-260nw-278633477.jpg\"}]},{\"collectionTitle\":\"Collection 4\",\"collection\":[{\"title\":\"Classic Fossil Collection\",\"value\":\"Fossil\",\"description\":\"American Company \",\"image_url\":\"https://www.pngitem.com/pimgs/m/247-2470775_fossil-logo-png-free-download-fossil-transparent-png.png\"}]},{\"collectionTitle\":\"Collection 5\",\"collection\":[{\"title\":\"Classic Fastrack Collection\",\"value\":\"FastTrack\",\"description\":\"Indian Company\",\"image_url\":\"https://logodix.com/logo/2153855.jpg\"}]}],\"buttons\":[{\"title\":\"Done\",\"type\":\"postback\",\"payload\":\"payload\"}]}}},\"cInfo\":{\"body\":\"{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"template_type\\\":\\\"advanced_multi_select\\\",\\\"heading\\\":\\\"Please select items to proceed\\\",\\\"description\\\":\\\"Premium Brands\\\",\\\"sliderView\\\":true,\\\"showViewMore\\\":true,\\\"limit\\\":1,\\\"elements\\\":[{\\\"collectionTitle\\\":\\\"Collection 1\\\",\\\"collection\\\":[{\\\"title\\\":\\\"Classic Adidas Collection\\\",\\\"description\\\":\\\"German Company\\\",\\\"value\\\":\\\"Adidas\\\",\\\"image_url\\\":\\\"https://cdn.britannica.com/94/193794-050-0FB7060D/Adidas-logo.jpg\\\"},{\\\"title\\\":\\\"Classic Puma Collection\\\",\\\"value\\\":\\\"Puma\\\",\\\"description\\\":\\\"German Company\\\",\\\"image_url\\\":\\\"https://www.myredqueen.com/45056-home_default/gucci-white-logo-t-shirt.jpg\\\"},{\\\"title\\\":\\\"Classic Nike Collection\\\",\\\"description\\\":\\\"American Company\\\",\\\"value\\\":\\\"Nike\\\",\\\"image_url\\\":\\\"https://miro.medium.com/max/1161/1*cJUVJJSWPj9WFIJlvf7dKg.jpeg\\\"}]},{\\\"collectionTitle\\\":\\\"Collection 2\\\",\\\"collection\\\":[{\\\"title\\\":\\\"Classic Rolls Royce Collection\\\",\\\"value\\\":\\\"Roll Royce\\\",\\\"description\\\":\\\"London Company\\\",\\\"image_url\\\":\\\"https://i.pinimg.com/236x/bd/40/f6/bd40f62bad0e38dd46f9aeaa6a95d80e.jpg\\\"},{\\\"title\\\":\\\"Classic Audi Collection\\\",\\\"value\\\":\\\"Audi\\\",\\\"description\\\":\\\"German Company\\\",\\\"image_url\\\":\\\"https://www.car-logos.org/wp-content/uploads/2011/09/audi.png\\\"},{\\\"title\\\":\\\"Classic lamborghini Collection\\\",\\\"value\\\":\\\"lamborghini\\\",\\\"description\\\":\\\"Italy Company\\\",\\\"image_url\\\":\\\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBeoerEQ7F5Mlh4S7u0uvEcPAlQ-J0s6V-__tBJ7JPc6KCZo9&usqp=CAU\\\"}]},{\\\"collectionTitle\\\":\\\"Collection 3\\\",\\\"collection\\\":[{\\\"title\\\":\\\"Classic Rolex Collection\\\",\\\"value\\\":\\\"Rolex\\\",\\\"description\\\":\\\"Switzerland Company\\\",\\\"image_url\\\":\\\"https://image.shutterstock.com/image-photo/kiev-ukraine-may-13-2015-260nw-278633477.jpg\\\"}]},{\\\"collectionTitle\\\":\\\"Collection 4\\\",\\\"collection\\\":[{\\\"title\\\":\\\"Classic Fossil Collection\\\",\\\"value\\\":\\\"Fossil\\\",\\\"description\\\":\\\"American Company \\\",\\\"image_url\\\":\\\"https://www.pngitem.com/pimgs/m/247-2470775_fossil-logo-png-free-download-fossil-transparent-png.png\\\"}]},{\\\"collectionTitle\\\":\\\"Collection 5\\\",\\\"collection\\\":[{\\\"title\\\":\\\"Classic Fastrack Collection\\\",\\\"value\\\":\\\"FastTrack\\\",\\\"description\\\":\\\"Indian Company\\\",\\\"image_url\\\":\\\"https://logodix.com/logo/2153855.jpg\\\"}]}],\\\"buttons\\\":[{\\\"title\\\":\\\"Done\\\",\\\"type\\\":\\\"postback\\\",\\\"payload\\\":\\\"payload\\\"}]}}\"}}],\"messageId\":\"ms-512f370a-0cc6-57d6-b5d7-94debca904d6\",\"sessionId\":\"651fac33b480a06d8a170fce\",\"botInfo\":{\"chatBot\":\"SDK\",\"taskBotId\":\"st-61e2f38d-e1c0-58ed-ba0d-f7139a671c9e\",\"hostDomain\":\"http://localhost:9000\",\"os\":\"Windows\",\"device\":\"Other\",\"userId\":\"u-17c9a588-ff37-571f-92b4-bd2d2487d27b\"},\"createdOn\":\"2023-10-06T06:42:11.593Z\",\"m-traceid\":\"RTM-TRACE-U9MF5M0SX 1696574531114\",\"xTraceId\":\"043fa13f-2ca0-44f2-8747-56cd5a45af13\",\"icon\":\"https://sit-bots.kore.ai/api/getMediaStream/market/f-8e0f52ae-769c-5915-90c0-d9e0e2a98ad5.png?n=1505712283&s=InAzck9Wb2NvaVI2WHBidUVodFAwaGF2YnpFSXBpamFPNFptZEh1WmJTSlU9Ig$$\",\"traceId\":\"3b18deef02eef3d5\",\"timestamp\":1696574531635}";
+    private String strResp = "{\"type\":\"bot_response\",\"from\":\"bot\",\"message\":[{\"type\":\"text\",\"component\":{\"type\":\"text\",\"payload\":{\"text\":\"Sorry.\"}},\"cInfo\":{\"body\":\"Sorry, I am unable to respond to your queries at this moment. You may retry after some time or reach out to our contact center for more help.\"}}],\"messageId\":\"ms-efce2bf7-da51-5149-a576-0d4cb2d42e11\",\"sessionId\":\"65785a5ba1586f6e13aec95d\",\"botInfo\":{\"channelClient\":\"Android\",\"chatBot\":\"SDK\",\"customData\":{\"botToken\":\"lT8lbgp_FLHSmsSy5T4B2XOUE5I_QJUIgc1gra52w3HE7RsUZTxMpeX-vqfEndSo\"},\"taskBotId\":\"st-b0439232-9345-508f-a1fb-cfcb5099c1fa\",\"userId\":\"u-99deac65-d823-5d0f-829d-8ccdd62d33ea\"},\"createdOn\":\"2023-12-12T13:04:48.943Z\",\"m-traceid\":\"RTM-TRACE-V4KP5DMV3 1702386288709\",\"xTraceId\":\"606830d0-68a1-464b-8bb6-cbd495550051\",\"icon\":\"https://dev-xo.kore.ai:443/api/getMediaStream/market/f-b47ec230-11bb-52ac-88fb-7e8eb6f91d78.png?n=6965627760&s=Imt2QTY5Vk1SOFV5aVlHWGRmcmNDaGNhbmZlNjgvZGU3VDlrNWRiWU4xekU9Ig$$\",\"traceId\":\"747d6a531e20d1d6\",\"timestamp\":1702386289013}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +213,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         findViews();
         getBundleInfo();
         getDataFromTxt();
-        getBrandingDataFromTxt();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -212,7 +221,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
         botContentFragment.setThemeChangeInterface(this);
-        botContentFragment.setBotBrandingModel(botOptionsModel);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
@@ -227,7 +235,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         composeFooterFragment = new ComposeFooterFragment();
         composeFooterFragment.setArguments(getIntent().getExtras());
-        composeFooterFragment.setBotBrandingModel(botOptionsModel);
         composeFooterFragment.setComposeFooterInterface(this);
         composeFooterFragment.setBottomOptionData(getDataFromTxt());
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
@@ -255,6 +262,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 finish();
             }
         });
+
     }
 
     final SocketChatListener sListener = new SocketChatListener() {
@@ -267,6 +275,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
 //                getBrandingDetails();
+//                closeProgressDialogue();
+//                rlChatWindow.setVisibility(VISIBLE);
+                getBrandingDataFromTxt();
             }
 
             new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", getUniqueDeviceId(BotChatActivity.this)));
@@ -326,29 +337,43 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected void onDestroy() {
         botClient.disconnect();
         KoreEventCenter.unregister(this);
+
+        if (progressBar != null) progressBar.dismiss();
+
+        if (welcomeDialog != null) {
+            welcomeDialog.hide();
+        }
+
         super.onDestroy();
     }
 
     private void getBundleInfo() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            if (!bundle.getBoolean(BundleUtils.IS_FROM_WELCOME)) {
-                this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                closeProgressDialogue();
-                                showWelcomeDialog();
-                            }
-                        }, 5000);
-                    }
-                });
-            } else {
-                closeProgressDialogue();
-                rlChatWindow.setVisibility(VISIBLE);
-            }
+//            if (!bundle.getBoolean(BundleUtils.IS_FROM_WELCOME)) {
+//                this.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (composeFooterFragment != null) {
+//                                    composeFooterFragment.setBotBrandingModel(botOptionsModel);
+//                                }
+//
+//                                if (botContentFragment != null) {
+//                                    botContentFragment.setBotBrandingModel(botOptionsModel);
+//                                }
+//
+//                                showWelcomeDialog();
+//                            }
+//                        }, 5000);
+//                    }
+//                });
+//            } else {
+//                closeProgressDialogue();
+//                rlChatWindow.setVisibility(VISIBLE);
+//            }
 
             jwt = bundle.getString(BundleUtils.JWT_TKN, "");
 
@@ -462,6 +487,35 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
         if (botContentFragment != null)
             botContentFragment.changeThemeBackGround(brandingModel.getWidgetBgColor(), brandingModel.getWidgetTextColor());
+    }
+
+    public void setButtonBranding(BotBrandingModel brandingModel) {
+        if(brandingModel != null)
+        {
+            SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+
+            if(brandingModel.getBody() != null && brandingModel.getBody().getBot_message() != null) {
+                editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBody().getBot_message().getBg_color());
+                editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR,  brandingModel.getBody().getBot_message().getColor());
+            }
+
+            if(brandingModel.getBody() != null && brandingModel.getBody().getUser_message() != null) {
+
+                editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getBody().getUser_message().getBg_color());
+                editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getBody().getUser_message().getColor());
+            }
+
+            if(brandingModel.getGeneral() != null && brandingModel.getGeneral().getColors() != null)
+            {
+                editor.putString(BotResponse.BUTTON_ACTIVE_BG_COLOR, brandingModel.getGeneral().getColors().getPrimary());
+                editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingModel.getGeneral().getColors().getPrimary_text());
+                editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingModel.getGeneral().getColors().getSecondary());
+                editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getGeneral().getColors().getSecondary_text());
+                SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getGeneral().getColors().getPrimary();
+                SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getGeneral().getColors().getPrimary_text();
+            }
+            editor.apply();
+        }
     }
 
 
@@ -610,7 +664,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollupNeeded) {
-        LogUtils.e("Message", message);
+        if(message.equalsIgnoreCase(BundleUtils.OPEN_WELCOME))
+        {
+            if(welcomeDialog != null)
+                welcomeDialog.show();
+        }
     }
 
     @Override
@@ -695,11 +753,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
                     if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
 
                     botContentFragment.addMessageToBotChatAdapter(botResponse);
-//                    textToSpeech(botResponse);
                     botContentFragment.setQuickRepliesIntoFooter(botResponse);
                     botContentFragment.showCalendarIntoFooter(botResponse);
                 }
@@ -708,27 +764,52 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
                 try {
-                    //This is the case Bot returning user sent message from another channel
                     if (botContentFragment != null) {
-                        BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
-                        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-                        botContentFragment.updateContentListOnSend(botRequest);
-                    }
-                } catch (Exception e1) {
-                    try {
-                        final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
-                        if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
-                            return;
-                        }
-                        LogUtils.d(LOG_TAG, payload);
-                        if (!botResponse.getMessage().isEmpty()) {
-                            ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
-                            if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload())) {
-                                displayMessage(compModel.getPayload(), BotResponse.COMPONENT_TYPE_TEXT, botResponse.getMessageId());
+                        EventModel eventModel = gson.fromJson(payload, EventModel.class);
+                        if (eventModel != null && eventModel.getMessage() != null) {
+                            if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI()))
+                            {
+                                EventMessageModel eventMessageModel = eventModel.getMessage();
+                                SipAccount sipAccount = new SipAccount();
+                                sipAccount.setUsername(botClient.getUserId());
+                                sipAccount.setDisplayName(botClient.getUserId());
+                                sipAccount.setDomain(eventMessageModel.getDomain());
+                                sipAccount.setProxy(eventMessageModel.getDomain());
+                                sipAccount.setPort(5080);
+                                sipAccount.setTransport(Transport.UDP);
+
+                                Prefs.setSipAccount(sipAccount);
+                                Prefs.setAutoRedirect(true);
+
+                                showAlertDialog(eventModel);
                             }
                         }
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    try {
+                        //This is the case Bot returning user sent message from another channel
+                        if (botContentFragment != null) {
+                            BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
+                            botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+                            botContentFragment.updateContentListOnSend(botRequest);
+                        }
+                    } catch (Exception e1) {
+                        try {
+                            final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
+                            if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                                return;
+                            }
+                            LogUtils.d(LOG_TAG, payload);
+                            if (!botResponse.getMessage().isEmpty()) {
+                                ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
+                                if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload())) {
+                                    displayMessage(compModel.getPayload(), BotResponse.COMPONENT_TYPE_TEXT, botResponse.getMessageId());
+                                }
+                            }
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
                     }
                 }
             }
@@ -778,6 +859,41 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             Reader reader = new InputStreamReader(is);
             BotActiveThemeModel botActiveThemeModel = gson.fromJson(reader, BotActiveThemeModel.class);
             botOptionsModel = botActiveThemeModel.getV3();
+
+            setButtonBranding(botOptionsModel);
+
+            if (composeFooterFragment != null) {
+                composeFooterFragment.setBotBrandingModel(botOptionsModel);
+            }
+
+            if (botContentFragment != null) {
+                botContentFragment.setBotBrandingModel(botOptionsModel);
+            }
+
+            if (botOptionsModel != null && botOptionsModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getChat_bubble().getStyle())) {
+                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getChat_bubble().getStyle()).apply();
+            }
+
+            if (botOptionsModel != null && botOptionsModel.getBody() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getBody().getBubble_style())) {
+                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getBody().getBubble_style()).apply();
+            }
+
+            if(botOptionsModel != null && botOptionsModel.getWelcome_screen() != null)
+            {
+                if(botOptionsModel.getWelcome_screen().isShow())
+                    showWelcomeDialog();
+                else
+                {
+                    closeProgressDialogue();
+                    rlChatWindow.setVisibility(VISIBLE);
+                }
+            }
+            else
+            {
+                closeProgressDialogue();
+                rlChatWindow.setVisibility(VISIBLE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1159,15 +1275,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void getBrandingDetails() {
-        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1", "en_US", SDKConfiguration.Client.bot_id);
+        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1", "en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<BotActiveThemeModel>() {
             @Override
             public void onResponse(@NonNull Call<BotActiveThemeModel> call, @NonNull Response<BotActiveThemeModel> response) {
                 if (response.isSuccessful()) {
                     botActiveThemeModel = response.body();
 
-                    if (botActiveThemeModel != null && botActiveThemeModel.getV3() != null) {
+                    if (botActiveThemeModel != null && botActiveThemeModel.getV3() != null)
+                    {
                         botOptionsModel = botActiveThemeModel.getV3();
+//                        botOptionsModel.getWelcome_screen().setShow(false);
+//                        botOptionsModel.getBody().getTime_stamp().setPosition("bottom");
+
+                        setButtonBranding(botOptionsModel);
 
                         if (composeFooterFragment != null) {
                             composeFooterFragment.setBotBrandingModel(botOptionsModel);
@@ -1177,25 +1298,44 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             botContentFragment.setBotBrandingModel(botOptionsModel);
                         }
 
-//                        if (arrBrandingNewDos.size() > 1)
-//                            onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
-
                         if (botOptionsModel != null && botOptionsModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getChat_bubble().getStyle())) {
                             sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getChat_bubble().getStyle()).apply();
                         }
 
-//                        showWelcomeDialog();
+                        if (botOptionsModel != null && botOptionsModel.getBody() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getBody().getBubble_style())) {
+                            sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getBody().getBubble_style()).apply();
+                        }
+
+                        if(botOptionsModel != null && botOptionsModel.getWelcome_screen() != null)
+                        {
+                            if(botOptionsModel.getWelcome_screen().isShow())
+                                showWelcomeDialog();
+                            else
+                            {
+                                closeProgressDialogue();
+                                rlChatWindow.setVisibility(VISIBLE);
+                            }
+                        }
+                        else
+                        {
+                            closeProgressDialogue();
+                            rlChatWindow.setVisibility(VISIBLE);
+                        }
 
                         if (isItFirstConnect) {
                             botClient.sendMessage("BotNotifications");
                             isItFirstConnect = false;
                         }
                     }
-                } else {
+                } else
+                {
                     if (isItFirstConnect) {
                         botClient.sendMessage("BotNotifications");
                         isItFirstConnect = false;
                     }
+
+                    closeProgressDialogue();
+                    rlChatWindow.setVisibility(VISIBLE);
                 }
             }
 
@@ -1207,6 +1347,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     botClient.sendMessage("BotNotifications");
                     isItFirstConnect = false;
                 }
+
+                closeProgressDialogue();
+                rlChatWindow.setVisibility(VISIBLE);
             }
         });
     }
@@ -1410,7 +1553,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         progressBar = new Dialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.progress_bar_dialog, null);
         progressBar.setContentView(view);
-        Objects.requireNonNull(progressBar.getWindow()).setLayout((int) (280 * dp1), (int) (120 * dp1));
+        Objects.requireNonNull(progressBar.getWindow()).setLayout((int) (250 * dp1), (int) (100 * dp1));
         progressBar.setCancelable(false);
         progressBar.setCanceledOnTouchOutside(false);
         progressBar.show();
@@ -1419,7 +1562,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     void showWelcomeDialog()
     {
         RelativeLayout llHeaderLayout = null;
-        LinearLayout llOuterHeader, llStartConversation;
+        LinearLayout llOuterHeader, llStartConversation, llBottomPower;
         AutoExpandListView lvPromotions;
         ConstraintLayout clStarter;
 
@@ -1429,6 +1572,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         llStartConversation = view.findViewById(R.id.llStartConversation);
         lvPromotions = view.findViewById(R.id.lvPromotions);
         clStarter = view.findViewById(R.id.clStarter);
+        llBottomPower = view.findViewById(R.id.llBottomPower);
+
         welcomeDialog.setContentView(view);
         Objects.requireNonNull(welcomeDialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         welcomeDialog.setCancelable(false);
@@ -1445,9 +1590,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BrandingWelcomeModel welcomeModel = botOptionsModel.getWelcome_screen();
 
             if (!StringUtils.isNullOrEmpty(welcomeModel.getLayout())) {
-                if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM)) {
+                if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE)) {
                     llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header_2, null);
-                } else if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE)) {
+                } else if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM)) {
                     llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header_3, null);
                 } else
                     llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header, null);
@@ -1458,9 +1603,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 TextView tvWelcomeHeader = llHeaderLayout.findViewById(R.id.tvWelcomeHeader);
                 TextView tvWelcomeTitle = llHeaderLayout.findViewById(R.id.tvWelcomeTitle);
                 TextView tvWelcomeDescription = llHeaderLayout.findViewById(R.id.tvWelcomeDescription);
+                ImageView ivWelcomeLogo = llHeaderLayout.findViewById(R.id.ivWelcomeLogo);
+                ConstraintLayout llInnerHeader = llHeaderLayout.findViewById(R.id.llInnerHeader);
 
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName()))
+                if (!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName())) {
                     tvWelcomeHeader.setText(welcomeModel.getTitle().getName());
+                }
 
                 if (!StringUtils.isNullOrEmpty(welcomeModel.getSub_title().getName()))
                     tvWelcomeTitle.setText(welcomeModel.getSub_title().getName());
@@ -1468,17 +1616,46 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 if (!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName()))
                     tvWelcomeDescription.setText(welcomeModel.getNote().getName());
 
-                if (welcomeModel.getBackground() != null && !StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg())) {
-                    Glide.with(BotChatActivity.this).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
-                        @Override
-                        public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                            rlHeader.setBackground(resource);
+                if (welcomeModel.getBackground() != null)
+                {
+                    if(!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getType()))
+                    {
+                        if(welcomeModel.getBackground().getType().equalsIgnoreCase(BundleUtils.COLOR))
+                        {
+                            llInnerHeader.setBackgroundColor(Color.parseColor(welcomeModel.getBackground().getColor()));
                         }
+                        else if(!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg()))
+                        {
+                            Glide.with(BotChatActivity.this).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    rlHeader.setBackground(resource);
+                                }
 
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+                            });
                         }
-                    });
+                    }
+                }
+
+                if(welcomeModel.getLogo() != null && !StringUtils.isNullOrEmpty(welcomeModel.getLogo().getLogo_url()))
+                {
+                    Picasso.get().load(welcomeModel.getLogo().getLogo_url()).transform(new RoundedCornersTransform()).into(ivWelcomeLogo);
+                }
+
+                if(botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()
+                        && !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getPrimary_text()))
+                {
+                    tvWelcomeHeader.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary_text()));
+                    tvWelcomeTitle.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary_text()));
+                    tvWelcomeDescription.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary_text()));
+                }
+
+                if(welcomeModel.getBottom_background() != null && !StringUtils.isNullOrEmpty(welcomeModel.getBottom_background().getColor()))
+                {
+                    llBottomPower.setBackgroundColor(Color.parseColor(welcomeModel.getBottom_background().getColor()));
                 }
             }
 
@@ -1519,8 +1696,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     }
 
                     if (welcomeModel.getStarter_box().getStart_conv_text() != null) {
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_text().getColor())) {
+                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_text().getColor()))
+                        {
                             tvStartConversation.setTextColor(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_text().getColor()));
+
+                            if(botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()
+                                    && !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getPrimary_text()))
+                            {
+                                tvStartConversation.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary_text()));
+                            }
                         }
                     }
 
@@ -1552,7 +1736,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
             }
 
-            if (welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().getPromotions().size() > 0) {
+            if (welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().isShow() && welcomeModel.getPromotional_content().getPromotions().size() > 0)
+            {
+                lvPromotions.setVisibility(VISIBLE);
                 lvPromotions.setAdapter(new PromotionsAdapter(BotChatActivity.this, welcomeModel.getPromotional_content().getPromotions()));
             }
 
@@ -1561,7 +1747,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     if (welcomeModel.getStatic_links().getLinks() != null && welcomeModel.getStatic_links().getLinks().size() > 0) {
                         rlLinks.setVisibility(View.VISIBLE);
 
-                        if (StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
+                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
                             hvpLinks.setVisibility(View.VISIBLE);
                             WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(BotChatActivity.this, welcomeModel.getStatic_links().getLinks());
                             quickRepliesAdapter.setComposeFooterInterface(BotChatActivity.this);
@@ -1580,18 +1766,83 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
         }
 
-        closeProgressDialogue();
         welcomeDialog.show();
         rlChatWindow.setVisibility(VISIBLE);
     }
 
     void closeWelcomeDialog() {
         if (welcomeDialog != null && welcomeDialog.isShowing()) {
-            welcomeDialog.dismiss();
+            welcomeDialog.hide();
+
+            closeProgressDialogue();
         }
     }
 
     void closeProgressDialogue() {
-        if (progressBar != null) progressBar.dismiss();
+        if (progressBar != null) progressBar.hide();
+    }
+
+    void showAlertDialog(EventModel eventModel) {
+        Dialog alertDialog = new Dialog(BotChatActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.incoming_call_layout, null);
+        alertDialog.setContentView(dialogView);
+        alertDialog.setCancelable(false);
+
+        TextView tvAgentName = dialogView.findViewById(R.id.tvAgentName);
+        TextView tvCallType = dialogView.findViewById(R.id.tvTypeOfCall);
+        TextView tvCallAccept = dialogView.findViewById(R.id.tvCallAccept);
+        TextView tvCallReject = dialogView.findViewById(R.id.tvCallReject);
+
+        tvAgentName.setText(eventModel.getMessage().getFirstName());
+        tvCallType.setText(getString(R.string.incoming_audio_call));
+
+        if(eventModel.getMessage().isVideoCall())
+            tvCallType.setText(getString(R.string.incoming_video_call));
+
+        tvCallAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (eventModel.getMessage() != null)
+                {
+                    eventModel.getMessage().setType("call_agent_webrtc_accepted");
+                    botClient.sendMessage(gson.toJsonTree(eventModel.getMessage()));
+
+                    openNextScreen(eventModel.getMessage().getSipUser(), eventModel.getMessage().isVideoCall());
+                    alertDialog.dismiss();
+                }
+            }
+        });
+
+        tvCallReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    void openNextScreen(String sipUser, boolean isVideoCall)
+    {
+        Prefs.setFirstLogin(false);
+        //start login and open app main screen
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(!ACManager.getInstance().isRegisterState()) {
+                    ACManager.getInstance().startLogin(false, false);
+                }
+
+                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin())
+                {
+                    Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    ACManager.getInstance().callNumber(sipUser, isVideoCall);
+                }
+            }
+        }).start();
     }
 }

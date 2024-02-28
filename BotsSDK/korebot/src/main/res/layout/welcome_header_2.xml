@@ -64,7 +64,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivWelcomeLogo"
         android:layout_width="@dimen/welcome_icon_size"
         android:layout_height="@dimen/welcome_icon_size"
         android:layout_below="@+id/llInnerHeader"

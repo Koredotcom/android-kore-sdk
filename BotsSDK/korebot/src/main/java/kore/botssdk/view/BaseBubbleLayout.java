@@ -489,9 +489,9 @@ public abstract class BaseBubbleLayout extends ViewGroup {
     protected void populateBubbleTextMedia(int position, BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean constrictLayout, int... dimens) {
 
         String message = null;
-        String textColor = "#000000";
+        String textColor;
         if (baseBotMessage.isSend()) {
-            message = ((BotRequest) baseBotMessage).getMessage().getBody();
+            message = (String) ((BotRequest) baseBotMessage).getMessage().getBody();
             bubbleTextMediaLayout.populateTextSenders(message);
         } else {
             BotResponseMessage msg = ((BotResponse) baseBotMessage).getTempMessage();

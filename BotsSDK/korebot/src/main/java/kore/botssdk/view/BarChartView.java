@@ -61,7 +61,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
 
         CustomMarkerView mv = new CustomMarkerView(mContext, R.layout.marker_content);
 
-// set the marker to the chart
+        // set the marker to the chart
         mv.setChartView(mChart);
         mChart.setMarker(mv);
         mChart.setOnChartValueSelectedListener(this);
@@ -114,7 +114,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         labelCount = 0;
 //        String[] company = {"Company A","Company B","Company C","Company D"};
 //        int endYear = startYear + groupCount;
-        ArrayList<BarEntry>[] yVals1;// = new ArrayList<BarEntry>();
+//        ArrayList<BarEntry>[] yVals1 ;// = new ArrayList<BarEntry>();
 //        ArrayList<BarEntry> yVals2 = new ArrayList<BarEntry>();
         BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
@@ -122,7 +122,7 @@ public class BarChartView extends ViewGroup implements OnChartValueSelectedListe
         if (_payInner.getBarChartDataModels() != null && _payInner.getBarChartDataModels().size() > 0) {
             int size = _payInner.getBarChartDataModels().size();
 
-            yVals1 = new ArrayList[size];
+            ArrayList<BarEntry>[] yVals1 = new ArrayList[size];
             for (int index = 0; index < size; index++) {
                 BotBarChartDataModel model = _payInner.getBarChartDataModels().get(index);
                 yVals1[index] = new ArrayList<>();

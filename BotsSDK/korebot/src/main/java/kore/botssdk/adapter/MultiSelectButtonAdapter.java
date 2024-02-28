@@ -93,20 +93,20 @@ public class MultiSelectButtonAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if(holder != null && sharedPreferences != null && holder.root_layout != null)
-        {
-            holder.root_layout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
-        }
+//        if(holder != null && sharedPreferences != null && holder.root_layout != null)
+//        {
+//            holder.root_layout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
+//        }
+//
+//        if(holder != null && sharedPreferences != null && holder.root_layout_btn != null)
+//        {
+//            holder.root_layout_btn.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
+//        }
 
-        if(holder != null && sharedPreferences != null && holder.root_layout_btn != null)
-        {
-            holder.root_layout_btn.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
-        }
-
-        if(holder != null && sharedPreferences != null &&  holder.textView != null)
-        {
-            holder.textView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
-        }
+//        if(holder != null && sharedPreferences != null &&  holder.textView != null)
+//        {
+//            holder.textView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+//        }
 
         populateVIew(holder, position,multiSelectModels.get(position) instanceof BotMultiSelectElementModel?0:1);
 

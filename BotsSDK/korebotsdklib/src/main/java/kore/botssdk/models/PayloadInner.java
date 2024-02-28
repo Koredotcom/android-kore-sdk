@@ -49,7 +49,7 @@ public class PayloadInner {
     private String boxShadow;
     private String seeMore;
     private String seeMoreTitle;
-    private final int moreCount = 0;
+    private int moreCount = 0;
     private String subtitle;
     private String image_url;
     private boolean is_end;
@@ -154,6 +154,10 @@ public class PayloadInner {
 
     public boolean isStacked() {
         return stacked;
+    }
+
+    public void setMoreCount(int moreCount) {
+        this.moreCount = moreCount;
     }
 
     public int getMoreCount() {
@@ -353,6 +357,10 @@ public class PayloadInner {
     private ArrayList<FeedbackStarModel> starArrays;
     private Object cards;
     private ArrayList<AdvancedListModel> listItems;
+    private ArrayList<FeedbackNumberModel> numbersArrays;
+    public ArrayList<FeedbackNumberModel> getNumbersArrays() {
+        return numbersArrays;
+    }
     private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
     public ArrayList<BotBeneficiaryModel> getBotBeneficiaryModels() {
         return botBeneficiaryModels;

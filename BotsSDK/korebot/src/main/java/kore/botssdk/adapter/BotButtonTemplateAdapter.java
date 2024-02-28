@@ -69,8 +69,9 @@ public class BotButtonTemplateAdapter extends RecyclerView.Adapter<BotButtonTemp
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotButtonModel buttonTemplate = botButtonModels.get(position);
 
+        ((GradientDrawable) holder.botItemButton.getBackground()).setColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
         ((GradientDrawable) holder.botItemButton.getBackground()).setStroke((int)(2*dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        holder.botItemButton.setTextColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        holder.botItemButton.setTextColor(isEnabled ? Color.parseColor(textColor) : Color.parseColor(disabledTextColor));
 
         holder.botItemButton.setText(buttonTemplate.getTitle());
 

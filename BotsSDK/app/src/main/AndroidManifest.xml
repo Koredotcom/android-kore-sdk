@@ -13,7 +13,7 @@
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.BotsSDK"
-        tools:replace="android:icon,android:theme">
+        tools:replace="android:icon,android:theme,android:allowBackup">
         <activity
             android:name=".MainActivity"
             android:exported="true">

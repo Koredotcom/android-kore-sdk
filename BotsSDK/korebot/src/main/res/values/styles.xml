@@ -233,5 +233,125 @@
         <attr format="reference" name="popupTheme"/>
     </declare-styleable>
 
+    <!-- generic styles -->
+    <style name="GenStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="GenEditTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+    <style name="GenTextViewStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- toolbar -->
+    <style name="ToolbarStyle">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <!-- splash screen -->
+    <style name="SplashLayoutStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <!-- login screen -->
+    <style name="LoginLayoutStyle">
+        <item name="android:background">@color/white</item>
+    </style>
+    <style name="LoginEditTextStyle" parent="GenEditTextStyle">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="LoginTextViewStyle" parent="GenTextViewStyle">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
+    <!-- settings account screen -->
+    <style name="SettingsLayoutStyle" parent="LoginLayoutStyle" >
+    </style>
+    <style name="SettingsEditTextStyle" parent="LoginEditTextStyle">
+    </style>
+    <style name="SettingsTextViewStyle" parent="LoginTextViewStyle">
+    </style>
+
+    <!-- settings account screen -->
+    <style name="PermissionDeniedLayoutStyle" parent="LoginLayoutStyle" >
+    </style>
+    <style name="PermissionDeniedTextViewStyle" parent="LoginTextViewStyle">
+    </style>
+
+    <!-- call stats screen -->
+    <style name="CalStatsLayoutStyle" parent="LoginLayoutStyle" >
+    </style>
+    <style name="CalStatsTextViewStyleHerder" parent="GenTextViewStyle">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="CalStatsTextViewStyleText" parent="GenTextViewStyle">
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- recent list screen -->
+    <style name="RecentListText" >
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- contact list screen -->
+    <style name="ContactListText" >
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- incoming call screen -->
+    <style name="IncomingCallTextView" >
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="IncomingCallButton" >
+        <item name="srcImage">@android:color/transparent</item>
+        <item name="BackgroundImage">@drawable/default_button_xml</item>
+        <item name="TextSize">10dp</item>
+        <item name="TextColor">@color/white</item>
+    </style>
+
+    <!-- call screen -->
+    <style name="CallTextView" >
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">@color/txtFontBlack</item>
+    </style>
+
+
+    <style name="CallKeypadButton" >
+        <item name="srcImage">@drawable/ic_call_number_bg</item>
+        <item name="BackgroundImage">@mipmap/dialpad_background_button</item>
+        <item name="TextSize">10dp</item>
+        <item name="TextColor">@color/txtFontBlack</item>
+    </style>
+
+
+    <!-- dialer screen -->
+    <style name="DialerKeypadButton" >
+        <item name="srcImage">@drawable/ic_call_number_bg</item>
+        <item name="BackgroundImage">@mipmap/dialpad_background_button</item>
+        <item name="TextSize">10dp</item>
+        <item name="TextColor">@color/txtFontBlack</item>
+
+    </style>
+    <style name="DialerCallButton" >
+        <item name="srcImage">@android:color/transparent</item>
+        <item name="BackgroundImage">@drawable/default_button_xml</item>
+        <item name="TextSize">10dp</item>
+        <item name="TextColor">@color/white</item>
+    </style>
+
+    <declare-styleable name="LoadingDots"><attr format="boolean" name="LoadingDots_auto_play"/><attr format="color" name="LoadingDots_dots_color"/><attr format="integer" name="LoadingDots_dots_count"/><attr format="dimension" name="LoadingDots_dots_size"/><attr format="dimension" name="LoadingDots_dots_space"/><attr format="integer" name="LoadingDots_loop_duration"/><attr format="integer" name="LoadingDots_loop_start_delay"/><attr format="integer" name="LoadingDots_jump_duration"/><attr format="dimension" name="LoadingDots_jump_height"/></declare-styleable>
+    <dimen name="LoadingDots_dots_size_default">12dp</dimen>
+    <dimen name="LoadingDots_dots_space_default">2dp</dimen>
+    <dimen name="LoadingDots_jump_height_default">12dp</dimen>
 
 </resources>

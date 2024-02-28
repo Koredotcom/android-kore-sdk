@@ -12,7 +12,7 @@
         android:id="@+id/text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rect_feedback"
+        android:background="@drawable/btn_template_bg"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"

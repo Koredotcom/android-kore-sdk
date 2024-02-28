@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/llOuterHeader"
@@ -27,7 +28,7 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:layout_marginEnd="@dimen/dimen_10dp"
                 android:layout_marginBottom="@dimen/dimen_10dp"
-                android:background="@drawable/rounded_rect_feedback"
+                android:background="@drawable/table_list_bg"
                 android:padding="@dimen/dimen_10dp"
                 android:visibility="visible">
 
@@ -48,9 +49,9 @@
                     android:text="@string/start_conversation"
                     android:textColor="@color/kora_grey"
                     android:textSize="@dimen/text_size_normal"
+                    android:visibility="gone"
                     app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:visibility="gone"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <kore.botssdk.views.CustomTextView
                     android:id="@+id/tvStarterDesc"
@@ -60,9 +61,9 @@
                     android:text="@string/tap_to_speak"
                     android:textColor="@color/gray_modern"
                     android:textSize="@dimen/text_size_small"
+                    android:visibility="gone"
                     app:layout_constraintStart_toEndOf="@+id/ivStarterLogo"
-                    app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle"
-                    android:visibility="gone"/>
+                    app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvStarterButtons"
@@ -114,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
-                    android:background="@drawable/rounded_rect_feedback"
+                    android:background="@drawable/table_list_bg"
                     android:padding="@dimen/dimen_10dp"
                     android:visibility="gone">
 
@@ -142,7 +143,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tvLinksTitle"
-                        android:layout_marginBottom="@dimen/dimen_10dp"/>
+                        android:layout_marginBottom="@dimen/dimen_10dp" />
 
                 </RelativeLayout>
 
@@ -155,7 +156,8 @@
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
                     android:divider="@color/white"
-                    android:dividerHeight="@dimen/dimen_5dp" />
+                    android:dividerHeight="@dimen/dimen_5dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -163,5 +165,29 @@
 
     </ScrollView>
 
+    <LinearLayout
+        android:id="@+id/llBottomPower"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bgBlueSignup"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_3dp">
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/tvPowered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/poweredby"
+            android:textColor="@color/grey" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:contentDescription="TODO"
+            android:src="@drawable/kore_ai_logo" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -283,7 +283,7 @@ public class TableCustomView<T> extends LinearLayout {
             if(showiewMore)
                 botTableShowMoreButton.setVisibility(VISIBLE);
 
-            botTableShowMoreButton.setOnClickListener(new View.OnClickListener() {
+            botTableShowMoreButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showTableViewDialog();

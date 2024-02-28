@@ -90,4 +90,21 @@
         <attr name="icvp_interpolator"/>
     </declare-styleable>
 
+    <declare-styleable name="ImageViewWithTextStyle">
+        <attr name="TextSize" format="dimension"/>
+        <attr name="TextColor" format="color"/>
+        <attr name="BackgroundImage" format="reference"/>
+        <attr name="srcImage" format="reference"/>
+        <attr name="Text" format="string"/>
+        <!--<attr name="labelPosition" format="enum">-->
+        <!--<enum name="left" value="0"/>-->
+        <!--<enum name="right" value="1"/>-->
+        <!--</attr>-->
+        <!--<attr name="labelWidth" format="dimension"/>-->
+        <!--<attr name="labelY" format="dimension"/>-->
+        <!--<attr name="pieRotation" format="integer"/>-->
+        <!--<attr name="pointerRadius" format="dimension"/>-->
+        <!--<attr name="showText" format="boolean"/>-->
+    </declare-styleable>
+
 </resources>

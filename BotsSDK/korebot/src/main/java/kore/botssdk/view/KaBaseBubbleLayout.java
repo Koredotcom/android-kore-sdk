@@ -778,7 +778,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         bubbleTextMediaLayout.setClicable(_isclickable);
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
             if(((BotRequest) baseBotMessage).getMessage() != null)
-                message = ((BotRequest) baseBotMessage).getMessage().getBody();
+                message = (String)((BotRequest) baseBotMessage).getMessage().getBody();
             bubbleTextMediaLayout.populateTextSenders(message);
         } else if (componentModel != null) {
             String compType = componentModel.getType();

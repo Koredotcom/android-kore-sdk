@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".audiocodes.webrtcclient.Activities.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/dialer_layout_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/dialer_layout_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="2">
+            <ImageView
+                android:id="@+id/dialer_button_keypad_fake"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/dialpad_button_back_icon_xml"
+                android:gravity="center"
+                android:visibility="invisible"
+                />
+            <EditText
+                android:id="@+id/dialer_editText_call_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:cursorVisible="true"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:inputType="textPersonName"
+
+                android:textSize="26sp"
+                />
+            <ImageView
+                android:id="@+id/dialer_button_keypad_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/dialpad_button_back_icon_xml"
+                android:gravity="center"
+                 />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dialer_layout_pad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1">
+            <LinearLayout
+                android:id="@+id/dialer_layout_row_1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1">
+
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="1"
+                    android:textSize="20sp"
+                    custom:Text="1"
+                    style="@style/DialerKeypadButton"/>
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="2\nABC" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="3\nDEF" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/dialer_layout_row_2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1">
+
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="4\nGHI" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="5\nJKL" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="6\nMNO" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/dialer_layout_row_3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1">
+
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="7\nPQRS" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="8\nTUV" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="9\nWXYZ" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/dialer_layout_row_4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1">
+
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_asterisk"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="*" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="0\n+" />
+                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                    android:id="@+id/dialer_button_keypad_hash"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    style="@style/DialerKeypadButton"
+                    custom:Text="#" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dialer_layout_call"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_weight="0">
+
+            <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                android:id="@+id/dialer_button_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:Text="@string/dialer_button_call_text"
+                style="@style/DialerCallButton"
+                android:layout_weight="1"/>
+            <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                android:id="@+id/dialer_button_video_call"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:Text="@string/dialer_button_video_call_text"
+                style="@style/DialerCallButton"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

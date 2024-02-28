@@ -13,6 +13,8 @@ public class BundleUtils {
     public static final String KEYPAD = "keypad";
     public static final String TOP = "top";
     public static final String IS_FROM_WELCOME = "IS_FROM_WELCOME";
+    public static final String COLOR = "color";
+    public static final String OPEN_WELCOME = "OPEN_WELCOME";
 
     public static String BOT_NAME = "chatBot";
     public static final String BOT_NAME_INITIALS ="bot_initials";

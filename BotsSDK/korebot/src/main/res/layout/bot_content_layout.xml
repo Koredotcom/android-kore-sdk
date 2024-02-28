@@ -10,7 +10,7 @@
         android:id="@+id/llBotHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/gray_modern"/>
+        android:background="@color/gray_modern" />
 
     <RelativeLayout
         android:id="@+id/rlBody"
@@ -40,7 +40,9 @@
                 android:layout_marginBottom="2dp"
                 android:choiceMode="singleChoice"
                 android:divider="@android:color/transparent"
+                android:layoutAnimation="@anim/layout_animation"
                 android:listSelector="@color/white"
+                android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 android:transcriptMode="normal"
                 android:visibility="visible"
@@ -56,7 +58,6 @@
 
 
         <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
-            xmlns:dots="http://schemas.android.com/apk/res-auto"
             android:id="@+id/botTypingStatus"
             android:layout_width="match_parent"
             android:layout_height="@dimen/typing_layout_height"
@@ -78,18 +79,21 @@
                 cpv:text_size="12dp" />
 
             <!-- Presence Dots -->
-            <kore.botssdk.views.DotsTextView
-                android:id="@+id/typing_status_item_dots"
+            <kore.botssdk.views.LoadingDots
+                android:id="@+id/ldDots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="5dp"
-                android:layout_marginBottom="@dimen/dot_view_margin_bottom"
-                android:textColor="@color/left_bubble_text_color"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                dots:autoplay="true"
-                dots:period="1000" />
+                android:layout_marginBottom="@dimen/dimen_3dp"
+                app:LoadingDots_auto_play="true"
+                app:LoadingDots_dots_color="@color/bgBlueSignup"
+                app:LoadingDots_dots_count="3"
+                app:LoadingDots_dots_size="@dimen/dimen_7dp"
+                app:LoadingDots_dots_space="5dp"
+                app:LoadingDots_jump_duration="300"
+                app:LoadingDots_jump_height="4dp"
+                app:LoadingDots_loop_duration="800"
+                app:LoadingDots_loop_start_delay="100" />
         </LinearLayout>
     </RelativeLayout>
 

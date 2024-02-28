@@ -93,7 +93,7 @@ public class RestResponse {
     }
 
     public static class BotMessage {
-        private String body;
+        private Object body;
         private BotCustomData customData;
         public HashMap<String, Object> getParams() {
             return params;
@@ -105,6 +105,10 @@ public class RestResponse {
 
         private HashMap<String, Object> params;
         private ArrayList<HashMap<String, String>> attachments = new ArrayList<>();
+
+        public BotMessage(Object body) {
+            this.body = body;
+        }
 
         public BotMessage(String body) {
             this.body = body;
@@ -123,7 +127,7 @@ public class RestResponse {
             this.attachments = attachments;
         }
 
-        public String getBody() {
+        public Object getBody() {
             return body;
         }
 
@@ -160,11 +164,18 @@ public class RestResponse {
         private int id = clientMessageId;
         private String client = "Android";
 
+        private String event;
+
         public void setMessage(BotMessage message) {
             this.message = message;
         }
         public void setBotInfo(BotInfoModel botInfo){
             this.botInfo = botInfo;
+        }
+
+        public void setEvent(String event)
+        {
+            this.event = event;
         }
 
         public int getClientMessageId() {

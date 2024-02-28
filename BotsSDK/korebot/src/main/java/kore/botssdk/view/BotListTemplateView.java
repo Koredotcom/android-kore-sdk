@@ -62,7 +62,7 @@ public class BotListTemplateView extends ViewGroup {
 
     }
 
-    public void populateListTemplateView(ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList) {
+    public void populateListTemplateView(ArrayList<BotListModel> botListModelArrayList, final ArrayList<BotButtonModel> botButtonModelArrayList, boolean isEnabled) {
 
 
         if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
@@ -75,6 +75,8 @@ public class BotListTemplateView extends ViewGroup {
             } else {
                 botListTemplateAdapter = (BotListTemplateAdapter) autoExpandListView.getAdapter();
             }
+
+            botListTemplateAdapter.setEnabled(isEnabled);
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.notifyDataSetChanged();
             botCustomListRoot.setVisibility(VISIBLE);

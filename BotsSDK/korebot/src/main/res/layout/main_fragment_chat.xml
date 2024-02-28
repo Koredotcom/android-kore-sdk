@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+
+
+        <TextView
+            android:id="@+id/chat_contact_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:text="@string/chat_contact" />
+
+        <EditText
+            android:id="@+id/chat_contact_edittext"
+            style="@style/LoginEditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:id="@+id/chat_message_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:text="@string/chat_message"
+            android:layout_marginTop="15dp"/>
+
+        <EditText
+            android:id="@+id/chat_message_edittext"
+            style="@style/LoginEditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:orientation="vertical"
+            android:background="@color/ac"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/chat_last_message_contact_title_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:text="@string/chat_last_message_contact"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/chat_last_message_contact_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/chat_last_message_title_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:text="@string/chat_last_message_text"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/chat_last_message_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/LoginTextViewStyle"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/chat_send_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/chat_send"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_weight="0"/>
+
+</LinearLayout>

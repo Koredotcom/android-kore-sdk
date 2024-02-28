@@ -69,25 +69,24 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         LineDataSet[] dataSet;
 
 
-
-        if(_payInner!=null&&_payInner.getText()!=null&& !StringUtils.isNullOrEmptyWithTrim(_payInner.getText())) {
+        if (_payInner != null && _payInner.getText() != null && !StringUtils.isNullOrEmptyWithTrim(_payInner.getText())) {
             Description desc = new Description();
             desc.setText(_payInner.getText());
             mChart.setDescription(desc);
         }
-       // mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
+        // mChart.getDescription().setPosition(mChart.getX()+(100*dp1),mChart.getY());
 
         ArrayList<BotLineChartDataModel> lineList = _payInner.getLineChartDataModels();
 
         ArrayList<ILineDataSet> sets = new ArrayList<ILineDataSet>(lineList.size());
         dataSet = new LineDataSet[lineList.size()];
 
-        for(int baseIndex=0; baseIndex < lineList.size(); baseIndex++){
+        for (int baseIndex = 0; baseIndex < lineList.size(); baseIndex++) {
             BotLineChartDataModel model = lineList.get(baseIndex);
 
             ArrayList<Entry> entry = new ArrayList<Entry>();
             for (int index = 0; index < model.getValues().size(); index++) {
-                entry.add(new Entry(index,Math.round(model.getValues().get(index))));
+                entry.add(new Entry(index, Math.round(model.getValues().get(index))));
             }
             dataSet[baseIndex] = new LineDataSet(entry, model.getTitle());
             dataSet[baseIndex].setLineWidth(2.5f);
@@ -104,7 +103,6 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
             dataSet[baseIndex].setFormSize(15.f);
             sets.add(dataSet[baseIndex]);
         }
-
 
 
         LineData lineData = new LineData(sets);
@@ -128,11 +126,11 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return _payInner.getxAxis().get((int)value);
+                return _payInner.getxAxis().get((int) value);
             }
         });
         xAxis.setLabelRotationAngle(-60f);
-        xAxis.setLabelCount( _payInner.getxAxis().size(), true);
+        xAxis.setLabelCount(_payInner.getxAxis().size(), true);
 
         Legend l = mChart.getLegend();
 
@@ -147,24 +145,24 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
         l.setDrawInside(false);
 
 
-
     }
 
 
-    private String[] getXAxisValues(ArrayList<BotLineChartDataModel> dataModels){
+    private String[] getXAxisValues(ArrayList<BotLineChartDataModel> dataModels) {
         String[] arr = new String[dataModels.size()];
-        for(int in=0; in<dataModels.size();in++){
+        for (int in = 0; in < dataModels.size(); in++) {
             arr[in] = dataModels.get(in).getTitle();
         }
 
         return arr;
     }
-    private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, List<String> headers){
+
+    private ArrayList<ILineDataSet> getYAxisValues(ArrayList<BotLineChartDataModel> dataModels, List<String> headers) {
         ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
         SecureRandom randomGenerator = new SecureRandom();
         String[] colors = this.getResources().getStringArray(R.array.color_set);
 
-        int size = dataModels != null && dataModels.size() > 0 ? dataModels.get(0).getValues() != null ? dataModels.get(0).getValues().size() : 0 :0;
+        int size = dataModels != null && dataModels.size() > 0 ? dataModels.get(0).getValues() != null ? dataModels.get(0).getValues().size() : 0 : 0;
         for (int i = 0; i <= size - 1; i++) {
             ArrayList<Entry> yVals = new ArrayList<Entry>();
             for (int j = 0; j <= dataModels.size() - 1; j++) {
@@ -173,9 +171,9 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
             }
 
             LineDataSet set1;
-            int index = randomGenerator.nextInt(colors.length-1);
-            Integer color =  Color.parseColor(colors[index]);
-            set1 = new LineDataSet(yVals, headers.get(i+1));
+            int index = randomGenerator.nextInt(colors.length - 1);
+            Integer color = Color.parseColor(colors[index]);
+            set1 = new LineDataSet(yVals, headers.get(i + 1));
             set1.setFillAlpha(110);
             set1.setColor(color);
             set1.setDrawValues(false);
@@ -188,7 +186,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
             set1.setDrawFilled(false);
             dataSets.add(set1);
         }
-        return  dataSets;
+        return dataSets;
     }
 
 
@@ -242,7 +240,7 @@ public class LineChartView extends ViewGroup implements OnChartGestureListener {
     @Override
     public void onChartGestureEnd(MotionEvent motionEvent, ChartTouchListener.ChartGesture chartGesture) {
         // un-highlight values after the gesture is finished and no single-tap
-        if(chartGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
+        if (chartGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
             mChart.highlightValues(null);
     }
 

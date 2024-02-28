@@ -124,8 +124,8 @@ public class BotResponsiveExpandTableView extends TableExpandView<MiniTableModel
         if (mode == MeasureSpec.UNSPECIFIED || mode == MeasureSpec.AT_MOST) {
             // super has to be called in the beginning so the child views can be initialized.
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            int height = 0;
-            height = 70 * dp1 * tableDataView.getAdapter().getCount();
+            int height;
+            height = 75 * dp1 * tableDataView.getAdapter().getCount();
             height += tableHeaderView.getMeasuredHeight();
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(height+getPaddingTop(), MeasureSpec.EXACTLY);
         }

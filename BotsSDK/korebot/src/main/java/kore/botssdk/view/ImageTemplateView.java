@@ -65,11 +65,11 @@ public class ImageTemplateView extends LinearLayout
     private RelativeLayout rlVideo;
     private WebView wvAudio;
     private LinearLayout llAudio, llPlayControls;
-    private ImageView ivAudioPlayPauseIcon, ivFullScreen, ivAudioMore;
-    private final MediaPlayer player = new MediaPlayer();
+    ImageView ivAudioPlayPauseIcon, ivFullScreen, ivAudioMore;
+    final MediaPlayer player = new MediaPlayer();
     private PayloadInner payloadInner;
     private ImageView ivVideoMore;
-    private PopupWindow popupWindow;
+    PopupWindow popupWindow;
     private View popUpView;
     private TextView tvTheme1, tvTheme2, tvVideoTitle;
     private View vTheme;
@@ -156,7 +156,7 @@ public class ImageTemplateView extends LinearLayout
 
     }
 
-    private boolean checkForPermissionAccessAndRequest()
+    boolean checkForPermissionAccessAndRequest()
     {
         return KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }

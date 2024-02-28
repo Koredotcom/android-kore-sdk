@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    style="@style/SettingsLayoutStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    >
+
+    <LinearLayout
+        android:id="@+id/call_stats_layout_stats"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_stats_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                style="@style/CalStatsTextViewStyleHerder"
+                android:layout_marginBottom="40dp"
+                android:textSize="24sp"
+                android:gravity="center"
+                android:text="@string/call_stats_textview_stats_title" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_packets_received_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_packets_received_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_packets_received_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_bytes_received_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_bytes_received_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_bytes_received_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_packets_lost_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_packets_lost_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_packets_lost_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_jitter_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_jitter_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_jitter_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_fraction_lost_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_fraction_lost_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_fraction_lost_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_packets_sent_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_packets_sent_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_packets_sent_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/call_stats_textview_bytes_sent_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleHerder"
+                android:text="@string/call_stats_textview_bytes_sent_header" />
+            <TextView
+                android:id="@+id/call_stats_textview_bytes_sent_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/CalStatsTextViewStyleText"
+                android:text="-" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

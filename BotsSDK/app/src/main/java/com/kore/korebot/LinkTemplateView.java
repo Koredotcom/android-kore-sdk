@@ -1,6 +1,6 @@
 package com.kore.korebot;
 
-import static com.kore.korebot.R.*;
+import static com.kore.korebot.R.id;
 
 import android.content.Context;
 import android.os.Environment;
@@ -22,7 +22,6 @@ import java.lang.reflect.Type;
 
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CustomTemplateView;
@@ -32,7 +31,7 @@ public class LinkTemplateView extends CustomTemplateView {
     private TextView tvPdfName;
     private Context context;
     private ProgressBar pbDownload;
-    private Gson gson;
+    private Gson gson = new Gson();
 
     public LinkTemplateView(Context context) {
         super(context);
@@ -41,32 +40,35 @@ public class LinkTemplateView extends CustomTemplateView {
 
     @Override
     public void populateTemplate(String botResponse, boolean isLast) {
-        Type botResp = new TypeToken<ResponsePayload>() {}.getType();
-        ResponsePayload responsePayload = gson.fromJson(botResponse, botResp);
-
-        if (responsePayload != null)
+        if(!StringUtils.isNullOrEmpty(botResponse))
         {
-            tvPdfName.setText(responsePayload.getFileName());
-            ivPdfDownload.setOnClickListener(v -> {
-                File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + responsePayload.getFileName());
-                if (!StringUtils.isNullOrEmpty(responsePayload.getUrl())) {
-                    ivPdfDownload.setVisibility(GONE);
-                    pbDownload.setVisibility(VISIBLE);
+            Type botResp = new TypeToken<ResponsePayload>() {}.getType();
+            ResponsePayload responsePayload = gson.fromJson(botResponse, botResp);
 
-                    if(writeBase64ToDisk(responsePayload.getUrl(), fileLocation))
+            if (responsePayload != null)
+            {
+                tvPdfName.setText(responsePayload.getFileName());
+                ivPdfDownload.setOnClickListener(v -> {
+                    File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + responsePayload.getFileName());
+                    if (!StringUtils.isNullOrEmpty(responsePayload.getUrl())) {
+                        ivPdfDownload.setVisibility(GONE);
+                        pbDownload.setVisibility(VISIBLE);
+
+                        if(writeBase64ToDisk(responsePayload.getUrl(), fileLocation))
+                        {
+                            ivPdfDownload.setVisibility(VISIBLE);
+                            pbDownload.setVisibility(GONE);
+
+                            Toast.makeText(context, "Statement downloaded successfully under downloads", Toast.LENGTH_SHORT).show();
+                        }
+                    } else
                     {
                         ivPdfDownload.setVisibility(VISIBLE);
                         pbDownload.setVisibility(GONE);
-
-                        Toast.makeText(context, "Statement downloaded successfully under downloads", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Statement can not be downloaded", Toast.LENGTH_SHORT).show();
                     }
-                } else
-                {
-                    ivPdfDownload.setVisibility(VISIBLE);
-                    pbDownload.setVisibility(GONE);
-                    Toast.makeText(context, "Statement can not be downloaded", Toast.LENGTH_SHORT).show();
-                }
-            });
+                });
+            }
         }
     }
 

@@ -3,7 +3,9 @@
     android:id="@+id/multiSelectLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@drawable/table_list_bg"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_5dp">
 
     <LinearLayout
         android:id="@+id/llCloseBottomSheet"
@@ -18,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Title"
+            android:text="@string/title"
             android:textColor="@color/black"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold"
@@ -27,7 +29,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
             android:background="@drawable/ic_close_black_24dp" />
     </LinearLayout>
 
@@ -35,9 +37,8 @@
         android:id="@+id/tvfeedback_template_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
-        android:layout_marginTop="@dimen/dimen_10dp"
-        android:text="Testing"
+        android:padding="@dimen/dimen_5dp"
+        android:text="@string/testing"
         android:textColor="#404051"
         android:textSize="@dimen/text_size_sub_header"
         android:textStyle="bold" />
@@ -47,7 +48,8 @@
         layout="@layout/imojis_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_5dp" />
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:visibility="gone" />
 
     <RatingBar
         android:id="@+id/rbFeedback"
@@ -62,7 +64,7 @@
         android:id="@+id/tvGlad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_20dp"
         android:layout_marginBottom="@dimen/dimen_20dp"
         android:fontFamily="@font/latoregular"
@@ -82,7 +84,7 @@
             android:id="@+id/tvCommentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:text="@string/whatcanbeimproved"
             android:textSize="@dimen/text_size_sub_header" />
@@ -102,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:gravity="top"/>
+                android:gravity="top" />
 
         </RelativeLayout>
 
@@ -119,4 +121,18 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_sub_header" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlViewNPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_marginBottom="@dimen/dimen_8dp"
+        android:padding="@dimen/dimen_5dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRatingScale"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
 </LinearLayout>

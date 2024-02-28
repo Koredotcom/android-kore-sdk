@@ -111,6 +111,15 @@
             android:layout_marginRight="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:visibility="visible" />
+
+        <ListView
+            android:id="@+id/lvMoreData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginRight="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

@@ -8,7 +8,7 @@
     android:paddingEnd="@dimen/dimen_10dp">
 
     <ImageView
-        android:id="@+id/ivThemeSwitcher"
+        android:id="@+id/ivBotArrowBack"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_centerVertical="true"
@@ -24,7 +24,7 @@
         android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/dimen_5dp"
-        android:layout_toEndOf="@+id/ivThemeSwitcher"
+        android:layout_toEndOf="@+id/ivBotArrowBack"
         android:background="@drawable/bot_avatar"
         android:contentDescription="@string/start_conversation" />
 

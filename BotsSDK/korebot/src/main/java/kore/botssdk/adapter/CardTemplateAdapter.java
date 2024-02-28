@@ -429,12 +429,12 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView bot_list_item_image, ivheaderExtra;
-        private final TextView bot_list_item_title, bot_list_item_subtitle, tvOnlyTitle, tvCardButton, tvheaderExtraTitle;
-        private final RelativeLayout rlTitle;
-        private final RecyclerView rvDescription;
-        private final LinearLayout llCardView, llCardViewTop;
-        private final View vBorder;
+        final ImageView bot_list_item_image, ivheaderExtra;
+        final TextView bot_list_item_title, bot_list_item_subtitle, tvOnlyTitle, tvCardButton, tvheaderExtraTitle;
+        final RelativeLayout rlTitle;
+        final RecyclerView rvDescription;
+        final LinearLayout llCardView, llCardViewTop;
+        final View vBorder;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
