@@ -305,9 +305,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private void toggleTTSButton() {
         if (isTTSEnabled) {
-            audio_speak_tts.setImageResource(R.mipmap.ic_volume_up_black_24dp);
+            audio_speak_tts.setImageResource(R.drawable.ic_volume_up_black_24dp);
         } else {
-            audio_speak_tts.setImageResource(R.mipmap.ic_volume_off_black_24dp);
+            audio_speak_tts.setImageResource(R.drawable.ic_volume_off_black_24dp);
         }
     }
 

@@ -9,6 +9,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorPrimary">@color/colorPrimaryKa</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="color_hint_composer">#dfe2e7</color>
+    <color name="bgBlueSignupAlpha">#503942f6</color>
+    <color name="color_c8c8c8">#c8c8c8</color>
+    <color name="color_blue_1_1">#0076FF</color>
+    <color name="background_tab_pressed">#efeffc</color>
 
 <!--    Associated Bank Theme-->
     <color name="colorPrimaryKa_associated">#0ea84d</color>

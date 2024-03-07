@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,15 +14,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
-import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.Widget;
+import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class AdvanceListdetailsAdapter extends BaseAdapter
 {
@@ -61,8 +60,8 @@ public class AdvanceListdetailsAdapter extends BaseAdapter
             convertView = View.inflate(context, R.layout.listwidget_details_item, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new DetailsViewHolder();
-            holder.tvBtnText = convertView.findViewById(com.kora.ai.widgetsdk.R.id.tvBtnText);
-            holder.ivListBtnIcon = convertView.findViewById(com.kora.ai.widgetsdk.R.id.ivListBtnIcon);
+            holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);
+            holder.ivListBtnIcon = convertView.findViewById(R.id.ivListBtnIcon);
             convertView.setTag(holder);
         } else {
             holder = (DetailsViewHolder) convertView.getTag();

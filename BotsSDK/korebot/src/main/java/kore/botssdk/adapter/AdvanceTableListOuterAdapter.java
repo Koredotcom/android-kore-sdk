@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
-
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.AdvanceListTableModel;
+import kore.botssdk.utils.KaFontUtils;
 
 public class AdvanceTableListOuterAdapter extends BaseAdapter
 {

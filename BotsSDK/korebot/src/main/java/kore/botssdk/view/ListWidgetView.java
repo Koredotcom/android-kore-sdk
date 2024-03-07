@@ -1,11 +1,16 @@
 package kore.botssdk.view;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
@@ -13,14 +18,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -40,16 +46,17 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
+@SuppressLint("UnknownNullness")
 public class ListWidgetView extends LinearLayout {
     private float dp1;
     public RecyclerView botCustomListView;
     private ListWidgetAdapter listWidgetAdapter = null;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    ComposeFooterInterface composeFooterInterface;
     final Context context;
     private TextView botCustomListViewButton;
     private LinearLayout botCustomListRoot;
-    private PayloadInner model;
+    PayloadInner model;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
     public ImageView icon_image_load;
@@ -117,16 +124,16 @@ public class ListWidgetView extends LinearLayout {
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void buttonAction(String utt, boolean appendUtterance){
+    public void buttonAction(String utt){
         String utterance = null;
         utterance = utt;
 
         if(utterance == null)return;
         if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
             if(utterance.startsWith("tel:")){
-                KaUtility.launchDialer(getContext(),utterance);
+                launchDialer(getContext(),utterance);
             }else if(utterance.startsWith("mailto:")){
-                KaUtility.showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
+                showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
             }
             return;
         }
@@ -192,7 +199,7 @@ public class ListWidgetView extends LinearLayout {
                         public void onClick(View v) {
                             if (model.getHeaderOptions() != null && headerOptionsModel.getButton() != null && headerOptionsModel.getButton().getPayload() != null)
                             {
-                                buttonAction(headerOptionsModel.getButton().getPayload(), true);
+                                buttonAction(headerOptionsModel.getButton().getPayload());
                             }
                         }
                     });
@@ -263,7 +270,7 @@ public class ListWidgetView extends LinearLayout {
                             public void onClick(View v) {
                                 if (model.getHeaderOptions() != null && headerOptionsModel.getImage() != null && headerOptionsModel.getImage().getPayload() != null)
                                 {
-                                    buttonAction(headerOptionsModel.getImage().getPayload(), true);
+                                    buttonAction(headerOptionsModel.getImage().getPayload());
                                 }
                             }
                         });
@@ -301,6 +308,42 @@ public class ListWidgetView extends LinearLayout {
                 botCustomListRoot.setBackground(rightDrawable);
             }
         }
+    }
+
+    public static void showEmailIntent(Activity activity, String recepientEmail) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+
+        try {
+            activity.startActivity(emailIntent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(activity, "Error while launching email intent!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    public static void launchDialer(Context context, String url) {
+        try {
+            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(url));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_NO_HISTORY);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static boolean hasPermission(Context context,String... permission) {
+        boolean shouldShowRequestPermissionRationale = true;
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
+        }
+        return shouldShowRequestPermissionRationale;
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {

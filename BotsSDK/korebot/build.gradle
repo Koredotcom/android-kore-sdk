@@ -53,11 +53,6 @@ dependencies {
     implementation(project(':korebotsdklib')){
         exclude module: 'support-v4'
     }
-    implementation(project(':widgetsdk')){
-        exclude module: 'support-v4'
-        exclude group: 'org.apache.commons'
-        exclude module: 'com.github.PhilJay'
-    }
 
     implementation 'com.google.android.material:material:1.11.0-alpha02'
     implementation 'androidx.multidex:multidex:2.0.1'

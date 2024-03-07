@@ -85,7 +85,7 @@ public class AdvancedListTemplateView extends LinearLayout {
                 {
                     botCustomListViewButton.setVisibility(VISIBLE);
                     botCustomListViewButton.setText(payloadInner.getSeeMoreTitle());
-                    botCustomListViewButton.setTextColor(getContext().getColor(R.color.color_blue_1_1));
+                    botCustomListViewButton.setTextColor(getContext().getColor(R.color.bgBlueSignup));
                 }
 
                 botCustomListViewButton.setOnClickListener(v -> {

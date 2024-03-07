@@ -15,14 +15,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.AdvanceListTableModel;
+import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateListAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;

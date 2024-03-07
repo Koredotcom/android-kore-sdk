@@ -1,3 +1,2 @@
 include ':korebot', ':korebotsdklib'
-include ':widgetsdk'
 include ':app'
