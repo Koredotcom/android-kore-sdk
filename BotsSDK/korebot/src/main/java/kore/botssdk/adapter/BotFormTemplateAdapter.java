@@ -94,7 +94,7 @@ public class BotFormTemplateAdapter extends BaseAdapter {
         if (item.getFieldButton() != null)
             holder.btfieldButton.setText(item.getFieldButton().getTitle());
         else
-            holder.btfieldButton.setText(R.string.ka_ok);
+            holder.btfieldButton.setText(R.string.ok);
 
         String str = item.getLabel() + " : ";
         holder.tvFormFieldTitle.setText(str);

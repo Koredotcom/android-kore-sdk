@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kore.ai.widgetsdk.models.BotTableListDefaultActionsModel;
 
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
@@ -22,6 +21,7 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotTableListDefaultActionsModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.tableview.TableDataAdapter;
 import kore.botssdk.view.tableview.model.MiniTableModel;
@@ -31,13 +31,12 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     private static final int TEXT_SIZE = 12;
     private final String[] alignment;
-    private final ComposeFooterInterface composeFooterInterface;
-    private final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    final ComposeFooterInterface composeFooterInterface;
+    final InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final Gson gson = new Gson();
     private Dialog dialog;
 
-    public BotTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface)
-    {
+    public BotTableAdapter(final Context context, final List<MiniTableModel> data, String[] alignment, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         super(context, data);
         this.alignment = alignment;
         this.composeFooterInterface = composeFooterInterface;
@@ -46,35 +45,31 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
 
     @Override
     public View getCellView(int rowIndex, int columnIndex, ViewGroup parentView) {
-        String  str = "";
+        String str = "";
         View renderedView = null;
 
-        if(getRowData(rowIndex).getElements().get(columnIndex) instanceof Double)
-        {
+        if (getRowData(rowIndex).getElements().get(columnIndex) instanceof Double) {
             str = Double.toString((Double) getRowData(rowIndex).getElements().get(columnIndex));
-            renderedView = renderString(columnIndex,str);
-        }else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof String){
+            renderedView = renderString(columnIndex, str);
+        } else if (getRowData(rowIndex).getElements().get(columnIndex) instanceof String) {
             str = (String) getRowData(rowIndex).getElements().get(columnIndex);
-            renderedView = renderString(columnIndex,str);
-        }
-        else if(getRowData(rowIndex).getElements().get(columnIndex) instanceof ArrayList)
-        {
+            renderedView = renderString(columnIndex, str);
+        } else if (getRowData(rowIndex).getElements().get(columnIndex) instanceof ArrayList) {
             renderedView = renderString(columnIndex, ((ArrayList<?>) getRowData(rowIndex).getElements().get(columnIndex)));
         }
 
         return renderedView;
     }
 
-    private int getGravity(int columnIndex){
-        if(alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
-            return Gravity.START|Gravity.CENTER_VERTICAL;
-        else if(alignment[columnIndex].equals("right"))
-            return Gravity.END|Gravity.CENTER_VERTICAL;
+    private int getGravity(int columnIndex) {
+        if (alignment[columnIndex].equals("left") || alignment[columnIndex].equals("default"))
+            return Gravity.START | Gravity.CENTER_VERTICAL;
+        else if (alignment[columnIndex].equals("right"))
+            return Gravity.END | Gravity.CENTER_VERTICAL;
         else return Gravity.CENTER;
     }
 
-    public void setDialogReference(Dialog dialog)
-    {
+    public void setDialogReference(Dialog dialog) {
         this.dialog = dialog;
     }
 
@@ -98,50 +93,42 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
         textView.setTextColor(Color.BLACK);
         textView.setGravity(getGravity(columnIndex));
 
-        if(value != null && value.size() > 0)
-        {
+        if (value != null && value.size() > 0) {
             textView.setText(format(value.get(0)));
 
-            if(value.size() > 1)
-            {
-                if(value.get(1).equals("button"))
-                {
+            if (value.size() > 1) {
+                if (value.get(1).equals("button")) {
                     textView.setTextColor(getResources().getColor(R.color.colorPrimary));
 
                     try {
                         String elementsAsString = gson.toJson(value.get(2));
-                        Type carouselType = new TypeToken<BotTableListDefaultActionsModel>() {}.getType();
+                        Type carouselType = new TypeToken<BotTableListDefaultActionsModel>() {
+                        }.getType();
                         BotTableListDefaultActionsModel botTableListDefaultActionsModel = gson.fromJson(elementsAsString, carouselType);
 
-                        if(botTableListDefaultActionsModel != null)
-                        {
-                            if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botTableListDefaultActionsModel.getType()))
+                        if (botTableListDefaultActionsModel != null) {
+                            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botTableListDefaultActionsModel.getType()))
                                 textView.setText(Html.fromHtml("<u>" + format(value.get(0)) + "<\"\"u>"));
 
-                            textView.setOnClickListener(new View.OnClickListener()
-                            {
+                            textView.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(View v)
-                                {
-                                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null)
-                                    {
+                                public void onClick(View v) {
+                                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                                         if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botTableListDefaultActionsModel.getType())) {
                                             invokeGenericWebViewInterface.invokeGenericWebView(botTableListDefaultActionsModel.getUrl());
                                         } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botTableListDefaultActionsModel.getType())) {
                                             String listElementButtonPayload = botTableListDefaultActionsModel.getPayload();
                                             String listElementButtonTitle = textView.getText().toString();
-                                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload,false);
+                                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload, false);
                                         }
 
-                                        if(dialog != null)
+                                        if (dialog != null)
                                             dialog.dismiss();
                                     }
                                 }
                             });
                         }
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -151,15 +138,12 @@ public class BotTableAdapter extends TableDataAdapter<MiniTableModel> {
         return textView;
     }
 
-    public static String format(Object d)
-    {
-        if(d instanceof Double)
-        {
+    public static String format(Object d) {
+        if (d instanceof Double) {
             NumberFormat format = new DecimalFormat("0.#");
             return format.format(d);
-        }
-        else
-            return d+"";
+        } else
+            return d + "";
     }
 
 }

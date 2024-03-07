@@ -55,9 +55,4 @@ dependencies {
         exclude module: 'support-v4'
     }
 
-    implementation(project(':widgetsdk')){
-        exclude module: 'support-v4'
-        exclude group: 'org.apache.commons'
-        exclude module: 'com.github.PhilJay'
-    }
 }

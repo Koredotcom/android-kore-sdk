@@ -11,14 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
-
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AdvanceListRefreshEvent;
 import kore.botssdk.models.AdvanceOptionsModel;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 
 public class AdvanceOptionsAdapter extends BaseAdapter {
