@@ -9,6 +9,7 @@ public class BrandingIconModel implements Serializable {
     private boolean show;
     private String color;
     private String icon;
+    private String type;
     private BrandingQuickStartButtonActionModel action;
 
     public void setAction(BrandingQuickStartButtonActionModel action) {
@@ -45,6 +46,14 @@ public class BrandingIconModel implements Serializable {
 
     public String getSize() {
         return size;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getIcon_url() {

@@ -37,6 +37,7 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 @SuppressLint("UnknownNullness")
 public class OptionsActionSheetFragment extends BottomSheetDialogFragment
@@ -115,7 +116,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                 rvQuickData.setLayoutManager(layoutManager);
 
-                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_LIST);
+                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_LIST,"#a7b0be");
                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons());
                 rvQuickData.setAdapter(quickRepliesAdapter);
             }
@@ -125,7 +126,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                 rvQuickData.setLayoutManager(layoutManager);
 
-                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_CAROUSEL);
+                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireActivity(), BotResponse.TEMPLATE_TYPE_CAROUSEL, "#a7b0be");
                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel.getWelcome_screen().getStarter_box().getQuick_start_buttons().getButtons());
                 rvQuickData.setAdapter(quickRepliesAdapter);
             }

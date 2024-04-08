@@ -177,7 +177,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
                                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                                 rvStarterButtons.setLayoutManager(layoutManager);
 
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_LIST);
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_LIST,"#a7b0be");
                                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
                                 rvStarterButtons.setAdapter(quickRepliesAdapter);
                             }
@@ -187,7 +187,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
                                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                                 rvStarterButtons.setLayoutManager(layoutManager);
 
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL);
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(WelcomeScreenActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL, "#a7b0be");
                                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
                                 rvStarterButtons.setAdapter(quickRepliesAdapter);
                             }
@@ -211,7 +211,7 @@ public class WelcomeScreenActivity extends BotAppCompactActivity {
 
                         if(StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
                             hvpLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks());
+                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(WelcomeScreenActivity.this, welcomeModel.getStatic_links().getLinks(),"#a7b0be");
                             hvpLinks.setAdapter(quickRepliesAdapter);
                         }
                         else

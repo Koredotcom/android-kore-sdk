@@ -79,8 +79,8 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private final int compressQualityInt = 100;
     private OrientationEventListener mOrientationEventListener;
     private String MEDIA_TYPE = MEDIA_TYPE_IMAGE;
-    private String MEDIA_FILENAME;
-    private String MEDIA_FILE_PATH;
+    String MEDIA_FILENAME;
+    String MEDIA_FILE_PATH;
     private String MEDIA_EXTENSION;
     private String thumbnailFilePath;
     private Intent resultIntent = null;
@@ -252,12 +252,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             } else if(imagePickType.equals(CHOOSE_TYPE_FILE)) {
                 Intent videoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 String[] mime = {"text/plain",
-                        "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/vnd.ms-excel", "application/vnd.ms-excel.sheet.binary.macroenabled.12","application/rtf",
-                "application/vnd.ms-excel.sheet.macroenabled.12","application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.template","application/vnd.ms-excel.template.macroEnabled.12",
-                "application/vnd.ms-excel.addin.macroEnabled.12", "application/vnd.ms-powerpoint","application/vnd.oasis.opendocument.text",
-                 "application/vnd.openxmlformats-officedocument.presentationml.presentation","audio/*"};
+                        "application/pdf"};
                 videoPickerIntent.setType("text/*");
                 videoPickerIntent.putExtra(Intent.EXTRA_MIME_TYPES,mime);
                 videoPickerIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
@@ -451,7 +446,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         return image;
     }
 
-    private String getFileNameByUri(Context context, Uri uri)
+    String getFileNameByUri(Context context, Uri uri)
     {
         String filepath = "";
         File file;
@@ -604,7 +599,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         }
     }
 
-    private void finishAndCancelOperation() {
+    void finishAndCancelOperation() {
         if (resultIntent == null) resultIntent = new Intent();
         resultIntent.putExtra("action", "IMAGE_CANCEL");
         resultIntent.putExtra("fileName", "");

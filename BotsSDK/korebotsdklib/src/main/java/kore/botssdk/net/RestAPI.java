@@ -3,13 +3,11 @@ package kore.botssdk.net;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.BotMetaModel;
-import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
 import kore.botssdk.models.PdfResponseModel;

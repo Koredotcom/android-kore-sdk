@@ -433,7 +433,7 @@ public class FileUtils {
             return Color.parseColor(COLOR_AUDIO);
         else if (fileType.equalsIgnoreCase(EXT_SKETCH) || fileType.equalsIgnoreCase("crdownload"))
             return Color.parseColor(COLOR_SKETCH);
-        else if (fileType.equalsIgnoreCase(EXT_TXT) || fileType.equalsIgnoreCase(EXT_HTML) || fileType.equalsIgnoreCase(EXT_ZIP) || fileType.equalsIgnoreCase(EXT_7ZIP)
+        else if (fileType.equalsIgnoreCase(EXT_HTML) || fileType.equalsIgnoreCase(EXT_ZIP) || fileType.equalsIgnoreCase(EXT_7ZIP)
                 || fileType.equalsIgnoreCase(EXT_JAR) || fileType.equalsIgnoreCase("js") || fileType.equalsIgnoreCase("java")
                 || fileType.equalsIgnoreCase(EXT_SQL)) return Color.parseColor(COLOR_TXT);
         else return Color.parseColor(COLOR_DOCX);
@@ -460,7 +460,7 @@ public class FileUtils {
         }else if(spreadTypes.contains(ext)){
             return R.drawable.ic_sheet_old;
         }else if(docTypes.contains(ext)){
-            return R.drawable.ic_document_old;
+            return R.drawable.ic_document;
         }else if(threeDImgTypes.contains(ext)){
             return R.drawable.ic_3d_object;
         }else if(rasterImageTypes.contains(ext)){

@@ -21,19 +21,29 @@
         android:background="@drawable/header_3_avatar_bg"
         android:paddingTop="@dimen/dimen_20dp">
 
-        <ImageView
-            android:id="@+id/ivBotAvatar"
+        <LinearLayout
+            android:id="@+id/llBotAvatar"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="@dimen/dimen_35dp"
-            android:background="@drawable/bot_avatar"
-            android:contentDescription="@string/start_conversation" />
+            android:background="@drawable/start_icon_bg"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivBotAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/smart_bot_icon"
+                android:contentDescription="@string/hello" />
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/rlTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ivBotAvatar"
+            android:layout_below="@id/llBotAvatar"
             android:layout_marginStart="@dimen/dimen_35dp">
 
             <kore.botssdk.views.CustomTextViewBold

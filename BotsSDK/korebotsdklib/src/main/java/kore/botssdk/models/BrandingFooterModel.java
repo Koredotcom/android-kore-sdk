@@ -6,6 +6,7 @@ public class BrandingFooterModel implements Serializable {
     private String bg_color;
     private String layout;
     private String style;
+    private String icons_color;
     private BrandingFooterComposeBarModel compose_bar;
     private BrandingFooterButtonsModel buttons;
 
@@ -29,23 +30,14 @@ public class BrandingFooterModel implements Serializable {
         return layout;
     }
 
+    public void setIcons_color(String icons_color) {
+        this.icons_color = icons_color;
+    }
+    public String getIcons_color() {
+        return icons_color;
+    }
     public void setBg_color(String bg_color) {
         this.bg_color = bg_color;
     }
 
-    public void setStyle(String style) {
-        this.style = style;
-    }
-
-    public void setButtons(BrandingFooterButtonsModel buttons) {
-        this.buttons = buttons;
-    }
-
-    public void setLayout(String layout) {
-        this.layout = layout;
-    }
-
-    public void setCompose_bar(BrandingFooterComposeBarModel compose_bar) {
-        this.compose_bar = compose_bar;
-    }
 }

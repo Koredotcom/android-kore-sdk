@@ -5,13 +5,14 @@
     android:id="@+id/rlHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_2dp"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llInnerHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_30dp"
+        android:layout_marginTop="@dimen/dimen_40dp"
         android:background="@drawable/welcome_header_bg"
         android:paddingStart="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_25dp"

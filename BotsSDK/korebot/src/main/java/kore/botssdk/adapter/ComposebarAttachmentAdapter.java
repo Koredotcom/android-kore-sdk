@@ -64,7 +64,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         return dataList.size();
     }
 
-    final ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
+    ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
     public void addAttachment(HashMap<String, String> attachmentKey) {
         dataList.add(attachmentKey);
         notifyItemRangeInserted(0, dataList.size() - 1);
@@ -72,7 +72,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
     public void clearAll()
     {
-        dataList.clear();
+        dataList = new ArrayList<>();
     }
 
     public ArrayList<HashMap<String, String>> getData() {

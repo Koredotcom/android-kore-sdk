@@ -5,6 +5,7 @@
     android:id="@+id/rlHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_2dp"
     android:paddingBottom="@dimen/dimen_5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout

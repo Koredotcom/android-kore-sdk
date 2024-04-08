@@ -45,7 +45,7 @@
       },
       "welcome_screen":{
          "show":true,
-         "layout":"medium",
+         "layout":"large",
          "logo":{
             "logo_url":"/images/sc-small.svg"
          },

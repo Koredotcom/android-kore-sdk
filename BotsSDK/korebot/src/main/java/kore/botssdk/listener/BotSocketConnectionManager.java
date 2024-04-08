@@ -2,6 +2,7 @@ package kore.botssdk.listener;
 
 import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
@@ -17,8 +18,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import kore.botssdk.botdb.BotDataPersister;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.botdb.BotDataPersister;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
 import kore.botssdk.events.NetworkEvents;
@@ -42,16 +43,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Ramachandra Pradeep on 03-Jan-18.
- */
-
+@SuppressLint("UnknownNullness")
 public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
-    private BotClient botClient;
+    BotClient botClient;
     private TTSSynthesizer ttsSynthesizer;
-    private static BotSocketConnectionManager botSocketConnectionManager;
+    static BotSocketConnectionManager botSocketConnectionManager;
     private String accessToken;
+
 
     public SocketChatListener getChatListener() {
         return chatListener;
@@ -77,9 +76,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.connection_state = connection_state;
     }
 
-    private CONNECTION_STATE connection_state = DISCONNECTED;
+    CONNECTION_STATE connection_state = DISCONNECTED;
     private String botAccessToken, botUserId;
-    private String botName, streamId;
+    String botName, streamId;
 
     private String userId;
 
@@ -273,7 +272,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     streamId = tokenResponseModel.getBotInfo().get_id();
                     SDKConfiguration.Server.setServerUrl(tokenResponseModel.getKoreAPIUrl());
                     SDKConfiguration.Server.setKoreBotServerUrl(tokenResponseModel.getKoreAPIUrl());
-                    KoreEventCenter.post(tokenResponseModel.getBranding());
 
                     if (!isRefresh) {
                         botClient.connectAsAnonymousUser(tokenResponseModel.getJwt(), botName, streamId, botSocketConnectionManager);
@@ -281,7 +279,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                         KoreEventCenter.post(tokenResponseModel.getJwt());
                     }
                 }else{
-//                    Log.d("token refresh", t.getMessage());
                     connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
                 }
             }

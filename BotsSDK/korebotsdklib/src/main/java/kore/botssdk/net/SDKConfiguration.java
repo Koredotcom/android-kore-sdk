@@ -1,10 +1,5 @@
 package kore.botssdk.net;
 
-/**
- * Created by Ramachandra on 30-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
 import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +20,7 @@ public class SDKConfiguration {
     private static String INIT_MESSAGE = "Welpro";
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
-    protected static HashMap<String , View> hsh = new HashMap<>();
+    protected static HashMap<String, View> hsh = new HashMap<>();
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -63,22 +58,23 @@ public class SDKConfiguration {
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
-        static  String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai/";
+
+        static String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static   String SERVER_URL = "https://sit-xo.kore.ai/";
-        public static final String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
+        public static String SERVER_URL = "https://sit-xo.kore.ai/";
+        public static final String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
         public static final String Branding_SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String koreAPIUrl = "https://dev-xo.kore.ai/";
     }
 
     public static class Client {
         //XO
-        public static final String client_id = "cs-a587b4ab-ae81-5f44-bd87-025eedd6f927";
-        public static final String client_secret = "yxACIL/EJ+0TbYtZfw86Cdcrbe1VSv34fPieGcKksLk=";
-        public static final String bot_id = "st-25c46de8-9585-5b69-9cf6-a690755022f9";
+        public static final String client_id = "cs-45fe4495-5c78-556c-9d9c-fdac19baf133";
+        public static final String client_secret = "uV6gaX+qYdRTgPiHXwheMjdq9ZFrRt30pfbb5cICAFM=";
+        public static final String bot_id = "st-7467c416-e781-5f33-813e-ca79f3817ead";
         public static String identity = "email@kore.com";
-        public static final String bot_name = "SDK";
+        public static final String bot_name = "SDKDemo";
 
 //        public static String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
 //        public static String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
@@ -105,7 +101,7 @@ public class SDKConfiguration {
 
     public static class BubbleColors {
         public static boolean isArabic = false;
-        public static  String rightBubbleSelected = APP_REQ_COLOR;
+        public static String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -148,15 +144,15 @@ public class SDKConfiguration {
         }
 
 
-        public static  String rightBubbleUnSelected=APP_REQ_COLOR;
-        public static  String leftBubbleSelected="#D3D3D3";
-        public static  String leftBubbleUnSelected="#f8f9f8";
-        public static  String leftBubbleTextColor="#404051";
-        public static  String rightBubbleTextColor="#161628";//"#757587";
-        public static  String whiteColor="#FFFFFF";
-        public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor=APP_REQ_COLOR;
-        public static  String leftLinkColor = APP_REQ_COLOR;
+        public static String rightBubbleUnSelected = APP_REQ_COLOR;
+        public static String leftBubbleSelected = "#D3D3D3";
+        public static String leftBubbleUnSelected = "#f8f9f8";
+        public static String leftBubbleTextColor = "#404051";
+        public static String rightBubbleTextColor = "#161628";//"#757587";
+        public static String whiteColor = "#FFFFFF";
+        public static String leftBubbleBorderColor = "#eeeef2";
+        public static String rightLinkColor = APP_REQ_COLOR;
+        public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = true;
 
@@ -193,8 +189,8 @@ public class SDKConfiguration {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#EEEEF0";
-        public static  String quickReplyTextColor = "#000000";
+        public static String quickReplyColor = "#EEEEF0";
+        public static String quickReplyTextColor = "#000000";
 
     }
 
@@ -215,14 +211,12 @@ public class SDKConfiguration {
 
     private static final FONT_TYPES fontType = FONT_TYPES.ROBOTO;
 
-    public static void setCustomTemplateView(String templateName, View templateView)
-    {
+    public static void setCustomTemplateView(String templateName, View templateView) {
         hsh.put(templateName, templateView);
-        Log.e("HashMap Count", hsh.size()+"");
+        Log.e("HashMap Count", hsh.size() + "");
     }
 
-    public static HashMap<String, View> getCustomTemplateView()
-    {
+    public static HashMap<String, View> getCustomTemplateView() {
         return hsh;
     }
 

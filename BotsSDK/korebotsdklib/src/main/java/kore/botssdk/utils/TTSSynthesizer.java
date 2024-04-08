@@ -56,13 +56,9 @@ public class TTSSynthesizer {
     }
 
     public final void initNative(Context context) {
-        textToSpeech = new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-
-            @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                }
+        textToSpeech = new TextToSpeech(context, status -> {
+            if (status != TextToSpeech.ERROR) {
+                textToSpeech.setLanguage(Locale.US);
             }
         });
 
@@ -95,11 +91,7 @@ public class TTSSynthesizer {
 
     private void speakViaNative(String textualMessage) {
        // stopTextToSpeechNative();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
-        } else {
-            textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null);
-        }
+        textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
     }
 
     public void stopTextToSpeech() {

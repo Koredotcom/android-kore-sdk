@@ -9,6 +9,7 @@ public class BrandingFooterComposeBarModel implements Serializable {
     @SerializedName("outline-color")
     private String outline_color;
     private String placeholder;
+    private String inline_color;
 
     public void setBg_color(String bg_color) {
         this.bg_color = bg_color;
@@ -32,5 +33,13 @@ public class BrandingFooterComposeBarModel implements Serializable {
 
     public String getPlaceholder() {
         return placeholder;
+    }
+
+    public void setInline_color(String inline_color) {
+        this.inline_color = inline_color;
+    }
+
+    public String getInline_color() {
+        return inline_color;
     }
 }

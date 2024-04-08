@@ -3,7 +3,6 @@ package kore.botssdk.models;
 public class TokenResponseModel {
     private String jwt;
     private String koreAPIUrl;
-    private BrandingModel branding;
     private BotInfoModel botInfo;
 
     public void setBotInfo(BotInfoModel botInfo) {
@@ -28,13 +27,5 @@ public class TokenResponseModel {
 
     public String getKoreAPIUrl() {
         return koreAPIUrl;
-    }
-
-    public void setBranding(BrandingModel branding) {
-        this.branding = branding;
-    }
-
-    public BrandingModel getBranding() {
-        return branding;
     }
 }

@@ -1,6 +1,10 @@
 package kore.botssdk.activity;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +13,7 @@ import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -18,7 +23,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
+import kore.botssdk.BuildConfig;
 import kore.botssdk.R;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -29,13 +36,22 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     WebView webview;
     ProgressBar mProgressBar;
 
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            String action = intent.getAction();
+            if (action != null && action.equals("finish_activity")) {
+                finish();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.generic_webview_layout);
         Bundle receivedBundle = getIntent().getExtras();
-        if(receivedBundle != null)
-        {
+        if (receivedBundle != null) {
             url = receivedBundle.getString("url");
             actionbarTitle = receivedBundle.getString("header");
         }
@@ -44,6 +60,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         webview = findViewById(R.id.webView);
         mProgressBar = findViewById(R.id.mProgress);
         loadUrl();
+
+        registerReceiver(broadcastReceiver, new IntentFilter("finish_activity"));
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -58,10 +76,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     }
 
 
-    protected void loadUrl()
-    {
-        if(!StringUtils.isNullOrEmpty(url))
-        {
+    protected void loadUrl() {
+        if (!StringUtils.isNullOrEmpty(url)) {
             webview.getSettings().setJavaScriptEnabled(true);
             webview.getSettings().setUseWideViewPort(true);
             webview.getSettings().setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
@@ -72,11 +88,13 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 @SuppressWarnings("deprecation")
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    LogUtils.e("Loaded URL", url);
                     return super.shouldOverrideUrlLoading(view, url);
                 }
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    LogUtils.e("WebResourceRequest URL", request.getUrl().getHost());
                     return super.shouldOverrideUrlLoading(view, request);
                 }
 
@@ -103,13 +121,18 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
                 @Override
                 public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                    Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
-                            + consoleMessage.lineNumber() + " of "
-                            + consoleMessage.sourceId());
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
+                                + consoleMessage.lineNumber() + " of "
+                                + consoleMessage.sourceId());
+                    }
+
                     return super.onConsoleMessage(consoleMessage);
                 }
 
             });
+
+            webview.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
             webview.loadUrl(url);
         }
@@ -120,9 +143,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
 
-        if(actionBar != null)
-        {
-            actionBar.setDisplayHomeAsUpEnabled (true);
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_arrow_back_black_24dp, getTheme()));
             actionBar.setTitle(actionbarTitle);
         }

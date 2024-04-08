@@ -1,18 +1,16 @@
 package kore.botssdk.fragment;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.text.HtmlCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,18 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,7 +53,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.activity.WelcomeScreenActivity;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -97,6 +87,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
+import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.views.DotsTextView;
 import kore.botssdk.views.LoadingDots;
 import kore.botssdk.websocket.SocketWrapper;
@@ -163,10 +154,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
 
-        if (!Client.isWebHook)
-            loadChatHistory(0, limit);
-        else
-            loadWebHookChatHistory(limit);
+        if (!Client.isWebHook) loadChatHistory(0, limit);
+        else loadWebHookChatHistory(limit);
         return view;
     }
 
@@ -182,20 +171,15 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
         headerView.setVisibility(View.GONE);
         sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!Client.isWebHook) {
-                    if (botsChatAdapter != null)
-                        loadChatHistory(botsChatAdapter.getItemCount(), limit);
-                    else
-                        loadChatHistory(0, limit);
+                    if (botsChatAdapter != null) loadChatHistory(botsChatAdapter.getItemCount(), limit);
+                    else loadChatHistory(0, limit);
                 } else {
                     fetching = false;
 
@@ -243,8 +227,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     public void setJwtTokenForWebHook(String jwt) {
-        if (!StringUtils.isNullOrEmpty(jwt))
-            this.jwt = jwt;
+        if (!StringUtils.isNullOrEmpty(jwt)) this.jwt = jwt;
     }
 
     @Override
@@ -309,32 +292,27 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         }
     }
 
-    public void setBotBrandingModel(BotBrandingModel botBrandingModel)
-    {
+    public void setBotBrandingModel(BotBrandingModel botBrandingModel) {
         this.botBrandingModel = botBrandingModel;
 
-        if(botBrandingModel != null)
-        {
+        if (botBrandingModel != null) {
             BrandingHeaderModel headerModel = botBrandingModel.getHeader();
 
-            if(headerModel != null)
-            {
+            if (headerModel != null) {
                 if (headerModel.getSize().equalsIgnoreCase(BundleUtils.COMPACT))
                     llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
                 else if (headerModel.getSize().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE))
                     llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_3, null));
-                else
-                    llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_2, null));
+                else llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header_2, null));
 
-                if(!StringUtils.isNullOrEmpty(headerModel.getBg_color()))
+                if (!StringUtils.isNullOrEmpty(headerModel.getBg_color()))
                     llBotHeader.setBackgroundColor(Color.parseColor(headerModel.getBg_color()));
-            }
-            else
-                llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
+            } else llBotHeader.addView(View.inflate(requireActivity(), R.layout.bot_header, null));
 
             TextView tvBotTitle = llBotHeader.findViewById(R.id.tvBotTitle);
             TextView tvBotDesc = llBotHeader.findViewById(R.id.tvBotDesc);
             ImageView ivBotAvatar = llBotHeader.findViewById(R.id.ivBotAvatar);
+            LinearLayout llBotAvatar = llBotHeader.findViewById(R.id.llBotAvatar);
             ImageView ivBotHelp = llBotHeader.findViewById(R.id.ivBotHelp);
             ImageView ivBotSupport = llBotHeader.findViewById(R.id.ivBotSupport);
             ImageView ivBotClose = llBotHeader.findViewById(R.id.ivBotClose);
@@ -352,45 +330,69 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
             });
 
-            if(headerModel != null)
-            {
-                if(headerModel.getTitle() != null && !StringUtils.isNullOrEmpty(headerModel.getTitle().getName())) {
+            if (headerModel != null) {
+                if (headerModel.getTitle() != null && !StringUtils.isNullOrEmpty(headerModel.getTitle().getName())) {
                     tvBotTitle.setText(headerModel.getTitle().getName());
-                    if(!StringUtils.isNullOrEmpty(headerModel.getTitle().getColor())) {
+                    if (!StringUtils.isNullOrEmpty(headerModel.getTitle().getColor())) {
                         tvBotTitle.setTextColor(Color.parseColor(headerModel.getTitle().getColor()));
                     }
                 }
 
-                if(headerModel.getSub_title() != null && !StringUtils.isNullOrEmpty(headerModel.getSub_title().getName())) {
+                if (headerModel.getSub_title() != null && !StringUtils.isNullOrEmpty(headerModel.getSub_title().getName())) {
                     tvBotDesc.setText(headerModel.getSub_title().getName());
-                    if(!StringUtils.isNullOrEmpty(headerModel.getSub_title().getColor())) {
+                    if (!StringUtils.isNullOrEmpty(headerModel.getSub_title().getColor())) {
                         tvBotDesc.setTextColor(Color.parseColor(headerModel.getSub_title().getColor()));
                     }
                 }
 
-                if(headerModel.getIcon() != null && headerModel.getIcon().isShow()) {
+                if (headerModel.getIcon() != null && headerModel.getIcon().isShow()) {
                     ivBotAvatar.setVisibility(View.VISIBLE);
+
+                    if (headerModel.getIcon().getType().equalsIgnoreCase(BundleUtils.CUSTOM)) {
+                        llBotAvatar.setBackgroundResource(0);
+                        Picasso.get().load(headerModel.getIcon().getIcon_url()).transform(new RoundedCornersTransform()).into(ivBotAvatar);
+                        ivBotAvatar.setLayoutParams(new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1)));
+                    } else {
+                        switch (headerModel.getIcon().getIcon_url()) {
+                            case "icon-1":
+                                ivBotAvatar.setImageDrawable(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.ic_icon_1, requireActivity().getTheme()));
+                                break;
+                            case "icon-2":
+                                ivBotAvatar.setImageDrawable(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.ic_icon_2, requireActivity().getTheme()));
+                                break;
+                            case "icon-3":
+                                ivBotAvatar.setImageDrawable(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.ic_icon_3, requireActivity().getTheme()));
+                                break;
+                            case "icon-4":
+                                ivBotAvatar.setImageDrawable(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.ic_icon_4, requireActivity().getTheme()));
+                                break;
+                        }
+
+                        if (botBrandingModel.getGeneral() != null && botBrandingModel.getGeneral().getColors() != null && botBrandingModel.getGeneral().getColors().isUseColorPaletteOnly()) {
+                            llBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botBrandingModel.getGeneral().getColors().getPrimary())));
+                            ivBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botBrandingModel.getGeneral().getColors().getSecondary_text())));
+                        }
+                    }
                 }
 
-                if(headerModel.getButtons() != null)
-                {
-                    if(headerModel.getButtons().getHelp() != null && headerModel.getButtons().getHelp().isShow())
-                    {
+                if (headerModel.getButtons() != null) {
+                    if (headerModel.getButtons().getHelp() != null && headerModel.getButtons().getHelp().isShow()) {
                         ivBotHelp.setVisibility(View.VISIBLE);
+
+                        if (!StringUtils.isNullOrEmpty(headerModel.getIcons_color()))
+                            ivBotHelp.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(headerModel.getIcons_color())));
 
                         ivBotHelp.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(headerModel.getButtons().getHelp().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getType()))
-                                {
-                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())
-                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                if (headerModel.getButtons().getHelp().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getType())) {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType()) || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
                                         invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getHelp().getAction().getValue());
-                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
-                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getValue()))
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getValue(),false);
-                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getTitle())) {
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getTitle(),false);
+                                    } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getHelp().getAction().getType())) {
+                                        if (!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getValue(), false);
+                                        else if (!StringUtils.isNullOrEmpty(headerModel.getButtons().getHelp().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getHelp().getAction().getTitle(), false);
                                         }
                                     }
                                 }
@@ -398,22 +400,23 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         });
                     }
 
-                    if(headerModel.getButtons().getLive_agent() != null && headerModel.getButtons().getLive_agent().isShow()) {
+                    if (headerModel.getButtons().getLive_agent() != null && headerModel.getButtons().getLive_agent().isShow()) {
                         ivBotSupport.setVisibility(View.VISIBLE);
+
+                        if (!StringUtils.isNullOrEmpty(headerModel.getIcons_color()))
+                            ivBotSupport.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(headerModel.getIcons_color())));
 
                         ivBotSupport.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(headerModel.getButtons().getLive_agent().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getType()))
-                                {
-                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())
-                                            || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                if (headerModel.getButtons().getLive_agent().getAction() != null && !StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType()) || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
                                         invokeGenericWebViewInterface.invokeGenericWebView(headerModel.getButtons().getLive_agent().getAction().getValue());
-                                    }else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
-                                        if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getValue()))
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getValue(),false);
-                                        else if(!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getTitle())) {
-                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getTitle(),false);
+                                    } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(headerModel.getButtons().getLive_agent().getAction().getType())) {
+                                        if (!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getValue()))
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getValue(), false);
+                                        else if (!StringUtils.isNullOrEmpty(headerModel.getButtons().getLive_agent().getAction().getTitle())) {
+                                            composeFooterInterface.onSendClick(headerModel.getButtons().getLive_agent().getAction().getTitle(), false);
                                         }
                                     }
                                 }
@@ -421,8 +424,11 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         });
                     }
 
-                    if(headerModel.getButtons().getClose() != null && headerModel.getButtons().getClose().isShow()) {
+                    if (headerModel.getButtons().getClose() != null && headerModel.getButtons().getClose().isShow()) {
                         ivBotClose.setVisibility(View.VISIBLE);
+
+                        if (!StringUtils.isNullOrEmpty(headerModel.getIcons_color()))
+                            ivBotClose.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(headerModel.getIcons_color())));
 
                         ivBotClose.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -433,54 +439,36 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         });
                     }
                 }
+
+                if (!StringUtils.isNullOrEmpty(headerModel.getIcons_color()))
+                    ivBotArrowBack.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(headerModel.getIcons_color())));
+
             }
 
-            if(botBrandingModel.getBody() != null)
-            {
+            if (botBrandingModel.getBody() != null) {
                 BrandingBodyModel bodyModel = botBrandingModel.getBody();
 
-                if(bodyModel != null)
-                {
-                    if(bodyModel.getBackground() != null && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getType()))
-                    {
-                        if(BundleConstants.COLOR.equalsIgnoreCase(bodyModel.getBackground().getType()) &&
-                                !StringUtils.isNullOrEmpty(bodyModel.getBackground().getColor())) {
+                if (bodyModel != null) {
+                    if (bodyModel.getBackground() != null && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getType())) {
+                        if (BundleConstants.COLOR.equalsIgnoreCase(bodyModel.getBackground().getType()) && !StringUtils.isNullOrEmpty(bodyModel.getBackground().getColor())) {
                             rlBody.setBackgroundColor(Color.parseColor(bodyModel.getBackground().getColor()));
-                        }
-                        else if(!StringUtils.isNullOrEmpty(bodyModel.getBackground().getImg())){
-                            Glide.with(requireActivity())
-                                    .load(bodyModel.getBackground().getImg())
-                                    .into(new CustomTarget<Drawable>() {
-                                        @Override
-                                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                            rlBody.setBackground(resource);
-                                        }
-                                        @Override
-                                        public void onLoadCleared(@Nullable Drawable placeholder) {}
-                                    });
+                        } else if (!StringUtils.isNullOrEmpty(bodyModel.getBackground().getImg())) {
+                            Glide.with(requireActivity()).load(bodyModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                    rlBody.setBackground(resource);
+                                }
+
+                                @Override
+                                public void onLoadCleared(@Nullable Drawable placeholder) {
+                                }
+                            });
                         }
                     }
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    if(bodyModel.getUser_message() != null) {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getBg_color())) {
-                            editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, bodyModel.getUser_message().getBg_color());
-                        }
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getUser_message().getColor())) {
-                            editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, bodyModel.getUser_message().getColor());
-                        }
-                    }
-                    if(bodyModel.getBot_message() != null) {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getBg_color())) {
-                            editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, bodyModel.getBot_message().getBg_color());
-                        }
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getBot_message().getColor())) {
-                            editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, bodyModel.getBot_message().getColor());
-                        }
-                    }
-                    if(bodyModel.getTime_stamp() != null )
-                    {
-                        if(!StringUtils.isNullOrEmpty(bodyModel.getTime_stamp().getColor())) {
+                    if (bodyModel.getTime_stamp() != null) {
+                        if (!StringUtils.isNullOrEmpty(bodyModel.getTime_stamp().getColor())) {
                             editor.putString(BotResponse.TIME_STAMP_TXT_COLOR, bodyModel.getTime_stamp().getColor());
                         }
 
@@ -497,7 +485,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public void showTypingStatus(BotResponse botResponse) {
         if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             botTypingStatusRl.setVisibility(View.VISIBLE);
-            if(StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
+            if (StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
                 mChannelIconURL = botResponse.getIcon();
                 botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
             }
@@ -545,16 +533,13 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                     int stDay = calendar.get(Calendar.DAY_OF_MONTH);
 
                                     String formatedDate = "";
-//                                    formatedDate = DateUtils.getMonthName(stMonth)+" "+stDay+DateUtils.getDayOfMonthSuffix(stDay)+", "+stYear;
-                                    formatedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1))
-                                            + "-" + (stDay > 9 ? stDay : "0" + stDay)
-                                            + "-" + stYear;
+                                    formatedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "-" + (stDay > 9 ? stDay : "0" + stDay) + "-" + stYear;
 
-                                    if (!formatedDate.isEmpty())
-                                        composeFooterInterface.onSendClick(formatedDate, false);
+                                    composeFooterInterface.onSendClick(formatedDate, false);
                                 }
                             });
                         } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
                         }
                     } else if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type())) {
                         initSettings();
@@ -589,11 +574,11 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                     formatedDate = formatedDate + " to " + DateUtils.getMonthName(endMonth) + " " + endDay + DateUtils.getDayOfMonthSuffix(endDay) + ", " + endYear;
 
 
-                                    if (!formatedDate.isEmpty())
-                                        composeFooterInterface.onSendClick(formatedDate, false);
+                                    composeFooterInterface.onSendClick(formatedDate, false);
                                 }
                             });
                         } catch (IllegalArgumentException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -838,54 +823,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         return utc;
     }
 
-    static class RangeValidator implements CalendarConstraints.DateValidator {
-
-        final long minDate;
-        final long maxDate;
-
-        RangeValidator(long minDate, long maxDate) {
-            this.minDate = minDate;
-            this.maxDate = maxDate;
-        }
-
-        RangeValidator(Parcel parcel) {
-            minDate = parcel.readLong();
-            maxDate = parcel.readLong();
-        }
-
-        @Override
-        public boolean isValid(long date) {
-            return !(minDate > date || maxDate < date);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeLong(minDate);
-            dest.writeLong(maxDate);
-        }
-
-        public static final Creator<RangeValidator> CREATOR = new Creator<RangeValidator>() {
-
-            @Override
-            public RangeValidator createFromParcel(Parcel parcel) {
-                return new RangeValidator(parcel);
-            }
-
-            @Override
-            public RangeValidator[] newArray(int size) {
-                return new RangeValidator[size];
-            }
-        };
-
-
-    }
-
-
     private void loadWebHookChatHistory(final int limit) {
         if (fetching) {
             if (swipeRefreshLayout != null) {
@@ -898,54 +835,51 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getWebHookHistoryRequest(limit)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ServerBotMsgResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        getWebHookHistoryRequest(limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(ServerBotMsgResponse re) {
-                        fetching = false;
+            @Override
+            public void onNext(ServerBotMsgResponse re) {
+                fetching = false;
 
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-                        ArrayList<BaseBotMessage> list = null;
-                        if (re != null) {
-                            list = re.getBotMessages();
-                            offset = re.getOriginalSize();
-                        }
+                ArrayList<BaseBotMessage> list = null;
+                if (re != null) {
+                    list = re.getBotMessages();
+                    offset = re.getOriginalSize();
+                }
 
-                        if (list != null && list.size() > 0) {
-                            addMessagesToBotChatAdapter(list, true);
-                        }
+                if (list != null && list.size() > 0) {
+                    addMessagesToBotChatAdapter(list, true);
+                }
 
-                        if ((list == null || list.size() < limit) && offset != 0) {
-                            hasMore = false;
-                        }
-                    }
+                if ((list == null || list.size() < limit) && offset != 0) {
+                    hasMore = false;
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        fetching = false;
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                fetching = false;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
 
-                    @Override
-                    public void onComplete() {
-                        fetching = false;
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
-                });
+            @Override
+            public void onComplete() {
+                fetching = false;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 
     void loadChatHistory(final int _offset, final int limit) {
@@ -960,53 +894,50 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getHistoryRequest(_offset, limit)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ServerBotMsgResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        getHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+            @Override
+            public void onSubscribe(Disposable d) {
 
-                    }
+            }
 
-                    @Override
-                    public void onNext(ServerBotMsgResponse re) {
-                        fetching = false;
+            @Override
+            public void onNext(ServerBotMsgResponse re) {
+                fetching = false;
 
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
 
-                        ArrayList<BaseBotMessage> list = null;
-                        if (re != null) {
-                            list = re.getBotMessages();
-                            offset = _offset + re.getOriginalSize();
-                        }
+                ArrayList<BaseBotMessage> list = null;
+                if (re != null) {
+                    list = re.getBotMessages();
+                    offset = _offset + re.getOriginalSize();
+                }
 
-                        if (list != null && list.size() > 0) {
-                            addMessagesToBotChatAdapter(list, offset == 0);
-                        }
+                if (list != null && list.size() > 0) {
+                    addMessagesToBotChatAdapter(list, offset == 0);
+                }
 
-                        if ((list == null || list.size() < limit) && offset != 0) {
-                            hasMore = false;
-                        }
-                    }
+                if ((list == null || list.size() < limit) && offset != 0) {
+                    hasMore = false;
+                }
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        fetching = false;
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
+            @Override
+            public void onError(Throwable e) {
+                fetching = false;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
 
-                    @Override
-                    public void onComplete() {
-                        fetching = false;
-                        if (swipeRefreshLayout != null) {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    }
-                });
+            @Override
+            public void onComplete() {
+                fetching = false;
+                if (swipeRefreshLayout != null) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -60,7 +61,7 @@
                     android:visibility="visible" />
 
                 <ImageView
-                    android:id="@+id/attachemnt"
+                    android:id="@+id/ivAttachment"
                     android:layout_width="@dimen/dimen_20dp"
                     android:layout_height="@dimen/dimen_20dp"
                     android:layout_centerVertical="true"
@@ -91,22 +92,44 @@
                 android:padding="@dimen/dimen_1dp"
                 android:visibility="visible">
 
-                <EditText
-                    android:id="@+id/edtTxtMessage"
+                <LinearLayout
+                    android:id="@+id/llEdtText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/input_compose"
-                    android:gravity="center_vertical|start"
-                    android:hint="@string/message"
-                    android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingRight="8dp"
-                    android:scrollbars="vertical"
-                    android:tag="regular"
-                    android:textColor="@color/bubble_dark_text_color"
-                    android:textSize="16sp" />
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/edtTxtMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="center_vertical|start"
+                        android:hint="@string/message"
+                        android:inputType="textMultiLine|textCapSentences|textNoSuggestions"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingRight="8dp"
+                        android:scrollbars="vertical"
+                        android:tag="regular"
+                        android:textColor="@color/bubble_dark_text_color"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:id="@+id/audio_speak_tts"
+                        android:layout_width="@dimen/dimen_20dp"
+                        android:layout_height="@dimen/dimen_20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@mipmap/ic_volume_up_black_24dp"
+                        android:visibility="visible"
+                        app:tint="#697586" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
@@ -193,16 +216,22 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/sendTv"
+                <LinearLayout
+                    android:id="@+id/llSend"
                     android:layout_width="@dimen/dimen_35dp"
                     android:layout_height="@dimen/dimen_35dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@drawable/send_msg"
-                    android:tag="bold"
-                    android:textColor="@color/bgBlueSignup"
-                    android:textSize="@dimen/text_size_normal"
-                    android:visibility="gone" />
+                    android:background="@drawable/ic_send_bg"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/sendTv"
+                        android:layout_width="@dimen/dimen_15dp"
+                        android:layout_height="@dimen/dimen_15dp"
+                        android:layout_margin="@dimen/dimen_10dp"
+                        android:background="@drawable/ic_send_small" />
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/rec_audio_img"
@@ -222,16 +251,6 @@
                     android:src="@drawable/keypad"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/audio_speak_tts"
-                    android:layout_width="@dimen/dimen_20dp"
-                    android:layout_height="@dimen/dimen_20dp"
-                    android:layout_gravity="center_vertical"
-                    android:alpha="0.70"
-                    android:contentDescription="@string/app_name"
-                    android:padding="5dp"
-                    android:src="@mipmap/ic_volume_up_black_24dp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 

@@ -54,6 +54,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         webview.getSettings().setDomStorageEnabled(true);
         webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        // Add JavaScript interface to detect form submission
+        webview.addJavascriptInterface(new MyJavaScriptInterface(), "Android");
 
         webview.setWebViewClient(new WebViewClient() {
             @Override
@@ -93,6 +95,22 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         });
 
         webview.loadUrl(url);
+    }
+
+    private class MyJavaScriptInterface {
+        @android.webkit.JavascriptInterface
+        public void onSubmit() {
+            // This method will be called from JavaScript when the form is submitted
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Close or hide the WebView upon form submission
+                    webview.setVisibility(View.GONE);
+                    // You can also finish() the activity if needed
+                    // finish();
+                }
+            });
+        }
     }
 
     public static class WebAppInterface {
