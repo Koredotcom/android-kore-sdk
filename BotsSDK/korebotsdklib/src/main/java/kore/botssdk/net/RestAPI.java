@@ -1,6 +1,10 @@
 package kore.botssdk.net;
 
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,16 +13,14 @@ import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.KoreLoginResponse;
+import kore.botssdk.models.LoginResponse;
 import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.models.WebHookResponseDataModel;
-import kore.botssdk.models.WebHookResponseModel;
-import kore.botssdk.net.RestResponse.LoginResponse;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -33,7 +35,9 @@ public interface RestAPI {
 
     String URL_VERSION = "/1.1";
 
-    /** Login Service **/
+    /**
+     * Login Service
+     **/
     @POST("/api/oAuth/token")
     Call<RestResponse.LoginResponse> loginUser(@Body HashMap<String, Object> userCredentials);
 
@@ -54,7 +58,7 @@ public interface RestAPI {
 
     //Getting jwt grant
     @POST("/api/oAuth/token/jwtgrant")
-    Call<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String,Object> jwtToken);
+    Call<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String, Object> jwtToken);
 
 //    //Getting jwt grant Anonymous
 //    @POST("/api/oAuth/token/jwtgrant/anonymous")
@@ -105,4 +109,29 @@ public interface RestAPI {
 
     @GET("chatbot/v2/webhook/{streamId}/poll/{pollId}")
     Call<WebHookResponseDataModel> getPollIdData(@Header("Authorization") String token, @Path("streamId") String streamId, @Path("pollId") String pollId);
+
+
+    /**
+     * Okta Login Service
+     **/
+//    @POST("https://dev-80048542.okta.com/api/v1/authn")
+    @FormUrlEncoded
+    @POST("https://dev-80048542.okta.com/oauth2/default/v1/token")
+    @Headers("Content-Type: application/x-www-form-urlencoded")
+    Call<LoginResponse> oktaLogin(
+            @Field("username") String userName,
+            @Field("password") String password,
+            @Field("grant_type") String grantType,
+            @Field("client_id") String clientId,
+            @Field("client_secret") String clientSecret
+    );
+
+    @FormUrlEncoded
+    @POST("https://dev-80048542.okta.com/oauth2/default/v1/introspect")
+    @Headers("Content-Type:application/x-www-form-urlencoded")
+    Call<JsonObject> verifyOktaToken(
+            @Field("token") String token,
+            @Field("client_id") String clientId,
+            @Field("client_secret") String clientSecret
+    );
 }
