@@ -280,5 +280,6 @@
     <string name="image_name">Image Name</string>
     <string name="_00_00_00_00">00:00/00:00</string>
     <string name="audio_play_pause_icon">audio play pause icon</string>
+    <string name="arrow_to_expand">arrow to expand</string>
 
 </resources>

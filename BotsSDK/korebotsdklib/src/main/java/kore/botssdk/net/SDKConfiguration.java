@@ -59,20 +59,20 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        static String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai/";
+        static String KORE_BOT_SERVER_URL = "https://platform.kore.ai/";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static String SERVER_URL = "https://sit-xo.kore.ai/";
+        public static String SERVER_URL = "https://platform.kore.ai/";
         public static final String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
-        public static final String Branding_SERVER_URL = "https://sit-xo.kore.ai/";
+        public static final String Branding_SERVER_URL = "https://platform.kore.ai/";
         public static final String koreAPIUrl = "https://dev-xo.kore.ai/";
     }
 
     public static class Client {
         //XO
-        public static final String client_id = "cs-45fe4495-5c78-556c-9d9c-fdac19baf133";
-        public static final String client_secret = "uV6gaX+qYdRTgPiHXwheMjdq9ZFrRt30pfbb5cICAFM=";
-        public static final String bot_id = "st-7467c416-e781-5f33-813e-ca79f3817ead";
+        public static final String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
+        public static final String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
+        public static final String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
         public static String identity = "email@kore.com";
         public static final String bot_name = "SDKDemo";
 

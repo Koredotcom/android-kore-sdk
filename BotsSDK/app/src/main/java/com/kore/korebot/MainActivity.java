@@ -21,7 +21,6 @@ import kore.botssdk.utils.BundleUtils;
 public class MainActivity extends AppCompatActivity {
 
     String TAG = MainActivity.class.getName();
-    private static boolean isPermissionRequestActive;
     static boolean allPermissionsGranted=true;
 
     @Override
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     {
 
         Log.d(TAG, "Check requestAllPermissions");
-        isPermissionRequestActive = true;
+        boolean isPermissionRequestActive = true;
         PermissionRequest permissionRequest =  new PermissionRequest()
         {
             @Override

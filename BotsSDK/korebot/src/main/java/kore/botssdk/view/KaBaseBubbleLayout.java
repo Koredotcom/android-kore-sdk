@@ -775,7 +775,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         String message = null;
         String textColor = "#000000";
-        bubbleTextMediaLayout.setClicable(_isclickable);
+        bubbleTextMediaLayout.setClickable(_isclickable);
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
             if(((BotRequest) baseBotMessage).getMessage() != null)
                 message = (String)((BotRequest) baseBotMessage).getMessage().getBody();

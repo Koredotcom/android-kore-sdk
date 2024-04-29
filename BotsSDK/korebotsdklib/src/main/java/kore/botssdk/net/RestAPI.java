@@ -90,7 +90,7 @@ public interface RestAPI {
 
     // Get JWT Token
     @GET("api/websdkthemes/{botId}/activetheme")
-    Call<BotActiveThemeModel> getBrandingNewDetails(@Path("botId") String bot_Id, @Header("Authorization") String token, @Header("tenantId") String tenantId, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
+    Call<BotActiveThemeModel> getBrandingNewDetails(@Path("botId") String bot_Id, @Header("Authorization") String token, @Header("state") String state, @Header("Accepts-version") String version, @Header("Accept-Language") String language, @Header("botid") String botId);
 
     // Send WebHook Message
     @POST("chatbot/v2/webhook/{streamId}")

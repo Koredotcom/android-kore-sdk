@@ -5,9 +5,7 @@ import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.StringUtils.getFileNameFromUrl;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-import static kotlinx.coroutines.BuildersKt.withContext;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -59,10 +57,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -72,7 +67,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -694,8 +688,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (!StringUtils.isNullOrEmpty(botResponse.getIcon()) && StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
                 SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
-            if (botClient != null && enable_ack_delivery)
-                botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
+            if (botClient != null && enable_ack_delivery) botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
             LogUtils.d(LOG_TAG, payload);
 
@@ -1246,7 +1239,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void getBrandingDetails() {
-        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1", "en_US", SDKConfiguration.Client.bot_id);
+        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<BotActiveThemeModel>() {
             @Override
             public void onResponse(@NonNull Call<BotActiveThemeModel> call, @NonNull Response<BotActiveThemeModel> response) {
@@ -1272,8 +1265,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                 botOptionsModel.getFooter().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
                                 botOptionsModel.getFooter().getCompose_bar().setOutline_color(botOptionsModel.getGeneral().getColors().getPrimary());
                                 botOptionsModel.getFooter().getCompose_bar().setInline_color(botOptionsModel.getGeneral().getColors().getSecondary_text());
-                                botOptionsModel.getHeader().setIcons_color(botOptionsModel.getGeneral().getColors().getPrimary());
-                                botOptionsModel.getFooter().setIcons_color(botOptionsModel.getGeneral().getColors().getPrimary());
+//                                botOptionsModel.getHeader().setIcons_color(botOptionsModel.getGeneral().getColors().getPrimary());
+//                                botOptionsModel.getFooter().setIcons_color(botOptionsModel.getGeneral().getColors().getPrimary());
                                 botOptionsModel.getHeader().getTitle().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
                                 botOptionsModel.getHeader().getSub_title().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
                             }
@@ -1369,8 +1362,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             }
                         }
 
-                        if (!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId()))
-                            startSendingPo11(webHookResponseDataModel.getPollId());
+                        if (!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId())) startSendingPo11(webHookResponseDataModel.getPollId());
                     }
                 } else {
                     taskProgressBar.setVisibility(View.GONE);
@@ -1587,11 +1579,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     tvWelcomeHeader.setText(welcomeModel.getTitle().getName());
                 }
 
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getSub_title().getName()))
-                    tvWelcomeTitle.setText(welcomeModel.getSub_title().getName());
+                if (!StringUtils.isNullOrEmpty(welcomeModel.getSub_title().getName())) tvWelcomeTitle.setText(welcomeModel.getSub_title().getName());
 
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName()))
-                    tvWelcomeDescription.setText(welcomeModel.getNote().getName());
+                if (!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName())) tvWelcomeDescription.setText(welcomeModel.getNote().getName());
 
                 if (welcomeModel.getBackground() != null) {
                     if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getType())) {
@@ -1731,7 +1721,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                                 rvStarterButtons.setLayoutManager(layoutManager);
 
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(BotChatActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL, !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(BotChatActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL, (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
                                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
                                 quickRepliesAdapter.setComposeFooterInterface(BotChatActivity.this);
                                 quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatActivity.this);
@@ -1754,7 +1744,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
                         if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
                             hvpLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(BotChatActivity.this, welcomeModel.getStatic_links().getLinks(), !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
+                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(BotChatActivity.this, welcomeModel.getStatic_links().getLinks(), (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
                             quickRepliesAdapter.setComposeFooterInterface(BotChatActivity.this);
                             quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatActivity.this);
                             hvpLinks.setAdapter(quickRepliesAdapter);

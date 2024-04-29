@@ -487,7 +487,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         botButtonLinkTemplateView.populateButtonList(payInner,isLastItem, 1);
                     }
                 } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type()) || BotResponse.TEMPLATE_TYPE_FORM_ACTIONS.equalsIgnoreCase(payInner.getTemplate_type())) {
-                    bubbleTextMediaLayout.setClicable(isLastItem);
+                    bubbleTextMediaLayout.setClickable(isLastItem);
                     bubbleTextMediaLayout.populateText(payInner.getText());
                     if (StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                         timeStampsTextView.setText("");
@@ -858,7 +858,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
             }
 
-            bubbleTextMediaLayout.setClicable(isLastItem);
+            bubbleTextMediaLayout.setClickable(isLastItem);
         }
     }
 
