@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.github.mikephil.charting.data.PieEntry;
 
@@ -599,7 +600,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     if (listWidgetView == null) {
                         listWidgetView = ViewProvider.getListWidgetTemplateView(context);
                         listWidgetView.setComposeFooterInterface(composeFooterInterface);
-                        addView(listWidgetView);
+                        addView(listWidgetView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                     }
                     listWidgetView.setVisibility(View.VISIBLE);
                     listWidgetView.setRestrictedMaxWidth(BUBBLE_CONTENT_LEFT_MARGIN + BubbleViewUtil.getBubbleContentWidth());

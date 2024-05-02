@@ -40,7 +40,7 @@ import kore.botssdk.utils.StringUtils;
 
 public class ListWidgetView extends LinearLayout {
     private static int DEFAULT_PREVIEW_LENGTH = 3;
-    private LinearLayout botCustomListRoot;
+    //    private LinearLayout botCustomListRoot;
     public RecyclerView botCustomListView;
     private ListWidgetAdapter listWidgetAdapter = null;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -59,7 +59,7 @@ public class ListWidgetView extends LinearLayout {
     public TextView meeting_desc;
     private PayloadInner model;
     private boolean isShowMore = false;
-    private float restrictedMaxWidth;
+//    private float restrictedMaxWidth;
 
     public ListWidgetView(Context context) {
         super(context);
@@ -73,7 +73,7 @@ public class ListWidgetView extends LinearLayout {
         rightDrawable = (GradientDrawable) context.getResources().getDrawable(R.drawable.rounded_rect_feedback);
 
         // KoreEventCenter.register(this);
-        botCustomListRoot = view.findViewById(R.id.botCustomListRoot);
+//        botCustomListRoot = view.findViewById(R.id.botCustomListRoot);
         botCustomListView = view.findViewById(R.id.botCustomListView);
         botCustomListView.setLayoutManager(new LinearLayoutManager(getContext()));
         botCustomListView.addItemDecoration(new ListWidgetItemDecoration(context));
@@ -322,11 +322,11 @@ public class ListWidgetView extends LinearLayout {
     }
 
     public void setRestrictedMaxWidth(float restrictedMaxWidth) {
-        this.restrictedMaxWidth = restrictedMaxWidth;
-        post(() -> {
-            LinearLayout.LayoutParams params = (LayoutParams) botCustomListRoot.getLayoutParams();
-            params.width = (int) this.restrictedMaxWidth;
-            setLayoutParams(params);
-        });
+//        this.restrictedMaxWidth = restrictedMaxWidth;
+//        post(() -> {
+//            LinearLayout.LayoutParams params = (LayoutParams) botCustomListRoot.getLayoutParams();
+//            params.width = (int) restrictedMaxWidth;
+//            setLayoutParams(params);
+//        });
     }
 }

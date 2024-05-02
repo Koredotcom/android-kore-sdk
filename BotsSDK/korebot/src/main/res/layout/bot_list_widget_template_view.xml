@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dimen_20dp"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/dimen_10dp"
+    android:paddingHorizontal="4dp"
     android:paddingVertical="5dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
@@ -161,7 +161,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_3dp"
         android:divider="@android:color/transparent"
-        android:paddingHorizontal="2dp"
         android:scrollbars="none" />
 
     <kore.botssdk.views.CustomTextView

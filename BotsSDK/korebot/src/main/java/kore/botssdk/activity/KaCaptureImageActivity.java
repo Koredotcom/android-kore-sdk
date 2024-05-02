@@ -30,7 +30,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.OrientationEventListener;
 import android.webkit.MimeTypeMap;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -57,11 +56,9 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 
-
 /**
  * Created by Shiva Krishna on 4/5/2018.
  */
-
 
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia {
 
@@ -76,8 +73,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     public static final String EXTRA_DOCUMENT_MIME = "documentMime";
 
     public static final String THUMBNAIL_FILE_PATH = "filePathThumbnail";
-    //keep track of cropping intent
-    private final int PIC_CROP = 2;
 
     // keep track of choose image intent
     private final int CHOOSE_IMAGE = 3;
@@ -93,20 +88,12 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     private static boolean NORMAL_PORTRAIT;
     private int compressQualityInt = 100;
     private OrientationEventListener mOrientationEventListener;
-    //    private UserData userData;
-    private int cropXInt = 128;
-    private int cropYInt = 128;
     private String MEDIA_TYPE = MEDIA_TYPE_IMAGE;
     private String MEDIA_FILENAME;
     private String MEDIA_FILE_PATH;
-    private String MEDIA_FILE_TOKEN;
     private String MEDIA_EXTENSION;
     private String thumbnailFilePath;
-    private String Cookie = "";
     private Intent resultIntent = null;
-    private Uri outputUri;
-    LinearLayout enableCaptureImageContainer;
-    LinearLayout enableChooseFilesContainer;
     String mCurrentPhotoPath = null;
 
     ArrayList<String> runtimeMediaPermissions = new ArrayList<>();
