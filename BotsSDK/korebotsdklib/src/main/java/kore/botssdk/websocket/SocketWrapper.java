@@ -3,6 +3,7 @@ package kore.botssdk.websocket;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
@@ -28,6 +29,7 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotSocketOptions;
 import kore.botssdk.net.BotRestBuilder;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.LogUtils;
 import retrofit2.Call;
@@ -291,6 +293,54 @@ public final class SocketWrapper {
 //                        Log.d("IKIDO","on complete called man");
                     }
                 });
+
+
+    }
+
+    /**
+     * Method to invoke connection for anonymous
+     * <p>
+     * These keys are generated from bot admin console
+     */
+    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final SocketConnectionListener socketConnectionListener, BotSocketOptions options, boolean isReconnect) {
+        this.socketConnectionListener = socketConnectionListener;
+        this.accessToken = null;
+        this.JWTToken = sJwtGrant;
+        this.botInfoModel = botInfoModel;
+        this.options = options;
+
+        getRtmUrlForConnectAnonymous(sJwtGrant, botInfoModel).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<RestResponse.RTMUrl>() {
+            @Override
+            public void onSubscribe(Disposable disposable) {
+                Log.d("HI", "on Subscribe");
+            }
+
+            @Override
+            public void onNext(RestResponse.RTMUrl rtmUrl) {
+                try {
+                    if (isReconnect) connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"), true);
+                    else connectToSocket(rtmUrl.getUrl(), false);
+
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                Log.d("HI", "on error");
+                mIsReconnectionAttemptNeeded = true;
+
+                if (isReconnect) reconnectAttempt();
+
+            }
+
+            @Override
+            public void onComplete() {
+//                        Log.d("IKIDO","on complete called man");
+            }
+        });
 
 
     }

@@ -270,8 +270,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         @Override
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
-                getBrandingDetails();
-//                getBrandingDataFromTxt();
+//                getBrandingDetails();
+                getBrandingDataFromTxt();
             }
 
             new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", getUniqueDeviceId(BotChatActivity.this)));
@@ -895,9 +895,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             } catch (Exception e) {
                 PayloadInner payloadInner = new PayloadInner();
                 payloadInner.setTemplate_type("text");
+                payloadInner.setText(text);
 
                 PayloadOuter payloadOuter = new PayloadOuter();
-                payloadOuter.setText(text);
                 payloadOuter.setType("text");
                 payloadOuter.setPayload(payloadInner);
 

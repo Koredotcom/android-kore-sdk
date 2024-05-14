@@ -29,11 +29,13 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.models.UserNameModel;
+import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
@@ -60,7 +62,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.chatListener = chatListener;
     }
 
-    private SocketChatListener chatListener;
+    SocketChatListener chatListener;
     private RestResponse.BotCustomData botCustomData;
 
 
@@ -181,6 +183,56 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         return jwt;
     }
 
+    private void makeStsJwtCallWithConfig(final boolean isRefresh)
+    {
+        Call<JWTTokenResponse> getBankingConfigService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
+        getBankingConfigService.enqueue(new Callback<JWTTokenResponse>() {
+            @Override
+            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
+
+                if (response.isSuccessful())
+                {
+                    JWTTokenResponse jwtTokenResponse = response.body();
+
+                    try
+                    {
+                        String jwt = jwtTokenResponse.getJwt();
+                        botName = SDKConfiguration.Client.bot_name;
+                        streamId = SDKConfiguration.Client.bot_id;
+                        if (!isRefresh) {
+                            botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager, false);
+                        } else {
+                            KoreEventCenter.post(jwt);
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+                        connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                        if(chatListener != null )
+                            chatListener.onConnectionStateChanged(connection_state,false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JWTTokenResponse> call, Throwable t)
+            {
+
+            }
+        });
+    }
+
+    private HashMap<String, Object> getRequestObject()
+    {
+        HashMap<String, Object> hsh = new HashMap<>();
+        hsh.put("clientId", SDKConfiguration.Client.client_id);
+        hsh.put("clientSecret", SDKConfiguration.Client.client_secret);
+        hsh.put("identity", SDKConfiguration.Client.identity);
+        hsh.put("aud", "https://idproxy.kore.com/authorize");
+        hsh.put("isAnonymous", false);
+
+        return hsh;
+    }
 
     public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg){
 
@@ -371,8 +423,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         }
         else
         {
-            if(!SDKConfiguration.Client.isWebHook)
-                makeJwtCallWithConfig(false);
+            if(!SDKConfiguration.Client.isWebHook) {
+//                makeJwtCallWithConfig(false);
+                makeStsJwtCallWithConfig(false);
+            }
             else
                 makeJwtCallwithConfig();
 

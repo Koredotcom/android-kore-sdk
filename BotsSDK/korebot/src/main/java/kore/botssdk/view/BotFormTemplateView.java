@@ -29,7 +29,7 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class BotFormTemplateView extends ViewGroup {
-    private AutoExpandListView autoExpandListView;
+    AutoExpandListView autoExpandListView;
     private View multiSelectLayout;
     private BotFormTemplateAdapter botFormTemplateAdapter;
     private float dp1;
@@ -72,7 +72,7 @@ public class BotFormTemplateView extends ViewGroup {
     }
 
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
 
 
     private void init(Context context) {
@@ -176,7 +176,7 @@ public class BotFormTemplateView extends ViewGroup {
         }
     }
 
-    private String getDotMessage(String strPassword)
+    String getDotMessage(String strPassword)
     {
         StringBuilder strDots = new StringBuilder();
         for (int i = 0; i< strPassword.length(); i++)

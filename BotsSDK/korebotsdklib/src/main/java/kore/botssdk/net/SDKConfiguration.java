@@ -45,7 +45,7 @@ public class SDKConfiguration {
 
     //JWTServer related configurations
     public static class JWTServer {
-        static final String JWT_SERVER_URL = "https://staging-bots.korebots.com";
+        static final String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
     }
 
     //Server related configurations
@@ -70,11 +70,11 @@ public class SDKConfiguration {
 
     public static class Client {
         //XO
-        public static final String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
-        public static final String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
-        public static final String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
-        public static String identity = "email@kore.com";
-        public static final String bot_name = "SDKDemo";
+//        public static final String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
+//        public static final String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
+//        public static final String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
+//        public static String identity = "email@kore.com";
+//        public static final String bot_name = "SDKDemo";
 
 //        public static String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
 //        public static String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
@@ -82,11 +82,11 @@ public class SDKConfiguration {
 //        public static String bot_name = "SDKBot";//"Android test";//"NewTemplates";
 //        public static String bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
 
-//        public static String client_id = "cs-88a6f685-bb7e-55c9-9b02-b6f1e4a95a41";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "FHCppYvfAnf7lRqEJlY2Rdfx9YbpIFF2qkWMuFOGer0=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "test@kore.com";
-//        public static String bot_name = "SDKBot";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-6ce81579-408e-51bd-808d-02a44aa197e9";
+        public static String client_id = "cs-4c02883b-1a90-5833-9ab7-57b541d023c3";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
+        public static String client_secret = "3dtQPyuKuYOGKOSrDcRb27j+SVPq0zVTNHWdlh5/NLo=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
+        public static String identity = "test@kore.com";
+        public static String bot_name = "PNC";//"Android test";//"NewTemplates";
+        public static String bot_id = "st-3f826975-eadb-53af-92b7-3430a1f5353a";
 
         public static final String tenant_id = "605da1dbb5f6f00badadb665";
         public static final boolean enablePanel = false;

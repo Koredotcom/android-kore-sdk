@@ -87,6 +87,18 @@ public class BotClient {
         SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel,  socketConnectionListener,null);
     }
 
+    /**
+     * Connection for anonymous user
+     *
+     * @param socketConnectionListener
+     */
+    public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener, boolean isReconnect) {
+
+//        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
+        botInfoModel = new BotInfoModel(chatBotName,taskBotId,customData);
+        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel,  socketConnectionListener,null, isReconnect);
+    }
+
 
     public void shouldAttemptToReconnect(boolean value){
         SocketWrapper.getInstance(mContext).shouldAttemptToReconnect(value);

@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import kore.botssdk.R;
@@ -20,7 +22,6 @@ import kore.botssdk.utils.StringUtils;
 
 public class BotFormTemplateAdapter extends BaseAdapter {
 
-    private ComposeFooterInterface composeFooterInterface;
     private final Context context;
     private ArrayList<BotFormTemplateModel> arrBotFormTemplateModels;
     private String textColor;
@@ -35,11 +36,11 @@ public class BotFormTemplateAdapter extends BaseAdapter {
 
     private boolean isEnabled;
 
-    public void setTextColor(String textColor) {
+    public void setTextColor(@NonNull String textColor) {
         this.textColor = textColor;
     }
 
-    public BotFormTemplateAdapter(Context context, ArrayList<BotFormTemplateModel> arrBotFormTemplateModels) {
+    public BotFormTemplateAdapter(@NonNull Context context, @NonNull ArrayList<BotFormTemplateModel> arrBotFormTemplateModels) {
         this.context = context;
         this.arrBotFormTemplateModels = arrBotFormTemplateModels;
     }
@@ -70,7 +71,7 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = View.inflate(context, R.layout.form_templete_cell_view, null);
@@ -85,12 +86,12 @@ public class BotFormTemplateAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        populateVIew(holder, position, arrBotFormTemplateModels.get(position) instanceof BotFormTemplateModel ? 0 : 1);
+        populateVIew(holder, position);
 
         return convertView;
     }
 
-    private void populateVIew(ViewHolder holder, int position, int type)
+    private void populateVIew(ViewHolder holder, int position)
     {
         final BotFormTemplateModel item = getItem(position);
         holder.btfieldButton.setTag(item);
@@ -115,10 +116,9 @@ public class BotFormTemplateAdapter extends BaseAdapter {
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         Button btfieldButton;
         TextView tvFormFieldTitle;
         EditText edtFormInput;
