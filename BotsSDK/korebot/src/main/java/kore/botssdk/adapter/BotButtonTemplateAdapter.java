@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 
 /**
@@ -38,8 +35,7 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
-    public BotButtonTemplateAdapter(Context context)
-    {
+    public BotButtonTemplateAdapter(Context context) {
         ownLayoutInflater = LayoutInflater.from(context);
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
@@ -97,25 +93,20 @@ public class BotButtonTemplateAdapter extends BaseAdapter {
 
         holder.botItemButton.setText(buttonTemplate.getTitle());
 
-        holder.botItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled()) {
-
-                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
-                    }
-                    else if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
-                    }else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())){
-                        setEnabled(false);
-                        invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(),buttonTemplate.getCustomData());
-                    }else{
-                        setEnabled(false);
-                        String title = buttonTemplate.getTitle();
-                        String payload = buttonTemplate.getPayload();
-                        composeFooterInterface.onSendClick(title, payload,false);
-                    }
+        holder.botItemButton.setOnClickListener(v -> {
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                } else if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType()) && isEnabled()) {
+                    setEnabled(false);
+                    invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(), buttonTemplate.getCustomData());
+                } else if (isEnabled()) {
+                    setEnabled(false);
+                    String title = buttonTemplate.getTitle();
+                    String payload = buttonTemplate.getPayload();
+                    composeFooterInterface.onSendClick(title, payload, false);
                 }
             }
         });
