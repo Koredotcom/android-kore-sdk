@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/multiSelectLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -47,7 +49,33 @@
         layout="@layout/imojis_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_5dp"></include>
+        android:layout_marginTop="@dimen/dimen_5dp" />
+
+    <LinearLayout
+        android:id="@+id/thumbs_up_down"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/thumbs_up"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            app:srcCompat="@drawable/thumbs_up" />
+
+        <ImageView
+            android:id="@+id/thumbs_down"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:rotationY="180"
+            app:srcCompat="@drawable/thumbs_down" />
+    </LinearLayout>
 
     <RatingBar
         android:id="@+id/rbFeedback"
@@ -102,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:gravity="top"/>
+                android:gravity="top" />
 
         </RelativeLayout>
 

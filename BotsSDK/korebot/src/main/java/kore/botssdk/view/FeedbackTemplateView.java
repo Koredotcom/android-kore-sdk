@@ -45,6 +45,12 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     private PayloadInner payloadInner;
     private RatingBar rbFeedback;
     private LinearLayout emojis;
+    private LinearLayout thumbsUpDown;
+
+    private ImageView thumbsUp;
+    private ImageView thumbsDown;
+
+    private boolean isEnabled = true;
 
     public FeedbackTemplateView(Context context) {
         super(context);
@@ -92,6 +98,9 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
         tvfeedback_template_title = view.findViewById(R.id.tvfeedback_template_title);
         rbFeedback = view.findViewById(R.id.rbFeedback);
         emojis = view.findViewById(R.id.emojis);
+        thumbsUpDown = view.findViewById(R.id.thumbs_up_down);
+        thumbsUp = view.findViewById(R.id.thumbs_up);
+        thumbsDown = view.findViewById(R.id.thumbs_down);
 
         icon_1 = view.findViewById(R.id.icon_1);
         icon_2 = view.findViewById(R.id.icon_2);
@@ -104,6 +113,8 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
         icon_3.setOnClickListener(this);
         icon_4.setOnClickListener(this);
         icon_5.setOnClickListener(this);
+        thumbsUp.setOnClickListener(this);
+        thumbsDown.setOnClickListener(this);
 
         dp1 = (int) AppControl.getInstance().getDimensionUtil().dp1;
 
@@ -121,7 +132,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     }
 
     public void populateData(final PayloadInner payloadInner, boolean isEnabled) {
-
+        this.isEnabled = isEnabled;
         if (payloadInner != null) {
             this.payloadInner = payloadInner;
             tvfeedback_template_title.setText(payloadInner.getText());
@@ -129,11 +140,17 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
             if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR)) {
                 emojis.setVisibility(GONE);
                 rbFeedback.setVisibility(VISIBLE);
+                thumbsUpDown.setVisibility(GONE);
                 rbFeedback.setRating(payloadInner.getEmojiPosition());
 //                rbFeedback.setOnRatingBarChangeListener(onRatingBarChangeListener);
+            } else if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_THUMBS_UP_DOWN)) {
+                emojis.setVisibility(GONE);
+                rbFeedback.setVisibility(GONE);
+                thumbsUpDown.setVisibility(VISIBLE);
             } else {
                 emojis.setVisibility(VISIBLE);
                 rbFeedback.setVisibility(GONE);
+                thumbsUpDown.setVisibility(GONE);
                 resetAll();
                 loademojis(payloadInner.getEmojiPosition());
             }
@@ -152,6 +169,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        if (!isEnabled) return;
         if (v.getId() == R.id.icon_1) {
             resetAll();
             //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
@@ -177,6 +195,12 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
             resetAll();
             loademojis(4);
             position = 5;
+            updateData();
+        } else if (v.getId() == R.id.thumbs_up) {
+            position = 1;
+            updateData();
+        } else if (v.getId() == R.id.thumbs_down) {
+            position = 2;
             updateData();
         }
     }

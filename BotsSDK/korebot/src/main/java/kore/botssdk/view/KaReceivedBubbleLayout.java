@@ -595,7 +595,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                     agentTransferTemplateView.populateAgentTemplateView(payInner);
                 } else if (BotResponse.TEMPLATE_TYPE_FEEDBACK.equalsIgnoreCase(payInner.getTemplate_type())) {
                     feedbackTemplateView.setVisibility(View.VISIBLE);
-                    feedbackTemplateView.populateData(payInner, true);
+                    feedbackTemplateView.populateData(payInner, isLastItem);
                 } else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(payInner.getTemplate_type())) {
                     if (listWidgetView == null) {
                         listWidgetView = ViewProvider.getListWidgetTemplateView(context);
