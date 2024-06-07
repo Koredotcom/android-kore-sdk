@@ -1,5 +1,6 @@
 package kore.botssdk.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -85,11 +86,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnknownNullness")
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
-    RelativeLayout rvChatContent;
+    RelativeLayout rvChatContent, botHeaderLayout;
     RecyclerView botsBubblesListView;
     ChatAdapter botsChatAdapter;
     QuickReplyView quickReplyView;
@@ -103,30 +104,29 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     boolean shallShowProfilePic;
     private String mChannelIconURL;
     private String mBotNameInitials;
-    private TTSUpdate ttsUpdate;
+    TTSUpdate ttsUpdate;
     private int mBotIconId;
-    private boolean fetching = false;
+    boolean fetching = false;
     private boolean hasMore = true;
-    private TextView headerView, tvTheme1, tvTheme2;
+    TextView headerView, tvTheme1, tvTheme2;
     private final Gson gson = new Gson();
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private LinearLayoutManager mLayoutManager;
-    private int offset = 0;
-    private SharedPreferences sharedPreferences;
-    private String chatBgColor, chatTextColor;
-    //Date Range
-    private long today;
-    private long nextMonth;
-    private long janThisYear;
-    private long decThisYear;
-    private long oneYearForward;
-    private Pair<Long, Long> todayPair;
-    private Pair<Long, Long> nextMonthPair;
-    private ImageView ivThemeSwitcher, ivChaseLogo;
-    private PopupWindow popupWindow;
-    private View popUpView;
-    private TextView tvChaseTitle;
-    private String jwt;
+    SwipeRefreshLayout swipeRefreshLayout;
+    LinearLayoutManager mLayoutManager;
+    int offset = 0;
+    SharedPreferences sharedPreferences;
+    long today;
+    long nextMonth;
+    long janThisYear;
+    long decThisYear;
+    long oneYearForward;
+    Pair<Long, Long> todayPair;
+    Pair<Long, Long> nextMonthPair;
+    ImageView ivThemeSwitcher, ivChaseLogo;
+    PopupWindow popupWindow;
+    View popUpView;
+    TextView tvChaseTitle;
+    String jwt;
+    String pattern = "M-DD-YYYY";
 
     @Nullable
     @Override
@@ -162,9 +162,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         ivThemeSwitcher = view.findViewById(R.id.ivThemeSwitcher);
         ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
+        botHeaderLayout = view.findViewById(R.id.header_layout);
         headerView.setVisibility(View.GONE);
         tvChaseTitle.setText(Html.fromHtml(Client.bot_name));
-        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -217,7 +218,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             public void onClick(View v)
             {
                 popupWindow.dismiss();
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                 editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
                 editor.apply();
 
@@ -229,7 +230,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                SharedPreferences.Editor editor = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                 editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
                 editor.apply();
 
@@ -238,53 +239,31 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         });
     }
 
-    public void changeThemeAndLaunch()
-    {
-        Intent intent = new Intent(getActivity(), BotChatActivity.class);
-        startActivity(intent);
-    }
-
     public void setJwtTokenForWebHook(String jwt)
     {
         if(!StringUtils.isNullOrEmpty(jwt))
             this.jwt = jwt;
     }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-//        chatBgColor = sharedPreferences.getString(BotResponse.WIDGET_BG_COLOR, "#f3f3f5");
-//        chatTextColor = sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, SDKConfiguration.BubbleColors.leftBubbleSelected);
-//        rvChatContent.setBackgroundColor(Color.parseColor(chatBgColor));
-//
-//        GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-//        gradientDrawable.setColor(Color.parseColor(chatBgColor));
-//        headerView.setTextColor(Color.parseColor(chatTextColor));
-
-    }
-
-    public void changeThemeBackGround(String bgColor, String textColor)
+    public void changeThemeBackGround(String bgColor, String textBgColor, String textColor, String botName)
     {
         if(!StringUtils.isNullOrEmpty(bgColor))
         {
             rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
-            GradientDrawable gradientDrawable = (GradientDrawable) headerView.getBackground();
-            gradientDrawable.setColor(Color.parseColor(bgColor));
         }
 
-        headerView.setTextColor(Color.parseColor(textColor));
-    }
+        botHeaderLayout.setBackgroundColor(Color.parseColor(textBgColor));
+        tvChaseTitle.setTextColor(Color.parseColor(textColor));
 
+        if(!StringUtils.isNullOrEmpty(botName))
+            tvChaseTitle.setText(botName);
+    }
     private void setupAdapter() {
         botsChatAdapter = new ChatAdapter(getActivity());
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.setAdapter(botsChatAdapter);
-//        botsChatAdapter.setShallShowProfilePic(shallShowProfilePic);
-       // botsBubblesListView.setOnScrollListener(onScrollListener);
-//        quickReplyView = new QuickReplyView(getContext());
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
     }
@@ -320,8 +299,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             if (typingStatusItemDots != null) {
                 botTypingStatusRl.setVisibility(View.VISIBLE);
                 typingStatusItemDots.start();
-//                Log.d("Hey", "Started animation");
-
                 if(StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
                     mChannelIconURL = botResponse.getIcon();
                     botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
@@ -356,7 +333,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         MaterialDatePicker.Builder<Long> builder =  MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-//                        builder.setCalendarConstraints(minRange(minDate, payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try
@@ -378,8 +354,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                                     +"-"+(stDay > 9 ? stDay : "0"+stDay)
                                                     +"-"+stYear;
 
-                                    if(!formatedDate.isEmpty())
-                                        composeFooterInterface.onSendClick(formatedDate, false);
+                                    composeFooterInterface.onSendClick(formatedDate, false);
                                 }
                             });
                         }
@@ -712,11 +687,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     private Date stringToDate(String aDate,String aFormat) {
 
-        SimpleDateFormat format = new SimpleDateFormat("M-DD-YYYY");
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
         try
         {
-            Date date = format.parse(aDate);
-            return date;
+            return format.parse(aDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -835,7 +809,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             });
     }
 
-    private void loadChatHistory(final int _offset, final int limit) {
+    void loadChatHistory(final int _offset, final int limit) {
         if (fetching){
             if (swipeRefreshLayout != null) {
                 swipeRefreshLayout.setRefreshing(false);

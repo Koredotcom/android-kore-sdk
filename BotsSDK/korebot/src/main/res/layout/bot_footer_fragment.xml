@@ -52,7 +52,7 @@
             android:layout_marginStart="2dp"/>
 
         <RelativeLayout
-            android:id="@+id/fl_footer"
+            android:id="@+id/rlFooter"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_gravity="bottom"
@@ -64,7 +64,6 @@
                 android:id="@+id/composeFooterRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/compose_chase_color"
                 android:gravity="center_vertical">
 
                 <RelativeLayout
