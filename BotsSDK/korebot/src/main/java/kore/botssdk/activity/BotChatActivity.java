@@ -76,7 +76,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.listener.ThemeChangeListener;
-import kore.botssdk.models.BotBrandingModel;
+import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
@@ -86,7 +86,6 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
@@ -150,7 +149,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected final int compressQualityInt = 100;
     final Handler messageHandler = new Handler();
     private String fileUrl;
-    ArrayList<BrandingNewModel> arrBrandingNewDos;
+    BotActiveThemeModel brandingNewDos;
     WebHookResponseDataModel webHookResponseDataModel;
     BotMetaModel botMetaModel;
     Runnable runnable;
@@ -167,7 +166,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         findViews();
         getBundleInfo();
         getDataFromTxt();
-        getBrandingDataFromTxt();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -386,17 +384,22 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingModel.getButtonActiveTextColor());
         editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingModel.getButtonInactiveBgColor());
         editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getButtonInactiveTextColor());
-        editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBgColor());
+        editor.putString(BotResponse.WIDGET_BG_COLOR, brandingModel.getWidgetBodyColor());
         editor.putString(BotResponse.WIDGET_TXT_COLOR, brandingModel.getWidgetTextColor());
         editor.putString(BotResponse.WIDGET_BORDER_COLOR, brandingModel.getWidgetBorderColor());
+        editor.putString(BotResponse.BUTTON_BORDER_COLOR, brandingModel.getButtonBorderColor());
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
         editor.apply();
 
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getButtonActiveBgColor();
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
+        SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getButtonBorderColor();
 
         if (botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBgColor(), brandingModel.getWidgetTextColor());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
+
+        if (composeFooterFragment != null)
+            composeFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
     }
 
 
@@ -680,15 +683,41 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return botOptionsModel;
     }
 
-    public void getBrandingDataFromTxt() {
-        BotBrandingModel botOptionsModel;
-        try {
+    public BrandingModel getBrandingDataFromTxt() {
+        BotActiveThemeModel botActiveThemeModel;
+        try
+        {
             InputStream is = getResources().openRawResource(R.raw.branding_response);
             Reader reader = new InputStreamReader(is);
-            botOptionsModel = gson.fromJson(reader, BotBrandingModel.class);
+            botActiveThemeModel = gson.fromJson(reader, BotActiveThemeModel.class);
+            if(botActiveThemeModel != null)
+            {
+                BrandingModel brandingModel = new BrandingModel();
+                brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
+                brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
+                brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
+                brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
+
+                brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
+                brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
+
+                brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
+                brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
+                brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
+
+                brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
+                brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
+                brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
+                brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
+                brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
+                brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+                return brandingModel;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void displayMessage(String text, String type, String messageId) {
@@ -1056,43 +1085,46 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void getBrandingDetails() {
-        Call<ArrayList<BrandingNewModel>> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails("bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SDKConfiguration.Client.tenant_id, "published", "1", "en_US", SDKConfiguration.Client.bot_id);
-        getBankingConfigService.enqueue(new Callback<ArrayList<BrandingNewModel>>() {
+        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
+        getBankingConfigService.enqueue(new Callback<BotActiveThemeModel>() {
             @Override
-            public void onResponse(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Response<ArrayList<BrandingNewModel>> response) {
+            public void onResponse(Call<BotActiveThemeModel> call, Response<BotActiveThemeModel> response) {
                 if (response.isSuccessful()) {
-                    arrBrandingNewDos = response.body();
+                    brandingNewDos = response.body();
 
-                    if (arrBrandingNewDos != null && arrBrandingNewDos.size() > 0) {
-                        BotOptionsModel botOptionsModel = arrBrandingNewDos.get(0).getHamburgermenu();
+                    if (brandingNewDos != null) {
+                        BrandingModel brandingModel = new BrandingModel();
+                        brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
+                        brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
+                        brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
+                        brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
 
-                        if (composeFooterFragment != null)
-                            composeFooterFragment.setBottomOptionData(botOptionsModel);
+                        brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
+                        brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
 
-                        if (arrBrandingNewDos.size() > 1)
-                            onEvent(arrBrandingNewDos.get(1).getBrandingwidgetdesktop());
+                        brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
+                        brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
+                        brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
 
-                        if (isItFirstConnect) {
-                            botClient.sendMessage("BotNotifications");
-                            isItFirstConnect = false;
-                        }
+                        brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                        brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
+                        brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
+                        brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
+                        brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
+                        brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
+                        brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+                        onEvent(brandingModel);
+                    } else {
+                        onEvent(getBrandingDataFromTxt());
                     }
                 } else {
-                    if (isItFirstConnect) {
-                        botClient.sendMessage("BotNotifications");
-                        isItFirstConnect = false;
-                    }
+                    onEvent(getBrandingDataFromTxt());
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ArrayList<BrandingNewModel>> call, @NonNull Throwable t) {
-                LogUtils.e("getBrandingDetails", t.toString());
-
-                if (isItFirstConnect) {
-                    botClient.sendMessage("BotNotifications");
-                    isItFirstConnect = false;
-                }
+            public void onFailure(@NonNull Call<BotActiveThemeModel> call, @NonNull Throwable t) {
+                onEvent(getBrandingDataFromTxt());
             }
         });
     }

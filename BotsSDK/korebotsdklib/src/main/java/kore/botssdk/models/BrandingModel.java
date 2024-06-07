@@ -13,10 +13,64 @@ public class BrandingModel
     private String theme;
     private String userchatBgColor;
     private String userchatTextColor;
-    private String widgetBgColor;
+    private String widgetHeaderColor;
+    private String widgetFooterColor;
+    private String widgetFooterBorderColor;
+    private String widgetFooterHintColor;
     private String widgetTextColor;
     private String widgetBorderColor;
+    private String buttonBorderColor;
     private String widgetDividerColor;
+    private String widgetBodyColor;
+    private String botName;
+
+    public void setWidgetFooterHintColor(String widgetFooterHintColor) {
+        this.widgetFooterHintColor = widgetFooterHintColor;
+    }
+
+    public String getWidgetFooterHintColor() {
+        return widgetFooterHintColor;
+    }
+
+    public void setButtonBorderColor(String buttonBorderColor) {
+        this.buttonBorderColor = buttonBorderColor;
+    }
+
+    public String getButtonBorderColor() {
+        return buttonBorderColor;
+    }
+
+    public String getWidgetFooterBorderColor() {
+        return widgetFooterBorderColor;
+    }
+
+    public void setWidgetFooterBorderColor(String widgetFooterBorderColor) {
+        this.widgetFooterBorderColor = widgetFooterBorderColor;
+    }
+
+    public String getWidgetFooterColor() {
+        return widgetFooterColor;
+    }
+
+    public void setWidgetFooterColor(String widgetFooterColor) {
+        this.widgetFooterColor = widgetFooterColor;
+    }
+
+    public String getBotName() {
+        return botName;
+    }
+
+    public void setBotName(String botName) {
+        this.botName = botName;
+    }
+
+    public void setWidgetBodyColor(String widgetBodyColor) {
+        this.widgetBodyColor = widgetBodyColor;
+    }
+
+    public String getWidgetBodyColor() {
+        return widgetBodyColor;
+    }
 
     public void setBotchatBgColor(String botchatBgColor) {
         this.botchatBgColor = botchatBgColor;
@@ -78,8 +132,8 @@ public class BrandingModel
         this.userchatTextColor = userchatTextColor;
     }
 
-    public void setWidgetBgColor(String widgetBgColor) {
-        this.widgetBgColor = widgetBgColor;
+    public void setWidgetHeaderColor(String widgetBgColor) {
+        this.widgetHeaderColor = widgetBgColor;
     }
 
     public void setWidgetBorderColor(String widgetBorderColor) {
@@ -122,8 +176,8 @@ public class BrandingModel
         return userchatTextColor;
     }
 
-    public String getWidgetBgColor() {
-        return widgetBgColor;
+    public String getWidgetHeaderColor() {
+        return widgetHeaderColor;
     }
 
     public String getWidgetBorderColor() {

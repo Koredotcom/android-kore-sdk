@@ -66,7 +66,7 @@ public class SDKConfiguration {
         public static final boolean IS_ANONYMOUS_USER = false;
         public static   String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
         public static final String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
-        public static final String Branding_SERVER_URL ="https://bankingassistant-qa-bots.kore.ai/";
+        public static final String Branding_SERVER_URL ="https://bots.kore.ai/";
         public static final String koreAPIUrl = "https://sit-bots.kore.ai/";
     }
 
@@ -186,6 +186,7 @@ public class SDKConfiguration {
 
         public static  String quickReplyColor = "#EEEEF0";
         public static  String quickReplyTextColor = "#000000";
+        public static  String quickBorderColor = "#000000";
 
     }
 

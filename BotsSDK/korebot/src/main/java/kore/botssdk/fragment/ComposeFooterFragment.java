@@ -15,6 +15,7 @@ import static kore.botssdk.view.viewUtils.FileUtils.EXT_VIDEO;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,6 +51,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,55 +129,47 @@ import kore.botssdk.websocket.SocketWrapper;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnknownNullness")
 public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
-
     private static final int REQ_CODE_SPEECH_INPUT = 1;
     final String LOG_TAG = ComposeFooterFragment.class.getName();
-
-    protected EditText editTextMessage;
-    protected TextView sendButton;
-    protected TextView speakerText;
-    protected LinearLayout mainContentLayout;
-    protected LinearLayout defaultFooterLayout;
-    protected ImageView rec_audio_img;
-    protected ImageView audio_speak_tts;
-    protected  ImageView keyboard_img;
-    protected ImageView newMenuLogo;
-    private SpeechProgressView progress;
-    private TextView text_view_speech;
-    private static final int REQUEST_RECORD_AUDIO = 13;
-
-    public boolean isDisabled() {
-        return isDisabled;
-    }
-
+    EditText editTextMessage;
+    TextView sendButton;
+    TextView speakerText;
+    LinearLayout mainContentLayout;
+    LinearLayout defaultFooterLayout;
+    ImageView rec_audio_img;
+    ImageView audio_speak_tts;
+    ImageView keyboard_img;
+    ImageView newMenuLogo;
+    SpeechProgressView progress;
+    TextView text_view_speech;
+    static final int REQUEST_RECORD_AUDIO = 13;
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
     }
-
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
-    private final String TapToSpeakFragmentTag = "TapToSpeakFragment";
-//    private TapToSpeakFragment tapToSpeakFragment;
-    private TTSUpdate ttsUpdate;
-    private LinearLayout linearLayoutProgress;
-    private BotOptionsModel botOptionsModel;
-    protected ReUsableListViewActionSheet listViewActionSheet;
-    private AttachmentOptionsAdapter adapter;
+    TTSUpdate ttsUpdate;
+    LinearLayout linearLayoutProgress;
+    BotOptionsModel botOptionsModel;
+    ReUsableListViewActionSheet listViewActionSheet;
+    AttachmentOptionsAdapter adapter;
     static final int REQ_IMAGE = 444;
     static final int REQ_CAMERA = 443;
     static final int REQ_VIDEO = 445;
     static final int REQ_VIDEO_CAPTURE = 446;
     static final int REQ_FILE = 448;
-    private String mCurrentPhotoPath;
-    private Uri cameraVideoUri1;
-    private ImageView attachemnt;
-    private ComposebarAttachmentAdapter composebarAttachmentAdapter;
+    String mCurrentPhotoPath;
+    Uri cameraVideoUri1;
+    ImageView attachemnt;
+    ComposebarAttachmentAdapter composebarAttachmentAdapter;
     RecyclerView attachment_recycler;
     private Attachment attachment;
     private static long totalFileSize;
     private final int compressQualityInt = 100;
     private String jwt;
+    RelativeLayout rlFooter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -220,37 +214,38 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         linearLayoutProgress = view.findViewById(R.id.linearLayoutProgress);
         newMenuLogo = view.findViewById(R.id.newMenuLogo);
         progress = view.findViewById(R.id.progress);
-        attachemnt= view.findViewById(R.id.attachemnt);
-        attachment_recycler=view.findViewById(R.id.attachment_recycler);
+        attachemnt = view.findViewById(R.id.attachemnt);
+        rlFooter = view.findViewById(R.id.rlFooter);
+
+        attachment_recycler = view.findViewById(R.id.attachment_recycler);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         int[] colors = {
-                getContext().getResources().getColor(android.R.color.black),
-                getContext().getResources().getColor(android.R.color.darker_gray),
-                getContext().getResources().getColor(android.R.color.black),
-                getContext().getResources().getColor(android.R.color.holo_orange_dark),
-                getContext().getResources().getColor(android.R.color.holo_red_dark)
+                requireActivity().getResources().getColor(android.R.color.black),
+                requireActivity().getResources().getColor(android.R.color.darker_gray),
+                requireActivity().getResources().getColor(android.R.color.black),
+                requireActivity().getResources().getColor(android.R.color.holo_orange_dark),
+                requireActivity().getResources().getColor(android.R.color.holo_red_dark)
         };
         progress.setColors(colors);
 
         text_view_speech = view.findViewById(R.id.text_view_speech);
-        if(composebarAttachmentAdapter==null)
-        {   composebarAttachmentAdapter=new ComposebarAttachmentAdapter(getActivity(), new AttachmentListner() {
-            @Override
-            public void onRemoveAttachment() {
+        if (composebarAttachmentAdapter == null) {
+            composebarAttachmentAdapter = new ComposebarAttachmentAdapter(requireActivity(), new AttachmentListner() {
+                @Override
+                public void onRemoveAttachment() {
 
-                enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
-            }
-        });
+                    enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
+                }
+            });
             attachment_recycler.setAdapter(composebarAttachmentAdapter);
         }
         attachemnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(composebarAttachmentAdapter.getItemCount()<1) {
+                if (composebarAttachmentAdapter.getItemCount() < 1) {
                     showAttachmentActionSheet();
-                }else
-                {
-                    ToastUtils.showToast(getActivity(),"You can upload only one file");
+                } else {
+                    ToastUtils.showToast(getActivity(), "You can upload only one file");
                 }
             }
         });
@@ -288,19 +283,22 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         rec_audio_img.setOnClickListener(onVoiceModeActivated);
         newMenuLogo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if(botOptionsModel != null && botOptionsModel.getTasks() != null && botOptionsModel.getTasks().size() > 0)
-                {
+            public void onClick(View v) {
+                if (botOptionsModel != null && botOptionsModel.getTasks() != null && botOptionsModel.getTasks().size() > 0) {
                     OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
                     bottomSheetDialog.setisFromFullView(false);
-                    bottomSheetDialog.setSkillName("skillName","trigger");
+                    bottomSheetDialog.setSkillName("skillName", "trigger");
                     bottomSheetDialog.setData(botOptionsModel);
                     bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
                 }
             }
         });
+    }
+
+    public void changeThemeBackGround(String widgetFooterColor, String widgetFooterHintColor) {
+        rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
+        editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
     }
 
     private void toggleTTSButton() {
@@ -313,7 +311,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private void sendMessageText(String message) {
         if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message.trim(),false);
+            composeFooterInterface.onSendClick(message.trim(), false);
            /* if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached()) {
                 tapToSpeakFragment.clearBuffAndCloseFragment();
                 editTextMessage.setText("");
@@ -323,10 +321,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    private void sendMessageAttachmentText(String message, ArrayList<HashMap<String, String>> dataList)
-    {
+    private void sendMessageAttachmentText(String message, ArrayList<HashMap<String, String>> dataList) {
         if (composeFooterInterface != null) {
-            composeFooterInterface.onSendClick(message.trim(),dataList, false);
+            composeFooterInterface.onSendClick(message.trim(), dataList, false);
         } else {
             LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
         }
@@ -357,7 +354,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
 
-
     final TextWatcher composeTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -368,7 +364,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (s.length() == 0) {
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
-            } else if ((sendButton.getVisibility() != View.VISIBLE )
+            } else if ((sendButton.getVisibility() != View.VISIBLE)
                     || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
                 sendButton.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
@@ -391,43 +387,38 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         @Override
         public void onClick(View v) {
             String msg = editTextMessage.getText().toString();
-            if (!msg.trim().isEmpty())
-            {
-                if(composebarAttachmentAdapter.getItemCount()>0)
-                {
-                    if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
-                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpg")
-                        || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpeg"))
-                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.camera)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
-                    else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
-                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.video)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
-                    else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
+            if (!msg.trim().isEmpty()) {
+                if (composebarAttachmentAdapter.getItemCount() > 0) {
+                    if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
+                            || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpg")
+                            || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpeg"))
+                        sendMessageAttachmentText(msg + "\n" + getActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                    else if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
+                        sendMessageAttachmentText(msg + "\n" + getActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                    else if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
                             || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".m4a"))
-                        sendMessageAttachmentText(msg+"\n"+getActivity().getResources().getString(R.string.audio)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+                        sendMessageAttachmentText(msg + "\n" + getActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else
-                        sendMessageAttachmentText(msg+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"),composebarAttachmentAdapter.getData());
+                        sendMessageAttachmentText(msg + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
 
-                }
-                else
+                } else
                     sendMessageText(msg);
 
                 editTextMessage.setText("");
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
-            }
-            else if(composebarAttachmentAdapter.getItemCount()>0)
-            {
-                if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
+            } else if (composebarAttachmentAdapter.getItemCount() > 0) {
+                if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".png")
                         || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpg")
                         || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".jpeg"))
-                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.camera)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
-                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.video)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else if(composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                else if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp4"))
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                else if (composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".mp3")
                         || composebarAttachmentAdapter.getData().get(0).get("fileName").contains(".m4a"))
-                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.audio)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else
-                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.attachment)+" "+composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
+                    sendMessageAttachmentText(getActivity().getResources().getString(R.string.attachment) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
 
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
@@ -437,8 +428,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     final View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-                animateLayoutVisible(mainContentLayout);
-                animateLayoutGone(defaultFooterLayout);
+            animateLayoutVisible(mainContentLayout);
+            animateLayoutGone(defaultFooterLayout);
         }
     };
 
@@ -454,7 +445,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 public void run() {
                     onButtonClick();
                 }
-            },500);
+            }, 500);
         }
     };
 
@@ -475,8 +466,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    public void initialSetUp()
-    {
+    public void initialSetUp() {
         mainContentLayout.setVisibility(View.GONE);
         animateLayoutGone(mainContentLayout);
 //        animateLayoutGone(newMenuLogo);
@@ -518,7 +508,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         animateLayoutGone(defaultFooterLayout);
 
         promptSpeechInput();
-        Utility.showVirtualKeyboard(getActivity(),mainContentLayout);
+        Utility.showVirtualKeyboard(getActivity(), mainContentLayout);
    /*     rec_audio_img.setVisibility(View.GONE);
 
         tapToSpeakFragment = new TapToSpeakFragment();
@@ -531,11 +521,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
 
-    void animateLayoutVisible(View view){
+    void animateLayoutVisible(View view) {
         view.setVisibility(View.VISIBLE);
         view.animate().translationY(0).alpha(1.0f).setDuration(500).setListener(null);
     }
-    void animateLayoutGone(final View view){
+
+    void animateLayoutGone(final View view) {
         view.animate().translationY(view.getHeight()).alpha(0.0f).setDuration(500).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -551,15 +542,15 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,60);
-        intent.putExtra(EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,10);
+        intent.putExtra(EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 60);
+        intent.putExtra(EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 10);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
-               "Say something");
+                "Say something");
         try {
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getActivity(),
-                   "Speech not supported",
+                    "Speech not supported",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -575,6 +566,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             }
         }
     }
+
     private void onRecordAudioPermissionGranted() {
         stopTTS();
         Utility.hideVirtualKeyboard(getActivity());
@@ -597,6 +589,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             showEnableGoogleVoiceTyping();
         }
     }
+
     @Override
     public void onStartOfSpeech() {
     }
@@ -623,9 +616,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         if (result.isEmpty()) {
             Speech.getInstance().say(getString(R.string.repeat));
 
-        }else{
+        } else {
             if (composeFooterInterface != null) {
-                composeFooterInterface.onSendClick(result,false);
+                composeFooterInterface.onSendClick(result, false);
                 editTextMessage.setText("");
             } else {
                 LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
@@ -637,11 +630,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         text_view_speech.setVisibility(View.GONE);
 
     }
+
     private void showSpeechNotSupportedDialog() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         SpeechUtil.redirectUserToGoogleAppOnPlayStore(getActivity());
                         break;
@@ -673,8 +667,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 .show();
     }
 
-    public void setComposeText(String text)
-    {
+    public void setComposeText(String text) {
         editTextMessage.setText(text);
         editTextMessage.setSelection(text.length());
     }
@@ -748,9 +741,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 KaPermissionsHelper.requestForPermission(getActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
                         Manifest.permission.MANAGE_EXTERNAL_STORAGE);
-            }
-            else
-            {
+            } else {
                 KaPermissionsHelper.requestForPermission(getActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
@@ -811,11 +802,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     final ActivityResultLauncher<Intent> activityImageResultLaunch = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>()
-            {
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(ActivityResult result)
-                {
+                public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         String filePath = result.getData().getStringExtra("filePath");
                         String fileName = result.getData().getStringExtra("fileName");
@@ -827,11 +816,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     final ActivityResultLauncher<Intent> activityVideoResultLaunch = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>()
-            {
+            new ActivityResultCallback<ActivityResult>() {
                 @Override
-                public void onActivityResult(ActivityResult result)
-                {
+                public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         String fileExtn = result.getData().getStringExtra("fileExtn");
                         if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
@@ -905,16 +892,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String mediaType = BitmapUtils.obtainMediaTypeOfExtn(extn);
                 processFileUpload(fileName, filePath, extn, mediaType, null, null);
             }
-        }
-        else if(reqCode == REQ_CODE_SPEECH_INPUT)
-        {
+        } else if (reqCode == REQ_CODE_SPEECH_INPUT) {
             if (resCode == RESULT_OK && null != data) {
 
                 ArrayList<String> result = data
                         .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 editTextMessage.setText(result.get(0));
                 editTextMessage.setEnabled(true);
-            }else{
+            } else {
                 editTextMessage.setEnabled(true);
             }
         }
@@ -922,9 +907,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     void processFileUpload(String fileName, String filePath, String extn, String mediaType, String thumbnailFilePath, String orientation) {
 
-        long fileLimit=  getFileMaxSize();
-        if(!SDKConfiguration.Client.isWebHook)
-        {
+        long fileLimit = getFileMaxSize();
+        if (!SDKConfiguration.Client.isWebHook) {
             KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
                     filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
                     SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
@@ -932,9 +916,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     new Messenger(messagesMediaUploadAcknowledgeHandler),
                     thumbnailFilePath, "AT_" + System.currentTimeMillis(),
                     getActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-        }
-        else
-        {
+        } else {
             KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
                     filePath, "bearer " + jwt,
                     SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
@@ -947,7 +929,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     private long getFileMaxSize() {
         long FILE_MAX_SIZE = getFileLimit();
-        if(FILE_MAX_SIZE!=-1) {
+        if (FILE_MAX_SIZE != -1) {
             FILE_MAX_SIZE = FILE_MAX_SIZE * 1024 * 1024;
         }
 
@@ -955,7 +937,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private int getFileLimit() {
-        attachment= SharedPreferenceUtils.getInstance(getActivity()).getAttachmentPref("");
+        attachment = SharedPreferenceUtils.getInstance(getActivity()).getAttachmentPref("");
 
         int file_limit = -1;
         if (attachment != null) {
@@ -991,36 +973,33 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     fOut.flush();
                 } catch (Exception e) {
                     LogUtils.e(LOG_TAG, e.toString());
-                }
-                finally {
+                } finally {
                     try {
                         assert fOut != null;
                         fOut.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    catch (Exception e){e.printStackTrace();}
                 }
             }
-            long fileLimit =  getFileMaxSize();
+            long fileLimit = getFileMaxSize();
 
-            if(!SDKConfiguration.Client.isWebHook)
-            {
+            if (!SDKConfiguration.Client.isWebHook) {
                 KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
                         filePath, "bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(),
                         SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
                         KoreMedia.BUFFER_SIZE_IMAGE,
                         new Messenger(messagesMediaUploadAcknowledgeHandler),
                         filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-            }
-            else
-            {
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            } else {
                 KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
                         filePath, "bearer " + jwt,
                         SocketWrapper.getInstance(getActivity()).getBotUserId(), "workflows", extn,
                         KoreMedia.BUFFER_SIZE_IMAGE,
                         new Messenger(messagesMediaUploadAcknowledgeHandler),
                         filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation,true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
+                        getActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
             }
 
 
@@ -1030,11 +1009,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     }
 
-    public void addAttachmentToAdapter(HashMap<String, String> attachmentKey)
-    {
+    public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
         composebarAttachmentAdapter.addAttachment(attachmentKey);
-        if(composebarAttachmentAdapter.getItemCount()>0)
-        {
+        if (composebarAttachmentAdapter.getItemCount() > 0) {
             enableOrDisableSendButton(true);
         }
     }
@@ -1046,20 +1023,16 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
      */
     public void enableOrDisableSendButton(boolean enable) {
 
-        if(composebarAttachmentAdapter.getItemCount()>0 || enable)
-        {
+        if (composebarAttachmentAdapter.getItemCount() > 0 || enable) {
             sendButton.setVisibility(View.VISIBLE);
             rec_audio_img.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             rec_audio_img.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.GONE);
         }
     }
 
-    public void setJwtToken(String jwt)
-    {
+    public void setJwtToken(String jwt) {
         this.jwt = jwt;
     }
 
@@ -1089,7 +1062,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 //            }
 
 //            if (thumbnail == null) {
-                thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
+            thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
 //            }
 
             Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
@@ -1097,8 +1070,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
             processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-        }
-        else {
+        } else {
             try {
                 DocumentFile pickFile = DocumentFile.fromSingleUri(requireActivity(), selectedImage);
                 String name = null;
@@ -1167,9 +1139,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     }
 
                     try {
-                        if(out != null)
+                        if (out != null)
                             out.close();
-                    }catch (Exception e){e.printStackTrace();}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             return filePath;
@@ -1235,7 +1209,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
             if (reply.getBoolean("success", true)) {
                 long fileSizeBytes = reply.getLong(UploadBulkFile.fileSizeBytes_key);
-                totalFileSize= totalFileSize+fileSizeBytes;
+                totalFileSize = totalFileSize + fileSizeBytes;
 //                String messageId = reply.getString(Constants.MESSAGE_ID);
                 String mediaFilePath = reply.getString("filePath");
                 String MEDIA_TYPE = reply.getString("fileExtn");
@@ -1264,7 +1238,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
                 HashMap<String, String> attachmentKey = new HashMap<>();
-                String keyExtenssion= FileUtils.VideoTypes().contains(MEDIA_TYPE) ?"." + MEDIA_TYPE:"";
+                String keyExtenssion = FileUtils.VideoTypes().contains(MEDIA_TYPE) ? "." + MEDIA_TYPE : "";
                 attachmentKey.put("fileName", mediaFileName + keyExtenssion);
                 attachmentKey.put("fileType", componentType);
                 attachmentKey.put("fileId", mediaFileId);
@@ -1275,9 +1249,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 // kaComponentModels.add(koreMedia);
                 //insertTags(koreMedia, componentType, orientation, mediaFileName);
 
-            }else {
+            } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
-                if(!TextUtils.isEmpty(errorMsg)) {
+                if (!TextUtils.isEmpty(errorMsg)) {
                     ToastUtils.showToast(getActivity(), errorMsg);
                 }
             }
@@ -1295,12 +1269,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void showFreemiumDialog() {
-        if(attachment==null) {
-            attachment= SharedPreferenceUtils.getInstance(getActivity()).getAttachmentPref("");
+        if (attachment == null) {
+            attachment = SharedPreferenceUtils.getInstance(getActivity()).getAttachmentPref("");
         }
-        FreemiumData freemiumData= new FreemiumData(FreemiumType.alertDialogType);
-        freemiumData.message="File uploads are limited to "+attachment.getSize()+"MB\nunder the Free plan.";
-        String enterprise_msg="File uploads are limited to "+attachment.getSize()+"MB\nunder the Enterprise Plan";
+        FreemiumData freemiumData = new FreemiumData(FreemiumType.alertDialogType);
+        freemiumData.message = "File uploads are limited to " + attachment.getSize() + "MB\nunder the Free plan.";
+        String enterprise_msg = "File uploads are limited to " + attachment.getSize() + "MB\nunder the Enterprise Plan";
 //        new Freemium(getActivity(), freemiumData, null).showFreemiumDialog(true,enterprise_msg);
     }
 
