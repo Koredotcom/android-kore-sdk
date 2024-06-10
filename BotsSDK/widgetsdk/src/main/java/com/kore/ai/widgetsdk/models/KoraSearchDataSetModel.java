@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Shiva Krishna on 2/8/2018.
- */
-
 public class KoraSearchDataSetModel{
     String type;
     public enum ViewType{

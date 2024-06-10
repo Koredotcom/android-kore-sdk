@@ -1,9 +1,5 @@
 package kore.botssdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 01-Apr-19.
- */
-
 public abstract class WidgetBaseDataModel {
 
     public int getWIDGET_TYPE() {

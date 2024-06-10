@@ -14,10 +14,6 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.websocket.SocketConnectionListener;
 
-/**
- * Created by Shiva Krishna on 11/23/2017.
- */
-
 public final class TtsWebSocketWrapper {
 
 

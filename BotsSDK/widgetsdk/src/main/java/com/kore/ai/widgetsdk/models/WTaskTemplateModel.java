@@ -3,10 +3,6 @@ package com.kore.ai.widgetsdk.models;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 01-Apr-19.
- */
-
 public class WTaskTemplateModel {
     public String getTemplate_type() {
         return template_type;

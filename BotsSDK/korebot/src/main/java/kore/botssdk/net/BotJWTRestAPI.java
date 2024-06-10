@@ -9,15 +9,10 @@ import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-/**
- * Created by Ramachandra Pradeep on 15-Mar-17.
- */
 public interface BotJWTRestAPI {
     String URL_VERSION = "/1.1";
-    @Headers({
-            "alg:RS256",
-            "typ:JWT"
-    })
+
+    @Headers({"alg:RS256", "typ:JWT"})
     //@POST("/api/users/sts")
     @POST("users/sts")
     Call<JWTTokenResponse> getJWTToken(@Body HashMap<String, Object> jsonObject);

@@ -33,9 +33,7 @@ import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 
 import java.util.ArrayList;
 
-public class BotTableListTemlateAdapter extends BaseAdapter {
-
-    String LOG_TAG = BotTableListTemlateAdapter.class.getSimpleName();
+public class BotTableListTemplateAdapter extends BaseAdapter {
     ArrayList<BotTableListElementsModel> botTableListModels = new ArrayList<>();
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -44,7 +42,7 @@ public class BotTableListTemlateAdapter extends BaseAdapter {
     final RoundedCornersTransform roundedCornersTransform;
     int count = 0;
 
-    public BotTableListTemlateAdapter(Context context, int count) {
+    public BotTableListTemplateAdapter(Context context, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();

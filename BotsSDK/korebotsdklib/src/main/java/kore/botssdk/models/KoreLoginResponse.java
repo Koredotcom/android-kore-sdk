@@ -1,8 +1,8 @@
 package kore.botssdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 1/9/2017.
- */
+import androidx.annotation.NonNull;
+
 public class KoreLoginResponse extends KoreUser {
+    @NonNull
     public String status;
 }

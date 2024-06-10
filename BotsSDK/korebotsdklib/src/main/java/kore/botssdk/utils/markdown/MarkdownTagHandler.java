@@ -5,10 +5,6 @@ import android.text.Html;
 
 import org.xml.sax.XMLReader;
 
-/**
- * Created by AmitYadav on 1/12/2017.
- */
-
 public class MarkdownTagHandler implements Html.TagHandler {
 
     private boolean first = true;

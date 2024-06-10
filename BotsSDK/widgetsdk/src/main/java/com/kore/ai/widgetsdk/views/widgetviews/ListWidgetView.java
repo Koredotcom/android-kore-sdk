@@ -374,7 +374,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
                     @Override
                     public void onNext(WidgetListDataModel model) {
-//                        WidgetListDataModel botOptionsModel = gson.fromJson(resp, WidgetListDataModel.class);
                         afterDataLoad(model);
                     }
 
@@ -398,7 +397,6 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                         listWidgetAdapter.setMessage(msg,drawable);
                         view_more.setVisibility(GONE);
                         list_widget_root_recycler.setAdapter(listWidgetAdapter);
-                        listWidgetAdapter.notifyAll();
                     }
 
                     @Override
@@ -458,7 +456,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
     }
-    private void afterDataLoad(final WidgetListDataModel model){
+    void afterDataLoad(final WidgetListDataModel model){
 
         widget_header.setText(mWidget.getTitle());
         if(model.getData().get(0).getHeaderOptions() != null && model.getData().get(0).getHeaderOptions().getType()!=null ) {

@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.events;
 
-/**
- * Created by Shiva Krishna on 3/9/2018.
- */
-
 public class KaEvents {
     public static class InformationSharedEvent{
 

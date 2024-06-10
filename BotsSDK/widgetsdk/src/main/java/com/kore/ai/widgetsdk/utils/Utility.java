@@ -21,10 +21,6 @@ import com.kore.ai.widgetsdk.models.CalEventsTemplateModel;
 import java.util.List;
 
 
-/**
- * Created by Pradeep Mahato on 30-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class Utility {
 
     public static String userId="";

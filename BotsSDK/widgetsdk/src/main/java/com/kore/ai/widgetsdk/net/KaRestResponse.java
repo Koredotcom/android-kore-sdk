@@ -14,10 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Created by Shiva Krishna on 11/16/2017.
- */
-
 @SuppressWarnings("serial")
 public class KaRestResponse {
 

@@ -559,13 +559,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             animateLayoutVisible(defaultFooterLayout);
             keyboard_img.setVisibility(View.VISIBLE);
             rec_audio_img.setVisibility(View.GONE);
-
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    onButtonClick();
-//                }
-//            },500);
         }
     };
 

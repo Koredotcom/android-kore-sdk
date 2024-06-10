@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +34,13 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+@SuppressLint("UnknownNullness")
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
-    private final ArrayList<Widget.Button> buttons;
-    private final Context mContext;
-    private String skillName;
-    private final String trigger;
+    final ArrayList<Widget.Button> buttons;
+    final Context mContext;
+    String skillName;
+    final String trigger;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
@@ -52,102 +51,79 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 
     @NonNull
     @Override
-    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i)
-    {
+    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         return new ButtonViewHolder(inflater.inflate(R.layout.list_btn_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
-//        holder.ll.setVisibility(View.VISIBLE);
         Widget.Button btn = buttons.get(i);
 
-//        if(i<2)
         holder.tvBtnText.setText(btn.getTitle());
-//        else holder.tv.setText("More...");
 
         String utt = null;
-        if(!StringUtils.isNullOrEmpty(btn.getPayload())){
+        if (!StringUtils.isNullOrEmpty(btn.getPayload())) {
             utt = btn.getPayload();
         }
-        if(!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null){
+        if (!StringUtils.isNullOrEmpty(btn.getUtterance()) && utt == null) {
             utt = btn.getUtterance();
         }
-        if(!StringUtils.isNullOrEmpty(btn.getUrl())){
+        if (!StringUtils.isNullOrEmpty(btn.getUrl())) {
             utt = btn.getUrl();
         }
 
-//        holder.ivButtonIcon.setVisibility(View.GONE);
-        if(holder.ivListBtnIcon != null && !StringUtils.isNullOrEmpty(btn.getImage().getImage_src()))
-        {
+        if (holder.ivListBtnIcon != null && btn.getImage() != null && !StringUtils.isNullOrEmpty(btn.getImage().getImage_src())) {
             holder.ivListBtnIcon.setVisibility(View.VISIBLE);
             String url = btn.getImage().getImage_src().trim();
-            url = url.replace("http://","https://");
+            url = url.replace("http://", "https://");
             Picasso.get().load(url).transform(new RoundedCornersTransform()).into(holder.ivListBtnIcon);
         }
 
         final String utterance = utt;
 
-        holder.tvBtnText.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-
-//                buttonAction(utterance);
-                if(!holder.tvBtnText.getText().equals("More...")) {
-                    buttonAction(utterance, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-
-//                    if(widgetComposeFooterInterface != null)
-//                        widgetComposeFooterInterface.onPanelSendClick(utterance, "", true);
-                }
-                else{
-                    WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-                    bottomSheetDialog.setisFromFullView(false);
-                    bottomSheetDialog.setSkillName(skillName,trigger);
-                    bottomSheetDialog.setData(buttons);
-                    bottomSheetDialog.setVerticalListViewActionHelper(null);
-                    bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
-                }
+        holder.tvBtnText.setOnClickListener(v -> {
+            if (!holder.tvBtnText.getText().equals("More...")) {
+                buttonAction(utterance, TextUtils.isEmpty(Constants.SKILL_SELECTION) || !StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION));
+            } else {
+                WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                bottomSheetDialog.setisFromFullView(false);
+                bottomSheetDialog.setSkillName(skillName, trigger);
+                bottomSheetDialog.setData(buttons);
+                bottomSheetDialog.setVerticalListViewActionHelper(null);
+                bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return buttons !=null?buttons.size():0;
-        /*if(buttons != null){
-            if(buttons.size()<3)
-                buttons.size();
-            else return 3;
-        }
-            return 0;
-*/    }
-
-    boolean isFullView;
-    public void setIsFromFullView(boolean isFullView) {
-        this.isFullView=isFullView;
+        return buttons != null ? buttons.size() : 0;
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder {
+    boolean isFullView;
+
+    public void setIsFromFullView(boolean isFullView) {
+        this.isFullView = isFullView;
+    }
+
+    public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         public final TextView tvBtnText;
         public final ImageView ivListBtnIcon;
-//        private LinearLayout ll;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tvBtnText = itemView.findViewById(R.id.tvBtnText);
             ivListBtnIcon = itemView.findViewById(R.id.ivListBtnIcon);
-//            ll = itemView.findViewById(R.id.buttonsLayout);
         }
     }
 
-    public void buttonAction(String utterance, boolean appendUtterance){
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
-            if(utterance.startsWith("tel:")){
-                launchDialer(mContext,utterance);
-            }else if(utterance.startsWith("mailto:")){
-                showEmailIntent((Activity) mContext,utterance.split(":")[1]);
+    public void buttonAction(String utterance, boolean appendUtterance) {
+        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
+            if (utterance.startsWith("tel:")) {
+                launchDialer(mContext, utterance);
+            } else if (utterance.startsWith("mailto:")) {
+                showEmailIntent((Activity) mContext, utterance.split(":")[1]);
             }
             return;
         }
@@ -155,8 +131,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
-            msg = msg.append(trigger).append(" ");
+        if (appendUtterance && trigger != null) msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
         event.setPayLoad(new Gson().toJson(hashMap));
@@ -168,7 +143,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
                 ((Activity) mContext).finish();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -180,9 +155,9 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         this.skillName = skillName;
     }
 
-    public static void showEmailIntent(Activity activity, String recepientEmail) {
+    public static void showEmailIntent(Activity activity, String recipientEmail) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
+        emailIntent.setData(Uri.parse("mailto:" + recipientEmail));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
 
         try {
@@ -197,25 +172,17 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         try {
             Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
             intent.setData(Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NO_HISTORY
-                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
             context.startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static boolean hasPermission(Context context,String... permission) {
+    public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale && ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }

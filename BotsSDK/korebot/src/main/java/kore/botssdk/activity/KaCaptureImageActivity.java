@@ -64,11 +64,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 
-/**
- * Created by Shiva Krishna on 4/5/2018.
- */
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
-
     public static final int THUMBNAIL_WIDTH=320;
     public static final int THUMNAIL_HEIGHT=240;
     public static final String THUMBNAIL_FILE_PATH = "filePathThumbnail";

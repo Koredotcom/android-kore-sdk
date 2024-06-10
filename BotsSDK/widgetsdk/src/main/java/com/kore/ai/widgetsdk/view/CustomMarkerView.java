@@ -11,10 +11,6 @@ import com.kore.ai.widgetsdk.charts.highlight.Highlight;
 import com.kore.ai.widgetsdk.charts.utils.MPPointF;
 import com.kore.ai.widgetsdk.charts.utils.Utils;
 
-/**
- * Created by Shiva Krishna on 11/7/2017.
- */
-
 public class CustomMarkerView extends MarkerView {
 
     private final TextView tvContent;

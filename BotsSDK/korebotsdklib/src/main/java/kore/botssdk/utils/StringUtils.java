@@ -4,9 +4,6 @@ import java.io.StringWriter;
 import java.util.HashMap;
 
 
-/**
- * Created by Ramachandra Pradeep on 12/20/2016.
- */
 public class StringUtils {
 
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";

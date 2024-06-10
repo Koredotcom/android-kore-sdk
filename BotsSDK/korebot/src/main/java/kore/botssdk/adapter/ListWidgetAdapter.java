@@ -67,10 +67,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
-/**
- * Created by Ramachandra Pradeep on 01-Apr-19.
- */
-
 public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;

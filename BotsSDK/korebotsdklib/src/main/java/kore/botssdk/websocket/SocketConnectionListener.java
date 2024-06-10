@@ -1,12 +1,7 @@
 package kore.botssdk.websocket;
 
 
-/**
- * Created by Ramachandra
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public interface SocketConnectionListener {
-
     /**
      * Fired when the WebSockets connection has been established.
      * After this happened, messages may be sent.

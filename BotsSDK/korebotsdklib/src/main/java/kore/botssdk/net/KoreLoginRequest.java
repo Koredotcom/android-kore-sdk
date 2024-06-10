@@ -12,11 +12,6 @@ import kore.botssdk.models.KoreLoginResponse;
 import retrofit2.Call;
 import retrofit2.Response;
 
-*/
-/**
- * Created by Ramachandra Pradeep on 1/9/2017.
- *//*
-
 public class KoreLoginRequest extends RestRequest<KoreLoginResponse> {
 
     protected HashMap<String, Object> userCredentials;

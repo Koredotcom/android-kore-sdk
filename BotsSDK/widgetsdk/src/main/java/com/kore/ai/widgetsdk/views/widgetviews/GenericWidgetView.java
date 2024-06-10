@@ -47,10 +47,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by Ramachandra Pradeep on 23-Apr-19.
- */
-
 @SuppressLint("ViewConstructor")
 public class GenericWidgetView extends LinearLayout {
 

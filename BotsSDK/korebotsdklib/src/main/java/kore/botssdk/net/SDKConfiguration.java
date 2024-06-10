@@ -59,37 +59,24 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        static String KORE_BOT_SERVER_URL = "https://platform.kore.ai/";
+        static String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static String SERVER_URL = "https://platform.kore.ai/";
+        public static String SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
-        public static final String Branding_SERVER_URL = "https://platform.kore.ai/";
+        public static final String Branding_SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String koreAPIUrl = "https://dev-xo.kore.ai/";
     }
 
     public static class Client {
-        //XO
-//        public static final String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
-//        public static final String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
-//        public static final String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
-//        public static String identity = "email@kore.com";
-//        public static final String bot_name = "SDKDemo";
-
-//        public static String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-//        public static String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-//        public static String identity = "example.email@kore.com";
-//        public static String bot_name = "SDKBot";//"Android test";//"NewTemplates";
-//        public static String bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
-
-        public static String client_id = "cs-4c02883b-1a90-5833-9ab7-57b541d023c3";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static String client_secret = "3dtQPyuKuYOGKOSrDcRb27j+SVPq0zVTNHWdlh5/NLo=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static String identity = "test@kore.com";
-        public static String bot_name = "PNC";//"Android test";//"NewTemplates";
-        public static String bot_id = "st-3f826975-eadb-53af-92b7-3430a1f5353a";
+        public static  String bot_name = "Widgets View more";
+        public static  String bot_id = "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87";
+        public static  String client_id = "cs-ff66f2cb-440b-5f37-8a7a-680e109066a8";
+        public static  String client_secret = "GHCir4+c3mKkqpwiTRipaXzPj5ykFUWkKMPAGhc1m3U=";
+        public static  String identity = "paladiprashanth95@gmail.com";
 
         public static final String tenant_id = "605da1dbb5f6f00badadb665";
-        public static final boolean enablePanel = false;
+        public static final boolean enablePanel = true;
         public static final boolean enable_ack_delivery = false;
         public static final boolean isWebHook = false;
         public static final String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";

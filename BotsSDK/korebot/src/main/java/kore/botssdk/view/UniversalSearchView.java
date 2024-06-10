@@ -232,7 +232,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     }
 
     @Override
-    public void tasksSelectedOrDeselected(boolean selecetd) {
+    public void tasksSelectedOrDeselected(boolean selected) {
 
     }
 
@@ -242,7 +242,7 @@ public class UniversalSearchView extends ViewGroup implements VerticalListViewAc
     }
 
     @Override
-    public void navigationToDialAndJoin(String actiontype, String actionLink) {
+    public void navigationToDialAndJoin(String actionType, String actionLink) {
 
     }
 

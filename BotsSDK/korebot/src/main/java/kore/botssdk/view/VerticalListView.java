@@ -328,11 +328,11 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     @Override
-    public void tasksSelectedOrDeselected(boolean selecetd) {
+    public void tasksSelectedOrDeselected(boolean selected) {
         setTranslationZ(500 * dp1);
         bringToFront();
         if(composeFooterInterface != null)
-            composeFooterInterface.updateActionbar(selecetd, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
+            composeFooterInterface.updateActionbar(selected, getTemplateType(recyclerView.getAdapter()), getActions(recyclerView.getAdapter()));
     }
 
     @Override
@@ -341,7 +341,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
     }
 
     @Override
-    public void navigationToDialAndJoin(String actiontype, String actionLink) {
+    public void navigationToDialAndJoin(String actionType, String actionLink) {
 
     }
 

@@ -16,9 +16,9 @@ public interface VerticalListViewActionHelper {
     void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel);
     void emailItemClicked(String action, HashMap customData);
     void calendarItemClicked(String action, BaseCalenderTemplateModel model);
-    void tasksSelectedOrDeselected(boolean selecetd);
+    void tasksSelectedOrDeselected(boolean selected);
     void widgetItemSelected(boolean isSelected, int count);
-    void navigationToDialAndJoin(String actiontype, String actionLink);
+    void navigationToDialAndJoin(String actionType, String actionLink);
     void takeNotesNavigation(BaseCalenderTemplateModel baseCalenderTemplateModel);
     void meetingNotesNavigation(Context context, String mId, String eId);
     void meetingWidgetViewMoreVisibility(boolean visible);

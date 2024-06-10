@@ -11,10 +11,6 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Map;
 
-/**
- * Created by Shiva Krishna on 11/17/2017.
- */
-
 public class AppUtils {
 
     public static float convertDpToPixel(Context context, float dp) {

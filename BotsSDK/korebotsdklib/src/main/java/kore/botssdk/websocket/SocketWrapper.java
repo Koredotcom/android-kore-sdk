@@ -36,10 +36,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 
-/**
- * Created by Ramachandra Pradeep on 6/1/2016.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 @SuppressLint("UnknownNullness")
 public final class SocketWrapper {
     private final String LOG_TAG = "SocketWrapper";//

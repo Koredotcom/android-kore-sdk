@@ -94,10 +94,6 @@ import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by Pradeep Mahato on 31-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
     RelativeLayout rvChatContent, rlBody;
     RecyclerView botsBubblesListView;

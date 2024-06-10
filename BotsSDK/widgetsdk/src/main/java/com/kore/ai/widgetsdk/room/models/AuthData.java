@@ -5,10 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Created by Ramachandra Pradeep on 20-Jul-18.
- */
-
 @Entity(tableName = "auth_data")
 public class AuthData {
 

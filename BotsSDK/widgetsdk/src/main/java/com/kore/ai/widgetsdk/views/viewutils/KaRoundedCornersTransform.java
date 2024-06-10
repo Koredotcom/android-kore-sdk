@@ -12,10 +12,6 @@ import android.graphics.RectF;
 
 import com.squareup.picasso.Transformation;
 
-/**
- * Created by Shiva Krishna on 3/14/2018.
- */
-
 public class KaRoundedCornersTransform implements Transformation {
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     @Override

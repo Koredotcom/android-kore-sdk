@@ -5,10 +5,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.utils.DateUtils;
 
-/**
- * Created by Ramachandra Pradeep on 09-Aug-18.
- */
-
 public class KaFileLookupModel {
     private static final DecimalFormat df2 = new DecimalFormat("###.##");
     private String fileName;

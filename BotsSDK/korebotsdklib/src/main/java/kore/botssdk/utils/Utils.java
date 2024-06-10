@@ -34,10 +34,6 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 
-/**
- * Created by Pradeep Mahato on 06-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class Utils {
 
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);

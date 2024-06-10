@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.utils;
 
-/**
- * Created by Shiva Krishna on 11/17/2017.
- */
-
 public class BundleConstants {
     public static final String USER_ID="userId";
     public static final String ACCESS_TKN="accessToken";

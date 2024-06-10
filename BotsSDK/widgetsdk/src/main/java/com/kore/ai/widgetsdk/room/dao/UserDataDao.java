@@ -13,10 +13,6 @@ import com.kore.ai.widgetsdk.room.models.UserData;
 
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 20-Jul-18.
- */
-
 @Dao
 public interface UserDataDao {
 

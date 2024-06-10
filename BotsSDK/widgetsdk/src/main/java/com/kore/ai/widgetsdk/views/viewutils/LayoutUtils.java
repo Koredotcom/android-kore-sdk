@@ -1,11 +1,6 @@
 package com.kore.ai.widgetsdk.views.viewutils;
 
 import android.view.View;
-
-/**
- * Created by Pradeep Mahato on 31-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class LayoutUtils {
 
     public static void layoutChild(View v, int l, int t) {

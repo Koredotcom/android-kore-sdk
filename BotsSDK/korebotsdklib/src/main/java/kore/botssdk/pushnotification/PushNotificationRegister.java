@@ -15,11 +15,6 @@ import kore.botssdk.utils.Utils;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 
-/**
- * Created by Pradeep Mahato on 08-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
 public class PushNotificationRegister  {
 
 //    RequestListener<Response> requestListener;

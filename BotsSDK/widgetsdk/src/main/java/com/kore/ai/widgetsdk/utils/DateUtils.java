@@ -13,10 +13,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Pradeep Mahato on 09-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class DateUtils {
     public static final long oneMin = 60 * 1000;
     public static final long fiveMin = 5 * oneMin;

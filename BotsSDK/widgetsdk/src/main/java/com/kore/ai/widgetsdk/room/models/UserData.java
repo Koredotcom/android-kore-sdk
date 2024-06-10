@@ -11,10 +11,6 @@ import com.kore.ai.widgetsdk.room.converters.StringListConverter;
 
 import java.util.ArrayList;
 
-/**
- * Created by Ramachandra Pradeep on 19-Jul-18.
- */
-
 @Entity(tableName = "user_data")
 public class UserData {
 

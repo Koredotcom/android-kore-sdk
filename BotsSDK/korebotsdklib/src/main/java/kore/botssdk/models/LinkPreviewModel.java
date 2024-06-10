@@ -2,9 +2,6 @@ package kore.botssdk.models;
 
 import java.io.Serializable;
 
-/**
- * Created by Shiva Krishna on 1/30/2018.
- */
 public class LinkPreviewModel implements Serializable {
 
     public LinkPreviewModel() {

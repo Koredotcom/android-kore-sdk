@@ -1,8 +1,5 @@
 package com.kore.ai.widgetsdk.events;
 
-/**
- * Created by amit on 7/10/2015.
- */
 public interface ComponentPlaybackEvents {
 
     class UpdateDownloadProgress {

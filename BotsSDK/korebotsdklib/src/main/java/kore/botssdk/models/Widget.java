@@ -8,10 +8,6 @@ import java.util.List;
 
 import kore.botssdk.utils.StringUtils;
 
-/**
- * Created by Ramachandra Pradeep on 08-Mar-19.
- */
-
 public class Widget implements Serializable,Cloneable {
 
 

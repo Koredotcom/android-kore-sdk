@@ -17,12 +17,6 @@ import kore.botssdk.services.KoreAuthErrorHandler;
 import kore.botssdk.utils.Utils;
 import kore.korebotsdklib.R;
 
-*/
-/**
- * Created by Ramachandra Pradeep on 6/1/2016.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- *//*
-
 public class BotRestService */
 /*extends RetrofitGsonSpiceService*//*
  {

@@ -11,10 +11,6 @@ import android.util.AttributeSet;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-/**
- * Created by Shiva Krishna on 2/22/2018.
- */
-
 public class ProfileTextView extends AppCompatTextView {
     private Paint paint;
     private Paint tPaint;

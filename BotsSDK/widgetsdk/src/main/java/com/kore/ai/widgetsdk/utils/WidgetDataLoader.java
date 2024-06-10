@@ -23,10 +23,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/**
- * Created by Ramachandra Pradeep on 08-Mar-19.
- */
-
 public class WidgetDataLoader {
 
     public enum SERVICE_TYPE{

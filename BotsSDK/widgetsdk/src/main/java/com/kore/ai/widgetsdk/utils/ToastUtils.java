@@ -6,10 +6,6 @@ import android.os.Looper;
 import android.widget.Toast;
 
 
-/**
- * Created by Shiva Krishna on 10/18/2017.
- */
-
 public class ToastUtils {
     public static void showToast(Context context, String msg) {
         showToast(context, msg, Toast.LENGTH_SHORT);

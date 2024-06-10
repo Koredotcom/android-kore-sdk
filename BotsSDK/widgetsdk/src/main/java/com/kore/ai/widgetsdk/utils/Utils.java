@@ -11,10 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-/**
- * Created by Pradeep Mahato on 06-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class Utils {
 
     /**

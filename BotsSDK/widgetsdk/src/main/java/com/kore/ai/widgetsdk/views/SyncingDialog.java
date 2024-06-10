@@ -9,9 +9,6 @@ import android.widget.TextView;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.utils.KaFontUtils;
 
-/**
- * Created by Pradeep on 14-Apr-15.
- */
 public class SyncingDialog extends Dialog {
 
     TextView syncDialogLoadingTextView;

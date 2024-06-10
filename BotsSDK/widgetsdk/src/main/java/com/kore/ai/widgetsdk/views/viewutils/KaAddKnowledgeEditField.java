@@ -18,14 +18,6 @@ import java.util.Objects;
 
 import kore.botssdk.application.AppControl;
 
-*/
-/**
- * Created by Shiva Krishna on 1/17/2018.
- *//*
-
-
-
-
 public class KaAddKnowledgeEditField extends SpannableEditText {
 
     String LOG_TAG = KaAddKnowledgeEditField.class.getSimpleName();

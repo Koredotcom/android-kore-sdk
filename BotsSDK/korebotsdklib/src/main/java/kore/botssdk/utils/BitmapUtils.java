@@ -23,10 +23,6 @@ import java.util.Objects;
 import kore.botssdk.models.KoreMedia;
 
 
-/**
- * Created by Shiva Krishna on 4/5/2018.
- */
-
 public class BitmapUtils {
 
     public static final String ORIENTATION_LS = "landscape";

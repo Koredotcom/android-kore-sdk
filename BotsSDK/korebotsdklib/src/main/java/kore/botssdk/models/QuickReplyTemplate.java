@@ -1,8 +1,5 @@
 package kore.botssdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 12/16/2016.
- */
 public class QuickReplyTemplate {
 
     private String content_type;

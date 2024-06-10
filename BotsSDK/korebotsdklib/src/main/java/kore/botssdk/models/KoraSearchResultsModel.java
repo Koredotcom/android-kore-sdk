@@ -2,10 +2,6 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shiva Krishna on 2/8/2018.
- */
-
 public class KoraSearchResultsModel {
     ArrayList<EmailModel> emails;
 

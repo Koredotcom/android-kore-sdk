@@ -203,7 +203,6 @@ public class FullViewActivity extends KaAppCompatActivity implements VerticalLis
         recyclerView.setAdapter(adapter);
         ((RecyclerViewDataAccessor) adapter).setVerticalListViewActionHelper(this);
         ((RecyclerViewDataAccessor) adapter).setExpanded(true);
-        adapter.notifyAll();
     }
 
     @Override

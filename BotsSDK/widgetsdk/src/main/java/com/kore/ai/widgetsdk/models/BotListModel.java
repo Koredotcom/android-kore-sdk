@@ -1,11 +1,6 @@
 package com.kore.ai.widgetsdk.models;
 
 import java.util.ArrayList;
-
-/**
- * Created by Pradeep Mahato on 21/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class BotListModel {
     String title;
     String image_url;

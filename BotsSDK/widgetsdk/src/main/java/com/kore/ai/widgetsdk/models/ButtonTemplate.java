@@ -1,8 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 12/15/2016.
- */
 public class ButtonTemplate {
 
     private String type;

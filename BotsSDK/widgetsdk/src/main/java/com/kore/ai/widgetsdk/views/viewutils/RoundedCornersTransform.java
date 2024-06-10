@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.views.viewutils;
 
-/**
- * Created by Pradeep Mahato on 22/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;

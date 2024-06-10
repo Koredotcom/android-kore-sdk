@@ -198,7 +198,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     }
 
     @Override
-    public void tasksSelectedOrDeselected(boolean selecetd) {
+    public void tasksSelectedOrDeselected(boolean selected) {
 
     }
 
@@ -208,7 +208,7 @@ public class WelcomeSummaryView extends ViewGroup implements VerticalListViewAct
     }
 
     @Override
-    public void navigationToDialAndJoin(String actiontype, String actionLink) {
+    public void navigationToDialAndJoin(String actionType, String actionLink) {
 
     }
 

@@ -3,10 +3,6 @@ package com.kore.ai.widgetsdk.utils;
 import android.content.Context;
 import android.content.res.Resources;
 
-/**
- * Created by Pradeep Mahato on 31-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class DimensionUtil {
 
     final Context context;

@@ -12,10 +12,6 @@ import com.kore.ai.widgetsdk.room.models.BotDBMessage;
 
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 26-Oct-18.
- */
-
 @Dao
 public interface BotMessageDBDao {
 

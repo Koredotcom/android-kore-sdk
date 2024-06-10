@@ -7,10 +7,6 @@ import com.kore.ai.widgetsdk.models.PayloadOuter;
 
 import java.util.ArrayList;
 
-/**
- * Created by Ramachandra Pradeep on 04-Dec-18.
- */
-
 public class ConvertUtils {
     public static BotResponse convertToCarousalModal(BotResponse botResponse, ArrayList<KnowledgeDetailModel> knowledgeDetailModels) {
         PayloadOuter payloadOuter = botResponse.getMessage().get(0).getComponent().getPayload();

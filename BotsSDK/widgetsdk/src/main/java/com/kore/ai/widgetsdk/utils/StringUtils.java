@@ -3,9 +3,6 @@ package com.kore.ai.widgetsdk.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Shiva Krishna on 11/15/2017.
- */
 public final class StringUtils {
 
     public static final String kora_thread = "Kore_Chat";

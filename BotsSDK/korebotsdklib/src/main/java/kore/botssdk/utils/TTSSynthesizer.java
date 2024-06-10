@@ -14,11 +14,6 @@ import java.util.Locale;
 import kore.botssdk.speechtotext.TtsWebSocketWrapper;
 import kore.botssdk.websocket.SocketConnectionListener;
 
-/**
- * Created by Pradeep Mahato on 19-May-17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
 public class TTSSynthesizer {
 
     private TextToSpeech textToSpeech;

@@ -27,10 +27,6 @@ import com.squareup.picasso.Transformation;
 
 import java.io.File;
 
-/**
- * Created by tapasya on 01/10/15.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class CircularProfileView extends RoundedImageView {
 
     private static final int DEFAULT_BADGE_TEXT_SIZE = 12;

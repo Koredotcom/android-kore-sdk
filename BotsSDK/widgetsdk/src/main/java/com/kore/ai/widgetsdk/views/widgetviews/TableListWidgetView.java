@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -21,13 +20,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.kora.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
-import com.kore.ai.widgetsdk.adapters.BotTableListTemlateAdapter;
+import com.kore.ai.widgetsdk.adapters.BotTableListTemplateAdapter;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.fragments.WidgetActionSheetFragment;
@@ -49,7 +47,6 @@ import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
@@ -75,7 +72,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
     public View view_more;
     public ProgressBar progress;
     private View rootView;
-    private BotTableListTemlateAdapter listWidgetAdapter = null;
+    private BotTableListTemplateAdapter listWidgetAdapter = null;
     private AuthData authData;
     private UserData userData;
     public ImageView imgMenu;
@@ -181,7 +178,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
         widget_header = view.findViewById(R.id.meeting_header);
         progress = view.findViewById(R.id.meeting_progress);
         dp1 = (int) Utility.convertDpToPixel(context, 1);
-        listWidgetAdapter = new BotTableListTemlateAdapter(getContext(), 4);
+        listWidgetAdapter = new BotTableListTemplateAdapter(getContext(), 4);
 //        listWidgetAdapter.setVerticalListViewActionHelper(this);
         imgMenu = view.findViewById(R.id.icon_image);
         tvButton = view.findViewById(R.id.tv_button);
@@ -552,7 +549,7 @@ public class TableListWidgetView extends LinearLayout implements VerticalListVie
 
         }
         if (model.getData().get(0).getRecords() != null && model.getData().get(0).getRecords().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
-            listWidgetAdapter = new BotTableListTemlateAdapter(getContext(), model.getData().get(0).getRecords().size());
+            listWidgetAdapter = new BotTableListTemplateAdapter(getContext(), model.getData().get(0).getRecords().size());
             if (model.getData().get(0).getRecords() != null && model.getData().get(0).getRecords().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
             }

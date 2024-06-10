@@ -1,11 +1,6 @@
 package com.kore.ai.widgetsdk.net;
 
 /**
- * Created by Ramachandra on 30-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-
-/**
  * This class is for defining properties
  */
 public class SDKConfiguration {
@@ -80,9 +75,9 @@ public class SDKConfiguration {
             IS_PRESENCE_SSL = isPresenceSsl;
         }
 
-        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai";//"https://bots.kore.ai";
-        public static String SERVER_URL ="https://bots.kore.ai";
-        public static String WIDGETS_SERVER_URL = "https://bots.kore.ai";
+        static  String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai";//"https://bots.kore.ai";
+        public static String SERVER_URL ="https://sit-xo.kore.ai";
+        public static String WIDGETS_SERVER_URL = "https://sit-xo.kore.ai";
 
         public static String SERVER_IP = "qa.kore.ai";
         public static String SERVER_PORT = "443";
@@ -115,11 +110,11 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static  String client_id = "cs-0245d453-ab18-560f-8205-305e37dfcbb8";
-        public static  String client_secret = "8BpBIPWGMEqhwXuyLAJNlqd6mknIlQxbfQzdJpLJ/RY=";
-        public static  String identity = "paladiprashanth95@gmail.com";
         public static  String bot_name = "Widgets View more";
-        public static  String bot_id = "st-e72d2d68-2fe4-5379-bcfc-6b66e2193da4";
+        public static  String bot_id = "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87";
+        public static  String client_id = "cs-ff66f2cb-440b-5f37-8a7a-680e109066a8";
+        public static  String client_secret = "GHCir4+c3mKkqpwiTRipaXzPj5ykFUWkKMPAGhc1m3U=";
+        public static  String identity = "paladiprashanth95@gmail.com";
     }
 
 

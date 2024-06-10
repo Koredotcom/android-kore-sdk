@@ -2,9 +2,6 @@ package com.kore.ai.widgetsdk.net;
 
 import com.google.gson.annotations.Expose;
 
-/**
- * Created by Naval on 26-Oct-15.
- */
 public class KoreVersionUpgradeResponse {
 
     @Expose

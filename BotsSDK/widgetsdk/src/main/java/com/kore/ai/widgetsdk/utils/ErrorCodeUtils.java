@@ -2,10 +2,6 @@ package com.kore.ai.widgetsdk.utils;
 
 import java.util.HashMap;
 
-/**
- * Created by Shiva Krishna on 5/31/2018.
- */
-
 public class ErrorCodeUtils {
     private static final HashMap<String,String> errorCodeMessageMap = new HashMap<>();
 

@@ -91,30 +91,30 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BottomPanelFragment extends KaBaseFragment implements PanelInterface,
-        VerticalListViewActionHelper, UpdateRefreshItem, GestureDetector.OnGestureListener {
-    private View view;
-    private ProgressBar progressBarPanel;
-    private RecyclerView pannel_recycler;
-    private PannelAdapter pannelAdapter;
-    private String jwtToken;
-    private TextView emptyPanelView;
-    private JWTTokenResponse jwtKeyResponse;
-    private SharedPreferenceUtils sharedPreferenceUtils;
-    private CustomBottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
-    private LinearLayout perssiatentPanel, persistentSubLayout;
-    private ImageView img_skill;
-    private TextView closeBtnPanel, editButton;
-    private RecyclerView recyclerView_panel;
-    private LinearLayout single_item_container;
-    private KaWidgetBaseAdapterNew widgetBaseAdapter;
-    private TextView txtTitle;
+@SuppressLint("UnknownNullness")
+public class BottomPanelFragment extends KaBaseFragment implements PanelInterface, VerticalListViewActionHelper, UpdateRefreshItem, GestureDetector.OnGestureListener {
+    View view;
+    ProgressBar progressBarPanel;
+    RecyclerView panel_recycler;
+    PannelAdapter pannelAdapter;
+    String jwtToken;
+    TextView emptyPanelView;
+    JWTTokenResponse jwtKeyResponse;
+    SharedPreferenceUtils sharedPreferenceUtils;
+    CustomBottomSheetBehavior<LinearLayout> mBottomSheetBehavior;
+    LinearLayout persistentPanel, persistentSubLayout;
+    ImageView img_skill;
+    TextView closeBtnPanel, editButton;
+    RecyclerView recyclerView_panel;
+    LinearLayout single_item_container;
+    KaWidgetBaseAdapterNew widgetBaseAdapter;
+    TextView txtTitle;
     final Handler handler = new Handler();
-    private WidgetComposeFooterInterface widgetComposeFooterInterface;
-    private Button panelDrag;
-    private GestureDetector gestureScanner;
-    private CoordinatorLayout cordinate_layout;
-    private float screenHeight;
+    WidgetComposeFooterInterface widgetComposeFooterInterface;
+    Button panelDrag;
+    GestureDetector gestureScanner;
+    CoordinatorLayout coordinate_layout;
+    float screenHeight;
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -131,7 +131,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         closeBtnPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                perssiatentPanel.setVisibility(GONE);
+                persistentPanel.setVisibility(GONE);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         });
@@ -148,11 +148,11 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     }
 
     private void findPanelView(View view) {
-        pannel_recycler = view.findViewById(R.id.pannel_recycler);
+        panel_recycler = view.findViewById(R.id.pannel_recycler);
         progressBarPanel = view.findViewById(R.id.progressBarPanel);
         emptyPanelView = view.findViewById(R.id.emptyView);
 
-        perssiatentPanel = view.findViewById(R.id.persistentPanel);
+        persistentPanel = view.findViewById(R.id.persistentPanel);
         persistentSubLayout = view.findViewById(R.id.panel_sub_layout);
         img_skill = view.findViewById(R.id.img_skill);
         txtTitle = view.findViewById(R.id.txtTitle);
@@ -166,8 +166,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         panelDrag = view.findViewById(R.id.panel_drag);
 
         recyclerView_panel.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBottomSheetBehavior = CustomBottomSheetBehavior.from(perssiatentPanel);
-        cordinate_layout = view.findViewById(R.id.cordinate_layout);
+        mBottomSheetBehavior = CustomBottomSheetBehavior.from(persistentPanel);
+        coordinate_layout = view.findViewById(R.id.cordinate_layout);
 
         gestureScanner = new GestureDetector(this);
 
@@ -180,7 +180,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        perssiatentPanel.setVisibility(GONE);
+                        persistentPanel.setVisibility(GONE);
                         mBottomSheetBehavior.setLocked(false);
                         break;
                 }
@@ -191,25 +191,24 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             }
         });
 
-        pannel_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        panel_recycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     }
 
     /*
     @PanelName : Launch default Panel based on name
      */
     public void getPanelData(final String panelName, final boolean isFromPresence) {
-        Call<List<PanelResponseData.Panel>> baseWidgetData = KaRestBuilder.getWidgetKaRestAPI().
-                getWidgetPannelData(com.kore.ai.widgetsdk.net.SDKConfiguration.Client.bot_id, Utils.ah(jwtToken), com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity);
+        Call<List<PanelResponseData.Panel>> baseWidgetData = KaRestBuilder.getWidgetKaRestAPI().getWidgetPannelData(com.kore.ai.widgetsdk.net.SDKConfiguration.Client.bot_id, Utils.ah(jwtToken), com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity);
         KaRestAPIHelper.enqueueWithRetry(baseWidgetData, new Callback<List<PanelResponseData.Panel>>() {
             @Override
-            public void onResponse(Call<List<PanelResponseData.Panel>> call, Response<List<PanelResponseData.Panel>> response) {
+            public void onResponse(@NonNull Call<List<PanelResponseData.Panel>> call, @NonNull Response<List<PanelResponseData.Panel>> response) {
                 if (response.isSuccessful()) {
                     progressBarPanel.setVisibility(View.GONE);
-                    pannel_recycler.setVisibility(View.VISIBLE);
-                    Log.e("Panel Response", response.body() + "");
+                    panel_recycler.setVisibility(View.VISIBLE);
+                    Log.e("Panel Response", String.valueOf(response.body()));
                     PanelResponseData panelResponseData = new PanelResponseData();
                     panelResponseData.setPanels(response.body());
-                    updatePannelData(panelResponseData, panelName, isFromPresence);
+                    updatePanelData(panelResponseData, panelName, isFromPresence);
                 } else {
                     progressBarPanel.setVisibility(View.GONE);
                     if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
@@ -223,7 +222,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             }
 
             @Override
-            public void onFailure(Call<List<PanelResponseData.Panel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<PanelResponseData.Panel>> call, @NonNull Throwable t) {
                 progressBarPanel.setVisibility(View.GONE);
                 if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
                     emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
@@ -236,25 +235,12 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         });
     }
 
-    private void updatePannelData(PanelResponseData panelResponseData, String panelName, boolean isFromPresence) {
+    void updatePanelData(PanelResponseData panelResponseData, String panelName, boolean isFromPresence) {
 
         if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
             emptyPanelView.setVisibility(View.GONE);
             pannelAdapter = new PannelAdapter(getActivity(), panelResponseData, this);
-            pannel_recycler.setAdapter(pannelAdapter);
-            PanelBaseModel model = getHomeModelData(panelResponseData, panelName);
-
-            if (model != null) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        SharedPreferenceUtils sharedPreferenceUtils = SharedPreferenceUtils.getInstance(getActivity());
-                        if (sharedPreferenceUtils.getKeyValue(com.kore.ai.widgetsdk.utils.BundleConstants.IS_ON_BOARDED, false)) {
-                        }
-                    }
-                }, 700);
-            }
-
+            panel_recycler.setAdapter(pannelAdapter);
         } else {
             emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", getActivity()));
             emptyPanelView.setVisibility(View.VISIBLE);
@@ -272,13 +258,15 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         Call<JWTTokenResponse> getJWTTokenService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(hsh);
         getJWTTokenService.enqueue(new Callback<JWTTokenResponse>() {
             @Override
-            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
+            public void onResponse(@NonNull Call<JWTTokenResponse> call, @NonNull Response<JWTTokenResponse> response) {
                 if (response.isSuccessful()) {
                     jwtKeyResponse = response.body();
-                    jwtToken = jwtKeyResponse.getJwt();
+                    if (jwtKeyResponse != null) {
+                        jwtToken = jwtKeyResponse.getJwt();
 
-                    if (sharedPreferenceUtils != null) {
-                        sharedPreferenceUtils.putKeyValue("JWToken", jwtToken);
+                        if (sharedPreferenceUtils != null) {
+                            sharedPreferenceUtils.putKeyValue("JWToken", jwtToken);
+                        }
                     }
 
                     getPanelData("home", false);
@@ -286,14 +274,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             }
 
             @Override
-            public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<JWTTokenResponse> call, @NonNull Throwable t) {
                 Log.e("Skill Panel Data", t.toString());
             }
         });
     }
 
     private PanelBaseModel getHomeModelData(PanelResponseData panelResponseData, String panelName) {
-        PanelBaseModel model = null;
+        PanelBaseModel model;
         if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
             for (PanelResponseData.Panel panel : panelResponseData.getPanels()) {
                 if (panel != null && panel.getName() != null && panel.getName().equalsIgnoreCase(panelName)) {
@@ -306,13 +294,12 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
         }
 
-        return model;
+        return null;
     }
 
     @Override
     public void onPanelClicked(PanelBaseModel pModel) {
         AppUtils.showHideVirtualKeyboard(getActivity(), recyclerView_panel, false);
-
         String appName = "Kore";
         String packageName = "com.kore.koreapp";
         if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
@@ -332,12 +319,11 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             } catch (Exception e) {
                 if (isAppEnabled(requireActivity(), packageName)) {
                     Intent intent = requireActivity().getPackageManager().getLaunchIntentForPackage(packageName);
-                    if(intent != null) {
+                    if (intent != null) {
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         requireActivity().startActivity(intent);
                     }
-                } else
-                    Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
         } else if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
@@ -357,12 +343,11 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             } catch (Exception e) {
                 if (isAppEnabled(requireActivity(), packageName)) {
                     Intent intent = requireActivity().getPackageManager().getLaunchIntentForPackage(packageName);
-                    if(intent != null) {
+                    if (intent != null) {
                         intent.putExtra("KoreHomeState", "KoreHomeState");
                         requireActivity().startActivity(intent);
                     }
-                } else
-                    Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                } else Toast.makeText(requireActivity(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
         }
@@ -370,17 +355,17 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
         if (mBottomSheetBehavior != null) {
             persistentSubLayout.setVisibility(View.VISIBLE);
-            perssiatentPanel.setVisibility(View.VISIBLE);
+            persistentPanel.setVisibility(View.VISIBLE);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(pModel != null) {
+                    if (pModel != null) {
                         updatePanelData(pModel);
                     }
                 }
             }, 500);
 
-            perssiatentPanel.post(new Runnable() {
+            persistentPanel.post(new Runnable() {
                 @Override
                 public void run() {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -411,7 +396,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updatePanelData(PanelBaseModel pModels) {
+    void updatePanelData(PanelBaseModel pModels) {
         int size = pModels.getData().getWidgets().size();
 
         if (size == 0) {
@@ -557,8 +542,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 break;
             case WidgetConstants.FILES_SINGLE_TEMPLATE:
             case WidgetConstants.TASKS_SINGLE_TEMPLATE:
-                GenericWidgetView gwv = new GenericWidgetView(getActivity(), 0, this, null,
-                        pModels.getData().getName(), "180", false, WidgetViewMoreEnum.EXPAND_VIEW);
+                GenericWidgetView gwv = new GenericWidgetView(getActivity(), 0, this, null, pModels.getData().getName(), "180", false, WidgetViewMoreEnum.EXPAND_VIEW);
                 gwv.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), true, panelData);
                 view = gwv;
                 break;
@@ -587,7 +571,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
 
             case WidgetConstants.TABLE_LIST_TEMPLATE:
                 TableListWidgetView tableListWidgetView = new TableListWidgetView(getActivity(), pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-                tableListWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData,  "Ask MyIT", jwtToken);
+                tableListWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData, "Ask MyIT", jwtToken);
                 view = tableListWidgetView;
                 break;
 
@@ -643,7 +627,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     }
 
     @Override
-    public void tasksSelectedOrDeselected(boolean selecetd) {
+    public void tasksSelectedOrDeselected(boolean selected) {
 
     }
 
@@ -692,7 +676,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         mBottomSheetBehavior.setLocked(false);
         try {
             if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                mBottomSheetBehavior.onInterceptTouchEvent(cordinate_layout, perssiatentPanel, motionEvent);
+                mBottomSheetBehavior.onInterceptTouchEvent(coordinate_layout, persistentPanel, motionEvent);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -726,9 +710,8 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         return false;
     }
 
-    public void onEvent(EntityEditEvent entityEditEvent)
-    {
-        perssiatentPanel.setVisibility(GONE);
+    public void onEvent(EntityEditEvent entityEditEvent) {
+        persistentPanel.setVisibility(GONE);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         widgetComposeFooterInterface.onPanelSendClick(entityEditEvent.getMessage(), true);
     }

@@ -327,14 +327,11 @@ final FileUploadInfo uploadInfo = new FileUploadInfo();
 	}
 
 	void setChunkCount(int n){
-		if(uploadInfo != null){
-			uploadInfo.setTotalChunks(n);
-			try {
-//				fileDao.update(uploadInfo);
-				helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		uploadInfo.setTotalChunks(n);
+		try {
+			helper.getFileUploadInfoMap().put(fileToken,uploadInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	private void sendMergeSignal(final int dataCount, String fileContext) throws IOException {

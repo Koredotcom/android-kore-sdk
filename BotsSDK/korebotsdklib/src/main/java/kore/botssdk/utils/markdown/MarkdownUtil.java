@@ -6,10 +6,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 import kore.botssdk.utils.Utils;
 
 
-/**
- * Created by AmitYadav on 2/28/2017.
- */
-
 public class MarkdownUtil {
 
     public static String processMarkDown(String text) {

@@ -37,7 +37,8 @@ import kore.botssdk.view.viewUtils.HorizontalInfiniteCycleViewPager;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
+public class
+BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
     private Button launchBotBtn;
     EditText etIdentity;
     private static final int ERROR_DIALOG_REQUEST_CODE = 1;

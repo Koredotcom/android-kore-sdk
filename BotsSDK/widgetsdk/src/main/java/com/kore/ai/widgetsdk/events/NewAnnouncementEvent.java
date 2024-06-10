@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.events;
 
-/**
- * Created by Ramachandra Pradeep on 22-Apr-19.
- */
-
 public class NewAnnouncementEvent {
     public String getkId() {
         return kId;

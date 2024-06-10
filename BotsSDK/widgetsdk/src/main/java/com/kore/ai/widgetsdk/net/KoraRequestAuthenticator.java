@@ -33,10 +33,6 @@ import retrofit2.Call;
 //import com.kore.korelib.events.AccessTokenUpdateEvent;
 
 
-/**
- * Created by Ramachandra Pradeep on 04-Jan-19.
- */
-
 public class KoraRequestAuthenticator implements Authenticator {
     private final Context mContext;
     private String newToken;

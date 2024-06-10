@@ -4,10 +4,7 @@ package kore.botssdk.net;
 import android.content.Context;
 
 */
-/**
- * Created by Pradeep Mahato on 13-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- *//*
+/*
 
 public interface SpiceManagerLifeCycle {
     */

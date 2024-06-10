@@ -1,9 +1,5 @@
 package kore.botssdk.utils.markdown;
 
-/**
- * Created by AmitYadav on 1/12/2017.
- */
-
 public interface MarkdownConstant {
 
     char STAR = '*';

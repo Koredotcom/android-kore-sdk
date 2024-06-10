@@ -28,11 +28,11 @@ import com.kore.ai.widgetsdk.utils.KaUtility;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.squareup.picasso.Picasso;
 
-public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHoldeer> {
+public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RViewHolder> {
 
     private final Context context;
-    private final PanelResponseData panelResponseData;
-    private final PanelInterface panelInterface;
+    final PanelResponseData panelResponseData;
+    final PanelInterface panelInterface;
     private KaMessengerUpdate _msgUpdate;
     private final int dp1;
 
@@ -41,7 +41,7 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
     }
 
     private final boolean isExpanded = false;
-    private final boolean isScrolling=false;
+    private final boolean isScrolling = false;
 
     public PannelAdapter(Context mainActivity, PanelResponseData panelResponseData, PanelInterface panelInterface) {
         context = mainActivity;
@@ -53,25 +53,25 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
 
     @NonNull
     @Override
-    public RViewHoldeer onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.panel_adapter_new, parent, false);
-        return new RViewHoldeer(view);
+        return new RViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final RViewHoldeer holder, int position) {
+    public void onBindViewHolder(@NonNull final RViewHolder holder, int position) {
         final PanelResponseData.Panel data = panelResponseData.getPanels().get(position);
 
-        if(data != null && data.getIcon() != null && data.getIcon().equalsIgnoreCase("url")) {
+        if (data != null && data.getIcon() != null && data.getIcon().equalsIgnoreCase("url")) {
             holder.img_skill.setVisibility(View.GONE);
             holder.img_icon.setVisibility(View.VISIBLE);
 
             holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
             holder.item.setSelected(data.isItemClicked());
-        }else {
+        } else {
             holder.img_icon.setVisibility(View.GONE);
 
-            if (data.getIcon() != null) {
+            if (data != null && data.getIcon() != null) {
 
                 try {
                     holder.img_skill.setVisibility(VISIBLE);
@@ -93,32 +93,32 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
                 holder.img_skill.setVisibility(GONE);
             }
 
-            if(data.isItemClicked())
-            {
-                holder.img_skill.setPadding(3*dp1,3*dp1,3*dp1,3*dp1);
+            if (data != null && data.isItemClicked()) {
+                holder.img_skill.setPadding(3 * dp1, 3 * dp1, 3 * dp1, 3 * dp1);
                 holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
                 holder.item.setSelected(data.isItemClicked());
 
-            }
-            else {
+            } else {
                 holder.item.setBackground(null);
-                holder.img_skill.setPadding(0,0,0,0);
+                holder.img_skill.setPadding(0, 0, 0, 0);
             }
         }
 
-        holder.txtTitle.setText(data.getName());
+        if (data != null) holder.txtTitle.setText(data.getName());
 
 
         holder.txtTitle.post(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 holder.txtTitle.setVisibility(View.VISIBLE);
-            } });
-        if(isScrolling){
+            }
+        });
+        if (isScrolling) {
             holder.item.animate().scaleX(1.12f).scaleY(1.12f).setInterpolator(new AccelerateDecelerateInterpolator());
-        }else{
+        } else {
             holder.item.animate().scaleX(1f).scaleY(1f).setInterpolator(new AccelerateDecelerateInterpolator());
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (data != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             holder.itemView.setTooltipText(data.getName());
         }
         holder.img_icon.setTypeface(KaUtility.getTypeFaceObj(context));
@@ -127,18 +127,18 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String tempiconID = data.get_id();
-                for (int index = 0; index < panelResponseData.getPanels().size();index ++){
-                    panelResponseData.getPanels().get(index).setItemClicked(tempiconID.equals(panelResponseData.getPanels().get(index).get_id()) &&
-                            !tempiconID.equalsIgnoreCase(""));
+                if (data != null) {
+                    String tempIconId = data.get_id();
+                    for (int index = 0; index < panelResponseData.getPanels().size(); index++) {
+                        panelResponseData.getPanels().get(index).setItemClicked(tempIconId.equals(panelResponseData.getPanels().get(index).get_id()) && !tempIconId.equalsIgnoreCase(""));
+                    }
+                    PanelBaseModel panelBaseModel = new PanelBaseModel();
+                    panelBaseModel.setData(data);
+                    if (panelInterface != null) {
+                        panelInterface.onPanelClicked(panelBaseModel);
+                    }
+                    notifyDataSetChanged();
                 }
-                PanelBaseModel panelBaseModel = new PanelBaseModel();
-                panelBaseModel.setData(data);
-                if(panelInterface != null){
-                    panelInterface.onPanelClicked(panelBaseModel);
-                }
-                notifyDataSetChanged();
-
             }
         });
     }
@@ -151,14 +151,14 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
         return 0;
     }
 
-    class RViewHoldeer extends RecyclerView.ViewHolder {
+    static class RViewHolder extends RecyclerView.ViewHolder {
         final TextView img_icon;
         final TextView txtTitle;
         final ImageView img_skill;
         final ViewGroup item;
         final ImageView unreadIcon;
 
-        public RViewHoldeer(@NonNull View itemView) {
+        public RViewHolder(@NonNull View itemView) {
             super(itemView);
             img_icon = itemView.findViewById(R.id.img_icon);
             txtTitle = itemView.findViewById(R.id.txtTitle);
