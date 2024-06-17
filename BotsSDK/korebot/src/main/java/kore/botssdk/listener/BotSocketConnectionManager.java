@@ -28,6 +28,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.models.UserNameModel;
+import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
@@ -48,11 +49,11 @@ import retrofit2.Response;
 
 public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
-    private BotClient botClient;
+    BotClient botClient;
     private TTSSynthesizer ttsSynthesizer;
-    private static BotSocketConnectionManager botSocketConnectionManager;
+    static BotSocketConnectionManager botSocketConnectionManager;
     private String accessToken;
-
+    boolean isReconnect = false;
     public SocketChatListener getChatListener() {
         return chatListener;
     }
@@ -61,7 +62,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.chatListener = chatListener;
     }
 
-    private SocketChatListener chatListener;
+    SocketChatListener chatListener;
     private RestResponse.BotCustomData botCustomData;
 
 
@@ -77,9 +78,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         this.connection_state = connection_state;
     }
 
-    private CONNECTION_STATE connection_state = DISCONNECTED;
+    CONNECTION_STATE connection_state = DISCONNECTED;
     private String botAccessToken, botUserId;
-    private String botName, streamId;
+    String botName, streamId;
 
     private String userId;
 
@@ -155,7 +156,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botName = SDKConfiguration.Client.bot_name;
             streamId = SDKConfiguration.Client.bot_id;
             if (!isRefresh) {
-                botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager);
+                botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager, false);
             } else {
                 KoreEventCenter.post(jwt);
             }
@@ -180,6 +181,55 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
+
+    private void makeStsJwtCallWithConfig(final boolean isRefresh) {
+        Call<JWTTokenResponse> getBankingConfigService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
+        getBankingConfigService.enqueue(new Callback<JWTTokenResponse>() {
+            @Override
+            public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
+
+                if (response.isSuccessful()) {
+                    JWTTokenResponse jwtTokenResponse = response.body();
+
+                    try {
+                        String jwt = jwtTokenResponse.getJwt();
+                        botName = SDKConfiguration.Client.bot_name;
+                        streamId = SDKConfiguration.Client.bot_id;
+                        if (!isRefresh) {
+                            botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager, isReconnect);
+                        } else {
+                            KoreEventCenter.post(jwt);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+                        connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                        if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
+                    }
+                } else {
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JWTTokenResponse> call, Throwable t) {
+                LogUtils.d("token refresh", t.getMessage());
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            }
+        });
+
+    }
+
+    private HashMap<String, Object> getRequestObject() {
+        HashMap<String, Object> hsh = new HashMap<>();
+        hsh.put("clientId", SDKConfiguration.Client.client_id);
+        hsh.put("clientSecret", SDKConfiguration.Client.client_secret);
+        hsh.put("identity", SDKConfiguration.Client.identity);
+        hsh.put("aud", "https://idproxy.kore.com/authorize");
+        hsh.put("isAnonymous", false);
+
+        return hsh;
+    }
 
     public void persistBotMessage(String payload, boolean isSentMessage, BotRequest sentMsg) {
 
@@ -250,7 +300,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (botCustomData == null) {
             botCustomData = new RestResponse.BotCustomData();
         }
-//        botCustomData.put("botId", SDKConfiguration.Client.bot_id);
         botCustomData.put("tenantId", SDKConfiguration.Client.tenant_id);
 
         Call<TokenResponseModel> jwtTokenCall = RestBuilder.getTokenRestAPI().getTokenJWT(botCustomData);
@@ -266,7 +315,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     KoreEventCenter.post(tokenResponseModel.getBranding());
 
                     if (!isRefresh) {
-                        botClient.connectAsAnonymousUser(tokenResponseModel.getJwt(), botName, streamId, botSocketConnectionManager);
+                        botClient.connectAsAnonymousUser(tokenResponseModel.getJwt(), botName, streamId, botSocketConnectionManager, false);
                     } else {
                         KoreEventCenter.post(tokenResponseModel.getJwt());
                     }
@@ -326,7 +375,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (connection_state == null || connection_state == DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
-//            KoreEventCenter.post(connection_state);
             if (chatListener != null) {
                 chatListener.onConnectionStateChanged(connection_state, false);
             }
@@ -338,9 +386,28 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             this.isWithAuth = false;
             botClient = new BotClient(mContext, botCustomData);
             ttsSynthesizer = new TTSSynthesizer(mContext);
-//            this.socketUpdateListener = socketUpdateListener;
-            /*if (!botsSpiceManager.isStarted())
-                botsSpiceManager.start(this.mContext);*/
+            initiateConnection();
+        }
+    }
+
+    @Override
+    public void startAndInitiateConnectionWithReconnect(Context mContext, RestResponse.BotCustomData botCustomData, boolean isReconnect) {
+        this.botCustomData = botCustomData;
+        this.isReconnect = isReconnect;
+        if (connection_state == null || connection_state == DISCONNECTED) {
+            this.mContext = mContext;
+            connection_state = CONNECTION_STATE.CONNECTING;
+            if (chatListener != null) {
+                chatListener.onConnectionStateChanged(connection_state, false);
+            }
+            if (botCustomData == null) {
+                botCustomData = new RestResponse.BotCustomData();
+            }
+            botCustomData.put("kmUId", userId);
+            botCustomData.put("kmToken", accessToken);
+            this.isWithAuth = false;
+            botClient = new BotClient(mContext, botCustomData);
+            ttsSynthesizer = new TTSSynthesizer(mContext);
             initiateConnection();
         }
     }
@@ -353,9 +420,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     private void initiateConnection() {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
-//            Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
             connection_state = DISCONNECTED;
-//            KoreEventCenter.post(connection_state);
             if (chatListener != null) {
                 chatListener.onConnectionStateChanged(connection_state, false);
             }
@@ -365,8 +430,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(false);
         } else {
-            if (!SDKConfiguration.Client.isWebHook)
-                makeJwtCallWithConfig(false);
+            if (!SDKConfiguration.Client.isWebHook) {
+                makeStsJwtCallWithConfig(false);
+            }
             else
                 makeJwtCallwithConfig();
         }

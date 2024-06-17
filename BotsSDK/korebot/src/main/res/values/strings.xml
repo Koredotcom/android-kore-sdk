@@ -173,6 +173,9 @@
     <string name="bot_chat_bubble_background_color">Bot Chat bubble background color</string>
     <string name="loading_data">Loading data…</string>
     <string name="to_reorder_the_widgets">to reorder the widgets</string>
+    <string name="minimize">Minimize</string>
+    <string name="close">Close</string>
+    <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

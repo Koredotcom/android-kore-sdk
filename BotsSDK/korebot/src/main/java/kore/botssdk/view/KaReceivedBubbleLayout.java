@@ -6,6 +6,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -492,7 +494,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
                         customTemplateView1.setComposeFooterInterface(composeFooterInterface);
                         customTemplateView1.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
-                        customTemplateView1.populateTemplate(payInner, isLastItem);
+                        customTemplateView1.populateTemplate(new Gson().toJson(payInner), isLastItem);
                         emptyTemplateView.addView(customTemplateView1);
                     }
                 }
@@ -846,7 +848,7 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
 
                 if(customTemplateView1 != null)
                 {
-                    customTemplateView1.populateTemplate(payInner, isLastItem);
+                    customTemplateView1.populateTemplate(new Gson().toJson(payInner), isLastItem);
                     emptyTemplateView.addView(customTemplateView1);
                 }
             }

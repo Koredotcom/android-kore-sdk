@@ -108,6 +108,10 @@ public class BotResponse extends BaseBotMessage {
     public static final String APPLY_THEME_NAME = "APPLY_THEME_NAME";
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
+    public static final String AGENT_INFO_KEY = "agentInfo";
+    public static final String EVENT = "EVENT";
+    public static final String HISTORY_COUNT = "HISTORY_COUNT";
+    public static final String LIVE_AGENT = "live_agent";
 
     private String type;
     private BotInfoModel botInfo;
@@ -115,6 +119,16 @@ public class BotResponse extends BaseBotMessage {
     private String icon;
     private String timestamp;
     private String key;
+
+    private boolean fromAgent = false;
+
+    public void setFromAgent(boolean fromAgent) {
+        this.fromAgent = fromAgent;
+    }
+
+    public boolean isFromAgent() {
+        return fromAgent;
+    }
 
     public String getTimestamp() {
         return timestamp;
