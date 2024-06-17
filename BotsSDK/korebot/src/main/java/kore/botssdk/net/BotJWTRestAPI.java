@@ -19,7 +19,7 @@ public interface BotJWTRestAPI {
             "typ:JWT"
     })
     //@POST("/api/users/sts")
-    @POST("/users/sts")
+    @POST("users/sts")
     Call<JWTTokenResponse> getJWTToken(@Body HashMap<String, Object> jsonObject);
 
     // Get JWT Token

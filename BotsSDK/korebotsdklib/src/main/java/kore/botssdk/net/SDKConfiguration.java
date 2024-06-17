@@ -1,10 +1,10 @@
 package kore.botssdk.net;
 
-/**
- * Created by Ramachandra on 30-May-16.
+/*
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.View;
 
@@ -13,6 +13,7 @@ import java.util.HashMap;
 /**
  * This class is for defining properties
  */
+@SuppressLint("UnknownNullness")
 public class SDKConfiguration {
 
     public static final String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
@@ -48,12 +49,11 @@ public class SDKConfiguration {
 
     //JWTServer related configurations
     public static class JWTServer {
-        static final String JWT_SERVER_URL = "https://staging-bots.korebots.com";
+        static String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
     }
 
     //Server related configurations
     public static class Server {
-
         public static void setKoreBotServerUrl(String koreBotServerUrl) {
             KORE_BOT_SERVER_URL = koreBotServerUrl;
         }
@@ -64,10 +64,19 @@ public class SDKConfiguration {
         static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai/";//https://qa-bots.kore.ai";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static   String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
+        public static String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
         public static final String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
         public static final String Branding_SERVER_URL ="https://bots.kore.ai/";
         public static final String koreAPIUrl = "https://sit-bots.kore.ai/";
+        public static HashMap<String, Object> queryParams = new HashMap<>();
+
+        public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+        public static void setQueryParams(HashMap<String, Object> queryParams) {
+            Server.queryParams = queryParams;
+        }
+        public static void setCustomData(RestResponse.BotCustomData customData) {
+            Server.customData = customData;
+        }
     }
 
     public static class Client {

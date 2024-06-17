@@ -64,8 +64,7 @@ public class BundleConstants {
     public static final String MEETING_CHANGE_SLOTS = "MEETING_CHANGE_SLOTS";
     public static final int TRANSPERANCY_50_PERCENT = 0xE6000000;
     public static final int REQ_CODE_REFRESH_CURRENT_PANEL = 5443;
-
-
+    public static final String IS_RECONNECT = "IS_RECONNECT";
     public static final String PAYLOAD = "payload";
     public static final String MESSAGE = "message";
     public static final String PICK_TYPE = "pickType";
@@ -180,4 +179,9 @@ public class BundleConstants {
     public static final int CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST = 1234;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST = 1434;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST = 3453;
+
+    public static final String MESSAGE_DELIVERED = "message_delivered";
+    public static final String MESSAGE_READ = "message_read";
+    public static final String STOP_TYPING = "stop_typing";
+    public static final String TYPING = "typing";
 }

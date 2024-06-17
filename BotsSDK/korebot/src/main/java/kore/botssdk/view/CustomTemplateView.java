@@ -13,7 +13,7 @@ public abstract class CustomTemplateView extends LinearLayout
         super(context);
     }
 
-    public abstract void populateTemplate(PayloadInner payloadInner, boolean isLast);
+    public abstract void populateTemplate(String payloadInner, boolean isLast);
 
     public abstract CustomTemplateView getNewInstance();
 

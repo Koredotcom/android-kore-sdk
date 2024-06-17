@@ -145,6 +145,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
+    public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
+        return baseBotMessageArrayList;
+    }
+
+    public void addMissedBaseBotMessages(ArrayList<BaseBotMessage> list) {
+        baseBotMessageArrayList.addAll(list);
+        notifyItemRangeInserted((baseBotMessageArrayList.size() - 1) - (list.size() - 1), list.size() - 1);
+    }
+
     private boolean checkIsContinuous(int position) {
         if (getItem(position).isSend() && getItem(position - 1).isSend()) {
             return true;
@@ -248,7 +257,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
+            headersMap.put(baseBotMessage.getFormattedDate(), i);
         }
     }
 }

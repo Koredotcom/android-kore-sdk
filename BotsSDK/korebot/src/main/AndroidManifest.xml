@@ -57,6 +57,12 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
+        <service android:name=".utils.ClosingService"
+            android:stopWithTask="false"
+            android:exported="false"
+            android:enabled="true"
+            android:permission="TODO" />
+
         <service
             android:name=".fcm.FCMWrapper"
             android:exported="false"
