@@ -26,7 +26,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WebHookRestBuilder {
 
     private static RestAPI restAPI;
-    private static Context mContext;
 
     private WebHookRestBuilder(){}
 
@@ -42,11 +41,6 @@ public class WebHookRestBuilder {
                     .build().create(RestAPI.class);
         }
         return restAPI;
-    }
-
-    public static void setContext(Context context)
-    {
-        mContext = context;
     }
 
     private static OkHttpClient getClient(){

@@ -7,7 +7,6 @@ import java.util.ArrayList;
  */
 
 public class BotResponse extends BaseBotMessage {
-
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "List";
     public static final String TEMPLATE_TYPE_PIECHART = "piechart";
@@ -35,6 +34,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_FILES_LOOKUP = "files_search_carousel";
     public static final String  TEMPLATE_TYPE_ATTENDEE_SLOTS = "attendee_slots_template";
     static final String TEMPLATE_TYPE_PICKER = "picker";
+    public static final String BG_COLOR = "bgColor";
     public static final String TEMPLATE_TYPE_SESSION_END = "session_end";
     public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
     public static final String TEMPLATE_TYPE_AGENT_TRANSFER = "agent_transfer_mode";

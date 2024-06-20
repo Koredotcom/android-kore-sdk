@@ -12,6 +12,5 @@ public class NetworkStateReceiver extends BroadcastReceiver {
         if(NetworkUtility.isNetworkConnectionAvailable(context)){
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(context,false);
         }
-
     }
 }

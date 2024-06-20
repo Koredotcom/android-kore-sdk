@@ -1,7 +1,5 @@
 package kore.botssdk.net;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -27,11 +25,8 @@ public class BrandingRestBuilder {
 
     private static RestAPI restAPI;
 
-    private BrandingRestBuilder(){}
-
-
-    public static RestAPI getRestAPI(){
-        if(restAPI == null) {
+    public static RestAPI getRestAPI() {
+        if (restAPI == null) {
             restAPI = new Retrofit.Builder()
                     .baseUrl(SDKConfiguration.Server.Branding_SERVER_URL)
                     .addConverterFactory(new RestBuilder.NullOnEmptyConverterFactory())
@@ -43,8 +38,7 @@ public class BrandingRestBuilder {
         return restAPI;
     }
 
-    public static RestAPI getPDfAPI(){
-//        if(restAPI == null) {
+    public static RestAPI getPDfAPI() {
         restAPI = new Retrofit.Builder()
                 .baseUrl("https://app.qa-opt.idfcfirstbank.com/")
                 .addConverterFactory(new RestBuilder.NullOnEmptyConverterFactory())
@@ -52,16 +46,10 @@ public class BrandingRestBuilder {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(getClient())
                 .build().create(RestAPI.class);
-//        }
         return restAPI;
     }
 
-    public static void setContext(Context context)
-    {
-    }
-
-
-    private static OkHttpClient getClient(){
+    private static OkHttpClient getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -82,14 +70,14 @@ public class BrandingRestBuilder {
 //        }
 //        else
 //        {
-            return new OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .addInterceptor(interceptor)
-                    .dispatcher(dispatcher)
-                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-                    .build();
+        return new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .dispatcher(dispatcher)
+                //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+                //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+                .build();
 //        }
     }
 
@@ -124,7 +112,8 @@ public class BrandingRestBuilder {
                 @Override
                 public Object convert(ResponseBody body) throws IOException {
                     if (body.contentLength() == 0) return null;
-                    return delegate.convert(body);                }
+                    return delegate.convert(body);
+                }
             };
         }
     }

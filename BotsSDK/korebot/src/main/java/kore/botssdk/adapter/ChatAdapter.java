@@ -262,6 +262,11 @@ final Context context;
         notifyItemRangeInserted(0, list.size() - 1);
     }
 
+    public void addMissedBaseBotMessages(ArrayList<BaseBotMessage> list) {
+        baseBotMessageArrayList.addAll(list);
+        notifyItemRangeInserted((baseBotMessageArrayList.size() - 1) - (list.size() - 1), list.size() - 1);
+    }
+
 
 
     public void setActivityContext(Activity activityContext) {

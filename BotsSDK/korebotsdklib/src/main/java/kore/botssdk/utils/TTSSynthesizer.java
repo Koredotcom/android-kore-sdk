@@ -99,10 +99,8 @@ public class TTSSynthesizer {
 
     private void stopTextToSpeechSDK() {
         que.clear();
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
+        mediaPlayer.stop();
+        mediaPlayer.reset();
     }
 
     private void stopTextToSpeechNative() {
@@ -129,6 +127,11 @@ public class TTSSynthesizer {
 
         @Override
         public void refreshJwtToken() {
+
+        }
+
+        @Override
+        public void onReconnectStopped(String reason) {
 
         }
 

@@ -25,6 +25,7 @@ import com.kore.ai.widgetsdk.interfaces.PanelInterface;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;
 import com.kore.ai.widgetsdk.models.PanelResponseData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
+import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.squareup.picasso.Picasso;
 
@@ -42,6 +43,7 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
 
     private final boolean isExpanded = false;
     private final boolean isScrolling = false;
+    String bgColor;
 
     public PannelAdapter(Context mainActivity, PanelResponseData panelResponseData, PanelInterface panelInterface) {
         context = mainActivity;
@@ -96,6 +98,10 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
             if (data != null && data.isItemClicked()) {
                 holder.img_skill.setPadding(3 * dp1, 3 * dp1, 3 * dp1, 3 * dp1);
                 holder.item.setBackgroundColor(Color.parseColor(data.getTheme()));
+
+                if (!StringUtils.isNullOrEmpty(bgColor))
+                    holder.item.setBackgroundColor(Color.parseColor(bgColor));
+
                 holder.item.setSelected(data.isItemClicked());
 
             } else {
@@ -141,6 +147,10 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
                 }
             }
         });
+    }
+
+    public void setBgColor(String bgColor) {
+        this.bgColor = bgColor;
     }
 
     @Override

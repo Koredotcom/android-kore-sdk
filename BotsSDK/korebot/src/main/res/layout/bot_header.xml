@@ -69,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvBotTitle"
-            android:text="@string/app_name"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_normal"
             android:textStyle="bold" />

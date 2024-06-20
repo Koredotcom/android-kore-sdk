@@ -14,6 +14,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +52,7 @@ import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
+import com.kore.ai.widgetsdk.models.BotResponse;
 import com.kore.ai.widgetsdk.models.ContactViewListModel;
 import com.kore.ai.widgetsdk.models.JWTTokenResponse;
 import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
@@ -115,6 +118,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
     GestureDetector gestureScanner;
     CoordinatorLayout coordinate_layout;
     float screenHeight;
+    String bg_color = "#e5f5f6";
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -144,6 +148,14 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         });
 
         getJWToken();
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            bg_color = bundle.getString(BotResponse.BG_COLOR, "#ffffff");
+            recyclerView_panel.setBackgroundColor(Color.parseColor(bg_color));
+            ((GradientDrawable)(persistentPanel.getBackground())).setColor(Color.parseColor(bg_color));
+        }
+
         return view;
     }
 
@@ -240,6 +252,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
             emptyPanelView.setVisibility(View.GONE);
             pannelAdapter = new PannelAdapter(getActivity(), panelResponseData, this);
+            pannelAdapter.setBgColor(bg_color);
             panel_recycler.setAdapter(pannelAdapter);
         } else {
             emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", getActivity()));
@@ -420,6 +433,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 Picasso.get().load(imageData).into(img_skill);
             }
         } catch (Exception e) {
+            img_background.setVisibility(GONE);
             img_skill.setVisibility(GONE);
         }
 

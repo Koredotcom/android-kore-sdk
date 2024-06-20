@@ -24,7 +24,7 @@ public class BotRestBuilder {
     public static RestAPI getBotRestService(){
         if(serviceBot == null) {
             serviceBot = new Retrofit.Builder()
-                    .baseUrl(SDKConfiguration.Server.KORE_BOT_SERVER_URL)
+                    .baseUrl(SDKConfiguration.Server.SERVER_URL)
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(getClient())

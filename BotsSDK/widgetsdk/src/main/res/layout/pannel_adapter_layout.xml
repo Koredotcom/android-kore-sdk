@@ -3,13 +3,13 @@
     android:id="@+id/panel_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center"
-    android:background="@drawable/pannel_item_background_root"
-    android:minWidth="50dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
     android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
     android:layout_marginEnd="2dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/pannel_item_background_root"
+    android:gravity="center"
+    android:minWidth="50dp"
 
     android:orientation="vertical">
 
@@ -17,21 +17,21 @@
         android:id="@+id/img_skill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:minHeight="32dp"
         android:textSize="22sp"
-        android:gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/img_icon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
+        android:gravity="center"
         android:minHeight="32dp"
         android:padding="2dp"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:textColor="#FFFFFF"
         android:scaleType="centerInside"
-        android:background="?selectableItemBackgroundBorderless"
-         />
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:visibility="gone" />
 </LinearLayout>

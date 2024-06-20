@@ -21,7 +21,7 @@ import kore.botssdk.utils.BundleUtils;
 public class MainActivity extends AppCompatActivity {
 
     String TAG = MainActivity.class.getName();
-    static boolean allPermissionsGranted=true;
+    static boolean allPermissionsGranted = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,44 +34,32 @@ public class MainActivity extends AppCompatActivity {
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!SDKConfiguration.Client.isWebHook)
-                {
-                    SDKConfiguration.Client.identity = UUID.randomUUID().toString();
-                    BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
-                    launchBotChatActivity();
-                }
-                else
-                {
-                    launchBotChatActivity();
-                }
+                launchBotChatActivity();
             }
         });
 
         appPermissionCheck();
     }
 
-    private void appPermissionCheck()
-    {
+    private void appPermissionCheck() {
 
         Log.d(TAG, "Check requestAllPermissions");
         boolean isPermissionRequestActive = true;
-        PermissionRequest permissionRequest =  new PermissionRequest()
-        {
+        PermissionRequest permissionRequest = new PermissionRequest() {
             @Override
-            public void granted()
-            {
+            public void granted() {
                 Log.d(TAG, " PermissionRequest: granted");
             }
+
             @Override
-            public void revoked()
-            {
+            public void revoked() {
                 //Can close app if not all permission is approved
                 Log.d(TAG, " PermissionRequest: revoked");
             }
 
             @Override
             public void allResults(boolean allGranted) {
-                allPermissionsGranted=allGranted;
+                allPermissionsGranted = allGranted;
             }
         };
         PermissionManager.getInstance().requestAllPermissions(MainActivity.this, permissionRequest);
@@ -79,24 +67,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if(requestCode == PermissionManager.REQUEST_CODE_ASK_PERMISSIONS)
-        {
-            int grantedRes=0;
-            for (int i =0; i< permissions.length; i++)
-            {
+        if (requestCode == PermissionManager.REQUEST_CODE_ASK_PERMISSIONS) {
+            int grantedRes = 0;
+            for (int i = 0; i < permissions.length; i++) {
                 String permision = permissions[i];
                 int grantResult = grantResults[i];
-                boolean isLastPermission = i == (permissions.length-1);
+                boolean isLastPermission = i == (permissions.length - 1);
 
-                Log.d(TAG, "onRequestPermissionsResult: permision: "+permision);
-                Log.d(TAG, "onRequestPermissionsResult: grantResult: "+grantResult);
-                Log.d(TAG, "isLastPermission: "+isLastPermission);
+                Log.d(TAG, "onRequestPermissionsResult: permision: " + permision);
+                Log.d(TAG, "onRequestPermissionsResult: grantResult: " + grantResult);
+                Log.d(TAG, "isLastPermission: " + isLastPermission);
 
                 //calculate results results
-                grantedRes+=grantResult;
+                grantedRes += grantResult;
 
-                switch (grantResult)
-                {
+                switch (grantResult) {
                     case PackageManager.PERMISSION_GRANTED:
                         PermissionManager.getInstance().getPermissionRequestList().get(i).granted();
                         break;
@@ -107,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(permissions.length>0) {
+            if (permissions.length > 0) {
                 PermissionManager.getInstance().getPermissionRequestList().get(permissions.length - 1).allResults(grantedRes == 0);
             }
         }
@@ -115,15 +100,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Launching BotchatActivity where user can interact with bot
-     *
+     * Launching BotChatActivity where user can interact with bot
      */
-    void launchBotChatActivity(){
+    void launchBotChatActivity() {
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS,SDKConfiguration.Client.bot_name.charAt(0)+"");
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
 
         startActivity(intent);

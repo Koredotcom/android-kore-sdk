@@ -5,9 +5,8 @@ import java.util.ArrayList;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-
+@SuppressWarnings("UnKnownNullness")
 public class BotResponse extends BaseBotMessage {
-
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
     public static final String TEMPLATE_TYPE_PIECHART = "piechart";
@@ -56,7 +55,6 @@ public class BotResponse extends BaseBotMessage {
     public static final String BAR_CHART_DIRECTION_VERTICAL = "vertical";
 
     //Added new
-    public static final String TABLE_VIEW_RESPONSIVE = "responsive";
     public static final String CAROUSEL_STACKED = "stacked";
     public static final String TEMPLATE_TYPE_FORM = "form_template";
     public static final String TEMPLATE_TYPE_LIST_VIEW  = "listView";
@@ -81,6 +79,10 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_BENEFICIARY = "beneficiaryTemplate";
     public static final String CARD_TEMPLATE = "cardTemplate";
     public static final String ADVANCED_MULTI_SELECT_TEMPLATE = "advanced_multi_select";
+    public static final String AGENT_INFO_KEY = "agentInfo";
+    public static final String EVENT = "EVENT";
+    public static final String HISTORY_COUNT = "HISTORY_COUNT";
+    public static final String LIVE_AGENT = "live_agent";
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
@@ -119,6 +121,15 @@ public class BotResponse extends BaseBotMessage {
     private String icon;
     private String timestamp;
     private String key;
+    private boolean fromAgent = false;
+
+    public void setFromAgent(boolean fromAgent) {
+        this.fromAgent = fromAgent;
+    }
+
+    public boolean isFromAgent() {
+        return fromAgent;
+    }
 
     public String getTimestamp() {
         return timestamp;
@@ -158,9 +169,8 @@ public class BotResponse extends BaseBotMessage {
         return message;
     }
 
-    /**
+    /*
      * returns null if there are no messages
-     * @return
      */
     public BotResponseMessage getTempMessage() {
         return message!=null && message.size() > 0?message.get(0):null;

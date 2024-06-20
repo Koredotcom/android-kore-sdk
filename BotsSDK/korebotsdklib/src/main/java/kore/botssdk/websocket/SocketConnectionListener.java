@@ -1,6 +1,6 @@
 package kore.botssdk.websocket;
 
-
+@SuppressWarnings("UnKnownNullness")
 public interface SocketConnectionListener {
     /**
      * Fired when the WebSockets connection has been established.
@@ -42,13 +42,9 @@ public interface SocketConnectionListener {
 
 
     void refreshJwtToken();
+
     /**
-     * Callback for when user Connected
-     *//*
-    void onConnected(String message);
-	
-	*//**
-     * Callback for when user Disconnected
-     *//*
-	void onDisconnected(String reason);*/
+     * Callback for when reconnection attempts stopped
+     */
+    void onReconnectStopped(String reason);
 }

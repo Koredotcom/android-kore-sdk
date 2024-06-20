@@ -112,7 +112,6 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     ImageView img_skill;
     private RecyclerView recyclerView_panel;
     private KaWidgetBaseAdapterNew widgetBaseAdapter;
-    LinearLayout view_helplayout;
     private GestureDetector gestureScanner;
     private CoordinatorLayout cordinate_layout;
     private JWTTokenResponse jwtKeyResponse;
@@ -194,7 +193,6 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         closeBtnPanel = findViewById(R.id.closeBtnPanel);
         closeBtnPanel.setTypeface(KaUtility.getTypeFaceObj(this));
 
-        view_helplayout=findViewById(R.id.view_helplayout);
         editButton = findViewById(R.id.editButton);
         editButton.setTypeface(KaUtility.getTypeFaceObj(this));
         recyclerView_panel.setLayoutManager(new LinearLayoutManager(this));
@@ -227,9 +225,6 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
 
             }
         });
-
-        mBottomSheetBehavior_help=CustomBottomSheetBehavior.from(view_helplayout);
-        mBottomSheetBehavior_help.setHideable(true);
 
         mBottomSheetBehavior.setBottomSheetCallback(new CustomBottomSheetBehavior.BottomSheetCallback() {
             @Override

@@ -85,14 +85,14 @@
         p.dashed {border-style: dashed;}
         </style>
         <body>
-        <p class="+"dashed"+">A dashed border.</p>
+        <p class=“+”dashed“+”>A dashed border.</p>
         </body>
         ]]>
     </string>
 
     <string name="border1">
     <![CDATA[
-        <div style="display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;">Sushanth</div>
+        <div style=“display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;”>Sushanth</div>
      ]]>
     </string>
     <string name="save">Save</string>
@@ -126,7 +126,7 @@
     <string name="cancel">Cancel</string>
     <string name="select_all">Select All</string>
     <string name="done">Done</string>
-    <string name="loading_data">Please wait...</string>
+    <string name="loading_data">Please wait…</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->
@@ -178,7 +178,7 @@
     <string name="settings_button_call_stats">Call stats</string>
 
     <!--permission denied-->
-    <string name="permission_denied_button_text">Some of the application\'s permissions have been rejected.\nThe application may not function properly until they are all granted.\nPlease either choose to manually change the permission or continue with the current state anyway.</string>
+    <string name="permission_denied_button_text">Some of the application\’s permissions have been rejected.\nThe application may not function properly until they are all granted.\nPlease either choose to manually change the permission or continue with the current state anyway.</string>
     <string name="permission_denied_button_continue">Continue</string>
     <string name="permission_denied_button_edit">Edit</string>
 
@@ -281,5 +281,10 @@
     <string name="_00_00_00_00">00:00/00:00</string>
     <string name="audio_play_pause_icon">audio play pause icon</string>
     <string name="arrow_to_expand">arrow to expand</string>
+    <string name="minimize">Minimize</string>
+    <string name="close">Close</string>
+    <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
+    <string name="bot_not_connected">Unable to connect to the bot. Please try again later</string>
+    <string name="ok">OK</string>
 
 </resources>

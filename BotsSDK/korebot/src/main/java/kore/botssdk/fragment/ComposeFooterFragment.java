@@ -92,6 +92,7 @@ import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.KaCaptureImageActivity;
 import kore.botssdk.adapter.AttachmentOptionsAdapter;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
+import kore.botssdk.bot.BotClient;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.dialogs.ReUsableListViewActionSheet;
 import kore.botssdk.event.KoreEventCenter;
@@ -177,6 +178,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     String outLineColor;
     BotBrandingModel botBrandingModel;
     int[] colors;
+    boolean isAgentConnected;
+    BotClient botClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -269,6 +272,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
             }
         });
+    }
+
+    public void setBotClient(BotClient botClient)
+    {
+        this.botClient = botClient;
     }
 
     SharedPreferences getSharedPreferences() {
@@ -469,12 +477,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (s.length() == 0) {
                 llSend.setVisibility(View.GONE);
 
+                if(isAgentConnected && botClient != null)
+                    botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
+
                 if (mainContentLayout.getVisibility() == View.VISIBLE) {
                     rec_audio_img.setVisibility(View.VISIBLE);
                 }
 
                 VectorDrawable stroke = (VectorDrawable) mainContentLayout.getBackground();
-
                 if (!StringUtils.isNullOrEmpty(outLineColor)) stroke.setTint(Color.parseColor(outLineColor));
                 else stroke.setTint(ContextCompat.getColor(requireActivity(), R.color.gray_modern));
 
@@ -483,6 +493,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 llSend.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
 
+                if(isAgentConnected && botClient != null)
+                    botClient.sendReceipts(BundleConstants.TYPING, "");
             }
         }
 
@@ -1137,6 +1149,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 e.printStackTrace();
             }
         }
+    }
+
+    public void setIsAgentConnected(boolean isAgentConnected)
+    {
+        this.isAgentConnected = isAgentConnected;
     }
 
     class SaveVideoTask extends AsyncTask<String, String, String> {

@@ -12,7 +12,7 @@ import java.util.HashMap;
 @SuppressLint("UnknownNullness")
 public class SDKConfiguration {
 
-    public static final String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
+    public static final String APP_REQ_COLOR = "#3942f6";
     /**
      * bot init text  and related settings
      */
@@ -50,33 +50,25 @@ public class SDKConfiguration {
 
     //Server related configurations
     public static class Server {
-
-        public static void setKoreBotServerUrl(String koreBotServerUrl) {
-            KORE_BOT_SERVER_URL = koreBotServerUrl;
-        }
-
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
-
-        static String KORE_BOT_SERVER_URL = "https://sit-xo.kore.ai/";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static String SERVER_URL = "https://sit-xo.kore.ai/";
-        public static final String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
-        public static final String Branding_SERVER_URL = "https://sit-xo.kore.ai/";
-        public static final String koreAPIUrl = "https://dev-xo.kore.ai/";
+        public static String SERVER_URL = "https://bots.kore.ai/";
+        public static final String Branding_SERVER_URL = "https://bots.kore.ai/";
+        public static final String koreAPIUrl = "https://bots.kore.ai/";
     }
 
     public static class Client {
-        public static  String bot_name = "Widgets View more";
-        public static  String bot_id = "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87";
-        public static  String client_id = "cs-ff66f2cb-440b-5f37-8a7a-680e109066a8";
-        public static  String client_secret = "GHCir4+c3mKkqpwiTRipaXzPj5ykFUWkKMPAGhc1m3U=";
-        public static  String identity = "paladiprashanth95@gmail.com";
+        public static String client_id = "cs-a8239f06-c548-5ac3-b9c4-3129f2fc5b89";
+        public static String client_secret = "+oTGPYWMjQ8g4kixEJwh7p0nD4bd+sVcru/YdXxNN/k=";
+        public static String bot_id = "st-27172eec-8b47-5bc5-bd1b-842a99e92d29";
+        public static String identity = "example@kore.com";
+        public static String bot_name = "Giga";
 
         public static final String tenant_id = "605da1dbb5f6f00badadb665";
-        public static final boolean enablePanel = true;
+        public static final boolean enablePanel = false;
         public static final boolean enable_ack_delivery = false;
         public static final boolean isWebHook = false;
         public static final String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";

@@ -1,7 +1,5 @@
 package kore.botssdk.net;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -27,14 +25,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RestBuilder {
 
     private static RestAPI restAPI;
-    private static Context mContext;
 
-    private RestBuilder(){}
+    private RestBuilder() {
+    }
 
-    public static RestAPI getRestAPI(){
-        if(restAPI == null) {
+    public static RestAPI getRestAPI() {
+        if (restAPI == null) {
             restAPI = new Retrofit.Builder()
-                    .baseUrl(Server.KORE_BOT_SERVER_URL)
+                    .baseUrl(Server.SERVER_URL)
                     .addConverterFactory(new NullOnEmptyConverterFactory())
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -44,10 +42,10 @@ public class RestBuilder {
         return restAPI;
     }
 
-    public static RestAPI getTokenRestAPI(){
-        if(restAPI == null) {
+    public static RestAPI getTokenRestAPI() {
+        if (restAPI == null) {
             restAPI = new Retrofit.Builder()
-                    .baseUrl(Server.TOKEN_SERVER_URL)
+                    .baseUrl(Server.SERVER_URL)
                     .addConverterFactory(new NullOnEmptyConverterFactory())
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -57,41 +55,20 @@ public class RestBuilder {
         return restAPI;
     }
 
-    public static void setContext(Context context)
-    {
-        mContext = context;
-    }
-
-    private static OkHttpClient getClient(){
+    private static OkHttpClient getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);
-
-//        if(SDKConfiguration.SSLConfig.isSSLEnable)
-//        {
-//            return new OkHttpClient.Builder()
-//                    .connectTimeout(60, TimeUnit.SECONDS)
-//                    .readTimeout(60, TimeUnit.SECONDS)
-//                    .addInterceptor(interceptor)
-//                    .dispatcher(dispatcher)
-//                    .sslSocketFactory(SSLHelper.getSSLContextWithCertificate(mContext, SDKConfiguration.Server.KORE_BOT_SERVER_URL).getSocketFactory(), SSLHelper.systemDefaultTrustManager())
-//                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-//                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-//                    .build();
-//        }
-//        else
-//        {
-            return new OkHttpClient.Builder()
-                    .connectTimeout(60, TimeUnit.SECONDS)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .addInterceptor(interceptor)
-                    .dispatcher(dispatcher)
-                    //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
-                    //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
-                    .build();
-//        }
+        return new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .dispatcher(dispatcher)
+                //.interceptors(KoreRequestInterceptor.getInstance(getApplicationContext()))
+                //.authenticator(new KoraRequestAuthenticator(KORestBuilder.mContext))
+                .build();
     }
 
     private static GsonConverterFactory createConverter() {
@@ -125,7 +102,8 @@ public class RestBuilder {
                 @Override
                 public Object convert(ResponseBody body) throws IOException {
                     if (body.contentLength() == 0) return null;
-                    return delegate.convert(body);                }
+                    return delegate.convert(body);
+                }
             };
         }
     }
