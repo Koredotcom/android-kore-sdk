@@ -10,6 +10,7 @@ import android.util.Log;
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -294,11 +295,25 @@ public final class SocketWrapper {
 
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
-                try {
-                    if (isReconnect) connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true"), true);
-                    else connectToSocket(rtmUrl.getUrl(), false);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                if (!isReconnect) {
+                    try {
+                        StringBuilder queryParams = new StringBuilder();
+                        for (Map.Entry<String, Object> entry : SDKConfiguration.Server.queryParams.entrySet()) {
+                            queryParams.append("&");
+                            queryParams.append(entry.getKey());
+                            queryParams.append("=");
+                            queryParams.append(entry.getValue());
+                        }
+                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false") + queryParams, false);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), false);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -619,8 +634,7 @@ public final class SocketWrapper {
      * @reurn
      */
     void reconnectAttempt() {
-        if(mReconnectionCount < 5)
-        {
+        if (mReconnectionCount < 5) {
             mReconnectDelay = getReconnectDelay();
             try {
                 final Handler _handler = new Handler();
@@ -639,8 +653,7 @@ public final class SocketWrapper {
             } catch (Exception e) {
                 LogUtils.d(LOG_TAG, ":: The Exception is " + e);
             }
-        }
-        else {
+        } else {
             Log.d(LOG_TAG, "Max attempts reached, Reconnection Stopped");
             socketConnectionListener.onReconnectStopped("Reconnection Stopped");
         }

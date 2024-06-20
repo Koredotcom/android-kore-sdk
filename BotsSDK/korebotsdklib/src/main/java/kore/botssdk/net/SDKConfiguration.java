@@ -58,6 +58,16 @@ public class SDKConfiguration {
         public static String SERVER_URL = "https://bots.kore.ai/";
         public static final String Branding_SERVER_URL = "https://bots.kore.ai/";
         public static final String koreAPIUrl = "https://bots.kore.ai/";
+
+        public static HashMap<String, Object> queryParams = new HashMap<>();
+
+        public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+        public static void setQueryParams(HashMap<String, Object> queryParams) {
+            Server.queryParams = queryParams;
+        }
+        public static void setCustomData(RestResponse.BotCustomData customData) {
+            Server.customData = customData;
+        }
     }
 
     public static class Client {

@@ -269,6 +269,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
 
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), SDKConfiguration.Server.customData, sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -289,6 +291,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 getBrandingDetails(!isReconnection);
+                isReconnectionStopped = false;
 
                 if (botContentFragment != null && isReconnection) {
                     if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) botContentFragment.loadChatHistory(0, 20);
@@ -1032,7 +1035,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected void onResume() {
         BotApplication.activityResumed();
         if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
         }
 

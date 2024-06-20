@@ -28,7 +28,6 @@ import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
 import kore.botssdk.models.TokenResponseModel;
-import kore.botssdk.models.UserNameModel;
 import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
