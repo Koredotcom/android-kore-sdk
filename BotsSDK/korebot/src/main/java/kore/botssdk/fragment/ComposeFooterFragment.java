@@ -172,7 +172,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private String jwt;
     RelativeLayout rlFooter;
     boolean isAgentConnected;
-    private BotClient botClient;
+    BotClient botClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

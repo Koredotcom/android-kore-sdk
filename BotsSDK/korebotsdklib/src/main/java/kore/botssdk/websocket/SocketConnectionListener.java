@@ -47,13 +47,7 @@ public interface SocketConnectionListener {
 
 
     void refreshJwtToken();
-    /**
-     * Callback for when user Connected
-     *//*
-    void onConnected(String message);
-	
-	*//**
-     * Callback for when user Disconnected
-     *//*
-	void onDisconnected(String reason);*/
+
+    void onReconnectStopped(String reconnectionStopped);
+
 }

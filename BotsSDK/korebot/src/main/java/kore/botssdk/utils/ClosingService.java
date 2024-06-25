@@ -19,7 +19,7 @@ public class ClosingService extends Service {
         super.onTaskRemoved(rootIntent);
 
         // Handle application closing
-        Intent intent = new Intent("destroy-event");
+        Intent intent = new Intent(BundleConstants.DESTROY_EVENT);
         sendBroadcast(intent);
 
         LogUtils.e("Application", "Closed called called");

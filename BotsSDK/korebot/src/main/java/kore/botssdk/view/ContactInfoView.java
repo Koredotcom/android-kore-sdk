@@ -95,7 +95,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()) + BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor()) + BundleConstants.TRANSPARENCY50_PERCENT);
         contactInfoViewBinding.getRoot().setBackground(shape);
 
         LayerDrawable shape1 = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.contact_card_background_style, getContext().getTheme());
@@ -118,7 +118,7 @@ public class ContactInfoView extends ViewGroup implements VerticalListViewAction
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPARENCY50_PERCENT);
         contactInfoViewBinding.getRoot().setBackground(shape);
     }
     @Override

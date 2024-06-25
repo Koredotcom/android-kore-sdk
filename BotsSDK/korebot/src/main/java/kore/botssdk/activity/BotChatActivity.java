@@ -50,6 +50,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -84,6 +85,7 @@ import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.AgentInfoModel;
 import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotButtonModel;
+import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotOptionsModel;
@@ -92,6 +94,8 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.BrandingNewModel;
+import kore.botssdk.models.BrandingV3Model;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
@@ -121,6 +125,7 @@ import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.websocket.SocketWrapper;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -161,7 +166,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     boolean isAgentTransfer = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
-
+    boolean isReconnectionStopped = false;
+    String resp = "";
     BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -187,7 +193,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getDataFromTxt();
 
         botClient = new BotClient(this);
-        registerReceiver(onDestroyReceiver, new IntentFilter("destroy-event"));
+        registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
@@ -245,6 +251,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         @Override
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
+                isReconnectionStopped = false;
                 getBrandingDetails();
 
                 if (botContentFragment != null && isReconnection) {
@@ -252,7 +259,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
                         botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
                     else botContentFragment.loadReconnectionChatHistory(0, 10);
-
+                }
+            } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
+                if (!isReconnectionStopped) {
+                    isReconnectionStopped = true;
+                    showReconnectionStopped();
                 }
             }
 
@@ -780,25 +791,25 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             botActiveThemeModel = gson.fromJson(reader, BotActiveThemeModel.class);
             if (botActiveThemeModel != null) {
                 BrandingModel brandingModel = new BrandingModel();
-                brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
-                brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
-                brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
-                brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
+                brandingModel.setBotchatBgColor(botActiveThemeModel.getBotMessage().getBubbleColor());
+                brandingModel.setBotchatTextColor(botActiveThemeModel.getBotMessage().getFontColor());
+                brandingModel.setUserchatBgColor(botActiveThemeModel.getUserMessage().getBubbleColor());
+                brandingModel.setUserchatTextColor(botActiveThemeModel.getUserMessage().getFontColor());
 
-                brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
-                brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
+                brandingModel.setButtonActiveBgColor(botActiveThemeModel.getButtons().getDefaultButtonColor());
+                brandingModel.setButtonActiveTextColor(botActiveThemeModel.getButtons().getDefaultFontColor());
 
-                brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
-                brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
-                brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
+                brandingModel.setButtonInactiveBgColor(botActiveThemeModel.getButtons().getOnHoverButtonColor());
+                brandingModel.setButtonInactiveTextColor(botActiveThemeModel.getButtons().getOnHoverFontColor());
+                brandingModel.setButtonBorderColor(botActiveThemeModel.getButtons().getBorderColor());
 
                 brandingModel.setBotName(SDKConfiguration.Client.bot_name);
-                brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
-                brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
-                brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
-                brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
-                brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
-                brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+                brandingModel.setWidgetBodyColor(botActiveThemeModel.getWidgetBody().getBackgroundColor());
+                brandingModel.setWidgetTextColor(botActiveThemeModel.getWidgetHeader().getFontColor());
+                brandingModel.setWidgetHeaderColor(botActiveThemeModel.getWidgetHeader().getBackgroundColor());
+                brandingModel.setWidgetFooterColor(botActiveThemeModel.getWidgetFooter().getBackgroundColor());
+                brandingModel.setWidgetFooterBorderColor(botActiveThemeModel.getWidgetFooter().getBorderColor());
+                brandingModel.setWidgetFooterHintColor(botActiveThemeModel.getWidgetFooter().getPlaceHolder());
                 return brandingModel;
             }
         } catch (Exception e) {
@@ -1161,37 +1172,89 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void getBrandingDetails() {
-        Call<BotActiveThemeModel> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
-        getBankingConfigService.enqueue(new Callback<BotActiveThemeModel>() {
+        Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
+        getBankingConfigService.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<BotActiveThemeModel> call, Response<BotActiveThemeModel> response) {
-                if (response.isSuccessful()) {
-                    brandingNewDos = response.body();
+            public void onResponse(@androidx.annotation.NonNull Call<ResponseBody> call, @androidx.annotation.NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        Type avtiveThemeType = new TypeToken<BotActiveThemeModel>() {
+                        }.getType();
+                        brandingNewDos = gson.fromJson(resp, avtiveThemeType);
+                        if (brandingNewDos == null) {
+                            BrandingModel brandingModel = new BrandingModel();
+                            brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
+                            brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
+                            brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
+                            brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
 
-                    if (brandingNewDos != null) {
-                        BrandingModel brandingModel = new BrandingModel();
-                        brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
-                        brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
-                        brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
-                        brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
+                            brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
+                            brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
 
-                        brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
-                        brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
+                            brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
+                            brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
+                            brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
 
-                        brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
-                        brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
-                        brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
+                            brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                            brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
+                            brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
+                            brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
+                            brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
+                            brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
+                            brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+                            onEvent(brandingModel);
+                        } else {
+                            throw new Exception("Something went wrong!");
+                        }
+                    } catch (Exception e) {
+                        try {
+                            Type avtiveThemeType = new TypeToken<BrandingNewModel>() {
+                            }.getType();
+                            BrandingNewModel brandingNewModel = gson.fromJson(resp, avtiveThemeType);
+                            if (brandingNewModel != null) {
+                                BrandingV3Model brandingNewDos = brandingNewModel.getV3();
+                                try {
+                                    BrandingModel brandingModel = new BrandingModel();
+                                    brandingModel.setBotchatBgColor(brandingNewDos.getBody().getBot_message().getBg_color());
+                                    brandingModel.setBotchatTextColor(brandingNewDos.getBody().getBot_message().getColor());
 
-                        brandingModel.setBotName(SDKConfiguration.Client.bot_name);
-                        brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
-                        brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
-                        brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
-                        brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
-                        brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
-                        brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
-                        onEvent(brandingModel);
-                    } else {
-                        onEvent(getBrandingDataFromTxt());
+                                    brandingModel.setUserchatBgColor(brandingNewDos.getBody().getUser_message().getBg_color());
+                                    brandingModel.setUserchatTextColor(brandingNewDos.getBody().getUser_message().getColor());
+
+                                    if (brandingNewDos.getGeneral() != null && brandingNewDos.getGeneral().getColors() != null && brandingNewDos.getGeneral().getColors().isUseColorPaletteOnly()) {
+                                        brandingModel.setButtonActiveBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
+                                        brandingModel.setButtonActiveTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
+                                        brandingModel.setButtonInactiveBgColor(brandingNewDos.getGeneral().getColors().getSecondary());
+                                        brandingModel.setButtonInactiveTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+                                        SDKConfiguration.BubbleColors.quickReplyColor = brandingNewDos.getGeneral().getColors().getPrimary();
+                                        SDKConfiguration.BubbleColors.quickReplyTextColor = brandingNewDos.getGeneral().getColors().getPrimary_text();
+                                        brandingModel.setBotchatBgColor(brandingNewDos.getGeneral().getColors().getSecondary());
+                                        brandingModel.setBotchatTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
+                                        brandingModel.setUserchatBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
+                                        brandingModel.setUserchatTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+                                    }
+
+                                    brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                                    brandingModel.setWidgetBodyColor(brandingNewDos.getBody().getBackground().getColor());
+                                    brandingModel.setWidgetTextColor((brandingNewDos.getHeader().getTitle().getColor()));
+                                    brandingModel.setWidgetHeaderColor(brandingNewDos.getHeader().getBg_color());
+                                    brandingModel.setWidgetFooterColor(brandingNewDos.getFooter().getBg_color());
+                                    brandingModel.setWidgetFooterBorderColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
+                                    brandingModel.setWidgetFooterHintColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
+                                    brandingModel.setWidgetFooterHintText(brandingNewDos.getFooter().getCompose_bar().getPlaceholder());
+                                    onEvent(brandingModel);
+
+                                } catch (Exception ex) {
+                                    ex.printStackTrace();
+                                }
+                            } else {
+                                onEvent(getBrandingDataFromTxt());
+                            }
+
+                        } catch (Exception ex) {
+                            onEvent(getBrandingDataFromTxt());
+                            throw new RuntimeException(ex);
+                        }
                     }
                 } else {
                     onEvent(getBrandingDataFromTxt());
@@ -1199,7 +1262,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             @Override
-            public void onFailure(@NonNull Call<BotActiveThemeModel> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 onEvent(getBrandingDataFromTxt());
             }
         });
@@ -1392,5 +1455,20 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     void stopSendingPolling() {
         handler.removeCallbacks(runnable);
+    }
+
+    void showReconnectionStopped() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    BotSocketConnectionManager.killInstance();
+                    finish();
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
+        builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
     }
 }
