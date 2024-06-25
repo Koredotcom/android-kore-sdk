@@ -4,13 +4,13 @@
     "__v":0,
     "activeTheme":true,
     "botMessage":{
-        "bubbleColor":"#9d8aed",
+        "bubbleColor":"#dfb462",
         "fontColor":"#ffffff",
         "borderColor":"#F3F5F8"
     },
     "buttons":{
-        "defaultButtonColor":"#80ceee",
-        "defaultFontColor":"#210404",
+        "defaultButtonColor":"#21b2ed",
+        "defaultFontColor":"#e91e1e",
         "onHoverButtonColor":"#9dc3fa",
         "onHoverFontColor":"#ff0000",
         "borderColor":"#0D6EFD"
@@ -27,12 +27,12 @@
         "borderColor":"#F3F5F8"
     },
     "lastModifiedBy":"u-f37609a4-6430-5f4c-8724-abfc08e174ae",
-    "lastModifiedOn":"2024-06-07T08:38:36.698Z",
+    "lastModifiedOn":"2024-06-10T12:03:53.253Z",
     "refId":"6681d92f-03da-57c2-ac99-f5307f357efa",
     "state":"published",
     "themeName":"newtheme",
     "userMessage":{
-        "bubbleColor":"#cce6e7",
+        "bubbleColor":"#f515e3",
         "fontColor":"#060505",
         "borderColor":"#0D6EFD"
     },

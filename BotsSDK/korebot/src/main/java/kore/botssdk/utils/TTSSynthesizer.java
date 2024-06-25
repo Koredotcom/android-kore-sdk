@@ -30,12 +30,11 @@ public class TTSSynthesizer {
     public boolean ttsEnabled = true;
 
 
-
     public TTSSynthesizer(Context context) {
         this.context = context;
-        if(!Constants.ENABLE_SDK) {
+        if (!Constants.ENABLE_SDK) {
             initNative(context);
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -47,7 +46,7 @@ public class TTSSynthesizer {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     que.remove(0);
-                    if(que.size() >0) {
+                    if (que.size() > 0) {
                         PlayAudio(que.get(0));
                     }
                 }
@@ -68,20 +67,20 @@ public class TTSSynthesizer {
 
     }
 
-    public void speak(String textualMessage,String accessToken) {
+    public void speak(String textualMessage, String accessToken) {
         if (Constants.ENABLE_SDK) {
-            speakViaSDK(textualMessage,accessToken);
+            speakViaSDK(textualMessage, accessToken);
         } else {
             speakViaNative(textualMessage);
         }
     }
 
-    void initializeWebSocket(){
+    void initializeWebSocket() {
         TtsWebSocketWrapper.getInstance(context).connect(sListener);
     }
 
-    private void speakViaSDK(String textualMessage,String accessToken) {
-        TtsWebSocketWrapper.getInstance(context).sendMessage(textualMessage,accessToken);
+    private void speakViaSDK(String textualMessage, String accessToken) {
+        TtsWebSocketWrapper.getInstance(context).sendMessage(textualMessage, accessToken);
     }
 
     final MediaPlayer.OnPreparedListener mediaPlayerOnPreparedListener = new MediaPlayer.OnPreparedListener() {
@@ -94,7 +93,7 @@ public class TTSSynthesizer {
     };
 
     private void speakViaNative(String textualMessage) {
-       // stopTextToSpeechNative();
+        // stopTextToSpeechNative();
         textToSpeech.speak(textualMessage, TextToSpeech.QUEUE_ADD, null, null);
     }
 
@@ -117,6 +116,7 @@ public class TTSSynthesizer {
             textToSpeech.stop();
         }
     }
+
     private final SocketConnectionListener sListener = new SocketConnectionListener() {
         @Override
         public void onOpen(boolean isReconnection) {
@@ -140,6 +140,11 @@ public class TTSSynthesizer {
         }
 
         @Override
+        public void onReconnectStopped(String reconnectionStopped) {
+
+        }
+
+        @Override
         public void onRawTextMessage(byte[] payload) {
             LogUtils.d(LOG_TAG, "Message received is 2 " + Arrays.toString(payload));
         }
@@ -147,24 +152,22 @@ public class TTSSynthesizer {
         @Override
         public void onBinaryMessage(byte[] payload) {
             LogUtils.d(LOG_TAG, "Message received is 3 " + Arrays.toString(payload));
-            String audio = Base64.encodeToString(payload,
-                    Base64.NO_WRAP);
+            String audio = Base64.encodeToString(payload, Base64.NO_WRAP);
             que.add(audio);
-            if(!mediaPlayer.isPlaying()  && que.size() <=1) {
+            if (!mediaPlayer.isPlaying() && que.size() <= 1) {
                 PlayAudio(audio);
             }
         }
     };
-    void PlayAudio(String audio){
-        try
-        {
-            String url = "data:audio/mp3;base64,"+audio;
+
+    void PlayAudio(String audio) {
+        try {
+            String url = "data:audio/mp3;base64," + audio;
             mediaPlayer.stop();
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             System.out.print(ex.getMessage());
         }
     }
@@ -175,7 +178,7 @@ public class TTSSynthesizer {
 
     public void setTtsEnabled(boolean ttsEnabled) {
         this.ttsEnabled = ttsEnabled;
-        if(!ttsEnabled){
+        if (!ttsEnabled) {
             stopTextToSpeech();
         }
     }

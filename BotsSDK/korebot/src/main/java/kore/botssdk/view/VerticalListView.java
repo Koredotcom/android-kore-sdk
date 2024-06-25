@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -102,7 +101,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPARENCY50_PERCENT);
         rootLayout.setBackground(shape);
         viewMore.setOnClickListener(new OnClickListener() {
             @Override
@@ -123,7 +122,7 @@ public class VerticalListView extends ViewGroup implements VerticalListViewActio
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+BundleConstants.TRANSPARENCY50_PERCENT);
         rootLayout.setBackground(shape);
     }
     @Override

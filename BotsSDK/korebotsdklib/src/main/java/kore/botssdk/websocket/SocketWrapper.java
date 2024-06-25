@@ -2,6 +2,8 @@ package kore.botssdk.websocket;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 
 import java.net.URISyntaxException;
@@ -218,7 +220,7 @@ public final class SocketWrapper {
      * Method to invoke connection for anonymous
      * These keys are generated from bot admin console
      */
-    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final SocketConnectionListener socketConnectionListener, BotSocketOptions options,boolean isReconnect) {
+    public void connectAnonymous(final String sJwtGrant, final BotInfoModel botInfoModel, final SocketConnectionListener socketConnectionListener, BotSocketOptions options, boolean isReconnect) {
         this.socketConnectionListener = socketConnectionListener;
         this.accessToken = null;
         this.JWTToken = sJwtGrant;
@@ -464,6 +466,9 @@ public final class SocketWrapper {
 
             @Override
             public void onError(Throwable throwable) {
+                LogUtils.d("HI", "on error");
+                mIsReconnectionAttemptNeeded = true;
+                reconnectAttempt();
             }
 
             @Override
@@ -503,28 +508,29 @@ public final class SocketWrapper {
      * @reurn
      */
     void reconnectAttempt() {
-        mReconnectDelay = getReconnectDelay();
-        try {
-            final Handler _handler = new Handler();
-            Runnable r = new Runnable() {
+        if (mReconnectionCount < 5) {
+            mReconnectDelay = getReconnectDelay();
+            try {
+                final Handler _handler = new Handler();
+                Runnable r = new Runnable() {
+                    @Override
+                    public void run() {
 
-                @Override
-                public void run() {
+                        LogUtils.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
+                        if (mIsReconnectionAttemptNeeded && !isConnected()) {
+                            reconnect();
+                            LogUtils.d(LOG_TAG, "#### trying to reconnect");
+                        }
 
-                    LogUtils.d(LOG_TAG, "Entered into reconnection post delayed " + mReconnectDelay);
-                    if (mIsReconnectionAttemptNeeded && !isConnected()) {
-                        reconnect();
-//                        Toast.makeText(mContext,"SocketDisConnected",Toast.LENGTH_SHORT).show();
-                        mReconnectDelay = getReconnectDelay();
-                        _handler.postDelayed(this, mReconnectDelay);
-                        LogUtils.d(LOG_TAG, "#### trying to reconnect");
                     }
-
-                }
-            };
-            _handler.postDelayed(r, mReconnectDelay);
-        } catch (Exception e) {
-            LogUtils.d(LOG_TAG, ":: The Exception is " + e);
+                };
+                _handler.postDelayed(r, mReconnectDelay);
+            } catch (Exception e) {
+                LogUtils.d(LOG_TAG, ":: The Exception is " + e);
+            }
+        } else {
+            Log.d(LOG_TAG, "Max attempts reached, Reconnection Stopped");
+            socketConnectionListener.onReconnectStopped("Reconnection Stopped");
         }
     }
 
@@ -532,11 +538,18 @@ public final class SocketWrapper {
      * The reconnection attempt delay(incremental delay)
      */
     int getReconnectDelay() {
-        mReconnectionCount++;
-        LogUtils.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
-        if (mReconnectionCount > 6) mReconnectionCount = 1;
-        SecureRandom rint = new SecureRandom();
-        return (rint.nextInt(5) + 1) * mReconnectionCount * 1000;
+        if (isOnline()) {
+            mReconnectionCount++;
+            LogUtils.d(LOG_TAG, "Reconnection count " + mReconnectionCount);
+        }
+
+        return 3 * 1000;
+    }
+
+    private boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     /**

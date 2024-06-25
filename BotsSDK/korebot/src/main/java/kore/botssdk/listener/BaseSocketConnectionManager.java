@@ -45,7 +45,8 @@ public abstract class BaseSocketConnectionManager implements SocketConnectionLis
         CONNECTING,
         CONNECTED,
         DISCONNECTED,
-        CONNECTED_BUT_DISCONNECTED
+        CONNECTED_BUT_DISCONNECTED,
+        RECONNECTION_STOPPED
     }
 
     public abstract void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, RestResponse.BotCustomData botCustomData);

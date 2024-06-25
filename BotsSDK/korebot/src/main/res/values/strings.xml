@@ -176,6 +176,7 @@
     <string name="minimize">Minimize</string>
     <string name="close">Close</string>
     <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
+    <string name="bot_not_connected">Unable to connect to the bot. Please try again later</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->

@@ -87,7 +87,7 @@ public class MeetingConfirmationView extends ViewGroup {
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPARENCY50_PERCENT);
         slotLayout.setBackground(shape);
         titleView = view.findViewById(R.id.title_view);
         tv_users = view.findViewById(R.id.tv_users);
@@ -100,7 +100,7 @@ public class MeetingConfirmationView extends ViewGroup {
         LayerDrawable shape = (LayerDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.shadow_layer_background, getContext().getTheme());
         assert shape != null;
         GradientDrawable outer = (GradientDrawable) shape.findDrawableByLayerId(R.id.inner);
-        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPERANCY_50_PERCENT);
+        outer.setColor(Color.parseColor(SDKConfiguration.BubbleColors.getProfileColor())+ BundleConstants.TRANSPARENCY50_PERCENT);
         slotLayout.setBackground(shape);
     }
     @Override

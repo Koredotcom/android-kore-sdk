@@ -17,12 +17,21 @@ public class BrandingModel
     private String widgetFooterColor;
     private String widgetFooterBorderColor;
     private String widgetFooterHintColor;
+    private String widgetFooterHintText;
     private String widgetTextColor;
     private String widgetBorderColor;
     private String buttonBorderColor;
     private String widgetDividerColor;
     private String widgetBodyColor;
     private String botName;
+
+    public String getWidgetFooterHintText() {
+        return widgetFooterHintText;
+    }
+
+    public void setWidgetFooterHintText(String widgetFooterHintText) {
+        this.widgetFooterHintText = widgetFooterHintText;
+    }
 
     public void setWidgetFooterHintColor(String widgetFooterHintColor) {
         this.widgetFooterHintColor = widgetFooterHintColor;
