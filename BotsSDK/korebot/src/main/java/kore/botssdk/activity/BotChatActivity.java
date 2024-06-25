@@ -193,7 +193,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getDataFromTxt();
 
         botClient = new BotClient(this);
-        registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT))
+        registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
