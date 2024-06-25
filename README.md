@@ -194,7 +194,7 @@ botClient.connectAsAnonymousUser(jwt,
             SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
 
 ```
-#### 4. JWT genration
+#### 4. JWT generation
     a. You need to have secure token service hosted in your environment which returns the JWT token.
     b. Generate JWT in your enviornment.
 

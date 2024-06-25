@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.util.Log;
 
 import java.net.URISyntaxException;
 import java.security.SecureRandom;
@@ -46,7 +45,6 @@ public final class SocketWrapper {
     static SocketWrapper pKorePresenceInstance;
     SocketConnectionListener socketConnectionListener = null;
     final IWebSocket mConnection = new WebSocketConnection();
-
     public boolean ismIsReconnectionAttemptNeeded() {
         return mIsReconnectionAttemptNeeded;
     }
@@ -238,8 +236,10 @@ public final class SocketWrapper {
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
 
-                if (!isReconnect) {
-                    try {
+                if(!isReconnect)
+                {
+                    try
+                    {
                         StringBuilder queryParams = new StringBuilder();
                         for (Map.Entry<String, Object> entry : SDKConfiguration.Server.queryParams.entrySet()) {
                             queryParams.append("&");
@@ -251,7 +251,8 @@ public final class SocketWrapper {
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
-                } else {
+                }
+                else {
                     try {
                         connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), false);
                     } catch (URISyntaxException e) {
