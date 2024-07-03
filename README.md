@@ -88,17 +88,45 @@ maven { url 'https://www.jitpack.io' }
 ```
 2. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.DocsInternal-Kore:kore-ui:0.1.4'
+implementation 'com.github.DocsInternal-Kore:kore-ui-v2:0.1.5'
 ```
-3. You can initialize the bot by providing the bot config like below
+3. You can initialize the bot by providing the bot config like below. You can pass Jwt Token as empty so that we generate token in the SDK. If token is passed we will use it to establish bot connection.
 ```
-SDKConfig.initialize(
-                "st-b9889c46-218c-58f7-838f-73ae9203488c",
-                "Bot Name",
-                "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9",
-                "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=",
-                "example@kore.com"
-        );
+//If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
+String jwtToken = "";
+
+//Set clientId, If jwtToken is empty this value is mandatory
+String clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+
+//Set clientSecret, If jwtToken is empty this value is mandatory
+String clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
+
+//Set botId, This value is mandatory
+String botId = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+
+//Set identity, This value is mandatory
+String identity = "email@kore.com";
+
+//Set botName, This value is mandatory
+String botName = "Kore.ai Bot";
+
+//Set serverUrl, This value is mandatory
+String serverUrl = "https://bots.kore.ai/";
+
+//Set brandingUrl, This value is mandatory
+String brandingUrl = "https://bots.kore.ai/";
+
+//Set Server url
+SDKConfig.setServerUrl(serverUrl);
+//Set Branding url
+SDKConfig.setBrandingUrl(brandingUrl);
+
+//Initialize the bot with bot config
+//You can pass client id and client secret as empty when you pass jwt token
+SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
+
+//Inject the custom template like below
+SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
 ```
 4. You can navigate to the bot chat window through Intent as below snippet
 ```
