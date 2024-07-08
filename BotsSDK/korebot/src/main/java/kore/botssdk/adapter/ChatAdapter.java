@@ -253,11 +253,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     }
 
     private void prepareHeaderMap() {
-        int i = 0;
+        int i;
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            headersMap.put(baseBotMessage.getFormattedDate(), i);
+            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
+                headersMap.put(baseBotMessage.getFormattedDate(), i);
+            }
         }
     }
 }

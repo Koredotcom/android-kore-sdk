@@ -324,7 +324,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
         if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
-        Log.e("BOT", "onDestroy of BotChatActivity");
         super.onDestroy();
     }
 
@@ -718,7 +717,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         break;
                     case DialogInterface.BUTTON_NEGATIVE:
                         if (sharedPreferences != null) {
-                            if (botClient != null)
+                            if (botClient != null && isAgentTransfer)
                                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
                             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -1177,10 +1176,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             public void onResponse(@androidx.annotation.NonNull Call<ResponseBody> call, @androidx.annotation.NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     try {
+                        resp = response.body().string();
                         Type avtiveThemeType = new TypeToken<BotActiveThemeModel>() {
                         }.getType();
                         brandingNewDos = gson.fromJson(resp, avtiveThemeType);
-                        if (brandingNewDos == null) {
+                        if (brandingNewDos != null) {
                             BrandingModel brandingModel = new BrandingModel();
                             brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
                             brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());

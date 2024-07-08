@@ -24,7 +24,7 @@ public class SDKConfiguration {
     private static String INIT_MESSAGE = "Welpro";
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
-    protected static HashMap<String , View> hsh = new HashMap<>();
+    protected static HashMap<String, View> hsh = new HashMap<>();
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -61,36 +61,33 @@ public class SDKConfiguration {
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
-        static  String KORE_BOT_SERVER_URL = "https://bots.kore.ai/";//https://qa-bots.kore.ai";
+
+        static String KORE_BOT_SERVER_URL = "https://bots.kore.ai/";//https://qa-bots.kore.ai";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
         public static String SERVER_URL = "https://bots.kore.ai/"; // "https://demo.kore.net";
-        public static final String TOKEN_SERVER_URL ="https://demodpd.kore.ai/";
-        public static final String Branding_SERVER_URL ="https://bots.kore.ai/";
+        public static final String TOKEN_SERVER_URL = "https://demodpd.kore.ai/";
+        public static final String Branding_SERVER_URL = "https://bots.kore.ai/";
         public static final String koreAPIUrl = "https://sit-bots.kore.ai/";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 
         public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+
         public static void setQueryParams(HashMap<String, Object> queryParams) {
             Server.queryParams = queryParams;
         }
+
         public static void setCustomData(RestResponse.BotCustomData customData) {
             Server.customData = customData;
         }
     }
 
     public static class Client {
-        //SDK 2.0
-        public static final String client_id = "cs-47e5f4e6-0621-563d-a3fb-2d1f3ab94750";
-        public static final String client_secret = "TvctzsjB/iewjdddKi2Ber4PPrYr0LoTi1WUasiMceM=";
+        public static final String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+        public static final String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
         public static String identity = "email@kore.com";
         public static final String bot_name = "SDKBot";
-        public static final String bot_id = "st-953e931b-1fe5-5bcc-9bb7-1b9bd4226947";
-//        public static final String client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
-//        public static final String client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
-//        public static String identity = "email@kore.com";
-//        public static final String bot_name = "SDKBot";
-//        public static final String bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+        public static final String bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
         public static final boolean enable_ack_delivery = false;
         public static final boolean isWebHook = false;
         public static final String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";
@@ -105,7 +102,7 @@ public class SDKConfiguration {
     }
 
     public static class BubbleColors {
-        public static  String rightBubbleSelected = APP_REQ_COLOR;
+        public static String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
             BubbleColors.rightBubbleSelected = rightBubbleSelected;
@@ -148,15 +145,15 @@ public class SDKConfiguration {
         }
 
 
-        public static  String rightBubbleUnSelected=APP_REQ_COLOR;
-        public static  String leftBubbleSelected="#D3D3D3";
-        public static  String leftBubbleUnSelected="#f8f9f8";
-        public static  String leftBubbleTextColor="#404051";
-        public static  String rightBubbleTextColor="#161628";//"#757587";
-        public static  String whiteColor="#FFFFFF";
-        public static  String leftBubbleBorderColor = "#eeeef2";
-        public static  String rightLinkColor=APP_REQ_COLOR;
-        public static  String leftLinkColor = APP_REQ_COLOR;
+        public static String rightBubbleUnSelected = APP_REQ_COLOR;
+        public static String leftBubbleSelected = "#D3D3D3";
+        public static String leftBubbleUnSelected = "#f8f9f8";
+        public static String leftBubbleTextColor = "#404051";
+        public static String rightBubbleTextColor = "#161628";//"#757587";
+        public static String whiteColor = "#FFFFFF";
+        public static String leftBubbleBorderColor = "#eeeef2";
+        public static String rightLinkColor = APP_REQ_COLOR;
+        public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = false;
 
@@ -193,9 +190,9 @@ public class SDKConfiguration {
             BubbleColors.quickReplyColor = quickReplyColor;
         }
 
-        public static  String quickReplyColor = "#EEEEF0";
-        public static  String quickReplyTextColor = "#000000";
-        public static  String quickBorderColor = "#000000";
+        public static String quickReplyColor = "#EEEEF0";
+        public static String quickReplyTextColor = "#000000";
+        public static String quickBorderColor = "#000000";
 
     }
 
@@ -216,14 +213,12 @@ public class SDKConfiguration {
 
     private static final FONT_TYPES fontType = FONT_TYPES.ROBOTO;
 
-    public static void setCustomTemplateView(String templateName, View templateView)
-    {
+    public static void setCustomTemplateView(String templateName, View templateView) {
         hsh.put(templateName, templateView);
-        Log.e("HashMap Count", hsh.size()+"");
+        Log.e("HashMap Count", hsh.size() + "");
     }
 
-    public static HashMap<String, View> getCustomTemplateView()
-    {
+    public static HashMap<String, View> getCustomTemplateView() {
         return hsh;
     }
 

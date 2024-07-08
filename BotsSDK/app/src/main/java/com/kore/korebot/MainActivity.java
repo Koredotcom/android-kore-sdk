@@ -31,17 +31,14 @@ public class MainActivity extends AppCompatActivity {
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
 
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!SDKConfiguration.Client.isWebHook)
-                {
-                    SDKConfiguration.Client.identity = UUID.randomUUID().toString();
+                if (!SDKConfiguration.Client.isWebHook) {
                     launchBotChatActivity();
-                }
-                else
-                {
+                } else {
                     launchBotChatActivity();
                 }
             }
@@ -51,22 +48,20 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Launching BotChatActivity where user can interact with bot
-     *
      */
-    void launchBotChatActivity(){
+    void launchBotChatActivity() {
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS,SDKConfiguration.Client.bot_name.charAt(0)+"");
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, SDKConfiguration.Client.bot_name.charAt(0) + "");
         intent.putExtras(bundle);
 
         startActivity(intent);
     }
 
     @SuppressLint("UnknownNullness")
-    public HashMap<String, Object> getQueryParams()
-    {
+    public HashMap<String, Object> getQueryParams() {
         HashMap<String, Object> queryParams = new HashMap<>();
         queryParams.put("q1", true);
         queryParams.put("q2", 4);
@@ -75,8 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("UnknownNullness")
-    public RestResponse.BotCustomData getCustomData()
-    {
+    public RestResponse.BotCustomData getCustomData() {
         RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
         customData.put("name", "Kore Bot");
         customData.put("emailId", "emailId");

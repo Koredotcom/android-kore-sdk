@@ -255,7 +255,7 @@ public final class SocketWrapper {
                 }
                 else {
                     try {
-                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), false);
+                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), isReconnect);
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
@@ -283,7 +283,7 @@ public final class SocketWrapper {
      *
      * @param url : to connect the socket to
      */
-    void connectToSocket(String url, final boolean isReconnectionAttaempt) throws URISyntaxException {
+    void connectToSocket(String url, final boolean isReconnectionAttempt) throws URISyntaxException {
         if ((isConnecting || isConnected())) return;
         isConnecting = true;
         if (url != null) {
@@ -297,7 +297,7 @@ public final class SocketWrapper {
                     @Override
                     public void onOpen() {
                         if (socketConnectionListener != null) {
-                            socketConnectionListener.onOpen(isReconnectionAttaempt);
+                            socketConnectionListener.onOpen(isReconnectionAttempt);
                         } else {
                             LogUtils.d("IKIDO", "Hey listener is null");
                         }
@@ -332,7 +332,7 @@ public final class SocketWrapper {
                 isConnecting = false;
                 if (e.getMessage() != null && e.getMessage().equals("already connected")) {
                     if (socketConnectionListener != null) {
-                        socketConnectionListener.onOpen(isReconnectionAttaempt);
+                        socketConnectionListener.onOpen(isReconnectionAttempt);
                     }
                     mReconnectionCount = 1;
                     mReconnectDelay = 1000;
