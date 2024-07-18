@@ -105,7 +105,7 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-
+      
         public static void setClient_id(String client_id) {
             Client.client_id = client_id;
         }
