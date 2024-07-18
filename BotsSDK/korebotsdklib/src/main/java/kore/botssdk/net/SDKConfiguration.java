@@ -53,7 +53,7 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        static String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        static String JWT_SERVER_URL = "Please enter Jwt Server Url";
 
         static String jwt_token = "";
 
@@ -133,14 +133,14 @@ public class SDKConfiguration {
         public static String bot_id = "";
         public static boolean enable_ack_delivery = false;
         public static boolean isWebHook = false;
-        public static final String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";
-        public static final String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";
-        public static final String webHook_identity = "email@kore.com";
-        public static final String webHook_bot_id = "st-fd0f5024-2318-56fe-8354-555e1786133e";
+        public static final String webHook_client_id = "Please enter clientId";
+        public static final String webHook_client_secret = "Please enter clientSecret";
+        public static final String webHook_identity = "Please enter Identity";
+        public static final String webHook_bot_id = "Please enter botId";
 
         //Weebhook
         // for webhook based communication use following option
-        public static String webhookURL = "https://qa1-bots.kore.ai/chatbot/v2/webhook/st-ea1b128f-7895-581a-8c87-bbfe3b9f1ff1";
+        public static String webhookURL = "Please enter WebHook Url";
         public static int apiVersion = 2;
     }
 
