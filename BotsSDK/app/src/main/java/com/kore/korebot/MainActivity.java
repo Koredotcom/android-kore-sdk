@@ -50,10 +50,10 @@ public class MainActivity extends AppCompatActivity {
         String botName = "Kore.ai Bot";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://bots.kore.ai/";
+        String serverUrl = "";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://bots.kore.ai/";
+        String brandingUrl = "";
 
         //Set Server url
         SDKConfig.setServerUrl(serverUrl);
