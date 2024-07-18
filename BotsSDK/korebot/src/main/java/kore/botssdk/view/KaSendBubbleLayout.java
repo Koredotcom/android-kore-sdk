@@ -54,7 +54,7 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         if (isContinuousMessage) {
             BUBBLE_TOP_BORDER = 0;
         } else {
-            BUBBLE_TOP_BORDER = (int) (10 * dp1);
+            BUBBLE_TOP_BORDER = (int) (7 * dp1);
         }
         BUBBLE_LEFT_BORDER = 0;
         BUBBLE_RIGHT_BORDER = BubbleUI ? (int) (2 * dp6 + dp6 + 2 * dp1) : 0;

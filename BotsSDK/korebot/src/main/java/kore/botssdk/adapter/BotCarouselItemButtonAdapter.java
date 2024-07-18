@@ -1,6 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +14,23 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotCaourselButtonModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
+import kore.botssdk.view.viewUtils.DimensionUtil;
+
 public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
     ArrayList<BotCaourselButtonModel> botCarouselButtonModels = new ArrayList<>();
     final Context context;
     final LayoutInflater ownLayoutInflater;
+    private final int quickWidgetColor;
+    private final int quickReplyFontColor;
 
     public BotCarouselItemButtonAdapter(@NonNull Context context) {
         this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
+        quickWidgetColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
+        quickReplyFontColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor);
     }
 
     @Override
@@ -52,7 +60,7 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
             convertView = View.inflate(context, R.layout.bot_carousel_item_button_layout, null);
         }
 
-        KaFontUtils.applyCustomFont(context,convertView);
+        KaFontUtils.applyCustomFont(context, convertView);
         if (convertView.getTag() == null) {
             initializeViewHolder(convertView);
         }
@@ -78,8 +86,10 @@ public class BotCarouselItemButtonAdapter extends BaseAdapter {
     private void initializeViewHolder(View view) {
 
         ViewHolder holder = new ViewHolder();
-
         holder.botCarouselItemButton = view.findViewById(R.id.bot_carousel_item_button);
+        holder.botCarouselItemButton.setBackgroundColor(quickWidgetColor);
+        holder.botCarouselItemButton.setTextColor(quickReplyFontColor);
+
         view.setTag(holder);
     }
 }

@@ -142,8 +142,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
 
-        if (!Client.isWebHook) loadChatHistory(0, limit);
-        else loadWebHookChatHistory(limit);
         return view;
     }
 

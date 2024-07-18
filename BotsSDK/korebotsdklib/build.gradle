@@ -27,12 +27,6 @@ android {
     dependencies {
         api 'androidx.appcompat:appcompat:1.6.1'
         api 'de.greenrobot:eventbus:2.4.0'
-        //For jwt
-        api 'io.jsonwebtoken:jjwt-api:0.12.3'
-        api 'io.jsonwebtoken:jjwt-impl:0.12.3'
-        api('io.jsonwebtoken:jjwt-orgjson:0.12.3') {
-            exclude group: 'org.json', module: 'json' //provided by Android natively
-        }
         api 'com.squareup.retrofit2:retrofit:2.9.0'
         api 'com.squareup.okhttp3:logging-interceptor:4.12.0'
         api 'com.google.code.gson:gson:2.10.1'
