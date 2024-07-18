@@ -58,9 +58,9 @@ dependencies {
         exclude module: 'support-v4'
     }
 
-//    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-//    implementation 'org.apache.httpcomponents:httpcore:4.4.15'
-//    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.16'
+    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
 
     implementation 'com.j256.ormlite:ormlite-android:4.48'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
@@ -73,7 +73,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-messaging:24.0.0'
 
-    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
-    implementation 'org.apache.httpcomponents:httpcore:4.4.6'
-    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
+//    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+//    implementation 'org.apache.httpcomponents:httpcore:4.4.6'
+//    implementation 'org.apache.httpcomponents:httpmime:4.3.6'
 }

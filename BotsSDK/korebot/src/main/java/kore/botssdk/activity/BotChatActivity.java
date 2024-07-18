@@ -193,7 +193,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         getDataFromTxt();
 
         botClient = new BotClient(this);
-        registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
+        else registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         botContentFragment = new BotContentFragment();
@@ -598,10 +602,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 return;
             }
 
-            if (botClient != null && enable_ack_delivery) botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
+            if (botClient != null && enable_ack_delivery)
+                botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
             LogUtils.d(LOG_TAG, payload);
             isAgentTransfer = botResponse.isFromAgent();
+
+            if (!StringUtils.isNullOrEmpty(botResponse.getIcon())) SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
             if (composeFooterFragment != null) composeFooterFragment.setIsAgentConnected(isAgentTransfer);
 
@@ -688,6 +695,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             return;
                         }
                         LogUtils.d(LOG_TAG, payload);
+
+                        if (!StringUtils.isNullOrEmpty(botResponse.getIcon()))
+                            SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
+
                         if (!botResponse.getMessage().isEmpty()) {
                             ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
                             if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload())) {
@@ -1306,7 +1317,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             }
                         }
 
-                        if (!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId())) startSendingPo11(webHookResponseDataModel.getPollId());
+                        if (!StringUtils.isNullOrEmpty(webHookResponseDataModel.getPollId()))
+                            startSendingPo11(webHookResponseDataModel.getPollId());
                     }
                 } else {
                     taskProgressBar.setVisibility(View.GONE);
