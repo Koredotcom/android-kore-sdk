@@ -35,16 +35,16 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "";
+        String clientId = "Please enter clientId";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "";
+        String clientSecret = "Please enter clientSecret";
 
         //Set botId, This value is mandatory
-        String botId = "";
+        String botId = "Please enter botId";
 
         //Set identity, This value is mandatory
-        String identity = "";
+        String identity = "Please enter identity";
 
         //Set botName, This value is mandatory
         String botName = "Kore.ai Bot";
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
         //This should not be null
         bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
-
         startActivity(intent);
     }
 
