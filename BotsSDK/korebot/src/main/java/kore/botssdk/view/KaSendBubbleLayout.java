@@ -2,6 +2,7 @@ package kore.botssdk.view;
 
 import static kore.botssdk.net.SDKConfiguration.BubbleColors.BubbleUI;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 
@@ -13,9 +14,9 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 /**
- * Created by Pradeep Mahato on 01-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnKnownNullness")
 public class KaSendBubbleLayout extends KaBaseBubbleLayout {
 
     public KaSendBubbleLayout(Context context) {
@@ -68,15 +69,12 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
     void initializeBubbleBorderPass2() {
         BUBBLE_CONTENT_RIGHT_BORDER = 0; //this is always 0...
         BUBBLE_CONTENT_LEFT_BORDER = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
-
-      //  invalidate();
     }
 
     @Override
     protected void initializeBubbleContentDimen() {
         super.initializeBubbleContentDimen();
 
-       // headerLayoutDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH + headerLayout.getMeasuredWidth() + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
         maxContentDimen[0] = BUBBLE_LEFT_BORDER + BUBBLE_LEFT_ARROW_WIDTH + BUBBLE_CONTENT_LEFT_MARGIN + Collections.max(Arrays.asList(textMediaDimen[0],timeStampsTextView.getMeasuredWidth()))+ BUBBLE_CONTENT_RIGHT_MARGIN + BUBBLE_RIGHT_ARROW_WIDTH + BUBBLE_RIGHT_BORDER;
 
         maxBubbleDimen[0] = BUBBLE_LEFT_PROFILE_PIC + maxContentDimen[0];
@@ -85,17 +83,6 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
                 textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN + BUBBLE_DOWN_BORDER+timeStampsTextView.getMeasuredHeight();
         maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN  + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN+timeStampsTextView.getMeasuredHeight();
     }
-
-/*
-    @Override
-    protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage) {
-        try {
-            headerLayout.populateHeader(DateUtils.getTimeStamp(baseBotMessage.getCreatedOn(), false));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-*/
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -131,20 +118,17 @@ public class KaSendBubbleLayout extends KaBaseBubbleLayout {
         int top = getPaddingTop()  + BUBBLE_SEPARATION_DISTANCE, left;
         int containerWidth = getMeasuredWidth();
 
+        LayoutUtils.layoutChild(timeStampsTextView, containerWidth - (int)(timeStampsTextView.getMeasuredWidth() + bubbleTextMediaLayouMarginRight + dp10), top+bubbleTextMediaLayouMarginTop);
 
         /*
          * For TextMedia Layout
          */
 
         left = (int)(containerWidth - (14 * dp1 + bubbleTextMediaLayout.getMeasuredWidth()));
-        top += bubbleTextMediaLayouMarginTop+BUBBLE_TOP_BORDER;
+        top += bubbleTextMediaLayouMarginTop+timeStampsTextView.getMeasuredHeight();
 
         LayoutUtils.layoutChild(bubbleTextMediaLayout, left, top);
 
-
-        left = containerWidth - (timeStampsTextView.getMeasuredWidth()+bubbleTextMediaLayouMarginRight);
-        top = bubbleTextMediaLayout.getBottom();
-        LayoutUtils.layoutChild(timeStampsTextView, left, top);
         initializeBubbleDimensionalParametersPhase2(); //Initialize paramters, now that its layed out...
     }
 }

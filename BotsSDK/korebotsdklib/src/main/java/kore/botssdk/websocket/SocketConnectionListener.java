@@ -1,8 +1,7 @@
 package kore.botssdk.websocket;
 
 
-/**
- * Created by Ramachandra
+/*
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public interface SocketConnectionListener {

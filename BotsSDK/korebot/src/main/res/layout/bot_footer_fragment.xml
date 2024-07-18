@@ -13,10 +13,10 @@
         android:alpha="0.0"
         android:background="@android:color/transparent"
         android:clickable="true"
+        android:focusable="true"
         android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:visibility="visible"
-        android:focusable="true">
+        android:visibility="visible">
 
         <!-- Bot Message Fragment resides -->
         <FrameLayout
@@ -49,7 +49,7 @@
             android:id="@+id/attachment_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"/>
+            android:layout_marginStart="2dp" />
 
         <RelativeLayout
             android:id="@+id/rlFooter"
@@ -79,15 +79,13 @@
                         android:layout_height="50dp"
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
+                        android:importantForAccessibility="no"
                         android:paddingStart="10dp"
-                        android:paddingLeft="10dp"
                         android:paddingTop="10dp"
                         android:paddingEnd="5dp"
-                        android:paddingRight="5dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/new_task"
-                        android:visibility="gone"
-                        android:importantForAccessibility="no" />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/newMenuLogo"
@@ -95,15 +93,23 @@
                         android:layout_height="50dp"
                         android:layout_centerVertical="true"
                         android:background="?android:attr/selectableItemBackground"
+                        android:importantForAccessibility="no"
                         android:paddingStart="10dp"
-                        android:paddingLeft="10dp"
                         android:paddingTop="10dp"
                         android:paddingEnd="5dp"
-                        android:paddingRight="5dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/widget_menu"
-                        android:visibility="gone"
-                        android:importantForAccessibility="no" />
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/attachemnt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:importantForAccessibility="no"
+                        android:padding="8dp"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/attachment_comp" />
 
                     <LinearLayout
                         android:id="@+id/loadingTasks"
@@ -118,10 +124,8 @@
                             android:layout_height="50dp"
                             android:indeterminate="false"
                             android:paddingStart="10dp"
-                            android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingEnd="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="10dp"
                             android:visibility="gone" />
 
@@ -129,16 +133,13 @@
                             android:id="@+id/errorLoading"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            android:layout_centerVertical="true"
+                            android:importantForAccessibility="no"
                             android:paddingStart="10dp"
-                            android:paddingLeft="10dp"
                             android:paddingTop="10dp"
                             android:paddingEnd="5dp"
-                            android:paddingRight="5dp"
                             android:paddingBottom="10dp"
                             android:src="@drawable/conection_error"
-                            android:visibility="gone"
-                            android:importantForAccessibility="no" />
+                            android:visibility="gone" />
                     </LinearLayout>
 
                 </RelativeLayout>
@@ -149,16 +150,13 @@
                     android:layout_height="45dp"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_toStartOf="@+id/btnsend1"
-                    android:layout_toLeftOf="@+id/btnsend1"
                     android:layout_toEndOf="@id/tasksRl"
-                    android:layout_toRightOf="@id/tasksRl"
                     android:background="@drawable/theme1_compose_bg"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -197,7 +195,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
                     android:orientation="horizontal">
 
                     <TextView
@@ -212,7 +209,7 @@
                         android:tag="bold"
                         android:text="@string/send"
                         android:textColor="@color/bgBlueSignup"
-                        android:textSize="14dp"
+                        android:textSize="@dimen/text_size_normal"
                         android:visibility="gone" />
 
                     <ImageView
@@ -221,21 +218,10 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
+                        android:importantForAccessibility="no"
                         android:padding="5dp"
                         android:src="@drawable/ic_mic"
-                        android:visibility="visible"
-                        android:importantForAccessibility="no" />
-
-                    <ImageView
-                        android:id="@+id/attachemnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:padding="8dp"
-                        android:visibility="visible"
-                        app:srcCompat="@drawable/attachment_comp"
-                        android:importantForAccessibility="no" />
+                        android:visibility="visible" />
 
                     <ImageView
                         android:id="@+id/audio_speak_tts"
@@ -243,10 +229,10 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
+                        android:importantForAccessibility="no"
                         android:padding="5dp"
                         android:src="@drawable/ic_volume_up_black_24dp"
-                        android:visibility="visible"
-                        android:importantForAccessibility="no" />
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -290,11 +276,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:gravity="right|end"
+            android:gravity="end"
             android:padding="5dp"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textSize="12dp"
+            android:textSize="@dimen/text_size_small"
             android:visibility="gone" />
 
         <RelativeLayout
@@ -325,7 +311,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
                 android:layout_margin="10dp"
                 android:contentDescription="@string/click_hear_to_enter_text"
                 android:padding="5dp"

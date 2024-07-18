@@ -15,9 +15,9 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by Pradeep Mahato on 09-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressLint("UnKnownNullness")
 public class DateUtils {
     public static final long oneMin = 60 * 1000;
     public static final long fiveMin = 5 * oneMin;
@@ -50,7 +50,7 @@ public class DateUtils {
     public static final SimpleDateFormat dateWeekDayTime5 = new SimpleDateFormat("EEE, MMM dd, yyyy, ", Locale.ENGLISH);
     public static final Format calendar_list_format2 = new SimpleDateFormat("EEE, MMM d, ", Locale.ENGLISH);
     public static final Format calendar_list_req_format2 = new SimpleDateFormat("EEE, MMM d ", Locale.ENGLISH);
-
+    public static final SimpleDateFormat chat_bubble_dateTime = new SimpleDateFormat("EE MMM dd yyyy 'at' hh:mm:ss a", Locale.ENGLISH);
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
@@ -96,7 +96,7 @@ public class DateUtils {
     }
 
     public static String getTimeInAmPm(long dateInMs) {
-        return dateTime.format(new Date(dateInMs));
+        return chat_bubble_dateTime.format(new Date(dateInMs));
     }
 
     /**

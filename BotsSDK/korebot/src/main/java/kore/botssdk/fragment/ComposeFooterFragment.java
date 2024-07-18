@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
@@ -1142,7 +1143,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 } catch (SecurityException se) {
                     se.printStackTrace();
                 }
-//            Bitmap bitMap = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
                 Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
                 Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
                 if (thumbnail == null) {
@@ -1173,7 +1173,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         return overlayBitmap;
     }
 
-    final Handler messagesMediaUploadAcknowledgeHandler = new Handler() {
+    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public synchronized void handleMessage(Message msg) {
             Bundle reply = msg.getData();
@@ -1193,9 +1193,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String mediaFileName = reply.getString("fileName");
                 String componentType = reply.getString("componentType");
                 String thumbnailURL = reply.getString("thumbnailURL");
-                String orientation = reply.getString(BundleConstants.ORIENTATION);
-                String COMPONENT_DESCRIPTION = reply.getString("componentDescription") != null ? reply.getString("componentDescription") : null;
-                HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
                 String fileSize = reply.getString("fileSize");
                 KoreComponentModel koreMedia = new KoreComponentModel();
                 koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
@@ -1222,9 +1219,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 attachmentKey.put("fileExtn", MEDIA_TYPE);
                 attachmentKey.put("thumbnailURL", thumbnailURL);
                 ((BotChatActivity) requireActivity()).mediaAttachment(attachmentKey);
-                // kaComponentModels.add(koreMedia);
-                //insertTags(koreMedia, componentType, orientation, mediaFileName);
-
             } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
