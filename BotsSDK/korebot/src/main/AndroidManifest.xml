@@ -53,28 +53,11 @@
                 android:resource="@xml/image_path" />
         </provider>
 
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
         <service android:name=".utils.ClosingService"
             android:stopWithTask="false"
             android:exported="false"
             android:enabled="true"
             android:permission="TODO" />
-
-        <service
-            android:name=".fcm.FCMWrapper"
-            android:exported="false"
-            android:permission="TODO">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/notification_channel_id" />
 
     </application>
 

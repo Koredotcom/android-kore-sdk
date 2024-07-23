@@ -2,9 +2,9 @@ package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
-import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.GROUP_KEY_NOTIFICATIONS;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -32,7 +32,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -50,7 +49,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -85,7 +83,6 @@ import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.AgentInfoModel;
 import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotOptionsModel;
@@ -179,6 +176,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             editor.putBoolean(BundleConstants.IS_RECONNECT, false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
             editor.apply();
+
+            new PushNotificationRegister().unsubscribePushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), "android-1234567890");
         }
     };
 

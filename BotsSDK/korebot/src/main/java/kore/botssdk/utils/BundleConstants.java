@@ -59,6 +59,7 @@ public class BundleConstants {
     public static final int CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST = 1234;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST = 1434;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST = 3453;
+    public final static String GROUP_KEY_NOTIFICATIONS = "group_key_notifications";
     public static final String MESSAGE_DELIVERED = "message_delivered";
     public static final String MESSAGE_READ = "message_read";
     public static final String STOP_TYPING = "stop_typing";

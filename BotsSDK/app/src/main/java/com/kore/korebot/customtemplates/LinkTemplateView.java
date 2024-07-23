@@ -1,7 +1,5 @@
 package com.kore.korebot.customtemplates;
 
-import static com.kore.korebot.R.id;
-
 import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.kore.korebot.R;
 import com.kore.korebot.model.ResponsePayload;
 
 import java.io.File;
@@ -22,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
+import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.utils.KaFontUtils;
@@ -92,9 +90,9 @@ public class LinkTemplateView extends CustomTemplateView {
     private void init(Context context) {
         this.context = context;
         View view = LayoutInflater.from(getContext()).inflate(R.layout.pdf_download_view, this, true);
-        tvPdfName = view.findViewById(id.tv_pdf_item_title);
-        ivPdfDownload = view.findViewById(id.ivPdfDownload);
-        pbDownload = view.findViewById(id.pbDownload);
+        tvPdfName = view.findViewById(R.id.tv_pdf_item_title);
+        ivPdfDownload = view.findViewById(R.id.ivPdfDownload);
+        pbDownload = view.findViewById(R.id.pbDownload);
 
         KaFontUtils.applyCustomFont(getContext(), view);
     }
