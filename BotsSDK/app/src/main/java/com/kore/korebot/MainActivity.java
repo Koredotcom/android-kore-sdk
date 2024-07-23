@@ -1,20 +1,28 @@
 package com.kore.korebot;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateView;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.UUID;
 
+import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
@@ -84,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        askNotificationPermission();
     }
 
     /**
@@ -117,5 +126,24 @@ public class MainActivity extends AppCompatActivity {
         customData.put("timeZoneOffset", -330);
         customData.put("UserTimeInGMT", TimeZone.getDefault().getID() + " " + Locale.getDefault().getISO3Language());
         return customData;
+    }
+
+    // Declare the launcher at the top of your Activity/Fragment:
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (!isGranted) {
+                    Toast.makeText(this, "Permission needed to send push notifications", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    private void askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                // FCM SDK (and your app) can post notifications.
+                requestPermissionLauncher.launch(POST_NOTIFICATIONS);
+            }
+        }
     }
 }
