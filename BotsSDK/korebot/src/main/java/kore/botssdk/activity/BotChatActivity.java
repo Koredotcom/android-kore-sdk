@@ -179,6 +179,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             editor.putBoolean(BundleConstants.IS_RECONNECT, false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
             editor.apply();
+
+            new PushNotificationRegister().unsubscribePushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), "android-1234567890");
         }
     };
 

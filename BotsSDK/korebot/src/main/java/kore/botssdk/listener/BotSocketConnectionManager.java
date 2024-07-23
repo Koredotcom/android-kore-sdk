@@ -324,9 +324,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(false);
         } else {
-            if (!SDKConfiguration.Client.isWebHook) {
-                makeStsJwtCallWithConfig(false);
-            } else makeJwtCallWithConfig();
+            makeStsJwtCallWithConfig(false);
         }
     }
 
