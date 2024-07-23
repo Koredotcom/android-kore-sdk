@@ -53,7 +53,7 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        static String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        static String JWT_SERVER_URL = "Please enter Jwt Server Url";
 
         static String jwt_token = "";
 
