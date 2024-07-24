@@ -83,7 +83,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     private final int EMPTY_CARD = 0;
     private final int MESSAGE = 2;
     private final int REPORTS = 3;
-    List<MultiAction> multiActions;
     int previewLength;
     String msg;
     Drawable errorIcon;
@@ -201,7 +200,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
             if (model.getImage() != null && !StringUtils.isNullOrEmpty(model.getImage().getImage_src()) && Patterns.WEB_URL.matcher(model.getImage().getImage_src()).matches()) {
                 String url = model.getImage().getImage_src().trim();
                 url = url.replace("http://", "https://");
-                Picasso.get().load(url).transform(new RoundedCornersTransform()).into(holder.imageIcon);
+                Picasso.get().load(url).error(R.drawable.ic_image_photo).transform(new RoundedCornersTransform()).into(holder.imageIcon);
             } else {
                 holder.imageIcon.setVisibility(GONE);
             }
@@ -466,7 +465,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerV
     @Override
     public void setData(ArrayList data) {
         this.items = data;
-        notifyItemRangeChanged(0, data.size() - 1);
+        if (items != null)
+            notifyItemRangeChanged(0, data.size() - 1);
     }
 
     public void setWidgetData(ArrayList<WidgetListElementModel> data) {

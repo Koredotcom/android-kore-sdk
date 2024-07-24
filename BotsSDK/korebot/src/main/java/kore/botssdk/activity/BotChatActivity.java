@@ -115,6 +115,7 @@ import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.ClosingService;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
@@ -176,8 +177,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             editor.putBoolean(BundleConstants.IS_RECONNECT, false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
             editor.apply();
-
-            new PushNotificationRegister().unsubscribePushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), "android-1234567890");
         }
     };
 
@@ -242,6 +241,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
             }
         });
+
+        startService(new Intent(getApplicationContext(), ClosingService.class));
     }
 
     final SocketChatListener sListener = new SocketChatListener() {
@@ -269,7 +270,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 }
             }
 
-            new PushNotificationRegister().registerPushNotification(BotChatActivity.this, botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("FCMToken", getUniqueDeviceId(BotChatActivity.this)));
+            new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(BotChatActivity.this));
             updateTitleBar(state);
         }
 
@@ -325,6 +326,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     protected void onDestroy() {
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+        new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("PREF_UNIQUE_ID", getUniqueDeviceId(BotChatActivity.this)));
+
         if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();

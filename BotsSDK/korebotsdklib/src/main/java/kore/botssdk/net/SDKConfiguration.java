@@ -53,7 +53,7 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        static String JWT_SERVER_URL = "Please enter Jwt Server Url";
+        static String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
 
         static String jwt_token = "";
 
@@ -78,7 +78,6 @@ public class SDKConfiguration {
 
         static String KORE_BOT_SERVER_URL = "";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
-        public static final boolean IS_ANONYMOUS_USER = false;
         public static String SERVER_URL = "";
         public static String TOKEN_SERVER_URL = "";
         public static String Branding_SERVER_URL = "";
@@ -105,7 +104,7 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-      
+
         public static void setClient_id(String client_id) {
             Client.client_id = client_id;
         }
@@ -248,15 +247,6 @@ public class SDKConfiguration {
     public static void setTimeStampsRequired(boolean timeStampsRequired) {
         TIME_STAMPS_REQUIRED = timeStampsRequired;
     }
-
-    /**
-     * don't use relative it is licenced version
-     */
-    public enum FONT_TYPES {
-        ROBOTO, RELATIVE
-    }
-
-    private static final FONT_TYPES fontType = FONT_TYPES.ROBOTO;
 
     public static void setCustomTemplateView(String templateName, View templateView) {
         hsh.put(templateName, templateView);

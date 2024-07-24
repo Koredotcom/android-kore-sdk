@@ -27,11 +27,14 @@ import retrofit2.http.Url;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressWarnings("UnKnownNullness")
 public interface RestAPI {
 
     String URL_VERSION = "/1.1";
 
-    /** Login Service **/
+    /**
+     * Login Service
+     **/
     @POST("/api/oAuth/token")
     Call<RestResponse.LoginResponse> loginUser(@Body HashMap<String, Object> userCredentials);
 
@@ -52,7 +55,7 @@ public interface RestAPI {
 
     //Getting jwt grant
     @POST("/api/oAuth/token/jwtgrant")
-    Call<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String,Object> jwtToken);
+    Call<RestResponse.BotAuthorization> jwtGrant(@Body HashMap<String, Object> jwtToken);
 
 //    //Getting jwt grant Anonymous
 //    @POST("/api/oAuth/token/jwtgrant/anonymous")
@@ -70,6 +73,7 @@ public interface RestAPI {
 //    Call<MarketStreamList> getMarketStreams(@Path("userId") String userId, @Header("Authorization") String token);
 
     //Subscribe to Push notification
+//    api/public/streams/st-7ed00fac-d947-59aa-a76e-ea25d58c80fa/sdknotifications/subscribe'
     @POST("/api/users/{userId}/sdknotifications/subscribe")
     Call<ResponseBody> subscribeForPushNotification(@Path("userId") String userId, @Header("Authorization") String token, @Body HashMap<String, Object> req);
 
@@ -106,8 +110,10 @@ public interface RestAPI {
 
     @GET("chatbot/v2/webhook/{streamId}/poll/{pollId}")
     Call<WebHookResponseDataModel> getPollIdData(@Header("Authorization") String token, @Path("streamId") String streamId, @Path("pollId") String pollId);
+
     @POST
     Call<PdfResponseModel> getPdfBaseDetails(@Url String url, @HeaderMap HashMap<String, String> header, @Body JsonObject body);
+
     @POST
-    Call<ResponseBody> getPdfDetails(@Url String url, @HeaderMap HashMap<String, String> header,  @Body JsonObject body);
+    Call<ResponseBody> getPdfDetails(@Url String url, @HeaderMap HashMap<String, String> header, @Body JsonObject body);
 }

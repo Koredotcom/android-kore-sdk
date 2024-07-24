@@ -31,6 +31,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BubbleConstants;
 import kore.botssdk.utils.DateUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ViewProvider;
 import kore.botssdk.view.viewUtils.BubbleViewUtil;
 import kore.botssdk.view.viewUtils.DimensionUtil;
@@ -816,11 +817,19 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
                         e.printStackTrace();
                     }
                 }
+            } else if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(payOuter.getType())) {
+                message = payOuter.getPayload().getText();
+                textColor = payOuter.getPayload().getColor();
+                if (botContentTextView != null && !StringUtils.isNullOrEmpty(textColor)) {
+                    try {
+                        botContentTextView.setTextColor(Color.parseColor(textColor));
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             bubbleTextMediaLayout.populateText(message);
         }
-
-
     }
 
     /*  abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);*/

@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "Please enter clientId";
+        String clientId = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "Please enter clientSecret";
+        String clientSecret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
 
         //Set botId, This value is mandatory
-        String botId = "Please enter botId";
+        String botId = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
 
         //Set identity, This value is mandatory
         String identity = "Please enter identity";
@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
         String botName = "Kore.ai Bot";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "";
+        String serverUrl = "https://platform.kore.ai/";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "";
+        String brandingUrl = "https://platform.kore.ai/";
 
         //Set Server url
         SDKConfig.setServerUrl(serverUrl);

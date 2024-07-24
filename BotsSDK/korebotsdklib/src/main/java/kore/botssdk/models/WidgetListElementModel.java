@@ -2,6 +2,7 @@ package kore.botssdk.models;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("UnKnownNullness")
 public class WidgetListElementModel {
 
     public ImageModel getImage() {

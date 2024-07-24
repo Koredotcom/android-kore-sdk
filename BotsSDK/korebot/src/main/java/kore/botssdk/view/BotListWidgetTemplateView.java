@@ -3,7 +3,6 @@ package kore.botssdk.view;
 import android.content.Context;
 import android.text.Html;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import kore.botssdk.adapter.BotListWidgetTemplateAdapter;
 import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotListWidgetModel;
@@ -31,20 +29,15 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 public class BotListWidgetTemplateView extends ViewGroup {
-
-    String LOG_TAG = BotListWidgetTemplateView.class.getSimpleName();
-
     float dp1, layoutItemHeight = 0;
     AutoExpandListView autoExpandListView;
     TextView botCustomListViewButton;
     TextView workBenchListViewButton;
     TextView tvListWidgetTitle;
     LinearLayout botCustomListRoot;
-    float restrictedMaxWidth, restrictedMaxHeight;
+    float restrictedMaxWidth;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    VerticalListViewActionHelper verticalListViewActionHelper;
-    String title;
 
     public BotListWidgetTemplateView(Context context) {
         super(context);
@@ -87,7 +80,7 @@ public class BotListWidgetTemplateView extends ViewGroup {
 
         if (botListModelArrayList != null && botListModelArrayList.size() > 0)
         {
-            BotListWidgetTemplateAdapter botListTemplateAdapter = null;
+            BotListWidgetTemplateAdapter botListTemplateAdapter;
 
             if(moreCount != 0 && botListModelArrayList.size() > moreCount)
                 botListTemplateAdapter = new BotListWidgetTemplateAdapter(getContext(), autoExpandListView, moreCount);
@@ -154,10 +147,6 @@ public class BotListWidgetTemplateView extends ViewGroup {
         }
     }
 
-
-    public void setRestrictedMaxHeight(float restrictedMaxHeight) {
-        this.restrictedMaxHeight = restrictedMaxHeight;
-    }
 
     public void setRestrictedMaxWidth(float restrictedMaxWidth) {
         this.restrictedMaxWidth = restrictedMaxWidth;
