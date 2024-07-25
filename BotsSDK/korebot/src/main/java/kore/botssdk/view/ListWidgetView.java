@@ -258,6 +258,7 @@ public class ListWidgetView extends LinearLayout {
                         break;
                 }
             }
+            listWidgetAdapter.setIsEnabled(isEnabled());
             if (model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > 0 && !model.getTemplate_type().equals("loginURL")) {
 
                 if (model.getWidgetlistElements() != null && model.getWidgetlistElements().size() > 3) {

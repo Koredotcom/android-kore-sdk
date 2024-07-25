@@ -43,6 +43,8 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     private final String trigger;
     private BottomSheetDialog bottomSheetDialog;
 
+    private boolean isEnabled = true;
+
     public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
@@ -62,16 +64,11 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
 
-        holder.tv.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        holder.tv.setOnClickListener(v -> {
+            if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
 
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
-
-                if(!StringUtils.isNullOrEmpty(btn.getPayload())){
-                    composeFooterInterface.onSendClick(btn.getPayload(), true);
-                }
+            if (!StringUtils.isNullOrEmpty(btn.getPayload()) && isEnabled) {
+                composeFooterInterface.onSendClick(btn.getPayload(), true);
             }
         });
     }
@@ -84,24 +81,30 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public void setBottomSheet(BottomSheetDialog bottomSheetDialog) {
         this.bottomSheetDialog = bottomSheetDialog;
     }
 
     @Override
     public int getItemCount() {
-        return buttons !=null?buttons.size():0;
+        return buttons != null ? buttons.size() : 0;
         /*if(buttons != null){
             if(buttons.size()<3)
                 buttons.size();
             else return 3;
         }
             return 0;
-*/    }
+*/
+    }
 
     boolean isFullView;
+
     public void setIsFromFullView(boolean isFullView) {
-        this.isFullView=isFullView;
+        this.isFullView = isFullView;
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
@@ -117,12 +120,12 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     }
 
 
-    public void buttonAction(String utterance, boolean appendUtterance){
-        if(utterance !=null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))){
-            if(utterance.startsWith("tel:")){
-                launchDialer(mContext,utterance);
-            }else if(utterance.startsWith("mailto:")){
-                showEmailIntent((Activity) mContext,utterance.split(":")[1]);
+    public void buttonAction(String utterance, boolean appendUtterance) {
+        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
+            if (utterance.startsWith("tel:")) {
+                launchDialer(mContext, utterance);
+            } else if (utterance.startsWith("mailto:")) {
+                showEmailIntent((Activity) mContext, utterance.split(":")[1]);
             }
             return;
         }
@@ -130,7 +133,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
+        if (appendUtterance && trigger != null)
             msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
@@ -185,10 +188,10 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         }
     }
 
-    public static boolean hasPermission(Context context,String... permission) {
+    public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
         int permissionLength = permission.length;
-        for (int i=0;i<permissionLength;i++) {
+        for (int i = 0; i < permissionLength; i++) {
             shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
                     ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
         }

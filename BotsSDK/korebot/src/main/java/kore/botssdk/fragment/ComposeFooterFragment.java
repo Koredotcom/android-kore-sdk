@@ -147,9 +147,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     SpeechProgressView progress;
     TextView text_view_speech;
     static final int REQUEST_RECORD_AUDIO = 13;
+
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
     }
+
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     ComposeFooterInterface composeFooterInterface;
     TTSUpdate ttsUpdate;
@@ -256,8 +258,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void updateUI() {
-        sendButton.setEnabled(!isDisabled && !isFirstTime);
-        sendButton.setAlpha(sendButton.isEnabled() ? 1.0f : 0.5f);
+        if (sendButton != null) {
+            sendButton.setEnabled(!isDisabled && !isFirstTime);
+            sendButton.setAlpha(sendButton.isEnabled() ? 1.0f : 0.5f);
+        }
     }
 
     private void setListener() {
@@ -360,13 +364,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 sendButton.setVisibility(View.GONE);
                 rec_audio_img.setVisibility(View.VISIBLE);
 
-                if(isAgentConnected && botClient != null)
+                if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
 
             } else if ((sendButton.getVisibility() != View.VISIBLE)
                     || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
 
-                if(isAgentConnected && botClient != null)
+                if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.TYPING, "");
 
                 sendButton.setVisibility(View.VISIBLE);
@@ -598,13 +602,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         text_view_speech.setVisibility(View.GONE);
     }
 
-    public void setBotClient(BotClient botClient)
-    {
+    public void setBotClient(BotClient botClient) {
         this.botClient = botClient;
     }
 
-    public void setIsAgentConnected(boolean isAgentConnected)
-    {
+    public void setIsAgentConnected(boolean isAgentConnected) {
         this.isAgentConnected = isAgentConnected;
     }
 

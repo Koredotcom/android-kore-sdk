@@ -49,6 +49,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
+import kore.botssdk.adapter.ChatAdapterNew;
+import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -89,7 +91,7 @@ import retrofit2.Response;
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
     RelativeLayout rvChatContent, botHeaderLayout;
     RecyclerView botsBubblesListView;
-    ChatAdapter botsChatAdapter;
+    ChatAdapterNew botsChatAdapter;
     QuickReplyView quickReplyView;
     String LOG_TAG = BotContentFragment.class.getSimpleName();
     LinearLayout botTypingStatusRl;
@@ -236,10 +238,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     private void setupAdapter() {
-        botsChatAdapter = new ChatAdapter(getActivity());
+        botsChatAdapter = new ChatAdapterNew(getActivity());
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        botsChatAdapter.setActivityContext(getActivity());
+//        botsChatAdapter.setActivityContext(getActivity());
+        botsBubblesListView.addItemDecoration(new ChatAdapterItemDecoration());
+        botsBubblesListView.setLayoutManager(new LinearLayoutManager(requireContext()));
         botsBubblesListView.setAdapter(botsChatAdapter);
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -433,7 +437,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         botsBubblesListView.post(new Runnable() {
             @Override
             public void run() {
-                botsBubblesListView.smoothScrollToPosition(count - 1);
+                if (count > 0) botsBubblesListView.smoothScrollToPosition(count - 1);
             }
         });
     }
@@ -948,7 +952,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
                     if (rBody.isSuccessful() && history != null) {
 
-                        if (!StringUtils.isNullOrEmpty(history.getIcon()) && setIconUrl) SDKConfiguration.BubbleColors.setIcon_url(history.getIcon());
+                        if (!StringUtils.isNullOrEmpty(history.getIcon()) && setIconUrl)
+                            SDKConfiguration.BubbleColors.setIcon_url(history.getIcon());
 
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;

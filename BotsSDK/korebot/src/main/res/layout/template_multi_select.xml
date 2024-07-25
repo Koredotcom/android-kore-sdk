@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/multi_select_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/template_bubble_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <kore.botssdk.view.AutoExpandListView
+        android:id="@+id/multi_select_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_rect"
+        android:divider="@null"
+        android:padding="2dp"
+        android:visibility="visible" />
+</androidx.appcompat.widget.LinearLayoutCompat>

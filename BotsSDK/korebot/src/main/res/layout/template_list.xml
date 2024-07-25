@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/template_bubble_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_right_rounded_rectangle"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/dimen_10dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingRight="@dimen/dimen_10dp"
+        android:paddingBottom="@dimen/dimen_10dp">
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/botListViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:paddingTop="@dimen/dimen_10dp"
+            android:paddingEnd="@dimen/dimen_20dp"
+            android:paddingBottom="@dimen/dimen_10dp"
+            android:textColor="@color/txtFontBlack"
+            android:textSize="@dimen/text_size_normal"
+            android:visibility="gone"
+            tools:text="Title" />
+
+        <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/botCustomListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="#eeeef2"
+            android:dividerHeight="1dp"
+            android:footerDividersEnabled="true"
+            android:headerDividersEnabled="true"
+            android:padding="2dp"
+            android:scrollbars="none" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/botCustomListViewButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:textColor="@android:color/holo_blue_dark"
+            android:visibility="visible" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

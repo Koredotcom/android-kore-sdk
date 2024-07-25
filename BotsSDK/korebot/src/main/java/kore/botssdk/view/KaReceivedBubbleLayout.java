@@ -465,8 +465,8 @@ public class KaReceivedBubbleLayout extends KaBaseBubbleLayout {
             }
             payInner = payOuter.getPayload();
 
-            if (payInner != null)
-                payInner.convertElementToAppropriate();
+//            if (payInner != null)
+//                payInner.convertElementToAppropriate();
 
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 checkBubbleVisibilityAndHideCpv();

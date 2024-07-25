@@ -183,7 +183,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getDescription());
 
-            if (botListModel.getDescriptionStyles() != null)
+            if (botListModel.getDescriptionStyles() != null && botListModel.getDescriptionStyles().getColor() != null)
                 holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getDescriptionStyles().getColor()));
         }
 
@@ -409,7 +409,8 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 }
                             }
 
-                            holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
+                                holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
@@ -440,7 +441,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
                         gradientDrawable.setStroke(0, null);
 
-                        if (headerOptionsModel.getStyles() != null) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 
@@ -500,7 +501,8 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 gradientDrawable.setColor(Color.parseColor("#224741fa"));
                             }
 
-                            holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
+                                holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
@@ -552,7 +554,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
                         holder.tvAction.setBackground(null);
 
-                        if (headerOptionsModel.getStyles() != null) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 
